@@ -977,4 +977,5 @@ translation = {
     "caseSensitiveSearch": "Поиск с учетом регистра",
     "enableCaseSensitiveSearch": "Включить поиск с учетом регистра",
     "caseSensitive": "С учетом регистра",
+    "journalAndBibleReadingPlan": "Журнал и план чтения Библии",
 }

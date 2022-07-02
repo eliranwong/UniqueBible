@@ -93,16 +93,19 @@ class HistoryLauncher(QWidget):
         return [file for file in files if os.path.isfile(file)]
 
     def refresh(self):
+        self.mainModel.clear()
         mainItems = list(reversed(config.history["main"]))
         for mainItem in mainItems:
             item = QStandardItem(mainItem)
             item.setToolTip(mainItem)
             self.mainModel.appendRow(item)
+        self.studyModel.clear()
         studyItems = list(reversed(config.history["study"]))
         for studyItem in studyItems:
             item = QStandardItem(studyItem)
             item.setToolTip(studyItem)
             self.studyModel.appendRow(item)
+        self.externalModel.clear()
         externalItems = self.filterExternalFileRecords()
         for externalItem in externalItems:
             item = QStandardItem(externalItem)

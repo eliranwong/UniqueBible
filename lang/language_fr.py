@@ -977,4 +977,5 @@ translation = {
     "caseSensitiveSearch": "Recherche sensible à la casse",
     "enableCaseSensitiveSearch": "Activer la recherche sensible à la casse",
     "caseSensitive": "Sensible à la casse",
+    "journalAndBibleReadingPlan": "Journal et plan de lecture de la Bible",
 }

@@ -977,4 +977,5 @@ translation = {
     "caseSensitiveSearch": "Case-sensitive Search",
     "enableCaseSensitiveSearch": "Enable Case-sensitive Search",
     "caseSensitive": "Case-sensitive",
+    "journalAndBibleReadingPlan": "Journal and Bible Reading Plan",
 }

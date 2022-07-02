@@ -36,3 +36,16 @@ class JournalSqlite:
             return False
         else:
             return True
+
+    def getMonthJournalList(self, year, month):
+        query = "SELECT year, month, day FROM Journal WHERE year=? AND month=? ORDER BY day"
+        self.cursor.execute(query, (year, month))
+        monthJournalList = self.cursor.fetchall()
+        return monthJournalList
+
+    def getSearchJournalList(self, searchString):
+        searchString = "%{0}%".format(searchString)
+        query = "SELECT year, month, day FROM Journal WHERE note LIKE ? ORDER BY year, month, day"
+        self.cursor.execute(query, (searchString,))
+        searchJournalList = self.cursor.fetchall()
+        return searchJournalList

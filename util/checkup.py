@@ -402,6 +402,13 @@ def isApswInstalled():
     except:
         return False
 
+def isPyluachInstalled():
+    try:
+        from pyluach import dates, hebrewcal, parshios
+        return True
+    except:
+        return False
+
 def isChineseEnglishLookupInstalled():
     try:
         from chinese_english_lookup import Dictionary
@@ -484,6 +491,8 @@ def setInstallConfig(module, isInstalled):
         config.isTabulateInstalled = isInstalled
     elif module in ("apsw", "-U apsw", "--upgrade apsw"):
         config.isApswInstalled = isInstalled
+    elif module in ("pyluach", "-U pyluach", "--upgrade pyluach"):
+        config.isPyluachInstalled = isInstalled
 
 # Specify qtLibrary for particular os
 if config.docker and config.usePySide2onWebtop:
@@ -592,6 +601,7 @@ optional = [
     ("textract", "Extract text from document", isTextractInstalled),
     ("tabulate", "Pretty-print tabular data", isTabulateInstalled),
     ("apsw", "Another Python SQLite Wrapper", isApswInstalled),
+    ("pyluach", "Hebrew (Jewish) calendar dates", isPyluachInstalled),
 ] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -622,6 +632,7 @@ optional = [
     ("textract", "Extract text from document", isTextractInstalled),
     ("tabulate", "Pretty-print tabular data", isTabulateInstalled),
     ("apsw", "Another Python SQLite Wrapper", isApswInstalled),
+    ("pyluach", "Hebrew (Jewish) calendar dates", isPyluachInstalled),
 ]
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))

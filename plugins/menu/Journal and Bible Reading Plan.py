@@ -377,7 +377,7 @@ class BibleReadingPlan(QWidget):
     }
 
     translation = (
-        "Bible Reading Plan",
+        "365-Day Bible Reading Plan",
         "Today is ",
         "Search: ",
         "Open in Tabs",
@@ -391,7 +391,14 @@ class BibleReadingPlan(QWidget):
         "Failed to save your progress locally.  You may need to grant write permission to UBA.",
         "Read Journal",
         "Edit Journal",
-        "Search Journal", #14
+        "Search Journal",
+        "Create Journal",
+        "Jewish: ", #16
+        "Date: ", #17
+        "Jewish Festival: ", #18
+        "Jewish Month: ", #19
+        "Journal", #20
+        "Refresh", #21
     )
 
     def __init__(self, parent):
@@ -424,6 +431,7 @@ class BibleReadingPlan(QWidget):
         self.journalSqlite = JournalSqlite()
 
     def setupUI(self):
+        from pyluach import dates
         if config.qtLibrary == "pyside6":
             from PySide6.QtGui import QStandardItemModel
             from PySide6.QtWidgets import QPushButton, QLabel, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QCalendarWidget
@@ -441,6 +449,14 @@ class BibleReadingPlan(QWidget):
         self.calendar.selectionChanged.connect(self.selectionChangedAction)
         mainLayoutLeft.addWidget(self.calendar)
 
+        self.selectedDateLabel = QLabel("")
+        mainLayoutLeft.addWidget(self.selectedDateLabel)
+        self.jewishMonthlLabel = QLabel("")
+        mainLayoutLeft.addWidget(self.jewishMonthlLabel)
+        self.jewishFestivalLabel = QLabel("")
+        mainLayoutLeft.addWidget(self.jewishFestivalLabel)
+        self.updateSelectedDate()
+
         buttonsLayout = QHBoxLayout()
         readJournal = QPushButton(self.translation[12])
         readJournal.clicked.connect(self.readJournal)
@@ -450,12 +466,33 @@ class BibleReadingPlan(QWidget):
         buttonsLayout.addWidget(editJournal)
         mainLayoutLeft.addLayout(buttonsLayout)
 
-        #self.searchJournalEntry = QLineEdit()
-        #mainLayoutLeft.addWidget(self.searchJournalEntry)
-        #searchJournal = QPushButton(self.translation[14])
-        #mainLayoutLeft.addWidget(searchJournal)
+        self.searchJournalEntry = QLineEdit()
+        self.searchJournalEntry.returnPressed.connect(self.searchJournal)
+        mainLayoutLeft.addWidget(self.searchJournalEntry)
+        searchJournal = QPushButton(self.translation[14])
+        searchJournal.clicked.connect(self.searchJournal)
+        mainLayoutLeft.addWidget(searchJournal)
 
         mainLayout0.addLayout(mainLayoutLeft)
+
+        # Layout in the middle
+        mainLayoutMiddle = QVBoxLayout()
+
+        mainLayoutMiddle.addWidget(QLabel(self.translation[20]))
+
+        self.journalListView = QListView()
+        self.journalListViewModel = QStandardItemModel(self.journalListView)
+        self.journalListView.setModel(self.journalListViewModel)
+        self.journalListView.selectionModel().selectionChanged.connect(self.journalSelectionChanged)
+        mainLayoutMiddle.addWidget(self.journalListView)
+        self.calendar.currentPageChanged.connect(self.resetJournalSelection)
+        self.resetJournalSelection()
+
+        refreshJournal = QPushButton(self.translation[21])
+        refreshJournal.clicked.connect(self.refreshJournalSelection)
+        mainLayoutMiddle.addWidget(refreshJournal)
+
+        mainLayout0.addLayout(mainLayoutMiddle)
 
         # Layout on the Right
         mainLayout = QVBoxLayout()
@@ -463,7 +500,10 @@ class BibleReadingPlan(QWidget):
         readingListLayout = QVBoxLayout()
 
         readingListLayout.addWidget(QLabel(self.translation[0]))
-        readingListLayout.addWidget(QLabel("{0}{1}".format(self.translation[1], self.today)))
+        hebrewToday = dates.HebrewDate.today()
+        todayLabel = QLabel("{0}{1} [{2}{3}-{4}-{5}]".format(self.translation[1], self.today, self.translation[16], hebrewToday.year, hebrewToday.month, hebrewToday.day))
+        todayLabel.mouseReleaseEvent = self.selectToday
+        readingListLayout.addWidget(todayLabel)
 
         filterLayout = QHBoxLayout()
         filterLayout.addWidget(QLabel(self.translation[2]))
@@ -507,7 +547,25 @@ class BibleReadingPlan(QWidget):
 
         self.setLayout(mainLayout0)
 
-    def selectionChangedAction(self):
+    def updateSelectedDate(self):
+        from pyluach import dates, hebrewcal
+        # documentation: https://pyluach.readthedocs.io/en/latest/index.html
+
+        date = self.calendar.selectedDate()
+        year, month, day = date.year(), date.month(), date.day()
+        hebrewDate = dates.GregorianDate(year, month, day).to_heb()
+        hebYear, hebMonth, hebDay = hebrewDate.year, hebrewDate.month, hebrewDate.day
+        dateLabel = "{7}{0}-{1}-{2} [{6}{3}-{4}-{5}]".format(year, month, day, hebYear, hebMonth, hebDay, self.translation[16], self.translation[17])
+        self.selectedDateLabel.setText(dateLabel)
+        month = hebrewcal.Month(hebYear, hebMonth)
+        hebrewMonthInEnglish = month.month_name()
+        hebrewMonth = month.month_name(True)
+        hebrewMonthLabel = "{0}{1} {2}".format(self.translation[19], hebrewMonthInEnglish, hebrewMonth)
+        self.jewishMonthlLabel.setText(hebrewMonthLabel)
+        festivalLabel = "{0}{1} {2}".format(self.translation[18], hebrewDate.festival(), hebrewDate.festival(hebrew=True)) if hebrewDate.festival() else ""
+        self.jewishFestivalLabel.setText(festivalLabel)
+
+    def scrollBibleReadingPlan(self):
         date = self.calendar.selectedDate()
         scrollIndex = date.dayOfYear() - 1
         if scrollIndex < 0:
@@ -515,6 +573,75 @@ class BibleReadingPlan(QWidget):
         elif scrollIndex > 365:
             scrollIndex = 365
         self.readingList.setCurrentIndex(self.readingListModel.index(scrollIndex, 0))
+
+    def selectionChangedAction(self):
+        self.updateSelectedDate()
+        self.scrollBibleReadingPlan()
+
+    def historyAction(self, selection, key):
+        if not self.parent.isRefreshing:
+            selectedItem = selection[0].indexes()[0].data()
+            self.openSelectedItem(selectedItem, key)
+
+    def refreshJournalSelection(self):
+        self.resetJournalSelection(self.calendar.yearShown(), self.calendar.monthShown())
+
+    def resetJournalSelection(self, year=None, month=None):
+        if config.qtLibrary == "pyside6":
+            from PySide6.QtGui import QStandardItem
+        else:
+            from qtpy.QtGui import QStandardItem
+
+        if month is None:
+            date = self.calendar.selectedDate()
+            year, month = date.year(), date.month()
+
+        self.journalListViewModel.clear()
+        self.journalList = self.journalSqlite.getMonthJournalList(year, month)
+        for journalTitle in self.journalList:
+            journalTitle = [str(number) for number in journalTitle]
+            journalTitle = "-".join(journalTitle)
+            item = QStandardItem(journalTitle)
+            item.setToolTip(journalTitle)
+            self.journalListViewModel.appendRow(item)
+
+    def journalSelectionChanged(self, selection):
+        if config.qtLibrary == "pyside6":
+            from PySide6.QtCore import QDate
+        else:
+            from qtpy.QtCore import QDate
+        
+        journalTitle = selection[0].indexes()[0].data()
+        year, month, day = journalTitle.split("-")
+        year, month, day = int(year), int(month), int(day)
+        qDate = QDate(year, month, day)
+        self.calendar.setSelectedDate(qDate)
+
+    def selectToday(self, event):
+        if config.qtLibrary == "pyside6":
+            from PySide6.QtCore import QDate
+        else:
+            from qtpy.QtCore import QDate
+
+        year, month, day = self.today.year, self.today.month, self.today.day
+        qDate = QDate(year, month, day)
+        self.calendar.setSelectedDate(qDate)
+
+    def searchJournal(self):
+        if config.qtLibrary == "pyside6":
+            from PySide6.QtGui import QStandardItem
+        else:
+            from qtpy.QtGui import QStandardItem
+
+        searchString = self.searchJournalEntry.text().strip()
+        self.journalListViewModel.clear()
+        self.journalList = self.journalSqlite.getSearchJournalList(searchString)
+        for journalTitle in self.journalList:
+            journalTitle = [str(number) for number in journalTitle]
+            journalTitle = "-".join(journalTitle)
+            item = QStandardItem(journalTitle)
+            item.setToolTip(journalTitle)
+            self.journalListViewModel.appendRow(item)
 
     def readJournal(self):
         config.mainWindow.textCommandParser.lastKeyword = "journal"

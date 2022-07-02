@@ -977,4 +977,5 @@ translation = {
     "caseSensitiveSearch": "区分大小写的搜索",
     "enableCaseSensitiveSearch": "启用区分大小写的搜索",
     "caseSensitive": "区分大小写",
+    "journalAndBibleReadingPlan": "日志和圣经阅读计划",
 }

@@ -977,4 +977,5 @@ translation = {
     "caseSensitiveSearch": "Αναζήτηση σε διάκριση πεζών",
     "enableCaseSensitiveSearch": "Ενεργοποίηση δυνατότητας αναζήτησης πεζών",
     "caseSensitive": "Υπόθεση-ευαίσθητη",
+    "journalAndBibleReadingPlan": "Περιοδικό και σχέδιο ανάγνωσης της Βίβλου",
 }

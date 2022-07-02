@@ -1,6 +1,13 @@
-Upcoming:
-* will add ability to search journal.
-* will add display of Hebrew dates or holidays.
+Changes in 31.02:
+* Renamed menu plugin "Bible Reading Plan" to "Journal and Bible Reading Plan".
+* Added features to "Journal and Bible Reading Plan":
+    - added a column to disply a list of journal according to the month shown on calendar.
+    - added ability to search journal.
+    - added ability to quickly select "today" by clicking the label showing today's information.
+    - added display of Jewish dates.
+    - added information about Jewish festivals.
+* Added a wiki page about the plugin:
+    https://github.com/eliranwong/UniqueBible/wiki/Journal-and-Bible-Reading-Plan
 
 Changes in 31.01:
 * Integrated a Calendar into menu plugin "Bible Reading Plan".

@@ -977,4 +977,5 @@ translation = {
     "caseSensitiveSearch": "Căutare sensibilă la caz",
     "enableCaseSensitiveSearch": "Activează căutarea sensibilă la caz",
     "caseSensitive": "Caz-sensibil",
+    "journalAndBibleReadingPlan": "Jurnal și planul de citire a Bibliei",
 }
