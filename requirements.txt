@@ -20,3 +20,4 @@ qrcode
 python-vlc
 yt-dlp
 apsw
+pydnsbl
