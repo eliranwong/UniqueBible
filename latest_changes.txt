@@ -1,3 +1,6 @@
+Changes in 31.06:
+* Added some code to harden http-server.
+
 Changes in 31.05:
 * Fixed http-server startup issue.
 

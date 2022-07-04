@@ -429,6 +429,14 @@ def isLemmagen3Installed():
 def isAudioConverterInstalled():
     return True if WebtopUtil.isPackageInstalled("audioconvert") else False
 
+def isPydnsblInstalled():
+    try:
+        import pydnsbl
+        return True
+    except:
+        return False
+
+
 # Set config values for optional features
 def setInstallConfig(module, isInstalled):
     #if module == "PyPDF2":
@@ -493,6 +501,8 @@ def setInstallConfig(module, isInstalled):
         config.isApswInstalled = isInstalled
     elif module in ("pyluach", "-U pyluach", "--upgrade pyluach"):
         config.isPyluachInstalled = isInstalled
+    elif module in ("pydnsbl", "-U pydnsbl", "--upgrade pydnsbl"):
+        config.isPydnsblInstalled = isInstalled
 
 # Specify qtLibrary for particular os
 if config.docker and config.usePySide2onWebtop:
@@ -602,6 +612,7 @@ optional = [
     ("tabulate", "Pretty-print tabular data", isTabulateInstalled),
     ("apsw", "Another Python SQLite Wrapper", isApswInstalled),
     ("pyluach", "Hebrew (Jewish) calendar dates", isPyluachInstalled),
+    ("pydnsbl", "Checks if ip is listed in anti-spam dns blacklists.", isPydnsblInstalled)
 ] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
