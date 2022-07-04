@@ -1,3 +1,6 @@
+Changes in 31.05:
+* Fixed http-server startup issue.
+
 Changes in 31.04:
 * Fixed display of Hebrew and Greek word audio links.
 

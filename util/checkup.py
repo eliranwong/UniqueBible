@@ -503,12 +503,12 @@ elif platform.system() == "Darwin" and config.usePySide6onMacOS:
     config.qtLibrary = "pyside6"
     config.fixLoadingContent = True
 # Check if required modules are installed
-required = (
+required = [
     ("config", "Configurations", isConfigInstalled),
     ("gdown", "Download UBA modules from Google drive", isGdownInstalled),
     ("babel", "Internationalization and localization library", isBabelInstalled),
     ("requests", "Download / Update files", isRequestsInstalled),
-) if config.noQt else [
+] if config.noQt else [
     ("config", "Configurations", isConfigInstalled),
     #("PySide2", "Qt Graphical Interface Library", isPySide2Installed) if config.qtLibrary.startswith("pyside") else ("PyQt5", "Qt Graphical Interface Library", isPyQt5Installed),
     #("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled),
