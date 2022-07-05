@@ -719,10 +719,10 @@ class BibleReadingPlan(QWidget):
             text = fileObj.read()
         translateDict = {}
         bookNames = []
-        for key, value in BibleBooks.eng.items():
+        for key, value in BibleBooks.abbrev["eng"].items():
             bookName = value[-1]
             bookNames.append(bookName)
-            translateDict[bookName] = BibleBooks.sc[key][-1]
+            translateDict[bookName] = BibleBooks.abbrev["sc"][key][-1]
         bookNames = sorted(bookNames, key=len, reverse=True)
         #print(bookNames)
         for name in bookNames:

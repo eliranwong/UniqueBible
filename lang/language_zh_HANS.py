@@ -978,4 +978,5 @@ translation = {
     "enableCaseSensitiveSearch": "启用区分大小写的搜索",
     "caseSensitive": "区分大小写",
     "journalAndBibleReadingPlan": "日志和圣经阅读计划",
+    "gitHubBibleAbbreviations": "GitHub 圣经",
 }

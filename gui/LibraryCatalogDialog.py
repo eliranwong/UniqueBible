@@ -316,7 +316,7 @@ class LibraryCatalogDialog(QDialog):
             file = file.replace(".commentary", "")
             file = file[1:]
             config.commentariesFolder = directory
-            command = "COMMENTARY:::{0}:::{1} {2}".format(file, BibleBooks.eng[str(config.mainB)][0], config.mainC)
+            command = "COMMENTARY:::{0}:::{1} {2}".format(file, BibleBooks.abbrev["eng"][str(config.mainB)][0], config.mainC)
         elif type == "DOCX":
             command = "DOCX:::{0}".format(file)
         elif type == "DEVOTIONAL":

@@ -23,7 +23,7 @@ class MorphologyLauncher(QWidget):
         super().__init__()
         self.setWindowTitle(config.thisTranslation["cp7"])
         self.parent = parent
-        self.bookList = BibleBooks.getStandardBookAbbreviations()
+        self.bookList = BibleBooks().getStandardBookAbbreviations()
         self.setupUI()
 
     def setupUI(self):

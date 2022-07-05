@@ -978,4 +978,5 @@ translation = {
     "enableCaseSensitiveSearch": "Suche nach Groß-/Kleinschreibung aktivieren",
     "caseSensitive": "Fall-sensitiv",
     "journalAndBibleReadingPlan": "Journal and Bible Reading Plan",
+    "gitHubBibleAbbreviations": "GitHub Bible Kürzungen",
 }

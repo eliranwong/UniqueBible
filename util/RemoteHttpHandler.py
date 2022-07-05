@@ -100,7 +100,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return {
             "text": config.mainText,
             "bAbb": self.abbreviations[str(config.mainB)],
-            "bFullEnglishName": BibleBooks.eng[str(config.mainB)][-1],
+            "bFullEnglishName": BibleBooks.abbrev["eng"][str(config.mainB)][-1],
             "b": config.mainB,
             "c": config.mainC,
             "v": config.mainV,

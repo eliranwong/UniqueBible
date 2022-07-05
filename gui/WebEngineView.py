@@ -1500,7 +1500,7 @@ class WebEngineView(QWebEngineView):
         if verses:
             command = "BIBLE:::{0}:::{1}".format(bible, selectedText)
         elif not config.openBibleInMainViewOnly and self.name == "study":
-            command = "STUDY:::{0}:::{1} {2}:{3}".format(bible, BibleBooks.eng[str(config.studyB)][0], config.studyC, config.studyV)
+            command = "STUDY:::{0}:::{1} {2}:{3}".format(bible, BibleBooks.abbrev["eng"][str(config.studyB)][0], config.studyC, config.studyV)
         else:
             command = "TEXT:::{0}".format(bible)
         self.parent.parent.textCommandChanged(command, self.name)
@@ -1525,7 +1525,7 @@ class WebEngineView(QWebEngineView):
         if verses:
             command = "COMPARE:::{0}_{1}:::{2}".format(config.mainText, bible, selectedText)
         elif not config.openBibleInMainViewOnly and self.name == "study":
-            command = "STUDY:::{0}:::{1} {2}:{3}".format(bible, BibleBooks.eng[str(config.studyB)][0], config.studyC, config.studyV)
+            command = "STUDY:::{0}:::{1} {2}:{3}".format(bible, BibleBooks.abbrev["eng"][str(config.studyB)][0], config.studyC, config.studyV)
         else:
             command = "TEXT:::{0}".format(bible)
         self.parent.parent.textCommandChanged(command, self.name)
@@ -1539,7 +1539,7 @@ class WebEngineView(QWebEngineView):
         if verses:
             command = "SIDEBYSIDE:::{0}_{1}:::{2}".format(config.mainText, bible, selectedText)
         elif not config.openBibleInMainViewOnly and self.name == "study":
-            command = "STUDY:::{0}:::{1} {2}:{3}".format(bible, BibleBooks.eng[str(config.studyB)][0], config.studyC, config.studyV)
+            command = "STUDY:::{0}:::{1} {2}:{3}".format(bible, BibleBooks.abbrev["eng"][str(config.studyB)][0], config.studyC, config.studyV)
         else:
             command = "TEXT:::{0}".format(bible)
         self.parent.parent.textCommandChanged(command, self.name)

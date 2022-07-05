@@ -690,7 +690,7 @@ class Commentary:
             if c > 0:
                 chapter = "<h2>{0}{1}</ref></h2>".format(self.formChapterTag(b, c), self.bcvToVerseReference(b, c, v).split(":", 1)[0])
             else:
-                chapter = "<h2>{0}</h2>".format(BibleBooks.eng[b][0])
+                chapter = "<h2>{0}</h2>".format(BibleBooks.abbrev["eng"][b][0])
             query = "SELECT Scripture FROM Commentary WHERE Book=? AND Chapter=?"
             self.cursor.execute(query, verse[0:2])
             scripture = self.cursor.fetchone()

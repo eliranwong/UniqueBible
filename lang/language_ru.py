@@ -978,4 +978,5 @@ translation = {
     "enableCaseSensitiveSearch": "Включить поиск с учетом регистра",
     "caseSensitive": "С учетом регистра",
     "journalAndBibleReadingPlan": "Журнал и план чтения Библии",
+    "gitHubBibleAbbreviations": "Библейские аббревиатуры GitHub",
 }

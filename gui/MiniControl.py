@@ -424,9 +424,9 @@ class MiniControl(QWidget):
                     text = self.bookMap[bookNum]
                     button = QPushButton(text)
                     if config.developer:
-                        button.setToolTip("{0} - {1}".format(BibleBooks.eng[bookNum][1], bookNum))
+                        button.setToolTip("{0} - {1}".format(BibleBooks.abbrev["eng"][bookNum][1], bookNum))
                     else:
-                        button.setToolTip("{0}".format(BibleBooks.eng[bookNum][1]))
+                        button.setToolTip("{0}".format(BibleBooks.abbrev["eng"][bookNum][1]))
                     button.clicked.connect(partial(self.bibleBookAction, bookNum))
                     layout.addWidget(button)
             gp.setLayout(layout)

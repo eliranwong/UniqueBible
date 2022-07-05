@@ -340,7 +340,7 @@ class DownloadBibleMp3Util:
             bookNum = int(folder)
             if base[0] == 'B':
                 bookNum += 39
-            bookName = BibleBooks.eng[str(bookNum)][1]
+            bookName = BibleBooks.abbrev["eng"][str(bookNum)][1]
             bookName = bookName.replace(" ", "")
             destFolder = os.path.join(destDir, folder + "_" + bookName)
             if not os.path.exists(destFolder):
@@ -393,7 +393,7 @@ class DownloadBibleMp3Util:
         for file in sorted(files):
             base = os.path.basename(file)
             bookNum = int(base[:2]) + offset
-            bookName = BibleBooks.eng[str(bookNum)][1]
+            bookName = BibleBooks.abbrev["eng"][str(bookNum)][1]
             bookName = bookName.replace(" ", "")
             try:
                 chapter = int(base[-7:-4])
@@ -437,7 +437,7 @@ class DownloadBibleMp3Util:
             bookNum = int(dir[:2])
             # bookNum += 39
 
-            bookName = BibleBooks.eng[str(bookNum)][1]
+            bookName = BibleBooks.abbrev["eng"][str(bookNum)][1]
             bookName = bookName.replace(" ", "")
             try:
                 base = base.replace(".mp3", "")

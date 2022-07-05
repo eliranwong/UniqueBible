@@ -1293,7 +1293,7 @@ class Converter:
         books = doc.getElementsByTagName("book")
         data = []
         for bookNum in range(1,67):
-            bookInfo = BibleBooks.eng[str(bookNum)]
+            bookInfo = BibleBooks.abbrev["eng"][str(bookNum)]
             bookName = bookInfo[1]
             bookTag = "_" + bookName.lower().replace(" ", "")
             print("{0}-{1}".format(bookTag, bookNum))

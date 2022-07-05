@@ -978,4 +978,5 @@ translation = {
     "enableCaseSensitiveSearch": "കേസ്-සංවේදී തെരച്ചില് സജ്ജമാക്കുക",
     "caseSensitive": "കേസ്-സംവേദനക്ഷമം",
     "journalAndBibleReadingPlan": "ജേർണൽ, ബൈബിൾ വായന പദ്ധതി",
+    "gitHubBibleAbbreviations": "ഗിറ്റ്ഹബ് ബൈബിൾ അബ്ബ്രിവിസേഷൻ",
 }
