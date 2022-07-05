@@ -1,3 +1,7 @@
+Changes in 31.07:
+* Added support for custom Bible abbreviations.
+- Download from Resources/Add/GitHub Bible Abbreviations
+
 Changes in 31.06:
 * Added some code to harden http-server.
 

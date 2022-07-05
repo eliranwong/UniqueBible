@@ -888,6 +888,11 @@ class MainWindow(QMainWindow):
     def installGithubDevotionals(self):
         self.installFromGitHub(GitHubRepoInfo.devotionals)
 
+    def installGithubBibleAbbreviations(self):
+        self.installFromGitHub(GitHubRepoInfo.bibleAbbreviations)
+        BibleBooks.initialized = False
+        self.setupMenuLayout(config.menuLayout)
+
     def showUserReposDialog(self):
         from gui.UserReposDialog import UserReposDialog
         self.userReposDialog = UserReposDialog(self)
@@ -4520,7 +4525,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
 
     # Set bible book abbreviations
     def setBibleAbbreviations(self):
-        items = ("ENG", "TC", "SC")
+        items = BibleBooks().booksMap.keys()
         item, ok = QInputDialog.getItem(self, "UniqueBible",
                                         config.thisTranslation["menu1_setAbbreviations"], items,
                                         items.index(config.standardAbbreviation), False)
@@ -5675,7 +5680,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         # Text command autocompletion/autosuggest
         textCommandParser = TextCommandParser(self)
         textCommands = [key + ":::" for key in textCommandParser.interpreters.keys()]
-        bibleBooks = BibleBooks.getStandardBookAbbreviations()
+        bibleBooks = BibleBooks().getStandardBookAbbreviations()
         textCommandAutosuggestion = QCompleter(textCommands + bibleBooks)
         textCommandAutosuggestion.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         return textCommandAutosuggestion

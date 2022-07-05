@@ -230,4 +230,4 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("githubBiblesIndex", "GitHub Bibles Index")
+        addLanguageStringToAllFiles("gitHubBibleAbbreviations", "GitHub Bible Abbreviations")

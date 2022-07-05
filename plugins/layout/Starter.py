@@ -81,7 +81,7 @@ class Starter:
         self.versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
         self.firstToolBar.addWidget(self.versionCombo)
 
-        # books = BibleBooks.getStandardBookAbbreviations()
+        # books = BibleBooks().getStandardBookAbbreviations()
         # self.bibleBookCombo = QComboBox()
         # self.bibleBookCombo.addItems(books)
         # self.bibleBookCombo.setCurrentIndex(config.mainB-1)

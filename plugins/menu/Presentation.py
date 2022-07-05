@@ -128,7 +128,7 @@ class ConfigurePresentationWindow(QWidget):
         versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
         self.bibleLayout.addRow("Bible Version", versionCombo)
 
-        defaultVerse = "{0} {1}:{2}".format(BibleBooks.eng[str(config.mainB)][0], config.mainC, config.mainV)
+        defaultVerse = "{0} {1}:{2}".format(BibleBooks.abbrev["eng"][str(config.mainB)][0], config.mainC, config.mainV)
         self.textEntry = QPlainTextEdit(defaultVerse)
         self.bibleLayout.addRow(self.textEntry)
 

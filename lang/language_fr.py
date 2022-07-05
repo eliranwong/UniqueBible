@@ -978,4 +978,5 @@ translation = {
     "enableCaseSensitiveSearch": "Activer la recherche sensible à la casse",
     "caseSensitive": "Sensible à la casse",
     "journalAndBibleReadingPlan": "Journal et plan de lecture de la Bible",
+    "gitHubBibleAbbreviations": "Bible GitHub Abréviations",
 }

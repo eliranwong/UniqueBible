@@ -113,13 +113,8 @@ class BibleVerseParser:
 
     # update self.standardAbbreviation
     def updateStandardAbbreviation(self):
-        standardAbbreviations = {
-            "ENG": BibleBooks.eng,
-            "TC": BibleBooks.tc,
-            "SC": BibleBooks.sc,
-        }
         self.checkConfig()
-        self.standardAbbreviation = standardAbbreviations[config.standardAbbreviation]
+        self.standardAbbreviation = BibleBooks().booksMap.get(config.standardAbbreviation, BibleBooks.abbrev["eng"])
         self.standardFullBookName = {key: value[1] for key, value in self.standardAbbreviation.items()}
         self.standardAbbreviation = {key: value[0] for key, value in self.standardAbbreviation.items()}
 
@@ -444,7 +439,7 @@ class BibleVerseParser:
         bookList = []
         for book in books:
             if book is not None:
-                bookList.append(BibleBooks.eng[str(book)][0])
+                bookList.append(BibleBooks.abbrev["eng"][str(book)][0])
         return bookList
 
     def extractBookListAsBookNumberList(self, inputString):

@@ -118,6 +118,7 @@ def addGithubDownloadMenuItems(self, subMenu):
             ("gitHubPluginsStartup", self.installGithubPluginsStartup),
             ("gitHubPluginsMenu", self.installGithubPluginsMenu),
             ("githubBiblesIndex", self.installGithubBiblesIndex),
+            ("gitHubBibleAbbreviations", self.installGithubBibleAbbreviations),
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)

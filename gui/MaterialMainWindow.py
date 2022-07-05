@@ -1,5 +1,6 @@
 import config
 from gui.MenuItems import *
+from util.BibleBooks import BibleBooks
 from util.ShortcutUtil import ShortcutUtil
 from util.LanguageUtil import LanguageUtil
 from util.Languages import Languages
@@ -291,7 +292,7 @@ class MaterialMainWindow:
             addCheckableMenuItem(subMenu1, description, self, partial(self.doubleClickActionSelected, option), config.verseNoDoubleClickAction, option)
         # Abbreviation language
         subMenu = addSubMenu(subMenu0, "menu1_setAbbreviations")
-        options = ("ENG", "TC", "SC")
+        options = BibleBooks().booksMap.keys()
         for option in options:
             addCheckableMenuItem(subMenu, option, self, partial(self.setBibleAbbreviationsSelected, option), config.standardAbbreviation, option, translation=False)
         # My Favourite Bibles

@@ -1081,7 +1081,7 @@ class Bible:
                     if file:
                         icon = config.audioBibleIcon
                         if v is not None:
-                            command = "READBIBLE:::{0}:::{1} {2}:{3}:::{4}".format(text, BibleBooks.eng[str(b)][0], c, v, dir)
+                            command = "READBIBLE:::{0}:::{1} {2}:{3}:::{4}".format(text, BibleBooks.abbrev["eng"][str(b)][0], c, v, dir)
                         else:
                             command = "READBIBLE:::@{0}".format(dir)
                         data += """ <ref onclick="document.title='{0}'" style="font-size: 1em">{1}</ref> """.format(command, icon)

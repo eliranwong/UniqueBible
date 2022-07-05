@@ -978,4 +978,5 @@ translation = {
     "enableCaseSensitiveSearch": "Ενεργοποίηση δυνατότητας αναζήτησης πεζών",
     "caseSensitive": "Υπόθεση-ευαίσθητη",
     "journalAndBibleReadingPlan": "Περιοδικό και σχέδιο ανάγνωσης της Βίβλου",
+    "gitHubBibleAbbreviations": "GitHub Συντομογραφίες Αγία Γραφή",
 }
