@@ -1,3 +1,6 @@
+Changes in 31.10:
+* Fix issue when loading .biblebooks file.
+
 Changes in 31.09:
 * Add plugins/language folder.
 
