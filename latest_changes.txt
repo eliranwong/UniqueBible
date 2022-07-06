@@ -1,3 +1,6 @@
+Changes in 31.08:
+* Added sc.biblebooks and tc.biblebooks to plugins/language.
+
 Changes in 31.07:
 * Added support for custom Bible abbreviations.
 - Download from Resources/Add/GitHub Bible Abbreviations
