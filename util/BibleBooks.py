@@ -2440,16 +2440,19 @@ class BibleBooks:
                 for file in files:
                     lang = Path(file).stem
                     abbreviations = {}
-                    with open(file, "r") as fileObj:
-                        for line in fileObj.readlines():
-                            if "(" in line:
-                                (number, abbrev, name) = re.search(r'.*"(.*)".*"(.*)".*"(.*)"', line).groups()
-                                abbreviations[number] = (abbrev, name)
-                            elif ":" in line:
-                                (abbrev, number) = re.search(r'.*"(.*)".*"(.*)"', line).groups()
-                                BibleBooks.name2number[abbrev] = number
-                    if len(abbreviations) > 0:
-                        BibleBooks.abbrev[lang] = abbreviations
+                    try:
+                        with open(file, "r", encoding="utf-8") as fileObj:
+                            for line in fileObj.readlines():
+                                if "(" in line:
+                                    (number, abbrev, name) = re.search(r'.*"(.*)".*"(.*)".*"(.*)"', line).groups()
+                                    abbreviations[number] = (abbrev, name)
+                                elif ":" in line:
+                                    (abbrev, number) = re.search(r'.*"(.*)".*"(.*)"', line).groups()
+                                    BibleBooks.name2number[abbrev] = number
+                        if len(abbreviations) > 0:
+                            BibleBooks.abbrev[lang] = abbreviations
+                    except Exception as ex:
+                        print(ex)
             for key in BibleBooks.abbrev.keys():
                 BibleBooks.booksMap[key.upper()] = BibleBooks.abbrev[key]
             BibleBooks.initialized = True
