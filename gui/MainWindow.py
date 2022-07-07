@@ -5,17 +5,18 @@ from datetime import datetime
 from distutils import util
 from functools import partial
 from pathlib import Path
-
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer
     from PySide6.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor, QAction, QShortcut
     from PySide6.QtWidgets import QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QColorDialog, QComboBox, QToolButton, QMenu, QCompleter
     from PySide6.QtWebEngineCore import QWebEnginePage
+    from PySide6.QtGui import QClipboard
 else:
     from qtpy.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer
     from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor
     from qtpy.QtWidgets import QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog, QComboBox, QToolButton, QMenu, QCompleter
     from qtpy.QtWebEngineWidgets import QWebEnginePage
+    from qtpy.QtGui import QClipboard
 from gui.WorkSpace import Workspace
 from db.DevotionalSqlite import DevotionalSqlite
 from gui.BibleCollectionDialog import BibleCollectionDialog
@@ -42,6 +43,7 @@ from gui.ConfigFlagsWindow import ConfigFlagsWindow
 from gui.EnableIndividualPlugins import EnableIndividualPlugins
 from gui.EditGuiLanguageFileDialog import EditGuiLanguageFileDialog
 from gui.InfoDialog import InfoDialog
+from util.PluginEventHandler import PluginEventHandler
 # These "unused" window imports are actually used.  Do not delete these lines.
 from gui.DisplayShortcutsWindow import DisplayShortcutsWindow
 from gui.GistWindow import GistWindow
@@ -1551,6 +1553,11 @@ class MainWindow(QMainWindow):
                 clipboardText = text
         config.clipboardText = clipboardText
         return clipboardText
+
+    def setClipboardText(self, text):
+        QApplication.clipboard().setText(text)
+        QApplication.clipboard().setText(text, QClipboard.Selection)
+        QApplication.clipboard().setText(text, QClipboard.Clipboard)
 
     def pasteFromClipboard(self):
         clipboardText = self.getClipboardText()
@@ -3900,6 +3907,12 @@ class MainWindow(QMainWindow):
                 self.newTabException = True
             # parse command
             view, content, dict = self.textCommandParser.parser(textCommand, source)
+            # plugin event hook
+            config.eventView = view
+            config.eventContent = content
+            config.eventDict = dict
+            PluginEventHandler.handleEvent("command", textCommand)
+            content = config.eventContent
             # process content
             if content == "INVALID_COMMAND_ENTERED":
                 self.displayMessage("{0} '{1}'".format(config.thisTranslation["message_invalid"], textCommand))

@@ -1,8 +1,12 @@
+Changes in 31.11:
+* Added plugin event handler
+- https://github.com/eliranwong/UniqueBible/wiki/Plugin-Event-Handler
+
 Changes in 31.10:
-* Fix issue when loading .biblebooks file.
+* Fixed issue when loading .biblebooks file.
 
 Changes in 31.09:
-* Add plugins/language folder.
+* Added plugins/language folder.
 
 Changes in 31.08:
 * Added sc.biblebooks and tc.biblebooks to plugins/language.
