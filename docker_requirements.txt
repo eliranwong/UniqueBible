@@ -29,7 +29,7 @@ idna==3.3
 importlib-metadata==4.8.1
 Jinja2==3.0.3
 langdetect==1.0.9
-lxml==4.8.0
+lxml==4.9.1
 mammoth==1.4.18
 Markdown==3.3.6
 MarkupSafe==2.0.1
