@@ -339,8 +339,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         import pydnsbl
         ip_checker = pydnsbl.DNSBLIpChecker()
         result = ip_checker.check(clientIP)
-        if result and result.blacklisted:
-            self.addIpToBlacklist(clientIP)
+        if result and result.blacklisted and not self.checkInWhitelist():
+            self.addIpToBlackList(clientIP)
             return True
         return False
 
