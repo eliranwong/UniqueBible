@@ -1,3 +1,6 @@
+Changes in 31.13:
+* Fixed addIpToBlackList.
+
 Changes in 31.12:
 * Changed whitelist logic, blacklist IP that returns a 404.
 
