@@ -15,6 +15,8 @@ class PluginEventHandler:
         if PluginEventHandler.eventHandlers is None:
             filelist = glob.glob(os.path.join("plugins", "event", "*.py"))
             PluginEventHandler.eventHandlers = filelist
+        if len(PluginEventHandler.eventHandlers) == 0:
+            return
         if eventType == "command":
             commandList = eventCommand.split(":::")
             command = commandList[0].lower()

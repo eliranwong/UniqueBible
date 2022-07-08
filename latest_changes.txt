@@ -1,3 +1,6 @@
+Changes in 31.12:
+* Changed whitelist logic, blacklist IP that returns a 404.
+
 Changes in 31.11:
 * Added plugin event handler
 - https://github.com/eliranwong/UniqueBible/wiki/Plugin-Event-Handler
