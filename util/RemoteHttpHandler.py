@@ -6,6 +6,8 @@ import logging
 import os, re, config, pprint, glob
 import subprocess
 import urllib
+from http import HTTPStatus
+
 import requests
 from http.server import SimpleHTTPRequestHandler
 from time import gmtime
@@ -77,9 +79,13 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             if os.path.exists(self.blackListFile):
                 self.blackListIPs = [ip.strip() for ip in open(self.blackListFile, "r").readlines()]
         except Exception as ex:
-            print(f"Could not read white/blacklists")
+            print("Could not read white/blacklists")
             print(ex)
-        super().__init__(*args, directory="htmlResources", **kwargs)
+        try:
+            super().__init__(*args, directory="htmlResources", **kwargs)
+        except Exception as ex:
+            print("Could not run init")
+            print(ex)
 
     def getCommands(self):
         return {
@@ -261,7 +267,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
     def handleBadRequests(self):
         self.clientIP = self.client_address[0]
-        if self.clientIP in self.whiteListIPs:
+        if self.checkInWhitelist():
             self.blankPage()
             return
         self.addIpToBlackList(self.clientIP)
@@ -271,7 +277,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         try:
             self.clientIP = self.client_address[0]
-            if self.clientIP not in self.whiteListIPs and self.clientIP in self.blackListIPs:
+            if not self.checkInWhitelist() and self.clientIP in self.blackListIPs:
                 self.redirectHeader()
                 return
             self.session = self.getSession()
@@ -315,6 +321,19 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 self.redirectHeader()
             else:
                 self.blankPage()
+
+    # If a 404 request, blacklist the IP
+    def send_error(self, code, message=None, explain=None):
+        if code == HTTPStatus.NOT_FOUND:
+            if not self.checkInWhitelist():
+                self.addIpToBlackList(self.clientIP)
+        super().send_error(code, message, explain)
+
+    def checkInWhitelist(self):
+        for whitelistip in self.whiteListIPs:
+            if self.clientIP.startswith(whitelistip):
+                return True
+        return False
 
     def checkAntiSpamBlacklist(self, clientIP):
         import pydnsbl
