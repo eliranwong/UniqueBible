@@ -3,6 +3,7 @@ locations = (
 )
 
 allLocations = (
+    # exlbl_entry, name, latitude, longitude
     ("BL1", "Abana", "33.545097", "36.224661"),
     ("BL2", "Abarim", "31.761357", "35.746148"),
     ("BL3", "Abdon", "33.046264", "35.172513"),

@@ -287,7 +287,7 @@ class IndexesSqlite:
     def getChapterContent(self, table, bcTuple):
         query = "SELECT * FROM {0} WHERE Book = ? AND Chapter = ?".format(table)
         self.cursor.execute(query, bcTuple)
-        parser = BibleVerseParser(config.parserStandarisation)
+        #parser = BibleVerseParser(config.parserStandarisation)
         content = "<br>".join(['[<ref onclick="bcv({0},{1},{2})">{1}:{2}</ref>] {3}'.format(b, c, v, re.sub("<p>|</p>", " ", text)) for b, c, v, text in self.cursor.fetchall()])
         if not content:
             return "[not applicable]"
@@ -296,6 +296,34 @@ class IndexesSqlite:
                 return "<table>{0}</table>".format(content)
             else:
                 return content
+
+    def getBookLocations(self, b):
+        query = "SELECT Information FROM exlbl WHERE Book = ?"
+        keys = (b,)
+        self.cursor.execute(query, keys)
+        return self.cursor.fetchall()
+
+    def getChapterLocations(self, b, c, startV=None, endV=None):
+        if startV is not None and endV is not None:
+            query = "SELECT Information FROM exlbl WHERE Book = ? AND Chapter = ? AND Verse >= ? AND Verse <= ?"
+            keys = (b, c, startV, endV)
+        elif startV is not None:
+            query = "SELECT Information FROM exlbl WHERE Book = ? AND Chapter = ? AND Verse >= ?"
+            keys = (b, c, startV)
+        elif endV is not None:
+            query = "SELECT Information FROM exlbl WHERE Book = ? AND Chapter = ? AND Verse <= ?"
+            keys = (b, c, endV)
+        else:
+            query = "SELECT Information FROM exlbl WHERE Book = ? AND Chapter = ?"
+            keys = (b, c)
+        self.cursor.execute(query, keys)
+        return self.cursor.fetchall()
+
+    def getVerseLocations(self, b, c, v):
+        query = "SELECT Information FROM exlbl WHERE Book = ? AND Chapter = ? AND Verse = ?"
+        keys = (b, c, v)
+        self.cursor.execute(query, keys)
+        return self.cursor.fetchall()
 
 
 class SearchSqlite:

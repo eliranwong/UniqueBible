@@ -431,6 +431,10 @@ class UBA(QApplication):
 
 config.startup = True
 config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
+# The following line fix loading html with third-party javascript, e.g. Google maps, on QWebengineView.
+# This line is required for Google maps to be displayed on Study Window.
+sys.argv.append("--disable-web-security")
+#sys.argv.append("--allow-file-access-from-files")
 #app = QApplication(sys.argv)
 app = UBA(sys.argv)
 

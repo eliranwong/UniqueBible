@@ -3854,7 +3854,7 @@ class MainWindow(QMainWindow):
     # change of text command detected via change of document.title
     def textCommandChanged(self, newTextCommand, source="main"):
         if isinstance(newTextCommand, str):
-            exceptionTuple = ("UniqueBible.app", "about:blank", "study.html")
+            exceptionTuple = ("UniqueBible.app", "about:blank", "study.html", "Google Maps - gmplot", "bible_map.html")
             if not (newTextCommand.startswith("data:text/html;") or newTextCommand.startswith("file:///") or newTextCommand[
                                                                                                              -4:] == ".txt" or newTextCommand in exceptionTuple):
                 if source == "main" and not newTextCommand.startswith("_"):

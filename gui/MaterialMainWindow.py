@@ -840,10 +840,13 @@ class MaterialMainWindow:
         if os.path.isfile(os.path.join("plugins", "menu", "Interlinear Data.py")) and os.path.isfile(os.path.join("plugins", "context", "Interlinear Data.py")):
             icon = "material/image/flare/materialiconsoutlined/48dp/2x/outline_flare_black_48dp.png"
             self.addMaterialIconButton("interlinearData", icon, self.openInterlinearData, self.firstToolBar)
+        if os.path.isfile(os.path.join("plugins", "menu", "Bible Locations.py")):
+            icon = "material/maps/pin_drop/materialiconsoutlined/48dp/2x/outline_pin_drop_black_48dp.png"
+            self.addMaterialIconButton("menu5_locations", icon, partial(self.runPlugin, "Bible Locations"), self.firstToolBar)
         if os.path.isfile(os.path.join("plugins", "menu", "Journal and Bible Reading Plan.py")):
             icon = "material/action/calendar_month/materialiconsoutlined/48dp/2x/outline_calendar_month_black_48dp.png"
             self.addMaterialIconButton("journalAndBibleReadingPlan", icon, partial(self.runPlugin, "Journal and Bible Reading Plan"), self.firstToolBar)
-            self.firstToolBar.addSeparator()
+        self.firstToolBar.addSeparator()
 
         icon = "material/action/zoom_in/materialiconsoutlined/48dp/2x/outline_zoom_in_black_48dp.png"
         self.addMaterialIconButton("masterSearch", icon, self.displaySearchBibleMenu, self.firstToolBar)

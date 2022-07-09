@@ -1,3 +1,7 @@
+Changes in 31.14:
+* Added menu plugin "Bible Locations", read the following wiki page:
+    https://github.com/eliranwong/UniqueBible/wiki/Bible-Locations
+
 Changes in 31.13:
 * Fixed addIpToBlackList.
 

@@ -436,6 +436,19 @@ def isPydnsblInstalled():
     except:
         return False
 
+def isGmplotInstalled():
+    try:
+        import gmplot
+        return True
+    except:
+        return False
+
+def isHaversineInstalled():
+    try:
+        from haversine import haversine
+        return True
+    except:
+        return False
 
 # Set config values for optional features
 def setInstallConfig(module, isInstalled):
@@ -503,6 +516,10 @@ def setInstallConfig(module, isInstalled):
         config.isPyluachInstalled = isInstalled
     elif module in ("pydnsbl", "-U pydnsbl", "--upgrade pydnsbl"):
         config.isPydnsblInstalled = isInstalled
+    elif module in ("gmplot", "-U gmplot", "--upgrade gmplot"):
+        config.isGmplotInstalled = isInstalled
+    elif module in ("haversine", "-U haversine", "--upgrade haversine"):
+        config.isHaversineInstalled = isInstalled
 
 # Specify qtLibrary for particular os
 if config.docker and config.usePySide2onWebtop:
@@ -612,7 +629,9 @@ optional = [
     ("tabulate", "Pretty-print tabular data", isTabulateInstalled),
     ("apsw", "Another Python SQLite Wrapper", isApswInstalled),
     ("pyluach", "Hebrew (Jewish) calendar dates", isPyluachInstalled),
-    ("pydnsbl", "Checks if ip is listed in anti-spam dns blacklists.", isPydnsblInstalled)
+    ("pydnsbl", "Checks if ip is listed in anti-spam dns blacklists.", isPydnsblInstalled),
+    ("gmplot", "Mark locations on Google Maps", isGmplotInstalled),
+    ("haversine", "Calculate the distance between two points", isHaversineInstalled),
 ] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -644,6 +663,8 @@ optional = [
     ("tabulate", "Pretty-print tabular data", isTabulateInstalled),
     ("apsw", "Another Python SQLite Wrapper", isApswInstalled),
     ("pyluach", "Hebrew (Jewish) calendar dates", isPyluachInstalled),
+    ("gmplot", "Mark locations on Google Maps", isGmplotInstalled),
+    ("haversine", "Calculate the distance between two points", isHaversineInstalled),
 ]
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))
