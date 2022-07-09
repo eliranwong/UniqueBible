@@ -979,4 +979,5 @@ translation = {
     "caseSensitive": "С учетом регистра",
     "journalAndBibleReadingPlan": "Журнал и план чтения Библии",
     "gitHubBibleAbbreviations": "Библейские аббревиатуры GitHub",
+    "setGoogleApiKey": "Введите ключ API Google",
 }

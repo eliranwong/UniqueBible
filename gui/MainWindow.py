@@ -656,6 +656,14 @@ class MainWindow(QMainWindow):
         else:
             self.mainView.currentWidget().saveMarkdown()
 
+    # Interface to add config.myGoogleApiKey
+    def setMyGoogleApiKey(self):
+        text, ok = QInputDialog.getText(self, "Unique Bible App",
+                config.thisTranslation["setGoogleApiKey"], QLineEdit.Normal,
+                config.myGoogleApiKey)
+        if ok:
+            config.myGoogleApiKey = text
+
     # manage latest update
     def checkApplicationUpdate(self):
         try:

@@ -979,4 +979,5 @@ translation = {
     "caseSensitive": "Caz-sensibil",
     "journalAndBibleReadingPlan": "Jurnal și planul de citire a Bibliei",
     "gitHubBibleAbbreviations": "Abrevieri biblice GitHub",
+    "setGoogleApiKey": "Introduceți Google API cheie",
 }

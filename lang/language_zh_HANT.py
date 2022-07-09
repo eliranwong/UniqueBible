@@ -979,4 +979,5 @@ translation = {
     "caseSensitive": "區分大小寫",
     "journalAndBibleReadingPlan": "日誌與聖經閱讀計劃",
     "gitHubBibleAbbreviations": "GitHub 聖經 Abbreviations",
+    "setGoogleApiKey": "輸入 Google API 金鑰",
 }

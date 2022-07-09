@@ -979,4 +979,5 @@ translation = {
     "caseSensitive": "കേസ്-സംവേദനക്ഷമം",
     "journalAndBibleReadingPlan": "ജേർണൽ, ബൈബിൾ വായന പദ്ധതി",
     "gitHubBibleAbbreviations": "ഗിറ്റ്ഹബ് ബൈബിൾ അബ്ബ്രിവിസേഷൻ",
+    "setGoogleApiKey": "ഗൂഗിള് API കീ നല്കുക",
 }

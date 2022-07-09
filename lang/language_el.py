@@ -979,4 +979,5 @@ translation = {
     "caseSensitive": "Υπόθεση-ευαίσθητη",
     "journalAndBibleReadingPlan": "Περιοδικό και σχέδιο ανάγνωσης της Βίβλου",
     "gitHubBibleAbbreviations": "GitHub Συντομογραφίες Αγία Γραφή",
+    "setGoogleApiKey": "Καταχώρηση κλειδιού Google API",
 }
