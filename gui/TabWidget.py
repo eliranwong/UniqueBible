@@ -31,7 +31,9 @@ class TabWidget(QTabWidget):
     def tabSelected(self):
         if self.name == "main":
             self.parent.parent.setMainPage()
-            self.parent.parent.mainPage.triggerAction(QWebEnginePage.Reload)
+            if config.fixLoadingContent:
+                self.parent.parent.mainPage.triggerAction(QWebEnginePage.Reload)
         elif self.name == "study":
             self.parent.parent.setStudyPage()
-            self.parent.parent.studyPage.triggerAction(QWebEnginePage.Reload)
+            if config.fixLoadingContent:
+                self.parent.parent.studyPage.triggerAction(QWebEnginePage.Reload)
