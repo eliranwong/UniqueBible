@@ -173,7 +173,7 @@ class DownloadBibleMp3Dialog(QDialog):
             else:
                 engFullBookName = BibleBooks().eng[str(int(file))][1]
             if self.selectedText in ("BHS5", "OGNT"):
-                reference = engFullBookName.split("_")[1]
+                reference = engFullBookName.split("_")[-1]
                 bookNum = int(file.split("_")[0])
                 chapters = reference.split("-")
                 folder = os.path.join("audio", "bibles", self.selectedText, self.selectedDirectory,
@@ -326,6 +326,9 @@ class DownloadFromGitHub(QObject):
                                 filename = key
                                 break
                             elif re.search(r"{0}_.*_{1}$".format(book, chap), key):
+                                filename = key
+                                break
+                            elif re.search(r"{0}_.*_.*_.*_{1}-.*".format(book, chap), key):
                                 filename = key
                                 break
                         elif key.startswith(bookNum):
