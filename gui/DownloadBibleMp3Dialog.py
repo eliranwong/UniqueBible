@@ -1,5 +1,6 @@
 import glob
 import os
+import re
 import zipfile
 import config
 if config.qtLibrary == "pyside6":
@@ -171,13 +172,21 @@ class DownloadBibleMp3Dialog(QDialog):
                 engFullBookName = file[3:]
             else:
                 engFullBookName = BibleBooks().eng[str(int(file))][1]
-            item = QStandardItem(file[:3].strip().replace("_", ""))
-            folder = os.path.join("audio", "bibles", self.selectedText, self.selectedDirectory, "{0}*".format(file[:3]))
+            if self.selectedText in ("BHS5", "OGNT"):
+                reference = engFullBookName.split("_")[1]
+                bookNum = int(file.split("_")[0])
+                chapters = reference.split("-")
+                folder = os.path.join("audio", "bibles", self.selectedText, self.selectedDirectory,
+                                      "{0}_{1}".format(bookNum, chapters[0]))
+                item = QStandardItem("{0}_{1}".format(bookNum, chapters[0]))
+            else:
+                item = QStandardItem(file[:3].strip().replace("_", ""))
+                folder = os.path.join("audio", "bibles", self.selectedText, self.selectedDirectory, "{0}*".format(file[:3]))
             exists = False
             if glob.glob(folder):
                 exists = True
             else:
-                if file[0] == '0':
+                if file[0] == '0' and not self.selectedText in ("BHS5", "OGNT"):
                     folder = os.path.join("audio", "bibles", self.selectedText, self.selectedDirectory,
                                                       "{0}_*".format(file[1]))
                     if glob.glob(folder):
@@ -308,7 +317,18 @@ class DownloadFromGitHub(QObject):
                     bookNum = self.dataViewModel.item(index).text()
                     filename = ""
                     for key in self.repoData.keys():
-                        if key.startswith(bookNum):
+                        if self.selectedText in ("BHS5", "OGNT"):
+                            bookNumber, chap = tuple(bookNum.split("_"))
+                            book = str(bookNumber)
+                            if int(bookNum) < 10:
+                                book = "0" + book
+                            if re.search(r"{0}_.*_{1}-.*".format(book, chap), key):
+                                filename = key
+                                break
+                            elif re.search(r"{0}_.*_{1}$".format(book, chap), key):
+                                filename = key
+                                break
+                        elif key.startswith(bookNum):
                             filename = key
                             break
                     file = os.path.join(folder, filename+".zip")
