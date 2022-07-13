@@ -1,3 +1,9 @@
+Changes in 31.21:
+* Added a menu plugin "Bible Characters".
+    Read https://github.com/eliranwong/UniqueBible/wiki/Bible-Characters
+* Integrated "Bible Characters" to material menu.
+* Relocated "Interlinear Data" from top toolbar to right toolbar.
+
 Changes in 31.20:
 * Uploaded two database files about bible people for potential development.
 

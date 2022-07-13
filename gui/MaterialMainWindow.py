@@ -838,12 +838,15 @@ class MaterialMainWindow:
 
         self.firstToolBar.addSeparator()
 
-        if os.path.isfile(os.path.join("plugins", "menu", "Interlinear Data.py")) and os.path.isfile(os.path.join("plugins", "context", "Interlinear Data.py")):
-            icon = "material/image/flare/materialiconsoutlined/48dp/2x/outline_flare_black_48dp.png"
-            self.addMaterialIconButton("interlinearData", icon, self.openInterlinearData, self.firstToolBar)
+        #if os.path.isfile(os.path.join("plugins", "menu", "Interlinear Data.py")) and os.path.isfile(os.path.join("plugins", "context", "Interlinear Data.py")):
+        #    icon = "material/image/flare/materialiconsoutlined/48dp/2x/outline_flare_black_48dp.png"
+        #    self.addMaterialIconButton("interlinearData", icon, self.openInterlinearData, self.firstToolBar)
         if os.path.isfile(os.path.join("plugins", "menu", "Bible Locations.py")):
             icon = "material/maps/pin_drop/materialiconsoutlined/48dp/2x/outline_pin_drop_black_48dp.png"
             self.addMaterialIconButton("menu5_locations", icon, partial(self.runPlugin, "Bible Locations"), self.firstToolBar)
+        if os.path.isfile(os.path.join("plugins", "menu", "Bible Characters.py")):
+            icon = "material/social/groups/materialiconsoutlined/48dp/2x/outline_groups_black_48dp.png"
+            self.addMaterialIconButton("menu5_characters", icon, partial(self.runPlugin, "Bible Characters"), self.firstToolBar)
         if os.path.isfile(os.path.join("plugins", "menu", "Journal and Bible Reading Plan.py")):
             icon = "material/action/calendar_month/materialiconsoutlined/48dp/2x/outline_calendar_month_black_48dp.png"
             self.addMaterialIconButton("journalAndBibleReadingPlan", icon, partial(self.runPlugin, "Journal and Bible Reading Plan"), self.firstToolBar)
@@ -1194,6 +1197,9 @@ class MaterialMainWindow:
         #icon = "material/maps/layers/materialiconsoutlined/48dp/2x/outline_layers_black_48dp.png"
         icon = "material/image/auto_awesome/materialiconsoutlined/48dp/2x/outline_auto_awesome_black_48dp.png"
         self.addMaterialIconButton("openFavouriteHebrewGreekBible", icon, self.runMIBStudy, self.rightToolBar)
+        if os.path.isfile(os.path.join("plugins", "menu", "Interlinear Data.py")) and os.path.isfile(os.path.join("plugins", "context", "Interlinear Data.py")):
+            icon = "material/image/flare/materialiconsoutlined/48dp/2x/outline_flare_black_48dp.png"
+            self.addMaterialIconButton("interlinearData", icon, self.openInterlinearData, self.rightToolBar)
         icon = "material/action/translate/materialiconsoutlined/48dp/2x/outline_translate_black_48dp.png"
         self.addMaterialIconButton("menu4_traslations", icon, self.runTRANSLATION, self.rightToolBar)
         icon = "material/editor/align_horizontal_right/materialicons/48dp/2x/baseline_align_horizontal_right_black_48dp.png"
