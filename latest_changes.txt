@@ -1,3 +1,6 @@
+Changes in 31.20:
+* Uploaded two database files about bible people for potential development.
+
 Changes in 31.19:
 * Fixed references to BibleBooks().eng
 
