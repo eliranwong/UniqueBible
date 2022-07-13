@@ -1,5 +1,8 @@
+Changes in 31.19:
+* Fixed references to BibleBooks().eng
+
 Changes in 31.18:
-* Fix loading Song_of_Songs and Acts_of_Apostles mp3 files
+* Fixed loading Song_of_Songs and Acts_of_Apostles mp3 files.
 
 Changes in 31.17:
 * Fixed downloading BHS5 and OGNT mp3 audio files.

@@ -231,7 +231,7 @@ class HtmlGeneratorUtil:
             if bcList:
                 check = len(bcList)
                 bookNo = bcList[0]
-                engFullBookName = BibleBooks().eng[str(bookNo)][-1]
+                engFullBookName = BibleBooks().abbrev["eng"][str(bookNo)][-1]
                 engFullBookNameWithoutNumber = engFullBookName
                 matches = re.match("^[0-9]+? (.*?)$", engFullBookName)
                 if matches:

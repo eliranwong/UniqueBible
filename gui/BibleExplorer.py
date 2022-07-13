@@ -414,7 +414,7 @@ class BibleExplorer(QWidget):
         self.parent.runTextCommand(command)
 
     def searchBookName(self, dictionary):
-        engFullBookName = BibleBooks().eng[str(self.b)][1]
+        engFullBookName = BibleBooks().abbrev["eng"][str(self.b)][1]
         matches = re.match("^[0-9]+? (.*?)$", engFullBookName)
         if matches:
             engFullBookName = matches.group(1)
@@ -422,7 +422,7 @@ class BibleExplorer(QWidget):
         self.parent.runTextCommand(command)
 
     def searchBookChapter(self, resource):
-        engFullBookName = BibleBooks().eng[str(self.b)][1]
+        engFullBookName = BibleBooks().abbrev["eng"][str(self.b)][1]
         command = "SEARCHBOOKCHAPTER:::{0}:::{1}".format(resource, engFullBookName)
         self.parent.runTextCommand(command)
 
