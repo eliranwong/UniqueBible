@@ -171,7 +171,7 @@ class DownloadBibleMp3Dialog(QDialog):
             if len(str(file)) > 3:
                 engFullBookName = file[3:]
             else:
-                engFullBookName = BibleBooks().eng[str(int(file))][1]
+                engFullBookName = BibleBooks().abbrev["eng"][str(int(file))][1]
             if self.selectedText in ("BHS5", "OGNT"):
                 reference = engFullBookName.split("_")[-1]
                 bookNum = int(file.split("_")[0])

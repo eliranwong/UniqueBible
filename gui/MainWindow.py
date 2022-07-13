@@ -1684,19 +1684,19 @@ class MainWindow(QMainWindow):
             return "[open file]"
 
     def runBookFeatureIntroduction(self):
-        engFullBookName = BibleBooks().eng[str(config.mainB)][1]
+        engFullBookName = BibleBooks().abbrev["eng"][str(config.mainB)][1]
         command = "SEARCHBOOKCHAPTER:::Tidwell_The_Bible_Book_by_Book:::{0}".format(engFullBookName)
         self.textCommandLineEdit.setText(command)
         self.runTextCommand(command)
 
     def runBookFeatureTimelines(self):
-        engFullBookName = BibleBooks().eng[str(config.mainB)][1]
+        engFullBookName = BibleBooks().abbrev["eng"][str(config.mainB)][1]
         command = "SEARCHBOOKCHAPTER:::Timelines:::{0}".format(engFullBookName)
         self.textCommandLineEdit.setText(command)
         self.runTextCommand(command)
 
     def runBookFeatureDictionary(self):
-        engFullBookName = BibleBooks().eng[str(config.mainB)][1]
+        engFullBookName = BibleBooks().abbrev["eng"][str(config.mainB)][1]
         matches = re.match("^[0-9]+? (.*?)$", engFullBookName)
         if matches:
             engFullBookName = matches.group(1)
@@ -1705,7 +1705,7 @@ class MainWindow(QMainWindow):
         self.runTextCommand(command)
 
     def runBookFeatureEncyclopedia(self):
-        engFullBookName = BibleBooks().eng[str(config.mainB)][1]
+        engFullBookName = BibleBooks().abbrev["eng"][str(config.mainB)][1]
         matches = re.match("^[0-9]+? (.*?)$", engFullBookName)
         if matches:
             engFullBookName = matches.group(1)
@@ -1714,25 +1714,25 @@ class MainWindow(QMainWindow):
         self.runTextCommand(command)
 
     def runChapterFeatureOverview(self):
-        bookAbb = BibleBooks().eng[str(config.mainB)][0]
+        bookAbb = BibleBooks().abbrev["eng"][str(config.mainB)][0]
         command = "OVERVIEW:::{0} {1}".format(bookAbb, config.mainC)
         self.textCommandLineEdit.setText(command)
         self.runTextCommand(command)
 
     def runChapterFeatureChapterIndex(self):
-        bookAbb = BibleBooks().eng[str(config.mainB)][0]
+        bookAbb = BibleBooks().abbrev["eng"][str(config.mainB)][0]
         command = "CHAPTERINDEX:::{0} {1}".format(bookAbb, config.mainC)
         self.textCommandLineEdit.setText(command)
         self.runTextCommand(command)
 
     def runChapterFeatureSummary(self):
-        bookAbb = BibleBooks().eng[str(config.mainB)][0]
+        bookAbb = BibleBooks().abbrev["eng"][str(config.mainB)][0]
         command = "SUMMARY:::{0} {1}".format(bookAbb, config.mainC)
         self.textCommandLineEdit.setText(command)
         self.runTextCommand(command)
 
     def runChapterFeatureCommentary(self):
-        bookAbb = BibleBooks().eng[str(config.mainB)][0]
+        bookAbb = BibleBooks().abbrev["eng"][str(config.mainB)][0]
         command = "COMMENTARY:::{0} {1}".format(bookAbb, config.mainC)
         self.textCommandLineEdit.setText(command)
         self.runTextCommand(command)
@@ -3667,7 +3667,7 @@ class MainWindow(QMainWindow):
     def searchBookName(self, dictionary, b=None):
         if b is None:
             b = config.mainB
-        engFullBookName = BibleBooks().eng[str(b)][1]
+        engFullBookName = BibleBooks().abbrev["eng"][str(b)][1]
         matches = re.match("^[0-9]+? (.*?)$", engFullBookName)
         if matches:
             engFullBookName = matches.group(1)
@@ -3677,7 +3677,7 @@ class MainWindow(QMainWindow):
     def searchBookChapter(self, resource, b=None):
         if b is None:
             b = config.mainB
-        engFullBookName = BibleBooks().eng[str(b)][1]
+        engFullBookName = BibleBooks().abbrev["eng"][str(b)][1]
         newTextCommand = "SEARCHBOOKCHAPTER:::{0}:::{1}".format(resource, engFullBookName)
         self.textCommandChanged(newTextCommand, "main")
 

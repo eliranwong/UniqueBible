@@ -521,7 +521,7 @@ class MiniControl(QWidget):
         self.parent.runTextCommand(command)
 
     def bookIntroAction(self, commentary):
-        command = "COMMENTARY:::{0}:::{1}".format(commentary, BibleBooks().eng[str(config.mainB)][-1])
+        command = "COMMENTARY:::{0}:::{1}".format(commentary, BibleBooks().abbrev["eng"][str(config.mainB)][-1])
         self.runCommmand(command)
         command = "_commentaryinfo:::{0}".format(commentary)
         self.parent.runTextCommand(command)

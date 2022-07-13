@@ -2659,7 +2659,7 @@ class TextCommandParser:
             return ("", "", {})
         else:
             *_, b, c, v = command.split(".")
-            verseReference = "{0} {1}:{2}".format(BibleBooks().eng[b][0], c, v)
+            verseReference = "{0} {1}:{2}".format(BibleBooks().abbrev["eng"][b][0], c, v)
             self.parent.addHistoryRecord("main" if config.verseNoDoubleClickAction == "COMPARE" else "study", "{0}:::{1}".format(config.verseNoDoubleClickAction, verseReference))
             return self.mapVerseAction(config.verseNoDoubleClickAction, verseReference, source)
 
