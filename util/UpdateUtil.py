@@ -172,5 +172,7 @@ if __name__ == "__main__":
     elif len(sys.argv) > 1:
         print("python3 -m util.UpdateUtil version sha1 sha2")
         exit(1)
+    with open("patches.txt", "a") as fileObj:
+        fileObj.write('\n')
     UpdateUtil.updatePatchFileWithChanges(version, sha1, sha2)
     UpdateUtil.removeDuplicates()

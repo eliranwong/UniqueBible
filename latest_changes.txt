@@ -1,3 +1,6 @@
+Changes in 31.22:
+* Added support for post_parse_bible in PluginEventHandler.
+
 Changes in 31.21:
 * Added a menu plugin "Bible Characters".
     Read https://github.com/eliranwong/UniqueBible/wiki/Bible-Characters

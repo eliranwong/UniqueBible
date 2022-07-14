@@ -2,6 +2,8 @@
 import glob
 import os, re, webbrowser, platform, multiprocessing, zipfile, subprocess, config
 from datetime import date
+
+from util.PluginEventHandler import PluginEventHandler
 from util.WebtopUtil import WebtopUtil
 from util.CatalogUtil import CatalogUtil
 from util.GitHubRepoInfo import GitHubRepoInfo
@@ -1146,6 +1148,9 @@ class TextCommandParser:
             content = self.toggleBibleText(content)
             # Add text tag for custom font styling
             content = "<bibletext class='{0}'>{1}</bibletext>".format(text, content)
+            config.eventContent = content
+            PluginEventHandler.handleEvent("post_parse_bible", command)
+            content = config.eventContent
             if config.openBibleInMainViewOnly:
                 self.setMainVerse(text, bcvTuple)
                 #self.setStudyVerse(text, bcvTuple)
@@ -3011,6 +3016,9 @@ class TextCommandParser:
             entriesSplit = entries.split("_")
             entryList = []
             for entry in entriesSplit:
+                config.eventEntry = entry
+                PluginEventHandler.handleEvent("lexicon_entry", entry)
+                entry = config.eventEntry
                 if not reverse and not module.startswith("Concordance") and not module == "Morphology" and entry.startswith("E"):
                     entryList += morphologySqlite.etcbcLexemeNo2StrongNo(entry)
                 else:
