@@ -1,3 +1,6 @@
+Changes in 31.23:
+* Added a gui for command prompt.
+
 Changes in 31.22:
 * Added support for post_parse_bible in PluginEventHandler.
 

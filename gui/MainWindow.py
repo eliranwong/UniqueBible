@@ -656,6 +656,19 @@ class MainWindow(QMainWindow):
         else:
             self.mainView.currentWidget().saveMarkdown()
 
+    # Command Prompt
+    def commandPrompt(self, prefix):
+        suffix, ok = QInputDialog.getText(self, "Unique Bible App",
+                config.thisTranslation["enter_text_here"], QLineEdit.Normal,
+                "")
+        if ok and suffix:
+            command = "{0}{1}".format(prefix, suffix)
+            self.textCommandLineEdit.setText(command)
+            self.runTextCommand(command)
+        else:
+            self.focusCommandLineField()
+            self.textCommandLineEdit.setText(prefix)
+
     # Interface to add config.myGoogleApiKey
     def setMyGoogleApiKey(self):
         text, ok = QInputDialog.getText(self, "Unique Bible App",
@@ -3936,8 +3949,7 @@ class MainWindow(QMainWindow):
                 self.displayMessage("{1} - {0}\n{2}".format(audioModule, config.thisTranslation["menu11_audio"], config.thisTranslation["message_installFirst"]))
                 self.installGithubBibleMp3(audioModule)
             elif view == "command":
-                self.focusCommandLineField()
-                self.textCommandLineEdit.setText(content)
+                self.commandPrompt(content)
             else:
                 #if view == "main":
                 #    content = config.enableInstantHighlight(content)
