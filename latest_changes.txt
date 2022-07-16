@@ -1,3 +1,9 @@
+Changes in 31.26:
+Added 3 more datasets to "Bible Data":
+* Study Notes - The Servant King
+* Kings of Judah
+* Kings of Israel
+
 Changes in 31.25:
 * Added "Paul Chronology" to "Bible Data".
 
