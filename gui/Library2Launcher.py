@@ -1,4 +1,4 @@
-import glob, config
+import glob, config, os
 from pathlib import Path
 if config.qtLibrary == "pyside6":
     from PySide6.QtGui import QStandardItemModel, QStandardItem
@@ -20,6 +20,8 @@ class Library2Launcher(QWidget):
         self.docxList = self.parent.docxList
         self.devotionals = [Path(filename).stem for filename in glob.glob(config.marvelData + "/devotionals/*.devotional")]
         self.selectedDevotional = self.devotionals[0] if len(self.devotionals) > 0 else None
+        self.notes = [Path(filename).stem for filename in glob.glob("notes/*.uba")]
+        self.selectedNote = self.notes[0] if len(self.notes) > 0 else None
 
         # setup interface
         self.setupUI()
@@ -59,19 +61,25 @@ class Library2Launcher(QWidget):
         pdfLayout.addLayout(buttons)
         centerColumnWidget.setLayout(pdfLayout)
 
+        rightColumnWidget0 = QGroupBox(config.thisTranslation["menu_notes"])
+        notesLayout = QVBoxLayout()
+        notesLayout.addWidget(self.noteListView())
+        button = QPushButton(config.thisTranslation["open"])
+        button.clicked.connect(self.openNote)
+        notesLayout.addWidget(button)
+        rightColumnWidget0.setLayout(notesLayout)
+
         rightColumnWidget = QGroupBox(config.thisTranslation["devotionals"])
         devotionalLayout = QVBoxLayout()
         devotionalLayout.addWidget(self.devotionsListView())
-        buttons = QHBoxLayout()
         button = QPushButton(config.thisTranslation["open"])
         button.clicked.connect(self.openDevotional)
-        buttons.addWidget(button)
-        buttons.addWidget(button)
-        devotionalLayout.addLayout(buttons)
+        devotionalLayout.addWidget(button)
         rightColumnWidget.setLayout(devotionalLayout)
 
         mainLayout.addWidget(leftColumnWidget)
         mainLayout.addWidget(centerColumnWidget)
+        mainLayout.addWidget(rightColumnWidget0)
         mainLayout.addWidget(rightColumnWidget)
         self.setLayout(mainLayout)
 
@@ -114,6 +122,18 @@ class Library2Launcher(QWidget):
         list.selectionModel().selectionChanged.connect(self.docxSelected)
         return list
 
+    def noteListView(self):
+        list = QListView()
+        list.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        model = QStandardItemModel(list)
+        for note in self.notes:
+            item = QStandardItem(note)
+            item.setToolTip(note)
+            model.appendRow(item)
+        list.setModel(model)
+        list.selectionModel().selectionChanged.connect(self.noteSelected)
+        return list
+
     def devotionsListView(self):
         list = QListView()
         list.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -145,3 +165,12 @@ class Library2Launcher(QWidget):
         if self.selectedDevotional is not None:
             command = "DEVOTIONAL:::{0}".format(self.selectedDevotional)
             self.parent.runTextCommand(command)
+
+    def noteSelected(self, selection):
+        index = selection[0].indexes()[0].row()
+        self.selectedNote = self.notes[index]
+
+    def openNote(self):
+        if self.selectedNote is not None:
+            filename = os.path.join("notes", "{0}.uba".format(self.selectedNote))
+            self.parent.parent.openUbaFile(filename)
