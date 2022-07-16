@@ -980,4 +980,8 @@ translation = {
     "journalAndBibleReadingPlan": "ジャーナル・バイディング計画",
     "gitHubBibleAbbreviations": "GitHub 聖書の省略形",
     "setGoogleApiKey": "Google API キーの入力",
+    "bibleData": "バイブルデータ",
+    "new": "ニュー",
+    "edit2": "編集",
+    "dataEditor": "データ・エディター",
 }

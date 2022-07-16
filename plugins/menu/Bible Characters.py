@@ -28,6 +28,7 @@ class BiblePeople(QWidget):
         # place holders
         self.selectedPersonID = None
         self.verseReference = None
+        self.verseReferenceList = []
         self.verses = None
         self.searchByReference = True
         self.searchMode = 2
@@ -132,10 +133,13 @@ class BiblePeople(QWidget):
         self.verseDisplay.setReadOnly(True)
         openVerseButton = QPushButton("Open")
         openVerseButton.clicked.connect(self.openVerseButtonClicked)
+        openAllVerseButton = QPushButton("Open All")
+        openAllVerseButton.clicked.connect(self.openAllVerseButtonClicked)
         layout3.addWidget(self.hits)
         layout3.addWidget(scriptureView)
         layout3.addWidget(self.verseDisplay)
         layout3.addWidget(openVerseButton)
+        layout3.addWidget(openAllVerseButton)
 
         self.exlbp = WebEngineViewPopover(config.mainWindow, "main", "main", windowTitle=config.thisTranslation["menu5_characters"])
         html = config.mainWindow.wrapHtml("<h2>Exhaustive Library</h2>")
@@ -192,7 +196,14 @@ class BiblePeople(QWidget):
 
     def openVerseButtonClicked(self):
         if self.verseReference is not None:
+            config.mainWindow.textCommandLineEdit.setText(self.verseReference)
             config.mainWindow.runTextCommand(self.verseReference)
+
+    def openAllVerseButtonClicked(self):
+        if self.verses:
+            cmd = "; ".join(self.verseReferenceList)
+            config.mainWindow.textCommandLineEdit.setText(cmd)
+            config.mainWindow.runTextCommand(cmd)
 
     def openLibraryContentOnStudyWindow(self):
         if self.selectedPersonID is not None:
@@ -217,9 +228,11 @@ class BiblePeople(QWidget):
             self.verses = self.cursor.fetchall()
             self.hits.setText("{0} verse(s)".format(len(self.verses)))
             self.scriptureViewModel.clear()
+            self.verseReferenceList = []
             parser = BibleVerseParser(config.parserStandarisation)
             for b, c, v in self.verses:
-                verseReference = parser.bcvToVerseReference(b, c, v) 
+                verseReference = parser.bcvToVerseReference(b, c, v)
+                self.verseReferenceList.append(verseReference)
                 item = QStandardItem(verseReference)
                 item.setToolTip(verseReference)
                 self.scriptureViewModel.appendRow(item)
@@ -235,7 +248,7 @@ class BiblePeople(QWidget):
                 scripture = BiblesSqlite().readTextVerse(config.mainText, b, c, v)[-1]
                 scripture = re.sub("&nbsp;|<br>", " ", scripture)
                 scripture = re.sub("<[^<>]*?>|audiotrack", "", scripture)
-                self.verseDisplay.setText("[{0}] {1}".format(self.verseReference, scripture))
+                self.verseDisplay.setPlainText("[{0}] {1}".format(self.verseReference, scripture))
         except:
             pass
 

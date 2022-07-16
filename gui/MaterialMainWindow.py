@@ -847,9 +847,9 @@ class MaterialMainWindow:
         if os.path.isfile(os.path.join("plugins", "menu", "Bible Characters.py")):
             icon = "material/social/groups/materialiconsoutlined/48dp/2x/outline_groups_black_48dp.png"
             self.addMaterialIconButton("menu5_characters", icon, partial(self.runPlugin, "Bible Characters"), self.firstToolBar)
-        if os.path.isfile(os.path.join("plugins", "menu", "Journal and Bible Reading Plan.py")):
-            icon = "material/action/calendar_month/materialiconsoutlined/48dp/2x/outline_calendar_month_black_48dp.png"
-            self.addMaterialIconButton("journalAndBibleReadingPlan", icon, partial(self.runPlugin, "Journal and Bible Reading Plan"), self.firstToolBar)
+        if os.path.isfile(os.path.join("plugins", "menu", "Bible Data.py")):
+            icon = "material/communication/list_alt/materialiconsoutlined/48dp/2x/outline_list_alt_black_48dp.png"
+            self.addMaterialIconButton("bibleData", icon, partial(self.runPlugin, "Bible Data"), self.firstToolBar)
         self.firstToolBar.addSeparator()
 
         icon = "material/action/zoom_in/materialiconsoutlined/48dp/2x/outline_zoom_in_black_48dp.png"
@@ -998,6 +998,10 @@ class MaterialMainWindow:
 #
 #        self.secondToolBar.addSeparator()
 
+        if os.path.isfile(os.path.join("plugins", "menu", "Journal and Bible Reading Plan.py")):
+            icon = "material/action/calendar_month/materialiconsoutlined/48dp/2x/outline_calendar_month_black_48dp.png"
+            self.addMaterialIconButton("journalAndBibleReadingPlan", icon, partial(self.runPlugin, "Journal and Bible Reading Plan"), self.secondToolBar)
+        
         #icon = "material/action/note_add/materialiconsoutlined/48dp/2x/outline_note_add_black_48dp.png"
         icon = "material/editor/edit_note/materialiconsoutlined/48dp/2x/outline_edit_note_black_48dp.png"
         self.addMaterialIconButton("note_editor", icon, self.toggleNoteEditor, self.secondToolBar)

@@ -980,4 +980,8 @@ translation = {
     "journalAndBibleReadingPlan": "Περιοδικό και σχέδιο ανάγνωσης της Βίβλου",
     "gitHubBibleAbbreviations": "GitHub Συντομογραφίες Αγία Γραφή",
     "setGoogleApiKey": "Καταχώρηση κλειδιού Google API",
+    "bibleData": "Δεδομένα Βίβλου.",
+    "new": "-Νέο",
+    "edit2": "Τροποποίηση:",
+    "dataEditor": "Λειτουργία επεξεργασίας δεδομένων",
 }
