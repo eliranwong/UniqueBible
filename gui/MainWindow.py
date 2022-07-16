@@ -4977,8 +4977,10 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         qIcon = self.getQIcon(icon)
         #button.setIcon(qIcon)
         button.setStyleSheet(qIcon)
-        button.clicked.connect(action)
+        if action is not None:
+            button.clicked.connect(action)
         toolbar.addWidget(button)
+        return button
 
     def setMainRefMenu(self):
         bible = Bible(config.mainText)

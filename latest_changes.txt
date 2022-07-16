@@ -1,3 +1,8 @@
+Changes in 31.27:
+Material menu layout:
+* Added "Bible Tools" menu button.
+* Changed "Bible Data" icon.
+
 Changes in 31.26:
 Added 3 more datasets to "Bible Data":
 * Study Notes - The Servant King

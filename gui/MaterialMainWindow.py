@@ -848,8 +848,22 @@ class MaterialMainWindow:
             icon = "material/social/groups/materialiconsoutlined/48dp/2x/outline_groups_black_48dp.png"
             self.addMaterialIconButton("menu5_characters", icon, partial(self.runPlugin, "Bible Characters"), self.firstToolBar)
         if os.path.isfile(os.path.join("plugins", "menu", "Bible Data.py")):
-            icon = "material/communication/list_alt/materialiconsoutlined/48dp/2x/outline_list_alt_black_48dp.png"
+            #icon = "material/communication/list_alt/materialiconsoutlined/48dp/2x/outline_list_alt_black_48dp.png"
+            icon = "material/action/token/materialiconsoutlined/48dp/2x/outline_token_black_48dp.png"
             self.addMaterialIconButton("bibleData", icon, partial(self.runPlugin, "Bible Data"), self.firstToolBar)
+        icon = "material/hardware/gamepad/materialiconsoutlined/48dp/2x/outline_gamepad_black_48dp.png"
+        bibleTools = self.addMaterialIconButton("bibleTools", icon, None, self.firstToolBar)
+        bibleToolsMenu = QMenu(self)
+        tools = (
+            ("html_timelines", "BOOK:::Timelines"),
+            ("biblePromises", "BOOK:::Bible_Promises"),
+            ("bibleHarmonies", "BOOK:::Harmonies_and_Parallels"),
+        )
+        for tool, command in tools:
+            bibleToolsMenu.addAction(config.thisTranslation[tool], lambda: self.runTextCommand(command))
+        if os.path.isfile(os.path.join("plugins", "menu", "Interlinear Data.py")) and os.path.isfile(os.path.join("plugins", "context", "Interlinear Data.py")):
+            bibleToolsMenu.addAction(config.thisTranslation["interlinearData"], self.openInterlinearData)
+        bibleTools.setMenu(bibleToolsMenu)
         self.firstToolBar.addSeparator()
 
         icon = "material/action/zoom_in/materialiconsoutlined/48dp/2x/outline_zoom_in_black_48dp.png"
@@ -1201,9 +1215,9 @@ class MaterialMainWindow:
         #icon = "material/maps/layers/materialiconsoutlined/48dp/2x/outline_layers_black_48dp.png"
         icon = "material/image/auto_awesome/materialiconsoutlined/48dp/2x/outline_auto_awesome_black_48dp.png"
         self.addMaterialIconButton("openFavouriteHebrewGreekBible", icon, self.runMIBStudy, self.rightToolBar)
-        if os.path.isfile(os.path.join("plugins", "menu", "Interlinear Data.py")) and os.path.isfile(os.path.join("plugins", "context", "Interlinear Data.py")):
-            icon = "material/image/flare/materialiconsoutlined/48dp/2x/outline_flare_black_48dp.png"
-            self.addMaterialIconButton("interlinearData", icon, self.openInterlinearData, self.rightToolBar)
+        #if os.path.isfile(os.path.join("plugins", "menu", "Interlinear Data.py")) and os.path.isfile(os.path.join("plugins", "context", "Interlinear Data.py")):
+        #    icon = "material/image/flare/materialiconsoutlined/48dp/2x/outline_flare_black_48dp.png"
+        #    self.addMaterialIconButton("interlinearData", icon, self.openInterlinearData, self.rightToolBar)
         icon = "material/action/translate/materialiconsoutlined/48dp/2x/outline_translate_black_48dp.png"
         self.addMaterialIconButton("menu4_traslations", icon, self.runTRANSLATION, self.rightToolBar)
         icon = "material/editor/align_horizontal_right/materialicons/48dp/2x/baseline_align_horizontal_right_black_48dp.png"

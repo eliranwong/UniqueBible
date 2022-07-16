@@ -984,4 +984,5 @@ translation = {
     "new": "新建",
     "edit2": "編輯",
     "dataEditor": "資料編輯器",
+    "bibleTools": "聖經工具",
 }
