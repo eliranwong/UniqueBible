@@ -601,6 +601,10 @@ for module, feature, isInstalled in required or config.updateDependenciesOnStart
             print("Required feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first!".format(feature, module))
             exit(1)
 
+disabledModules = []
+if os.path.exists("disabled_modules.txt"):
+    with open('disabled_modules.txt') as disabledModulesFile:
+        disabledModules = [line.strip() for line in disabledModulesFile.readlines()]
 # Check if optional modules are installed
 optional = [
     ("html-text", "Read html text", isHtmlTextInstalled),
@@ -669,7 +673,10 @@ optional = [
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))
 for module, feature, isInstalled in optional:
-    if not isInstalled() or config.updateDependenciesOnStartup:
+    if module in disabledModules:
+        print(f"{module} has been manually disabled")
+        available = False
+    elif not isInstalled() or config.updateDependenciesOnStartup:
         if config.updateDependenciesOnStartup and not (module.startswith("-U ") or module.startswith("--upgrade ")):
             module = "--upgrade {0}".format(module)
         pip3InstallModule(module)

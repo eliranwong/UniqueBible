@@ -1,3 +1,6 @@
+Changes in 31.29:
+* Added ability to disable installing optional modules.
+
 Changes in 31.28:
 * Added "Notes" view to Master Control Library2 tab.
 
