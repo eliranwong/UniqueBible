@@ -21,8 +21,10 @@ def uploadNotes():
                 f.write(text)
             config.mainWindow.displayMessage("Uploaded 'note.sqlite' to Google Drive!\nFile ID: {0}".format(text[:-1]))
         else:
+            print(stderr)
             config.mainWindow.displayMessage("Failed to upload bible notes!")
-    except:
+    except Exception as ex:
+        print(ex)
         config.mainWindow.displayMessage("Failed to upload bible notes!")
 
 
