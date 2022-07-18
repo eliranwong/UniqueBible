@@ -143,28 +143,30 @@ class UpdateUtil:
         f = open("patches.txt", "r")
         lines = f.readlines()
         for line in lines:
-            try:
-                version, contentType, filePath = literal_eval(line)
-            except Exception as e:
-                print(f"{e} in '{line}'")
-            patches[filePath] = version
+            if len(line.strip()) > 0:
+                try:
+                    version, contentType, filePath = literal_eval(line)
+                except Exception as e:
+                    print(f"{e} in '{line}'")
+                patches[filePath] = version
         f.close()
         patch = open("patches.txt", "w")
         for line in lines:
-            try:
-                version, contentType, filePath = literal_eval(line)
-            except Exception as e:
-                print(f"{e} in '{line}'")
-            if patches[filePath] == version:
-                patch.write(line)
+            if len(line.strip()) > 0:
+                try:
+                    version, contentType, filePath = literal_eval(line)
+                except Exception as e:
+                    print(f"{e} in '{line}'")
+                if patches[filePath] == version:
+                    patch.write(line)
         patch.close()
 
 if __name__ == "__main__":
 
-    version = "29.51"
+    version = "31.30"
     # Run "git log" to find the sha of commits to compare
-    sha1 = "8d3df70f795f91ad202bba17ef48cae113bd03fb"
-    sha2 = "d36ef8852ea4eb5a985c54399a555933b0442b24"
+    sha1 = "ac71ed607c2c0fef194be7fce8720b4f6850619d"
+    sha2 = "8c8589351ad749f0c64c2dd39b97a6c7a5513367"
     if len(sys.argv) == 4:
         version = sys.argv[1].strip()
         sha1 = sys.argv[2].strip()

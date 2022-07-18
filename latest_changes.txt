@@ -1,3 +1,6 @@
+Changes in 31.30:
+* Added debugging to Google Drives Notes Backup.
+
 Changes in 31.29:
 * Added ability to disable installing optional modules.
 
