@@ -992,4 +992,5 @@ translation = {
     "fitToWindow": "Ventana de ajuste",
     "loadImage": "Imagen de carga",
     "bibleTimelines": "Líneas de tiempo bíblicas",
+    "displayOnStudyWindow": "Visualización en ventana de estudio",
 }

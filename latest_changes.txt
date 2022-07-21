@@ -1,3 +1,14 @@
+Changes in 31.33:
+* Trigger download helper to download missing but required database files for certain menu plugins when the plugins are launched.
+* Added menu plugins:
+    - Bible Parallels
+    - Bible promises
+* updated menu plugins:
+    - Bible Characters
+    - Bible Locations
+    - Bible Timelines
+* Integrated new plugins into material menu.
+
 Changes in 31.32:
 * Fixed passing pytest.
 

@@ -992,4 +992,5 @@ translation = {
     "fitToWindow": "フィット・ウィンドウ",
     "loadImage": "イメージのロード",
     "bibleTimelines": "聖書の年表",
+    "displayOnStudyWindow": "学習ウィンドウに表示",
 }

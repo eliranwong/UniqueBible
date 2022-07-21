@@ -992,4 +992,5 @@ translation = {
     "fitToWindow": "विंडो फिट करें",
     "loadImage": "छवि लोड करें",
     "bibleTimelines": "बाइबल की समयरेखा",
+    "displayOnStudyWindow": "अध्ययन विंडो पर प्रदर्शित करें",
 }

@@ -300,6 +300,10 @@ class BiblePeople(QWidget):
                 self.peopleViewModel.appendRow(item)
 
 
-# Display Bible People window
-config.mainWindow.biblePeople = BiblePeople(config.mainWindow)
-config.mainWindow.biblePeople.show()
+databaseFile = os.path.join(config.marvelData, "data", "exlb3.data")
+if os.path.isfile(databaseFile):
+    config.mainWindow.biblePeople = BiblePeople(config.mainWindow)
+    config.mainWindow.biblePeople.show()
+else:
+    databaseInfo = ((config.marvelData, "data", "exlb3.data"), "1gp2Unsab85Se-IB_tmvVZQ3JKGvXLyMP")
+    config.mainWindow.downloadHelper(databaseInfo)

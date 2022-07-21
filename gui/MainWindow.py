@@ -3797,7 +3797,7 @@ class MainWindow(QMainWindow):
     # Run instant highlight
     def runInstantHighlight(self):
         if config.enableInstantHighlight:
-            text = self.textCommandLineEdit.text()
+            text = self.textCommandLineEdit.text().strip()
             self.mainView.currentWidget().findText(text, QWebEnginePage.FindFlags())
             self.studyView.currentWidget().findText(text, QWebEnginePage.FindFlags())
 

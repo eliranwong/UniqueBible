@@ -992,4 +992,5 @@ translation = {
     "fitToWindow": "Παράθυρο Fit",
     "loadImage": "Φόρτωση εικόνας",
     "bibleTimelines": "Χρονοδιάγραμμα Της Βίβλου",
+    "displayOnStudyWindow": "Εμφάνιση σε παράθυρο μελέτης",
 }

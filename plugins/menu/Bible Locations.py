@@ -348,8 +348,14 @@ class BibleLocations(QWidget):
         #config.mainWindow.openTextOnStudyView(html, tab_title="Bible Map", toolTip="Bible Map")
         #config.mainWindow.studyView.setHtml(html, config.baseUrl)
 
-config.mainWindow.bibleLocations = BibleLocations(config.mainWindow)
-config.mainWindow.bibleLocations.show()
-#config.mainWindow.bibleLocations.locationCombo.clearAll()
-#config.mainWindow.bibleLocations.locationCombo.checkAll()
-#config.mainWindow.bibleLocations.displayMap()
+databaseFile = os.path.join(config.marvelData, "data", "exlb3.data")
+if os.path.isfile(databaseFile):
+    config.mainWindow.bibleLocations = BibleLocations(config.mainWindow)
+    config.mainWindow.bibleLocations.show()
+    #config.mainWindow.bibleLocations.locationCombo.clearAll()
+    #config.mainWindow.bibleLocations.locationCombo.checkAll()
+    #config.mainWindow.bibleLocations.displayMap()
+else:
+    databaseInfo = ((config.marvelData, "data", "exlb3.data"), "1gp2Unsab85Se-IB_tmvVZQ3JKGvXLyMP")
+    config.mainWindow.downloadHelper(databaseInfo)
+

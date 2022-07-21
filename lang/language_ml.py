@@ -992,4 +992,5 @@ translation = {
     "fitToWindow": "ജാലകം ഫീറ്റ് ചെയ്യുക",
     "loadImage": "ചിത്രം ലോഡ് ചെയ്യുക",
     "bibleTimelines": "ബൈബിള് ടൈം ലൈസന്സ്",
+    "displayOnStudyWindow": "പഠന ജാലകത്തില് കാണിയ്ക്കുക",
 }

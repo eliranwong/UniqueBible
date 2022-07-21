@@ -992,4 +992,5 @@ translation = {
     "fitToWindow": "Fit Window",
     "loadImage": "Load Image",
     "bibleTimelines": "Bible Timelines",
+    "displayOnStudyWindow": "Display on Study Window",
 }

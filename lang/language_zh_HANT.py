@@ -992,4 +992,5 @@ translation = {
     "fitToWindow": "符合視窗大小",
     "loadImage": "載入影像",
     "bibleTimelines": "聖經時間表",
+    "displayOnStudyWindow": "在學習視窗顯示",
 }

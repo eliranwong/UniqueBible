@@ -992,4 +992,5 @@ translation = {
     "fitToWindow": "피트 창",
     "loadImage": "로드 이미지",
     "bibleTimelines": "성경 타임라인",
+    "displayOnStudyWindow": "연구 창에 표시",
 }

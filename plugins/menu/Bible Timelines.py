@@ -1,4 +1,4 @@
-import config
+import config, os
 from gui.ImageViewer import ImageViewer
 
 imageListViewItems = [
@@ -29,5 +29,11 @@ imageListViewItems = [
     ("by_All_4_Gospels", "books/Timelines/24.png"),
 ]
 
-config.mainWindow.imageViewer = ImageViewer(config.mainWindow, showLoadImageButton=False, showImageListView=True, imageListViewItems=imageListViewItems)
-config.mainWindow.imageViewer.show()
+
+databaseFile = os.path.join(config.marvelData, "books", "Maps_ABS.book")
+if os.path.isfile(databaseFile):
+    config.mainWindow.imageViewer = ImageViewer(config.mainWindow, showLoadImageButton=False, showImageListView=True, imageListViewItems=imageListViewItems)
+    config.mainWindow.imageViewer.show()
+else:
+    databaseInfo = ((config.marvelData, "books", "Maps_ABS.book"), "13hf1NvhAjNXmRQn-Cpq4hY0E2XbEfmEd")
+    config.mainWindow.downloadHelper(databaseInfo)

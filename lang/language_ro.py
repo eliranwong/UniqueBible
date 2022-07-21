@@ -992,4 +992,5 @@ translation = {
     "fitToWindow": "Fereastra de acces",
     "loadImage": "Încarcă imaginea",
     "bibleTimelines": "Biblia Sinodală",
+    "displayOnStudyWindow": "Afişarea pe fereastra de studiu",
 }
