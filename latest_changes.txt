@@ -1,3 +1,8 @@
+Changes in 31.34:
+* Added menu plugin "Bible Topics"
+* Updated menu plugin "Bible Parallels"
+* Integrated menu plugin "Bible Topics" into material menu.
+
 Changes in 31.33:
 * Trigger download helper to download missing but required database files for certain menu plugins when the plugins are launched.
 * Added menu plugins:

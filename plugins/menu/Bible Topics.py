@@ -1,7 +1,6 @@
 import config, os, apsw, re
 from gui.WebEngineViewPopover import WebEngineViewPopover
-from db.BiblesSqlite import BiblesSqlite
-from util.BibleVerseParser import BibleVerseParser
+from db.ToolsSqlite import ExlbData
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt
     from PySide6.QtWebEngineCore import QWebEnginePage
@@ -13,13 +12,13 @@ else:
     from qtpy.QtGui import QStandardItemModel, QStandardItem, QGuiApplication
     from qtpy.QtWidgets import QWidget, QPushButton, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
 
-class BibleParallels(QWidget):
+class BibleTopics(QWidget):
 
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
         # set title
-        self.setWindowTitle(config.thisTranslation["bibleHarmonies"])
+        self.setWindowTitle(config.thisTranslation["menu5_topics"])
         #self.setMinimumSize(830, 500)
         # set variables
         self.setupVariables()
@@ -29,45 +28,14 @@ class BibleParallels(QWidget):
         self.resize(QGuiApplication.primaryScreen().availableSize() * 3 / 4)
 
     def setupVariables(self):
-        self.modules = (
-            "History of Israel I",
-            "History of Israel II",
-            "Gospels I",
-            "Gospels II",
-            "Book of Moses",
-            "Samuel, Kings, Chronicles",
-            "Psalms",
-            "Gospels - (Mark, Matthew, Luke [ordered] + John) x 54",
-            "Gospels - (Mark, Matthew, Luke [unordered]) x 14",
-            "Gospels - (Mark & Matthew ONLY) x 11",
-            "Gospels - (Mark, Matthew & John ONLY) x 4",
-            "Gospels - (Mark & Luke ONLY) x 7",
-            "Gospels - (Mathhew & Luke ONLY) x 32",
-            "Gospels - (Mark ONLY) x 5",
-            "Gospels - (Matthew ONLY) x 30",
-            "Gospels - (Luke ONLY) x 39",
-            "Gospels - (John ONLY) x 61",
-            "摩西五經",
-            "撒母耳記，列王紀，歷代志",
-            "詩篇",
-            "福音書（可，太，路〔順序〕＋ 約） x 54",
-            "福音書（可，太，路〔不順序〕） x 14",
-            "福音書（可，太） x 11",
-            "福音書（可，太，約） x 4",
-            "福音書（可，路） x 7",
-            "福音書（太，路） x 32",
-            "福音書（可〔獨家記載〕） x 5",
-            "福音書（太〔獨家記載〕） x 30",
-            "福音書（路〔獨家記載〕） x 39",
-            "福音書（約〔獨家記載〕） x 61",
-        )
+        self.modules = config.mainWindow.topicList
         # Connect database
-        self.database = os.path.join(config.marvelData, "collections3.sqlite")
+        self.database = os.path.join(config.marvelData, "search.sqlite")
         self.connection = apsw.Connection(self.database)
         self.cursor = self.connection.cursor()
         # Entries
         self.entries = []
-        self.number = None
+        self.articleEntry = None
         self.refreshing = False
 
     def setupUI(self):
@@ -100,7 +68,7 @@ class BibleParallels(QWidget):
         entryView.setModel(self.entryViewModel)
         self.filterEntry()
         entryView.selectionModel().selectionChanged.connect(self.entrySelected)
-        openButton = QPushButton(config.thisTranslation["html_openMain"])
+        openButton = QPushButton(config.thisTranslation["html_openStudy"])
         openButton.clicked.connect(self.openOnMainWindow)
         layout000Lt.addWidget(self.moduleView)
         layout000Lt.addWidget(self.searchEntry)
@@ -111,8 +79,8 @@ class BibleParallels(QWidget):
         self.searchEntryRt = QLineEdit()
         self.searchEntryRt.setClearButtonEnabled(True)
         self.searchEntryRt.textChanged.connect(self.highlightContent)
-        self.contentView = WebEngineViewPopover(config.mainWindow, "main", "main", windowTitle=config.thisTranslation["bibleHarmonies"])
-        html = config.mainWindow.wrapHtml("<h2>{0}</h2>".format(config.thisTranslation["bibleHarmonies"]))
+        self.contentView = WebEngineViewPopover(config.mainWindow, "main", "main", windowTitle=config.thisTranslation["menu5_topics"])
+        html = config.mainWindow.wrapHtml("<h2>{0}</h2>".format(config.thisTranslation["menu5_topics"]))
         self.contentView.setHtml(html, config.baseUrl)
         layout000Rt.addWidget(self.searchEntryRt)
         layout000Rt.addWidget(self.contentView)
@@ -132,48 +100,48 @@ class BibleParallels(QWidget):
         # get search string
         searchString = self.searchEntry.text().strip()
         # get all entries
-        query = "SELECT Number, Topic FROM PARALLEL WHERE Tool=? ORDER BY Number"
-        self.cursor.execute(query, (self.moduleView.currentIndex(),))
+        moduleIndex = self.moduleView.currentIndex()
+        query = "SELECT EntryID, link FROM {0}".format(config.mainWindow.topicListAbb[moduleIndex])
+        self.cursor.execute(query)
         self.entries = self.cursor.fetchall()
-        for number, topic in self.entries:
-            if searchString.lower() in topic.lower():
-                topic = re.sub("<br>", "\n", topic)
-                item = QStandardItem(topic)
-                item.setToolTip("[{0}] {1}".format(number, topic))
+        for entryID, link in self.entries:
+            if searchString.lower() in entryID.lower():
+                item = QStandardItem(entryID)
+                # link example: <ref onclick="exlbt('HIT52')">Making Wise</ref>
+                tooltip = re.sub("""<ref onclick="exlbt\('(.*?)'\)">(.*?)</ref>""", r"[\1] \2", link)
+                item.setToolTip(tooltip)
                 self.entryViewModel.appendRow(item)
 
     def entrySelected(self, selection):
         if not self.refreshing:
-            # get tool number
+            # get articleEntry
             index = selection[0].indexes()[0].row()
             toolTip = self.entryViewModel.item(index).toolTip()
-            toolTip = re.sub("\n", "", toolTip)
-            self.number = int(re.sub("^\[([0-9]+?)\].*?$", r"\1", toolTip))
+            self.articleEntry = re.sub("^\[(.*?)\].*?$", r"\1", toolTip)
             # fetch entry data
-            query = "SELECT Topic, Passages FROM PARALLEL WHERE Tool=? AND Number=?"
-            self.cursor.execute(query, (self.moduleView.currentIndex(), self.number))
-            entry = self.cursor.fetchone()
-            if entry:
-                topic, passagesString = entry
-                bibleVerseParser = BibleVerseParser(config.parserStandarisation)
-                biblesSqlite = BiblesSqlite()
-                passages = bibleVerseParser.extractAllReferences(passagesString, tagged=True)
-                tableList = [("<th><ref onclick='document.title=\"BIBLE:::{0}\"'>{0}</ref></th>".format(bibleVerseParser.bcvToVerseReference(*passage)), "<td style='vertical-align: text-top;'>{0}</td>".format(biblesSqlite.readMultipleVerses(config.mainText, [passage], displayRef=False))) for passage in passages]
-                versions, verses = zip(*tableList)
-                html = "<h2>{2}</h2><table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses), topic)
-                html = config.mainWindow.wrapHtml(html)
-                self.contentView.setHtml(html, config.baseUrl)
+            exlbData = ExlbData()
+            content = exlbData.getContent("exlbt", self.articleEntry)
+            if config.theme in ("dark", "night"):
+                content = config.mainWindow.textCommandParser.adjustDarkThemeColorsForExl(content)
+            content = config.mainWindow.wrapHtml(content)
+            self.contentView.setHtml(content, config.baseUrl)
 
     def openOnMainWindow(self):
-        if self.number is not None:
-            command = "_harmony:::{0}.{1}".format(self.moduleView.currentIndex(), self.number)
+        # command examples, EXLB:::exlbt:::HIT116
+        if self.articleEntry is not None:
+            command = "EXLB:::exlbt:::{0}".format(self.articleEntry)
             config.mainWindow.runTextCommand(command)
 
 
-databaseFile = os.path.join(config.marvelData, "collections3.sqlite")
+databaseFile = os.path.join(config.marvelData, "search.sqlite")
 if os.path.isfile(databaseFile):
-    config.mainWindow.bibleParallels = BibleParallels(config.mainWindow)
-    config.mainWindow.bibleParallels.show()
+    databaseFile = os.path.join(config.marvelData, "data", "exlb3.data")
+    if os.path.isfile(databaseFile):
+        config.mainWindow.bibleTopics = BibleTopics(config.mainWindow)
+        config.mainWindow.bibleTopics.show()
+    else:
+        databaseInfo = ((config.marvelData, "data", "exlb3.data"), "1gp2Unsab85Se-IB_tmvVZQ3JKGvXLyMP")
+        config.mainWindow.downloadHelper(databaseInfo)
 else:
-    databaseInfo = ((config.marvelData, "collections3.sqlite"), "18dRwEc3SL2Z6JxD1eI1Jm07oIpt9i205")
+    databaseInfo = ((config.marvelData, "search.sqlite"), "1A4s8ewpxayrVXamiva2l1y1AinAcIKAh"),
     config.mainWindow.downloadHelper(databaseInfo)

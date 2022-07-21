@@ -856,6 +856,15 @@ class MaterialMainWindow:
         bibleToolsMenu = QMenu(self)
         tools = (
             ("bibleTimelines", "BOOK:::Timelines", "Bible Timelines"),
+        )
+        for tool, command, menuPlugin in tools:
+            if os.path.isfile(os.path.join("plugins", "menu", "{0}.py".format(menuPlugin))):
+                bibleToolsMenu.addAction(config.thisTranslation[tool], partial(self.runPlugin, menuPlugin))
+            else:
+                bibleToolsMenu.addAction(config.thisTranslation[tool], partial(self.runTextCommand, command))
+        if os.path.isfile(os.path.join("plugins", "menu", "Bible Topics.py".format(menuPlugin))):
+            bibleToolsMenu.addAction(config.thisTranslation["menu5_topics"], partial(self.runPlugin, "Bible Topics"))
+        tools = (
             ("bibleHarmonies", "BOOK:::Harmonies_and_Parallels", "Bible Parallels"),
             ("biblePromises", "BOOK:::Bible_Promises", "Bible Promises"),
         )
