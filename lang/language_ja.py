@@ -985,4 +985,11 @@ translation = {
     "edit2": "編集",
     "dataEditor": "データ・エディター",
     "bibleTools": "聖書ツール",
+    "zoomIn": "ズームイン",
+    "zoomOut": "ズームアウト",
+    "normalSize": "通常サイズ",
+    "actualSize": "実際のサイズ",
+    "fitToWindow": "フィット・ウィンドウ",
+    "loadImage": "イメージのロード",
+    "bibleTimelines": "聖書の年表",
 }

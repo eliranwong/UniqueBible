@@ -985,4 +985,11 @@ translation = {
     "edit2": "संपादित करें",
     "dataEditor": "डाटा संपादक",
     "bibleTools": "बाइबल टूल्स",
+    "zoomIn": "ज़ूम इन करें",
+    "zoomOut": "ज़ूम आउट",
+    "normalSize": "सामान्य आकार",
+    "actualSize": "वास्तविक आकार",
+    "fitToWindow": "विंडो फिट करें",
+    "loadImage": "छवि लोड करें",
+    "bibleTimelines": "बाइबल की समयरेखा",
 }

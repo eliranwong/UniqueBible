@@ -985,4 +985,11 @@ translation = {
     "edit2": "ചിട്ടപ്പെടുത്തുക",
     "dataEditor": "ഡേറ്റാ എഡിറ്റര്",
     "bibleTools": "ബൈബിള് ടൂള്സ്",
+    "zoomIn": "View-zoom-action",
+    "zoomOut": "View-zoom-action",
+    "normalSize": "സാധാരണ വലിപ്പം",
+    "actualSize": "वास्तविक വലിപ്പം",
+    "fitToWindow": "ജാലകം ഫീറ്റ് ചെയ്യുക",
+    "loadImage": "ചിത്രം ലോഡ് ചെയ്യുക",
+    "bibleTimelines": "ബൈബിള് ടൈം ലൈസന്സ്",
 }

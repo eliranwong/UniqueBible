@@ -985,4 +985,11 @@ translation = {
     "edit2": "Editează",
     "dataEditor": "Editor de date",
     "bibleTools": "Instrumente de Biblie",
+    "zoomIn": "Zoom In",
+    "zoomOut": "Zoom Out",
+    "normalSize": "Dimensiune normală",
+    "actualSize": "Dimensiunea reală",
+    "fitToWindow": "Fereastra de acces",
+    "loadImage": "Încarcă imaginea",
+    "bibleTimelines": "Biblia Sinodală",
 }

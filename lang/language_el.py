@@ -985,4 +985,11 @@ translation = {
     "edit2": "Τροποποίηση:",
     "dataEditor": "Λειτουργία επεξεργασίας δεδομένων",
     "bibleTools": "Εργαλεία Αγία Γραφή",
+    "zoomIn": "Zoom In",
+    "zoomOut": "Εστω!",
+    "normalSize": "Κανονικό μέγεθος",
+    "actualSize": "Πραγματικό μέγεθος.",
+    "fitToWindow": "Παράθυρο Fit",
+    "loadImage": "Φόρτωση εικόνας",
+    "bibleTimelines": "Χρονοδιάγραμμα Της Βίβλου",
 }

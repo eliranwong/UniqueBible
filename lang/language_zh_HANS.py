@@ -985,4 +985,11 @@ translation = {
     "edit2": "编辑",
     "dataEditor": "数据编辑器",
     "bibleTools": "圣经工具",
+    "zoomIn": "放大",
+    "zoomOut": "缩小",
+    "normalSize": "正常大小",
+    "actualSize": "实际大小",
+    "fitToWindow": "适合窗口",
+    "loadImage": "装入图像",
+    "bibleTimelines": "圣经时间表",
 }

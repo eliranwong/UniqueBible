@@ -985,4 +985,11 @@ translation = {
     "edit2": "편집",
     "dataEditor": "데이터 편집기",
     "bibleTools": "성경도구",
+    "zoomIn": "확대",
+    "zoomOut": "축소",
+    "normalSize": "일반 크기",
+    "actualSize": "실제 크기",
+    "fitToWindow": "피트 창",
+    "loadImage": "로드 이미지",
+    "bibleTimelines": "성경 타임라인",
 }

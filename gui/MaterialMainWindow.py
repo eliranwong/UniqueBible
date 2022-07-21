@@ -854,13 +854,16 @@ class MaterialMainWindow:
         icon = "material/hardware/gamepad/materialiconsoutlined/48dp/2x/outline_gamepad_black_48dp.png"
         bibleTools = self.addMaterialIconButton("bibleTools", icon, None, self.firstToolBar)
         bibleToolsMenu = QMenu(self)
+        if os.path.isfile(os.path.join("plugins", "menu", "Bible Timelines.py")) and os.path.isfile(os.path.join("plugins", "context", "Interlinear Data.py")):
+            bibleToolsMenu.addAction(config.thisTranslation["bibleTimelines"], partial(self.runPlugin, "Bible Timelines"))
+        else:
+            bibleToolsMenu.addAction(config.thisTranslation["bibleTimelines"], partial(self.runTextCommand, "BOOK:::Timelines"))
         tools = (
-            ("html_timelines", "BOOK:::Timelines"),
             ("biblePromises", "BOOK:::Bible_Promises"),
             ("bibleHarmonies", "BOOK:::Harmonies_and_Parallels"),
         )
         for tool, command in tools:
-            bibleToolsMenu.addAction(config.thisTranslation[tool], lambda: self.runTextCommand(command))
+            bibleToolsMenu.addAction(config.thisTranslation[tool], partial(self.runTextCommand, command))
         if os.path.isfile(os.path.join("plugins", "menu", "Interlinear Data.py")) and os.path.isfile(os.path.join("plugins", "context", "Interlinear Data.py")):
             bibleToolsMenu.addAction(config.thisTranslation["interlinearData"], self.openInterlinearData)
         bibleTools.setMenu(bibleToolsMenu)

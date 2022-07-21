@@ -26,6 +26,7 @@ from db.Highlight import Highlight
 from util.TtsLanguages import TtsLanguages
 from db.BiblesSqlite import MorphologySqlite
 from db.JournalSqlite import JournalSqlite
+from gui.ImageViewer import ImageViewer
 
 #from gui.Downloader import Downloader
 from install.module import *
@@ -2445,6 +2446,11 @@ class TextCommandParser:
                 return ("study", "Image not found!", {})
         elif config.enableHttpServer:
             return ("study", "[File type not supported!]", {})
+        elif re.search("\.bmp$|\.jpg$|\.jpeg$|\.png$|\.pbm$|\.pgm$|\.ppm$|\.xbm$|\.xpm$", filePath.lower()):
+            imageViewer = ImageViewer(self.parent)
+            imageViewer.show()
+            imageViewer.load_file(filePath)
+            return ("", "", {})
         else:
             self.parent.openExternalFile(filePath)
             return ("", "", {})

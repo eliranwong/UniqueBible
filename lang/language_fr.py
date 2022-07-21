@@ -985,4 +985,11 @@ translation = {
     "edit2": "Editer",
     "dataEditor": "Editeur de données",
     "bibleTools": "Outils bibliques",
+    "zoomIn": "Zoom avant",
+    "zoomOut": "Zoom arrière",
+    "normalSize": "Taille normale",
+    "actualSize": "Taille réelle",
+    "fitToWindow": "Adapter la fenêtre",
+    "loadImage": "Charger une image",
+    "bibleTimelines": "Délais de la Bible",
 }
