@@ -1,3 +1,12 @@
+Changes in 31.35:
+* Added new menu plugins:
+    - Bible Encyclopedia
+    - Bible Dictionaries
+    - Third Party Dictionaries
+    - Reference Books
+* Integrated new plugins into material menu.
+* Updated "Bible Topics"
+
 Changes in 31.34:
 * Added menu plugin "Bible Topics"
 * Updated menu plugin "Bible Parallels"

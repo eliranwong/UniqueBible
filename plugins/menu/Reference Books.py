@@ -1,6 +1,7 @@
 import config, os, apsw, re
 from gui.WebEngineViewPopover import WebEngineViewPopover
-from db.ToolsSqlite import ExlbData
+from util.ThirdParty import ThirdPartyDictionary
+from db.ToolsSqlite import Book, BookData
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt
     from PySide6.QtWebEngineCore import QWebEnginePage
@@ -12,13 +13,13 @@ else:
     from qtpy.QtGui import QStandardItemModel, QStandardItem, QGuiApplication
     from qtpy.QtWidgets import QWidget, QPushButton, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
 
-class BibleTopics(QWidget):
+class ReferenceBooks(QWidget):
 
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
         # set title
-        self.setWindowTitle(config.thisTranslation["menu5_topics"])
+        self.setWindowTitle(config.thisTranslation["installBooks"])
         #self.setMinimumSize(830, 500)
         # set variables
         self.setupVariables()
@@ -28,11 +29,7 @@ class BibleTopics(QWidget):
         self.resize(QGuiApplication.primaryScreen().availableSize() * 3 / 4)
 
     def setupVariables(self):
-        self.modules = config.mainWindow.topicList
-        # Connect database
-        self.database = os.path.join(config.marvelData, "search.sqlite")
-        self.connection = apsw.Connection(self.database)
-        self.cursor = self.connection.cursor()
+        self.modules = config.mainWindow.referenceBookList
         # Entries
         self.entries = []
         self.articleEntry = None
@@ -53,16 +50,20 @@ class BibleTopics(QWidget):
         layout000.addWidget(splitter)
 
         # widgets on the left
+        maxWidth = 350
         self.moduleView = QComboBox()
+        self.moduleView.setMaximumWidth(maxWidth)
         self.moduleView.addItems(self.modules)
         for index, tooltip in enumerate(self.modules):
-            tooltip = "[{0}] {1}".format(config.mainWindow.topicListAbb[index], tooltip)
             self.moduleView.setItemData(index, tooltip, Qt.ToolTipRole)
         self.moduleView.currentIndexChanged.connect(self.moduleSelected)
         self.searchEntry = QLineEdit()
+        self.searchEntry.setMaximumWidth(maxWidth)
         self.searchEntry.setClearButtonEnabled(True)
         self.searchEntry.textChanged.connect(self.filterEntry)
+        #self.searchEntry.returnPressed.connect(self.filterEntry)
         entryView = QListView()
+        entryView.setMaximumWidth(maxWidth)
         entryView.setEditTriggers(QAbstractItemView.NoEditTriggers)
         entryView.setWordWrap(True)
         self.entryViewModel = QStandardItemModel(entryView)
@@ -70,6 +71,7 @@ class BibleTopics(QWidget):
         self.filterEntry()
         entryView.selectionModel().selectionChanged.connect(self.entrySelected)
         openButton = QPushButton(config.thisTranslation["html_openStudy"])
+        openButton.setMaximumWidth(maxWidth)
         openButton.clicked.connect(self.openOnMainWindow)
         layout000Lt.addWidget(self.moduleView)
         layout000Lt.addWidget(self.searchEntry)
@@ -80,8 +82,8 @@ class BibleTopics(QWidget):
         self.searchEntryRt = QLineEdit()
         self.searchEntryRt.setClearButtonEnabled(True)
         self.searchEntryRt.textChanged.connect(self.highlightContent)
-        self.contentView = WebEngineViewPopover(config.mainWindow, "main", "main", windowTitle=config.thisTranslation["menu5_topics"])
-        html = config.mainWindow.wrapHtml("<h2>{0}</h2>".format(config.thisTranslation["menu5_topics"]))
+        self.contentView = WebEngineViewPopover(config.mainWindow, "main", "main", windowTitle=config.thisTranslation["installBooks"])
+        html = config.mainWindow.wrapHtml("<h2>{0}</h2>".format(config.thisTranslation["installBooks"]))
         self.contentView.setHtml(html, config.baseUrl)
         layout000Rt.addWidget(self.searchEntryRt)
         layout000Rt.addWidget(self.contentView)
@@ -101,48 +103,31 @@ class BibleTopics(QWidget):
         # get search string
         searchString = self.searchEntry.text().strip()
         # get all entries
-        moduleIndex = self.moduleView.currentIndex()
-        query = "SELECT EntryID, link FROM {0}".format(config.mainWindow.topicListAbb[moduleIndex])
-        self.cursor.execute(query)
-        self.entries = self.cursor.fetchall()
-        for entryID, link in self.entries:
+        module = self.modules[self.moduleView.currentIndex()]
+        self.entries = Book(module).getTopicList()
+        for entryID in self.entries:
             if searchString.lower() in entryID.lower():
                 item = QStandardItem(entryID)
-                # link example: <ref onclick="exlbt('HIT52')">Making Wise</ref>
-                tooltip = re.sub("""<ref onclick="exlbt\('(.*?)'\)">(.*?)</ref>""", r"[\1] \2", link)
-                item.setToolTip(tooltip)
+                item.setToolTip(entryID)
                 self.entryViewModel.appendRow(item)
 
     def entrySelected(self, selection):
         if not self.refreshing:
             # get articleEntry
             index = selection[0].indexes()[0].row()
-            toolTip = self.entryViewModel.item(index).toolTip()
-            self.articleEntry = re.sub("^\[(.*?)\].*?$", r"\1", toolTip)
+            self.articleEntry = self.entryViewModel.item(index).toolTip()
             # fetch entry data
-            exlbData = ExlbData()
-            content = exlbData.getContent("exlbt", self.articleEntry)
-            if config.theme in ("dark", "night"):
-                content = config.mainWindow.textCommandParser.adjustDarkThemeColorsForExl(content)
+            module = self.modules[self.moduleView.currentIndex()]
+            content = BookData().getContent(module, self.articleEntry)
             content = config.mainWindow.wrapHtml(content)
             self.contentView.setHtml(content, config.baseUrl)
 
     def openOnMainWindow(self):
-        # command examples, EXLB:::exlbt:::HIT116
+        # command examples, BOOK:::Graphics_Barry7_Doctrinal:::5. The Process of Theology
         if self.articleEntry is not None:
-            command = "EXLB:::exlbt:::{0}".format(self.articleEntry)
+            command = "BOOK:::{0}:::{1}".format(self.modules[self.moduleView.currentIndex()], self.articleEntry)
             config.mainWindow.runTextCommand(command)
 
 
-databaseFile = os.path.join(config.marvelData, "search.sqlite")
-if os.path.isfile(databaseFile):
-    databaseFile = os.path.join(config.marvelData, "data", "exlb3.data")
-    if os.path.isfile(databaseFile):
-        config.mainWindow.bibleTopics = BibleTopics(config.mainWindow)
-        config.mainWindow.bibleTopics.show()
-    else:
-        databaseInfo = ((config.marvelData, "data", "exlb3.data"), "1gp2Unsab85Se-IB_tmvVZQ3JKGvXLyMP")
-        config.mainWindow.downloadHelper(databaseInfo)
-else:
-    databaseInfo = ((config.marvelData, "search.sqlite"), "1A4s8ewpxayrVXamiva2l1y1AinAcIKAh"),
-    config.mainWindow.downloadHelper(databaseInfo)
+config.mainWindow.referenceBooks = ReferenceBooks(config.mainWindow)
+config.mainWindow.referenceBooks.show()

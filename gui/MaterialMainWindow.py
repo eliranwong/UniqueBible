@@ -873,6 +873,15 @@ class MaterialMainWindow:
                 bibleToolsMenu.addAction(config.thisTranslation[tool], partial(self.runPlugin, menuPlugin))
             else:
                 bibleToolsMenu.addAction(config.thisTranslation[tool], partial(self.runTextCommand, command))
+        tools = (
+            ("context1_encyclopedia", "Bible Encyclopedia"),
+            ("context1_dict", "Bible Dictionaries"),
+            ("menu5_3rdDict", "Third Party Dictionaries"),
+            ("installBooks", "Reference Books"),
+        )
+        for tool, menuPlugin in tools:
+            if os.path.isfile(os.path.join("plugins", "menu", "{0}.py".format(menuPlugin))):
+                bibleToolsMenu.addAction(config.thisTranslation[tool], partial(self.runPlugin, menuPlugin))
         if os.path.isfile(os.path.join("plugins", "menu", "Interlinear Data.py")) and os.path.isfile(os.path.join("plugins", "context", "Interlinear Data.py")):
             bibleToolsMenu.addAction(config.thisTranslation["interlinearData"], self.openInterlinearData)
         bibleTools.setMenu(bibleToolsMenu)

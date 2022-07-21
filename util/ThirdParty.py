@@ -2183,6 +2183,19 @@ class ThirdPartyDictionary:
         selectForm += "</select>"
         return selectForm
 
+    def getAllEntries(self):
+        if not self.database:
+            return []
+        else:
+            getDictionaryData = {
+                ".dic.bbp": self.getBibleBentoPlusDicAll,
+                ".dcti": self.getESwordDicAll,
+                ".lexi": self.getESwordLexAll,
+                ".dct.mybible": self.getMySwordAll,
+                ".dictionary.SQLite3": self.getMyBibleAll,
+            }
+            return getDictionaryData[self.fileExtension]()
+
     def getExactWord(self, entry):
         if not self.database:
             return "INVALID_COMMAND_ENTERED"
@@ -2232,6 +2245,12 @@ class ThirdPartyDictionary:
         else:
             return "<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, content[0])
 
+    def getBibleBentoPlusDicAll(self):
+        query = TextUtil.getQueryPrefix()
+        query += "SELECT Topic FROM Dictionary"
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
+
     def getBibleBentoPlusDicSimilarWord(self, entry):
         query = TextUtil.getQueryPrefix()
         query += "SELECT Topic FROM Dictionary WHERE Topic LIKE ? AND Topic != ?"
@@ -2265,6 +2284,12 @@ class ThirdPartyDictionary:
             return "[not found]"
         else:
             return "<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, content[0])
+
+    def getESwordDicAll(self):
+        query = TextUtil.getQueryPrefix()
+        query += "SELECT Topic FROM Dictionary"
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
 
     def getESwordDicSimilarWord(self, entry):
         query = TextUtil.getQueryPrefix()
@@ -2300,6 +2325,12 @@ class ThirdPartyDictionary:
         else:
             return "<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, content[0])
 
+    def getESwordLexAll(self):
+        query = TextUtil.getQueryPrefix()
+        query += "SELECT Topic FROM Lexicon"
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
+
     def getESwordLexSimilarWord(self, entry):
         query = TextUtil.getQueryPrefix()
         query += "SELECT Topic FROM Lexicon WHERE Topic LIKE ? AND Topic != ?"
@@ -2333,6 +2364,12 @@ class ThirdPartyDictionary:
             return "[not found]"
         else:
             return "<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, content[0])
+
+    def getMySwordAll(self):
+        query = TextUtil.getQueryPrefix()
+        query += "SELECT word FROM dictionary"
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
 
     def getMySwordSimilarWord(self, entry):
         query = TextUtil.getQueryPrefix()
@@ -2369,6 +2406,12 @@ class ThirdPartyDictionary:
             return "[not found]"
         else:
             return "<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, content[0])
+
+    def getMyBibleAll(self):
+        query = TextUtil.getQueryPrefix()
+        query += "SELECT topic FROM dictionary"
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
 
     def getMyBibleSimilarWord(self, entry):
         query = TextUtil.getQueryPrefix()
