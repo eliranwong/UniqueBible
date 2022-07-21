@@ -1,3 +1,6 @@
+Changes in 31.32:
+* Fixed passing pytest.
+
 Changes in 31.31:
 * Added an image viewer for opening image files.
 * Added a menu plugin "Bible Timelines".
