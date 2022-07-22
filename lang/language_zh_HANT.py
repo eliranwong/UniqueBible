@@ -993,4 +993,5 @@ translation = {
     "loadImage": "載入影像",
     "bibleTimelines": "聖經時間表",
     "displayOnStudyWindow": "在學習視窗顯示",
+    "refreshWindowsAfterSavingNote": "儲存附註之後重新整理視窗",
 }

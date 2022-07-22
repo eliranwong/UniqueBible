@@ -993,4 +993,5 @@ translation = {
     "loadImage": "Immagine di carico",
     "bibleTimelines": "Timeline della Bibbia",
     "displayOnStudyWindow": "Visualizzazione su Finestra di studio",
+    "refreshWindowsAfterSavingNote": "Aggiornare le finestre dopo aver salvato la nota",
 }

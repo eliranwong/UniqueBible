@@ -888,7 +888,8 @@ p, li {0} white-space: pre-wrap; {1}
         if not self.noteType == "file":
             self.parent.parent.noteSaved = True
             self.updateWindowTitle()
-            self.parent.parent.reloadCurrentRecord(True)
+            if config.refreshWindowsAfterSavingNote:
+                self.parent.parent.reloadCurrentRecord(True)
 
     def openSaveAsDialog(self):
         if self.noteFileName:

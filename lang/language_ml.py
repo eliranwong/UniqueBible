@@ -993,4 +993,5 @@ translation = {
     "loadImage": "ചിത്രം ലോഡ് ചെയ്യുക",
     "bibleTimelines": "ബൈബിള് ടൈം ലൈസന്സ്",
     "displayOnStudyWindow": "പഠന ജാലകത്തില് കാണിയ്ക്കുക",
+    "refreshWindowsAfterSavingNote": "കുറിപ്പ് സൂക്ഷിച്ചശേഷം ജാലകങ്ങള് പുതുക്കുക",
 }

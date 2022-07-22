@@ -1302,6 +1302,12 @@ class ConfigUtil:
         else:
             config.menuUnderline = ""
 
+        config.help["refreshWindowsAfterSavingNote"] = """
+        # Refresh the windows after saving a note
+        """
+        if not hasattr(config, "refreshWindowsAfterSavingNote"):
+            config.refreshWindowsAfterSavingNote = True
+
     # Save configurations on exit
     @staticmethod
     def save():
@@ -1609,6 +1615,7 @@ class ConfigUtil:
             ("disableOpenPopupWindowOnStartup", config.disableOpenPopupWindowOnStartup),
             ("showMiniKeyboardInMiniControl", config.showMiniKeyboardInMiniControl),
             ("parseClearSpecialCharacters", config.parseClearSpecialCharacters),
+            ("refreshWindowsAfterSavingNote", config.refreshWindowsAfterSavingNote),
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:

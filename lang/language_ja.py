@@ -993,4 +993,5 @@ translation = {
     "loadImage": "イメージのロード",
     "bibleTimelines": "聖書の年表",
     "displayOnStudyWindow": "学習ウィンドウに表示",
+    "refreshWindowsAfterSavingNote": "メモを保存した後にウィンドウ",
 }

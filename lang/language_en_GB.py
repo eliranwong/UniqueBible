@@ -993,4 +993,5 @@ translation = {
     "loadImage": "Load Image",
     "bibleTimelines": "Bible Timelines",
     "displayOnStudyWindow": "Display on Study Window",
+    "refreshWindowsAfterSavingNote": "Refresh windows after saving note",
 }
