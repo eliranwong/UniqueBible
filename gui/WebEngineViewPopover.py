@@ -4,14 +4,14 @@ import shortcut as sc
 if config.qtLibrary == "pyside6":
     from PySide6.QtGui import QKeySequence, QAction, QShortcut
     from PySide6.QtWidgets import QFileDialog, QInputDialog, QLineEdit
-    from PySide6.QtCore import Qt
+    from PySide6.QtCore import Qt, QUrl
     from PySide6.QtWidgets import QMenu
     from PySide6.QtWebEngineCore import QWebEnginePage
     from PySide6.QtWebEngineWidgets import QWebEngineView
 else:
     from qtpy.QtGui import QKeySequence
     from qtpy.QtWidgets import QFileDialog, QInputDialog, QLineEdit, QShortcut
-    from qtpy.QtCore import Qt
+    from qtpy.QtCore import Qt, QUrl
     from qtpy.QtWidgets import QAction, QMenu
     from qtpy.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
 
@@ -46,6 +46,12 @@ class WebEngineViewPopover(QWebEngineView):
         self.page().runJavaScript("var activeVerse = document.getElementById('v"+str(config.studyB)+"."+str(config.studyC)+"."+str(config.studyV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = '"+activeVerseNoColour+"'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
         self.page().toHtml(self.getHtml)
     
+    def setHtml(self, html, baseUrl=QUrl()):
+        if config.bibleWindowContentTransformers:
+            for transformer in config.bibleWindowContentTransformers:
+                html = transformer(html)
+        super().setHtml(html, baseUrl)
+
     def getHtml(self, html):
         # store html in a variable when page is finished loading to facilitate file saving
         self.html = html
