@@ -994,4 +994,5 @@ translation = {
     "bibleTimelines": "Bibelzeitachsen",
     "displayOnStudyWindow": "Anzeige im Studienfenster",
     "refreshWindowsAfterSavingNote": "Windows nach dem Speichern von Notiz aktualisieren",
+    "bibleLexicons": "Bible Lexicons",
 }

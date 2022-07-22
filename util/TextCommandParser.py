@@ -2461,6 +2461,12 @@ class TextCommandParser:
         filePath = os.path.join(*fileitems)
         if config.enableHttpServer:
             return ("study", TextUtil.imageToText(filePath), {})
+        elif re.search("\.bmp$|\.jpg$|\.jpeg$|\.png$|\.pbm$|\.pgm$|\.ppm$|\.xbm$|\.xpm$", filePath.lower()):
+            from gui.ImageViewer import ImageViewer
+            imageViewer = ImageViewer(self.parent)
+            imageViewer.show()
+            imageViewer.load_file(filePath)
+            return ("", "", {})
         else:
             self.parent.openExternalFile(filePath)
             return ("", "", {})
@@ -3277,7 +3283,7 @@ class TextCommandParser:
     # BOOK:::
     def textBook(self, command, source):
         bookData = BookData()
-        bookList = [book for book, *_ in bookData.getCatalogBookList()]
+        #bookList = [book for book, *_ in bookData.getCatalogBookList()]
         if command.count(":::") == 0:
         # if command.count(":::") == 0 and command in bookList:
             config.book = command

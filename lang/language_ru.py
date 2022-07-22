@@ -994,4 +994,5 @@ translation = {
     "bibleTimelines": "Библейские графики",
     "displayOnStudyWindow": "Показать в окне исследования",
     "refreshWindowsAfterSavingNote": "Обновить окна после сохранения примечания",
+    "bibleLexicons": "Библия",
 }

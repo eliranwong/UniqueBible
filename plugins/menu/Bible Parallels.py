@@ -89,9 +89,13 @@ class BibleParallels(QWidget):
         self.moduleView.addItems(self.modules)
         for index, tooltip in enumerate(self.modules):
             self.moduleView.setItemData(index, tooltip, Qt.ToolTipRole)
+        initialIndex = self.modules.index(config.parallels) if config.parallels in self.modules else 0
+        if initialIndex < len(self.modules):
+            self.moduleView.setCurrentIndex(initialIndex)
         self.moduleView.currentIndexChanged.connect(self.moduleSelected)
         self.searchEntry = QLineEdit()
         self.searchEntry.setClearButtonEnabled(True)
+        self.searchEntry.setText(config.mainWindow.selectedText())
         self.searchEntry.textChanged.connect(self.filterEntry)
         entryView = QListView()
         entryView.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -144,6 +148,9 @@ class BibleParallels(QWidget):
 
     def entrySelected(self, selection):
         if not self.refreshing:
+            # set config
+            moduleIndex = self.moduleView.currentIndex()
+            config.parallels = self.modules[moduleIndex]
             # get tool number
             index = selection[0].indexes()[0].row()
             toolTip = self.entryViewModel.item(index).toolTip()

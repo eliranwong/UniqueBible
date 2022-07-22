@@ -874,6 +874,7 @@ class MaterialMainWindow:
             else:
                 bibleToolsMenu.addAction(config.thisTranslation[tool], partial(self.runTextCommand, command))
         tools = (
+            ("bibleLexicons", "Bible Lexicons"),
             ("context1_encyclopedia", "Bible Encyclopedia"),
             ("context1_dict", "Bible Dictionaries"),
             ("menu5_3rdDict", "Third Party Dictionaries"),

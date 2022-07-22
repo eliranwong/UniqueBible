@@ -1,3 +1,18 @@
+Changes in 31.39:
+* Added menu plugin "Bible Lexicons".
+* Added config.parallels and config.promises.
+* Added ability in the following plugins, to load and save related configurations:
+    - Bible Topics
+    - Bible promises
+    - Bible Parallels
+    - Bible Lexicons
+    - Bible Encyclopedia
+    - Bible Dictionaries
+    - Third Party Dictionaries
+    - Reference Books
+* Added "Previous Chapter" and "Next Chapter" buttons to menu plugin "Reference Books".
+* Added support of using built-in image viewer with open::: command.
+
 Changes in 31.38:
 * Added refreshWindowsAfterSavingNote config flag.
 

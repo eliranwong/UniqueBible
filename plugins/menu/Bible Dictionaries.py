@@ -58,9 +58,13 @@ class BibleDictionaries(QWidget):
         for index, tooltip in enumerate(self.modules):
             tooltip = "[{0}] {1}".format(config.mainWindow.dictionaryListAbb[index], tooltip)
             self.moduleView.setItemData(index, tooltip, Qt.ToolTipRole)
+        initialIndex = config.mainWindow.dictionaryListAbb.index(config.dictionary) if config.dictionary in config.mainWindow.dictionaryListAbb else 0
+        if initialIndex < len(self.modules):
+            self.moduleView.setCurrentIndex(initialIndex)
         self.moduleView.currentIndexChanged.connect(self.moduleSelected)
         self.searchEntry = QLineEdit()
         self.searchEntry.setClearButtonEnabled(True)
+        self.searchEntry.setText(config.mainWindow.selectedText())
         self.searchEntry.textChanged.connect(self.filterEntry)
         entryView = QListView()
         entryView.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -115,6 +119,9 @@ class BibleDictionaries(QWidget):
 
     def entrySelected(self, selection):
         if not self.refreshing:
+            # set config
+            moduleIndex = self.moduleView.currentIndex()
+            config.dictionary = config.mainWindow.dictionaryListAbb[moduleIndex]
             # get articleEntry
             index = selection[0].indexes()[0].row()
             toolTip = self.entryViewModel.item(index).toolTip()

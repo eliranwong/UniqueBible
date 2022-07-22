@@ -365,7 +365,7 @@ class MainWindow(QMainWindow):
                 textCommandText = self.textCommandLineEdit.text()
                 if textCommandText:
                     self.controlPanel.commandField.setText(textCommandText)
-                selectedText = self.mainView.currentWidget().selectedText().strip()
+                #selectedText = self.mainView.currentWidget().selectedText().strip()
                 # Removed morphology tab temporarily until a fix.
                 #self.controlPanel.morphologyTab.searchField.setText(selectedText)
                 self.controlPanel.raise_()
@@ -5720,7 +5720,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         textCommandAutosuggestion.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         return textCommandAutosuggestion
 
-    # For use in macros
+    # Get text selection
     def getSelectedText(self):
         selectedText = self.mainView.currentWidget().selectedText().strip()
         if not selectedText:
@@ -5730,3 +5730,14 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         else:
             config.selectedText = selectedText
 
+    def selectedText(self, studyViewFirst=False):
+        if studyViewFirst:
+            selectedText = self.studyView.currentWidget().selectedText().strip()
+            if not selectedText:
+                selectedText = self.mainView.currentWidget().selectedText().strip()
+            return selectedText
+        else:
+            selectedText = self.mainView.currentWidget().selectedText().strip()
+            if not selectedText:
+                selectedText = self.studyView.currentWidget().selectedText().strip()
+            return selectedText

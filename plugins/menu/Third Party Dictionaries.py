@@ -53,9 +53,13 @@ class ThirdPartyDictionaries(QWidget):
         self.moduleView.addItems(self.modules)
         for index, tooltip in enumerate(self.modules):
             self.moduleView.setItemData(index, tooltip, Qt.ToolTipRole)
+        initialIndex = config.mainWindow.thirdPartyDictionaryList.index(config.thirdDictionary) if config.thirdDictionary in config.mainWindow.thirdPartyDictionaryList else 0
+        if initialIndex < len(self.modules):
+            self.moduleView.setCurrentIndex(initialIndex)
         self.moduleView.currentIndexChanged.connect(self.moduleSelected)
         self.searchEntry = QLineEdit()
         self.searchEntry.setClearButtonEnabled(True)
+        self.searchEntry.setText(config.mainWindow.selectedText())
         # textChanged is slow for fetching third-party dictionary data
         #self.searchEntry.textChanged.connect(self.filterEntry)
         self.searchEntry.returnPressed.connect(self.filterEntry)
@@ -110,6 +114,9 @@ class ThirdPartyDictionaries(QWidget):
 
     def entrySelected(self, selection):
         if not self.refreshing:
+            # set config
+            moduleIndex = self.moduleView.currentIndex()
+            config.thirdDictionary = config.mainWindow.thirdPartyDictionaryList[moduleIndex]
             # get articleEntry
             index = selection[0].indexes()[0].row()
             self.articleEntry = self.entryViewModel.item(index).toolTip()

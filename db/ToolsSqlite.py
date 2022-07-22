@@ -839,6 +839,11 @@ class Lexicon:
         except:
             return ""
 
+    def getAllTopics(self):
+        query = "SELECT Topic FROM Lexicon"
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
+
     def searchTopic(self, search):
         try:
             searchString = "%{0}%".format(search)

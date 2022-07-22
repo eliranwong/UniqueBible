@@ -994,4 +994,5 @@ translation = {
     "bibleTimelines": "Bible Timelines",
     "displayOnStudyWindow": "Display on Study Window",
     "refreshWindowsAfterSavingNote": "Refresh windows after saving note",
+    "bibleLexicons": "Bible Lexicons",
 }

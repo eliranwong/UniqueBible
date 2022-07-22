@@ -855,6 +855,14 @@ class ConfigUtil:
         # Last-opened book module"""
         if not hasattr(config, "book"):
             config.book = "Harmonies_and_Parallels"
+        config.help["parallels"] = """
+        # Last-opened parallels module"""
+        if not hasattr(config, "parallels"):
+            config.parallels = "Gospels I"
+        config.help["promises"] = """
+        # Last-opened promises module"""
+        if not hasattr(config, "promises"):
+            config.promises = "Take Words with You"
         config.help["bookChapter"] = """
         # Last-opened book chapter"""
         if not hasattr(config, "bookChapter"):
@@ -1506,6 +1514,8 @@ class ConfigUtil:
             ("pdfTextPath", config.pdfTextPath),
             ("docxText", config.docxText),
             ("parseWordDocument", config.parseWordDocument),
+            ("parallels", config.parallels),
+            ("promises", config.promises),
             ("book", config.book),
             ("bookChapter", config.bookChapter),
             ("openBookInNewWindow", config.openBookInNewWindow),
