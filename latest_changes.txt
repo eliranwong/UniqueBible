@@ -1,3 +1,6 @@
+Changes in 31.40:
+* Improved menu plugin "Bible Timelines", to make it launch with a timeline related to the currently opened book.
+
 Changes in 31.39:
 * Added menu plugin "Bible Lexicons".
 * Added config.parallels and config.promises.
