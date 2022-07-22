@@ -995,4 +995,5 @@ translation = {
     "displayOnStudyWindow": "Εμφάνιση σε παράθυρο μελέτης",
     "refreshWindowsAfterSavingNote": "Ανανέωση παραθύρων μετά την αποθήκευση σημείωσης",
     "bibleLexicons": "Lexicons Αγία Γραφή",
+    "next": "Επόμενο:",
 }

@@ -995,4 +995,5 @@ translation = {
     "displayOnStudyWindow": "学習ウィンドウに表示",
     "refreshWindowsAfterSavingNote": "メモを保存した後にウィンドウ",
     "bibleLexicons": "聖書辞典",
+    "next": "次",
 }

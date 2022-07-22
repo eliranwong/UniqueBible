@@ -995,4 +995,5 @@ translation = {
     "displayOnStudyWindow": "Показать в окне исследования",
     "refreshWindowsAfterSavingNote": "Обновить окна после сохранения примечания",
     "bibleLexicons": "Библия",
+    "next": "Далее",
 }

@@ -995,4 +995,5 @@ translation = {
     "displayOnStudyWindow": "Afişarea pe fereastra de studiu",
     "refreshWindowsAfterSavingNote": "Reîmprospătează ferestrele după ce salvează",
     "bibleLexicons": "Biblia Sinodală",
+    "next": "Următor",
 }

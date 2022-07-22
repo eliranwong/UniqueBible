@@ -995,4 +995,5 @@ translation = {
     "displayOnStudyWindow": "연구 창에 표시",
     "refreshWindowsAfterSavingNote": "메모 저장 후 창 새로 고치기",
     "bibleLexicons": "성경 렉시아이콘",
+    "next": "다음",
 }

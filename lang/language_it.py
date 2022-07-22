@@ -995,4 +995,5 @@ translation = {
     "displayOnStudyWindow": "Visualizzazione su Finestra di studio",
     "refreshWindowsAfterSavingNote": "Aggiornare le finestre dopo aver salvato la nota",
     "bibleLexicons": "Lexicone della Bibbia",
+    "next": "Successivo",
 }

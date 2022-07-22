@@ -51,12 +51,15 @@ shows how to use QPainter to print an image.</p>
 
 
 class ImageViewer(QMainWindow):
-    def __init__(self, parent=None, showLoadImageButton=False, showImageListView=False, imageListViewItems=None):
+    def __init__(self, parent=None, showLoadImageButton=False, showImageListView=False, imageListViewItems=None, initialScrollIndex=None):
         super().__init__(parent)
         self.parent = parent
         self.imageListViewItems = imageListViewItems
         self.setupVariables()
         self.setupUI(showLoadImageButton, showImageListView)
+
+        if initialScrollIndex is not None:
+            self.imageListView.setCurrentIndex(initialScrollIndex)
 
         if self._scale_factor < 1.0:
             self._normal_size()
@@ -83,6 +86,12 @@ class ImageViewer(QMainWindow):
         self._scroll_area.setVisible(True)
 
         if showImageListView and self.imageListViewItems:
+            prevButton = QPushButton("＜")
+            prevButton.setToolTip(config.thisTranslation["previous"])
+            prevButton.clicked.connect(self._open_previous_image)
+            nextButton = QPushButton("＞")
+            nextButton.setToolTip(config.thisTranslation["next"])
+            nextButton.clicked.connect(self._open_next_image)
             self.titleList = []
             self.tooltipList = []
             for title, filepath in self.imageListViewItems:
@@ -111,7 +120,9 @@ class ImageViewer(QMainWindow):
 
         buttonLayout = QHBoxLayout()
         if showImageListView and self.imageListViewItems:
+            buttonLayout.addWidget(prevButton)
             buttonLayout.addWidget(self.imageListView)
+            buttonLayout.addWidget(nextButton)
         buttonLayout.addStretch()
         if showLoadImageButton:
             buttonLayout.addWidget(openButton)
@@ -135,6 +146,22 @@ class ImageViewer(QMainWindow):
     def loadSelectedItem(self, index):
         filepath = self.tooltipList[index]
         self.load_file(filepath)
+
+    @Slot()
+    def _open_previous_image(self):
+        index = self.imageListView.currentIndex()
+        index -= 1
+        if index < 0:
+            index = len(self.imageListViewItems) - 1
+        self.imageListView.setCurrentIndex(index)
+
+    @Slot()
+    def _open_next_image(self):
+        index = self.imageListView.currentIndex()
+        index += 1
+        if index >= len(self.imageListViewItems):
+            index = 0
+        self.imageListView.setCurrentIndex(index)
 
     def load_file(self, fileName):
         reader = QImageReader(fileName)

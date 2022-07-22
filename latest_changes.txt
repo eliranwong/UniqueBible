@@ -1,3 +1,8 @@
+Changes in 31.41:
+* Enhanced image viewer.
+    - Added "Previous" and "Next" buttons.
+    - It now accepts initialScrollIndex.
+
 Changes in 31.40:
 * Improved menu plugin "Bible Timelines", to make it launch with a timeline related to the currently opened book.
 

@@ -78,12 +78,9 @@ initialIndexMap = {
 
 databaseFile = os.path.join(config.marvelData, "books", "Maps_ABS.book")
 if os.path.isfile(databaseFile):
-    config.mainWindow.imageViewer = ImageViewer(config.mainWindow, showLoadImageButton=False, showImageListView=True, imageListViewItems=imageListViewItems)
+    initialScrollIndex = initialIndexMap.get(config.mainB, 19)
+    config.mainWindow.imageViewer = ImageViewer(config.mainWindow, showLoadImageButton=False, showImageListView=True, imageListViewItems=imageListViewItems, initialScrollIndex=initialScrollIndex)
     config.mainWindow.imageViewer.show()
-
-    initialIndex = initialIndexMap.get(config.mainB, 19)
-    config.mainWindow.imageViewer.imageListView.setCurrentIndex(initialIndex)
-
 else:
     databaseInfo = ((config.marvelData, "books", "Maps_ABS.book"), "13hf1NvhAjNXmRQn-Cpq4hY0E2XbEfmEd")
     config.mainWindow.downloadHelper(databaseInfo)

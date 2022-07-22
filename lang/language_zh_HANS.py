@@ -995,4 +995,5 @@ translation = {
     "displayOnStudyWindow": "在研究窗口上显示",
     "refreshWindowsAfterSavingNote": "保存注释后刷新窗口",
     "bibleLexicons": "圣经词典",
+    "next": "下一个",
 }
