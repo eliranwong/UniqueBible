@@ -141,7 +141,7 @@ class BiblePeople(QWidget):
         layout3.addWidget(openVerseButton)
         layout3.addWidget(openAllVerseButton)
 
-        self.exlbp = WebEngineViewPopover(config.mainWindow, "main", "main", windowTitle=config.thisTranslation["menu5_characters"])
+        self.exlbp = WebEngineViewPopover(config.mainWindow, "main", "main", windowTitle=config.thisTranslation["menu5_characters"], enableCloseAction=False)
         html = config.mainWindow.wrapHtml("<h2>Exhaustive Library</h2>")
         self.exlbp.setHtml(html, config.baseUrl)
         displayOnStudyWindowButton = QPushButton("Display on Study Window")

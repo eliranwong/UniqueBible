@@ -82,7 +82,7 @@ class ReferenceBooks(QWidget):
         self.searchEntryRt = QLineEdit()
         self.searchEntryRt.setClearButtonEnabled(True)
         self.searchEntryRt.textChanged.connect(self.highlightContent)
-        self.contentView = WebEngineViewPopover(config.mainWindow, "main", "main", windowTitle=config.thisTranslation["installBooks"])
+        self.contentView = WebEngineViewPopover(config.mainWindow, "main", "main", windowTitle=config.thisTranslation["installBooks"], enableCloseAction=False)
         html = config.mainWindow.wrapHtml("<h2>{0}</h2>".format(config.thisTranslation["installBooks"]))
         self.contentView.setHtml(html, config.baseUrl)
         layout000Rt.addWidget(self.searchEntryRt)

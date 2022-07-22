@@ -80,7 +80,7 @@ class BibleDictionaries(QWidget):
         self.searchEntryRt = QLineEdit()
         self.searchEntryRt.setClearButtonEnabled(True)
         self.searchEntryRt.textChanged.connect(self.highlightContent)
-        self.contentView = WebEngineViewPopover(config.mainWindow, "main", "main", windowTitle=config.thisTranslation["context1_dict"])
+        self.contentView = WebEngineViewPopover(config.mainWindow, "main", "main", windowTitle=config.thisTranslation["context1_dict"], enableCloseAction=False)
         html = config.mainWindow.wrapHtml("<h2>{0}</h2>".format(config.thisTranslation["context1_dict"]))
         self.contentView.setHtml(html, config.baseUrl)
         layout000Rt.addWidget(self.searchEntryRt)

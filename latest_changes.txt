@@ -1,3 +1,6 @@
+Changes in 31.36:
+* Hide close option of content view in some menu plugins.
+
 Changes in 31.35:
 * Added new menu plugins:
     - Bible Encyclopedia

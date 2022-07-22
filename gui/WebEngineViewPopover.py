@@ -18,10 +18,11 @@ else:
 
 class WebEngineViewPopover(QWebEngineView):
 
-    def __init__(self, parent, name, source, windowTitle=""):
+    def __init__(self, parent, name, source, windowTitle="", enableCloseAction=True):
         super().__init__()
         self.parent = parent
         self.name = name
+        self.enableCloseAction = enableCloseAction
         self.wsName = "reader"
         self.wsFilename = ""
         self.source = source
@@ -237,7 +238,7 @@ class WebEngineViewPopover(QWebEngineView):
         separator.setSeparator(True)
         self.addAction(separator)
 
-        if not (hasattr(self.parent, "name") and self.parent.name == "workspace"):
+        if self.enableCloseAction and not (hasattr(self.parent, "name") and self.parent.name == "workspace"):
             qKey = QAction(self)
             qKey.setText("{0} | {1}".format(config.thisTranslation["close"], sc.closePopoverWindow))
             qKey.setShortcut(QKeySequence(sc.closePopoverWindow))
