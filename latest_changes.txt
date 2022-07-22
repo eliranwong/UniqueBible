@@ -1,3 +1,6 @@
+Changes in 31.37:
+* Added "Bible Names" to "Bible Data".
+
 Changes in 31.36:
 * Hide close option of content view in some menu plugins.
 
