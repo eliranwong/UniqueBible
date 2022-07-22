@@ -137,6 +137,7 @@ class ConfigFlagsWindow(QDialog):
             ("forceUseBuiltinMediaPlayer", config.forceUseBuiltinMediaPlayer, self.forceUseBuiltinMediaPlayerChanged, False, config.thisTranslation["forceUseBuiltinMediaPlayer"]),
             ("hideVlcInterfaceReadingSingleVerse", config.hideVlcInterfaceReadingSingleVerse, self.hideVlcInterfaceReadingSingleVerseChanged, True, config.thisTranslation["hideVlcInterfaceReadingSingleVerse"]),
             ("doNotStop3rdPartyMediaPlayerOnExit", config.doNotStop3rdPartyMediaPlayerOnExit, self.doNotStop3rdPartyMediaPlayerOnExitChanged, False, config.thisTranslation["doNotStop3rdPartyMediaPlayerOnExit"]),
+            ("refreshWindowsAfterSavingNote", config.refreshWindowsAfterSavingNote, self.refreshWindowsAfterSavingNoteChanged, True, config.thisTranslation["refreshWindowsAfterSavingNote"]),
         ]
         if config.isOfflineTtsInstalled:
             options += [
@@ -535,3 +536,6 @@ class ConfigFlagsWindow(QDialog):
 
     def showMiniKeyboardInMiniControlChanged(self):
         config.showMiniKeyboardInMiniControl = not config.showMiniKeyboardInMiniControl
+
+    def refreshWindowsAfterSavingNoteChanged(self):
+        config.refreshWindowsAfterSavingNote = not config.refreshWindowsAfterSavingNote

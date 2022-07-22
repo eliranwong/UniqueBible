@@ -993,4 +993,5 @@ translation = {
     "loadImage": "로드 이미지",
     "bibleTimelines": "성경 타임라인",
     "displayOnStudyWindow": "연구 창에 표시",
+    "refreshWindowsAfterSavingNote": "메모 저장 후 창 새로 고치기",
 }

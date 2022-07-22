@@ -993,4 +993,5 @@ translation = {
     "loadImage": "Încarcă imaginea",
     "bibleTimelines": "Biblia Sinodală",
     "displayOnStudyWindow": "Afişarea pe fereastra de studiu",
+    "refreshWindowsAfterSavingNote": "Reîmprospătează ferestrele după ce salvează",
 }

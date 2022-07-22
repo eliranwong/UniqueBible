@@ -993,4 +993,5 @@ translation = {
     "loadImage": "छवि लोड करें",
     "bibleTimelines": "बाइबल की समयरेखा",
     "displayOnStudyWindow": "अध्ययन विंडो पर प्रदर्शित करें",
+    "refreshWindowsAfterSavingNote": "नोट सहेजने के बाद विंडो ताज़ा करें",
 }

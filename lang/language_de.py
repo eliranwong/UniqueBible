@@ -993,4 +993,5 @@ translation = {
     "loadImage": "Bild laden",
     "bibleTimelines": "Bibelzeitachsen",
     "displayOnStudyWindow": "Anzeige im Studienfenster",
+    "refreshWindowsAfterSavingNote": "Windows nach dem Speichern von Notiz aktualisieren",
 }

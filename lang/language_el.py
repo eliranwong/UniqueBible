@@ -993,4 +993,5 @@ translation = {
     "loadImage": "Φόρτωση εικόνας",
     "bibleTimelines": "Χρονοδιάγραμμα Της Βίβλου",
     "displayOnStudyWindow": "Εμφάνιση σε παράθυρο μελέτης",
+    "refreshWindowsAfterSavingNote": "Ανανέωση παραθύρων μετά την αποθήκευση σημείωσης",
 }
