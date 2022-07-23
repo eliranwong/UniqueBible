@@ -12,11 +12,17 @@ class NoteService:
 
     ns = None
 
+    @staticmethod
     def getNoteSqlite():
         if not NoteService.ns:
             NoteService.ns = NoteSqlite()
         return NoteService.ns
 
+    @staticmethod
+    def close():
+        NoteService.getNoteSqlite().connection.close()
+
+    @staticmethod
     def getBookNote(b):
         validGist = False
         noteL = noteG = None
@@ -52,6 +58,7 @@ class NoteService:
             ns.saveBookNote(b, noteG, updatedG)
         return note
 
+    @staticmethod
     def getChapterNote(b, c):
         validGist = False
         noteL = noteG = None
@@ -87,6 +94,7 @@ class NoteService:
             ns.saveChapterNote(b, c, noteG, updatedG)
         return note
 
+    @staticmethod
     def getVerseNote(b, c, v):
         validGist = False
         noteL = noteG = None
@@ -122,6 +130,7 @@ class NoteService:
             ns.saveVerseNote(b, c, v, noteG, updatedG)
         return note
 
+    @staticmethod
     def saveBookNote(b, note):
         now = DateUtil.epoch()
         if config.enableGist:
@@ -131,6 +140,7 @@ class NoteService:
         ns = NoteService.getNoteSqlite()
         ns.saveBookNote(b, note, now)
 
+    @staticmethod
     def saveChapterNote(b, c, note):
         now = DateUtil.epoch()
         if config.enableGist:
@@ -140,6 +150,7 @@ class NoteService:
         ns = NoteService.getNoteSqlite()
         ns.saveChapterNote(b, c, note, now)
 
+    @staticmethod
     def saveVerseNote(b, c, v, note):
         now = DateUtil.epoch()
         if config.enableGist:
@@ -149,26 +160,31 @@ class NoteService:
         ns = NoteService.getNoteSqlite()
         ns.saveVerseNote(b, c, v, note, now)
 
+    @staticmethod
     def getSearchedChapterList(command):
         ns = NoteService.getNoteSqlite()
         chapters = ns.getSearchedChapterList(command)
         return chapters
 
+    @staticmethod
     def getSearchedVerseList(command):
         ns = NoteService.getNoteSqlite()
         verses = ns.getSearchedVerseList(command)
         return verses
 
+    @staticmethod
     def getChapterVerseList(b, c):
         ns = NoteService.getNoteSqlite()
         noteVerseList = ns.getChapterVerseList(b, c)
         return noteVerseList
 
+    @staticmethod
     def isChapterNote(b, c):
         ns = NoteService.getNoteSqlite()
         result = ns.isChapterNote(b, c)
         return result
 
+    @staticmethod
     def mergeNotes(note1, note2, separater=""):
         note1 = note1.replace('\n', '').replace('\r', '')
         note2 = note2.replace('\n', '').replace('\r', '')

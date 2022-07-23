@@ -8,6 +8,7 @@ import os, platform, logging, re, sys, subprocess
 import logging.handlers as handlers
 from util.FileUtil import FileUtil
 from util.NetworkUtil import NetworkUtil
+from util.NoteService import NoteService
 from util.WebtopUtil import WebtopUtil
 
 # Change working directory to UniqueBible directory
@@ -137,14 +138,18 @@ def runStartupPlugins():
 from db.BiblesSqlite import BiblesSqlite
 
 def checkMigration():
-    if config.version >= 0.56:
-        biblesSqlite = BiblesSqlite()
-        biblesWithBothVersions = biblesSqlite.migratePlainFormattedBibles()
-        if biblesWithBothVersions:
-            biblesSqlite.proceedMigration(biblesWithBothVersions)
-        if config.migrateDatabaseBibleNameToDetailsTable:
-            biblesSqlite.migrateDatabaseContent()
-        del biblesSqlite
+    if config.version >= 0.56 and not config.databaseConvertedOnStartup:
+        try:
+            biblesSqlite = BiblesSqlite()
+            biblesWithBothVersions = biblesSqlite.migratePlainFormattedBibles()
+            if biblesWithBothVersions:
+                biblesSqlite.proceedMigration(biblesWithBothVersions)
+            if config.migrateDatabaseBibleNameToDetailsTable:
+                biblesSqlite.migrateDatabaseContent()
+            del biblesSqlite
+            config.databaseConvertedOnStartup = True
+        except:
+            pass
 
 def startHttpServer():
     import socketserver
@@ -307,6 +312,7 @@ def exitApplication():
                 script = os.path.join(os.getcwd(), "plugins", "shutdown", "{0}.py".format(plugin))
                 config.mainWindow.execPythonFile(script)
     ConfigUtil.save()
+    NoteService.close()
     if config.docker and config.restartUBA:
         os.system("nohup ./UniqueBibleApp.sh > /dev/null 2>&1 &")
     elif config.restartUBA and hasattr(config, "cli"):
@@ -467,8 +473,11 @@ config.studyTextTemp = config.studyText
 config.mainWindow = MainWindow()
 
 # Check screen size
-availableGeometry = config.mainWindow.screen().availableGeometry()
-setupMainWindow(availableGeometry)
+try:
+    availableGeometry = config.mainWindow.screen().availableGeometry()
+    setupMainWindow(availableGeometry)
+except:
+    pass
 
 # A container of functions to be run after UBA loaded history records on startup
 # This offers a way for startup plugins to run codes after history records being loaded.
