@@ -1,6 +1,8 @@
 import config, re, textract, os, base64, glob, webbrowser, markdown
 from datetime import datetime
 import shortcut as sc
+from util.SystemUtil import SystemUtil
+
 if config.qtLibrary == "pyside6":
     from PySide6.QtGui import QIcon, QKeySequence, QShortcut
     from PySide6.QtCore import Qt, QTimer
@@ -131,7 +133,8 @@ class Workspace(QMainWindow):
         self.exemptSaving = True
         # Display Workspace
         self.show()
-        self.activateWindow()
+        if not SystemUtil.isWayland():
+            self.activateWindow()
         self.raise_()
         # Add widget to Workspace
         subWindow = self.mda.addSubWindow(widget)
@@ -143,7 +146,8 @@ class Workspace(QMainWindow):
         if windowTooltip:
             widget.setToolTip(windowTooltip)
         subWindow.show()
-        subWindow.activateWindow()
+        if not SystemUtil.isWayland():
+            subWindow.activateWindow()
         subWindow.raise_()
         # set cursor focus
         if hasattr(widget, "wsName") and widget.wsName == "editor":

@@ -1,6 +1,11 @@
-Changes in 31.43:
+Changes in 31.44:
 * Added a menu plugin "Bible Commentaries".
 * Integrated menu plugin into material menu.
+
+Changes in 31.43:
+* Disabled call to activateWindow for Linux Wayland
+* Added databaseConvertedOnStartup config flag
+* Added staticmethod in NoteService
 
 Changes in 31.42:
 * Apply startup plugins to WebEngineViewPopover content.

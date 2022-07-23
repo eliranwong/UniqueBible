@@ -36,6 +36,9 @@ class ConfigUtil:
         config.runMode = "gui"
         #config.customBooksRangeSearch = ""
         config.mainCssBibleFontStyle = ""
+        if not hasattr(config, "databaseConvertedOnStartup"):
+            config.databaseConvertedOnStartup = False
+
 
         # Default settings for configurations:
 
@@ -1626,6 +1629,7 @@ class ConfigUtil:
             ("showMiniKeyboardInMiniControl", config.showMiniKeyboardInMiniControl),
             ("parseClearSpecialCharacters", config.parseClearSpecialCharacters),
             ("refreshWindowsAfterSavingNote", config.refreshWindowsAfterSavingNote),
+            ("databaseConvertedOnStartup", config.databaseConvertedOnStartup),
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:

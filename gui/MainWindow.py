@@ -5,6 +5,9 @@ from datetime import datetime
 from distutils import util
 from functools import partial
 from pathlib import Path
+
+from util.SystemUtil import SystemUtil
+
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer
     from PySide6.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor, QAction, QShortcut
@@ -378,7 +381,8 @@ class MainWindow(QMainWindow):
                     self.controlPanel.hide()
                 self.controlPanel.show()
                 self.controlPanel.tabChanged(index)
-                self.controlPanel.activateWindow()
+                if not SystemUtil.isWayland():
+                    self.controlPanel.activateWindow()
             elif not config.controlPanel:
                 self.controlPanel = MasterControl(self, index, b, c, v, text)
                 if show:
@@ -477,17 +481,21 @@ class MainWindow(QMainWindow):
 
     # check migration
     def checkMigration(self):
-        if config.version >= 0.56:
-            biblesSqlite = BiblesSqlite()
-            biblesWithBothVersions = biblesSqlite.migratePlainFormattedBibles()
-            if biblesWithBothVersions:
-                self.displayMessage("{0}  {1}".format(config.thisTranslation["message_migration"],
-                                                      config.thisTranslation["message_willBeNoticed"]))
-                biblesSqlite.proceedMigration(biblesWithBothVersions)
-                self.displayMessage(config.thisTranslation["message_done"])
-            if config.migrateDatabaseBibleNameToDetailsTable:
-                biblesSqlite.migrateDatabaseContent()
-            del biblesSqlite
+        if config.version >= 0.56 and not config.databaseConvertedOnStartup:
+            try:
+                biblesSqlite = BiblesSqlite()
+                biblesWithBothVersions = biblesSqlite.migratePlainFormattedBibles()
+                if biblesWithBothVersions:
+                    self.displayMessage("{0}  {1}".format(config.thisTranslation["message_migration"],
+                                                          config.thisTranslation["message_willBeNoticed"]))
+                    biblesSqlite.proceedMigration(biblesWithBothVersions)
+                    self.displayMessage(config.thisTranslation["message_done"])
+                if config.migrateDatabaseBibleNameToDetailsTable:
+                    biblesSqlite.migrateDatabaseContent()
+                del biblesSqlite
+                config.databaseConvertedOnStartup = True
+            except:
+                pass
 
     def displayMessage(self, message="", title="UniqueBible"):
         if hasattr(config, "cli") and config.cli:
@@ -1427,7 +1435,8 @@ class MainWindow(QMainWindow):
             if window.isVisible() and not window.isActiveWindow():
                 window.hide()
             window.show()
-            window.activateWindow()
+            if not SystemUtil.isWayland():
+                window.activateWindow()
 
     def openMainBookNote(self):
         self.openBookNote(config.mainB)
@@ -5652,7 +5661,8 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         self.show()
         if self.isMinimized():
             self.showMaximized()
-        self.activateWindow()
+        if not SystemUtil.isWayland():
+            self.activateWindow()
         self.raise_()
         if platform.system() == "Linux":
             self.bringToForeground(self)
@@ -5670,7 +5680,8 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         self.ws.show()
         if self.ws.isMinimized():
             self.ws.showMaximized()
-        self.ws.activateWindow()
+        if not SystemUtil.isWayland():
+            self.ws.activateWindow()
         self.ws.raise_()
         if platform.system() == "Linux":
             self.bringToForeground(self.ws)
