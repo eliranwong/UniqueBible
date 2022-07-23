@@ -3505,7 +3505,8 @@ class MainWindow(QMainWindow):
         if hasattr(self, "commentaryCombo"):
             self.updateCommentaryCombo()
         if self.commentaryRefButton:
-            self.commentaryRefButton.setText(self.verseReference("commentary"))
+            #self.commentaryRefButton.setText(self.verseReference("commentary"))
+            self.commentaryRefButton.setText(config.commentaryText)
 
     def updateCommentaryCombo(self):
         if self.commentaryCombo is not None and config.menuLayout == "material" and not config.fixLoadingContent:

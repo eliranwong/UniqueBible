@@ -49,6 +49,18 @@ class BiblesSqlite:
         bibles = self.getPlainBibleList() + self.getFormattedBibleList(includeMarvelBibles)
         return sorted(set(bibles))
 
+    def getKJVchapters(self, b):
+        query = "SELECT DISTINCT Chapter FROM kjvbcv WHERE Book=? ORDER BY Chapter"
+        self.cursor.execute(query, (b,))
+        chapters = self.cursor.fetchall()
+        return [c for c, *_ in chapters] if chapters else []
+
+    def getKJVverses(self, b, c):
+        query = "SELECT Verse FROM kjvbcv WHERE Book=? AND Chapter=? ORDER BY Verse"
+        self.cursor.execute(query, (b, c))
+        verses = self.cursor.fetchall()
+        return [v for v, *_ in verses] if verses else []
+
     # legacy list before version 0.56
     def getBibleList2(self):
         query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"

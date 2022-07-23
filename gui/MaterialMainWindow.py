@@ -992,21 +992,24 @@ class MaterialMainWindow:
 
         # Commentary selection
 
-        if config.refButtonClickAction == "mini":
-            self.commentaryCombo = None
-            self.commentaryRefButton = QPushButton(self.verseReference("commentary"))
-            self.addStandardTextButton("menu4_commentary", self.commentaryRefButtonClicked, self.secondToolBar, self.commentaryRefButton)
-        else:
-            self.commentaryRefButton = None
-            self.commentaryCombo = QComboBox()
-            self.commentaryCombo.addItems(self.commentaryList)
-            initialIndex = 0
-            if config.commentaryText in self.commentaryList:
-                initialIndex = self.commentaryList.index(config.commentaryText)
-            self.commentaryCombo.setCurrentIndex(initialIndex)
-            self.commentaryCombo.currentIndexChanged.connect(self.changeCommentaryVersion)
-            self.commentaryCombo.setMaximumWidth(int(config.iconButtonSize * 7))
-            self.secondToolBar.addWidget(self.commentaryCombo)
+        self.commentaryRefButton = QPushButton(self.verseReference("commentary"))
+        self.commentaryRefButton = QPushButton(config.commentaryText)
+        self.addStandardTextButton("menu4_commentary", partial(self.runPlugin, "Bible Commentaries"), self.secondToolBar, self.commentaryRefButton)
+#        if config.refButtonClickAction == "mini":
+#            self.commentaryCombo = None
+#            self.commentaryRefButton = QPushButton(self.verseReference("commentary"))
+#            self.addStandardTextButton("menu4_commentary", self.commentaryRefButtonClicked, self.secondToolBar, self.commentaryRefButton)
+#        else:
+#            self.commentaryRefButton = None
+#            self.commentaryCombo = QComboBox()
+#            self.commentaryCombo.addItems(self.commentaryList)
+#            initialIndex = 0
+#            if config.commentaryText in self.commentaryList:
+#                initialIndex = self.commentaryList.index(config.commentaryText)
+#            self.commentaryCombo.setCurrentIndex(initialIndex)
+#            self.commentaryCombo.currentIndexChanged.connect(self.changeCommentaryVersion)
+#            self.commentaryCombo.setMaximumWidth(int(config.iconButtonSize * 7))
+#            self.secondToolBar.addWidget(self.commentaryCombo)
 
         self.enableSyncCommentaryButton = QPushButton()
         self.addMaterialIconButton(self.getSyncCommentaryDisplayToolTip(), self.getSyncCommentaryDisplay(), self.enableSyncCommentaryButtonClicked, self.secondToolBar, self.enableSyncCommentaryButton, False)
