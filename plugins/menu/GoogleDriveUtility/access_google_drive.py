@@ -63,7 +63,7 @@ def uploadFiles(service):
     if os.path.isfile(cloudIdFile):
         with open(cloudIdFile, "r", encoding="utf-8") as fileObject:
             oldFile_id = fileObject.readline().rstrip()
-    
+
     # Check if an older version exists
     currentFiles = listFiles(service)
     fileExists = oldFile_id in currentFiles
@@ -130,7 +130,7 @@ if __name__ == '__main__':
     if getBackupFolder(service) == 0:
         createBackupFolder(service)
     argument, backupFile = " ".join(sys.argv[1:]).split(" ", 1)
-    cloudIdFile = os.path.join("plugins", "menu", "GoggleDriveUtility", convertFilePath(backupFile))
+    cloudIdFile = os.path.join("plugins", "menu", "GoogleDriveUtility", convertFilePath(backupFile))
     options = {
         "upload": uploadFiles,
         "download": downloadFiles,
