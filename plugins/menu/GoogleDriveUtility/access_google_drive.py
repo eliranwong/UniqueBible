@@ -68,7 +68,10 @@ def uploadFiles(service):
     currentFiles = listFiles(service)
     fileExists = oldFile_id in currentFiles
 
-    file_metadata = {
+    file_update_metadata = {
+        "name": backupFile,
+    }
+    file_create_metadata = {
         "name": backupFile,
         "parents": [getBackupFolder(service)]
     }
@@ -77,9 +80,9 @@ def uploadFiles(service):
                             resumable=True)
     # update an existing file / create a new file
     if fileExists:
-        file = service.files().update(fileId=oldFile_id, body=file_metadata, media_body=media, fields='id').execute()
+        file = service.files().update(fileId=oldFile_id, body=file_update_metadata, media_body=media, fields='id').execute()
     else:
-        file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+        file = service.files().create(body=file_create_metadata, media_body=media, fields='id').execute()
     # Return new file id
     print(file.get('id'))
 
