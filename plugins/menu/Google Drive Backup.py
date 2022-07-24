@@ -45,7 +45,7 @@ def uploadFiles():
 
 credentials = os.path.join("credentials.json")
 if not os.path.isfile(credentials):
-    config.mainWindow.displayMessage("You have not yet enabled Googlee Drive API! \nRead for more information at: https://github.com/eliranwong/UniqueBible/wiki/Backup-with-Google-Drive")
+    config.mainWindow.displayMessage("You have not yet enabled Google Drive API! \nRead for more information at: https://github.com/eliranwong/UniqueBible/wiki/Backup-with-Google-Drive")
     config.mainWindow.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/Backup-with-Google-Drive")
 else:
     if not modulesInstalled:
