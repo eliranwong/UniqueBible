@@ -161,7 +161,7 @@ class Workspace(QMainWindow):
             QTimer.singleShot(1000, self.saveWorkspace)
 
     def addHtmlContent(self, html, editable=False, windowTitle="", windowTooltip="", autoSave=True):
-        html = self.parent.wrapHtml(html)
+        #html = self.parent.wrapHtml(html)
         if editable:
             widget = MiniTextEditor(self)
             widget.setHtml(html)

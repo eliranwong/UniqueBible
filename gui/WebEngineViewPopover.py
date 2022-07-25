@@ -1,3 +1,4 @@
+from genericpath import isfile
 import os
 import config
 import shortcut as sc
@@ -44,12 +45,28 @@ class WebEngineViewPopover(QWebEngineView):
         activeVerseNoColour = config.darkThemeActiveVerseColor if config.theme == "dark" else config.lightThemeActiveVerseColor
         # scroll to the study verse
         self.page().runJavaScript("var activeVerse = document.getElementById('v"+str(config.studyB)+"."+str(config.studyC)+"."+str(config.studyV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = '"+activeVerseNoColour+"'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
-        self.page().toHtml(self.getHtml)
+        if not self.htmlStored:
+            self.page().toHtml(self.getHtml)
     
+    def load(self, url):
+        try:
+            filepath = url.toLocalFile()
+            if os.path.isfile(filepath):
+                with open(filepath, 'r', encoding='utf8') as fileObj:
+                    self.html = fileObj.read()
+                self.htmlStored = True
+            else:
+                self.htmlStored = False
+        except:
+            self.htmlStored = False
+        super().load(url)
+
     def setHtml(self, html, baseUrl=QUrl()):
         if config.bibleWindowContentTransformers:
             for transformer in config.bibleWindowContentTransformers:
                 html = transformer(html)
+        self.html = html
+        self.htmlStored = True
         super().setHtml(html, baseUrl)
 
     def getHtml(self, html):
@@ -66,10 +83,12 @@ class WebEngineViewPopover(QWebEngineView):
             config.mainWindow.textCommandChanged(newTextCommand, self.source)
 
     def addToWorkspaceReadOnly(self):
-        self.page().toHtml(self.addToWorkspaceReadOnlyAction)
+        #self.page().toHtml(self.addToWorkspaceReadOnlyAction)
+        self.addToWorkspaceReadOnlyAction(self.html)
 
     def addToWorkspaceEditable(self):
-        self.page().toHtml(self.addToWorkspaceEditableAction)
+        #self.page().toHtml(self.addToWorkspaceEditableAction)
+        self.addToWorkspaceEditableAction(self.html)
 
     def addToWorkspaceReadOnlyAction(self, html):
         windowTitle = self.windowTitle() if not self.windowTitle() == "Unique Bible App" else ""
@@ -366,12 +385,6 @@ class WebEngineViewPopover(QWebEngineView):
             else:
                 self.setWindowTitle(windowTitle)
                 self.parent.saveWorkspace()
-
-    def addToWorkspaceReadOnly(self):
-        self.page().toHtml(self.addToWorkspaceReadOnlyAction)
-
-    def addToWorkspaceEditable(self):
-        self.page().toHtml(self.addToWorkspaceEditableAction)
 
     def addTextSelectionToWorkspace(self, selectedText=None, editable=False):
         if not selectedText:

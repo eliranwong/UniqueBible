@@ -1,3 +1,6 @@
+Changes in 31.46:
+* Enhanced effectiveness of sending html to workspace.
+
 Changes in 31.45:
 * Added Google Drive backup/restore plugin.
 - https://github.com/eliranwong/UniqueBible/wiki/Backup-with-Google-Drive

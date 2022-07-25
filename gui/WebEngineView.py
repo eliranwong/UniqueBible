@@ -39,6 +39,7 @@ class WebEngineView(QWebEngineView):
         super().__init__()
         self.parent = parent
         self.name = name
+        self.html = None
         self.setPage(WebEnginePage(self))
         self.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
         self.page().fullScreenRequested.connect(lambda request: request.accept())
@@ -50,6 +51,27 @@ class WebEngineView(QWebEngineView):
 
         # selection monitoring
         self.selectionChanged.connect(self.selectionMonitoringFeature)
+
+    def load(self, url):
+        try:
+            filepath = url.toLocalFile()
+            if os.path.isfile(filepath):
+                with open(filepath, 'r', encoding='utf8') as fileObj:
+                    self.html = fileObj.read()
+                self.htmlStored = True
+            else:
+                self.htmlStored = False
+        except:
+            self.htmlStored = False
+        super().load(url)
+
+    def setHtml(self, html, baseUrl=QUrl()):
+        if config.bibleWindowContentTransformers:
+            for transformer in config.bibleWindowContentTransformers:
+                html = transformer(html)
+        self.html = html
+        self.htmlStored = True
+        super().setHtml(html, baseUrl)
 
     def selectionMonitoringFeature(self):
         if config.enableSelectionMonitoring:
@@ -1021,10 +1043,16 @@ class WebEngineView(QWebEngineView):
 
     # Add to Workspace
     def addToWorkspaceReadOnly(self):
-        self.page().toHtml(self.addToWorkspaceReadOnlyAction)
+        if self.htmlStored:
+            self.addToWorkspaceReadOnlyAction(self.html)
+        else:
+            self.page().toHtml(self.addToWorkspaceReadOnlyAction)
 
     def addToWorkspaceEditable(self):
-        self.page().toHtml(self.addToWorkspaceEditableAction)
+        if self.htmlStored:
+            self.addToWorkspaceEditableAction(self.html)
+        else:
+            self.page().toHtml(self.addToWorkspaceEditableAction)
 
     def addToWorkspaceReadOnlyAction(self, html):
         windowTitle = ""
