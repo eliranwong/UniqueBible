@@ -1,5 +1,8 @@
-Changes in 31.46:
+Changes in 31.47:
 * Enhanced effectiveness of sending html to workspace.
+
+Changes in 31.46:
+* Deleted Notes backup/restore plugin.
 
 Changes in 31.45:
 * Added Google Drive backup/restore plugin.
