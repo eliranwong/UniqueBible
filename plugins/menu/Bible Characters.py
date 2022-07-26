@@ -19,10 +19,12 @@ class BiblePeople(QWidget):
         # set title
         self.setWindowTitle(config.thisTranslation["menu5_characters"])
         #self.setMinimumSize(830, 500)
+        # get text selection
+        selectedText = config.mainWindow.selectedText(config.pluginContext == "study")
         # set variables
         self.setupVariables()
         # setup interface
-        self.setupUI()
+        self.setupUI(selectedText)
 
     def setupVariables(self):
         # place holders
@@ -47,7 +49,7 @@ class BiblePeople(QWidget):
         iconFilePath = os.path.join("htmlResources", "material", "social", "female", "materialiconsoutlined", "48dp", "2x", "outline_female_black_48dp.png")
         self.femaleIcon = config.mainWindow.getMaskedQIcon(iconFilePath, textColor, config.maskMaterialIconBackground, True)
 
-    def setupUI(self):
+    def setupUI(self, selectedText):
         layout000 = QHBoxLayout()
         self.setLayout(layout000)
         layout00h = QHBoxLayout()
@@ -101,6 +103,7 @@ class BiblePeople(QWidget):
         label = QLabel("Name:")
         self.searchEntry = QLineEdit()
         self.searchEntry.setClearButtonEnabled(True)
+        self.searchEntry.setText(selectedText)
         self.searchEntry.textChanged.connect(self.filterPeople)
         peopleView = QListView()
         peopleView.setEditTriggers(QAbstractItemView.NoEditTriggers)

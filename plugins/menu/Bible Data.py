@@ -66,10 +66,12 @@ class BibleData(QWidget):
         # set title
         self.setWindowTitle(config.thisTranslation["bibleData"])
         self.setMinimumSize(830, 500)
+        # get text selection
+        selectedText = config.mainWindow.selectedText(config.pluginContext == "study")
         # set variables
         self.setupVariables()
         # setup interface
-        self.setupUI()
+        self.setupUI(selectedText)
 
     def setupVariables(self):
         self.updatingData = False
@@ -79,7 +81,7 @@ class BibleData(QWidget):
     def resetFilenameList(self):
         self.filenameList = [item for item in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu", "Bible Data"), "txt")]
 
-    def setupUI(self):
+    def setupUI(self, selectedText):
         layout000 = QGridLayout()
         layout000.setColumnStretch(0, 2)
         layout000.setColumnStretch(1, 1)
@@ -94,6 +96,8 @@ class BibleData(QWidget):
         self.datasets.addItems(self.filenameList)
         for index, tooltip in enumerate(self.filenameList):
             self.datasets.setItemData(index, tooltip, Qt.ToolTipRole)
+        if config.dataset in self.filenameList:
+            self.datasets.setCurrentIndex(self.filenameList.index(config.dataset))
         self.datasets.currentIndexChanged.connect(self.filterData)
         editButton = QPushButton(config.thisTranslation["edit2"])
         editButton.clicked.connect(self.editAction)
@@ -105,6 +109,7 @@ class BibleData(QWidget):
         importButton.clicked.connect(self.importAction)
         self.searchEntry = QLineEdit()
         self.searchEntry.setClearButtonEnabled(True)
+        self.searchEntry.setText(selectedText)
         self.searchEntry.textChanged.connect(self.filterData)
         dataView = QListView()
         dataView.setEditTriggers(QAbstractItemView.NoEditTriggers)

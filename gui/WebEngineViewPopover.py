@@ -72,6 +72,7 @@ class WebEngineViewPopover(QWebEngineView):
     def getHtml(self, html):
         # store html in a variable when page is finished loading to facilitate file saving
         self.html = html
+        self.htmlStored = True
 
     def popoverTextCommandChanged(self, newTextCommand):
         # reset document.title
@@ -83,12 +84,16 @@ class WebEngineViewPopover(QWebEngineView):
             config.mainWindow.textCommandChanged(newTextCommand, self.source)
 
     def addToWorkspaceReadOnly(self):
-        #self.page().toHtml(self.addToWorkspaceReadOnlyAction)
-        self.addToWorkspaceReadOnlyAction(self.html)
+        if self.htmlStored:
+            self.addToWorkspaceReadOnlyAction(self.html)
+        else:
+            self.page().toHtml(self.addToWorkspaceReadOnlyAction)
 
     def addToWorkspaceEditable(self):
-        #self.page().toHtml(self.addToWorkspaceEditableAction)
-        self.addToWorkspaceEditableAction(self.html)
+        if self.htmlStored:
+            self.addToWorkspaceEditableAction(self.html)
+        else:
+            self.page().toHtml(self.addToWorkspaceEditableAction)
 
     def addToWorkspaceReadOnlyAction(self, html):
         windowTitle = self.windowTitle() if not self.windowTitle() == "Unique Bible App" else ""
@@ -316,7 +321,10 @@ class WebEngineViewPopover(QWebEngineView):
         elif self.name == "EPUB":
             config.mainWindow.runPlugin("ePub Viewer")
         else:
-            self.page().toHtml(self.openHtmlInStudyWindow)
+            if self.htmlStored:
+                self.openHtmlInStudyWindow(self.html)
+            else:
+                self.page().toHtml(self.openHtmlInStudyWindow)
         self.close()
     
     def openHtmlInStudyWindow(self, html):
@@ -349,9 +357,15 @@ class WebEngineViewPopover(QWebEngineView):
     def saveHtml(self, fileName=""):
         if self.html is None:
             if not fileName:
-                self.page().toHtml(self.saveHtmlToFile)
+                if self.htmlStored:
+                    self.saveHtmlToFile(self.html)
+                else:
+                    self.page().toHtml(self.saveHtmlToFile)
             else:
-                self.page().toHtml(lambda html, fileName=fileName: self.saveHtmlToFileAction(html, fileName))
+                if self.htmlStored:
+                    self.saveHtmlToFileAction(self.html, fileName)
+                else:
+                    self.page().toHtml(lambda html, fileName=fileName: self.saveHtmlToFileAction(html, fileName))
         else:
             if not fileName:
                 self.saveHtmlToFile(self.html)

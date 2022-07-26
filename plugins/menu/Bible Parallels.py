@@ -21,12 +21,17 @@ class BibleParallels(QWidget):
         # set title
         self.setWindowTitle(config.thisTranslation["bibleHarmonies"])
         #self.setMinimumSize(830, 500)
+        # get text selection
+        selectedText = config.mainWindow.selectedText(config.pluginContext == "study")
         # set variables
         self.setupVariables()
         # setup interface
-        self.setupUI()
+        self.setupUI(selectedText)
         # set initial window size
         self.resize(QGuiApplication.primaryScreen().availableSize() * 3 / 4)
+        # display initial content
+        if not selectedText:
+            self.displayContent()
 
     def setupVariables(self):
         self.modules = (
@@ -67,10 +72,9 @@ class BibleParallels(QWidget):
         self.cursor = self.connection.cursor()
         # Entries
         self.entries = []
-        self.number = None
         self.refreshing = False
 
-    def setupUI(self):
+    def setupUI(self, selectedText):
         layout000 = QHBoxLayout()
         self.setLayout(layout000)
         widgetLt = QWidget()
@@ -89,13 +93,13 @@ class BibleParallels(QWidget):
         self.moduleView.addItems(self.modules)
         for index, tooltip in enumerate(self.modules):
             self.moduleView.setItemData(index, tooltip, Qt.ToolTipRole)
-        initialIndex = self.modules.index(config.parallels) if config.parallels in self.modules else 0
+        initialIndex = config.parallels
         if initialIndex < len(self.modules):
             self.moduleView.setCurrentIndex(initialIndex)
         self.moduleView.currentIndexChanged.connect(self.moduleSelected)
         self.searchEntry = QLineEdit()
         self.searchEntry.setClearButtonEnabled(True)
-        self.searchEntry.setText(config.mainWindow.selectedText())
+        self.searchEntry.setText(selectedText)
         self.searchEntry.textChanged.connect(self.filterEntry)
         entryView = QListView()
         entryView.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -149,16 +153,19 @@ class BibleParallels(QWidget):
     def entrySelected(self, selection):
         if not self.refreshing:
             # set config
-            moduleIndex = self.moduleView.currentIndex()
-            config.parallels = self.modules[moduleIndex]
+            config.parallels = self.moduleView.currentIndex()
             # get tool number
             index = selection[0].indexes()[0].row()
             toolTip = self.entryViewModel.item(index).toolTip()
             toolTip = re.sub("\n", "", toolTip)
-            self.number = int(re.sub("^\[([0-9]+?)\].*?$", r"\1", toolTip))
+            config.parallelsEntry = int(re.sub("^\[([0-9]+?)\].*?$", r"\1", toolTip))
+            self.displayContent()
+    
+    def displayContent(self):
+        if config.parallels and config.parallelsEntry:
             # fetch entry data
             query = "SELECT Topic, Passages FROM PARALLEL WHERE Tool=? AND Number=?"
-            self.cursor.execute(query, (self.moduleView.currentIndex(), self.number))
+            self.cursor.execute(query, (config.parallels, config.parallelsEntry))
             entry = self.cursor.fetchone()
             if entry:
                 topic, passagesString = entry
@@ -172,8 +179,8 @@ class BibleParallels(QWidget):
                 self.contentView.setHtml(html, config.baseUrl)
 
     def openOnMainWindow(self):
-        if self.number is not None:
-            command = "_harmony:::{0}.{1}".format(self.moduleView.currentIndex(), self.number)
+        if config.parallels and config.parallelsEntry:
+            command = "_harmony:::{0}.{1}".format(config.parallels, config.parallelsEntry)
             config.mainWindow.runTextCommand(command)
 
 

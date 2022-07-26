@@ -1,9 +1,19 @@
-import config
-import gmplot, os, webbrowser, re
+import config, gmplot, os, webbrowser, re
+from util.exlbl import allLocations
+from gui.CheckableComboBox import CheckableComboBox
+from gui.WebEngineViewPopover import WebEngineViewPopover
+from util.BibleVerseParser import BibleVerseParser
+from db.ToolsSqlite import IndexesSqlite
+from haversine import haversine
+
 if config.qtLibrary == "pyside6":
-    from PySide6.QtWidgets import QWidget
+    from PySide6.QtGui import QStandardItemModel, QStandardItem, QGuiApplication
+    from PySide6.QtCore import Qt, QUrl
+    from PySide6.QtWidgets import QSplitter, QWidget, QComboBox, QGroupBox, QPushButton, QLabel, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit
 else:
-    from qtpy.QtWidgets import QWidget
+    from qtpy.QtGui import QStandardItemModel, QStandardItem, QGuiApplication
+    from qtpy.QtCore import Qt, QUrl
+    from qtpy.QtWidgets import QSplitter, QWidget, QComboBox, QGroupBox, QPushButton, QLabel, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit
 
 
 class BibleLocations(QWidget):
@@ -12,43 +22,43 @@ class BibleLocations(QWidget):
         super().__init__()
         self.parent = parent
         # set title
-        self.setWindowTitle("Bible Locations")
+        self.setWindowTitle(config.thisTranslation["menu5_locations"])
         #self.setMinimumSize(830, 500)
+        # get text selection
+        selectedText = config.mainWindow.selectedText(config.pluginContext == "study")
         # set variables
         self.setupVariables()
         # setup interface
-        self.setupUI()
+        self.setupUI(selectedText)
 
     def setupVariables(self):
-        from util.exlbl import allLocations
         self.locations = allLocations
         self.locationMap = {exlbl_entry: (name[0].upper(), name, float(latitude), float(longitude)) for exlbl_entry, name, latitude, longitude in self.locations}
 
-    def setupUI(self):
-        from gui.CheckableComboBox import CheckableComboBox
-        import config
-
-        if config.qtLibrary == "pyside6":
-            from PySide6.QtGui import QStandardItemModel
-            from PySide6.QtCore import Qt
-            from PySide6.QtWidgets import QComboBox, QGroupBox, QPushButton, QLabel, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit
-        else:
-            from qtpy.QtGui import QStandardItemModel
-            from qtpy.QtCore import Qt
-            from qtpy.QtWidgets import QComboBox, QGroupBox, QPushButton, QLabel, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit
-
+    def setupUI(self, selectedText):
         self.items = ["{0}. {1}".format(exlbl_entry[2:], name) for exlbl_entry, name, *_ in self.locations]
         itemTooltips = ["{0}. {1} [{2}, {3}]".format(exlbl_entry[2:], name, latitude, longitude) for exlbl_entry, name, latitude, longitude in self.locations]
 
-        layout000 = QVBoxLayout()
+        widgetTop = QWidget()
         layout001 = QHBoxLayout()
-        layout000.addLayout(layout001)
-        self.setLayout(layout000)
-        
+        layout001Lt = QVBoxLayout()
+        layout001.addLayout(layout001Lt)
+        widgetTop.setLayout(layout001)
+
+        layout0000 = QHBoxLayout()
+        splitter = QSplitter(Qt.Vertical, self)
+        splitter.addWidget(widgetTop)
+        self.contentView = WebEngineViewPopover(config.mainWindow, "main", "main", windowTitle=config.thisTranslation["menu5_locations"], enableCloseAction=False)
+        html = config.mainWindow.wrapHtml("<h2>{0}</h2>".format(config.thisTranslation["menu5_locations"]))
+        self.contentView.setHtml(html, config.baseUrl)
+        splitter.addWidget(self.contentView)
+        layout0000.addWidget(splitter)
+        self.setLayout(layout0000)
+
         leftGroupWidget = QGroupBox("Distance")
         layoutLt0 = QVBoxLayout()
         leftGroupWidget.setLayout(layoutLt0)
-        layout001.addWidget(leftGroupWidget)
+        layout001Lt.addWidget(leftGroupWidget)
 
         rightGroupWidget = QGroupBox("Library Links and Google Maps")
         layout0 = QVBoxLayout()
@@ -67,7 +77,7 @@ class BibleLocations(QWidget):
 
         wikiButton = QPushButton("Wiki")
         wikiButton.clicked.connect(lambda: webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/Bible-Locations"))
-        layout000.addWidget(wikiButton)
+        layout001Lt.addWidget(wikiButton)
 
         layoutLt0.addWidget(QLabel("between"))
         self.location1 = QComboBox()
@@ -131,9 +141,6 @@ class BibleLocations(QWidget):
         self.searchLocationsListModel = QStandardItemModel(searchLocationsList)
         searchLocationsList.setModel(self.searchLocationsListModel)
         #self.searchLocationsListModel.itemChanged.connect(self.itemChanged)
-        selectedText = config.mainWindow.mainView.currentWidget().selectedText().strip()
-        if not selectedText:
-            selectedText = config.mainWindow.studyView.currentWidget().selectedText().strip()
         self.searchLocationEntry.setText(selectedText)
         layout3.addWidget(searchLocationsList)
 
@@ -144,17 +151,19 @@ class BibleLocations(QWidget):
         getLinkButton = QPushButton("Library Links")
         getLinkButton.clicked.connect(self.displayLinks)
         lyaout4.addWidget(getLinkButton)
-        lyaout4.addWidget(QLabel("Open Google Map on:"))
-        displayMapButton = QPushButton("Study Window")
+        lyaout4.addStretch()
+        lyaout4.addWidget(QLabel("Google Map:"))
+        displayMapButton = QPushButton("HERE")
         displayMapButton.clicked.connect(self.displayMap)
         lyaout4.addWidget(displayMapButton)
+        displayMapOnStudyWindowButton = QPushButton("Study Window")
+        displayMapOnStudyWindowButton.clicked.connect(lambda: self.displayMap(displayOnStudyWindow=True))
+        lyaout4.addWidget(displayMapOnStudyWindowButton)
         displayMapWebbrowserButton = QPushButton("Web Browser")
-        displayMapWebbrowserButton.clicked.connect(lambda: self.displayMap(True))
+        displayMapWebbrowserButton.clicked.connect(lambda: self.displayMap(browser=True))
         lyaout4.addWidget(displayMapWebbrowserButton)
 
     def updateLocation(self, index):
-        from haversine import haversine
-
         locationIndex1 = self.location1.currentIndex()
         text = self.items[locationIndex1]
         num = int(re.sub("\..*?$", "", text))
@@ -171,11 +180,6 @@ class BibleLocations(QWidget):
         self.distanceInMile.setText("{0} mi".format(haversine(location1, location2, unit='mi')))
 
     def filterLocations(self):
-        if config.qtLibrary == "pyside6":
-            from PySide6.QtGui import QStandardItem
-        else:
-            from qtpy.QtGui import QStandardItem
-
         self.searchLocationsListModel.clear()
         searchString = self.searchLocationEntry.text().strip()
         if searchString:
@@ -189,11 +193,6 @@ class BibleLocations(QWidget):
                     self.searchLocationsListModel.appendRow(item)
 
     def addSearchedLocations(self):
-        if config.qtLibrary == "pyside6":
-            from PySide6.QtCore import Qt
-        else:
-            from qtpy.QtCore import Qt
-
         locations = []
         for row in range(0, self.searchLocationsListModel.rowCount()):
             standardItem = self.searchLocationsListModel.item(row)
@@ -229,7 +228,6 @@ class BibleLocations(QWidget):
         self.locationCombo.checkFromList(formattedList)
 
     def getReference(self):
-        from util.BibleVerseParser import BibleVerseParser
         reference = self.searchEntry.text().strip()
         verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(reference, False)
         return verses[0] if verses else []
@@ -237,7 +235,6 @@ class BibleLocations(QWidget):
     def addBookLocations(self):
         reference = self.getReference()
         if reference:
-            from db.ToolsSqlite import IndexesSqlite
             indexesSqlite = IndexesSqlite()
             locations = indexesSqlite.getBookLocations(reference[0])
             self.selectLocations(locations)
@@ -245,7 +242,6 @@ class BibleLocations(QWidget):
     def addChapterLocations(self):
         reference = self.getReference()
         if reference:
-            from db.ToolsSqlite import IndexesSqlite
             indexesSqlite = IndexesSqlite()
             b, c, *_ = reference
             locations = indexesSqlite.getChapterLocations(b, c)
@@ -254,7 +250,6 @@ class BibleLocations(QWidget):
     def addVerseLocations(self):
         reference = self.getReference()
         if reference:
-            from db.ToolsSqlite import IndexesSqlite
             indexesSqlite = IndexesSqlite()
             b, c, v, *_ = reference
             locations = indexesSqlite.getVerseLocations(b, c, v)
@@ -264,7 +259,6 @@ class BibleLocations(QWidget):
         combinedLocations = []
         reference = self.getReference()
         if reference and len(reference) == 5:
-            from db.ToolsSqlite import IndexesSqlite
             indexesSqlite = IndexesSqlite()
             b, c, v, ce, ve = reference
             if c == ce:
@@ -296,17 +290,13 @@ class BibleLocations(QWidget):
         else:
             linkList.append("""<ref onclick="exlbl('{0}')">{1} - {2}</ref>""".format("BL636", "J", "Jerusalem"))
         html = "<p>{0}</p>".format("<br>".join(linkList))
-        if config.openStudyWindowContentOnNextTab:
-            config.mainWindow.nextStudyWindowTab()
+        #if config.openStudyWindowContentOnNextTab:
+            #config.mainWindow.nextStudyWindowTab()
         html = config.mainWindow.htmlWrapper(html, False, "study", False, False)
-        config.mainWindow.openTextOnStudyView(html, tab_title="Bible Locations", toolTip="Bible Locations")
+        self.contentView.setHtml(html, config.baseUrl)
+        #config.mainWindow.openTextOnStudyView(html, tab_title="Bible Locations", toolTip="Bible Locations")
 
-    def displayMap(self, browser=False):
-        if config.qtLibrary == "pyside6":
-            from PySide6.QtCore import QUrl
-        else:
-            from qtpy.QtCore import QUrl
-
+    def displayMap(self, browser=False, displayOnStudyWindow=False):
         gmap = gmplot.GoogleMapPlotter(33.877444, 34.234935, 6, map_type='hybrid')
         if config.myGoogleApiKey:
             gmap.apikey = config.myGoogleApiKey
@@ -338,10 +328,12 @@ class BibleLocations(QWidget):
         fullFilePath = os.path.abspath(mapHtml)
         if browser:
             webbrowser.open("file://{0}".format(fullFilePath))
-        else:
+        elif displayOnStudyWindow:
             if config.openStudyWindowContentOnNextTab:
                 config.mainWindow.nextStudyWindowTab()
             config.mainWindow.studyView.load(QUrl.fromLocalFile(fullFilePath))
+        else:
+            self.contentView.load(QUrl.fromLocalFile(fullFilePath))
 
         # HTML text
         #html = gmap.get()

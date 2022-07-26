@@ -1,3 +1,9 @@
+Changes in 31.49:
+* Added built-in map browser in menu plugin "Bible Locations".
+* Added a splitter to menu plugin "Bible Locations", so that users can maximise the map view by moving the splitter.
+* Fixed loading Google map from Study Window to full screen.
+* Enhanced integration of several more newly created menu plugins.
+
 Changes in 31.48:
 * Enhanced integration of newly created menu plugins.
 

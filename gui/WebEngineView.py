@@ -637,20 +637,30 @@ class WebEngineView(QWebEngineView):
 
         subMenu = QMenu()
 
-        searchBibleCharacter = QAction(self)
-        searchBibleCharacter.setText(config.thisTranslation["menu5_characters"])
-        searchBibleCharacter.triggered.connect(self.searchCharacter)
-        subMenu.addAction(searchBibleCharacter)
-
         searchBibleName = QAction(self)
         searchBibleName.setText(config.thisTranslation["menu5_names"])
         searchBibleName.triggered.connect(self.searchName)
         subMenu.addAction(searchBibleName)
 
+        searchBibleCharacter = QAction(self)
+        searchBibleCharacter.setText(config.thisTranslation["menu5_characters"])
+        searchBibleCharacter.triggered.connect(self.searchCharacter)
+        subMenu.addAction(searchBibleCharacter)
+
         searchBibleLocation = QAction(self)
         searchBibleLocation.setText(config.thisTranslation["menu5_locations"])
         searchBibleLocation.triggered.connect(self.searchLocation)
         subMenu.addAction(searchBibleLocation)
+
+        searchBibleParallel = QAction(self)
+        searchBibleParallel.setText(config.thisTranslation["bibleHarmonies"])
+        searchBibleParallel.triggered.connect(self.searchParallel)
+        subMenu.addAction(searchBibleParallel)
+
+        searchBiblePromise = QAction(self)
+        searchBiblePromise.setText(config.thisTranslation["biblePromises"])
+        searchBiblePromise.triggered.connect(self.searchPromise)
+        subMenu.addAction(searchBiblePromise)
 
         subSubMenu = QMenu()
 
@@ -1033,7 +1043,10 @@ class WebEngineView(QWebEngineView):
 
     def copyHtmlCode(self):
         #self.page().runJavaScript("document.documentElement.outerHTML", 0, self.copyHtmlToClipboard)
-        self.page().toHtml(self.copyHtmlToClipboard)
+        if self.htmlStored:
+            self.copyHtmlToClipboard(self.html)
+        else:
+            self.page().toHtml(self.copyHtmlToClipboard)
 
     def copyPlainText(self):
         self.page().toPlainText(self.copyHtmlToClipboard)
@@ -1088,7 +1101,10 @@ class WebEngineView(QWebEngineView):
 
     # Open in Note Editor
     def openInNoteEditor(self):
-        self.page().toHtml(config.mainWindow.displayContentInNoteEditor)
+        if self.htmlStored:
+            config.mainWindow.displayContentInNoteEditor(self.html)
+        else:
+            self.page().toHtml(config.mainWindow.displayContentInNoteEditor)
 
     # Instant highligh feature
     def instantHighlight(self, selectionMonitoring=False):
@@ -1443,13 +1459,33 @@ class WebEngineView(QWebEngineView):
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def searchCharacter(self):
-        self.searchResource("EXLBP")
+        #self.searchResource("EXLBP")
+        config.pluginContext = self.name
+        self.parent.parent.runPlugin("Bible Characters")
+        config.pluginContext = ""
 
     def searchName(self):
-        self.searchResource("HBN")
+        #self.searchResource("HBN")
+        config.dataset = "Bible Names"
+        config.pluginContext = self.name
+        self.parent.parent.runPlugin("Bible Data")
+        config.pluginContext = ""
+
+    def searchPromise(self):
+        config.pluginContext = self.name
+        self.parent.parent.runPlugin("Bible Promises")
+        config.pluginContext = ""
+
+    def searchParallel(self):
+        config.pluginContext = self.name
+        self.parent.parent.runPlugin("Bible Parallels")
+        config.pluginContext = ""
 
     def searchLocation(self):
-        self.searchResource("EXLBL")
+        #self.searchResource("EXLBL")
+        config.pluginContext = self.name
+        self.parent.parent.runPlugin("Bible Locations")
+        config.pluginContext = ""
 
     def searchTopic(self, module=""):
         #self.searchResource(config.topic)
@@ -1517,7 +1553,10 @@ class WebEngineView(QWebEngineView):
             self.parent.parent.runPlugin("ePub Viewer New Window")
         else:
             #self.page().runJavaScript("document.documentElement.outerHTML", 0, self.openNewWindow)
-            self.page().toHtml(self.openNewWindow)
+            if self.htmlStored:
+                self.openNewWindow(self.html)
+            else:
+                self.page().toHtml(self.openNewWindow)
 
     def openOnFullScreen(self):
         #toolText = self.parent.mainView.tabText(self.parent.mainView.currentIndex()) if self.name == "main" else self.parent.studyView.tabText(self.parent.studyView.currentIndex())
@@ -1530,7 +1569,10 @@ class WebEngineView(QWebEngineView):
         elif toolTip == "EPUB":
             self.parent.parent.runPlugin("ePub Viewer Full Screen")
         else:
-            self.page().toHtml(lambda html: self.openNewWindow(html, True))
+            if self.htmlStored:
+                self.openNewWindow(self.html, True)
+            else:
+                self.page().toHtml(lambda html: self.openNewWindow(html, True))
 
     def openNewWindow(self, html, fullScreen=False):
         self.openPopover(html=html, fullScreen=fullScreen)
@@ -1668,7 +1710,7 @@ class WebEngineView(QWebEngineView):
         if config.clickToOpenImage:
             html = self.parent.parent.addOpenImageAction(html)
         # format html content
-        html = self.parent.parent.wrapHtml(html)
+        #html = self.parent.parent.wrapHtml(html)
         if self.parent.popoverView is None or forceNewWindow:
             self.parent.popoverView = WebEngineViewPopover(self, name, self.name)
             if not fullScreen:
@@ -1721,16 +1763,25 @@ class WebEngineView(QWebEngineView):
             self.parent.popoverView.close()
 
     def saveHtml(self):
-        self.page().toHtml(self.saveHtmlToFile)
+        if self.htmlStored:
+            self.saveHtmlToFile(self.html)
+        else:
+            self.page().toHtml(self.saveHtmlToFile)
 
     def saveMarkdown(self):
-        self.page().toHtml(self.saveMarkdownToFile)
+        if self.htmlStored:
+            self.saveMarkdownToFile(self.html)
+        else:
+            self.page().toHtml(self.saveMarkdownToFile)
 
     def savePlainText(self):
         self.page().toPlainText(self.savePlainTextToFile)
 
     def saveDocx(self):
-        self.page().toHtml(self.saveDocxFile)
+        if self.htmlStored:
+            self.saveDocxFile(self.html)
+        else:
+            self.page().toHtml(self.saveDocxFile)
 
     def saveDocxFile(self, html):
         options = QFileDialog.Options()

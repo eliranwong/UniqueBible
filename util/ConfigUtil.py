@@ -867,18 +867,30 @@ class ConfigUtil:
         # Last-opened pdf file path"""
         if not hasattr(config, "pdfTextPath"):
             config.pdfTextPath = ""
+        config.help["dataset"] = """
+        # Last-opened dataset module"""
+        if not hasattr(config, "dataset"):
+            config.dataset = "Bible Chronology"
         config.help["book"] = """
         # Last-opened book module"""
         if not hasattr(config, "book"):
             config.book = "Harmonies_and_Parallels"
         config.help["parallels"] = """
         # Last-opened parallels module"""
-        if not hasattr(config, "parallels"):
-            config.parallels = "Gospels I"
+        if not hasattr(config, "parallels") or not isinstance(config.parallels, int):
+            config.parallels = 2
+        config.help["parallelsEntry"] = """
+        # Last-opened parallels entry"""
+        if not hasattr(config, "parallelsEntry") or not isinstance(config.parallelsEntry, int):
+            config.parallelsEntry = 1
         config.help["promises"] = """
         # Last-opened promises module"""
-        if not hasattr(config, "promises"):
-            config.promises = "Take Words with You"
+        if not hasattr(config, "promises") or not isinstance(config.promises, int):
+            config.promises = 4
+        config.help["promisesEntry"] = """
+        # Last-opened promises entry"""
+        if not hasattr(config, "promisesEntry") or not isinstance(config.promisesEntry, int):
+            config.promisesEntry = 1
         config.help["bookChapter"] = """
         # Last-opened book chapter"""
         if not hasattr(config, "bookChapter"):
@@ -1542,7 +1554,10 @@ class ConfigUtil:
             ("docxText", config.docxText),
             ("parseWordDocument", config.parseWordDocument),
             ("parallels", config.parallels),
+            ("parallelsEntry", config.parallelsEntry),
             ("promises", config.promises),
+            ("promisesEntry", config.promisesEntry),
+            ("dataset", config.dataset),
             ("book", config.book),
             ("bookChapter", config.bookChapter),
             ("openBookInNewWindow", config.openBookInNewWindow),
