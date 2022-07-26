@@ -27,12 +27,13 @@ class ReferenceBooks(QWidget):
         self.setupUI()
         # set initial window size
         self.resize(QGuiApplication.primaryScreen().availableSize() * 3 / 4)
+        # display initial content
+        self.displayBookContent()
 
     def setupVariables(self):
         self.modules = config.mainWindow.referenceBookList
         # Entries
         self.entries = []
-        self.articleEntry = None
         self.refreshing = False
 
     def setupUI(self):
@@ -131,7 +132,7 @@ class ReferenceBooks(QWidget):
             self.setBookConfig()
             # get articleEntry
             index = selection[0].indexes()[0].row()
-            self.articleEntry = self.entryViewModel.item(index).toolTip()
+            config.bookChapter = self.entryViewModel.item(index).toolTip()
             # fetch entry data
             self.displayBookContent()
 
@@ -141,9 +142,10 @@ class ReferenceBooks(QWidget):
         config.mainWindow.updateBookButton()
 
     def displayBookContent(self):
-        content = BookData().getContent(config.book, self.articleEntry)
-        content = config.mainWindow.wrapHtml(content)
-        self.contentView.setHtml(content, config.baseUrl)
+        if config.book and config.bookChapter:
+            content = BookData().getContent(config.book, config.bookChapter)
+            content = config.mainWindow.wrapHtml(content)
+            self.contentView.setHtml(content, config.baseUrl)
 
     def openBookPreviousChapter(self):
         if hasattr(config, "bookChapNum"):
@@ -152,7 +154,7 @@ class ReferenceBooks(QWidget):
             if config.bookChapNum < 1:
                 book = Book(config.book)
                 config.bookChapNum = book.getChapterCount()
-            self.articleEntry = str(config.bookChapNum)
+            config.bookChapter = str(config.bookChapNum)
             self.displayBookContent()
 
     def openBookNextChapter(self):
@@ -163,13 +165,13 @@ class ReferenceBooks(QWidget):
                 config.bookChapNum += 1
             else:
                 config.bookChapNum = 1
-            self.articleEntry = str(config.bookChapNum)
+            config.bookChapter = str(config.bookChapNum)
             self.displayBookContent()
 
     def openOnMainWindow(self):
         # command examples, BOOK:::Graphics_Barry7_Doctrinal:::5. The Process of Theology
-        if self.articleEntry is not None:
-            command = "BOOK:::{0}:::{1}".format(self.modules[self.moduleView.currentIndex()], self.articleEntry)
+        if config.book and config.bookChapter:
+            command = "BOOK:::{0}:::{1}".format(config.book, config.bookChapter)
             config.mainWindow.runTextCommand(command)
 
 

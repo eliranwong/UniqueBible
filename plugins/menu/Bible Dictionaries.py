@@ -20,12 +20,17 @@ class BibleDictionaries(QWidget):
         # set title
         self.setWindowTitle(config.thisTranslation["context1_dict"])
         #self.setMinimumSize(830, 500)
+        # get text selection
+        selectedText = config.mainWindow.selectedText(config.pluginContext == "study")
         # set variables
         self.setupVariables()
         # setup interface
-        self.setupUI()
+        self.setupUI(selectedText)
         # set initial window size
         self.resize(QGuiApplication.primaryScreen().availableSize() * 3 / 4)
+        # display initial content
+        if not selectedText:
+            self.displayContent()
 
     def setupVariables(self):
         self.modules = config.mainWindow.dictionaryList[:-1]
@@ -35,10 +40,9 @@ class BibleDictionaries(QWidget):
         self.cursor = self.connection.cursor()
         # Entries
         self.entries = []
-        self.articleEntry = None
         self.refreshing = False
 
-    def setupUI(self):
+    def setupUI(self, selectedText):
         layout000 = QHBoxLayout()
         self.setLayout(layout000)
         widgetLt = QWidget()
@@ -64,7 +68,7 @@ class BibleDictionaries(QWidget):
         self.moduleView.currentIndexChanged.connect(self.moduleSelected)
         self.searchEntry = QLineEdit()
         self.searchEntry.setClearButtonEnabled(True)
-        self.searchEntry.setText(config.mainWindow.selectedText())
+        self.searchEntry.setText(selectedText)
         self.searchEntry.textChanged.connect(self.filterEntry)
         entryView = QListView()
         entryView.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -125,17 +129,22 @@ class BibleDictionaries(QWidget):
             # get articleEntry
             index = selection[0].indexes()[0].row()
             toolTip = self.entryViewModel.item(index).toolTip()
-            self.articleEntry = re.sub("^\[(.*?)\].*?$", r"\1", toolTip)
+            config.dictionaryEntry = re.sub("^\[(.*?)\].*?$", r"\1", toolTip)
+            # display
+            self.displayContent()
+
+    def displayContent(self):
+        if config.dictionary and config.dictionaryEntry:
             # fetch entry data
             dictionaryData = DictionaryData()
-            content = dictionaryData.getContent(self.articleEntry)
+            content = dictionaryData.getContent(config.dictionaryEntry)
             content = config.mainWindow.wrapHtml(content)
             self.contentView.setHtml(content, config.baseUrl)
 
     def openOnMainWindow(self):
         # command examples, DICTIONARY:::EAS2330
-        if self.articleEntry is not None:
-            command = "DICTIONARY:::{0}".format(self.articleEntry)
+        if config.dictionary and config.dictionaryEntry:
+            command = "DICTIONARY:::{0}".format(config.dictionaryEntry)
             config.mainWindow.runTextCommand(command)
 
 

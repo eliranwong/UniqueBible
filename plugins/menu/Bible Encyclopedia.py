@@ -20,12 +20,17 @@ class BibleEncyclopedia(QWidget):
         # set title
         self.setWindowTitle(config.thisTranslation["context1_encyclopedia"])
         #self.setMinimumSize(830, 500)
+        # get text selection
+        selectedText = config.mainWindow.selectedText(config.pluginContext == "study")
         # set variables
         self.setupVariables()
         # setup interface
-        self.setupUI()
+        self.setupUI(selectedText)
         # set initial window size
         self.resize(QGuiApplication.primaryScreen().availableSize() * 3 / 4)
+        # display initial content
+        if not selectedText:
+            self.displayContent()
 
     def setupVariables(self):
         self.modules = config.mainWindow.encyclopediaList
@@ -35,10 +40,9 @@ class BibleEncyclopedia(QWidget):
         self.cursor = self.connection.cursor()
         # Entries
         self.entries = []
-        self.articleEntry = None
         self.refreshing = False
 
-    def setupUI(self):
+    def setupUI(self, selectedText):
         layout000 = QHBoxLayout()
         self.setLayout(layout000)
         widgetLt = QWidget()
@@ -64,7 +68,7 @@ class BibleEncyclopedia(QWidget):
         self.moduleView.currentIndexChanged.connect(self.moduleSelected)
         self.searchEntry = QLineEdit()
         self.searchEntry.setClearButtonEnabled(True)
-        self.searchEntry.setText(config.mainWindow.selectedText())
+        self.searchEntry.setText(selectedText)
         self.searchEntry.textChanged.connect(self.filterEntry)
         entryView = QListView()
         entryView.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -125,17 +129,22 @@ class BibleEncyclopedia(QWidget):
             # get articleEntry
             index = selection[0].indexes()[0].row()
             toolTip = self.entryViewModel.item(index).toolTip()
-            self.articleEntry = re.sub("^\[(.*?)\].*?$", r"\1", toolTip)
+            config.encyclopediaEntry = re.sub("^\[(.*?)\].*?$", r"\1", toolTip)
+            # display
+            self.displayContent()
+    
+    def displayContent(self):
+        if config.encyclopedia and config.encyclopediaEntry:
             # fetch entry data
             encyclopediaData = EncyclopediaData()
-            content = encyclopediaData.getContent(config.mainWindow.encyclopediaListAbb[self.moduleView.currentIndex()], self.articleEntry)
+            content = encyclopediaData.getContent(config.encyclopedia, config.encyclopediaEntry)
             content = config.mainWindow.wrapHtml(content)
             self.contentView.setHtml(content, config.baseUrl)
 
     def openOnMainWindow(self):
         # command examples, ENCYCLOPEDIA:::ISB:::ISBE1308
-        if self.articleEntry is not None:
-            command = "ENCYCLOPEDIA:::{0}:::{1}".format(config.mainWindow.encyclopediaListAbb[self.moduleView.currentIndex()], self.articleEntry)
+        if config.encyclopedia and config.encyclopediaEntry:
+            command = "ENCYCLOPEDIA:::{0}:::{1}".format(config.mainWindow.encyclopediaListAbb[self.moduleView.currentIndex()], config.encyclopediaEntry)
             config.mainWindow.runTextCommand(command)
 
 

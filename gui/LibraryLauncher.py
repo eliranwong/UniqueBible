@@ -1,4 +1,4 @@
-import os
+import os, re
 
 import config
 if config.qtLibrary == "pyside6":
@@ -22,6 +22,7 @@ class LibraryLauncher(QWidget):
         # setup interface
         self.setupUI()
         self.selectedBook = None
+        self.updatingChapter = False
 
     def setupUI(self):
         mainLayout = QGridLayout()
@@ -162,24 +163,25 @@ class LibraryLauncher(QWidget):
         self.chapterlist.setCurrentIndex(self.chapterModel.index(topicList.index(config.bookChapter) if topicList and config.bookChapter in topicList else 0, 0))
 
     def openPreviousCommentary(self):
-        command = "COMMENTARY:::{0}:::{1}".format(config.commentaryText, self.parent.bibleTab.getSelectedReference())
-        self.parent.runTextCommand(command)
+        #command = "COMMENTARY:::{0}:::{1}".format(config.commentaryText, self.parent.bibleTab.getSelectedReference())
+        #self.parent.runTextCommand(command)
+        self.parent.parent.runPlugin("Bible Commentaries")
 
     def openPreviousBookChapter(self):
         if config.bookChapter == "":
             config.bookChapter = self.getBookTopicList()[0]
-        command = "BOOK:::{0}:::{1}".format(config.book, config.bookChapter)
-        self.parent.runTextCommand(command)
+        #command = "BOOK:::{0}:::{1}".format(config.book, config.bookChapter)
+        #self.parent.runTextCommand(command)
+        self.parent.parent.runPlugin("Reference Books")
 
     def commentarySelected(self, selection):
         index = selection[0].indexes()[0].row()
-        self.parent.parent.changeCommentaryVersion(index)
+        #self.parent.parent.changeCommentaryVersion(index)
+        commentary = self.commentaryListView.selectionModel().model().item(index).text()
+        config.commentaryText = re.sub("^\[(.*?)\].*?$", r"\1", commentary)
+        self.parent.parent.runPlugin("Bible Commentaries")
         if config.closeControlPanelAfterRunningCommand and not self.parent.isRefreshing:
             self.parent.hide()
-        #reverseLookup = {v: k for k, v in Commentary.fileLookup.items()}
-        #config.commentaryText = reverseLookup[self.commentaryList[index]]
-        #command = "COMMENTARY:::{0}:::{1}".format(config.commentaryText, self.parent.bibleTab.getSelectedReference())
-        #self.parent.runTextCommand(command)
 
     def showActiveOnlyCommentaries(self):
         self.reloadCommentariesListModel(True)
@@ -227,7 +229,8 @@ class LibraryLauncher(QWidget):
             #config.bookChapter = selection[0].indexes()[0].row()
             if self.selectedBook:
                 config.book = self.selectedBook
-            command = "BOOK:::{0}:::{1}".format(config.book, config.bookChapter)
             if not self.parent.isRefreshing:
-                self.parent.runTextCommand(command)
+                #command = "BOOK:::{0}:::{1}".format(config.book, config.bookChapter)
+                #self.parent.runTextCommand(command)
+                self.parent.parent.runPlugin("Reference Books")
             self.parent.isRefreshing = False

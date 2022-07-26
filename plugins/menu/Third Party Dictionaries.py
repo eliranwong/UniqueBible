@@ -20,21 +20,25 @@ class ThirdPartyDictionaries(QWidget):
         # set title
         self.setWindowTitle(config.thisTranslation["menu5_3rdDict"])
         #self.setMinimumSize(830, 500)
+        # get text selection
+        selectedText = config.mainWindow.selectedText(config.pluginContext == "study")
         # set variables
         self.setupVariables()
         # setup interface
-        self.setupUI()
+        self.setupUI(selectedText)
         # set initial window size
         self.resize(QGuiApplication.primaryScreen().availableSize() * 3 / 4)
+        # display initial content
+        if not selectedText:
+            self.displayContent()
 
     def setupVariables(self):
         self.modules = config.mainWindow.thirdPartyDictionaryList[:-1]
         # Entries
         self.entries = []
-        self.articleEntry = None
         self.refreshing = False
 
-    def setupUI(self):
+    def setupUI(self, selectedText):
         layout000 = QHBoxLayout()
         self.setLayout(layout000)
         widgetLt = QWidget()
@@ -59,7 +63,7 @@ class ThirdPartyDictionaries(QWidget):
         self.moduleView.currentIndexChanged.connect(self.moduleSelected)
         self.searchEntry = QLineEdit()
         self.searchEntry.setClearButtonEnabled(True)
-        self.searchEntry.setText(config.mainWindow.selectedText())
+        self.searchEntry.setText(selectedText)
         # textChanged is slow for fetching third-party dictionary data
         #self.searchEntry.textChanged.connect(self.filterEntry)
         self.searchEntry.returnPressed.connect(self.filterEntry)
@@ -119,19 +123,23 @@ class ThirdPartyDictionaries(QWidget):
             config.thirdDictionary = config.mainWindow.thirdPartyDictionaryList[moduleIndex]
             # get articleEntry
             index = selection[0].indexes()[0].row()
-            self.articleEntry = self.entryViewModel.item(index).toolTip()
+            config.thirdDictionaryEntry = self.entryViewModel.item(index).toolTip()
+            # display
+            self.displayContent()
+    
+    def displayContent(self):
+        if config.thirdDictionary and config.thirdDictionaryEntry:
             # fetch entry data
-            module = config.mainWindow.thirdPartyDictionaryList[self.moduleView.currentIndex()]
-            module = config.mainWindow.isThridPartyDictionary(module)
-            thirdPartyDictionary = ThirdPartyDictionary(module)
-            content = thirdPartyDictionary.getData(self.articleEntry)
+            config.thirdDictionary = config.mainWindow.isThridPartyDictionary(config.thirdDictionary)
+            thirdPartyDictionary = ThirdPartyDictionary(config.thirdDictionary)
+            content = thirdPartyDictionary.getData(config.thirdDictionaryEntry)
             content = config.mainWindow.wrapHtml(content)
             self.contentView.setHtml(content, config.baseUrl)
 
     def openOnMainWindow(self):
         # command examples, THIRDDICTIONARY:::wordnet:::love
-        if self.articleEntry is not None:
-            command = "THIRDDICTIONARY:::{0}:::{1}".format(config.mainWindow.thirdPartyDictionaryList[self.moduleView.currentIndex()], self.articleEntry)
+        if config.thirdDictionary and config.thirdDictionaryEntry:
+            command = "THIRDDICTIONARY:::{0}:::{1}".format(config.mainWindow.thirdPartyDictionaryList[self.moduleView.currentIndex()], config.thirdDictionaryEntry)
             config.mainWindow.runTextCommand(command)
 
 

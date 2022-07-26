@@ -666,7 +666,7 @@ class WebEngineView(QWebEngineView):
         for module in self.parent.parent.topicListAbb:
             action = QAction(self)
             action.setText(module)
-            action.triggered.connect(partial(self.searchResource, module))
+            action.triggered.connect(partial(self.searchTopic, module))
             subSubMenu.addAction(action)
 
         action = QAction(self)
@@ -688,7 +688,7 @@ class WebEngineView(QWebEngineView):
         for module in self.parent.parent.dictionaryListAbb:
             action = QAction(self)
             action.setText(module)
-            action.triggered.connect(partial(self.searchResource, module))
+            action.triggered.connect(partial(self.searchDictionary, module))
             subSubMenu.addAction(action)
 
         action = QAction(self)
@@ -710,7 +710,7 @@ class WebEngineView(QWebEngineView):
         for module in self.parent.parent.encyclopediaListAbb:
             action = QAction(self)
             action.setText(module)
-            action.triggered.connect(partial(self.searchResource, module))
+            action.triggered.connect(partial(self.searchEncyclopedia, module))
             subSubMenu.addAction(action)
 
         action = QAction(self)
@@ -725,10 +725,10 @@ class WebEngineView(QWebEngineView):
         action.triggered.connect(self.searchHebrewGreekLexicon)
         subSubMenu.addAction(action)
 
-        action = QAction(self)
-        action.setText(config.thisTranslation["all"])
-        action.triggered.connect(partial(self.searchHebrewGreekLexiconSelected, config.thisTranslation["all"]))
-        subSubMenu.addAction(action)
+        #action = QAction(self)
+        #action.setText(config.thisTranslation["all"])
+        #action.triggered.connect(partial(self.searchHebrewGreekLexiconSelected, config.thisTranslation["all"]))
+        #subSubMenu.addAction(action)
 
         separator = QAction(self)
         separator.setSeparator(True)
@@ -737,7 +737,7 @@ class WebEngineView(QWebEngineView):
         for module in self.parent.parent.lexiconList:
             action = QAction(self)
             action.setText(module)
-            action.triggered.connect(partial(self.searchHebrewGreekLexiconSelected, module))
+            action.triggered.connect(partial(self.searchHebrewGreekLexicon, module))
             subSubMenu.addAction(action)
 
         action = QAction(self)
@@ -759,7 +759,7 @@ class WebEngineView(QWebEngineView):
         for module in self.parent.parent.thirdPartyDictionaryList:
             action = QAction(self)
             action.setText(module)
-            action.triggered.connect(partial(self.searchThirdPartyDictionarySelected, module))
+            action.triggered.connect(partial(self.searchThirdPartyDictionary, module))
             subSubMenu.addAction(action)
 
         action = QAction(self)
@@ -768,7 +768,7 @@ class WebEngineView(QWebEngineView):
         subMenu.addAction(action)
 
         action = QAction(self)
-        action.setText(config.thisTranslation["searchOtherResources"])
+        action.setText(config.thisTranslation["searchMore"])
         action.setMenu(subMenu)
         self.addAction(action)
 
@@ -1347,13 +1347,19 @@ class WebEngineView(QWebEngineView):
             searchCommand = "SEARCH:::{0}:::{1}".format("MOB", selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
-    def searchHebrewGreekLexicon(self):
-        selectedText = self.selectedTextProcessed()
-        if not selectedText:
-            self.messageNoSelection()
-        else:
-            searchCommand = "LEXICON:::{0}".format(selectedText)
-            self.parent.parent.textCommandChanged(searchCommand, self.name)
+    def searchHebrewGreekLexicon(self, module=""):
+#        selectedText = self.selectedTextProcessed()
+#        if not selectedText:
+#            self.messageNoSelection()
+#        else:
+#            searchCommand = "LEXICON:::{0}".format(selectedText)
+#            self.parent.parent.textCommandChanged(searchCommand, self.name)
+        if module and not module == config.lexicon:
+            config.lexiconEntry = ""
+            config.lexicon = module
+        config.pluginContext = self.name
+        self.parent.parent.runPlugin("Bible Lexicons")
+        config.pluginContext = ""
 
     def searchHebrewGreekLexiconSelected(self, module):
         selectedText = self.selectedTextProcessed()
@@ -1445,22 +1451,46 @@ class WebEngineView(QWebEngineView):
     def searchLocation(self):
         self.searchResource("EXLBL")
 
-    def searchTopic(self):
-        self.searchResource(config.topic)
+    def searchTopic(self, module=""):
+        #self.searchResource(config.topic)
+        if module and not module == config.topic:
+            config.topicEntry = ""
+            config.topic = module
+        config.pluginContext = self.name
+        self.parent.parent.runPlugin("Bible Topics")
+        config.pluginContext = ""
 
-    def searchDictionary(self):
-        self.searchResource(config.dictionary)
+    def searchDictionary(self, module=""):
+        #self.searchResource(config.dictionary)
+        if module and not module == config.dictionary:
+            config.dictionaryEntry = ""
+            config.dictionary = module
+        config.pluginContext = self.name
+        self.parent.parent.runPlugin("Bible Dictionaries")
+        config.pluginContext = ""
 
-    def searchEncyclopedia(self):
-        self.searchResource(config.encyclopedia)
+    def searchEncyclopedia(self, module=""):
+        #self.searchResource(config.encyclopedia)
+        if module and not module == config.encyclopedia:
+            config.encyclopediaEntry = ""
+            config.encyclopedia = module
+        config.pluginContext = self.name
+        self.parent.parent.runPlugin("Bible Encyclopedia")
+        config.pluginContext = ""
 
-    def searchThirdPartyDictionary(self):
-        selectedText = self.selectedTextProcessed()
-        if not selectedText:
-            self.messageNoSelection()
-        else:
-            searchCommand = "SEARCHTHIRDDICTIONARY:::{0}:::{1}".format(config.thirdDictionary, selectedText)
-            self.parent.parent.textCommandChanged(searchCommand, self.name)
+    def searchThirdPartyDictionary(self, module=""):
+#        selectedText = self.selectedTextProcessed()
+#        if not selectedText:
+#            self.messageNoSelection()
+#        else:
+#            searchCommand = "SEARCHTHIRDDICTIONARY:::{0}:::{1}".format(config.thirdDictionary, selectedText)
+#            self.parent.parent.textCommandChanged(searchCommand, self.name)
+        if module and not module == config.thirdDictionary:
+            config.thirdDictionaryEntry = ""
+            config.thirdDictionary = module
+        config.pluginContext = self.name
+        self.parent.parent.runPlugin("Third Party Dictionaries")
+        config.pluginContext = ""
 
     def searchThirdPartyDictionarySelected(self, module):
         selectedText = self.selectedTextProcessed()

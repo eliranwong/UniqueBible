@@ -20,21 +20,25 @@ class BibleLexicons(QWidget):
         # set title
         self.setWindowTitle(config.thisTranslation["bibleLexicons"])
         #self.setMinimumSize(830, 500)
+        # get text selection
+        selectedText = config.mainWindow.selectedText(config.pluginContext == "study")
         # set variables
         self.setupVariables()
         # setup interface
-        self.setupUI()
+        self.setupUI(selectedText)
         # set initial window size
         self.resize(QGuiApplication.primaryScreen().availableSize() * 3 / 4)
+        # display initial content
+        if not selectedText:
+            self.displayContent()
 
     def setupVariables(self):
         self.modules = config.mainWindow.lexiconList[:-1]
         # Entries
         self.entries = []
-        self.articleEntry = None
         self.refreshing = False
 
-    def setupUI(self):
+    def setupUI(self, selectedText):
         layout000 = QHBoxLayout()
         self.setLayout(layout000)
         widgetLt = QWidget()
@@ -59,7 +63,7 @@ class BibleLexicons(QWidget):
         self.moduleView.currentIndexChanged.connect(self.moduleSelected)
         self.searchEntry = QLineEdit()
         self.searchEntry.setClearButtonEnabled(True)
-        self.searchEntry.setText(config.mainWindow.selectedText())
+        self.searchEntry.setText(selectedText)
         # textChanged is slow for fetching third-party dictionary data
         #self.searchEntry.textChanged.connect(self.filterEntry)
         self.searchEntry.returnPressed.connect(self.filterEntry)
@@ -118,17 +122,22 @@ class BibleLexicons(QWidget):
             config.lexicon = config.mainWindow.lexiconList[moduleIndex]
             # get articleEntry
             index = selection[0].indexes()[0].row()
-            self.articleEntry = self.entryViewModel.item(index).toolTip()
+            config.lexiconEntry = self.entryViewModel.item(index).toolTip()
+            # display
+            self.displayContent()
+    
+    def displayContent(self):
+        if config.lexicon and config.lexiconEntry:
             # fetch entry data
             lexicon = Lexicon(config.lexicon)
-            content = lexicon.getContent(self.articleEntry, False)
+            content = lexicon.getContent(config.lexiconEntry, False)
             content = config.mainWindow.wrapHtml(content)
             self.contentView.setHtml(content, config.baseUrl)
 
     def openOnMainWindow(self):
         # command examples, LEXICON:::Morphology:::G1234
-        if self.articleEntry is not None:
-            command = "LEXICON:::{0}:::{1}".format(self.modules[self.moduleView.currentIndex()], self.articleEntry)
+        if config.lexicon and config.lexiconEntry:
+            command = "LEXICON:::{0}:::{1}".format(self.modules[self.moduleView.currentIndex()], config.lexiconEntry)
             config.mainWindow.runTextCommand(command)
 
 

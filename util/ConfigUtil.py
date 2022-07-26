@@ -25,6 +25,7 @@ class ConfigUtil:
         config.miniControl = False
         config.tempRecord = ""
         config.contextItem = ""
+        config.pluginContext = ""
         config.isDownloading = False
         config.noStudyBibleToolbar = False
         #config.noteOpened = False
@@ -830,14 +831,26 @@ class ConfigUtil:
         # Last-opened module for topical studies"""
         if not hasattr(config, "topic"):
             config.topic = "EXLBT"
+        config.help["topicEntry"] = """
+        # Last-opened entry for topical studies"""
+        if not hasattr(config, "topicEntry"):
+            config.topicEntry = ""
         config.help["dictionary"] = """
         # Last-opened dictionary module"""
         if not hasattr(config, "dictionary"):
             config.dictionary = "EAS"
+        config.help["dictionaryEntry"] = """
+        # Last-opened dictionary entry"""
+        if not hasattr(config, "dictionaryEntry"):
+            config.dictionaryEntry = ""
         config.help["encyclopedia"] = """
         # Last-opened encyclopedia module"""
         if not hasattr(config, "encyclopedia"):
             config.encyclopedia = "ISB"
+        config.help["encyclopediaEntry"] = """
+        # Last-opened encyclopedia entry"""
+        if not hasattr(config, "encyclopediaEntry"):
+            config.encyclopediaEntry = ""
         config.help["docxText"] = """
         # Last-opened docx text"""
         if not hasattr(config, "docxText"):
@@ -869,7 +882,7 @@ class ConfigUtil:
         config.help["bookChapter"] = """
         # Last-opened book chapter"""
         if not hasattr(config, "bookChapter"):
-            config.bookChapter = "03 - Gospels I"
+            config.bookChapter = ""
         config.help["openBookInNewWindow"] = """
         # Option to open book content on a new window"""
         if not hasattr(config, "openBookInNewWindow"):
@@ -931,10 +944,18 @@ class ConfigUtil:
         # Last-opened third-party dictionary"""
         if not hasattr(config, "thirdDictionary"):
             config.thirdDictionary = "webster"
+        config.help["thirdDictionaryEntry"] = """
+        # Last-opened third-party dictionary entry"""
+        if not hasattr(config, "thirdDictionaryEntry"):
+            config.thirdDictionaryEntry = ""
         config.help["lexicon"] = """
         # Last-opened lexicon"""
         if not hasattr(config, "lexicon"):
             config.lexicon = "ConcordanceBook"
+        config.help["lexiconEntry"] = """
+        # Last-opened lexicon entry"""
+        if not hasattr(config, "lexiconEntry"):
+            config.lexiconEntry = ""
         config.help["defaultLexiconStrongH"] = """
         # Default Hebrew lexicon"""
         if not hasattr(config, "defaultLexiconStrongH"):
@@ -1511,8 +1532,11 @@ class ConfigUtil:
             ("commentaryC", config.commentaryC),
             ("commentaryV", config.commentaryV),
             ("topic", config.topic),
+            ("topicEntry", config.topicEntry),
             ("dictionary", config.dictionary),
+            ("dictionaryEntry", config.dictionaryEntry),
             ("encyclopedia", config.encyclopedia),
+            ("encyclopediaEntry", config.encyclopediaEntry),
             ("pdfText", config.pdfText),
             ("pdfTextPath", config.pdfTextPath),
             ("docxText", config.docxText),
@@ -1538,7 +1562,9 @@ class ConfigUtil:
             ("noteSearchString", config.noteSearchString),
             #("instantHighlightString", config.instantHighlightString),
             ("thirdDictionary", config.thirdDictionary),
+            ("thirdDictionaryEntry", config.thirdDictionaryEntry),
             ("lexicon", config.lexicon),
+            ("lexiconEntry", config.lexiconEntry),
             ("defaultLexiconStrongH", config.defaultLexiconStrongH),
             ("defaultLexiconStrongG", config.defaultLexiconStrongG),
             ("defaultLexiconETCBC", config.defaultLexiconETCBC),

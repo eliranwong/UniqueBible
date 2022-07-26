@@ -310,19 +310,27 @@ class LibraryCatalogDialog(QDialog):
         elif type == "BOOK":
             if file.endswith(".book"):
                 file = file.replace(".book", "")
+            if not file == config.book:
+                config.bookChapter = ""
+                config.book = file
             config.booksFolder = directory
-            command = "BOOK:::{0}".format(file)
+            self.parent.runPlugin("Reference Books")
+            #command = "BOOK:::{0}".format(file)
         elif type == "COMM":
             file = file.replace(".commentary", "")
             file = file[1:]
+            if not file == config.commentaryText:
+                config.commentaryText = file
             config.commentariesFolder = directory
-            command = "COMMENTARY:::{0}:::{1} {2}".format(file, BibleBooks.abbrev["eng"][str(config.mainB)][0], config.mainC)
+            self.parent.runPlugin("Bible Commentaries")
+            #command = "COMMENTARY:::{0}:::{1} {2}".format(file, BibleBooks.abbrev["eng"][str(config.mainB)][0], config.mainC)
         elif type == "DOCX":
             command = "DOCX:::{0}".format(file)
         elif type == "DEVOTIONAL":
             file = file.replace(".devotional", "")
             command = "DEVOTIONAL:::{0}".format(file)
-        self.parent.runTextCommand(command)
+        if not type in ("BOOK", "COMM"):
+            self.parent.runTextCommand(command)
 
     def download(self):
         self.downloadButton.setEnabled(False)

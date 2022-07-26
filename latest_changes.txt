@@ -1,3 +1,6 @@
+Changes in 31.48:
+* Enhanced integration of newly created menu plugins.
+
 Changes in 31.47:
 * Enhanced effectiveness of sending html to workspace.
 

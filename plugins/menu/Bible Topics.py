@@ -20,12 +20,17 @@ class BibleTopics(QWidget):
         # set title
         self.setWindowTitle(config.thisTranslation["menu5_topics"])
         #self.setMinimumSize(830, 500)
+        # get text selection
+        selectedText = config.mainWindow.selectedText(config.pluginContext == "study")
         # set variables
         self.setupVariables()
         # setup interface
-        self.setupUI()
+        self.setupUI(selectedText)
         # set initial window size
         self.resize(QGuiApplication.primaryScreen().availableSize() * 3 / 4)
+        # display initial content
+        if not selectedText:
+            self.displayContent()
 
     def setupVariables(self):
         self.modules = config.mainWindow.topicList
@@ -35,10 +40,9 @@ class BibleTopics(QWidget):
         self.cursor = self.connection.cursor()
         # Entries
         self.entries = []
-        self.articleEntry = None
         self.refreshing = False
 
-    def setupUI(self):
+    def setupUI(self, selectedText):
         layout000 = QHBoxLayout()
         self.setLayout(layout000)
         widgetLt = QWidget()
@@ -64,7 +68,7 @@ class BibleTopics(QWidget):
         self.moduleView.currentIndexChanged.connect(self.moduleSelected)
         self.searchEntry = QLineEdit()
         self.searchEntry.setClearButtonEnabled(True)
-        self.searchEntry.setText(config.mainWindow.selectedText())
+        self.searchEntry.setText(selectedText)
         self.searchEntry.textChanged.connect(self.filterEntry)
         entryView = QListView()
         entryView.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -125,10 +129,15 @@ class BibleTopics(QWidget):
             # get articleEntry
             index = selection[0].indexes()[0].row()
             toolTip = self.entryViewModel.item(index).toolTip()
-            self.articleEntry = re.sub("^\[(.*?)\].*?$", r"\1", toolTip)
+            config.topicEntry = re.sub("^\[(.*?)\].*?$", r"\1", toolTip)
+            # display
+            self.displayContent()
+    
+    def displayContent(self):
+        if config.topic and config.topicEntry:
             # fetch entry data
             exlbData = ExlbData()
-            content = exlbData.getContent("exlbt", self.articleEntry)
+            content = exlbData.getContent("exlbt", config.topicEntry)
             if config.theme in ("dark", "night"):
                 content = config.mainWindow.textCommandParser.adjustDarkThemeColorsForExl(content)
             content = config.mainWindow.wrapHtml(content)
@@ -136,8 +145,8 @@ class BibleTopics(QWidget):
 
     def openOnMainWindow(self):
         # command examples, EXLB:::exlbt:::HIT116
-        if self.articleEntry is not None:
-            command = "EXLB:::exlbt:::{0}".format(self.articleEntry)
+        if config.topic and config.topicEntry:
+            command = "EXLB:::exlbt:::{0}".format(config.topicEntry)
             config.mainWindow.runTextCommand(command)
 
 
