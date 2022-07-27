@@ -996,4 +996,6 @@ translation = {
     "refreshWindowsAfterSavingNote": "Обновить окна после сохранения примечания",
     "bibleLexicons": "Библия",
     "next": "Далее",
+    "landscape": "Режим ландшафта",
+    "portrait": "Режим портрета",
 }

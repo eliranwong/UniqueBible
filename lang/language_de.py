@@ -996,4 +996,6 @@ translation = {
     "refreshWindowsAfterSavingNote": "Windows nach dem Speichern von Notiz aktualisieren",
     "bibleLexicons": "Bible Lexicons",
     "next": "Weiter",
+    "landscape": "Landschaftsmodus",
+    "portrait": "Portrait-Modus",
 }

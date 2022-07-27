@@ -996,4 +996,6 @@ translation = {
     "refreshWindowsAfterSavingNote": "메모 저장 후 창 새로 고치기",
     "bibleLexicons": "성경 렉시아이콘",
     "next": "다음",
+    "landscape": "가로 모드",
+    "portrait": "세로 모드",
 }

@@ -1,3 +1,10 @@
+Changes in 31.50:
+* Updated material menu:
+    - Relocated buttons
+    - Changed and added some icons
+    - Group bible tool buttons together
+* Added "Edit" and "Others" buttons to Master Control Library 2 tab "Notes" session.
+
 Changes in 31.49:
 * Added built-in map browser in menu plugin "Bible Locations".
 * Added a splitter to menu plugin "Bible Locations", so that users can maximise the map view by moving the splitter.

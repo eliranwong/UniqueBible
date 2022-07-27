@@ -996,4 +996,6 @@ translation = {
     "refreshWindowsAfterSavingNote": "Refresh windows after saving note",
     "bibleLexicons": "Bible Lexicons",
     "next": "Next",
+    "landscape": "Landscape Mode",
+    "portrait": "Portrait Mode",
 }

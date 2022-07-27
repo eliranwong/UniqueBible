@@ -996,4 +996,6 @@ translation = {
     "refreshWindowsAfterSavingNote": "儲存附註之後重新整理視窗",
     "bibleLexicons": "聖經原文詞典",
     "next": "下一個",
+    "landscape": "橫向模式",
+    "portrait": "直向模式",
 }

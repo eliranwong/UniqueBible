@@ -118,6 +118,7 @@ class NoteEditorWindow(QMainWindow):
                 title, *_ = title.split(":")
         mode = {True: "rich", False: "plain"}
         notModified = {True: "", False: " [modified]"}
+        print("hi", self.parent.parent.noteSaved)
         self.parent.setWindowTitle("Note Editor ({1} mode) - {0}{2}".format(title, mode[self.html], notModified[self.parent.parent.noteSaved]))
 
     # switching between "rich" & "plain" mode

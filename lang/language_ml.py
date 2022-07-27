@@ -996,4 +996,6 @@ translation = {
     "refreshWindowsAfterSavingNote": "കുറിപ്പ് സൂക്ഷിച്ചശേഷം ജാലകങ്ങള് പുതുക്കുക",
     "bibleLexicons": "ബൈബിള് ലെക്സിക്കന്സ്",
     "next": "അടുത്തത്",
+    "landscape": "ലാന്റ്സ്കേപ്പ് ദശ",
+    "portrait": "പോര്ട്രെയിറ്റ് മോഡ്",
 }

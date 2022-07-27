@@ -64,9 +64,17 @@ class Library2Launcher(QWidget):
         rightColumnWidget0 = QGroupBox(config.thisTranslation["menu_notes"])
         notesLayout = QVBoxLayout()
         notesLayout.addWidget(self.noteListView())
+        buttons = QHBoxLayout()
+        notesLayout.addLayout(buttons)
         button = QPushButton(config.thisTranslation["open"])
         button.clicked.connect(self.openNote)
-        notesLayout.addWidget(button)
+        buttons.addWidget(button)
+        button = QPushButton(config.thisTranslation["edit2"])
+        button.clicked.connect(self.editNote)
+        buttons.addWidget(button)
+        button = QPushButton(config.thisTranslation["others"])
+        button.clicked.connect(self.parent.parent.openTextFileDialog)
+        buttons.addWidget(button)
         rightColumnWidget0.setLayout(notesLayout)
 
         rightColumnWidget = QGroupBox(config.thisTranslation["devotionals"])
@@ -169,8 +177,16 @@ class Library2Launcher(QWidget):
     def noteSelected(self, selection):
         index = selection[0].indexes()[0].row()
         self.selectedNote = self.notes[index]
+        self.openNote()
 
     def openNote(self):
         if self.selectedNote is not None:
             filename = os.path.join("notes", "{0}.uba".format(self.selectedNote))
             self.parent.parent.openUbaFile(filename)
+
+    def editNote(self):
+        if self.selectedNote is not None:
+            filename = os.path.join("notes", "{0}.uba".format(self.selectedNote))
+            #self.parent.parent.openUbaFile(filename)
+            config.history["external"].append(filename)
+            self.parent.parent.editExternalFileButtonClicked()

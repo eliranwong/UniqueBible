@@ -996,4 +996,6 @@ translation = {
     "refreshWindowsAfterSavingNote": "保存注释后刷新窗口",
     "bibleLexicons": "圣经词典",
     "next": "下一个",
+    "landscape": "横向方式",
+    "portrait": "纵向方式",
 }

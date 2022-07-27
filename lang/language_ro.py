@@ -996,4 +996,6 @@ translation = {
     "refreshWindowsAfterSavingNote": "Reîmprospătează ferestrele după ce salvează",
     "bibleLexicons": "Biblia Sinodală",
     "next": "Următor",
+    "landscape": "Mod peisaj",
+    "portrait": "Modul portret",
 }

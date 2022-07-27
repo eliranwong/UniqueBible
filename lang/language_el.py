@@ -996,4 +996,6 @@ translation = {
     "refreshWindowsAfterSavingNote": "Ανανέωση παραθύρων μετά την αποθήκευση σημείωσης",
     "bibleLexicons": "Lexicons Αγία Γραφή",
     "next": "Επόμενο:",
+    "landscape": "Κατάσταση τοπίου.",
+    "portrait": "Λειτουργία Portrait",
 }

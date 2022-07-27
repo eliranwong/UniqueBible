@@ -996,4 +996,6 @@ translation = {
     "refreshWindowsAfterSavingNote": "メモを保存した後にウィンドウ",
     "bibleLexicons": "聖書辞典",
     "next": "次",
+    "landscape": "ランドスケープモード",
+    "portrait": "縦長モード",
 }

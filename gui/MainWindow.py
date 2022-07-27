@@ -1695,8 +1695,9 @@ class MainWindow(QMainWindow):
             externalFileHistory.append(fileName)
 
     def setExternalFileButton(self):
-        self.externalFileButton.setText(self.getLastExternalFileName()[:20])
-        self.externalFileButton.setToolTip(self.getLastExternalFileName())
+        if not config.menuLayout == "material":
+            self.externalFileButton.setText(self.getLastExternalFileName()[:20])
+            self.externalFileButton.setToolTip(self.getLastExternalFileName())
 
     def getLastExternalFileName(self):
         externalFileHistory = config.history["external"]
@@ -2983,6 +2984,22 @@ class MainWindow(QMainWindow):
         self.syncButtonChanging = False
         if config.menuLayout == "material":
             self.setupMenuLayout("material")
+
+    def getOrientationDisplay(self):
+        if config.landscapeMode:
+            return self.getCrossplatformPath("material/communication/stay_current_landscape/materialiconsoutlined/48dp/2x/outline_stay_current_landscape_black_48dp.png")
+        else:
+            return self.getCrossplatformPath("material/communication/stay_current_portrait/materialiconsoutlined/48dp/2x/outline_stay_current_portrait_black_48dp.png")
+
+    def getOrientationDisplayToolTip(self):
+        return config.thisTranslation["landscape"] if config.landscapeMode else config.thisTranslation["portrait"]
+
+    def orientationButtonClicked(self):
+        self.switchLandscapeMode()
+        icon = self.getQIcon(self.getOrientationDisplay())
+        self.switchOrientationButton.setStyleSheet(icon)
+        self.switchOrientationButton.setToolTip(self.getOrientationDisplayToolTip())
+        self.setupMenuLayout("material")
 
     # Actions - enable or disable study bible / bible displayed on study view
     def getStudyBibleDisplay(self):
@@ -4835,6 +4852,13 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             if not ".ubam" in file:
                 file += ".ubam"
             MacroParser(self).parse(file)
+
+    def addMenuPluginButton(self, plugin, feature, icon, toolbar):
+        if self.isMenuPlugin(plugin):
+            self.addMaterialIconButton(feature, icon, partial(self.runPlugin, plugin), toolbar)
+
+    def isMenuPlugin(self, plugin):
+        return os.path.isfile(os.path.join("plugins", "menu", "{0}.py".format(plugin)))
 
     def runPlugin(self, fileName):
         self.crossPlatform.runPlugin(fileName)

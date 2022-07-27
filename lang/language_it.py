@@ -996,4 +996,6 @@ translation = {
     "refreshWindowsAfterSavingNote": "Aggiornare le finestre dopo aver salvato la nota",
     "bibleLexicons": "Lexicone della Bibbia",
     "next": "Successivo",
+    "landscape": "Modalità del paesaggio",
+    "portrait": "Modalità ritratto",
 }
