@@ -1,6 +1,6 @@
 import subprocess, sys, os, config
-from plugins.menu.GoogleDriveUtility.install import *
 try:
+    from plugins.menu.GoogleDriveUtility.install import *
     from googleapiclient.discovery import build
     from google_auth_oauthlib.flow import InstalledAppFlow
     from google.auth.transport.requests import Request

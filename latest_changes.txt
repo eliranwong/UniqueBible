@@ -1,3 +1,6 @@
+Changes in 31.51:
+* Fixed Google Drive backup issue.
+
 Changes in 31.50:
 * Updated material menu:
     - Relocated buttons
