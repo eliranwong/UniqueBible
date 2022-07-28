@@ -117,7 +117,7 @@ def downloadFiles(service):
     while done is False:
         status, done = downloader.next_chunk()
         downloadPercentage = int(status.progress() * 100)
-        print("Downloaded {0}%".format(downloadPercentage))
+        # print("Downloaded {0}%".format(downloadPercentage))
     if downloadPercentage == 100:
         # Backup an earlier version
         if os.path.exists(backupFile):
