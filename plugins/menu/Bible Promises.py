@@ -141,7 +141,7 @@ class BiblePromises(QWidget):
             self.displayContent()
     
     def displayContent(self):
-        if config.promises and config.promisesEntry:
+        if config.promisesEntry:
             # fetch entry data
             query = "SELECT Topic, Passages FROM PROMISES WHERE Tool=? AND Number=?"
             self.cursor.execute(query, (config.promises, config.promisesEntry))
@@ -156,7 +156,7 @@ class BiblePromises(QWidget):
                 self.contentView.setHtml(html, config.baseUrl)
 
     def openOnMainWindow(self):
-        if config.promises and config.promisesEntry:
+        if config.promisesEntry:
             command = "_promise:::{0}.{1}".format(config.promises, config.promisesEntry)
             config.mainWindow.runTextCommand(command)
 

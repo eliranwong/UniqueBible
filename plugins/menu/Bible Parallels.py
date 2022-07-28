@@ -162,7 +162,7 @@ class BibleParallels(QWidget):
             self.displayContent()
     
     def displayContent(self):
-        if config.parallels and config.parallelsEntry:
+        if config.parallelsEntry:
             # fetch entry data
             query = "SELECT Topic, Passages FROM PARALLEL WHERE Tool=? AND Number=?"
             self.cursor.execute(query, (config.parallels, config.parallelsEntry))
@@ -179,7 +179,7 @@ class BibleParallels(QWidget):
                 self.contentView.setHtml(html, config.baseUrl)
 
     def openOnMainWindow(self):
-        if config.parallels and config.parallelsEntry:
+        if config.parallelsEntry:
             command = "_harmony:::{0}.{1}".format(config.parallels, config.parallelsEntry)
             config.mainWindow.runTextCommand(command)
 
