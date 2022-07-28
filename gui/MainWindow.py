@@ -3060,8 +3060,9 @@ class MainWindow(QMainWindow):
             self.runTextCommand(textCommand, False, view, True)
 
     def updateBookButton(self):
-        self.bookButton.setText(config.book[:20])
-        self.bookButton.setToolTip(config.book)
+        if not config.menuLayout == "material":
+            self.bookButton.setText(config.book[:20])
+            self.bookButton.setToolTip(config.book)
 
     # Actions - enable or disable lightning feature
     def getInstantInformation(self):
