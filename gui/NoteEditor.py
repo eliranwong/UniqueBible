@@ -267,7 +267,7 @@ class NoteEditorWindow(QMainWindow):
         toolTip = config.thisTranslation["menu7_open"]
         self.parent.parent.addMaterialIconButton(toolTip, icon, self.openFileDialog, self.menuBar, None, False)
 
-        self.menuBar.addSeparator()
+        #self.menuBar.addSeparator()
 
         icon = "material/content/save/materialiconsoutlined/48dp/2x/outline_save_black_48dp.png"
         #toolTip = "{0}\n[Ctrl/Cmd + S]".format(config.thisTranslation["note_save"])
@@ -278,13 +278,17 @@ class NoteEditorWindow(QMainWindow):
         toolTip = config.thisTranslation["note_saveAs"]
         self.parent.parent.addMaterialIconButton(toolTip, icon, self.openSaveAsDialog, self.menuBar, None, False)
 
-        self.menuBar.addSeparator()
+        #self.menuBar.addSeparator()
+
+        icon = "material/action/preview/materialiconsoutlined/48dp/2x/outline_preview_black_48dp.png"
+        toolTip = config.thisTranslation["displayOnStudyWindow"]
+        self.parent.parent.addMaterialIconButton(toolTip, icon, self.readNote, self.menuBar, None, False)
 
         icon = "material/maps/local_printshop/materialiconsoutlined/48dp/2x/outline_local_printshop_black_48dp.png"
         toolTip = config.thisTranslation["note_print"]
         self.parent.parent.addMaterialIconButton(toolTip, icon, self.printNote, self.menuBar, None, False)
 
-        self.menuBar.addSeparator()
+        #self.menuBar.addSeparator()
 
         icon = "material/communication/swap_calls/materialiconsoutlined/48dp/2x/outline_swap_calls_black_48dp.png"
         toolTip = config.thisTranslation["note_mode"]
@@ -390,6 +394,12 @@ class NoteEditorWindow(QMainWindow):
             self.ttsToolbar.hide()
             self.translateToolbar.hide()
             config.hideNoteEditorTextUtility = True
+
+    def readNote(self):
+        html = self.editor.toHtml()
+        html = self.parent.parent.fixNoteFontDisplay(html)
+        html = self.parent.parent.htmlWrapper(html, True, "study", False)
+        self.parent.parent.openTextOnStudyView(html, tab_title=config.thisTranslation["menu_notes"], toolTip=config.thisTranslation["menu_notes"])
 
     def printNote(self):
         #document = QTextDocument("Sample Page")

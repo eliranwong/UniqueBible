@@ -1,3 +1,7 @@
+Changes in 31.52:
+* Added a "Display on Study Window" button on note editor.
+* Added tab title and tooltip for a Google map to be displayed on Study Window.
+
 Changes in 31.51:
 * Fixed Google Drive backup issue.
 

@@ -332,6 +332,8 @@ class BibleLocations(QWidget):
             if config.openStudyWindowContentOnNextTab:
                 config.mainWindow.nextStudyWindowTab()
             config.mainWindow.studyView.load(QUrl.fromLocalFile(fullFilePath))
+            config.mainWindow.studyView.setTabText(config.mainWindow.studyView.currentIndex(), "Map")
+            config.mainWindow.studyView.setTabToolTip(config.mainWindow.studyView.currentIndex(), "Google Map")
         else:
             self.contentView.load(QUrl.fromLocalFile(fullFilePath))
 
