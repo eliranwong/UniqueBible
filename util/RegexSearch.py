@@ -20,7 +20,7 @@ class RegexSearch:
     # Searching in a loop until a specific pattern is no longer found.
     @staticmethod
     def deepReplace(text, searchPattern, searchReplace, multiLine=True):
-        p = re.compile(searchPattern, flags=re.M)
+        p = re.compile(searchPattern, flags=re.M) if multiLine else re.compile(searchPattern)
         while p.search(text):
             for search, replace in searchReplace:
                 if multiLine:
