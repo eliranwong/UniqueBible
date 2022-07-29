@@ -61,7 +61,7 @@ class MiniTextEditor(QMainWindow):
         menuBar.setContextMenuPolicy(Qt.PreventContextMenu)
 
         icon = "material/editor/title/materialiconsoutlined/48dp/2x/outline_title_black_48dp.png"
-        self.parent.parent.addMaterialIconButton("changeWindowTitle", icon, self.changeWindowTitle, menuBar)
+        self.parent.parent.addMaterialIconButton("changeWindowTitle", icon, lambda: self.changeWindowTitle(self.windowTitle()), menuBar)
 
         #icon = "material/content/save/materialiconsoutlined/48dp/2x/outline_save_black_48dp.png"
         #self.parent.parent.addMaterialIconButton("note_save", icon, self.saveWsFile, menuBar)
@@ -158,14 +158,10 @@ class MiniTextEditor(QMainWindow):
 
     def changeWindowTitle(self, windowTitle=""):
         if self.parent is config.mainWindow.ws:
-            if not windowTitle:
-                windowTitle, ok = QInputDialog.getText(self, config.thisTranslation["changeWindowTitle"],
-                        config.thisTranslation["enter_text_here"], QLineEdit.Normal,
-                        "")
-                if ok and windowTitle:
-                    self.setWindowTitle(windowTitle)
-                    self.parent.saveWorkspace()
-            else:
+            windowTitle, ok = QInputDialog.getText(self, config.thisTranslation["changeWindowTitle"],
+                    config.thisTranslation["enter_text_here"], QLineEdit.Normal,
+                    windowTitle)
+            if ok and windowTitle:
                 self.setWindowTitle(windowTitle)
                 self.parent.saveWorkspace()
 

@@ -998,4 +998,5 @@ translation = {
     "next": "Επόμενο:",
     "landscape": "Κατάσταση τοπίου.",
     "portrait": "Λειτουργία Portrait",
+    "limitWorkspaceFilenameLength": "Περιορισμός μήκους ονόματος αρχείου χώρου εργασίας",
 }

@@ -230,4 +230,4 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("refreshWindowsAfterSavingNote", "Refresh windows after saving note")
+        addLanguageStringToAllFiles("limitWorkspaceFilenameLength", "Limit the workspace filename length")

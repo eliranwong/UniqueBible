@@ -998,4 +998,5 @@ translation = {
     "next": "अगला",
     "landscape": "लैंडस्केप मोड",
     "portrait": "पोर्ट्रेट मोड",
+    "limitWorkspaceFilenameLength": "कार्यस्थान फ़ाइल नाम की सीमा को सीमित करें",
 }

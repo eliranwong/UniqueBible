@@ -998,4 +998,5 @@ translation = {
     "next": "下一個",
     "landscape": "橫向模式",
     "portrait": "直向模式",
+    "limitWorkspaceFilenameLength": "限制工作區檔名長度",
 }
