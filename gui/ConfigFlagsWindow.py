@@ -138,6 +138,7 @@ class ConfigFlagsWindow(QDialog):
             ("hideVlcInterfaceReadingSingleVerse", config.hideVlcInterfaceReadingSingleVerse, self.hideVlcInterfaceReadingSingleVerseChanged, True, config.thisTranslation["hideVlcInterfaceReadingSingleVerse"]),
             ("doNotStop3rdPartyMediaPlayerOnExit", config.doNotStop3rdPartyMediaPlayerOnExit, self.doNotStop3rdPartyMediaPlayerOnExitChanged, False, config.thisTranslation["doNotStop3rdPartyMediaPlayerOnExit"]),
             ("refreshWindowsAfterSavingNote", config.refreshWindowsAfterSavingNote, self.refreshWindowsAfterSavingNoteChanged, True, config.thisTranslation["refreshWindowsAfterSavingNote"]),
+            ("limitWorkspaceFilenameLength", config.limitWorkspaceFilenameLength, self.limitWorkspaceFilenameLengthChanged, True, config.thisTranslation["limitWorkspaceFilenameLength"]),
         ]
         if config.isOfflineTtsInstalled:
             options += [
@@ -539,3 +540,6 @@ class ConfigFlagsWindow(QDialog):
 
     def refreshWindowsAfterSavingNoteChanged(self):
         config.refreshWindowsAfterSavingNote = not config.refreshWindowsAfterSavingNote
+
+    def limitWorkspaceFilenameLengthChanged(self):
+        config.limitWorkspaceFilenameLength = not config.limitWorkspaceFilenameLength

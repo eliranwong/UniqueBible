@@ -998,4 +998,5 @@ translation = {
     "next": "Далее",
     "landscape": "Режим ландшафта",
     "portrait": "Режим портрета",
+    "limitWorkspaceFilenameLength": "Ограничить длину имени файла рабочей области",
 }

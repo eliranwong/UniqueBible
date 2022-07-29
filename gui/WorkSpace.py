@@ -140,7 +140,7 @@ class Workspace(QMainWindow):
         subWindow = self.mda.addSubWindow(widget)
         subWindow.setWindowIcon(self.appIcon)
         if windowTitle:
-            if len(windowTitle) > 20:
+            if config.limitWorkspaceFilenameLength and len(windowTitle) > 20:
                 windowTitle = windowTitle[:20]
             widget.setWindowTitle(windowTitle)
         if windowTooltip:
@@ -348,7 +348,7 @@ Your browser does not support the video tag.
                 widget = subWindow.widget()
                 if hasattr(widget, "wsName"):
                     windowTitle = widget.windowTitle()
-                    if len(windowTitle) > 20:
+                    if config.limitWorkspaceFilenameLength and len(windowTitle) > 20:
                         windowTitle = windowTitle[:20]
                     fileName = "uba_ws_{3}{0}_{1}.{2}".format(index, windowTitle, widget.wsName, "0" if index < 10 else "")
                     fileName = os.path.join(folderName, fileName)

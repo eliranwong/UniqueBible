@@ -998,4 +998,5 @@ translation = {
     "next": "അടുത്തത്",
     "landscape": "ലാന്റ്സ്കേപ്പ് ദശ",
     "portrait": "പോര്ട്രെയിറ്റ് മോഡ്",
+    "limitWorkspaceFilenameLength": "പണിയിടത്തിന്റെ ഫയല്നാമം നീളം മാറ്റുക",
 }

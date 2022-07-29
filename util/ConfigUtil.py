@@ -1352,6 +1352,12 @@ class ConfigUtil:
         if not hasattr(config, "refreshWindowsAfterSavingNote"):
             config.refreshWindowsAfterSavingNote = True
 
+        config.help["limitWorkspaceFilenameLength"] = """
+        # Limit the workspace filename length to 20 characters
+        """
+        if not hasattr(config, "limitWorkspaceFilenameLength"):
+            config.limitWorkspaceFilenameLength = True
+
     # Save configurations on exit
     @staticmethod
     def save():
@@ -1671,6 +1677,7 @@ class ConfigUtil:
             ("parseClearSpecialCharacters", config.parseClearSpecialCharacters),
             ("refreshWindowsAfterSavingNote", config.refreshWindowsAfterSavingNote),
             ("databaseConvertedOnStartup", config.databaseConvertedOnStartup),
+            ("limitWorkspaceFilenameLength", config.limitWorkspaceFilenameLength),
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:

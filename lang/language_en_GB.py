@@ -998,4 +998,5 @@ translation = {
     "next": "Next",
     "landscape": "Landscape Mode",
     "portrait": "Portrait Mode",
+    "limitWorkspaceFilenameLength": "Limit the workspace filename length",
 }

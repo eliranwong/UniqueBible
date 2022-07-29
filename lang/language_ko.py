@@ -998,4 +998,5 @@ translation = {
     "next": "다음",
     "landscape": "가로 모드",
     "portrait": "세로 모드",
+    "limitWorkspaceFilenameLength": "작업공간 파일 이름 길이 제한",
 }
