@@ -1,3 +1,6 @@
+Changes in 31.57:
+* Fixed saving html file from popover window.
+
 Changes in 31.56:
 * Added limitWorkspaceFilenameLength config flag.
 

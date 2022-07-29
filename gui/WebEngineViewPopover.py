@@ -381,11 +381,12 @@ class WebEngineViewPopover(QWebEngineView):
         if fileName:
             if not os.path.basename(fileName).lower().endswith(".html"):
                 fileName = fileName + ".html"
-                self.saveHtmlToFileAction(html, fileName)
+            self.saveHtmlToFileAction(html, fileName)
 
     def saveHtmlToFileAction(self, html, fileName):
         with open(fileName, "w", encoding="utf-8") as fileObj:
             fileObj.write(html)
+        config.mainWindow.displayMessage(config.thisTranslation["saved"])
 
     def changeWindowTitle(self, windowTitle=""):
         if self.parent is config.mainWindow.ws:
