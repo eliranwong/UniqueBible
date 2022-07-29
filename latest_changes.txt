@@ -1,3 +1,6 @@
+Changes in 31.55:
+* Updated the icon for resizing Study Window in material menu.
+
 Changes in 31.54:
 * Fixed loading the first module in Bible Parallels and Promises.
 

@@ -1149,7 +1149,7 @@ class MaterialMainWindow:
 
         self.switchOrientationButton = QPushButton()
         self.addMaterialIconButton(self.getOrientationDisplayToolTip(), self.getOrientationDisplay(), self.orientationButtonClicked, self.secondToolBar, self.switchOrientationButton, False)
-        icon = "material/action/aspect_ratio/materialiconsoutlined/48dp/2x/outline_aspect_ratio_black_48dp.png"
+        icon = "material/action/expand/materialiconsoutlined/48dp/2x/outline_expand_black_48dp.png"
         self.addMaterialIconButton("menu2_study", icon, self.parallel, self.secondToolBar)
         self.enableInstantButton = QPushButton()
         self.addMaterialIconButton(self.getInstantLookupDisplayToolTip(), self.getInstantInformation(), self.enableInstantButtonClicked, self.secondToolBar, self.enableInstantButton, False)
