@@ -1,3 +1,6 @@
+Changes in 31.59:
+* Support use of unicode in plugins.
+
 Changes in 31.58:
 * Fixed bible reference link hover.
 

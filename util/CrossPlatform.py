@@ -165,12 +165,12 @@ class CrossPlatform:
 
     def execPythonFile(self, script):
         if config.developer:
-            with open(script) as f:
+            with open(script, 'r', encoding='utf8') as f:
                 code = compile(f.read(), script, 'exec')
                 exec(code, globals())
         else:
             try:
-                with open(script) as f:
+                with open(script, 'r', encoding='utf8') as f:
                     code = compile(f.read(), script, 'exec')
                     exec(code, globals())
             except:
