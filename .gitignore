@@ -80,3 +80,4 @@ util/GitHubCustomRepoCache.py
 /ip_blacklist.txt
 /ip_whitelist.txt
 plugins/event/*.py
+secrets/github/*.txt

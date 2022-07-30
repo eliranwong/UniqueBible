@@ -999,4 +999,5 @@ translation = {
     "landscape": "横向方式",
     "portrait": "纵向方式",
     "limitWorkspaceFilenameLength": "限制工作空间文件名长度",
+    "couldNotAccess": "无法访问",
 }

@@ -999,4 +999,5 @@ translation = {
     "landscape": "Modalità del paesaggio",
     "portrait": "Modalità ritratto",
     "limitWorkspaceFilenameLength": "Limitare la lunghezza del filename di lavoro",
+    "couldNotAccess": "Impossibile accedere",
 }

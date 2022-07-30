@@ -954,7 +954,8 @@ class MainWindow(QMainWindow):
                     self.installFromGitHub(gitHubRepoInfo)
                     return True
             except Exception as ex:
-                print(f"Could not access {repo}")
+                self.displayMessage(config.thisTranslation["couldNotAccess"] + " " + repo)
+                print(ex)
         return False
 
     # Select database to modify
