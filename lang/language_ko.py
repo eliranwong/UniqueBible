@@ -999,4 +999,5 @@ translation = {
     "landscape": "가로 모드",
     "portrait": "세로 모드",
     "limitWorkspaceFilenameLength": "작업공간 파일 이름 길이 제한",
+    "couldNotAccess": "액세스할 수 없음",
 }

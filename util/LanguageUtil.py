@@ -230,4 +230,4 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("limitWorkspaceFilenameLength", "Limit the workspace filename length")
+        addLanguageStringToAllFiles("couldNotAccess", "Could not access")

@@ -999,4 +999,5 @@ translation = {
     "landscape": "Mod peisaj",
     "portrait": "Modul portret",
     "limitWorkspaceFilenameLength": "Limitați lungimea fișierului spațiului de lucru",
+    "couldNotAccess": "Nu a putut accesa",
 }

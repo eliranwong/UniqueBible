@@ -1358,6 +1358,15 @@ class ConfigUtil:
         if not hasattr(config, "limitWorkspaceFilenameLength"):
             config.limitWorkspaceFilenameLength = True
 
+        patFile = os.path.join("secrets", "github", "pat.txt")
+        if os.path.exists(patFile):
+            with open(patFile) as file:
+                pat = file.readline().strip()
+                if pat:
+                    config.githubAccessToken = pat
+                    if config.developer:
+                        print(f"Using {patFile}")
+
     # Save configurations on exit
     @staticmethod
     def save():

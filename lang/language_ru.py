@@ -999,4 +999,5 @@ translation = {
     "landscape": "Режим ландшафта",
     "portrait": "Режим портрета",
     "limitWorkspaceFilenameLength": "Ограничить длину имени файла рабочей области",
+    "couldNotAccess": "Не удалось получить доступ",
 }

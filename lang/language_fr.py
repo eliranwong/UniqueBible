@@ -999,4 +999,5 @@ translation = {
     "landscape": "Mode paysage",
     "portrait": "Mode Portrait",
     "limitWorkspaceFilenameLength": "Limiter la longueur du nom du nom de fichier",
+    "couldNotAccess": "Impossible d'accéder à",
 }

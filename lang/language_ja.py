@@ -999,4 +999,5 @@ translation = {
     "landscape": "ランドスケープモード",
     "portrait": "縦長モード",
     "limitWorkspaceFilenameLength": "ワークスペースのファイル名を制限する",
+    "couldNotAccess": "アクセスできません",
 }

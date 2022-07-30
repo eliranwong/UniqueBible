@@ -999,4 +999,5 @@ translation = {
     "landscape": "Κατάσταση τοπίου.",
     "portrait": "Λειτουργία Portrait",
     "limitWorkspaceFilenameLength": "Περιορισμός μήκους ονόματος αρχείου χώρου εργασίας",
+    "couldNotAccess": "Αδυναμία πρόσβασης",
 }
