@@ -1,3 +1,6 @@
+Changes in 31.61:
+* Fixed startup when config is missing.
+
 Changes in 31.60:
 * Added ability to use Github personal access token.
 - https://github.com/eliranwong/UniqueBible/wiki/GitHub-Personal-Access-Token
