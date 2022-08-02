@@ -8,7 +8,6 @@ import os, platform, logging, re, sys, subprocess
 import logging.handlers as handlers
 from util.FileUtil import FileUtil
 from util.NetworkUtil import NetworkUtil
-from util.NoteService import NoteService
 from util.WebtopUtil import WebtopUtil
 
 # Change working directory to UniqueBible directory
@@ -302,6 +301,8 @@ def setCurrentRecord():
     config.currentRecord = {'main': mainRecordPosition, 'study': studyRecordPosition}
 
 def exitApplication():
+    from util.NoteService import NoteService
+
     app.closeAllWindows()
     if not config.doNotStop3rdPartyMediaPlayerOnExit:
         config.mainWindow.closeMediaPlayer()
