@@ -2037,7 +2037,7 @@ class MainWindow(QMainWindow):
                   "MySword Dictionaries (*.dct.mybible);;e-Sword Bibles [Apple] (*.bbli);;"
                   "e-Sword Bibles [Apple] (*.bblx);;e-Sword Commentaries [Apple] (*.cmti);;"
                   "e-Sword Dictionaries [Apple] (*.dcti);;e-Sword Lexicons [Apple] (*.lexi);;e-Sword Books [Apple] (*.refi);;"
-                  "e-Sword Devotionals (*.devx);;;"
+                  "e-Sword Devotionals (*.devx);;"
                   "MyBible Bibles (*.SQLite3);;MyBible Commentaries (*.commentaries.SQLite3);;MyBible Dictionaries (*.dictionary.SQLite3);;"
                   "XML [Beblia/OSIS/Zefania] (*.xml);;"
                   "theWord Complete Bibles (*.ont);;"

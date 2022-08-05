@@ -1789,14 +1789,17 @@ class Converter:
             150: 15,
             160: 16,
             190: 17,
+            192: 78,
             220: 18,
             230: 19,
+            232: 86,
             240: 20,
             250: 21,
             260: 22,
             290: 23,
             300: 24,
             310: 25,
+            323: 72,
             330: 26,
             340: 27,
             350: 28,
@@ -1861,7 +1864,7 @@ class Converter:
             469: 85, # Eliran's customised no.
             191: 78, # Eliran's customised no.
             231: 86, # Eliran's customised no.
-            232: 90, # Eliran's customised no.
+            # 232: 90, # Eliran's customised no.
             235: 90, # Oleg's Barach module
             800: 91, # Eliran's customised no.
             245: 91, # Oleg's Barach module

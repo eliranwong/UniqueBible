@@ -1,3 +1,6 @@
+Changes in 31.62:
+* Fixed import MyBible RSV with Apocrypha.
+
 Changes in 31.61:
 * Fixed startup when config is missing.
 
