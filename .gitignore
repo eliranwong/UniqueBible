@@ -81,3 +81,5 @@ util/GitHubCustomRepoCache.py
 /ip_whitelist.txt
 plugins/event/*.py
 secrets/github/*.txt
+enable_binary_execution_mode
+config.ini

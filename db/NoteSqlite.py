@@ -1,4 +1,4 @@
-import os, re, apsw, config
+import os, re, dbw, config
 from util.BibleVerseParser import BibleVerseParser
 from util.DateUtil import DateUtil
 from util.TextUtil import TextUtil
@@ -9,7 +9,7 @@ class NoteSqlite:
     def __init__(self):
         # connect the note file specified in config.py > config.bibleNotes
         self.database = os.path.join(config.marvelData, config.bibleNotes)
-        self.connection = apsw.Connection(self.database)
+        self.connection = dbw.Connection(self.database)
         self.cursor = self.connection.cursor()
         create = (
             "CREATE TABLE IF NOT EXISTS BookNote (Book INT, Note TEXT)",

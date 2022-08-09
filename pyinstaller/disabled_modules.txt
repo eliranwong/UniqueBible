@@ -1,0 +1,4 @@
+apsw
+word-forms
+lemmagen3
+chinese-english-lookup

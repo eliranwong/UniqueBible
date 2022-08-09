@@ -1,4 +1,4 @@
-import os, apsw, re
+import os, dbw, re
 import config
 from util.BibleVerseParser import BibleVerseParser
 
@@ -14,7 +14,7 @@ class Highlight:
             code = "hl{0}".format(i + 1)
             self.codes[code] = code
         self.filename = os.path.join(config.marvelData, "highlights.bible")
-        self.connection = apsw.Connection(self.filename)
+        self.connection = dbw.Connection(self.filename)
         self.cursor = self.connection.cursor()
         if not self.checkTableExists():
             self.createHighlightTable()

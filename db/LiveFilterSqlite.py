@@ -1,4 +1,4 @@
-import os, apsw
+import os, dbw
 import config
 
 
@@ -9,7 +9,7 @@ class LiveFilterSqlite:
 
     def __init__(self):
         self.filename = os.path.join(config.marvelData, "livefilter.sqlite")
-        self.connection = apsw.Connection(self.filename)
+        self.connection = dbw.Connection(self.filename)
         self.cursor = self.connection.cursor()
         if not self.checkTableExists():
             self.createTable()

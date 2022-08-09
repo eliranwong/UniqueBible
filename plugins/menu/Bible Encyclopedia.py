@@ -1,4 +1,4 @@
-import config, os, apsw, re
+import config, os, dbw, re
 from gui.WebEngineViewPopover import WebEngineViewPopover
 from db.ToolsSqlite import EncyclopediaData
 if config.qtLibrary == "pyside6":
@@ -36,7 +36,7 @@ class BibleEncyclopedia(QWidget):
         self.modules = config.mainWindow.encyclopediaList
         # Connect database
         self.database = os.path.join(config.marvelData, "search.sqlite")
-        self.connection = apsw.Connection(self.database)
+        self.connection = dbw.Connection(self.database)
         self.cursor = self.connection.cursor()
         # Entries
         self.entries = []

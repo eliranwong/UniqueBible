@@ -1,4 +1,4 @@
-import os, apsw, config
+import os, dbw, config
 
 
 class DevotionalSqlite:
@@ -13,7 +13,7 @@ class DevotionalSqlite:
         self.database = os.path.join(config.marvelData, "devotionals", "{0}.devotional".format(devotional))
         self.connection = None
         if os.path.exists(self.database):
-            self.connection = apsw.Connection(self.database)
+            self.connection = dbw.Connection(self.database)
             self.cursor = self.connection.cursor()
 
     def __del__(self):
@@ -44,7 +44,7 @@ class DevotionalSqlite:
         database = os.path.join(config.marvelData, "devotionals", "{0}.devotional".format(devotional))
         if os.path.isfile(database):
             os.remove(database)
-        with apsw.Connection(database) as connection:
+        with dbw.Connection(database) as connection:
             cursor = connection.cursor()
             cursor.execute(DevotionalSqlite.CREATE_DEVOTIONAL_TABLE)
 #            cursor.execute("COMMIT")
