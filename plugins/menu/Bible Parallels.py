@@ -1,4 +1,4 @@
-import config, os, apsw, re
+import config, os, dbw, re
 from gui.WebEngineViewPopover import WebEngineViewPopover
 from db.BiblesSqlite import BiblesSqlite
 from util.BibleVerseParser import BibleVerseParser
@@ -68,7 +68,7 @@ class BibleParallels(QWidget):
         )
         # Connect database
         self.database = os.path.join(config.marvelData, "collections3.sqlite")
-        self.connection = apsw.Connection(self.database)
+        self.connection = dbw.Connection(self.database)
         self.cursor = self.connection.cursor()
         # Entries
         self.entries = []

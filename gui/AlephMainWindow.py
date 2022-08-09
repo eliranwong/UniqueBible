@@ -229,8 +229,9 @@ class AlephMainWindow:
             menu1.addAction(
                 QAction(config.thisTranslation["menu_startup_macro"], self, triggered=self.setStartupMacro))
 
-        menu1.addAction(
-            QAction(config.thisTranslation["menu1_update"], self, triggered=self.showUpdateAppWindow))
+        if not config.enableBinaryExecutionMode:
+            menu1.addAction(
+                QAction(config.thisTranslation["menu1_update"], self, triggered=self.showUpdateAppWindow))
 
         menu1.addAction(
             QAction(config.thisTranslation["menu_quit"], self, shortcut=sc.quitApp, triggered=self.quitApp))

@@ -1,4 +1,4 @@
-import os, apsw
+import os, dbw
 import config
 from util.GitHubRepoInfo import GitHubRepoInfo
 
@@ -17,7 +17,7 @@ class UserRepoSqlite:
 
     def __init__(self):
         self.filename = os.path.join(config.marvelData, "userrepo.sqlite")
-        self.connection = apsw.Connection(self.filename)
+        self.connection = dbw.Connection(self.filename)
         self.cursor = self.connection.cursor()
         if not self.checkTableExists():
             self.createTable()

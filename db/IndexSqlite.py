@@ -1,4 +1,4 @@
-import os, apsw, config, logging
+import os, dbw, config, logging
 
 class IndexSqlite:
 
@@ -19,7 +19,7 @@ class IndexSqlite:
 
         self.type = type
         self.filename = filename
-        self.connection = apsw.Connection(filePath)
+        self.connection = dbw.Connection(filePath)
         self.cursor = self.connection.cursor()
         self.logger = logging.getLogger('uba')
         if not self.checkTableExists():

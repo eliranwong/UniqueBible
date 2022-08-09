@@ -2,7 +2,7 @@
 Reading data from bibles.sqlite
 """
 import glob
-import os, apsw, config, re, logging
+import os, dbw, config, re, logging
 from datetime import datetime
 from pathlib import Path
 from functools import partial
@@ -33,8 +33,9 @@ class BiblesSqlite:
         defaultDatabase = os.path.join(config.marvelData, "bibles.sqlite")
         langDatabase = os.path.join(config.marvelData, "bibles_{0}.sqlite".format(language))
         self.database = langDatabase if language and os.path.isfile(langDatabase) else defaultDatabase
-        self.connection = apsw.Connection(self.database)
-        self.connection.createscalarfunction("REGEXP", TextUtil.regexp)
+        self.connection = dbw.Connection(self.database)
+        if not config.enableBinaryExecutionMode:
+            self.connection.createscalarfunction("REGEXP", TextUtil.regexp)
         self.cursor = self.connection.cursor()
         self.marvelBibles = ("MOB", "MIB", "MAB", "MPB", "MTB", "LXX1", "LXX1i", "LXX2", "LXX2i")
         self.logger = logging.getLogger('uba')
@@ -766,8 +767,9 @@ class Bible:
         self.cursor = None
         self.database = os.path.join(config.marvelData, "bibles", text+".bible")
         if os.path.exists(self.database):
-            self.connection = apsw.Connection(self.database)
-            self.connection.createscalarfunction("REGEXP", TextUtil.regexp)
+            self.connection = dbw.Connection(self.database)
+            if not config.enableBinaryExecutionMode:
+                self.connection.createscalarfunction("REGEXP", TextUtil.regexp)
             self.cursor = self.connection.cursor()
 
     def __del__(self):
@@ -1332,7 +1334,7 @@ class Bible:
         formattedBible = os.path.join(config.marvelData, "bibles", "{0}.bible".format(abbreviation))
         if os.path.isfile(formattedBible):
             os.remove(formattedBible)
-        connection = apsw.Connection(formattedBible)
+        connection = dbw.Connection(formattedBible)
         cursor = connection.cursor()
 
         cursor.execute(Bible.CREATE_VERSES_TABLE)
@@ -1362,7 +1364,7 @@ class ClauseONTData:
         self.testament = testament
         # connect images.sqlite
         self.database = os.path.join(config.marvelData, "data", "clause{0}.data".format(self.testament))
-        self.connection = apsw.Connection(self.database)
+        self.connection = dbw.Connection(self.database)
         self.cursor = self.connection.cursor()
 
     def __del__(self):
@@ -1383,7 +1385,7 @@ class MorphologySqlite:
     def __init__(self):
         # connect bibles.sqlite
         self.database = os.path.join(config.marvelData, "morphology.sqlite")
-        self.connection = apsw.Connection(self.database)
+        self.connection = dbw.Connection(self.database)
         self.cursor = self.connection.cursor()
 
     def __del__(self):
