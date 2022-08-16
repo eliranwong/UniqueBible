@@ -1134,10 +1134,7 @@ class ConfigUtil:
         config.help["menuLayout"] = """
         # Menu layout"""
         if not hasattr(config, "menuLayout"):
-            if config.enableBinaryExecutionMode:
-                config.menuLayout = "starter"
-            else:
-                config.menuLayout = "material"
+            config.menuLayout = "material"
         config.help["useLiteVerseParsing"] = """
         # Verse parsing method"""
         if not hasattr(config, "useLiteVerseParsing"):
