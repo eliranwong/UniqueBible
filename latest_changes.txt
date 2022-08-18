@@ -1,3 +1,6 @@
+Changes in 31.64:
+* Removed "saved" message dialog when worspace does autosaving.
+
 Changes in 31.63:
 * Added Windows icon file "UniqueBibleApp.ico".
 
