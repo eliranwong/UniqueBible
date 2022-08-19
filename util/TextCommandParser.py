@@ -1606,7 +1606,8 @@ class TextCommandParser:
 
     # READWORD:::
     def readWord(self, command, source):
-        self.parent.closeMediaPlayer()
+        if not source == 'http':
+            self.parent.closeMediaPlayer()
         text, b, c, v, wordID = command.split(".")
         folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
         filename = "{0}_{1}_{2}_{3}_{4}.mp3".format(text, b, c, v, wordID)
