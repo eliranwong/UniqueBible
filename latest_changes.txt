@@ -1,3 +1,6 @@
+Changes in 31.65:
+* Fixed read word in http mode.
+
 Changes in 31.64:
 * Removed "saved" message dialog when worspace does autosaving.
 
