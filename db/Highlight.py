@@ -20,8 +20,7 @@ class Highlight:
             self.createHighlightTable()
 
     def __del__(self):
-        if config.enableBinaryExecutionMode:
-            dbw.commit(self.cursor)
+        dbw.commit(self.cursor)
         self.connection.close()
 
     def createHighlightTable(self):
@@ -46,8 +45,7 @@ class Highlight:
     def deleteAll(self):
         delete = "DELETE FROM Highlight"
         self.cursor.execute(delete)
-        if config.enableBinaryExecutionMode:
-            dbw.commit(self.cursor)
+        dbw.commit(self.cursor)
 
     def getVerseDict(self, b, c):
         query = "SELECT Verse, Code FROM Highlight WHERE Book=? AND Chapter=? ORDER BY Verse"
