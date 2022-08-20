@@ -19,6 +19,12 @@ class ConfigUtil:
         if not hasattr(config, "version") or current_version > config.version:
             config.version = current_version
 
+        # Determine if running in binary run mode or Python run mode
+        config.enableBinaryExecutionMode = False
+        if os.path.exists("enable_binary_execution_mode"):
+            config.enableBinaryExecutionMode = True
+            ConfigUtil.loadConfigIni()
+
         # Temporary configurations
         # Their values are not saved on exit.
         config.controlPanel = False
@@ -1364,8 +1370,6 @@ class ConfigUtil:
                 pat = file.readline().strip()
                 if pat:
                     config.githubAccessToken = pat
-                    if config.developer:
-                        print(f"Using {patFile}")
 
     # Save configurations on exit
     @staticmethod
@@ -1688,14 +1692,35 @@ class ConfigUtil:
             ("databaseConvertedOnStartup", config.databaseConvertedOnStartup),
             ("limitWorkspaceFilenameLength", config.limitWorkspaceFilenameLength),
         )
-        with open("config.py", "w", encoding="utf-8") as fileObj:
-            for name, value in configs:
-                fileObj.write("{0} = {1}\n".format(name, pprint.pformat(value)))
-            if hasattr(config, "translationLanguage"):
-                fileObj.write("{0} = {1}\n".format("translationLanguage", pprint.pformat(config.translationLanguage)))
-            if hasattr(config, "iModeSplitterSizes"):
-                fileObj.write("{0} = {1}\n".format("iModeSplitterSizes", pprint.pformat(config.iModeSplitterSizes)))
-            if hasattr(config, "pModeSplitterSizes"):
-                fileObj.write("{0} = {1}\n".format("pModeSplitterSizes", pprint.pformat(config.pModeSplitterSizes)))
-            # print("A copy of configurations is saved in file 'config.py'!")
+        if os.path.exists("enable_binary_execution_mode"):
+            with open("config.ini", "w", encoding="utf-8") as fileObj:
+                for name, value in configs:
+                    fileObj.write("{0} = {1}\n".format(name, str(value)))
+        else:
+            with open("config.py", "w", encoding="utf-8") as fileObj:
+                for name, value in configs:
+                    fileObj.write("{0} = {1}\n".format(name, pprint.pformat(value)))
+                if hasattr(config, "translationLanguage"):
+                    fileObj.write("{0} = {1}\n".format("translationLanguage", pprint.pformat(config.translationLanguage)))
+                if hasattr(config, "iModeSplitterSizes"):
+                    fileObj.write("{0} = {1}\n".format("iModeSplitterSizes", pprint.pformat(config.iModeSplitterSizes)))
+                if hasattr(config, "pModeSplitterSizes"):
+                    fileObj.write("{0} = {1}\n".format("pModeSplitterSizes", pprint.pformat(config.pModeSplitterSizes)))
 
+    @staticmethod
+    def loadConfigIni():
+        if os.path.exists("config.ini"):
+            with open("config.ini", "r", encoding="utf-8") as fileObject:
+                for line in fileObject.readlines():
+                    parts = line.split("=", 1)
+                    key = parts[0].strip()
+                    value = parts[1].strip()
+                    valueType = getattr(config, key)
+                    if type(valueType) is str:
+                        setattr(config, key, str(value))
+                    elif type(valueType) is int:
+                        setattr(config, key, int(value))
+                    elif type(valueType) is float:
+                        setattr(config, key, float(value))
+                    else:
+                        setattr(config, key, eval(value))
