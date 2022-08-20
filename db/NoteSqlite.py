@@ -27,7 +27,8 @@ class NoteSqlite:
         if not self.checkColumnExists("BookNote", "Updated"):
             self.addColumnToTable("BookNote", "Updated", "INT")
             self.addColumnToTable("BookNote", "GistId", "NVARCHAR(40)")
-#        #self.cursor.execute("COMMIT")
+        if config.enableBinaryExecutionMode:
+            self.cursor.execute("COMMIT")
 
     def __del__(self):
         self.connection.close()
@@ -87,55 +88,66 @@ class NoteSqlite:
     def saveBookNote(self, b, note, updated=DateUtil.epoch()):
         delete = "DELETE FROM BookNote WHERE Book=?"
         self.cursor.execute(delete, (b,))
-#        self.cursor.execute("COMMIT")
+        if config.enableBinaryExecutionMode:
+            self.cursor.execute("COMMIT")
         if note and note != config.thisTranslation["empty"] and self.isNotEmptyNote(note):
             insert = "INSERT INTO BookNote (Book, Note, Updated) VALUES (?, ?, ?)"
             self.cursor.execute(insert, (b, note, updated))
-#            self.cursor.execute("COMMIT")
+        if config.enableBinaryExecutionMode:
+            self.cursor.execute("COMMIT")
 
     def saveChapterNote(self, b, c, note, updated=DateUtil.epoch()):
         delete = "DELETE FROM ChapterNote WHERE Book=? AND Chapter=?"
         self.cursor.execute(delete, (b, c))
-#        self.cursor.execute("COMMIT")
+        if config.enableBinaryExecutionMode:
+            self.cursor.execute("COMMIT")
         if note and note != config.thisTranslation["empty"] and self.isNotEmptyNote(note):
             insert = "INSERT INTO ChapterNote (Book, Chapter, Note, Updated) VALUES (?, ?, ?, ?)"
             self.cursor.execute(insert, (b, c, note, updated))
-#            self.cursor.execute("COMMIT")
+        if config.enableBinaryExecutionMode:
+            self.cursor.execute("COMMIT")
 
     def setBookNoteUpdate(self, b, c, updated):
         update = "UPDATE BookNote set Updated=? WHERE Book=?"
         self.cursor.execute(update, (updated, b))
-#        self.cursor.execute("COMMIT")
+        if config.enableBinaryExecutionMode:
+            self.cursor.execute("COMMIT")
 
     def setChapterNoteUpdate(self, b, c, updated):
         update = "UPDATE ChapterNote set Updated=? WHERE Book=? and Chapter=?"
         self.cursor.execute(update, (updated, b, c))
-#        self.cursor.execute("COMMIT")
+        if config.enableBinaryExecutionMode:
+            self.cursor.execute("COMMIT")
 
     def setChapterNoteContent(self, b, c, content, updated):
         update = "UPDATE ChapterNote set Note=?, Updated=? WHERE Book=? and Chapter=?"
         self.cursor.execute(update, (content, updated, b, c))
-#        self.cursor.execute("COMMIT")
+        if config.enableBinaryExecutionMode:
+            self.cursor.execute("COMMIT")
 
     def saveVerseNote(self, b, c, v, note, updated=DateUtil.epoch()):
         delete = "DELETE FROM VerseNote WHERE Book=? AND Chapter=? AND Verse=?"
         self.cursor.execute(delete, (b, c, v))
-#        #self.cursor.execute("COMMIT")
+        if config.enableBinaryExecutionMode:
+            self.cursor.execute("COMMIT")
         if note and note != config.thisTranslation["empty"] and self.isNotEmptyNote(note):
             insert = "INSERT INTO VerseNote (Book, Chapter, Verse, Note, Updated) VALUES (?, ?, ?, ?, ?)"
             self.cursor.execute(insert, (b, c, v, note, updated))
-#            #self.cursor.execute("COMMIT")
+            if config.enableBinaryExecutionMode:
+                self.cursor.execute("COMMIT")
 
     def setVerseNoteUpdate(self, b, c, v, updated):
         update = "UPDATE VerseNote set Updated = ? WHERE Book=? and Chapter=? and Verse=?"
         self.cursor.execute(update, (updated, b, c, v))
-#        self.cursor.execute("COMMIT")
+        if config.enableBinaryExecutionMode:
+            self.cursor.execute("COMMIT")
 
     def setVerseNoteContent(self, b, c, v, content, updated):
         update = "UPDATE VerseNote set Note=?, Updated=? WHERE Book=? and Chapter=? and Verse=?"
         self.cursor.execute(update, (content, updated, b, c, v))
-#        self.cursor.execute("COMMIT")
-    
+        if config.enableBinaryExecutionMode:
+            self.cursor.execute("COMMIT")
+
     def getSearchedBookList(self, searchString):
         searchString = "%{0}%".format(searchString)
         query = TextUtil.getQueryPrefix()
@@ -233,15 +245,18 @@ class NoteSqlite:
 
     def deleteBookNotes(self):
         self.cursor.execute("DELETE FROM BookNote")
-#        self.cursor.execute("COMMIT")
+        if config.enableBinaryExecutionMode:
+            self.cursor.execute("COMMIT")
 
     def deleteChapterNotes(self):
         self.cursor.execute("DELETE FROM ChapterNote")
-#        self.cursor.execute("COMMIT")
+        if config.enableBinaryExecutionMode:
+            self.cursor.execute("COMMIT")
 
     def deleteVerseNotes(self):
         self.cursor.execute("DELETE FROM VerseNote")
-#        self.cursor.execute("COMMIT")
+        if config.enableBinaryExecutionMode:
+            self.cursor.execute("COMMIT")
 
     def checkColumnExists(self, table, column):
         self.cursor.execute("SELECT * FROM pragma_table_info(?) WHERE name=?", (table, column))

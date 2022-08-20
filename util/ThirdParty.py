@@ -43,16 +43,19 @@ class Converter:
             )
             for create in statements:
                 cursor.execute(create)
-#                cursor.execute("COMMIT")
+                if config.enableBinaryExecutionMode:
+                    cursor.execute("COMMIT")
             # insert data to table "Details"
             insert = "INSERT INTO Details (Title, Abbreviation, Information, Version, OldTestament, NewTestament, Apocrypha, Strongs, Language) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
             cursor.execute(insert, (title, abbreviation, description, 1, 1, 1, 0, 0, ''))
-#            cursor.execute("COMMIT")
+            if config.enableBinaryExecutionMode:
+                cursor.execute("COMMIT")
             # insert data to table "Commentary"
             if content:
                 insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
                 cursor.executemany(insert, content)
-#                cursor.execute("COMMIT")
+                if config.enableBinaryExecutionMode:
+                    cursor.execute("COMMIT")
 
     def createBookModuleFromImages(self, folder):
         module = os.path.basename(folder)
@@ -254,22 +257,26 @@ class Converter:
             # Create table for book content
             create = "CREATE TABLE Reference (Chapter NVARCHAR(100), Content TEXT)"
             cursor.execute(create)
-#            cursor.execute("COMMIT")
+            if config.enableBinaryExecutionMode:
+                cursor.execute("COMMIT")
             # insert data for book content
             self.logger.info("Inserting reference data")
             insert = "INSERT INTO Reference (Chapter, Content) VALUES (?, ?)"
             cursor.executemany(insert, content)
-#            cursor.execute("COMMIT")
+            if config.enableBinaryExecutionMode:
+                cursor.execute("COMMIT")
             if blobData:
                 # Create table for book content
                 create = "CREATE TABLE data (Filename TEXT, Content BLOB)"
                 cursor.execute(create)
-#                cursor.execute("COMMIT")
+                if config.enableBinaryExecutionMode:
+                    cursor.execute("COMMIT")
                 # insert data for book content
                 self.logger.info("Inserting blob data")
                 insert = "INSERT INTO data (Filename, Content) VALUES (?, ?)"
                 cursor.executemany(insert, blobData)
-#                cursor.execute("COMMIT")
+                if config.enableBinaryExecutionMode:
+                    cursor.execute("COMMIT")
 
     # create UniqueBible.app dictionary module
     def createDictionaryModule(self, module, content):
@@ -281,11 +288,13 @@ class Converter:
             # create table "Dictionary"
             create = "CREATE TABLE Dictionary (Topic NVARCHAR(100), Definition TEXT)"
             cursor.execute(create)
-#            cursor.execute("COMMIT")
+            if config.enableBinaryExecutionMode:
+                cursor.execute("COMMIT")
             # insert data to table "Dictionary"
             insert = "INSERT INTO Dictionary (Topic, Definition) VALUES (?, ?)"
             cursor.executemany(insert, content)
-#            cursor.execute("COMMIT")
+            if config.enableBinaryExecutionMode:
+                cursor.execute("COMMIT")
 
     # create UniqueBible.app lexicon modules
     def createLexiconModule(self, module, content):
@@ -297,11 +306,13 @@ class Converter:
             # create table "Lexicon"
             create = "CREATE TABLE Lexicon (Topic NVARCHAR(100), Definition TEXT)"
             cursor.execute(create)
-#            cursor.execute("COMMIT")
+            if config.enableBinaryExecutionMode:
+                cursor.execute("COMMIT")
             # insert data to table "Lexicon
             insert = "INSERT INTO Lexicon (Topic, Definition) VALUES (?, ?)"
             cursor.executemany(insert, content)
-#            cursor.execute("COMMIT")
+            if config.enableBinaryExecutionMode:
+                cursor.execute("COMMIT")
 
     # export image files
     def exportImageData(self, module, images):
@@ -527,7 +538,8 @@ class Converter:
         )
         for create in statements:
             cursor.execute(create)
-#            cursor.execute("COMMIT")
+            if config.enableBinaryExecutionMode:
+                cursor.execute("COMMIT")
 
         formattedChapters = {}
         for book, chapter, verse, scripture in verses:
@@ -557,12 +569,14 @@ class Converter:
             insert = "INSERT INTO Notes (Book, Chapter, Verse, ID, Note) VALUES (?, ?, ?, ?, ?)"
             notes = [(book, chapter, verse, id, self.formatNonBibleESwordModule(note)) for book, chapter, verse, id, note in notes]
             cursor.executemany(insert, notes)
-#            cursor.execute("COMMIT")
+            if config.enableBinaryExecutionMode:
+                cursor.execute("COMMIT")
 
         formattedChapters = [(book, chapter, formattedChapters[(book, chapter)]) for book, chapter in formattedChapters]
         insert = "INSERT INTO Bible (Book, Chapter, Scripture) VALUES (?, ?, ?)"
         cursor.executemany(insert, formattedChapters)
-#        cursor.execute("COMMIT")
+        if config.enableBinaryExecutionMode:
+            cursor.execute("COMMIT")
 
         self.populateDetails(cursor, description, abbreviation)
 
@@ -922,7 +936,8 @@ class Converter:
         )
         for create in statements:
             cursor.execute(create)
-#            cursor.execute("COMMIT")
+            if config.enableBinaryExecutionMode:
+                cursor.execute("COMMIT")
 
         noteList = []
         formattedChapters = {}
@@ -947,12 +962,14 @@ class Converter:
 
         insert = "INSERT INTO Notes (Book, Chapter, Verse, ID, Note) VALUES (?, ?, ?, ?, ?)"
         cursor.executemany(insert, noteList)
-#        cursor.execute("COMMIT")
+        if config.enableBinaryExecutionMode:
+            cursor.execute("COMMIT")
 
         formattedChapters = [(book, chapter, formattedChapters[(book, chapter)]) for book, chapter in formattedChapters]
         insert = "INSERT INTO Bible (Book, Chapter, Scripture) VALUES (?, ?, ?)"
         cursor.executemany(insert, formattedChapters)
-#        cursor.execute("COMMIT")
+        if config.enableBinaryExecutionMode:
+            cursor.execute("COMMIT")
 
         self.populateDetails(cursor, description, abbreviation, "", 0)
 
@@ -981,7 +998,8 @@ class Converter:
         insert = "INSERT INTO Details VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         cursor.execute(insert, (description[:100], abbreviation[:50], information, version, oldTestamentFlag,
                                 newTestamentFlag, apocryphaFlag, strongsFlag, language, "", ""))
-#        cursor.execute("COMMIT")
+        if config.enableBinaryExecutionMode:
+            cursor.execute("COMMIT")
 
     def stripMySwordBibleTags(self, text):
         if config.importDoNotStripStrongNo:
@@ -1527,7 +1545,8 @@ class Converter:
         )
         for create in statements:
             cursor.execute(create)
-#            cursor.execute("COMMIT")
+            if config.enableBinaryExecutionMode:
+                cursor.execute("COMMIT")
 
         if stories:
             stories = self.storiesToTitles(stories)
@@ -1562,12 +1581,14 @@ class Converter:
             insert = "INSERT INTO Notes (Book, Chapter, Verse, ID, Note) VALUES (?, ?, ?, ?, ?)"
             notes = [(self.convertMyBibleBookNo(book), chapter, verse, id, self.formatNonBibleMyBibleModule(note, abbreviation)) for book, chapter, verse, id, note in notes]
             cursor.executemany(insert, notes)
-#            cursor.execute("COMMIT")
+            if config.enableBinaryExecutionMode:
+                cursor.execute("COMMIT")
 
         formattedChapters = [(book, chapter, formattedChapters[(book, chapter)]) for book, chapter in formattedChapters]
         insert = "INSERT INTO Bible (Book, Chapter, Scripture) VALUES (?, ?, ?)"
         cursor.executemany(insert, formattedChapters)
-#        cursor.execute("COMMIT")
+        if config.enableBinaryExecutionMode:
+            cursor.execute("COMMIT")
 
         self.populateDetails(cursor, description, abbreviation)
 
@@ -2034,10 +2055,12 @@ class Converter:
             )
             for create in statements:
                 cursor.execute(create)
-#                cursor.execute("COMMIT")
+                if config.enableBinaryExecutionMode:
+                    cursor.execute("COMMIT")
             insert = "INSERT INTO Details (Title, Information) VALUES (?, ?)"
             cursor.execute(insert, (title, description))
-#            cursor.execute("COMMIT")
+            if config.enableBinaryExecutionMode:
+                cursor.execute("COMMIT")
             if xrefs:
                 data = []
                 book = 0
@@ -2061,7 +2084,8 @@ class Converter:
                 data.append((book, chapter, verse, info))
                 insert = "INSERT INTO CrossReference (Book, Chapter, Verse, Information) VALUES (?, ?, ?, ?)"
                 cursor.executemany(insert, data)
-#                cursor.execute("COMMIT")
+                if config.enableBinaryExecutionMode:
+                    cursor.execute("COMMIT")
 
     def convertRtfToHtml(self, rtf):
         rtf = rtf.replace("\\pard", "<p>\n")
