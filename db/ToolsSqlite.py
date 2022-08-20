@@ -567,7 +567,7 @@ class Commentary:
                        "Apocrypha, Strongs) VALUES (?, ?, ?, 1, 1, 1, 0, 0)")
                 cursor.execute(sql, (commentary, commentary, commentary))
             if config.enableBinaryExecutionMode:
-                cursor.execute("COMMIT")
+                dbw.commit(cursor)
             deleteData = []
             insertData = []
             for data in content:
@@ -579,7 +579,7 @@ class Commentary:
             insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
             cursor.executemany(insert, insertData)
             if config.enableBinaryExecutionMode:
-                cursor.execute("COMMIT")
+                dbw.commit(cursor)
 
     def reloadFileLookup(self):
             Commentary.fileLookup = {}
@@ -747,7 +747,7 @@ class Commentary:
             update = "Update Commentary SET Scripture = ? WHERE Book = ? AND Chapter = ?"
             self.cursor.execute(update, (scripture, record[0], record[1]))
             if config.enableBinaryExecutionMode:
-                self.cursor.execute("COMMIT")
+                self.dbw.commit(cursor)
             if int(record[1]) >= 1:
                 self.logger.info("Fix commentary {0} - {1}:{2}".format(self.text, record[0], record[1]))
 
@@ -761,7 +761,7 @@ class Commentary:
             update = "Update Commentary SET Scripture = ? WHERE Book = ? AND Chapter = ?"
             self.cursor.execute(update, (scripture, record[0], record[1]))
             if config.enableBinaryExecutionMode:
-                self.cursor.execute("COMMIT")
+                self.dbw.commit(cursor)
             if int(record[1]) >= 1:
                 self.logger.info("Fix commentary {0} - {1}:{2}".format(self.text, record[0], record[1]))
 
@@ -809,7 +809,7 @@ class Lexicon:
                 sql = ("INSERT INTO Lexicon (Topic, Definition) VALUES (?, ?)")
                 cursor.execute(sql, ('info', lexicon))
             if config.enableBinaryExecutionMode:
-                cursor.execute("COMMIT")
+                dbw.commit(cursor)
             deleteData = []
             insertData = []
             for data in content:
@@ -821,7 +821,7 @@ class Lexicon:
             insert = "INSERT INTO Lexicon (Topic, Definition) VALUES (?, ?)"
             cursor.executemany(insert, insertData)
             if config.enableBinaryExecutionMode:
-                cursor.execute("COMMIT")
+                dbw.commit(cursor)
 
     def getInfo(self):
         try:

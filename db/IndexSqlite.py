@@ -43,7 +43,7 @@ class IndexSqlite:
         insert = "INSERT INTO Index_Data (Word, Book, Chapter, Verse) VALUES (?, ?, ?, ?)"
         self.cursor.executemany(insert, content)
         if config.enableBinaryExecutionMode:
-            self.cursor.execute("COMMIT")
+            dbw.commit(self.cursor)
 
     def updateRef(self):
         if not self.checkColumnExists("Index_Data", "Ref"):
@@ -53,7 +53,7 @@ class IndexSqlite:
         create = 'CREATE INDEX "Index_Word" ON "Index_Data" ("Word")'
         self.cursor.execute(create)
         if config.enableBinaryExecutionMode:
-            self.cursor.execute("COMMIT")
+            dbw.commit(self.cursor)
 
     def getVerses(self, word):
         sql = "SELECT Book, Chapter, Verse FROM Index_Data WHERE Word=? ORDER BY Book, Chapter, Verse"
@@ -71,13 +71,13 @@ class IndexSqlite:
         delete = "DELETE FROM Index_Data"
         self.cursor.execute(delete)
         if config.enableBinaryExecutionMode:
-            self.cursor.execute("COMMIT")
+            dbw.commit(self.cursor)
 
     def deleteBook(self, book):
         delete = "DELETE FROM Index_Data WHERE Book=?"
         self.cursor.execute(delete, (book,))
         if config.enableBinaryExecutionMode:
-            self.cursor.execute("COMMIT")
+            dbw.commit(self.cursor)
 
     def checkTableExists(self):
         if self.type == "bible":

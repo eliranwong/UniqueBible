@@ -24,7 +24,7 @@ class UserRepoSqlite:
 
     def __del__(self):
         if config.enableBinaryExecutionMode:
-            self.cursor.execute("COMMIT")
+            dbw.commit(self.cursor)
         self.connection.close()
 
     def createTable(self):
@@ -44,7 +44,7 @@ class UserRepoSqlite:
             VALUES (?, ?, ?, ?, ?)"""
         self.cursor.execute(insert, (active, name, type, repo, directory))
         if config.enableBinaryExecutionMode:
-            self.cursor.execute("COMMIT")
+            dbw.commit(self.cursor)
 
     def update(self, id, name, type, repo, directory="", active=True):
         repo = GitHubRepoInfo.fixRepoUrl(repo)
@@ -53,19 +53,19 @@ class UserRepoSqlite:
             WHERE id=?"""
         self.cursor.execute(update, (active, name, type, repo, directory, id))
         if config.enableBinaryExecutionMode:
-            self.cursor.execute("COMMIT")
+            dbw.commit(self.cursor)
 
     def delete(self, id):
         delete = f"DELETE FROM {self.TABLE_NAME} WHERE id=?"
         self.cursor.execute(delete, (id,))
         if config.enableBinaryExecutionMode:
-            self.cursor.execute("COMMIT")
+            dbw.commit(self.cursor)
 
     def deleteAll(self):
         delete = f"DELETE FROM {self.TABLE_NAME}"
         self.cursor.execute(delete)
         if config.enableBinaryExecutionMode:
-            self.cursor.execute("COMMIT")
+            dbw.commit(self.cursor)
 
     def getAll(self):
         query = f"SELECT id, active, name, type, repo, directory FROM {self.TABLE_NAME} order by name"

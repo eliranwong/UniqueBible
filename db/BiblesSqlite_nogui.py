@@ -85,7 +85,7 @@ class BiblesSqlite:
                 delete = "DROP TABLE {0}".format(bible)
                 self.cursor.execute(delete)
                 if config.enableBinaryExecutionMode:
-                    self.cursor.execute("COMMIT")
+                    dbw.commit(self.cursor)
             self.connection.execute("VACUUM")
 
     def installKJVversification(self):
@@ -129,11 +129,11 @@ class BiblesSqlite:
                 create = "CREATE TABLE {0} (Book INT, Chapter INT, Verse INT, Scripture TEXT)".format(abbreviation)
                 self.cursor.execute(create)
             if config.enableBinaryExecutionMode:
-                self.cursor.execute("COMMIT")
+                dbw.commit(self.cursor)
             insert = "INSERT INTO {0} (Book, Chapter, Verse, Scripture) VALUES (?, ?, ?, ?)".format(abbreviation)
             self.cursor.executemany(insert, verses)
             if config.enableBinaryExecutionMode:
-                self.cursor.execute("COMMIT")
+                dbw.commit(self.cursor)
         else:
             Bible(abbreviation).importPlainFormat(verses, description)
 
@@ -800,7 +800,7 @@ class Bible:
     def __del__(self):
         if not self.connection is None:
             if config.enableBinaryExecutionMode:
-                self.cursor.execute("COMMIT")
+                dbw.commit(self.cursor)
             self.connection.close()
 
     def bcvToVerseReference(self, b, c, v):
@@ -992,11 +992,11 @@ class Bible:
             create = Bible.CREATE_VERSES_TABLE
             self.cursor.execute(create)
         if config.enableBinaryExecutionMode:
-            self.cursor.execute("COMMIT")
+            dbw.commit(self.cursor)
         insert = "INSERT INTO Verses (Book, Chapter, Verse, Scripture) VALUES (?, ?, ?, ?)"
         self.cursor.executemany(insert, verses)
         if config.enableBinaryExecutionMode:
-            self.cursor.execute("COMMIT")
+            dbw.commit(self.cursor)
 
     def readTextChapter(self, b, c):
         query = "SELECT * FROM Verses WHERE Book=? AND Chapter=? ORDER BY Verse"
@@ -1184,13 +1184,13 @@ class Bible:
         sql = "UPDATE Details set Title = ?, FontSize = ?, FontName = ?"
         self.cursor.execute(sql, (bibleFullname, fontSize, fontName))
         if config.enableBinaryExecutionMode:
-            self.cursor.execute("COMMIT")
+            dbw.commit(self.cursor)
 
     def updateLanguage(self, language):
         sql = "UPDATE Details set Language = ?"
         self.cursor.execute(sql, (language,))
         if config.enableBinaryExecutionMode:
-            self.cursor.execute("COMMIT")
+            dbw.commit(self.cursor)
 
     def deleteOldBibleInfo(self):
         query = "DELETE FROM Verses WHERE Book=0 AND Chapter=0 AND Verse=0"
@@ -1267,7 +1267,7 @@ class Bible:
         cursor.execute(insert, details)
 
         if config.enableBinaryExecutionMode:
-            self.cursor.execute("COMMIT")
+            dbw.commit(self.cursor)
 
 
 class ClauseData:

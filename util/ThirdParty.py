@@ -44,18 +44,18 @@ class Converter:
             for create in statements:
                 cursor.execute(create)
                 if config.enableBinaryExecutionMode:
-                    cursor.execute("COMMIT")
+                    dbw.commit(cursor)
             # insert data to table "Details"
             insert = "INSERT INTO Details (Title, Abbreviation, Information, Version, OldTestament, NewTestament, Apocrypha, Strongs, Language) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
             cursor.execute(insert, (title, abbreviation, description, 1, 1, 1, 0, 0, ''))
             if config.enableBinaryExecutionMode:
-                cursor.execute("COMMIT")
+                dbw.commit(cursor)
             # insert data to table "Commentary"
             if content:
                 insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
                 cursor.executemany(insert, content)
                 if config.enableBinaryExecutionMode:
-                    cursor.execute("COMMIT")
+                    dbw.commit(cursor)
 
     def createBookModuleFromImages(self, folder):
         module = os.path.basename(folder)
@@ -258,25 +258,25 @@ class Converter:
             create = "CREATE TABLE Reference (Chapter NVARCHAR(100), Content TEXT)"
             cursor.execute(create)
             if config.enableBinaryExecutionMode:
-                cursor.execute("COMMIT")
+                dbw.commit(cursor)
             # insert data for book content
             self.logger.info("Inserting reference data")
             insert = "INSERT INTO Reference (Chapter, Content) VALUES (?, ?)"
             cursor.executemany(insert, content)
             if config.enableBinaryExecutionMode:
-                cursor.execute("COMMIT")
+                dbw.commit(cursor)
             if blobData:
                 # Create table for book content
                 create = "CREATE TABLE data (Filename TEXT, Content BLOB)"
                 cursor.execute(create)
                 if config.enableBinaryExecutionMode:
-                    cursor.execute("COMMIT")
+                    dbw.commit(cursor)
                 # insert data for book content
                 self.logger.info("Inserting blob data")
                 insert = "INSERT INTO data (Filename, Content) VALUES (?, ?)"
                 cursor.executemany(insert, blobData)
                 if config.enableBinaryExecutionMode:
-                    cursor.execute("COMMIT")
+                    dbw.commit(cursor)
 
     # create UniqueBible.app dictionary module
     def createDictionaryModule(self, module, content):
@@ -289,12 +289,12 @@ class Converter:
             create = "CREATE TABLE Dictionary (Topic NVARCHAR(100), Definition TEXT)"
             cursor.execute(create)
             if config.enableBinaryExecutionMode:
-                cursor.execute("COMMIT")
+                dbw.commit(cursor)
             # insert data to table "Dictionary"
             insert = "INSERT INTO Dictionary (Topic, Definition) VALUES (?, ?)"
             cursor.executemany(insert, content)
             if config.enableBinaryExecutionMode:
-                cursor.execute("COMMIT")
+                dbw.commit(cursor)
 
     # create UniqueBible.app lexicon modules
     def createLexiconModule(self, module, content):
@@ -307,12 +307,12 @@ class Converter:
             create = "CREATE TABLE Lexicon (Topic NVARCHAR(100), Definition TEXT)"
             cursor.execute(create)
             if config.enableBinaryExecutionMode:
-                cursor.execute("COMMIT")
+                dbw.commit(cursor)
             # insert data to table "Lexicon
             insert = "INSERT INTO Lexicon (Topic, Definition) VALUES (?, ?)"
             cursor.executemany(insert, content)
             if config.enableBinaryExecutionMode:
-                cursor.execute("COMMIT")
+                dbw.commit(cursor)
 
     # export image files
     def exportImageData(self, module, images):
@@ -539,7 +539,7 @@ class Converter:
         for create in statements:
             cursor.execute(create)
             if config.enableBinaryExecutionMode:
-                cursor.execute("COMMIT")
+                dbw.commit(cursor)
 
         formattedChapters = {}
         for book, chapter, verse, scripture in verses:
@@ -570,13 +570,13 @@ class Converter:
             notes = [(book, chapter, verse, id, self.formatNonBibleESwordModule(note)) for book, chapter, verse, id, note in notes]
             cursor.executemany(insert, notes)
             if config.enableBinaryExecutionMode:
-                cursor.execute("COMMIT")
+                dbw.commit(cursor)
 
         formattedChapters = [(book, chapter, formattedChapters[(book, chapter)]) for book, chapter in formattedChapters]
         insert = "INSERT INTO Bible (Book, Chapter, Scripture) VALUES (?, ?, ?)"
         cursor.executemany(insert, formattedChapters)
         if config.enableBinaryExecutionMode:
-            cursor.execute("COMMIT")
+            dbw.commit(cursor)
 
         self.populateDetails(cursor, description, abbreviation)
 
@@ -937,7 +937,7 @@ class Converter:
         for create in statements:
             cursor.execute(create)
             if config.enableBinaryExecutionMode:
-                cursor.execute("COMMIT")
+                dbw.commit(cursor)
 
         noteList = []
         formattedChapters = {}
@@ -963,13 +963,13 @@ class Converter:
         insert = "INSERT INTO Notes (Book, Chapter, Verse, ID, Note) VALUES (?, ?, ?, ?, ?)"
         cursor.executemany(insert, noteList)
         if config.enableBinaryExecutionMode:
-            cursor.execute("COMMIT")
+            dbw.commit(cursor)
 
         formattedChapters = [(book, chapter, formattedChapters[(book, chapter)]) for book, chapter in formattedChapters]
         insert = "INSERT INTO Bible (Book, Chapter, Scripture) VALUES (?, ?, ?)"
         cursor.executemany(insert, formattedChapters)
         if config.enableBinaryExecutionMode:
-            cursor.execute("COMMIT")
+            dbw.commit(cursor)
 
         self.populateDetails(cursor, description, abbreviation, "", 0)
 
@@ -999,7 +999,7 @@ class Converter:
         cursor.execute(insert, (description[:100], abbreviation[:50], information, version, oldTestamentFlag,
                                 newTestamentFlag, apocryphaFlag, strongsFlag, language, "", ""))
         if config.enableBinaryExecutionMode:
-            cursor.execute("COMMIT")
+            dbw.commit(cursor)
 
     def stripMySwordBibleTags(self, text):
         if config.importDoNotStripStrongNo:
@@ -1546,7 +1546,7 @@ class Converter:
         for create in statements:
             cursor.execute(create)
             if config.enableBinaryExecutionMode:
-                cursor.execute("COMMIT")
+                dbw.commit(cursor)
 
         if stories:
             stories = self.storiesToTitles(stories)
@@ -1582,13 +1582,13 @@ class Converter:
             notes = [(self.convertMyBibleBookNo(book), chapter, verse, id, self.formatNonBibleMyBibleModule(note, abbreviation)) for book, chapter, verse, id, note in notes]
             cursor.executemany(insert, notes)
             if config.enableBinaryExecutionMode:
-                cursor.execute("COMMIT")
+                dbw.commit(cursor)
 
         formattedChapters = [(book, chapter, formattedChapters[(book, chapter)]) for book, chapter in formattedChapters]
         insert = "INSERT INTO Bible (Book, Chapter, Scripture) VALUES (?, ?, ?)"
         cursor.executemany(insert, formattedChapters)
         if config.enableBinaryExecutionMode:
-            cursor.execute("COMMIT")
+            dbw.commit(cursor)
 
         self.populateDetails(cursor, description, abbreviation)
 
@@ -2056,11 +2056,11 @@ class Converter:
             for create in statements:
                 cursor.execute(create)
                 if config.enableBinaryExecutionMode:
-                    cursor.execute("COMMIT")
+                    dbw.commit(cursor)
             insert = "INSERT INTO Details (Title, Information) VALUES (?, ?)"
             cursor.execute(insert, (title, description))
             if config.enableBinaryExecutionMode:
-                cursor.execute("COMMIT")
+                dbw.commit(cursor)
             if xrefs:
                 data = []
                 book = 0
@@ -2085,7 +2085,7 @@ class Converter:
                 insert = "INSERT INTO CrossReference (Book, Chapter, Verse, Information) VALUES (?, ?, ?, ?)"
                 cursor.executemany(insert, data)
                 if config.enableBinaryExecutionMode:
-                    cursor.execute("COMMIT")
+                    dbw.commit(cursor)
 
     def convertRtfToHtml(self, rtf):
         rtf = rtf.replace("\\pard", "<p>\n")

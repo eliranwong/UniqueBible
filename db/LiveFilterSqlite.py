@@ -17,7 +17,7 @@ class LiveFilterSqlite:
 
     def __del__(self):
         if config.enableBinaryExecutionMode:
-            self.cursor.execute("COMMIT")
+            dbw.commit(self.cursor)
         self.connection.close()
 
     def createTable(self):
@@ -35,19 +35,19 @@ class LiveFilterSqlite:
             insert = "INSERT INTO {0} (Filter, Pattern) VALUES (?, ?)".format(self.TABLE_NAME)
             self.cursor.execute(insert, (filter, pattern))
             if config.enableBinaryExecutionMode:
-                self.cursor.execute("COMMIT")
+                dbw.commit(self.cursor)
 
     def delete(self, filter):
         delete = "DELETE FROM {0} WHERE Filter=?".format(self.TABLE_NAME)
         self.cursor.execute(delete, (filter,))
         if config.enableBinaryExecutionMode:
-            self.cursor.execute("COMMIT")
+            dbw.commit(self.cursor)
 
     def deleteAll(self):
         delete = "DELETE FROM {0}".format(self.TABLE_NAME)
         self.cursor.execute(delete)
         if config.enableBinaryExecutionMode:
-            self.cursor.execute("COMMIT")
+            dbw.commit(self.cursor)
 
     def checkFilterExists(self, filter):
         query = "SELECT * FROM {0} WHERE Filter=?".format(self.TABLE_NAME)

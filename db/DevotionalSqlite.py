@@ -48,11 +48,11 @@ class DevotionalSqlite:
             cursor = connection.cursor()
             cursor.execute(DevotionalSqlite.CREATE_DEVOTIONAL_TABLE)
             if config.enableBinaryExecutionMode:
-                cursor.execute("COMMIT")
+                dbw.commit(cursor)
             insert = "INSERT INTO devotional (month, day, devotion) VALUES (?, ?, ?)"
             cursor.executemany(insert, content)
             if config.enableBinaryExecutionMode:
-                cursor.execute("COMMIT")
+                dbw.commit(cursor)
 
 
 if __name__ == "__main__":

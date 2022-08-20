@@ -1,5 +1,6 @@
 import config
 
+
 class Connection:
 
     def __new__(self, database):
@@ -9,4 +10,12 @@ class Connection:
         else:
             import apsw
             return apsw.Connection(database)
+
+
+def commit(cursor):
+    if config.enableBinaryExecutionMode:
+        try:
+            cursor.execute("COMMIT")
+        except:
+            pass
 
