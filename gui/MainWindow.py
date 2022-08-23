@@ -171,10 +171,11 @@ class MainWindow(QMainWindow):
         # position views as the last-opened layout
         self.resizeCentral()
 
-        # check if newer version is available
-        self.checkApplicationUpdate()
-        # check if newer versions of formatted bibles are available
-        self.checkModulesUpdate()
+        if not config.enableBinaryExecutionMode:
+            # check if newer version is available
+            self.checkApplicationUpdate()
+            # check if newer versions of formatted bibles are available
+            self.checkModulesUpdate()
         # Control Panel
         self.controlPanel = None
         # Mini control

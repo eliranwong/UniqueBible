@@ -11,7 +11,7 @@ if __name__ == "__main__":
 
 import logging
 from logging import handlers
-import os, apsw, re
+import os, dbw, re
 from db.BiblesSqlite import BiblesSqlite
 from util.BibleVerseParser import BibleVerseParser
 from util.TextUtil import TextUtil
@@ -37,7 +37,7 @@ class VerseONTData:
     def __init__(self, filename):
         # connect bibles.sqlite
         self.database = os.path.join(config.marvelData, "data", "{0}.data".format(filename))
-        self.connection = apsw.Connection(self.database)
+        self.connection = dbw.Connection(self.database)
         self.cursor = self.connection.cursor()
 
     def __del__(self):
@@ -67,7 +67,7 @@ class CrossReferenceSqlite:
         self.connection = None
         self.database = os.path.join(config.marvelData, filename)
         if os.path.exists(self.database):
-            self.connection = apsw.Connection(self.database)
+            self.connection = dbw.Connection(self.database)
             self.cursor = self.connection.cursor()
 
     def __del__(self):
@@ -104,7 +104,7 @@ class CollectionsSqlite:
     def __init__(self):
         # connect collections.sqlite
         self.database = os.path.join(config.marvelData, "collections3.sqlite")
-        self.connection = apsw.Connection(self.database)
+        self.connection = dbw.Connection(self.database)
         self.cursor = self.connection.cursor()
 
     def __del__(self):
@@ -138,7 +138,7 @@ class ImageSqlite:
     def __init__(self):
         # connect images.sqlite
         self.database = os.path.join(config.marvelData, "images.sqlite")
-        self.connection = apsw.Connection(self.database)
+        self.connection = dbw.Connection(self.database)
         self.cursor = self.connection.cursor()
 
     def __del__(self):
@@ -170,7 +170,7 @@ class IndexesSqlite:
     def __init__(self):
         # connect images.sqlite
         self.database = os.path.join(config.marvelData, "indexes2.sqlite")
-        self.connection = apsw.Connection(self.database)
+        self.connection = dbw.Connection(self.database)
         self.cursor = self.connection.cursor()
         self.setResourceList()
 
@@ -331,7 +331,7 @@ class SearchSqlite:
     def __init__(self):
         # connect images.sqlite
         self.database = os.path.join(config.marvelData, "search.sqlite")
-        self.connection = apsw.Connection(self.database)
+        self.connection = dbw.Connection(self.database)
         self.cursor = self.connection.cursor()
 
     def __del__(self):
@@ -362,7 +362,7 @@ class DictionaryData:
     def __init__(self):
         # connect images.sqlite
         self.database = os.path.join(config.marvelData, "data", "dictionary.data")
-        self.connection = apsw.Connection(self.database)
+        self.connection = dbw.Connection(self.database)
         self.cursor = self.connection.cursor()
 
     def __del__(self):
@@ -398,7 +398,7 @@ class EncyclopediaData:
     def __init__(self):
         # connect images.sqlite
         self.database = os.path.join(config.marvelData, "data", "encyclopedia.data")
-        self.connection = apsw.Connection(self.database)
+        self.connection = dbw.Connection(self.database)
         self.cursor = self.connection.cursor()
 
     def __del__(self):
@@ -443,7 +443,7 @@ class WordONTData:
         self.testament = testament
         # connect images.sqlite
         self.database = os.path.join(config.marvelData, "data", "word{0}.data".format(self.testament))
-        self.connection = apsw.Connection(self.database)
+        self.connection = dbw.Connection(self.database)
         self.cursor = self.connection.cursor()
 
     def __del__(self):
@@ -466,7 +466,7 @@ class ExlbData:
     def __init__(self):
         # connect images.sqlite
         self.database = os.path.join(config.marvelData, "data", "exlb3.data")
-        self.connection = apsw.Connection(self.database)
+        self.connection = dbw.Connection(self.database)
         self.cursor = self.connection.cursor()
 
     def __del__(self):
@@ -549,7 +549,7 @@ class Commentary:
             self.text = text
             if self.text in self.getCommentaryList():
                 self.database = os.path.join(config.commentariesFolder, "c{0}.commentary".format(text))
-                self.connection = apsw.Connection(self.database)
+                self.connection = dbw.Connection(self.database)
                 self.cursor = self.connection.cursor()
         if Commentary.fileLookup is None:
             self.reloadFileLookup()
@@ -557,7 +557,7 @@ class Commentary:
     @staticmethod
     def createCommentary(commentary, content):
         database = os.path.join(config.commentariesFolder, "c{0}.commentary".format(commentary))
-        with apsw.Connection(database) as connection:
+        with dbw.Connection(database) as connection:
             cursor = connection.cursor()
             if not ToolsSqlite.checkTableExists(cursor, "Commentary"):
                 cursor.execute(Commentary.CREATE_COMMENTARY_TABLE)
@@ -566,7 +566,7 @@ class Commentary:
                 sql = ("INSERT INTO Details (Title, Abbreviation, Information, Version, OldTestament, NewTestament,"
                        "Apocrypha, Strongs) VALUES (?, ?, ?, 1, 1, 1, 0, 0)")
                 cursor.execute(sql, (commentary, commentary, commentary))
-#            cursor.execute("COMMIT")
+            dbw.commit(cursor)
             deleteData = []
             insertData = []
             for data in content:
@@ -577,7 +577,7 @@ class Commentary:
             cursor.executemany(delete, deleteData)
             insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
             cursor.executemany(insert, insertData)
-#            cursor.execute("COMMIT")
+            dbw.commit(cursor)
 
     def reloadFileLookup(self):
             Commentary.fileLookup = {}
@@ -590,7 +590,7 @@ class Commentary:
                     description = Commentary.marvelCommentaries[commentary]
                 else:
                     database = os.path.join(config.commentariesFolder, "c{0}.commentary".format(commentary))
-                    connection = apsw.Connection(database)
+                    connection = dbw.Connection(database)
                     cursor = connection.cursor()
                     query = "SELECT title FROM Details"
                     cursor.execute(query)
@@ -641,7 +641,7 @@ class Commentary:
         activeCommentaries = []
         for commentary in sorted(commentaryList):
             database = os.path.join(config.commentariesFolder, "c{0}.commentary".format(commentary))
-            connection = apsw.Connection(database)
+            connection = dbw.Connection(database)
             cursor = connection.cursor()
             query = "select book from commentary where book=? and chapter=?"
             cursor.execute(query, (book, chapter))
@@ -744,7 +744,7 @@ class Commentary:
             scripture = BibleVerseParser("no").replaceTextWithReference(scripture, False)
             update = "Update Commentary SET Scripture = ? WHERE Book = ? AND Chapter = ?"
             self.cursor.execute(update, (scripture, record[0], record[1]))
-#            self.cursor.execute("COMMIT")
+            self.dbw.commit(self.cursor)
             if int(record[1]) >= 1:
                 self.logger.info("Fix commentary {0} - {1}:{2}".format(self.text, record[0], record[1]))
 
@@ -757,7 +757,7 @@ class Commentary:
             scripture = re.sub(r"<grk>(.*?)</span>", r"<grk>\1</grk>", scripture)
             update = "Update Commentary SET Scripture = ? WHERE Book = ? AND Chapter = ?"
             self.cursor.execute(update, (scripture, record[0], record[1]))
-#            self.cursor.execute("COMMIT")
+            self.dbw.commit(self.cursor)
             if int(record[1]) >= 1:
                 self.logger.info("Fix commentary {0} - {1}:{2}".format(self.text, record[0], record[1]))
 
@@ -789,7 +789,7 @@ class Lexicon:
         self.module = module
 
         self.database = os.path.join(config.marvelData, "lexicons", "{0}.lexicon".format(module))
-        self.connection = apsw.Connection(self.database)
+        self.connection = dbw.Connection(self.database)
         self.cursor = self.connection.cursor()
 
     def __del__(self):
@@ -798,13 +798,13 @@ class Lexicon:
     @staticmethod
     def createLexicon(lexicon, content):
         database = os.path.join(config.marvelData, "lexicons", "{0}.lexicon".format(lexicon))
-        with apsw.Connection(database) as connection:
+        with dbw.Connection(database) as connection:
             cursor = connection.cursor()
             if not ToolsSqlite.checkTableExists(cursor, "Lexicon"):
                 cursor.execute(Lexicon.CREATE_LEXICON_TABLE)
                 sql = ("INSERT INTO Lexicon (Topic, Definition) VALUES (?, ?)")
                 cursor.execute(sql, ('info', lexicon))
-#            cursor.execute("COMMIT")
+            dbw.commit(cursor)
             deleteData = []
             insertData = []
             for data in content:
@@ -815,7 +815,7 @@ class Lexicon:
             cursor.executemany(delete, deleteData)
             insert = "INSERT INTO Lexicon (Topic, Definition) VALUES (?, ?)"
             cursor.executemany(insert, insertData)
-#            cursor.execute("COMMIT")
+            dbw.commit(cursor)
 
     def getInfo(self):
         try:
@@ -1003,7 +1003,7 @@ class Book:
         if not os.path.exists(self.database):
             self.module = ""
         else:
-            self.connection = apsw.Connection(self.database)
+            self.connection = dbw.Connection(self.database)
             self.cursor = self.connection.cursor()
 
     def __del__(self):

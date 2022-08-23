@@ -1,4 +1,4 @@
-import config, os, apsw, re
+import config, os, dbw, re
 
 
 class JournalSqlite:
@@ -6,7 +6,7 @@ class JournalSqlite:
     def __init__(self):
         # connect the note file specified in config.py > config.bibleNotes
         self.database = os.path.join(config.marvelData, "journal.sqlite")
-        self.connection = apsw.Connection(self.database)
+        self.connection = dbw.Connection(self.database)
         self.cursor = self.connection.cursor()
         create = (
             "CREATE TABLE IF NOT EXISTS Journal (year INT, month INT, day INT, note TEXT)",

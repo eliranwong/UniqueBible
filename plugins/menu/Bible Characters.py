@@ -1,4 +1,4 @@
-import config, os, apsw, re, webbrowser
+import config, os, dbw, re, webbrowser
 from gui.WebEngineViewPopover import WebEngineViewPopover
 from db.ToolsSqlite import ExlbData
 from db.BiblesSqlite import BiblesSqlite
@@ -36,7 +36,7 @@ class BiblePeople(QWidget):
         self.searchMode = 2
         # Connect database
         self.database = os.path.join(config.marvelData, "data", "biblePeople.data")
-        self.connection = apsw.Connection(self.database)
+        self.connection = dbw.Connection(self.database)
         self.cursor = self.connection.cursor()
         # Get all people list
         query = "SELECT PersonID, Name, Sex FROM PEOPLERELATIONSHIP WHERE Relationship=? ORDER BY PersonID"
