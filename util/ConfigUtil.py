@@ -1,4 +1,5 @@
 import codecs
+import logging
 import os, pprint, config
 from platform import system
 from util.DateUtil import DateUtil
@@ -1364,8 +1365,10 @@ class ConfigUtil:
                 pat = file.readline().strip()
                 if pat:
                     config.githubAccessToken = pat
-                    if config.developer:
-                        print(f"Using {patFile}")
+                    logger = logging.getLogger('uba')
+                    logger.info(f"Using {patFile}")
+
+        ConfigUtil.loadColorConfig()
 
     # Save configurations on exit
     @staticmethod
@@ -1699,3 +1702,16 @@ class ConfigUtil:
                 fileObj.write("{0} = {1}\n".format("pModeSplitterSizes", pprint.pformat(config.pModeSplitterSizes)))
             # print("A copy of configurations is saved in file 'config.py'!")
 
+    @staticmethod
+    def getColorConfigFilename():
+        fileName = os.path.join("plugins", "config", f"{config.menuLayout}_{config.theme}.color")
+        return fileName
+
+    @staticmethod
+    def loadColorConfig(fileName=None):
+        if not fileName:
+            fileName = ConfigUtil.getColorConfigFilename()
+        if os.path.exists(fileName):
+            with open(fileName, "r") as f:
+                settings = f.read()
+                exec(settings)

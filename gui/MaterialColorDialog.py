@@ -1,10 +1,15 @@
 import sys, config, pprint, os
 import webbrowser
+
+from util.ConfigUtil import ConfigUtil
+
 if config.qtLibrary == "pyside6":
-    from PySide6.QtWidgets import QLabel, QPushButton, QFrame, QDialog, QGridLayout, QColorDialog, QApplication, QFileDialog
+    from PySide6.QtWidgets import QLabel, QPushButton, QFrame, QDialog, QGridLayout, QColorDialog, QApplication, \
+    QFileDialog, QDialogButtonBox
     from PySide6.QtGui import QColor, QPalette
 else:
-    from qtpy.QtWidgets import QLabel, QPushButton, QFrame, QDialog, QGridLayout, QColorDialog, QApplication, QFileDialog
+    from qtpy.QtWidgets import QLabel, QPushButton, QFrame, QDialog, QGridLayout, QColorDialog, QApplication, \
+        QFileDialog, QDialogButtonBox
     from qtpy.QtGui import QColor, QPalette
 from util.TextUtil import TextUtil
 
@@ -50,22 +55,22 @@ class MaterialColorDialog(QDialog):
         self.textColour.setFrameStyle(frameStyle)
         label = TextUtil.formatConfigLabel("darkThemeTextColor" if config.theme in ("dark", "night") else "lightThemeTextColor")
         self.textColourButton = QPushButton(label)
-        self.textColourButton.clicked.connect(self.changeTextColour)
+        self.textColourButton.clicked.connect(lambda: self.changeTextColour(True))
 
         self.activeVerseColour = QLabel()
         self.activeVerseColour.setFrameStyle(frameStyle)
         label = TextUtil.formatConfigLabel("darkThemeActiveVerseColor" if config.theme in ("dark", "night") else "lightThemeActiveVerseColor")
         self.activeVerseColourButton = QPushButton(label)
-        self.activeVerseColourButton.clicked.connect(self.changeActiveVerseColour)
+        self.activeVerseColourButton.clicked.connect(lambda: self.changeActiveVerseColour(True))
 
 #        self.textSelectionColor = QLabel()
 #        self.textSelectionColor.setFrameStyle(frameStyle)
 #        self.textSelectionColorButton = QPushButton(TextUtil.formatConfigLabel("textSelectionColor"))
 #        self.textSelectionColorButton.clicked.connect(self.changeTextSelectionColor)
 
-        self.saveButton = QPushButton(config.thisTranslation["note_saveAs"])
+        self.saveButton = QPushButton(config.thisTranslation["export"])
         self.saveButton.clicked.connect(self.openSaveAsDialog)
-        self.loadButton = QPushButton(config.thisTranslation["loadMySettings"])
+        self.loadButton = QPushButton(config.thisTranslation["import"])
         self.loadButton.clicked.connect(self.openFileDialogAction)
 
         self.defaultButton = QPushButton(config.thisTranslation["default"])
@@ -106,6 +111,12 @@ class MaterialColorDialog(QDialog):
         layout.addWidget(self.defaultButton, 9, 0)
         layout.addWidget(self.aboutButton, 9, 1)
 
+        buttons = QDialogButtonBox.Ok
+        self.buttonBox = QDialogButtonBox(buttons)
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.accepted.connect(self.saveColors)
+        layout.addWidget(self.buttonBox, 10, 1)
+
         self.setLayout(layout)
 
         self.setWindowTitle(config.thisTranslation["colourCustomisation"])
@@ -122,19 +133,17 @@ class MaterialColorDialog(QDialog):
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getOpenFileName(self,
                 config.thisTranslation["menu7_open"],
-                "",
+                os.getcwd(),
                 "UniqueBible.app Color Settings (*.color)", "", options)
         if fileName:
-            with open(fileName, "r") as f:
-                settings = f.read()
-                exec(settings)
-            #self.parent.resetUI()
-            self.parent.setTheme(config.theme, setColours=False)
-            self.parent.setTheme(config.theme, setColours=False)
+            ConfigUtil.loadColorConfig(fileName)
             self.setConfigColor()
+            self.saveColors()
+            self.parent.setTheme(config.theme, setColours=True)
+            self.parent.reloadCurrentRecord(True)
 
     def openSaveAsDialog(self):
-        defaultName = "uba.color"
+        defaultName = os.path.join(os.getcwd(), "uba.color")
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getSaveFileName(self,
                 config.thisTranslation["note_saveAs"],
@@ -167,7 +176,8 @@ class MaterialColorDialog(QDialog):
                 fileObj.write("{0} = {1}\n".format(name, pprint.pformat(value)))
 
     def setDefault(self):
-        self.parent.setTheme(config.theme)
+        self.parent.setColours()
+        self.saveColors()
         self.parent.setTheme(config.theme)
         self.setConfigColor()
 
@@ -231,7 +241,7 @@ class MaterialColorDialog(QDialog):
             self.setMaskColor()
             self.setLabelColor(self.widgetForegroundColorPressed, color)
 
-    def changeTextColour(self):
+    def changeTextColour(self, reload=True):
         color = QColorDialog.getColor(QColor(config.darkThemeTextColor if config.theme in ("dark", "night") else config.lightThemeTextColor), self)
         if color.isValid():
             self.setLabelColor(self.textColour, color)
@@ -240,10 +250,12 @@ class MaterialColorDialog(QDialog):
                 config.darkThemeTextColor = colorName
             else:
                 config.lightThemeTextColor = colorName
-            self.parent.reloadCurrentRecord(True)
-            self.parent.resetUI()
+            if reload:
+                self.saveColors()
+                self.parent.reloadCurrentRecord(True)
+                self.parent.resetUI()
 
-    def changeActiveVerseColour(self):
+    def changeActiveVerseColour(self, reload=True):
         color = QColorDialog.getColor(QColor(config.darkThemeActiveVerseColor if config.theme in ("dark", "night") else config.lightThemeActiveVerseColor), self)
         if color.isValid():
             self.setLabelColor(self.activeVerseColour, color)
@@ -252,7 +264,9 @@ class MaterialColorDialog(QDialog):
                 config.darkThemeActiveVerseColor = colorName
             else:
                 config.lightThemeActiveVerseColor = colorName
-            self.parent.reloadCurrentRecord(True)
+            if reload:
+                self.saveColors()
+                self.parent.reloadCurrentRecord(True)
 
 #    def changeTextSelectionColor(self):
 #        color = QColorDialog.getColor(QColor(config.textSelectionColor), self)
@@ -261,7 +275,17 @@ class MaterialColorDialog(QDialog):
 #            config.textSelectionColor = color.name()
 #            self.parent.reloadCurrentRecord(True)
 
+    def saveColors(self):
+        fileName = ConfigUtil.getColorConfigFilename()
+        self.saveData(fileName)
+
+
 if __name__ == '__main__':
+    from util.LanguageUtil import LanguageUtil
+
+    ConfigUtil.setup()
+    config.thisTranslation = LanguageUtil.loadTranslation("en_US")
+
     app = QApplication(sys.argv)
     dialog = MaterialColorDialog()
     sys.exit(dialog.exec_())

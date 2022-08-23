@@ -32,7 +32,7 @@ class FocusMainWindow:
         items = (
             ("bibleCollections", self.showBibleCollectionDialog),
             ("refButtonAction", self.selectRefButtonSingleClickActionDialog),
-            ("activeVerseColour", self.changeActiveVerseColour),
+            ("colourCustomisation", self.changeButtonColour),
             ("menu1_tabNo", self.setTabNumberDialog),
             ("menu1_setAbbreviations", self.setBibleAbbreviations),
             ("menu1_setMyFavouriteBible", self.openFavouriteBibleDialog),

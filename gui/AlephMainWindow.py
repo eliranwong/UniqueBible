@@ -196,7 +196,12 @@ class AlephMainWindow:
         menu1_defaults.addAction(
             QAction(config.thisTranslation["bibleCollections"], self, shortcut=sc.bibleCollections, triggered=self.showBibleCollectionDialog))
         addMenuItem(menu1_defaults, "refButtonAction", self, self.selectRefButtonSingleClickActionDialog)
-        menu1_defaults.addAction(QAction(config.thisTranslation["activeVerseColour"], self, triggered=self.changeActiveVerseColour))
+        # Colour Customisation
+        items = (
+            ("colourCustomisation", self.changeButtonColour),
+        )
+        for feature, action in items:
+            addMenuItem(menu1_defaults, feature, self, action)
         menu1_defaults.addAction(
             QAction(config.thisTranslation["menu_favouriteBible"], self, triggered=self.openFavouriteBibleDialog))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_abbreviations"], self, triggered=self.setBibleAbbreviations))
