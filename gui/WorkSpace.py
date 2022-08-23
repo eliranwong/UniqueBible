@@ -33,7 +33,8 @@ class Workspace(QMainWindow):
         self.mda.tileSubWindows()
         self.setCentralWidget(self.mda)
 
-        self.setupMenuBarMaterial()
+        if config.menuLayout == "material":
+            self.setupMenuBarMaterial()
 
         # load last saved content
         self.loadWorkspaceFiles()

@@ -6,6 +6,7 @@ from distutils import util
 from functools import partial
 from pathlib import Path
 
+from util.ConfigUtil import ConfigUtil
 from util.SystemUtil import SystemUtil
 
 if config.qtLibrary == "pyside6":
@@ -473,6 +474,7 @@ class MainWindow(QMainWindow):
                 self.setupMenuLayout("material")
             else:
                 app.setStyleSheet("")
+        ConfigUtil.loadColorConfig()
         self.reloadCurrentRecord(True)
 
     def restartApp(self):
@@ -1131,6 +1133,7 @@ class MainWindow(QMainWindow):
                 self.setColours()
         else:
             self.setupMenuLayout(config.menuLayout)
+        PluginEventHandler.handleEvent("post_theme_change")
         self.resetUI()
 
     def setColours(self, color=""):
@@ -5011,8 +5014,10 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         button.setCursor(QCursor(Qt.PointingHandCursor))
         button.setToolTip(config.thisTranslation[toolTip] if translation else toolTip)
         qIcon = self.getQIcon(icon)
-        #button.setIcon(qIcon)
-        button.setStyleSheet(qIcon)
+        if config.menuLayout == "material":
+            button.setStyleSheet(qIcon)
+        else:
+            button.setIcon(qIcon)
         if action is not None:
             button.clicked.connect(action)
         toolbar.addWidget(button)

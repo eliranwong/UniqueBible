@@ -20,6 +20,10 @@ class PluginEventHandler:
     # eventType: lexicon_entry
     # called to manipulate the lexicon entry word
     # word is in config.eventEntry
+    #
+    # eventType: post_theme_change
+    # called after a theme is changed
+    #
     @staticmethod
     def handleEvent(eventType, eventCommand=''):
         config.eventType = eventType

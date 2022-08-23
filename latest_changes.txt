@@ -1,3 +1,6 @@
+Changes in 31.66:
+* Allow colors to be independently customized for layout/themes.
+
 Changes in 31.65:
 * Fixed read word in http mode.
 
