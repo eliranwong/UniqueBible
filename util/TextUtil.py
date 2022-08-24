@@ -24,7 +24,10 @@ class TextUtil:
 
     @staticmethod
     def getQueryPrefix():
-        return "PRAGMA case_sensitive_like = {0}; ".format("true" if config.enableCaseSensitiveSearch else "false")
+        if config.enableBinaryExecutionMode:
+            return ""
+        else:
+            return "PRAGMA case_sensitive_like = {0}; ".format("true" if config.enableCaseSensitiveSearch else "false")
 
     @staticmethod
     def regexp(expr, item):

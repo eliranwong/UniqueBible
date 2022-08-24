@@ -501,6 +501,11 @@ input.addEventListener('keyup', function(event) {0}
             verses = self.getSearchVerses(query, t)
         elif text in formattedBibleList:
             verses = Bible(text).getSearchVerses(query, t)
+        if config.enableBinaryExecutionMode:
+            if config.enableCaseSensitiveSearch and mode in ("BASIC", "SEARCHALL"):
+                verses = [(b, c, v, verseText) for
+                          b, c, v, verseText in verses if
+                          re.search(searchString, verseText, flags=0)]
         # Old way to search fetched result with regular express here
 #        if mode == "REGEX":
 #            formatedText = "REGEXSEARCH:::<aa>{0}</aa>:::{1}".format(text, searchString)
