@@ -45,7 +45,7 @@ class ConfigUtil:
         #config.customBooksRangeSearch = ""
         config.mainCssBibleFontStyle = ""
         if not hasattr(config, "databaseConvertedOnStartup"):
-            config.databaseConvertedOnStartup = False
+            config.databaseConvertedOnStartup = True
 
 
         # Default settings for configurations:
