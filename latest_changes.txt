@@ -1,3 +1,7 @@
+Changes in 31.68:
+* Integrated Google Earth links into plugin "Bible Locations".
+    Google Earth links are labeled as "[3D]", on information window when a location pin is clicked.
+
 Changes in 31.67:
 * Set databaseConvertedOnStartup to True for new installations.
 

@@ -308,18 +308,20 @@ class BibleLocations(QWidget):
                     num = int(re.sub("\..*?$", "", item))
                     exlbl_entry = "BL{0}".format(num)
                     label, name, latitude, longitude = self.locationMap[exlbl_entry]
+                    googleEarthLink = "https://earth.google.com/web/search/{0},+{1}".format(str(latitude).replace(".", "%2e"), str(longitude).replace(".", "%2e"))
                     if browser:
-                        info = "<a href='https://marvel.bible/tool.php?exlbl={0}' target='_blank'>{1}</a>".format(exlbl_entry, name)
+                        info = "<a href='https://marvel.bible/tool.php?exlbl={0}' target='_blank'>{1}</a> [<a href='{2}' target='_blank'>3D</a>]".format(exlbl_entry, name, googleEarthLink)
                     else:
-                        info = """<ref onclick="document.title = 'EXLB:::exlbl:::{0}';">{1}</ref>""".format(exlbl_entry, name)
+                        info = """<ref onclick="document.title = 'EXLB:::exlbl:::{0}';">{1}</ref> [<ref onclick="document.title = 'online:::{2}';">3D</a>]""".format(exlbl_entry, name, googleEarthLink)
                     gmap.marker(latitude, longitude, label=label, title=name, info_window=info)
                 except:
                     pass
         else:
+            googleEarthLink = r"https://earth.google.com/web/search/31%2e777444,+35%2e234935"
             if browser:
-                info = "<a href='https://marvel.bible/tool.php?exlbl=BL636' target='_blank'>Jerusalem</a>"
+                info = "<a href='https://marvel.bible/tool.php?exlbl=BL636' target='_blank'>Jerusalem</a> [<a href='{0}' target='_blank'>3D</a>]".format(googleEarthLink)
             else:
-                info = """<ref onclick="document.title = 'EXLB:::exlbl:::BL636';">Jerusalem</ref>"""
+                info = """<ref onclick="document.title = 'EXLB:::exlbl:::BL636';">Jerusalem</ref> [<ref onclick="document.title = 'online:::{0}';">3D</a>]""".format(googleEarthLink)
             gmap.marker(31.777444, 35.234935, label="J", title="Jerusalem", info_window=info)
 
         # HTML file
