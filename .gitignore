@@ -83,3 +83,4 @@ plugins/event/*.py
 secrets/github/*.txt
 config.ini
 enable_binary_execution_mode
+disabled_modules.txt
