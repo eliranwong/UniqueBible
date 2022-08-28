@@ -421,8 +421,9 @@ class MaterialMainWindow:
         if config.enableMacros:
             addMenuItem(menu, "menu_startup_macro", self, self.setStartupMacro)
             menu.addSeparator()
-        addMenuItem(menu, "menu1_update", self, self.showUpdateAppWindow)
-        menu.addSeparator()
+        if not config.enableBinaryExecutionMode:
+            addMenuItem(menu, "menu1_update", self, self.showUpdateAppWindow)
+            menu.addSeparator()
         if hasattr(config, "cli"):
             addMenuItem(menu, "restart", self, self.restartApp)
         addIconMenuItem(config.desktopUBAIcon[14:], menu, "menu_quit", self, self.quitApp, sc.quitApp)

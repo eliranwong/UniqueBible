@@ -179,8 +179,9 @@ class ClassicMainWindow:
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
         menu.addSeparator()
-        addMenuItem(menu, "menu1_update", self, self.showUpdateAppWindow, None)
-        menu.addSeparator()
+        if not config.enableBinaryExecutionMode:
+            addMenuItem(menu, "menu1_update", self, self.showUpdateAppWindow, None)
+            menu.addSeparator()
 
         appIcon = QIcon(os.path.join("htmlResources", "UniqueBibleApp.png"))
         quit_action = QAction(appIcon, config.thisTranslation["menu1_exit"], self, shortcut=sc.quitApp, triggered=self.quitApp)

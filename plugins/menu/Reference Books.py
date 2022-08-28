@@ -1,4 +1,4 @@
-import config, os, apsw, re
+import config, os, dbw, re
 from gui.WebEngineViewPopover import WebEngineViewPopover
 from util.ThirdParty import ThirdPartyDictionary
 from db.ToolsSqlite import Book, BookData

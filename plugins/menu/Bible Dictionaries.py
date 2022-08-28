@@ -1,4 +1,4 @@
-import config, os, apsw, re
+import config, os, dbw, re
 from gui.WebEngineViewPopover import WebEngineViewPopover
 from db.ToolsSqlite import DictionaryData
 if config.qtLibrary == "pyside6":
@@ -36,7 +36,7 @@ class BibleDictionaries(QWidget):
         self.modules = config.mainWindow.dictionaryList[:-1]
         # Connect database
         self.database = os.path.join(config.marvelData, "search.sqlite")
-        self.connection = apsw.Connection(self.database)
+        self.connection = dbw.Connection(self.database)
         self.cursor = self.connection.cursor()
         # Entries
         self.entries = []
@@ -158,5 +158,5 @@ if os.path.isfile(databaseFile):
         databaseInfo = ((config.marvelData, "data", "dictionary.data"), "1NfbkhaR-dtmT1_Aue34KypR3mfPtqCZn")
         config.mainWindow.downloadHelper(databaseInfo)
 else:
-    databaseInfo = ((config.marvelData, "search.sqlite"), "1A4s8ewpxayrVXamiva2l1y1AinAcIKAh"),
+    databaseInfo = ((config.marvelData, "search.sqlite"), "1A4s8ewpxayrVXamiva2l1y1AinAcIKAh")
     config.mainWindow.downloadHelper(databaseInfo)

@@ -372,6 +372,8 @@ def isNltkInstalled():
         return False
 
 def isWordformsInstalled():
+    if config.enableBinaryExecutionMode:
+        return False
     import ssl
     try:
         _create_unverified_https_context = ssl._create_unverified_context
@@ -396,6 +398,9 @@ def isPaddleocrInstalled():
         return False
 
 def isApswInstalled():
+    if config.enableBinaryExecutionMode:
+        return False
+
     try:
         import apsw
         return True
@@ -410,6 +415,8 @@ def isPyluachInstalled():
         return False
 
 def isChineseEnglishLookupInstalled():
+    if config.enableBinaryExecutionMode:
+        return False
     try:
         from chinese_english_lookup import Dictionary
         config.cedict = Dictionary()
@@ -418,6 +425,8 @@ def isChineseEnglishLookupInstalled():
         return False
 
 def isLemmagen3Installed():
+    if config.enableBinaryExecutionMode:
+        return False
     # Note: It looks like that lemmagen3 is a better lemmatizer than using "word_forms.lemmatize" installed with word_forms package
     try:
         from lemmagen3 import Lemmatizer
@@ -674,7 +683,8 @@ if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))
 for module, feature, isInstalled in optional:
     if module in disabledModules:
-        print(f"{module} has been manually disabled")
+        if not config.enableBinaryExecutionMode:
+            print(f"{module} has been manually disabled")
         available = False
     elif not isInstalled() or config.updateDependenciesOnStartup:
         if config.updateDependenciesOnStartup and not (module.startswith("-U ") or module.startswith("--upgrade ")):

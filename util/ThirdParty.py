@@ -1,5 +1,5 @@
 from xml.dom.minidom import Node
-import os, apsw, config, re, json, base64, logging
+import os, dbw, config, re, json, base64, logging
 
 if __name__ == '__main__':
     import config
@@ -33,7 +33,7 @@ class Converter:
         ubCommentary = os.path.join(config.commentariesFolder, "c{0}.commentary".format(abbreviation))
         if os.path.isfile(ubCommentary):
             os.remove(ubCommentary)
-        with apsw.Connection(ubCommentary) as connection:
+        with dbw.Connection(ubCommentary) as connection:
             # create a cusor object
             cursor = connection.cursor()
             # create two tables: "Details" & "Commentary"
@@ -43,16 +43,16 @@ class Converter:
             )
             for create in statements:
                 cursor.execute(create)
-#                cursor.execute("COMMIT")
+                dbw.commit(cursor)
             # insert data to table "Details"
             insert = "INSERT INTO Details (Title, Abbreviation, Information, Version, OldTestament, NewTestament, Apocrypha, Strongs, Language) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
             cursor.execute(insert, (title, abbreviation, description, 1, 1, 1, 0, 0, ''))
-#            cursor.execute("COMMIT")
+            dbw.commit(cursor)
             # insert data to table "Commentary"
             if content:
                 insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
                 cursor.executemany(insert, content)
-#                cursor.execute("COMMIT")
+                dbw.commit(cursor)
 
     def createBookModuleFromImages(self, folder):
         module = os.path.basename(folder)
@@ -249,59 +249,59 @@ class Converter:
         book = os.path.join(config.marvelData, "books", "{0}.book".format(module))
         if os.path.isfile(book):
             os.remove(book)
-        with apsw.Connection(book) as connection:
+        with dbw.Connection(book) as connection:
             cursor = connection.cursor()
             # Create table for book content
             create = "CREATE TABLE Reference (Chapter NVARCHAR(100), Content TEXT)"
             cursor.execute(create)
-#            cursor.execute("COMMIT")
+            dbw.commit(cursor)
             # insert data for book content
             self.logger.info("Inserting reference data")
             insert = "INSERT INTO Reference (Chapter, Content) VALUES (?, ?)"
             cursor.executemany(insert, content)
-#            cursor.execute("COMMIT")
+            dbw.commit(cursor)
             if blobData:
                 # Create table for book content
                 create = "CREATE TABLE data (Filename TEXT, Content BLOB)"
                 cursor.execute(create)
-#                cursor.execute("COMMIT")
+                dbw.commit(cursor)
                 # insert data for book content
                 self.logger.info("Inserting blob data")
                 insert = "INSERT INTO data (Filename, Content) VALUES (?, ?)"
                 cursor.executemany(insert, blobData)
-#                cursor.execute("COMMIT")
+                dbw.commit(cursor)
 
     # create UniqueBible.app dictionary module
     def createDictionaryModule(self, module, content):
         filename = os.path.join("thirdParty", "dictionaries", "{0}.dic.bbp".format(module))
         if os.path.isfile(filename):
             os.remove(filename)
-        with apsw.Connection(filename) as connection:
+        with dbw.Connection(filename) as connection:
             cursor = connection.cursor()
             # create table "Dictionary"
             create = "CREATE TABLE Dictionary (Topic NVARCHAR(100), Definition TEXT)"
             cursor.execute(create)
-#            cursor.execute("COMMIT")
+            dbw.commit(cursor)
             # insert data to table "Dictionary"
             insert = "INSERT INTO Dictionary (Topic, Definition) VALUES (?, ?)"
             cursor.executemany(insert, content)
-#            cursor.execute("COMMIT")
+            dbw.commit(cursor)
 
     # create UniqueBible.app lexicon modules
     def createLexiconModule(self, module, content):
         book = os.path.join(config.marvelData, "lexicons", "{0}.lexicon".format(module))
         if os.path.isfile(book):
             os.remove(book)
-        with apsw.Connection(book) as connection:
+        with dbw.Connection(book) as connection:
             cursor = connection.cursor()
             # create table "Lexicon"
             create = "CREATE TABLE Lexicon (Topic NVARCHAR(100), Definition TEXT)"
             cursor.execute(create)
-#            cursor.execute("COMMIT")
+            dbw.commit(cursor)
             # insert data to table "Lexicon
             insert = "INSERT INTO Lexicon (Topic, Definition) VALUES (?, ?)"
             cursor.executemany(insert, content)
-#            cursor.execute("COMMIT")
+            dbw.commit(cursor)
 
     # export image files
     def exportImageData(self, module, images):
@@ -325,7 +325,7 @@ class Converter:
 
     def exportJsonBible(self, bible):
         filename = os.path.join(config.marvelData, "bibles", "{0}.bible".format(bible))
-        connection = apsw.Connection(filename)
+        connection = dbw.Connection(filename)
         cursor = connection.cursor()
 
         query = "SELECT * FROM Verses ORDER BY Book, Chapter, Verse"
@@ -351,7 +351,7 @@ class Converter:
     # if exportMarvelBible doesn't work, use exportMarvelBible2 instead
     def exportJsonBible2(self, bible):
         filename = os.path.join(config.marvelData, "bibles", "{0}.bible".format(bible))
-        connection = apsw.Connection(filename)
+        connection = dbw.Connection(filename)
         cursor = connection.cursor()
 
         query = "SELECT * FROM Verses ORDER BY Book, Chapter, Verse"
@@ -463,7 +463,7 @@ class Converter:
     # Import e-Sword Bibles [Apple / macOS / iOS]
     def importESwordBible(self, filename):
         self.logger.info("Importing eSword Bible: " + filename)
-        connection = apsw.Connection(filename)
+        connection = dbw.Connection(filename)
         connection.text_factory = lambda b: b.decode(errors='ignore')
         cursor = connection.cursor()
 
@@ -516,7 +516,7 @@ class Converter:
         formattedBible = os.path.join(config.marvelData, "bibles", "{0}.bible".format(abbreviation))
         if os.path.isfile(formattedBible):
             os.remove(formattedBible)
-        connection = apsw.Connection(formattedBible)
+        connection = dbw.Connection(formattedBible)
         cursor = connection.cursor()
 
         statements = (
@@ -527,7 +527,7 @@ class Converter:
         )
         for create in statements:
             cursor.execute(create)
-#            cursor.execute("COMMIT")
+            dbw.commit(cursor)
 
         formattedChapters = {}
         for book, chapter, verse, scripture in verses:
@@ -557,12 +557,12 @@ class Converter:
             insert = "INSERT INTO Notes (Book, Chapter, Verse, ID, Note) VALUES (?, ?, ?, ?, ?)"
             notes = [(book, chapter, verse, id, self.formatNonBibleESwordModule(note)) for book, chapter, verse, id, note in notes]
             cursor.executemany(insert, notes)
-#            cursor.execute("COMMIT")
+            dbw.commit(cursor)
 
         formattedChapters = [(book, chapter, formattedChapters[(book, chapter)]) for book, chapter in formattedChapters]
         insert = "INSERT INTO Bible (Book, Chapter, Scripture) VALUES (?, ?, ?)"
         cursor.executemany(insert, formattedChapters)
-#        cursor.execute("COMMIT")
+        dbw.commit(cursor)
 
         self.populateDetails(cursor, description, abbreviation)
 
@@ -664,7 +664,7 @@ class Converter:
     # Import e-Sword Commentaries
     def importESwordCommentary(self, filename):
         # connect e-Sword commentary
-        with apsw.Connection(filename) as connection:
+        with dbw.Connection(filename) as connection:
             cursor = connection.cursor()
             # process 4 tables: Details, BookCommentary, ChapterCommentary, VerseCommentary
             # table: Details
@@ -881,7 +881,7 @@ class Converter:
     # Import MySword Bibles
     def importMySwordBible(self, filename):
         self.logger.info("Importing MySword Bible: " + filename)
-        connection = apsw.Connection(filename)
+        connection = dbw.Connection(filename)
         cursor = connection.cursor()
 
         query = "SELECT Description, Abbreviation FROM Details"
@@ -912,7 +912,7 @@ class Converter:
         formattedBible = os.path.join(config.marvelData, "bibles", "{0}.bible".format(abbreviation))
         if os.path.isfile(formattedBible):
             os.remove(formattedBible)
-        connection = apsw.Connection(formattedBible)
+        connection = dbw.Connection(formattedBible)
         cursor = connection.cursor()
 
         statements = (
@@ -922,7 +922,7 @@ class Converter:
         )
         for create in statements:
             cursor.execute(create)
-#            cursor.execute("COMMIT")
+            dbw.commit(cursor)
 
         noteList = []
         formattedChapters = {}
@@ -947,12 +947,12 @@ class Converter:
 
         insert = "INSERT INTO Notes (Book, Chapter, Verse, ID, Note) VALUES (?, ?, ?, ?, ?)"
         cursor.executemany(insert, noteList)
-#        cursor.execute("COMMIT")
+        dbw.commit(cursor)
 
         formattedChapters = [(book, chapter, formattedChapters[(book, chapter)]) for book, chapter in formattedChapters]
         insert = "INSERT INTO Bible (Book, Chapter, Scripture) VALUES (?, ?, ?)"
         cursor.executemany(insert, formattedChapters)
-#        cursor.execute("COMMIT")
+        dbw.commit(cursor)
 
         self.populateDetails(cursor, description, abbreviation, "", 0)
 
@@ -981,7 +981,7 @@ class Converter:
         insert = "INSERT INTO Details VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         cursor.execute(insert, (description[:100], abbreviation[:50], information, version, oldTestamentFlag,
                                 newTestamentFlag, apocryphaFlag, strongsFlag, language, "", ""))
-#        cursor.execute("COMMIT")
+        dbw.commit(cursor)
 
     def stripMySwordBibleTags(self, text):
         if config.importDoNotStripStrongNo:
@@ -1057,7 +1057,7 @@ class Converter:
         # variable to hold commentary content
         commentaryContent = []
         # connect MySword commentary
-        with apsw.Connection(filename) as connection:
+        with dbw.Connection(filename) as connection:
             cursor = connection.cursor()
             # process 2 tables: details, commentary
             query = "SELECT title, abbreviation, description FROM details"
@@ -1125,7 +1125,7 @@ class Converter:
         module = module[:-12]
 
         # connect MySword *.bok.mybible file
-        with apsw.Connection(filename) as connection:
+        with dbw.Connection(filename) as connection:
             cursor = connection.cursor()
 
             query = "SELECT title, content FROM journal"
@@ -1168,7 +1168,7 @@ class Converter:
 
     # Import MyBible Bibles
     def importMyBibleBible(self, filename):
-        connection = apsw.Connection(filename)
+        connection = dbw.Connection(filename)
         cursor = connection.cursor()
 
         query = "SELECT value FROM info WHERE name = 'description'"
@@ -1214,7 +1214,7 @@ class Converter:
         # check if notes are available in commentary format
         noteFile = os.path.join(inputFilePath, "{0}.commentaries.SQLite3".format(originalModuleName))
         if os.path.isfile(noteFile):
-            noteConnection = apsw.Connection(noteFile)
+            noteConnection = dbw.Connection(noteFile)
             noteCursor = noteConnection.cursor()
 
             query = "SELECT book_number, chapter_number_from, verse_number_from, marker, text FROM commentaries"
@@ -1516,7 +1516,7 @@ class Converter:
         formattedBible = os.path.join(config.marvelData, "bibles", "{0}.bible".format(abbreviation))
         if os.path.isfile(formattedBible):
             os.remove(formattedBible)
-        connection = apsw.Connection(formattedBible)
+        connection = dbw.Connection(formattedBible)
         cursor = connection.cursor()
 
         statements = (
@@ -1527,7 +1527,7 @@ class Converter:
         )
         for create in statements:
             cursor.execute(create)
-#            cursor.execute("COMMIT")
+            dbw.commit(cursor)
 
         if stories:
             stories = self.storiesToTitles(stories)
@@ -1562,12 +1562,12 @@ class Converter:
             insert = "INSERT INTO Notes (Book, Chapter, Verse, ID, Note) VALUES (?, ?, ?, ?, ?)"
             notes = [(self.convertMyBibleBookNo(book), chapter, verse, id, self.formatNonBibleMyBibleModule(note, abbreviation)) for book, chapter, verse, id, note in notes]
             cursor.executemany(insert, notes)
-#            cursor.execute("COMMIT")
+            dbw.commit(cursor)
 
         formattedChapters = [(book, chapter, formattedChapters[(book, chapter)]) for book, chapter in formattedChapters]
         insert = "INSERT INTO Bible (Book, Chapter, Scripture) VALUES (?, ?, ?)"
         cursor.executemany(insert, formattedChapters)
-#        cursor.execute("COMMIT")
+        dbw.commit(cursor)
 
         self.populateDetails(cursor, description, abbreviation)
 
@@ -1655,7 +1655,7 @@ class Converter:
         # variable to hold commentary content
         commentaryContent = []
         # connect MySword commentary
-        with apsw.Connection(filename) as connection:
+        with dbw.Connection(filename) as connection:
             cursor = connection.cursor()
             # draw data from two tables: info, commentaries
             # table: info
@@ -1922,7 +1922,7 @@ class Converter:
 
     def convertOldLexiconData(self):
         database = os.path.join(config.marvelData, "data", "lexicon.data")
-        connection = apsw.Connection(database)
+        connection = dbw.Connection(database)
         cursor = connection.cursor()
 
         t = ("table",)
@@ -1942,7 +1942,7 @@ class Converter:
 
     def convertOldBookData(self):
         database = os.path.join(config.marvelData, "data", "book.data")
-        connection = apsw.Connection(database)
+        connection = dbw.Connection(database)
         cursor = connection.cursor()
 
         t = ("table",)
@@ -1965,7 +1965,7 @@ class Converter:
         module = module[:-5]
 
         # connect e-Sword *.refi file
-        connection = apsw.Connection(filename)
+        connection = dbw.Connection(filename)
         cursor = connection.cursor()
 
         query = "SELECT Chapter, Content FROM Reference"
@@ -1986,7 +1986,7 @@ class Converter:
     def importESwordDevotional(self, filename):
         *_, module = os.path.split(filename)
         module = Path(module).stem
-        connection = apsw.Connection(filename)
+        connection = dbw.Connection(filename)
         cursor = connection.cursor()
 
         query = "SELECT Month, Day, Devotion from Devotions"
@@ -2010,7 +2010,7 @@ class Converter:
     # Import TheWord cross references
     def importTheWordXref(self, filename):
         xrefFilename = Path(filename).stem.replace(".xrefs", "")
-        with apsw.Connection(filename) as connection:
+        with dbw.Connection(filename) as connection:
             cursor = connection.cursor()
             query = "SELECT value FROM config where name='tables.xrefs.description'"
             cursor.execute(query)
@@ -2026,7 +2026,7 @@ class Converter:
         xrefFile = os.path.join(xrefFolder, "{0}.xref".format(filename))
         if os.path.isfile(xrefFile):
             os.remove(xrefFile)
-        with apsw.Connection(xrefFile) as connection:
+        with dbw.Connection(xrefFile) as connection:
             cursor = connection.cursor()
             statements = (
                 """CREATE TABLE "CrossReference" (Book INT, Chapter INT, Verse INT, Information TEXT)""",
@@ -2034,10 +2034,10 @@ class Converter:
             )
             for create in statements:
                 cursor.execute(create)
-#                cursor.execute("COMMIT")
+                dbw.commit(cursor)
             insert = "INSERT INTO Details (Title, Information) VALUES (?, ?)"
             cursor.execute(insert, (title, description))
-#            cursor.execute("COMMIT")
+            dbw.commit(cursor)
             if xrefs:
                 data = []
                 book = 0
@@ -2061,7 +2061,7 @@ class Converter:
                 data.append((book, chapter, verse, info))
                 insert = "INSERT INTO CrossReference (Book, Chapter, Verse, Information) VALUES (?, ?, ?, ?)"
                 cursor.executemany(insert, data)
-#                cursor.execute("COMMIT")
+                dbw.commit(cursor)
 
     def convertRtfToHtml(self, rtf):
         rtf = rtf.replace("\\pard", "<p>\n")
@@ -2146,7 +2146,7 @@ class ThirdPartyDictionary:
             self.module, self.fileExtension = moduleTuple
             if self.module in self.moduleList:
                 self.database = os.path.join("thirdParty", "dictionaries", "{0}{1}".format(self.module, self.fileExtension))
-                self.connection = apsw.Connection(self.database)
+                self.connection = dbw.Connection(self.database)
                 self.cursor = self.connection.cursor()
 
     def __del__(self):
@@ -2443,7 +2443,7 @@ class ThirdPartyDictionary:
     # Import TheWord Commentaries
     def importTheWordCommentary(self, filename):
         commentaryContent = []
-        with apsw.Connection(filename) as connection:
+        with dbw.Connection(filename) as connection:
             cursor = connection.cursor()
             query = "SELECT value FROM config where name='title'"
             cursor.execute(query)

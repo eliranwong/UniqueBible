@@ -21,8 +21,8 @@ class InfoDialog(QDialog):
 
         self.wikiLink = "https://github.com/eliranwong/UniqueBible/wiki"
 
-        self.setMinimumWidth(500)
-        self.setMinimumHeight(500)
+        self.setMinimumWidth(600)
+        self.setMinimumHeight(600)
         self.setWindowTitle(config.thisTranslation["info"])
         self.layout = QVBoxLayout()
 
@@ -43,6 +43,8 @@ class InfoDialog(QDialog):
         count = len(FileUtil.getAllFilesWithExtension("music", ".mp3"))
         filesVBox1.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu11_music"], count)))
         filesVBox1.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu1_menuLayout"], config.menuLayout)))
+        ipLabel = QLabel("IP: {0}".format(NetworkUtil.get_ip()))
+        filesVBox1.addWidget(ipLabel)
         filesHBox.addLayout(filesVBox1)
 
         filesVBox2 = QVBoxLayout()
@@ -54,6 +56,8 @@ class InfoDialog(QDialog):
         filesVBox2.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu11_video"], count)))
         filesVBox2.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu_language"], config.displayLanguage)))
         filesVBox2.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu_shortcuts"], config.menuShortcuts)))
+        mode = "binary" if config.enableBinaryExecutionMode else "python"
+        filesVBox2.addWidget(QLabel(f"Execution: {mode}"))
         filesHBox.addLayout(filesVBox2)
 
         filesVBox3 = QVBoxLayout()
@@ -65,12 +69,12 @@ class InfoDialog(QDialog):
         filesVBox3.addWidget(QLabel("{0}: {1}".format("DOCX", count)))
         filesVBox3.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu_window"], config.windowStyle)))
         filesVBox3.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu_theme"], config.theme)))
+        filesVBox3.addWidget(QLabel("qtLibrary: {0}".format(config.qtLibrary)))
         filesHBox.addLayout(filesVBox3)
 
         self.layout.addLayout(filesHBox)
 
-        ipLabel = QLabel("IP: {0}".format(NetworkUtil.get_ip()))
-        self.layout.addWidget(ipLabel)
+        self.layout.addSpacing(10)
 
         if content is None:
             with open("latest_changes.txt", "r", encoding="utf-8") as fileObject:

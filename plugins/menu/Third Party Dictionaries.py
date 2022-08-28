@@ -1,4 +1,4 @@
-import config, os, apsw, re
+import config
 from gui.WebEngineViewPopover import WebEngineViewPopover
 from util.ThirdParty import ThirdPartyDictionary
 if config.qtLibrary == "pyside6":
