@@ -543,14 +543,17 @@ required = [
     ("babel", "Internationalization and localization library", isBabelInstalled),
     ("requests", "Download / Update files", isRequestsInstalled),
 ]
-if config.qtLibrary == "pyside6":
-    required.append(("PySide6", "Qt Graphical Interface Library", isPySide6Installed))
-else:
-    if config.qtLibrary == "pyside2":
-        required.append(("PySide2", "Qt Graphical Interface Library", isPySide2Installed))
+# Add Qt Library module
+if not config.noQt:
+    if config.qtLibrary == "pyside6":
+        required.append(("PySide6", "Qt Graphical Interface Library", isPySide6Installed))
     else:
-        required.append(("PyQt5", "Qt Graphical Interface Library", isPyQt5Installed))
-    required.append(("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled))
+        if config.qtLibrary == "pyside2":
+            required.append(("PySide2", "Qt Graphical Interface Library", isPySide2Installed))
+        else:
+            required.append(("PyQt5", "Qt Graphical Interface Library", isPyQt5Installed))
+        required.append(("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled))
+
 for module, feature, isInstalled in required or config.updateDependenciesOnStartup:
     if config.updateDependenciesOnStartup and not (module.startswith("-U ") or module.startswith("--upgrade ")):
             module = "--upgrade {0}".format(module)
