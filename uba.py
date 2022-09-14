@@ -108,7 +108,7 @@ if sys.prefix == sys.base_prefix:
         try:
             if not "venv" in sys.modules:
                 import venv
-            venv.create(env_dir=venvDir, with_pip=True, system_site_packages=True) if initialCommand == "docker" else venv.create(env_dir=venvDir, with_pip=True)
+            venv.create(env_dir=venvDir, with_pip=True, system_site_packages=True) if initialCommand == "docker" or os.path.isfile("use_system_site_packages") else venv.create(env_dir=venvDir, with_pip=True)
         except:
             pass
 
