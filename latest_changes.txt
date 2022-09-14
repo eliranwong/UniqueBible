@@ -1,3 +1,6 @@
+Changes in 31.72:
+* Support running without sandbox
+
 Changes in 31.71:
 * Fixed running UBA when optional package 'textract' is not installed.
 
