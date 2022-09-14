@@ -1,4 +1,4 @@
-import config, re, textract, os, base64, glob, webbrowser, markdown
+import config, re, os, base64, glob, webbrowser, markdown
 from datetime import datetime
 import shortcut as sc
 from util.SystemUtil import SystemUtil
@@ -195,8 +195,12 @@ class Workspace(QMainWindow):
                 html = self.fixNoteFont(html)
                 html = config.mainWindow.htmlWrapper(html, True, html=False if fileName.lower().endswith(".md") else True)
             else:
-                html = textract.process(fileName).decode()
-                html = config.mainWindow.htmlWrapper(html, True, html=False)
+                try:
+                    import textract
+                    html = textract.process(fileName).decode()
+                    html = config.mainWindow.htmlWrapper(html, True, html=False)
+                except:
+                    self.parent.displayMessage("Optional package 'textract' is not installed!")
             self.addHtmlContent(html, editable, os.path.basename(fileName))
 
     def fixNoteFont(self, note):

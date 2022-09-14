@@ -1,3 +1,6 @@
+Changes in 31.71:
+* Fixed running UBA when optional package 'textract' is not installed.
+
 Changes in 31.70:
 * Added support of using installed system site packages.
     To enable this feature, users need to manually add a file named "use_system_site_packages" in UBA home folder, BEFORE the first run or BEFORE setting up venv folder.
