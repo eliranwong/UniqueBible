@@ -46,6 +46,9 @@ if platform.system() == "Linux" and os.path.exists("/mnt/chromeos/"):
         except:
             pass
 
+if os.path.isfile("use_vnc"):
+    os.environ["QT_QPA_PLATFORM"] = "vnc"
+
 #python = "py" if platform.system() == "Windows" else "python3"
 # Do NOT use sys.executable directly
 python = os.path.basename(sys.executable)

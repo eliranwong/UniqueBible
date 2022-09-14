@@ -1,3 +1,7 @@
+Changes in 31.73:
+* Support vnc display.
+    To use UBA with VNC display, users need to manually add a file named "use_vnc" in UBA home folder.
+
 Changes in 31.72:
 * Support running without sandbox
 

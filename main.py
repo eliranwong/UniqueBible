@@ -442,8 +442,8 @@ config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
 # This line is required for Google maps to be displayed on Study Window.
 sys.argv.append("--disable-web-security")
 # Support running without sandbox
-sys.argv.append("--user-data-dir")
 sys.argv.append("--no-sandbox")
+#sys.argv.append("--user-data-dir")
 #sys.argv.append("--allow-file-access-from-files")
 #app = QApplication(sys.argv)
 app = UBA(sys.argv)
