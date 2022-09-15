@@ -1,3 +1,7 @@
+Changes in 31.74:
+* Added "_comparison:::" command to open bible comparison menu.
+    On http-server users can enter either _comparison::: or .comparison in command entry.
+
 Changes in 31.73:
 * Support vnc display.
     To use UBA with VNC display, users need to manually add a file named "use_vnc" in UBA home folder.

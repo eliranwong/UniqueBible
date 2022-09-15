@@ -668,6 +668,10 @@ class TextCommandParser:
             # e.g. _menu:::43
             # e.g. _menu:::43.3
             # e.g. _menu:::43.3.16"""),
+            "_comparison": (self.textComparisonMenu, """
+            # [KEYWORD] _comparison
+            # Feature - Open html menu for bible version comparison
+            # e.g. _comparison:::"""),
             "_chapters": (self.textChapters, """
             # [KEYWORD] _chapters
             # Feature - Display all available chapters of a bible version.
@@ -2648,6 +2652,14 @@ class TextCommandParser:
                 bibleCommand = "BIBLE:::{0}:::{1} {2}:{3}".format(text, BibleBooks.abbrev["eng"][b][0], config.mainC, config.mainV)
                 self.parent.addHistoryRecord("main", bibleCommand)
             menu = HtmlGeneratorUtil().getMenu(command, source)
+            return (source, menu, {})
+        except:
+            return self.invalidCommand()
+
+    # _comparison:::
+    def textComparisonMenu(self, command, source):
+        try:
+            menu = HtmlGeneratorUtil().getComparisonMenu(command, source)
             return (source, menu, {})
         except:
             return self.invalidCommand()

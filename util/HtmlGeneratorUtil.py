@@ -368,7 +368,7 @@ class HtmlGeneratorUtil:
             for searchMode in searchOptions:
                 menu += "<button  id='{0}' type='button' onclick='checkSearch(\"{0}\", \"{1}\");' class='ubaButton'>{0}</button> ".format(searchMode, defaultSearchText)
             # menu - Search multiple bibles
-            menu += "<hr><b>{0}</b> ".format(config.thisTranslation["html_searchBibles2"])
+            menu += "<hr><b>{0}</b> <br>".format(config.thisTranslation["html_searchBibles2"])
             for version in versions:
                 if version == defaultSearchText or version == config.favouriteBible:
                     menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='search{0}' checked></div> ".format(version)
@@ -381,4 +381,35 @@ class HtmlGeneratorUtil:
             # Perform search when "ENTER" key is pressed
             menu += biblesSqlite.inputEntered("bibleSearch", "SEARCH")
             menu += biblesSqlite.inputEntered("multiBibleSearch", "multiSEARCH")
+        return menu
+
+
+    @staticmethod
+    def getComparisonMenu(command, source="main"):
+        biblesSqlite = BiblesSqlite()
+        parser = BibleVerseParser(config.parserStandarisation)
+        #items = command.split(".", 3)
+        #text = items[0]
+        versions = biblesSqlite.getBibleList()
+        # provide a link to go back the last opened bible verse
+        mainVerseReference = parser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+        menu = "<ref onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>&lt;&lt;&lt; {0} - {1}</ref>".format(config.mainText, mainVerseReference)
+
+        # menu - comparison
+        defaultSearchText = config.mainText
+
+        # menu - Search multiple bibles
+        menu += "<hr>"
+        for version in versions:
+            if version == defaultSearchText or version == config.favouriteBible or version == config.favouriteBible2:
+                menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='search{0}' checked></div> ".format(version)
+            else:
+                menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='search{0}'></div> ".format(version)
+            menu += "<script>versionList.push('{0}');</script>".format(version)
+        menu += "<hr>"
+        
+        searchOptions = ("PARALLEL", "SIDEBYSIDE", "COMPARE")
+        for searchMode in searchOptions:
+            menu += "<button id='multi{0}' type='button' onclick='checkComparison(\"{0}\");' class='ubaButton'>{0}</button> ".format(searchMode)
+
         return menu

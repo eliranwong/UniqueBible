@@ -164,6 +164,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             ".chapterindex": "chapterindex:::{0} {1}".format(mainVerse["bAbb"], mainVerse["c"]),
             ".summary": "summary:::{0} {1}".format(mainVerse["bAbb"], mainVerse["c"]),
             ".biblemenu": "_menu:::",
+            ".comparison": "_comparison:::",
             ".timelinemenu": "BOOK:::Timelines",
             ".maps": "SEARCHTOOL:::EXLBL:::",
             ".characters": "SEARCHTOOL:::EXLBP:::",
@@ -357,8 +358,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{3}.css?v=1.062'>
-                <script src='js/http_server.js?v=1.062'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{3}.css?v=1.063'>
+                <script src='js/http_server.js?v=1.063'></script>
                 </head>
                 <body>... {1} ...
                 <script>
@@ -560,7 +561,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.062'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.063'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -690,12 +691,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5}
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.062'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.062'>
-                <script src='js/common.js?v=1.062'></script>
-                <script src='js/{9}.js?v=1.062'></script>
-                <script src='w3.js?v=1.062'></script>
-                <script src='js/http_server.js?v=1.062'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.063'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.063'>
+                <script src='js/common.js?v=1.063'></script>
+                <script src='js/{9}.js?v=1.063'></script>
+                <script src='w3.js?v=1.063'></script>
+                <script src='js/http_server.js?v=1.063'></script>
                 <script>
                 var queryString = window.location.search;	
                 queryString = queryString.substring(1);
@@ -883,6 +884,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         html += "<hr>"
         sideNavItems = (
             ("{0} &#x1F50E;&#xFE0E;".format(config.thisTranslation["menu5_bible"]), ".biblemenu"),
+            (config.thisTranslation["html_showCompare"], ".comparison"),
             (config.thisTranslation["commentaries"], ".commentarymenu"),
             (config.thisTranslation["menu_library"], ".library"),
             (config.thisTranslation["html_timelines"], ".timelineMenu"),
@@ -1042,12 +1044,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "zh {2} font-family:'{6}'; {3} "
                 ".ubaButton {2} background-color: {10}; color: {11}; border: none; padding: 2px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 17px; margin: 2px 2px; cursor: pointer; {3}"
                 "{8}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.062'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.062'>"
-                "<script src='js/common.js?v=1.062'></script>"
-                "<script src='js/{7}.js?v=1.062'></script>"
-                "<script src='w3.js?v=1.062'></script>"
-                "<script src='js/http_server.js?v=1.062'></script>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.063'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.063'>"
+                "<script src='js/common.js?v=1.063'></script>"
+                "<script src='js/{7}.js?v=1.063'></script>"
+                "<script src='w3.js?v=1.063'></script>"
+                "<script src='js/http_server.js?v=1.063'></script>"
                 """<script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}
@@ -1063,7 +1065,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "{0}"
                 """<script>var versionList = []; var compareList = []; var parallelList = [];
                 var diffList = []; var searchList = [];</script>"""
-                "<script src='js/custom.js?v=1.062'></script>"
+                "<script src='js/custom.js?v=1.063'></script>"
                 "</head><body><span id='v0.0.0'></span>{1}"
                 "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible();document.querySelector('body').addEventListener('click', window.parent.closeSideNav);</script></body></html>"
                 ).format(activeBCVsettings,
@@ -1435,6 +1437,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.biblemenu')">.bibleMenu</ref> - Open bible menu.<br>
         <ref onclick="window.parent.submitCommand('.chapters')">.chapters</ref> - Open a menu of all available chapters.<br>
         <ref onclick="window.parent.submitCommand('.commentarymenu')">.commentaryMenu</ref> - Open Commentary menu.<br>
+        <ref onclick="window.parent.submitCommand('.comparison')">.comparison</ref> - Open bible version comparison menu.<br>
         <ref onclick="window.parent.submitCommand('.timelinemenu')">.timelineMenu</ref> - Open Timeline menu.<br>
         <ref onclick="window.parent.submitCommand('.audio')">.audio</ref> - Open audio bible content page.<br>
         <ref onclick="window.parent.submitCommand('.play')">.play</ref> - Play all available bible audio linked with the current content.<br>

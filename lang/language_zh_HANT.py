@@ -343,7 +343,7 @@ translation = {
     "html_searchBibles2": "搜索多個聖經：",
     "html_features": "特殊功能：",
     "html_and": "和：",
-    "html_showCompare": "顯示比較",
+    "html_showCompare": "聖經對照",
     "html_showParallel": "顯示平行閱讀",
     "html_showDifference": "顯示差別",
     "html_current": "已選擇：",

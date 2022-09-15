@@ -1006,6 +1006,18 @@ function checkMultiSearch(searchKeyword) {
     }
 }
 
+function checkComparison(keyword) {
+    versionList.forEach(addMultiSearch);
+    if (searchList.length == 0) {
+        alert("Select bible versions first!");
+    } else {
+        var texts = searchList.join("_");
+        searchList = [];
+        var verseReference = bcvToVerseRefence(activeB,activeC,activeV);
+        document.title = keyword+":::"+texts+":::"+verseReference;
+    }
+}
+
 function addMultiSearch(value) {
     var checkBox = document.getElementById("search"+value);
     if (checkBox.checked == true){
