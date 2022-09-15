@@ -3993,7 +3993,11 @@ class MainWindow(QMainWindow):
                     fileObject.write(content)
                     fileObject.close()
                 else:
-                    html = self.wrapHtml(content, view, textCommand.startswith("BOOK:::"))
+                    # wrap with shared UBA html elements if it is not a google map
+                    if ('tab_title' in dict.keys() and dict['tab_title'] == "Map"):
+                        html = content
+                    else:
+                        html = self.wrapHtml(content, view, textCommand.startswith("BOOK:::"))
                 views = {
                     "main": self.mainView,
                     "study": self.studyView,

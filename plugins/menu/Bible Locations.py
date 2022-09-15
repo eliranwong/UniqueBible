@@ -7,11 +7,11 @@ from db.ToolsSqlite import IndexesSqlite
 from haversine import haversine
 
 if config.qtLibrary == "pyside6":
-    from PySide6.QtGui import QStandardItemModel, QStandardItem, QGuiApplication
+    from PySide6.QtGui import QStandardItemModel, QStandardItem
     from PySide6.QtCore import Qt, QUrl
     from PySide6.QtWidgets import QSplitter, QWidget, QComboBox, QGroupBox, QPushButton, QLabel, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit
 else:
-    from qtpy.QtGui import QStandardItemModel, QStandardItem, QGuiApplication
+    from qtpy.QtGui import QStandardItemModel, QStandardItem
     from qtpy.QtCore import Qt, QUrl
     from qtpy.QtWidgets import QSplitter, QWidget, QComboBox, QGroupBox, QPushButton, QLabel, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit
 

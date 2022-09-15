@@ -1,6 +1,10 @@
+Changes in 31.75:
+* Added map::: command to dispaly a google map with pinned locations.
+    e.g. MAP:::Acts 15:36-18:22
+
 Changes in 31.74:
 * Added "_comparison:::" command to open bible comparison menu.
-    On http-server users can enter either _comparison::: or .comparison in command entry.
+    Http-server users can enter either _comparison::: or .comparison in command entry.
 
 Changes in 31.73:
 * Support vnc display.

@@ -2,7 +2,7 @@
 import glob
 import os, re, webbrowser, platform, multiprocessing, zipfile, subprocess, config
 from datetime import date
-
+from util.exlbl import allLocations
 from util.PluginEventHandler import PluginEventHandler
 from util.WebtopUtil import WebtopUtil
 from util.CatalogUtil import CatalogUtil
@@ -51,6 +51,7 @@ class TextCommandParser:
         self.lastKeyword = None
         self.cliTtsProcess = None
         self.qtTtsEngine = None
+        self.locationMap = {exlbl_entry: (name[0].upper(), name, float(latitude), float(longitude)) for exlbl_entry, name, latitude, longitude in allLocations}
 
         self.interpreters = {
             "bible": (self.textBible, """
@@ -276,6 +277,9 @@ class TextCommandParser:
             "chapterindex": (self.textChapterIndex, """
             # [KEYWORD] CHAPTERINDEX
             # e.g. CHAPTERINDEX:::Gen 1"""),
+            "map": (self.textMap, """
+            # [KEYWORD] MAP
+            # e.g. MAP:::Act 15:36-18:22"""),
             "crossreference": (self.textCrossReference, """
             # [KEYWORD] CROSSREFERENCE
             # e.g. CROSSREFERENCE:::Gen 1:1
@@ -3393,6 +3397,89 @@ class TextCommandParser:
             noteSqlite = NoteSqlite()
             verses = noteSqlite.getSearchedVerseList(command)
             return ("study", "<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on verse(s)</p><p>{2}</p>".format(command, len(verses), "; ".join(verses)), {})
+
+    # MAP:::
+    def textMap(self, command, source):
+        verseList = self.extractAllVerses(command)
+        if not verseList or not config.isGmplotInstalled:
+            return self.invalidCommand()
+        else:
+            combinedLocations = []
+            reference = verseList[0]
+            indexesSqlite = IndexesSqlite()
+            if len(reference) == 5:
+                b, c, v, ce, ve = reference
+                if c == ce:
+                    if v == ve:
+                        combinedLocations += indexesSqlite.getVerseLocations(b, c, v)
+                    elif ve > v:
+                        combinedLocations += indexesSqlite.getChapterLocations(b, c, startV=v, endV=ve)
+                elif ce > c:
+                    combinedLocations += indexesSqlite.getChapterLocations(b, c, startV=v)
+                    combinedLocations += indexesSqlite.getChapterLocations(b, ce, endV=ve)
+                    if (ce - c) > 1:
+                        for i in range(c+1, ce):
+                            combinedLocations += indexesSqlite.getChapterLocations(b, i)
+            else:
+                b, c, v, *_ = reference
+                combinedLocations += indexesSqlite.getVerseLocations(b, c, v)
+
+            try:
+                selectedLocations = self.selectLocations(combinedLocations)
+                html = self.displayMap(selectedLocations)
+                #print(html)
+                return ("study", html, {'tab_title': "Map"})
+            except:
+                return self.invalidCommand()
+
+    def selectLocations(self, locations):
+        checkList = []
+        for location in locations:
+            # e.g. <p><ref onclick="exlbl('BL1163')">Hiddekel</ref> ... <ref onclick="exlbl('BL421')">Euphrates</ref></p>
+            searchPattern = "exlbl\('BL([0-9]+?)'\)"
+            found = re.findall(searchPattern, location[0])
+            if found:
+                for entry in found:
+                    checkList.append(entry)
+        checkList = [int(item) for item in checkList]
+        checkList = list(set(checkList))
+        #checkList.sort()
+
+        formattedList = []
+        for num in checkList:
+            exlbl_entry = "BL{0}".format(num)
+            if exlbl_entry in self.locationMap:
+                formattedList.append("{0}. {1}".format(num, self.locationMap[exlbl_entry][1]))
+
+        formattedList = list(set(formattedList))
+        # e.g. For Acts 15:36-18:22, formattedList = ['1160. Thyatira', '76. Apollonia', '87. Areopagus/Mars Hill', '590. Iconium', '636. Jerusalem', '880. Neapolis', '108. Asia/Achaia', '118. Athens', '16. Achaia', '431. Galatia', '956. Pontus', '918. Pamphylia', '1025. Samothracia', '266. Caesarea', '281. Cenchrea', '177. Berea', '1182. Troas', '1122. Syria/Syrians', '1158. Thessalonica', '400. Ephesus', '1013. Rome', '601. Italy', '68. Antioch', '865. Mysia', '747. Macedonia', '330. Derbe', '250. Bithynia', '306. Corinth', '59. Amphipolis', '742. Lystra', '946. Phrygia', '316. Chittim/Cyprus', '300. Cilicia', '942. Philippi']
+
+        return formattedList
+
+    def displayMap(self, selectedLocations, browser=False, displayOnStudyWindow=False):
+        import gmplot
+        gmap = gmplot.GoogleMapPlotter(33.877444, 34.234935, 6, map_type='hybrid')
+        if config.myGoogleApiKey:
+            gmap.apikey = config.myGoogleApiKey
+
+        if selectedLocations:
+            for item in selectedLocations:
+                try:
+                    num = int(re.sub("\..*?$", "", item))
+                    exlbl_entry = "BL{0}".format(num)
+                    label, name, latitude, longitude = self.locationMap[exlbl_entry]
+                    googleEarthLink = "https://earth.google.com/web/search/{0},+{1}".format(str(latitude).replace(".", "%2e"), str(longitude).replace(".", "%2e"))
+                    info = """<ref onclick="document.title = 'EXLB:::exlbl:::{0}';">{1}</ref> [<ref onclick="document.title = 'online:::{2}';">3D</a>]""".format(exlbl_entry, name, googleEarthLink)
+                    gmap.marker(latitude, longitude, label=label, title=name, info_window=info)
+                except:
+                    pass
+        else:
+            googleEarthLink = r"https://earth.google.com/web/search/31%2e777444,+35%2e234935"
+            info = """<ref onclick="document.title = 'EXLB:::exlbl:::BL636';">Jerusalem</ref> [<ref onclick="document.title = 'online:::{0}';">3D</a>]""".format(googleEarthLink)
+            gmap.marker(31.777444, 35.234935, label="J", title="Jerusalem", info_window=info)
+
+        # HTML text
+        return gmap.get()
 
     # CROSSREFERENCE:::
     def textCrossReference(self, command, source):
