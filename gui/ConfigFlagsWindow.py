@@ -544,3 +544,6 @@ class ConfigFlagsWindow(QDialog):
 
     def limitWorkspaceFilenameLengthChanged(self):
         config.limitWorkspaceFilenameLength = not config.limitWorkspaceFilenameLength
+
+    def enableHttpRemoteErrorRedirection(self):
+        config.enableHttpRemoteErrorRedirection = not config.enableHttpRemoteErrorRedirection
