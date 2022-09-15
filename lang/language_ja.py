@@ -1000,4 +1000,5 @@ translation = {
     "portrait": "縦長モード",
     "limitWorkspaceFilenameLength": "ワークスペースのファイル名を制限する",
     "couldNotAccess": "アクセスできません",
+    "enableHttpRemoteErrorRedirection": "http サーバーのエラーが発生した場合はリダイレクト・ページに移動",
 }

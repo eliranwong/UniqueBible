@@ -1000,4 +1000,5 @@ translation = {
     "portrait": "പോര്ട്രെയിറ്റ് മോഡ്",
     "limitWorkspaceFilenameLength": "പണിയിടത്തിന്റെ ഫയല്നാമം നീളം മാറ്റുക",
     "couldNotAccess": "ലഭ്യമാക്കുവാന് സാധ്യമായില്ല",
+    "enableHttpRemoteErrorRedirection": "എച്ച്. ടി. പി സര്വറില് പിശകുമെങ്കില് വീണ്ടും ദിശയിലേക്ക് പോകുക",
 }

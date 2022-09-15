@@ -1000,4 +1000,5 @@ translation = {
     "portrait": "Λειτουργία Portrait",
     "limitWorkspaceFilenameLength": "Περιορισμός μήκους ονόματος αρχείου χώρου εργασίας",
     "couldNotAccess": "Αδυναμία πρόσβασης",
+    "enableHttpRemoteErrorRedirection": "Μετάβαση στη σελίδα ανακατεύθυνσης σε περίπτωση σφάλματος στον εξυπηρετητή http",
 }

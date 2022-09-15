@@ -1,3 +1,6 @@
+Changes in 31.76:
+* Added enableHttpRemoteErrorRedirection config flag
+
 Changes in 31.75:
 * Added map::: command to dispaly a google map with pinned locations.
     e.g. MAP:::Acts 15:36-18:22

@@ -267,22 +267,25 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.handleBadRequests()
 
     def handleBadRequests(self):
-        self.clientIP = self.client_address[0]
-        if self.checkInWhitelist():
+        if config.enableHttpRemoteErrorRedirection:
+            self.clientIP = self.client_address[0]
+            if self.checkInWhitelist():
+                self.blankPage()
+                return
+            self.addIpToBlackList(self.clientIP)
+            self.redirectHeader()
+        else:
             self.blankPage()
-            return
-        self.addIpToBlackList(self.clientIP)
-        self.redirectHeader()
-        return
 
     def do_GET(self):
         try:
             self.clientIP = self.client_address[0]
-            if not self.checkInWhitelist() and self.clientIP in self.blackListIPs:
+            if config.enableHttpRemoteErrorRedirection and (not self.checkInWhitelist() and self.clientIP in self.blackListIPs):
                 self.redirectHeader()
                 return
             self.session = self.getSession()
             if self.session is None:
+                print("No session")
                 self.blankPage()
                 return
             if self.clientIP not in self.users:
@@ -291,6 +294,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 self.primaryUser = True
             self.updateData()
             if self.ignoreCommand(self.path):
+                print(f"Ignoring command: {self.path}")
                 self.blankPage()
                 return
             elif self.path == "" or self.path == "/" or self.path.startswith("/index.html") or config.displayLanguage != "en_GB":
@@ -317,8 +321,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             else:
                 return super().do_GET()
         except Exception as ex:
-            print(ex)
-            if self.checkAntiSpamBlacklist(self.clientIP):
+            print(f"Exception: {ex}")
+            if config.enableHttpRemoteErrorRedirection and self.checkAntiSpamBlacklist(self.clientIP):
                 self.redirectHeader()
             else:
                 self.blankPage()
@@ -511,6 +515,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             try:
                 view, content, *_ = self.textCommandParser.parser(self.command, "http")
             except Exception as e:
+                print(f"Exception: {e}")
                 content = "Error!"
             if tempDeveloper:
                 config.developer = False

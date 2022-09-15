@@ -139,6 +139,7 @@ class ConfigFlagsWindow(QDialog):
             ("doNotStop3rdPartyMediaPlayerOnExit", config.doNotStop3rdPartyMediaPlayerOnExit, self.doNotStop3rdPartyMediaPlayerOnExitChanged, False, config.thisTranslation["doNotStop3rdPartyMediaPlayerOnExit"]),
             ("refreshWindowsAfterSavingNote", config.refreshWindowsAfterSavingNote, self.refreshWindowsAfterSavingNoteChanged, True, config.thisTranslation["refreshWindowsAfterSavingNote"]),
             ("limitWorkspaceFilenameLength", config.limitWorkspaceFilenameLength, self.limitWorkspaceFilenameLengthChanged, True, config.thisTranslation["limitWorkspaceFilenameLength"]),
+            ("enableHttpRemoteErrorRedirection", config.enableHttpRemoteErrorRedirection, self.enableHttpRemoteErrorRedirection, False, config.thisTranslation["enableHttpRemoteErrorRedirection"]),
         ]
         if config.isOfflineTtsInstalled:
             options += [

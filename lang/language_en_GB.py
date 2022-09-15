@@ -1000,4 +1000,5 @@ translation = {
     "portrait": "Portrait Mode",
     "limitWorkspaceFilenameLength": "Limit the workspace filename length",
     "couldNotAccess": "Could not access",
+    "enableHttpRemoteErrorRedirection": "Go to redirection page if error in http server",
 }
