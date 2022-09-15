@@ -230,4 +230,4 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("couldNotAccess", "Could not access")
+        addLanguageStringToAllFiles("enableHttpRemoteErrorRedirection", "Go to redirection page if error in http server")

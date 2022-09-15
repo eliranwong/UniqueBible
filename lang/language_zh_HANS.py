@@ -1000,4 +1000,5 @@ translation = {
     "portrait": "纵向方式",
     "limitWorkspaceFilenameLength": "限制工作空间文件名长度",
     "couldNotAccess": "无法访问",
+    "enableHttpRemoteErrorRedirection": "如果 HTTP 服务器中出错，请转至重定向页面",
 }

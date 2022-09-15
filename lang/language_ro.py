@@ -1000,4 +1000,5 @@ translation = {
     "portrait": "Modul portret",
     "limitWorkspaceFilenameLength": "Limitați lungimea fișierului spațiului de lucru",
     "couldNotAccess": "Nu a putut accesa",
+    "enableHttpRemoteErrorRedirection": "Du-te la pagina de redirecționare dacă eroare în serverul http",
 }

@@ -1359,6 +1359,12 @@ class ConfigUtil:
         if not hasattr(config, "limitWorkspaceFilenameLength"):
             config.limitWorkspaceFilenameLength = True
 
+        config.help["enableHttpRemoteErrorRedirection"] = """
+        # Go to redirection page if error in http-server
+        """
+        if not hasattr(config, "enableHttpRemoteErrorRedirection"):
+            config.enableHttpRemoteErrorRedirection = False
+
         patFile = os.path.join("secrets", "github", "pat.txt")
         if os.path.exists(patFile):
             with open(patFile) as file:
@@ -1690,6 +1696,7 @@ class ConfigUtil:
             ("refreshWindowsAfterSavingNote", config.refreshWindowsAfterSavingNote),
             ("databaseConvertedOnStartup", config.databaseConvertedOnStartup),
             ("limitWorkspaceFilenameLength", config.limitWorkspaceFilenameLength),
+            ("enableHttpRemoteErrorRedirection", config.enableHttpRemoteErrorRedirection),
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:

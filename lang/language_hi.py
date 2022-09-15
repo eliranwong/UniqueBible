@@ -1000,4 +1000,5 @@ translation = {
     "portrait": "पोर्ट्रेट मोड",
     "limitWorkspaceFilenameLength": "कार्यस्थान फ़ाइल नाम की सीमा को सीमित करें",
     "couldNotAccess": "पहुँच नहीं सका",
+    "enableHttpRemoteErrorRedirection": "यदि http सर्वर में त्रुटि है तो पृष्ठ रीदिशा पृष्ठ पर जाएँ",
 }
