@@ -1,3 +1,6 @@
+Changes in 31.78:
+* Added a command keyword DATA:::, to display data lists, available in menu plugin "Bible Data", into a table.
+
 Changes in 31.77:
 * Added interface to open a bible map on http-server display.
 * Changed http-server commands:

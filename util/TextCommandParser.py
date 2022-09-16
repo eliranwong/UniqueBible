@@ -277,8 +277,15 @@ class TextCommandParser:
             "chapterindex": (self.textChapterIndex, """
             # [KEYWORD] CHAPTERINDEX
             # e.g. CHAPTERINDEX:::Gen 1"""),
+            "data": (self.textData, """
+            # [KEYWORD] DATA
+            # Feature - Display a data list into a table
+            # Usage - DATA:::[menu_plugin_bible_data_filename]
+            # e.g. DATA:::Bible Chronology"""),
             "map": (self.textMap, """
             # [KEYWORD] MAP
+            # Feature - Open a Google map with bible locations pinned
+            # Usage - MAP:::[BIBLE_REFERENCE]
             # e.g. MAP:::Act 15:36-18:22"""),
             "crossreference": (self.textCrossReference, """
             # [KEYWORD] CROSSREFERENCE
@@ -3397,6 +3404,27 @@ class TextCommandParser:
             noteSqlite = NoteSqlite()
             verses = noteSqlite.getSearchedVerseList(command)
             return ("study", "<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on verse(s)</p><p>{2}</p>".format(command, len(verses), "; ".join(verses)), {})
+
+    # DATA:::
+    def textData(self, command, source):
+        filepath = os.path.join("plugins", "menu", "Bible Data", "{0}.txt".format(command))
+        if not os.path.isfile(filepath) or not config.isTabulateInstalled:
+            return self.invalidCommand("study")
+        with open(filepath, 'r', encoding='utf8') as fileObj:
+            dataList = fileObj.read().split("\n")
+
+        table = []
+        headers = [command]
+        #parser = BibleVerseParser(config.parserStandarisation)
+        for text in dataList:
+            # Remove CLRF linebreak
+            text = re.sub("\r", "", text)
+            #text = parser.parseText(text)
+            table.append([text])
+        from tabulate import tabulate
+        html = tabulate(table, headers, tablefmt="html")
+        html = BibleVerseParser(config.parserStandarisation).parseText(html)
+        return ("study", html, {'tab_title': "Data"})
 
     # MAP:::
     def textMap(self, command, source):
