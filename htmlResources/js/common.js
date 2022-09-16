@@ -990,6 +990,11 @@ function checkSearch(searchKeyword, searchText) {
     }
 }
 
+function openBibleMap() {
+    var searchString = document.getElementById("mapReference").value;
+    document.title = "MAP:::"+searchString;
+}
+
 function checkMultiSearch(searchKeyword) {
     var searchString = document.getElementById("multiBibleSearch").value;
     if (searchString == "") {

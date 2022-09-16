@@ -3881,14 +3881,14 @@ class MainWindow(QMainWindow):
 
     def mainTextCommandChanged(self, newTextCommand):
         try:
-            if isinstance(newTextCommand, str) and newTextCommand not in ("main.html", "UniqueBible.app"):
+            if isinstance(newTextCommand, str) and newTextCommand not in ("main.html", "UniqueBible.app", "Unique Bible App"):
                 self.textCommandChanged(newTextCommand, "main")
         except Exception as ex:
             self.logger.error("mainTextCommandChanged:{0}".format(ex))
 
     def studyTextCommandChanged(self, newTextCommand):
         try:
-            if isinstance(newTextCommand, str) and newTextCommand not in ("main.html", "UniqueBible.app", "index.html", "This E-Book is Published with Bibi | EPUB Reader on your website.") \
+            if isinstance(newTextCommand, str) and newTextCommand not in ("main.html", "UniqueBible.app", "Unique Bible App", "index.html", "This E-Book is Published with Bibi | EPUB Reader on your website.") \
                     and not newTextCommand.endswith("UniqueBibleApp.png") \
                     and not newTextCommand.startswith("viewer.html") \
                     and not newTextCommand.endswith(".pdf") \
@@ -3959,11 +3959,11 @@ class MainWindow(QMainWindow):
             if re.search('^(_commentary:::|_menu:::|_vnsc:::|_chapters:::|_verses:::|_commentaries|_commentarychapters:::|_commentaryverses:::)', textCommand.lower()):
                 self.newTabException = True
             # parse command
-            view, content, dict = self.textCommandParser.parser(textCommand, source)
+            view, content, infoDict = self.textCommandParser.parser(textCommand, source)
             # plugin event hook
             config.eventView = view
             config.eventContent = content
-            config.eventDict = dict
+            config.eventDict = infoDict
             PluginEventHandler.handleEvent("command", textCommand)
             content = config.eventContent
             # process content
@@ -3985,7 +3985,7 @@ class MainWindow(QMainWindow):
             else:
                 #if view == "main":
                 #    content = config.enableInstantHighlight(content)
-                pdfFilename = dict['pdf_filename'] if "pdf_filename" in dict.keys() else None
+                pdfFilename = infoDict['pdf_filename'] if "pdf_filename" in infoDict.keys() else None
                 outputFile = None
                 if pdfFilename is not None:
                     outputFile = os.path.join("htmlResources", "{0}.pdf".format(pdfFilename))
@@ -3993,8 +3993,8 @@ class MainWindow(QMainWindow):
                     fileObject.write(content)
                     fileObject.close()
                 else:
-                    # wrap with shared UBA html elements if it is not a google map
-                    if ('tab_title' in dict.keys() and dict['tab_title'] == "Map"):
+                    # wrap with shared UBA html elements for most cases
+                    if ('tab_title' in infoDict.keys() and infoDict['tab_title'] in ("Map",)):
                         html = content
                     else:
                         html = self.wrapHtml(content, view, textCommand.startswith("BOOK:::"))
@@ -4023,8 +4023,8 @@ class MainWindow(QMainWindow):
                     if pdfFilename is not None:
                         self.openPdfReader(outputFile)
                     else:
-                        tab_title = dict['tab_title'] if 'tab_title' in dict.keys() else ""
-                        anchor = dict['jump_to'] if "jump_to" in dict.keys() else None
+                        tab_title = infoDict['tab_title'] if 'tab_title' in infoDict.keys() else ""
+                        anchor = infoDict['jump_to'] if "jump_to" in infoDict.keys() else None
                         self.openTextOnStudyView(html, tab_title, anchor, textCommand)
                 elif view == "main":
                     self.openTextOnMainView(html, textCommand)
@@ -4132,13 +4132,13 @@ class MainWindow(QMainWindow):
                 zh {2} font-family:'{6}'; {3} 
                 {8} {9}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.063'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.064'>
                 {10}
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.063'>
-                <script src='js/common.js?v=1.063'></script>
-                <script src='js/{7}.js?v=1.063'></script>
-                <script src='w3.js?v=1.063'></script>
-                <script src='js/custom.js?v=1.063'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.064'>
+                <script src='js/common.js?v=1.064'></script>
+                <script src='js/{7}.js?v=1.064'></script>
+                <script src='w3.js?v=1.064'></script>
+                <script src='js/custom.js?v=1.064'></script>
                 {0}
                 {11}
                 <script>var versionList = []; var compareList = []; var parallelList = []; 

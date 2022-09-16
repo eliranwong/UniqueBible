@@ -3469,7 +3469,10 @@ class TextCommandParser:
                     exlbl_entry = "BL{0}".format(num)
                     label, name, latitude, longitude = self.locationMap[exlbl_entry]
                     googleEarthLink = "https://earth.google.com/web/search/{0},+{1}".format(str(latitude).replace(".", "%2e"), str(longitude).replace(".", "%2e"))
-                    info = """<ref onclick="document.title = 'EXLB:::exlbl:::{0}';">{1}</ref> [<ref onclick="document.title = 'online:::{2}';">3D</a>]""".format(exlbl_entry, name, googleEarthLink)
+                    if config.enableHttpServer:
+                        info = """<a href="#" onclick="document.title = 'EXLB:::exlbl:::{0}';">{1}</a> [<a href='{2}' target='_blank';">3D</a>]""".format(exlbl_entry, name, googleEarthLink)
+                    else:
+                        info = """<a href="#" onclick="document.title = 'EXLB:::exlbl:::{0}';">{1}</a> [<a href="#" onclick="document.title = 'online:::{2}';">3D</a>]""".format(exlbl_entry, name, googleEarthLink)
                     gmap.marker(latitude, longitude, label=label, title=name, info_window=info)
                 except:
                     pass

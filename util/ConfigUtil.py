@@ -1379,7 +1379,7 @@ class ConfigUtil:
     # Save configurations on exit
     @staticmethod
     def save():
-        if config.openBibleInMainViewOnly == True:
+        if config.openBibleInMainViewOnly == True and not config.noQt:
             config.studyText = config.studyTextTemp
 #        if config.menuLayout == "material" and not config.noQt:
 #            texts = config.mainWindow.bibleVersionCombo.checkItems

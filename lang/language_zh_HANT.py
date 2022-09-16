@@ -1001,4 +1001,5 @@ translation = {
     "limitWorkspaceFilenameLength": "限制工作區檔名長度",
     "couldNotAccess": "無法存取",
     "enableHttpRemoteErrorRedirection": "在 HTTP 伺服器中發生錯誤時移至重新導向頁面",
+    "bibleMaps": "聖經地圖",
 }

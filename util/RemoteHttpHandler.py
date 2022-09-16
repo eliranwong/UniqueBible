@@ -45,6 +45,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if RemoteHttpHandler.textCommandParser is None:
             RemoteHttpHandler.textCommandParser = TextCommandParser(RemoteCliMainWindow())
         self.textCommandParser = RemoteHttpHandler.textCommandParser
+        config.internet = True
         config.mainWindow = self
         self.runStartupPlugins()
         if RemoteHttpHandler.bibles is None:
@@ -166,7 +167,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             ".biblemenu": "_menu:::",
             ".comparison": "_comparison:::",
             ".timelinemenu": "BOOK:::Timelines",
-            ".maps": "SEARCHTOOL:::EXLBL:::",
+            ".locations": "SEARCHTOOL:::EXLBL:::",
             ".characters": "SEARCHTOOL:::EXLBP:::",
             ".names": "SEARCHTOOL:::HBN:::",
             ".promises": "BOOK:::Bible_Promises",
@@ -362,8 +363,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{3}.css?v=1.063'>
-                <script src='js/http_server.js?v=1.063'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{3}.css?v=1.064'>
+                <script src='js/http_server.js?v=1.064'></script>
                 </head>
                 <body>... {1} ...
                 <script>
@@ -376,6 +377,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.wfile.write(bytes(self.loadLastVerseHtml(), "utf8"))
 
     def loadContent(self):
+        infoDict = {}
         features = {
             "audio": self.audioContent,
             "play": self.playAudio,
@@ -388,6 +390,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "library": self.libraryContent,
             "logout": self.logout,
             "search": self.searchContent,
+            "maps": self.mapsContent,
             "theme": self.swapTheme,
             "globalviewer": self.toggleGlobalViewer,
             "presentationmode": self.togglePresentationMode,
@@ -513,7 +516,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 config.developer = True
                 tempDeveloper = True
             try:
-                view, content, *_ = self.textCommandParser.parser(self.command, "http")
+                view, content, infoDict = self.textCommandParser.parser(self.command, "http")
             except Exception as e:
                 print(f"Exception: {e}")
                 content = "Error!"
@@ -526,17 +529,35 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             elif not content in ("INVALID_COMMAND_ENTERED", "Error!", "No content for display!"):
                 self.textCommandParser.parent.addHistoryRecord(view, self.command)
 
-        content = self.wrapHtml(content)
+        if ('tab_title' in infoDict.keys() and infoDict['tab_title'] == "Map"):
+            content = content.replace("<title>Google Maps - gmplot</title>", """<title>UniqueBible.app</title>
+                <script src='js/http_server.js?v=1.064'></script>
+                <script>
+                var target = document.querySelector('title');
+                var observer = new MutationObserver(function(mutations) {0}
+                    mutations.forEach(function(mutation) {0}
+                        ubaCommandChanged(document.title);
+                    {1});
+                {1});
+                var config = {0}
+                    childList: true,
+                {1};
+                observer.observe(target, config);
+                </script>""".format("{", "}"))
+            #print(content)
+        else:
+            content = self.wrapHtml(content)
+
         if config.bibleWindowContentTransformers:
             for transformer in config.bibleWindowContentTransformers:
                 content = transformer(content)
         outputFile = os.path.join("htmlResources", "main-{0}.html".format(self.session))
         with open(outputFile, "w", encoding="utf-8") as fileObject:
             fileObject.write(content)
-        if config.httpServerViewerGlobalMode and config.webPresentationMode:
-            url = config.httpServerViewerBaseUrl + "/submit.php"
-            data = {"code": self.session, "content": content}
-            response = requests.post(url, data=json.dumps(data))
+        #if config.httpServerViewerGlobalMode and config.webPresentationMode:
+            #url = config.httpServerViewerBaseUrl + "/submit.php"
+            #data = {"code": self.session, "content": content}
+            #response = requests.post(url, data=json.dumps(data))
             # print("Submitted data to {0}: {1}".format(url, response))
         self.indexPage()
 
@@ -566,7 +587,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.063'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.064'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -696,12 +717,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5}
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.063'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.063'>
-                <script src='js/common.js?v=1.063'></script>
-                <script src='js/{9}.js?v=1.063'></script>
-                <script src='w3.js?v=1.063'></script>
-                <script src='js/http_server.js?v=1.063'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.064'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.064'>
+                <script src='js/common.js?v=1.064'></script>
+                <script src='js/{9}.js?v=1.064'></script>
+                <script src='w3.js?v=1.064'></script>
+                <script src='js/http_server.js?v=1.064'></script>
                 <script>
                 var queryString = window.location.search;	
                 queryString = queryString.substring(1);
@@ -896,7 +917,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             (config.thisTranslation["bibleAudio"], ".audio"),
             (config.thisTranslation["menu5_names"], ".names"),
             (config.thisTranslation["menu5_characters"], ".characters"),
-            (config.thisTranslation["menu5_locations"], ".maps"),
+            (config.thisTranslation["bibleMaps"], ".maps"),
+            (config.thisTranslation["menu5_locations"], ".locations"),
             (config.thisTranslation["menu5_topics"], ".topics"),
             (config.thisTranslation["bibleHarmonies"], ".parallels"),
             (config.thisTranslation["biblePromises"], ".promises"),
@@ -1049,12 +1071,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "zh {2} font-family:'{6}'; {3} "
                 ".ubaButton {2} background-color: {10}; color: {11}; border: none; padding: 2px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 17px; margin: 2px 2px; cursor: pointer; {3}"
                 "{8}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.063'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.063'>"
-                "<script src='js/common.js?v=1.063'></script>"
-                "<script src='js/{7}.js?v=1.063'></script>"
-                "<script src='w3.js?v=1.063'></script>"
-                "<script src='js/http_server.js?v=1.063'></script>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.064'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.064'>"
+                "<script src='js/common.js?v=1.064'></script>"
+                "<script src='js/{7}.js?v=1.064'></script>"
+                "<script src='w3.js?v=1.064'></script>"
+                "<script src='js/http_server.js?v=1.064'></script>"
                 """<script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}
@@ -1070,7 +1092,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "{0}"
                 """<script>var versionList = []; var compareList = []; var parallelList = [];
                 var diffList = []; var searchList = [];</script>"""
-                "<script src='js/custom.js?v=1.063'></script>"
+                "<script src='js/custom.js?v=1.064'></script>"
                 "</head><body><span id='v0.0.0'></span>{1}"
                 "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible();document.querySelector('body').addEventListener('click', window.parent.closeSideNav);</script></body></html>"
                 ).format(activeBCVsettings,
@@ -1448,7 +1470,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.play')">.play</ref> - Play all available bible audio linked with the current content.<br>
         <ref onclick="window.parent.submitCommand('.names')">.names</ref> - Open bible names content page.<br>
         <ref onclick="window.parent.submitCommand('.characters')">.characters</ref> - Open bible characters content page.<br>
-        <ref onclick="window.parent.submitCommand('.maps')">.maps</ref> - Open bible maps content page.<br>
+        <ref onclick="window.parent.submitCommand('.maps')">.maps</ref> - Open bible map content page.<br>
+        <ref onclick="window.parent.submitCommand('.locations')">.locations</ref> - Open bible location content page.<br>
         <ref onclick="window.parent.submitCommand('.topics')">.topics</ref> - Open bible topics content page.<br>
         <ref onclick="window.parent.submitCommand('.parallels')">.parallels</ref> - Open bible parallels content page.<br>
         <ref onclick="window.parent.submitCommand('.promises')">.promises</ref> - Open bible promises content page.<br>
@@ -1679,6 +1702,28 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def setFavouriteBibleContent(self, favouriteBible="favouriteBible"):
         content = "<h2>Select Faviourite Bible:</h2>"
         content += "<br>".join(["""<ref onclick ="document.title = '_setconfig:::{2}:::\\'{0}\\''">{1}</ref>""".format(abb, self.textCommandParser.parent.textFullNameList[index], favouriteBible) for index, abb in enumerate(self.textCommandParser.parent.textList)])
+        return content
+
+    def mapsContent(self):
+        content = "<h2>{0}</h2>".format(config.thisTranslation["bibleMaps"])
+        if config.displayLanguage == "zh_HANT":
+            content += """<p>如要開啟聖經地圖，請先輸入一個聖經經文章節（例如：啓示錄 1:11、約書亞記 10:1-43、使徒行傳 15:36-18:22 等等），然後按下按鈕「{0}」。</p>""".format(config.thisTranslation["open"])
+        elif config.displayLanguage == "zh_HANS":
+            content += """<p>如要开启圣经地图，请先输入一个圣经经文章节（例如：启示录 1:11、约书亚记 10:1-43、使徒行传 15:36-18:22 等等），然后按下按钮「{0}」。</p>""".format(config.thisTranslation["open"])
+        else:
+            content += """<p>To open a bible map, enter a bible reference below (e.g. Rev 1:11, Josh 10:1-43, Act 15:36-18:22, etc.) and click the button '{0}'.</p>""".format(config.thisTranslation["open"])
+        content += "<p><input type='text' id='mapReference' style='width:95%' autofocus></p>"
+        content += "<p><button id='openMapButton' type='button' onclick='openBibleMap();' class='ubaButton'>{0}</button></p>".format(config.thisTranslation["open"])
+        content += """
+<script>
+var input = document.getElementById('mapReference');
+input.addEventListener('keyup', function(event) {0}
+  if (event.keyCode === 13) {0}
+   event.preventDefault();
+   document.getElementById('openMapButton').click();
+  {1}
+{1});
+</script>""".format("{", "}")
         return content
 
     def formatSearchSection(self, resourceType, inputID, searchCommand, abbreviationList, fullNameList=None):

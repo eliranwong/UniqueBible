@@ -312,7 +312,7 @@ class BibleLocations(QWidget):
                     if browser:
                         info = "<a href='https://marvel.bible/tool.php?exlbl={0}' target='_blank'>{1}</a> [<a href='{2}' target='_blank'>3D</a>]".format(exlbl_entry, name, googleEarthLink)
                     else:
-                        info = """<ref onclick="document.title = 'EXLB:::exlbl:::{0}';">{1}</ref> [<ref onclick="document.title = 'online:::{2}';">3D</a>]""".format(exlbl_entry, name, googleEarthLink)
+                        info = """<a href="#" onclick="document.title = 'EXLB:::exlbl:::{0}';">{1}</a> [<a href="#" onclick="document.title = 'online:::{2}';">3D</a>]""".format(exlbl_entry, name, googleEarthLink)
                     gmap.marker(latitude, longitude, label=label, title=name, info_window=info)
                 except:
                     pass
@@ -321,7 +321,7 @@ class BibleLocations(QWidget):
             if browser:
                 info = "<a href='https://marvel.bible/tool.php?exlbl=BL636' target='_blank'>Jerusalem</a> [<a href='{0}' target='_blank'>3D</a>]".format(googleEarthLink)
             else:
-                info = """<ref onclick="document.title = 'EXLB:::exlbl:::BL636';">Jerusalem</ref> [<ref onclick="document.title = 'online:::{0}';">3D</a>]""".format(googleEarthLink)
+                info = """<a href="#" onclick="document.title = 'EXLB:::exlbl:::BL636';">Jerusalem</a> [<a href="#" onclick="document.title = 'online:::{0}';">3D</a>]""".format(googleEarthLink)
             gmap.marker(31.777444, 35.234935, label="J", title="Jerusalem", info_window=info)
 
         # HTML file

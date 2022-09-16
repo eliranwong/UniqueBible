@@ -1,3 +1,12 @@
+Changes in 31.77:
+* Added interface to open a bible map on http-server display.
+* Changed http-server commands:
+    '.maps' now opens bible map reference entry page
+    '.locations' opens bible locations menu page
+* Fixed running map::: command via http-server.
+* Fixed loading Exhaustive Library of Bible Locations articles via http-server.
+* Fixed http-server restart issue caused by failure in saving config value.
+
 Changes in 31.76:
 * Added enableHttpRemoteErrorRedirection config flag
 

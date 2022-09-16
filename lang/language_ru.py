@@ -1001,4 +1001,5 @@ translation = {
     "limitWorkspaceFilenameLength": "Ограничить длину имени файла рабочей области",
     "couldNotAccess": "Не удалось получить доступ",
     "enableHttpRemoteErrorRedirection": "Перейти на страницу перенаправления, если ошибка на сервере http",
+    "bibleMaps": "Карты Библии",
 }
