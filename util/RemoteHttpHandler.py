@@ -1682,6 +1682,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         content += "<h2>EPUB {0}</h2>".format(config.thisTranslation["file"])
         content += "<br>".join(["""<ref onclick ="document.title = 'EPUB:::{0}'">{0}</ref>""".format(book)
             for book in self.textCommandParser.parent.epubList])
+        content += "<h2>{0}</h2>".format(config.thisTranslation["others"])
+        dataList = [item for item in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu", "Bible Data"), "txt")]
+        content += "<br>".join(["""<ref onclick ="document.title = 'DATA:::{0}'">{0}</ref>""".format(book)
+            for book in dataList])
         return content
 
     def setVerseNoClickActionContent(self, double=False):

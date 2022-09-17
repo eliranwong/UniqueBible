@@ -1,3 +1,6 @@
+Changes in 31.79:
+* Added "Others" section in http-server library menu, to display available data lists.
+
 Changes in 31.78:
 * Added a command keyword DATA:::, to display data lists, available in menu plugin "Bible Data", into a table.
 
