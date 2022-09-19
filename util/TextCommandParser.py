@@ -286,18 +286,21 @@ class TextCommandParser:
             "day": (self.textDay, """
             # [KEYWORD] DAY
             # Feature - Display 365 Day Bible Reading Content
-            # Usage - DAY:::[day_number]
-            # e.g. DAY:::1"""),
+            # Usage - DAY:::[BIBLE_VERSION]:::[day_number]
+            # e.g. DAY:::1
+            # e.g. DAY:::NET:::1"""),
             "dayaudio": (self.textDayAudio, """
             # [KEYWORD] DAYAUDIO
             # Feature - Open 365 Day Bible Reading Audio
-            # Usage - DAYAUDIO:::[day_number]
-            # e.g. DAYAUDIO:::1"""),
+            # Usage - DAYAUDIO:::[BIBLE_VERSION]:::[day_number]
+            # e.g. DAYAUDIO:::1
+            # e.g. DAYAUDIO:::NET:::1"""),
             "dayaudioplus": (self.textDayAudioPlus, """
             # [KEYWORD] DAYAUDIOPLUS
             # Feature - Open 365 Day Bible Reading Audio in two translations
-            # Usage - DAYAUDIOPLUS:::[day_number]
-            # e.g. DAYAUDIOPLUS:::1"""),
+            # Usage - DAYAUDIOPLUS:::[BIBLE_VERSION(S)]:::[day_number]
+            # e.g. DAYAUDIOPLUS:::1
+            # e.g. DAYAUDIOPLUS:::NET:::1"""),
             "map": (self.textMap, """
             # [KEYWORD] MAP
             # Feature - Open a Google map with bible locations pinned
@@ -3422,8 +3425,7 @@ class TextCommandParser:
             return ("study", "<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on verse(s)</p><p>{2}</p>".format(command, len(verses), "; ".join(verses)), {})
 
     # DAY:::
-
-    def getDayEntry(self, entry):
+    def getDayEntry(self, entry): 
         dayEntry = allDays[int(entry)][-1]
         dayEntry = dayEntry.split(", ")
         parser = BibleVerseParser(config.parserStandarisation)
@@ -3437,35 +3439,64 @@ class TextCommandParser:
 
     def textDay(self, command, source):
         try:
-            dayEntry = self.getDayEntry(command)
-            command = "{0}:::{1}".format(config.mainText, dayEntry)
+            if command.count(":::") == 0:
+                if config.enableHttpServer and config.webHomePage == "traditional.html":
+                    config.mainText = "CUV"
+                    command = "CUV:::{0}".format(command)
+                elif config.enableHttpServer and config.webHomePage == "simplified.html":
+                    config.mainText = "CUVs"
+                    command = "CUVs:::{0}".format(command)
+                else:
+                    command = "{0}:::".format(config.mainText)
+            commandPrefix, entry, *_ = command.split(":::")
+            dayEntry = self.getDayEntry(entry)
+            command = "{0}:::{1}".format(commandPrefix, dayEntry)
             return self.textBible(command, source)
         except:
             return self.invalidCommand("study")
 
     def textDayAudio(self, command, source):
         try:
-            dayEntry = self.getDayEntry(command)
-            command = "{0}:::{1}".format(config.mainText, dayEntry)
+            if command.count(":::") == 0:
+                if config.enableHttpServer and config.webHomePage == "traditional.html":
+                    config.mainText = "CUV"
+                    command = "CUV:::{0}".format(command)
+                elif config.enableHttpServer and config.webHomePage == "simplified.html":
+                    config.mainText = "CUVs"
+                    command = "CUVs:::{0}".format(command)
+                else:
+                    command = "{0}:::".format(config.mainText)
+            commandPrefix, entry, *_ = command.split(":::")
+            dayEntry = self.getDayEntry(entry)
+            command = "{0}:::{1}".format(commandPrefix, dayEntry)
             return self.textRead(command, source)
         except:
             return self.invalidCommand("study")
 
     def textDayAudioPlus(self, command, source):
         try:
-            dayEntry = self.getDayEntry(command)
-            biblesSqlite = BiblesSqlite()
-            favBible1 = biblesSqlite.getFavouriteBible()
-            favBible2 = biblesSqlite.getFavouriteBible2()
-            favBible3 = biblesSqlite.getFavouriteBible3()
-            plusBible = ""
-            if not config.mainText == favBible1:
-                plusBible = favBible1
-            elif not config.mainText == favBible2:
-                plusBible = favBible2
-            elif not config.mainText == favBible3:
-                plusBible = favBible3
-            command = "{0}_{1}:::{2}".format(config.mainText, plusBible, dayEntry) if plusBible else "{0}:::{1}".format(config.mainText, dayEntry)
+            if command.count(":::") == 0:
+                if config.enableHttpServer and config.webHomePage == "traditional.html":
+                    config.mainText = "CUV"
+                elif config.enableHttpServer and config.webHomePage == "simplified.html":
+                    config.mainText = "CUVs"
+
+                biblesSqlite = BiblesSqlite()
+                favBible1 = biblesSqlite.getFavouriteBible()
+                favBible2 = biblesSqlite.getFavouriteBible2()
+                favBible3 = biblesSqlite.getFavouriteBible3()
+                plusBible = ""
+                if not config.mainText == favBible1:
+                    plusBible = favBible1
+                elif not config.mainText == favBible2:
+                    plusBible = favBible2
+                elif not config.mainText == favBible3:
+                    plusBible = favBible3
+                
+                command = "{1}_{2}:::{0}".format(command, config.mainText, plusBible)
+            commandPrefix, entry, *_ = command.split(":::")
+            dayEntry = self.getDayEntry(entry)
+            command = "{0}:::{1}".format(commandPrefix, dayEntry)
             return self.textRead(command, source)
         except:
             return self.invalidCommand("study")

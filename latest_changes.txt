@@ -1,3 +1,6 @@
+Changes in 31.82:
+* Day:::, DayAudio:::, and DayAudioPlus::: commands can now specify bible versions.
+
 Changes in 31.81:
 * Added two command keywords, dayaudio::: and dayaudioplus:::
 * Added "Reading Plan" to http-server side navigation menu.
