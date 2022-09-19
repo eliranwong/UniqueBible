@@ -11,6 +11,7 @@ from util.HtmlGeneratorUtil import HtmlGeneratorUtil
 from util.TextUtil import TextUtil
 from util.FileUtil import FileUtil
 from util.LexicalData import LexicalData
+from util.readings import allDays
 from functools import partial
 from util.BibleVerseParser import BibleVerseParser
 from util.BibleBooks import BibleBooks
@@ -282,6 +283,11 @@ class TextCommandParser:
             # Feature - Display a data list into a table
             # Usage - DATA:::[menu_plugin_bible_data_filename]
             # e.g. DATA:::Bible Chronology"""),
+            "day": (self.textDay, """
+            # [KEYWORD] DAY
+            # Feature - Display 365 Day Bible Reading Content
+            # Usage - DAY:::[day_number]
+            # e.g. DAY:::1"""),
             "map": (self.textMap, """
             # [KEYWORD] MAP
             # Feature - Open a Google map with bible locations pinned
@@ -3404,6 +3410,24 @@ class TextCommandParser:
             noteSqlite = NoteSqlite()
             verses = noteSqlite.getSearchedVerseList(command)
             return ("study", "<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on verse(s)</p><p>{2}</p>".format(command, len(verses), "; ".join(verses)), {})
+
+    # DAY:::
+    def textDay(self, command, source):
+        try:
+            dayEntry = allDays[int(command)][-1]
+            dayEntry = dayEntry.split(", ")
+            parser = BibleVerseParser(config.parserStandarisation)
+            for index, reference in enumerate(dayEntry):
+                if not ":" in reference:
+                    b, c, *_ = parser.extractAllReferences(reference)[0]
+                    lastVerse = Bible(config.mainText).getLastVerse(b, c)
+                    fullReference = parser.bcvToVerseReference(b, c, 1, c, lastVerse)
+                    dayEntry[index] = fullReference
+            dayEntry = ", ".join(dayEntry)
+            command = "{0}:::{1}".format(config.mainText, dayEntry)
+            return self.textBible(command, source)
+        except:
+            return self.invalidCommand("study")
 
     # DATA:::
     def textData(self, command, source):

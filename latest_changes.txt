@@ -1,3 +1,7 @@
+Changes in 31.80:
+* Added a command keyword DAY:::, to display 365 Day Bible Reading Content
+* Fixed the issue that multiple verse display was scrolled to the last verse.
+
 Changes in 31.79:
 * Added "Others" section in http-server library menu, to display available data lists.
 

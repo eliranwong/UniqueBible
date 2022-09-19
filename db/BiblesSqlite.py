@@ -616,6 +616,9 @@ input.addEventListener('keyup', function(event) {0}
                     display = text if isFavouriteBible or not displayRef else verseReference
                     verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), display, verseText)
                 verses += "</div>"
+            if verseList:
+                b, c, v, *_ = verseList[-1]
+                verses = "<span id='v{0}.{1}.{2}'></span>{3}".format(b, c, v, verses)
         return verses
 
     def readPlainChapter(self, text, verse, source):
