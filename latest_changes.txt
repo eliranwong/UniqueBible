@@ -1,3 +1,7 @@
+Changes in 31.81:
+* Added two command keywords, dayaudio::: and dayaudioplus:::
+* Added "Reading Plan" to http-server side navigation menu.
+
 Changes in 31.80:
 * Added a command keyword DAY:::, to display 365 Day Bible Reading Content
 * Fixed the issue that multiple verse display was scrolled to the last verse.

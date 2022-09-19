@@ -1002,4 +1002,6 @@ translation = {
     "couldNotAccess": "アクセスできません",
     "enableHttpRemoteErrorRedirection": "http サーバーのエラーが発生した場合はリダイレクト・ページに移動",
     "bibleMaps": "聖書地図",
+    "readingPlan": "計測値計画",
+    "bibleInAYear": "365 日聖書朗読計画",
 }

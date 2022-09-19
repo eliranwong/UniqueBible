@@ -1002,4 +1002,6 @@ translation = {
     "couldNotAccess": "ലഭ്യമാക്കുവാന് സാധ്യമായില്ല",
     "enableHttpRemoteErrorRedirection": "എച്ച്. ടി. പി സര്വറില് പിശകുമെങ്കില് വീണ്ടും ദിശയിലേക്ക് പോകുക",
     "bibleMaps": "ബൈബിള് മാപ്പുകള്",
+    "readingPlan": "പദ്ധതി വായിക്കുകName",
+    "bibleInAYear": "365-ദിവസം ബൈബിൾ വായന പദ്ധതി",
 }

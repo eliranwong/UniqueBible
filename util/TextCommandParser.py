@@ -288,6 +288,16 @@ class TextCommandParser:
             # Feature - Display 365 Day Bible Reading Content
             # Usage - DAY:::[day_number]
             # e.g. DAY:::1"""),
+            "dayaudio": (self.textDayAudio, """
+            # [KEYWORD] DAYAUDIO
+            # Feature - Open 365 Day Bible Reading Audio
+            # Usage - DAYAUDIO:::[day_number]
+            # e.g. DAYAUDIO:::1"""),
+            "dayaudioplus": (self.textDayAudioPlus, """
+            # [KEYWORD] DAYAUDIOPLUS
+            # Feature - Open 365 Day Bible Reading Audio in two translations
+            # Usage - DAYAUDIOPLUS:::[day_number]
+            # e.g. DAYAUDIOPLUS:::1"""),
             "map": (self.textMap, """
             # [KEYWORD] MAP
             # Feature - Open a Google map with bible locations pinned
@@ -3412,20 +3422,51 @@ class TextCommandParser:
             return ("study", "<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on verse(s)</p><p>{2}</p>".format(command, len(verses), "; ".join(verses)), {})
 
     # DAY:::
+
+    def getDayEntry(self, entry):
+        dayEntry = allDays[int(entry)][-1]
+        dayEntry = dayEntry.split(", ")
+        parser = BibleVerseParser(config.parserStandarisation)
+        for index, reference in enumerate(dayEntry):
+            if not ":" in reference:
+                b, c, *_ = parser.extractAllReferences(reference)[0]
+                lastVerse = Bible(config.mainText).getLastVerse(b, c)
+                fullReference = parser.bcvToVerseReference(b, c, 1, c, lastVerse)
+                dayEntry[index] = fullReference
+        return ", ".join(dayEntry)
+
     def textDay(self, command, source):
         try:
-            dayEntry = allDays[int(command)][-1]
-            dayEntry = dayEntry.split(", ")
-            parser = BibleVerseParser(config.parserStandarisation)
-            for index, reference in enumerate(dayEntry):
-                if not ":" in reference:
-                    b, c, *_ = parser.extractAllReferences(reference)[0]
-                    lastVerse = Bible(config.mainText).getLastVerse(b, c)
-                    fullReference = parser.bcvToVerseReference(b, c, 1, c, lastVerse)
-                    dayEntry[index] = fullReference
-            dayEntry = ", ".join(dayEntry)
+            dayEntry = self.getDayEntry(command)
             command = "{0}:::{1}".format(config.mainText, dayEntry)
             return self.textBible(command, source)
+        except:
+            return self.invalidCommand("study")
+
+    def textDayAudio(self, command, source):
+        try:
+            dayEntry = self.getDayEntry(command)
+            command = "{0}:::{1}".format(config.mainText, dayEntry)
+            return self.textRead(command, source)
+        except:
+            return self.invalidCommand("study")
+
+    def textDayAudioPlus(self, command, source):
+        try:
+            dayEntry = self.getDayEntry(command)
+            biblesSqlite = BiblesSqlite()
+            favBible1 = biblesSqlite.getFavouriteBible()
+            favBible2 = biblesSqlite.getFavouriteBible2()
+            favBible3 = biblesSqlite.getFavouriteBible3()
+            plusBible = ""
+            if not config.mainText == favBible1:
+                plusBible = favBible1
+            elif not config.mainText == favBible2:
+                plusBible = favBible2
+            elif not config.mainText == favBible3:
+                plusBible = favBible3
+            command = "{0}_{1}:::{2}".format(config.mainText, plusBible, dayEntry) if plusBible else "{0}:::{1}".format(config.mainText, dayEntry)
+            return self.textRead(command, source)
         except:
             return self.invalidCommand("study")
 

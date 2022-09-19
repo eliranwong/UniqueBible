@@ -792,7 +792,7 @@ translation = {
     "commandTextIfNoSelection": "當沒有文字選擇時，選文插件功能使用於命令框中輸入的文字。",
     "addLanguageFiles": "新增語言檔案",
     "updateLanguageFiles": "更新語言檔案",
-    "menu11_audio": "音訊",
+    "menu11_audio": "語音",
     "readTillChapterEnd": "閱讀同章其後節數",
     "showHebrewGreekWordAudioLinks": "在聖經中，顯示每一個希伯來文和希臘文的可用語音鏈結。",
     "displayHebrewGreekWordAudio": "顯示希伯來文 / 希臘文字音訊",
@@ -1002,4 +1002,6 @@ translation = {
     "couldNotAccess": "無法存取",
     "enableHttpRemoteErrorRedirection": "在 HTTP 伺服器中發生錯誤時移至重新導向頁面",
     "bibleMaps": "聖經地圖",
+    "readingPlan": "閱讀計劃",
+    "bibleInAYear": "365 天聖經閱讀計劃",
 }

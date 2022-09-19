@@ -567,6 +567,16 @@ input.addEventListener('keyup', function(event) {0}
         else:
             return config.favouriteBible2
 
+    def getFavouriteBible3(self):
+        if config.enableHttpServer and config.webHomePage == "{0}.html".format(config.webPrivateHomePage):
+            return config.favouriteBiblePrivate3
+        elif config.enableHttpServer and config.webHomePage == "traditional.html":
+            return config.favouriteBibleTC3
+        elif config.enableHttpServer and config.webHomePage == "simplified.html":
+            return config.favouriteBibleSC3
+        else:
+            return config.favouriteBible3
+
     def getMultiReferenceFavouriteBible(self, inputText):
         favouriteBible = self.getFavouriteBible()
         if inputText == favouriteBible:

@@ -792,7 +792,7 @@ translation = {
     "commandTextIfNoSelection": "当没有文字选择时，选文插件功能使用于命令框中输入的文字。",
     "addLanguageFiles": "添加语言文件",
     "updateLanguageFiles": "更新语言文件",
-    "menu11_audio": "音频",
+    "menu11_audio": "语音",
     "readTillChapterEnd": "阅读同章其后节数",
     "showHebrewGreekWordAudioLinks": "显示圣经中每个希伯来语和希腊语单词的语音链接。",
     "displayHebrewGreekWordAudio": "显示希伯来语 / 希腊语单词音频",
@@ -1002,4 +1002,6 @@ translation = {
     "couldNotAccess": "无法访问",
     "enableHttpRemoteErrorRedirection": "如果 HTTP 服务器中出错，请转至重定向页面",
     "bibleMaps": "圣经地图",
+    "readingPlan": "阅读计划",
+    "bibleInAYear": "365 天圣经阅读计划",
 }

@@ -391,6 +391,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "logout": self.logout,
             "search": self.searchContent,
             "maps": self.mapsContent,
+            "days": self.dailyReadingContent,
             "theme": self.swapTheme,
             "globalviewer": self.toggleGlobalViewer,
             "presentationmode": self.togglePresentationMode,
@@ -922,6 +923,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             (config.thisTranslation["menu5_topics"], ".topics"),
             (config.thisTranslation["bibleHarmonies"], ".parallels"),
             (config.thisTranslation["biblePromises"], ".promises"),
+            (config.thisTranslation["readingPlan"], ".days"),
             ("{0} &#x1F50E;&#xFE0E;".format(config.thisTranslation["menu_search"]), ".search"),
             (config.thisTranslation["download"], ".download"),
             (config.thisTranslation["ubaCommands"], ".help"),
@@ -1236,7 +1238,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if newChapter < 1:
             newChapter = 1
         command = self.parser.bcvToVerseReference(config.mainB, newChapter, 1)
-        html = """<button type='button' title='{1}' onclick='submitCommand(\"{0}\")'><span class="material-icons-outlined">navigate_before</span></button>""".format(command, config.thisTranslation["menu4_previous"])
+        html = """<button type='button' title='{1}' onclick='submitCommand("{0}")'><span class="material-icons-outlined">navigate_before</span></button>""".format(command, config.thisTranslation["menu4_previous"])
         return html
 
     def nextChapter(self):
@@ -1475,6 +1477,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.topics')">.topics</ref> - Open bible topics content page.<br>
         <ref onclick="window.parent.submitCommand('.parallels')">.parallels</ref> - Open bible parallels content page.<br>
         <ref onclick="window.parent.submitCommand('.promises')">.promises</ref> - Open bible promises content page.<br>
+        <ref onclick="window.parent.submitCommand('.days')">.days</ref> - Open bible reading plan page.<br>
         <ref onclick="window.parent.submitCommand('.download')">.download</ref> - Display downloadable resources.<br>
         <ref onclick="window.parent.submitCommand('.library')">.library</ref> - Display installed bible commentaries and references books.<br>
         <ref onclick="window.parent.submitCommand('.search')">.search</ref> - Display search options.
@@ -1706,6 +1709,17 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def setFavouriteBibleContent(self, favouriteBible="favouriteBible"):
         content = "<h2>Select Faviourite Bible:</h2>"
         content += "<br>".join(["""<ref onclick ="document.title = '_setconfig:::{2}:::\\'{0}\\''">{1}</ref>""".format(abb, self.textCommandParser.parent.textFullNameList[index], favouriteBible) for index, abb in enumerate(self.textCommandParser.parent.textList)])
+        return content
+
+    def dailyReadingContent(self):
+        content = "<div style='margin: auto; text-align: center;'><h2>{0}</h2><p style='text-align: center;'>".format(config.thisTranslation["bibleInAYear"])
+        for i in range(1, 366):
+            day = "第 {0} 日".format(i) if (config.displayLanguage == "zh_HANT" or config.displayLanguage == "zh_HANS") else "Day {0}".format(i)
+            readButton = """<button type='button' title='{1}' onclick='document.title="DAY:::{0}"'>{1}</button>""".format(i, config.thisTranslation["menu1_readClipboard"])
+            audioButton = """<button type='button' title='{1}' onclick='document.title="DAYAUDIO:::{0}"'>{1}</button>""".format(i, config.thisTranslation["menu11_audio"])
+            audioButtonPlus = """<button type='button' title='{1} +' onclick='document.title="DAYAUDIOPLUS:::{0}"'>{1} +</button>""".format(i, config.thisTranslation["menu11_audio"])
+            content += "{0} {1} {2} {3}<br>".format(day, readButton, audioButton, audioButtonPlus)
+        content += "</p></div>"
         return content
 
     def mapsContent(self):

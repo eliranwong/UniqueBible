@@ -1002,4 +1002,6 @@ translation = {
     "couldNotAccess": "Nu a putut accesa",
     "enableHttpRemoteErrorRedirection": "Du-te la pagina de redirecționare dacă eroare în serverul http",
     "bibleMaps": "Hărţi biblice",
+    "readingPlan": "Planul de lectură",
+    "bibleInAYear": "365-Day Plan de citire a Bibliei",
 }

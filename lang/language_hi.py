@@ -1002,4 +1002,6 @@ translation = {
     "couldNotAccess": "पहुँच नहीं सका",
     "enableHttpRemoteErrorRedirection": "यदि http सर्वर में त्रुटि है तो पृष्ठ रीदिशा पृष्ठ पर जाएँ",
     "bibleMaps": "बाइबल मानचित्र",
+    "readingPlan": "पठन योजना",
+    "bibleInAYear": "365-दिवस बाइबल पठन योजना",
 }

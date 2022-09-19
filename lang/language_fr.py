@@ -1002,4 +1002,6 @@ translation = {
     "couldNotAccess": "Impossible d'accéder à",
     "enableHttpRemoteErrorRedirection": "Aller à la page de redirection en cas d'erreur sur le serveur http",
     "bibleMaps": "Cartes bibliques",
+    "readingPlan": "Plan de lecture",
+    "bibleInAYear": "Plan de lecture de la Bible de 365 jours",
 }

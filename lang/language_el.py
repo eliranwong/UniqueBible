@@ -1002,4 +1002,6 @@ translation = {
     "couldNotAccess": "Αδυναμία πρόσβασης",
     "enableHttpRemoteErrorRedirection": "Μετάβαση στη σελίδα ανακατεύθυνσης σε περίπτωση σφάλματος στον εξυπηρετητή http",
     "bibleMaps": "Χάρτες της Βίβλου",
+    "readingPlan": "Σχέδιο ανάγνωσης",
+    "bibleInAYear": "Σχέδιο Ανάγνωσης της Βίβλου 365 ημερών",
 }
