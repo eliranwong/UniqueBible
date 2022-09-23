@@ -61,7 +61,7 @@ if initialCommand == "cli":
     config.cli = True
 elif initialCommand == "gui":
     initialCommand = ""
-elif len(sys.argv) > 1 and sys.argv[1] in ("telnet-server", "http-server", "execute-macro"):
+elif len(sys.argv) > 1 and sys.argv[1].lower() in ("telnet-server", "http-server", "execute-macro", "terminal"):
     config.noQt = True
 initialCommandIsPython = True if initialCommand.endswith(".py") and os.path.isfile(initialCommand) else False
 

@@ -1,4 +1,4 @@
-Changes in 31.83:
+Changes in 31.83, 31.84:
 * Added "terminal" mode.
     Users can now run in terminal, python3 uba.py terminal
 
