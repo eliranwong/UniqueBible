@@ -92,6 +92,25 @@ def cleanupTempFiles():
 
 cleanupTempFiles()
 
+# Local CLI
+if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
+    config.runMode = "terminal"
+    print("Running Unique Bible App in terminal mode ...")
+
+    from util.LocalCliHandler import LocalCliHandler
+    cli = LocalCliHandler()
+
+    command = " ".join(sys.argv[2:]).strip()
+    if command:
+        print(cli.getContent(command))
+    while command != ".quit":
+        command = input("Enter a UBA command: ")
+        content = cli.getContent(command)
+        print(content)
+
+    print("Closing ...")
+    sys.exit(0)
+
 # Remote CLI
 if (len(sys.argv) > 1) and sys.argv[1] == "telnet-server":
     config.runMode = "telnet-server"

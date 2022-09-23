@@ -1,3 +1,7 @@
+Changes in 31.83:
+* Added "terminal" mode.
+    Users can now run in terminal, python3 uba.py terminal
+
 Changes in 31.82:
 * Day:::, DayAudio:::, and DayAudioPlus::: commands can now specify bible versions.
 
