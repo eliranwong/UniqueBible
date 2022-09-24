@@ -101,14 +101,28 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     cli = LocalCliHandler()
 
     command = " ".join(sys.argv[2:]).strip()
+    if not command:
+        history = config.history["main"]
+        command = history[-1]
     if command:
         print(cli.getContent(command))
-    while command != ".quit":
-        command = input("Enter a UBA command: ")
-        content = cli.getContent(command)
-        print(content)
+    while not command.lower() in (".quit", ".restart"):
+        try:
+            print("--------------------")
+            print("Enter an UBA command (or '.help', '.quit', '.restart'):")
+            command = input("> ").strip()
+            if command:
+                content = cli.getContent(command)
+                if content:
+                    print("--------------------")
+                    print(content)
+        except:
+            pass
 
-    print("Closing ...")
+    print("Restarting ..." if command.lower() == ".restart" else "Closing ...")
+    ConfigUtil.save()
+    if command.lower() == ".restart":
+        os.system("{0} {1} terminal".format(sys.executable, "uba.py"))
     sys.exit(0)
 
 # Remote CLI

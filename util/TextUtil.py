@@ -53,6 +53,7 @@ class TextUtil:
         else:
             content = re.sub("<br/?>|<br>", "\n", content)
             content = re.sub('<[^<]+?>', '', content)
+        content = re.sub("audiotrack ", "", content)
         return content
 
     @staticmethod

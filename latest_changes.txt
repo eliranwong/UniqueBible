@@ -1,6 +1,7 @@
-Changes in 31.83, 31.84:
+Changes in 31.83, 31.84, 31.85:
 * Added "terminal" mode.
     Users can now run in terminal, python3 uba.py terminal
+    Wiki page: https://github.com/eliranwong/UniqueBible/wiki/Terminal-Mode
 
 Changes in 31.82:
 * Day:::, DayAudio:::, and DayAudioPlus::: commands can now specify bible versions.

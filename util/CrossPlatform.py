@@ -2,7 +2,6 @@ import config, os, glob, re
 from db.BiblesSqlite import BiblesSqlite, Bible
 from db.ToolsSqlite import BookData, IndexesSqlite, Commentary
 from db.ToolsSqlite import LexiconData
-from util.BibleBooks import BibleBooks
 from util.CatalogUtil import CatalogUtil
 from util.ThirdParty import ThirdPartyDictionary
 
