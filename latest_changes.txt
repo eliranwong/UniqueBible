@@ -1,3 +1,6 @@
+Changes in 31.92:
+* Terminal mode now supports startup plugins.
+
 Changes in 31.91:
 * Support setting vlc playback speed, via config.vlcSpeed, e.g. run the following line to change the playback rate to 2.0:
     _setconfig:::vlcSpeed:::2.0

@@ -93,18 +93,27 @@ def cleanupTempFiles():
 
 cleanupTempFiles()
 
+# Run startup plugins
+def runStartupPlugins():
+    if config.enablePlugins:
+        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "startup"), "py"):
+            if not plugin in config.excludeStartupPlugins:
+                script = os.path.join(os.getcwd(), "plugins", "startup", "{0}.py".format(plugin))
+                config.mainWindow.execPythonFile(script)
+
 # Local CLI
 if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     config.runMode = "terminal"
     print("Running Unique Bible App in terminal mode ...")
 
     from util.LocalCliHandler import LocalCliHandler
-    cli = LocalCliHandler()
+    config.mainWindow = LocalCliHandler()
+    runStartupPlugins()
 
-    if config.isPrompt_toolkit:
+    if config.isPrompt_toolkitInstalled:
         from prompt_toolkit import PromptSession
         from prompt_toolkit.completion import WordCompleter
-        command_completer = WordCompleter(cli.getTextCommandSuggestion(), ignore_case=True)
+        command_completer = WordCompleter(config.mainWindow.getTextCommandSuggestion(), ignore_case=True)
         session = PromptSession()
     elif sys.platform in ("linux", "darwin"):
         import readline
@@ -114,13 +123,13 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         history = config.history["main"]
         command = history[-1]
     if command:
-        print(cli.getContent(command))
+        print(config.mainWindow.getContent(command))
     while not command.lower() in (".quit", ".restart"):
         try:
             print("--------------------")
             print("Enter an UBA command (or '.help', '.quit', '.restart'):")
             # User command input
-            if config.isPrompt_toolkit:
+            if config.isPrompt_toolkitInstalled:
                 command = session.prompt("> ", completer=command_completer).strip()
             elif sys.platform in ("linux", "darwin"):
                 import readline
@@ -128,7 +137,7 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
             else:
                 command = input("> ").strip()
             if command:
-                content = cli.getContent(command)
+                content = config.mainWindow.getContent(command)
                 if content:
                     print("--------------------")
                     print(content)
@@ -173,14 +182,6 @@ if (len(sys.argv) > 1) and sys.argv[1] == "telnet-server":
     except Exception as e:
         print(str(e))
         exit(-1)
-
-# Run startup plugins
-def runStartupPlugins():
-    if config.enablePlugins:
-        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "startup"), "py"):
-            if not plugin in config.excludeStartupPlugins:
-                script = os.path.join(os.getcwd(), "plugins", "startup", "{0}.py".format(plugin))
-                config.mainWindow.execPythonFile(script)
 
 # HTTP Server
 from db.BiblesSqlite import BiblesSqlite

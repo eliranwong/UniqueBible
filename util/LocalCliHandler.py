@@ -1,4 +1,4 @@
-import re
+import re, config
 from util.TextUtil import TextUtil
 from util.RemoteCliMainWindow import RemoteCliMainWindow
 from util.TextCommandParser import TextCommandParser
@@ -10,6 +10,10 @@ class LocalCliHandler:
     def __init__(self):
         self.textCommandParser = TextCommandParser(RemoteCliMainWindow())
         self.crossPlatform = CrossPlatform()
+        self.html = ""
+
+    def execPythonFile(self, script):
+        self.crossPlatform.execPythonFile(script)
 
     def getContent(self, command):
         if command.lower() == ".help":
@@ -17,6 +21,7 @@ class LocalCliHandler:
         view, content, dict = self.textCommandParser.parser(command, "cli")
         if content:
             self.crossPlatform.addHistoryRecord(view, command)
+            self.html = content
         else:
             content = "Command was processed!"
         return TextUtil.htmlToPlainText(content).strip()
