@@ -31,6 +31,7 @@ initialCommand = " ".join(sys.argv[1:]).strip()
 docker = False
 config.noQt = False
 config.cli = False
+config.enableCli = True if initialCommand.lower() in ("cli", "gui", "docker") else False
 if initialCommand == "docker":
     docker = True
     initialCommand = "gui"
@@ -67,7 +68,6 @@ initialCommandIsPython = True if initialCommand.endswith(".py") and os.path.isfi
 
 # Check for dependencies and other essential elements
 os.environ["PYTHONUNBUFFERED"] = "1"
-config.enableCli = True if initialCommand.lower() in ("cli", "gui", "docker") else False
 from util.checkup import *
 
 if initialCommand == "setup-only":
