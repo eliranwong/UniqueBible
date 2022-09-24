@@ -1,3 +1,6 @@
+Changes in 31.87:
+* Attempt terminal mode if Qt library is not installed.
+
 Changes in 31.86:
 * Fixed UBA startup without an argument.
 

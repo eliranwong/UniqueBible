@@ -450,6 +450,11 @@ def isHaversineInstalled():
     except:
         return False
 
+def runTerminalMode():
+    print("'{0}' is not installed!\nTo run UBA with graphical interface, install 'PySide6', 'PySide2' or 'PyQt5' first!".format(feature))
+    print("attempting to run UBA in terminal mode ...")
+    os.system("{0} {1} terminal".format(sys.executable, "uba.py"))
+
 # Set config values for optional features
 def setInstallConfig(module, isInstalled):
     #if module == "PyPDF2":
@@ -576,9 +581,7 @@ for module, feature, isInstalled in required or config.updateDependenciesOnStart
                 else:
                     #print("Required feature '{0}' is not enabled.\nInstall either 'PySide2' or 'PyQt5' first!".format(feature, module))
                     #exit(1)
-                    print("'{0}' is not installed!\nTo run UBA with graphical interface, install 'PySide6', 'PySide2' or 'PyQt5' first!".format(feature))
-                    print("attempting to run UBA in terminal mode ...")
-                    os.system("{0} {1} terminal".format(sys.executable, "uba.py"))
+                    runTerminalMode()
                     exit(0)
             else:
                 config.qtLibrary == "pyqt5"
@@ -597,16 +600,22 @@ for module, feature, isInstalled in required or config.updateDependenciesOnStart
                     os.environ["QT_API"] = config.qtLibrary
                     print("Installed!")
                 else:
-                    print("Required feature '{0}' is not enabled.\nInstall either 'PySide2' or 'PyQt5' first!".format(feature, module))
-                    exit(1)
+                    #print("Required feature '{0}' is not enabled.\nInstall either 'PySide2' or 'PyQt5' first!".format(feature, module))
+                    #exit(1)
+                    runTerminalMode()
+                    exit(0)
             else:
                 config.qtLibrary == "pyside2"
                 os.environ["QT_API"] = config.qtLibrary
         if isInstalled():
             print("Installed!")
         else:
-            print("Required feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first!".format(feature, module))
-            exit(1)
+            if module == "PySide6":
+                runTerminalMode()
+                exit(0)
+            else:
+                print("Required feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first!".format(feature, module))
+                exit(1)
 
 disabledModules = []
 if os.path.exists("disabled_modules.txt"):
