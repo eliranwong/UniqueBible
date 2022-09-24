@@ -6,6 +6,7 @@ from util.ThirdParty import Converter
 from util.CrossPlatform import CrossPlatform
 from util.DatafileLocation import DatafileLocation
 from util.TextUtil import TextUtil
+from util.WebtopUtil import WebtopUtil
 from db.BiblesSqlite import Bible
 
 
@@ -121,6 +122,29 @@ class RemoteCliMainWindow(CrossPlatform):
                         playlist.append((audioFile, audioFilePath))
         return playlist
         #return [("NET_1_1_3.mp3", "audio/bibles/NET-UK/default/1_1/NET_1_1_3.mp3"), ("NET_1_1_4.mp3", "audio/bibles/NET-UK/default/1_1/NET_1_1_4.mp3")]
+
+    def playAudioBibleFilePlayList(self, playlist, gui=False):
+        # do not remove the dummy gui argument for this method
+        self.closeMediaPlayer()
+        if playlist:
+            if config.macVlc:
+                audioFiles = '" "'.join(playlist)
+                audioFiles = '"{0}"'.format(audioFiles)
+                WebtopUtil.run(f"{config.macVlc} {audioFiles}")
+            elif WebtopUtil.isPackageInstalled("vlc"):
+                audioFiles = '" "'.join(playlist)
+                audioFiles = '"{0}"'.format(audioFiles)
+                #vlcCmd = "vlc" if gui else "cvlc"
+                # always use cvlc
+                vlcCmd = "cvlc"
+                #os.system("pkill vlc")
+                WebtopUtil.run(f"{vlcCmd} {audioFiles}")
+
+    def closeMediaPlayer(self):
+        if config.macVlc:
+            os.system("pkill VLC")
+        if WebtopUtil.isPackageInstalled("vlc") and WebtopUtil.isPackageInstalled("pkill"):
+            os.system("pkill vlc")
 
     def enforceCompareParallelButtonClicked(self):
         config.enforceCompareParallel = not config.enforceCompareParallel

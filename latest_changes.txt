@@ -1,3 +1,6 @@
+Changes in 31.89:
+* Added support of read::: command in terminal mode.
+
 Changes in 31.87, 31.88:
 * Attempt terminal mode if Qt library is not installed.
 
