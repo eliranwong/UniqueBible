@@ -267,6 +267,10 @@ class ConfigUtil:
         # Google Cloud text-to-speech speed"""
         if not hasattr(config, "gcttsSpeed"):
             config.gcttsSpeed = 1.0
+        config.help["vlcSpeed"] = """
+        # VLC player playback speed"""
+        if not hasattr(config, "vlcSpeed"):
+            config.vlcSpeed = 1.0
         config.help["macOSttsSpeed"] = """
         # Apple macOS text-to-speech speaking rate"""
         if not hasattr(config, "macOSttsSpeed"):
@@ -1434,6 +1438,7 @@ class ConfigUtil:
             ("espeakSpeed", config.espeakSpeed),
             ("qttsSpeed", config.qttsSpeed),
             ("gcttsSpeed", config.gcttsSpeed),
+            ("vlcSpeed", config.vlcSpeed),
             ("macOSttsSpeed", config.macOSttsSpeed),
             ("useLangDetectOnTts", config.useLangDetectOnTts),
             ("ttsDefaultLangauge", config.ttsDefaultLangauge),

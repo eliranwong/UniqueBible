@@ -130,7 +130,7 @@ class RemoteCliMainWindow(CrossPlatform):
             if config.macVlc:
                 audioFiles = '" "'.join(playlist)
                 audioFiles = '"{0}"'.format(audioFiles)
-                WebtopUtil.run(f"{config.macVlc} {audioFiles}")
+                WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFiles}")
             elif WebtopUtil.isPackageInstalled("vlc"):
                 audioFiles = '" "'.join(playlist)
                 audioFiles = '"{0}"'.format(audioFiles)
@@ -138,7 +138,7 @@ class RemoteCliMainWindow(CrossPlatform):
                 # always use cvlc
                 vlcCmd = "cvlc"
                 #os.system("pkill vlc")
-                WebtopUtil.run(f"{vlcCmd} {audioFiles}")
+                WebtopUtil.run(f"{vlcCmd} --rate {config.vlcSpeed} {audioFiles}")
 
     def closeMediaPlayer(self):
         if config.macVlc:

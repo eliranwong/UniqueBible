@@ -5451,7 +5451,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             if config.macVlc and not config.forceUseBuiltinMediaPlayer:
                 os.system("pkill VLC")
                 if filename:
-                    WebtopUtil.run(f'{config.macVlc} "{filename}"')
+                    WebtopUtil.run(f'{config.macVlc} --rate {config.vlcSpeed} "{filename}"')
                 else:
                     WebtopUtil.run(config.macVlc)
             elif WebtopUtil.isPackageInstalled("vlc") and not config.forceUseBuiltinMediaPlayer:
@@ -5508,13 +5508,13 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         if config.macVlc and not config.forceUseBuiltinMediaPlayer:
             audioFiles = '" "'.join(playlist)
             audioFiles = '"{0}"'.format(audioFiles)
-            WebtopUtil.run(f"{config.macVlc} {audioFiles}")
+            WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFiles}")
         elif playlist and WebtopUtil.isPackageInstalled("vlc") and not config.forceUseBuiltinMediaPlayer:
             audioFiles = '" "'.join(playlist)
             audioFiles = '"{0}"'.format(audioFiles)
             vlcCmd = "vlc" if gui else "cvlc"
             #os.system("pkill vlc")
-            WebtopUtil.run(f"{vlcCmd} {audioFiles}")
+            WebtopUtil.run(f"{vlcCmd} --rate {config.vlcSpeed} {audioFiles}")
         elif playlist and config.isVlcInstalled:
             from gui.VlcPlayer import VlcPlayer
             if self.vlcPlayer is not None:
@@ -5537,7 +5537,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
                     if file:
                         fileList.append(file)
                 audioFiles = ' '.join(fileList)
-                WebtopUtil.run(f"{config.macVlc} {audioFiles}")
+                WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFiles}")
             elif WebtopUtil.isPackageInstalled("vlc") and not config.forceUseBuiltinMediaPlayer:
                 fileList = []
                 for listItem in playlist:
@@ -5547,7 +5547,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
                         fileList.append(file)
                 audioFiles = ' '.join(fileList)
                 #os.system("pkill vlc")
-                WebtopUtil.run(f"vlc {audioFiles}")
+                WebtopUtil.run(f"vlc --rate {config.vlcSpeed} {audioFiles}")
             elif config.isVlcInstalled:
                 from gui.VlcPlayer import VlcPlayer
                 if self.vlcPlayer is not None:

@@ -1,3 +1,7 @@
+Changes in 31.91:
+* Support setting vlc playback speed, via config.vlcSpeed, e.g. run the following line to change the playback rate to 2.0:
+    _setconfig:::vlcSpeed:::2.0
+
 Changes in 31.90:
 * Added command keyword autocompletion in terminal mode.
 * Added command keyword _whatis::: to display brief description about a command keyword, e.g. _whatis:::BIBLE
