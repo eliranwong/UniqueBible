@@ -1,3 +1,6 @@
+Changes in 31.86:
+* Fixed UBA startup without an argument.
+
 Changes in 31.83, 31.84, 31.85:
 * Added "terminal" mode.
     Users can now run in terminal, python3 uba.py terminal
