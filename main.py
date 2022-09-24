@@ -98,6 +98,8 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     config.runMode = "terminal"
     print("Running Unique Bible App in terminal mode ...")
 
+    if sys.platform in ("linux", "darwin"):
+        import readline
     from util.LocalCliHandler import LocalCliHandler
     cli = LocalCliHandler()
 
