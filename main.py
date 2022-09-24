@@ -98,10 +98,16 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     config.runMode = "terminal"
     print("Running Unique Bible App in terminal mode ...")
 
-    if sys.platform in ("linux", "darwin"):
-        import readline
     from util.LocalCliHandler import LocalCliHandler
     cli = LocalCliHandler()
+
+    if config.isPrompt_toolkit:
+        from prompt_toolkit import PromptSession
+        from prompt_toolkit.completion import WordCompleter
+        command_completer = WordCompleter(cli.getTextCommandSuggestion(), ignore_case=True)
+        session = PromptSession()
+    elif sys.platform in ("linux", "darwin"):
+        import readline
 
     command = " ".join(sys.argv[2:]).strip()
     if not command:
@@ -113,7 +119,14 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         try:
             print("--------------------")
             print("Enter an UBA command (or '.help', '.quit', '.restart'):")
-            command = input("> ").strip()
+            # User command input
+            if config.isPrompt_toolkit:
+                command = session.prompt("> ", completer=command_completer).strip()
+            elif sys.platform in ("linux", "darwin"):
+                import readline
+                command = input("> ").strip()
+            else:
+                command = input("> ").strip()
             if command:
                 content = cli.getContent(command)
                 if content:

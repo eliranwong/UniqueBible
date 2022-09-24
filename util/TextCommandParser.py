@@ -814,9 +814,15 @@ class TextCommandParser:
             # Usage: _searchword:::[1=OT, 2=NT]:::[wordID]
             # e.g. _searchword:::1:::1"""),
             "_harmony": (self.textHarmony, """
-            # [KEYWORD] _harmony"""),
+            # [KEYWORD] _harmony
+            # Feature - Display verses from a harmony collection.
+            # Usage - _harmony:::[collection_number].[entry_number]
+            # e.g. _harmony:::4.1"""),
             "_promise": (self.textPromise, """
-            # [KEYWORD] _promise"""),
+            # [KEYWORD] _promise
+            # Feature - Display verses from a bible collection.
+            # Usage - _promise:::[collection_number].[entry_number]
+            # e.g. _promise:::4.1"""),
             "_paste": (self.pasteFromClipboard, """
             # [KEYWORD] _paste
             # e.g. _paste:::"""),
@@ -827,18 +833,18 @@ class TextCommandParser:
             "_highlight": (self.highlightVerse, """
             # [KEYWORD] _highlight
             # Feature - Highlight a verse
-            # Usage - _HIGHLIGHT:::[code]:::[BIBLE_REFERENCE(S)]
+            # Usage - _highlight:::[code]:::[BIBLE_REFERENCE(S)]
             # Examples:
-            # e.g. _HIGHLIGHT:::hl1:::John 3:16
-            # e.g. _HIGHLIGHT:::hl2:::John 3:16
-            # e.g. _HIGHLIGHT:::ul1:::John 3:16
-            # e.g. _HIGHLIGHT:::delete:::John 3:16"""),
+            # e.g. _highlight:::hl1:::John 3:16
+            # e.g. _highlight:::hl2:::John 3:16
+            # e.g. _highlight:::ul1:::John 3:16
+            # e.g. _highlight:::delete:::John 3:16"""),
             "_savepdfcurrentpage": (self.savePdfCurrentPage, """
             # [KEYWORD] _savePdfCurrentPage
             # Feature - Save the current page of PDF
-            # Usage - _SAVEPDFCURRENTPAGE:::[page]
+            # Usage - _savePdfCurrentPage:::[page]
             # Example:
-            # e.g. _SAVEPDFCURRENTPAGE:::100"""),
+            # e.g. _savePdfCurrentPage:::100"""),
             "_setconfig": (self.textSetConfig, """
             # [KEYWORD] _setconfig
             # Feature - Set a config value in config.py.
@@ -858,6 +864,12 @@ class TextCommandParser:
             # Example:
             # _copy:::Unique Bible App
             """),
+            "_whatis": (self.textWhatIs, """
+            # [KEYWORD] _whatis
+            # Feature - Display brief description about a command keyword
+            # Usage - _whatis:::[command_keyword]
+            # e.g. _whatis:::bible
+            # e.g. _whatis:::read"""),
         }
         for key, value in BibleBooks.abbrev["eng"].items():
             book = value[0]
@@ -2805,6 +2817,16 @@ class TextCommandParser:
     def pasteFromClipboard(self, command, source):
         self.parent.pasteFromClipboard()
         return ("", "", {})
+
+    # _whatIs:::
+    def textWhatIs(self, command, source):
+        try:
+            command = command.lower().strip()
+            content = self.interpreters[command][-1]
+            content = re.sub("            #", "<br>#", content)
+            return ("study", content, {})
+        except:
+            return self.invalidCommand()
 
     # _htmlimage:::
     def textHtmlImage(self, command, source):

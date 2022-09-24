@@ -1,3 +1,7 @@
+Changes in 31.90:
+* Added command keyword autocompletion in terminal mode.
+* Added command keyword _whatis::: to display brief description about a command keyword, e.g. _whatis:::BIBLE
+
 Changes in 31.89:
 * Added support of read::: command in terminal mode.
 * Support readline in terminal mode.

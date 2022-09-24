@@ -3,6 +3,7 @@ from util.TextUtil import TextUtil
 from util.RemoteCliMainWindow import RemoteCliMainWindow
 from util.TextCommandParser import TextCommandParser
 from util.CrossPlatform import CrossPlatform
+from util.BibleBooks import BibleBooks
 
 class LocalCliHandler:
 
@@ -19,6 +20,12 @@ class LocalCliHandler:
         else:
             content = "Command was processed!"
         return TextUtil.htmlToPlainText(content).strip()
+
+    def getTextCommandSuggestion(self):
+        # Text command autocompletion/autosuggest
+        textCommands = [key + ":::" for key in self.textCommandParser.interpreters.keys()]
+        bibleBooks = BibleBooks().getStandardBookAbbreviations()
+        return ['.help', '.quit', '.restart'] + textCommands + bibleBooks
 
     def getCommandDocumentation(self):
         print("\nUBA commands:")

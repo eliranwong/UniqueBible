@@ -436,6 +436,13 @@ def isPydnsblInstalled():
     except:
         return False
 
+def isPrompt_toolkit():
+    try:
+        from prompt_toolkit import PromptSession
+        return True
+    except:
+        return False
+
 def isGmplotInstalled():
     try:
         import gmplot
@@ -529,6 +536,8 @@ def setInstallConfig(module, isInstalled):
         config.isGmplotInstalled = isInstalled
     elif module in ("haversine", "-U haversine", "--upgrade haversine"):
         config.isHaversineInstalled = isInstalled
+    elif module in ("prompt_toolkit", "-U prompt_toolkit", "--upgrade prompt_toolkit"):
+        config.isPrompt_toolkit = isInstalled
 
 # Specify qtLibrary for particular os
 if config.docker and config.usePySide2onWebtop:
@@ -653,6 +662,7 @@ optional = [
     ("pydnsbl", "Checks if ip is listed in anti-spam dns blacklists.", isPydnsblInstalled),
     ("gmplot", "Mark locations on Google Maps", isGmplotInstalled),
     ("haversine", "Calculate the distance between two points", isHaversineInstalled),
+    ("prompt_toolkit", "Command Line Interaction", isPrompt_toolkit),
 ] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -686,6 +696,7 @@ optional = [
     ("pyluach", "Hebrew (Jewish) calendar dates", isPyluachInstalled),
     ("gmplot", "Mark locations on Google Maps", isGmplotInstalled),
     ("haversine", "Calculate the distance between two points", isHaversineInstalled),
+    ("prompt_toolkit", "Command Line Interaction", isPrompt_toolkit),
 ]
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))
