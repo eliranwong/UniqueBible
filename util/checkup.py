@@ -452,8 +452,12 @@ def isHaversineInstalled():
 
 def runTerminalMode():
     print("'{0}' is not installed!\nTo run UBA with graphical interface, install 'PySide6', 'PySide2' or 'PyQt5' first!".format(feature))
-    print("attempting to run UBA in terminal mode ...")
-    os.system("{0} {1} terminal".format(sys.executable, "uba.py"))
+    if config.enableCli:
+        print("attempting to run UBA in terminal mode ...")
+        os.system("{0} {1} terminal".format(sys.executable, "uba.py"))
+        exit(0)
+    else:
+        exit(1)
 
 # Set config values for optional features
 def setInstallConfig(module, isInstalled):
@@ -582,7 +586,6 @@ for module, feature, isInstalled in required or config.updateDependenciesOnStart
                     #print("Required feature '{0}' is not enabled.\nInstall either 'PySide2' or 'PyQt5' first!".format(feature, module))
                     #exit(1)
                     runTerminalMode()
-                    exit(0)
             else:
                 config.qtLibrary == "pyqt5"
                 os.environ["QT_API"] = config.qtLibrary
@@ -603,7 +606,6 @@ for module, feature, isInstalled in required or config.updateDependenciesOnStart
                     #print("Required feature '{0}' is not enabled.\nInstall either 'PySide2' or 'PyQt5' first!".format(feature, module))
                     #exit(1)
                     runTerminalMode()
-                    exit(0)
             else:
                 config.qtLibrary == "pyside2"
                 os.environ["QT_API"] = config.qtLibrary
@@ -612,7 +614,6 @@ for module, feature, isInstalled in required or config.updateDependenciesOnStart
         else:
             if module == "PySide6":
                 runTerminalMode()
-                exit(0)
             else:
                 print("Required feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first!".format(feature, module))
                 exit(1)
