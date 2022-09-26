@@ -13,11 +13,6 @@ try:
 except:
     isBeautifulsoup4Installed = False
 
-if config.isColoramaInstalled:
-    from colorama import init
-    init()
-    from colorama import Fore, Back, Style
-
 class TextUtil:
 
     @staticmethod
@@ -79,6 +74,9 @@ class TextUtil:
             content = re.sub("<br/?>|<br>", "\n", content)
             content = re.sub('<[^<]+?>', '', content)
         if config.runMode == "terminal" and config.isColoramaInstalled:
+            from colorama import init
+            init()
+            from colorama import Fore, Back, Style
             searchReplace = (
                 ("「Fore.CYAN」", Fore.CYAN),
                 ("「Back.YELLOW」「Fore.BLACK」", f"{Back.YELLOW}{Fore.BLACK}"),
