@@ -50,7 +50,7 @@ class TextUtil:
                 ("(<ref>|<ref .*?>)", r"\1「Fore.CYAN」"),
                 ("(<vid .*?>)", r"\1「Fore.CYAN」"),
                 ("(</ref>|</vid>)", r"\1「Fore.RESET」"),
-                ("<z>", "「Back.YELLOW」「Fore.BLACK」"),
+                ("<z>", "「Back.YELLOW」「Fore.BLUE」"),
                 ("</z>", "「Style.RESET_ALL」"),
             )
             for search, replace in searchReplace:
@@ -79,7 +79,7 @@ class TextUtil:
             from colorama import Fore, Back, Style
             searchReplace = (
                 ("「Fore.CYAN」", Fore.CYAN),
-                ("「Back.YELLOW」「Fore.BLACK」", f"{Back.YELLOW}{Fore.BLACK}"),
+                ("「Back.YELLOW」「Fore.BLUE」", f"{Back.YELLOW}{Fore.BLUE}"),
                 ("[ ]*「Fore.RESET」", Fore.RESET),
                 ("[ ]*「Back.RESET」", Back.RESET),
                 ("[ ]*「Style.RESET_ALL」", Style.RESET_ALL),
