@@ -73,7 +73,7 @@ class TextUtil:
         else:
             content = re.sub("<br/?>|<br>", "\n", content)
             content = re.sub('<[^<]+?>', '', content)
-        if config.runMode == "terminal" and config.isColoramaInstalled:
+        if config.runMode == "terminal" and config.isColoramaInstalled and colours:
             from colorama import init
             init()
             from colorama import Fore, Back, Style

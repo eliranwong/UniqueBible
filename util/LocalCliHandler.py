@@ -40,6 +40,7 @@ class LocalCliHandler:
             ".share": ("copy a web link for sharing", self.share),
             ".copy": ("copy the last loaded content", self.copy),
             ".copyhtml": ("copy the last loaded content in html format", self.copyHtml),
+            ".find": ("find a string in the last loaded content", self.find),
         }
 
     def execPythonFile(self, script):
@@ -279,3 +280,14 @@ class LocalCliHandler:
     def noClipboardUtility(self):
         print("Clipboard utility 'pyperclip' is not installed.")
         return ""
+
+    def find(self):
+        searchInput = input("Enter search item here: ").strip()
+        if config.isColoramaInstalled:
+            from colorama import init
+            init()
+            from colorama import Fore, Back, Style
+            content = re.sub(r"({0})".format(searchInput), r"{0}{1}\1{2}".format(Back.RED, Fore.WHITE, Style.RESET_ALL), self.plainText)
+        else:
+            content = re.sub(r"({0})".format(searchInput), r"[[[ \1 ]]]", self.plainText)
+        return content

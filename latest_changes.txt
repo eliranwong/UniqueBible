@@ -1,3 +1,6 @@
+Changes in 31.95:
+* Added .find command to terminal mode.
+
 Changes in 31.94:
 * Added .share, .copy, .copyhtml commands to terminal mode.
 
