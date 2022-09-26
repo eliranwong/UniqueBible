@@ -1,5 +1,5 @@
 import re, html, base64, os, config
-
+import urllib.parse
 try:
     import html_text
     isHtmlTextInstalled = True
@@ -49,7 +49,7 @@ class TextUtil:
             searchReplace = (
                 ("(<ref>|<ref .*?>)", r"\1「Fore.CYAN」"),
                 ("(<vid .*?>)", r"\1「Fore.CYAN」"),
-                ("</ref>|</vid>", "</ref>「Fore.RESET」"),
+                ("(</ref>|</vid>)", r"\1「Fore.RESET」"),
                 ("<z>", "「Back.YELLOW」「Fore.BLACK」"),
                 ("</z>", "「Style.RESET_ALL」"),
             )
@@ -59,9 +59,9 @@ class TextUtil:
         return text
 
     @staticmethod
-    def htmlToPlainText(content):
+    def htmlToPlainText(content, colours=True):
         # Format text colours
-        if config.runMode == "terminal" and config.isColoramaInstalled:
+        if config.runMode == "terminal" and config.isColoramaInstalled and colours:
             content = TextUtil.colourTerminalText(content)
         if isHtmlTextInstalled:
             content = html_text.extract_text(content)
@@ -146,6 +146,19 @@ class TextUtil:
     @staticmethod
     def getDigits(text):
         return ''.join(c for c in text if c.isdigit())
+
+    # Generate a web link for sharing
+    @staticmethod
+    def getWeblink(command):
+        # https://stackoverflow.com/questions/40557606/how-to-url-encode-in-python-3
+        command = urllib.parse.quote(command)
+        htmlPages = {
+            "ENG": "index.html",
+            "TC": "traditional.html",
+            "SC": "simplified.html",
+        }
+        htmlPage = "" if config.webUBAServer.endswith(".html") else "/{0}".format(htmlPages.get(htmlPages[config.standardAbbreviation], "index.html"))
+        return "{0}{1}?cmd={2}".format(config.webUBAServer, htmlPage, command)
 
     # Remove Hebrew vowels or Greek accents
     @staticmethod

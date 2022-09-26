@@ -99,7 +99,9 @@ class ConfigUtil:
         if not hasattr(config, "httpServerViewerGlobalMode"):
             config.httpServerViewerGlobalMode = False
         config.help["webUBAServer"] = """
-        # Specify a web server to work with the share links."""
+        # Specify a web server to work with the share links.
+        # Default is 'https://bible.gospelchurch.uk'
+        # Users can specify a private page, e.g. 'https://ubaserver.com/private.html'"""
         if not hasattr(config, "webUBAServer"):
             config.webUBAServer = "https://bible.gospelchurch.uk"
         config.help["httpServerViewerBaseUrl"] = """

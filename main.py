@@ -108,7 +108,14 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
 
     import pydoc
     from util.LocalCliHandler import LocalCliHandler
-    config.mainWindow = LocalCliHandler()
+
+    # get initial command
+    command = " ".join(sys.argv[2:]).strip()
+    if not command:
+        history = config.history["main"]
+        command = history[-1]
+
+    config.mainWindow = LocalCliHandler(command)
     runStartupPlugins()
 
     if config.isPrompt_toolkitInstalled:
@@ -119,10 +126,6 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     elif sys.platform in ("linux", "darwin"):
         import readline
 
-    command = " ".join(sys.argv[2:]).strip()
-    if not command:
-        history = config.history["main"]
-        command = history[-1]
     if command:
         print(config.mainWindow.getContent(command))
     while not command.lower() in (".quit", ".restart"):

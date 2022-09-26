@@ -1,4 +1,5 @@
 import re, config, pprint, os
+import urllib.parse
 from util.TextUtil import TextUtil
 from util.RemoteCliMainWindow import RemoteCliMainWindow
 from util.TextCommandParser import TextCommandParser
@@ -11,13 +12,13 @@ from db.BiblesSqlite import Bible
 
 class LocalCliHandler:
 
-    def __init__(self):
+    def __init__(self, command="John 3:16"):
         self.textCommandParser = TextCommandParser(RemoteCliMainWindow())
         self.crossPlatform = CrossPlatform()
         self.crossPlatform.setupResourceLists()
         self.html = "<ref >Unique Bible App</ref>"
         self.plainText = "Unique Bible App"
-        self.command = "John 3:16"
+        self.command = command
         self.dotCommands = {
             ".help": ("display help menu", self.help),
             ".togglepager": ("toggle paging for text output", self.togglePager),
@@ -32,10 +33,13 @@ class LocalCliHandler:
             ".chapters": ("display bible chapter list", self.chapters),
             ".verses": ("display bible verse list", self.verses),
             ".download": ("display available downloads", self.download),
-            ".paste": ("run clipboard text as command", self.paste),
             ".data": ("display installed data", self.data),
             ".commentaries": ("display installed commentaries", self.commentaries),
             ".referencebooks": ("display installed reference books", self.referencebooks),
+            ".paste": ("run clipboard text as command", self.paste),
+            ".share": ("copy a web link for sharing", self.share),
+            ".copy": ("copy the last loaded content", self.copy),
+            ".copyhtml": ("copy the last loaded content in html format", self.copyHtml),
         }
 
     def execPythonFile(self, script):
@@ -55,7 +59,7 @@ class LocalCliHandler:
             content = "Command processed!"
         # Convert html to plain text
         plainText = TextUtil.htmlToPlainText(content).strip()
-        self.plainText = plainText
+        self.plainText = "" if content == "Command processed!" else plainText
         # Update main text, b, c, v
         references = self.textCommandParser.extractAllVerses(command)
         if references:
@@ -244,5 +248,34 @@ class LocalCliHandler:
             import pyperclip
             command = pyperclip.paste()
             return self.getContent(command)
-        else:
-            return "Clipboard utility 'pyperclip' is not installed."
+        return self.noClipboardUtility()
+
+    def share(self):
+        if config.isPyperclipInstalled:
+            import pyperclip
+            weblink = TextUtil.getWeblink(self.command)
+            pyperclip.copy(weblink)
+            print(f"The following link is copied to clipboard for sharing:\n{weblink}")
+            return ""
+        return self.noClipboardUtility()
+
+    def copy(self):
+        if config.isPyperclipInstalled:
+            import pyperclip
+            plainText = TextUtil.htmlToPlainText(self.html, False).strip()
+            pyperclip.copy(plainText)
+            print("Content is copied to clipboard.")
+            return ""
+        return self.noClipboardUtility()
+
+    def copyHtml(self):
+        if config.isPyperclipInstalled:
+            import pyperclip
+            pyperclip.copy(self.html)
+            print("HTML content is copied to clipboard.")
+            return ""
+        return self.noClipboardUtility()
+
+    def noClipboardUtility(self):
+        print("Clipboard utility 'pyperclip' is not installed.")
+        return ""

@@ -3410,16 +3410,7 @@ class MainWindow(QMainWindow):
         self.showAllChaptersMenu()
 
     def getOnlineLink(self):
-        command = self.textCommandLineEdit.text()
-        # https://stackoverflow.com/questions/40557606/how-to-url-encode-in-python-3
-        command = urllib.parse.quote(command)
-        htmlPages = {
-            "ENG": "index.html",
-            "TC": "traditional.html",
-            "SC": "simplified.html",
-        }
-        htmlPage = "" if config.webUBAServer.endswith(".html") else "/{0}".format(htmlPages.get(htmlPages[config.standardAbbreviation], "index.html"))
-        return "{0}{1}?cmd={2}".format(config.webUBAServer, htmlPage, command)
+        return TextUtil.getWeblink(self.textCommandLineEdit.text())
 
     def goOnline(self):
         webbrowser.open(self.getOnlineLink())
