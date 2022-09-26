@@ -82,6 +82,10 @@ class ConfigUtil:
         # Use PySide6 as Qt Library, even config.qtLibrary is set to a value other than 'pyside6'."""
         if not hasattr(config, "usePySide6onMacOS"):
             config.usePySide6onMacOS = True
+        config.help["enableTerminalPager"] = """
+        # To enable paging of terminal output when UBA runs in terminal mode."""
+        if not hasattr(config, "enableTerminalPager"):
+            config.enableTerminalPager = False
         config.help["telnetServerPort"] = """
         # To specify the port used by telnet-server."""
         if not hasattr(config, "telnetServerPort"):
@@ -1402,6 +1406,7 @@ class ConfigUtil:
             ("qtLibrary", config.qtLibrary),
             ("usePySide2onWebtop", config.usePySide2onWebtop),
             ("usePySide6onMacOS", config.usePySide6onMacOS),
+            ("enableTerminalPager", config.enableTerminalPager),
             ("telnetServerPort", config.telnetServerPort),
             ("httpServerUbaFile", config.httpServerUbaFile),
             ("httpServerPort", config.httpServerPort),

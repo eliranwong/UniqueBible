@@ -104,8 +104,9 @@ def runStartupPlugins():
 # Local CLI
 if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     config.runMode = "terminal"
-    print("Running Unique Bible App in terminal mode ...")
+    print(f"Running Unique Bible App {config.version} in terminal mode ...")
 
+    import pydoc
     from util.LocalCliHandler import LocalCliHandler
     config.mainWindow = LocalCliHandler()
     runStartupPlugins()
@@ -126,25 +127,46 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         print(config.mainWindow.getContent(command))
     while not command.lower() in (".quit", ".restart"):
         try:
-            print("--------------------")
-            print("Enter an UBA command (or '.help', '.quit', '.restart'):")
+            config.mainWindow.initialDisplay()
             # User command input
             if config.isPrompt_toolkitInstalled:
-                command = session.prompt("> ", completer=command_completer).strip()
+                command = session.prompt(">>> ", completer=command_completer).strip()
             elif sys.platform in ("linux", "darwin"):
                 import readline
-                command = input("> ").strip()
+                command = input(">>> ").strip()
             else:
-                command = input("> ").strip()
+                command = input(">>> ").strip()
             if command:
                 content = config.mainWindow.getContent(command)
                 if content:
-                    print("--------------------")
-                    print(content)
+                    if config.enableTerminalPager:
+                        if platform.system() == "Windows":
+                            # When you use remote powershell and want to pipe a command on the remote windows server through a pager, piping through  out-host -paging works as desired. Piping through more when running the remote command is of no use: the entire text is displayed at once.
+                            try:
+                                pydoc.pipepager(content, cmd='out-host -paging')
+                            except:
+                                try:
+                                    pydoc.pipepager(content, cmd='more')
+                                except:
+                                    config.enableTerminalPager = False
+                                    print("--------------------")
+                                    print(content)
+                        else:
+                            try:
+                                # paging without colours
+                                #pydoc.pager(content)
+                                # paging with colours
+                                pydoc.pipepager(content, cmd='less -R')
+                            except:
+                                config.enableTerminalPager = False
+                                print("--------------------")
+                                print(content)
+                    else:
+                        print("--------------------")
+                        print(content)
         except:
             pass
 
-    print("Restarting ..." if command.lower() == ".restart" else "Closing ...")
     ConfigUtil.save()
     if command.lower() == ".restart":
         os.system("{0} {1} terminal".format(sys.executable, "uba.py"))

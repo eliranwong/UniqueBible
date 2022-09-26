@@ -894,8 +894,13 @@ class TextCommandParser:
             keyword = keyword.lower()
             if keyword in self.interpreters:
                 if self.isDatabaseInstalled(keyword):
-                    self.lastKeyword = keyword
-                    return self.interpreters[keyword][0](command, source)
+                    command = command.strip()
+                    if command:
+                        self.lastKeyword = keyword
+                        return self.interpreters[keyword][0](command, source)
+                    # TODO::: add exceptions later
+                    elif not keyword in ("xxxx",):
+                        return self.textWhatIs(keyword, source)
                 else:
                     return self.databaseNotInstalled(keyword)
             else:
@@ -2007,7 +2012,7 @@ class TextCommandParser:
 
     # STUDY:::
     def textStudy(self, command, source):
-        if config.openBibleInMainViewOnly:
+        if config.openBibleInMainViewOnly and not config.noQt:
             self.parent.enableStudyBibleButtonClicked()
         return self.textAnotherView(command, source, "study")
 
@@ -2851,6 +2856,8 @@ class TextCommandParser:
     def textCommentary(self, command, source):
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.commentaryText, command)
+        elif command.count(":::") == 1 and command.endswith(":::"):
+            command = "{0}{1}".format(command, self.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
         commandList = self.splitCommand(command)
         if " " in commandList[1]:
             verseList = self.extractAllVerses(commandList[1])

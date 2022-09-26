@@ -2431,6 +2431,22 @@ class BibleBooks:
                     break
         return books
 
+    def getStandardBookAbbreviation(self, bookNo, lang=None):
+        if lang is None:
+            lang = config.standardAbbreviation
+        standardAbbreviation = BibleBooks().booksMap.get(lang)
+        if standardAbbreviation:
+            return standardAbbreviation.get(str(bookNo), "")[0]
+        return ""
+
+    def getStandardBookFullName(self, bookNo, lang=None):
+        if lang is None:
+            lang = config.standardAbbreviation
+        standardAbbreviation = BibleBooks().booksMap.get(lang)
+        if standardAbbreviation:
+            return standardAbbreviation.get(str(bookNo), "")[-1]
+        return ""
+
     def __init__(self):
         import re
         if not BibleBooks.initialized:

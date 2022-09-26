@@ -1,4 +1,4 @@
-import os, config, zipfile, gdown, shutil, platform
+import os, config, zipfile, gdown, shutil, re
 
 from util.LanguageUtil import LanguageUtil
 from util.TextCommandParser import TextCommandParser
@@ -7,6 +7,7 @@ from util.CrossPlatform import CrossPlatform
 from util.DatafileLocation import DatafileLocation
 from util.TextUtil import TextUtil
 from util.WebtopUtil import WebtopUtil
+from util.FileUtil import FileUtil
 from db.BiblesSqlite import Bible
 
 
@@ -109,6 +110,40 @@ class RemoteCliMainWindow(CrossPlatform):
         else:
             return("main", "No file specified", {})
 
+    def getPlaylistFromHTML(self, html):
+        playlist = []
+        #searchPattern = """[Rr][Ee][Aa][Dd][Cc][Hh][Aa][Pp][Tt][Ee][Rr]:::([A-Za-z0-9]+?)\.([0-9]+?)\.([0-9]+?)[\."']"""
+        searchPattern = """_[Cc][Hh][Aa][Pp][Tt][Ee][Rr][Ss]:::([^\.>]+?)_([0-9]+?)\.([0-9]+?)["'].*onclick=["']rC\("""
+        found = re.search(searchPattern, html)
+        if found:
+            text, b, c = found[1], found[2], found[3]
+            text = FileUtil.getMP3TextFile(text)
+            playlist = RemoteCliMainWindow().playAudioBibleChapterVerseByVerse(text, b, c)
+        else:
+            searchPattern = """[Rr][Ee][Aa][Dd][Vv][Ee][Rr][Ss][Ee]:::([A-Za-z0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)["']"""
+            found = re.findall(searchPattern, html)
+            if found:
+                for entry in found:
+                    text, b, c, v = entry
+                    audioFolder = os.path.join("audio", "bibles", text, "default", "{1}_{2}".format(text, b, c))
+                    audioFile = "{0}_{1}_{2}_{3}.mp3".format(text, b, c, v)
+                    audioFilePath = os.path.join(audioFolder, audioFile)
+                    if os.path.isfile(audioFilePath):
+                        playlist.append(audioFilePath)
+            else:
+                searchPattern = """[Rr][Ee][Aa][Dd]([Ww][Oo][Rr][Dd]|[Ll][Ee][Xx][Ee][Mm][Ee]):::([A-Za-z0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)["']"""
+                found = re.findall(searchPattern, html)
+                if found:
+                    for entry in found:
+                        wordType, text, b, c, v, wordID = entry
+                        audioFolder = os.path.join("audio", "bibles", text, "default", "{1}_{2}".format(text, b, c))
+                        prefix = "lex_" if wordType.lower() == "lexeme" else ""
+                        audioFile = "{5}{0}_{1}_{2}_{3}_{4}.mp3".format(text, b, c, v, wordID, prefix)
+                        audioFilePath = os.path.join(audioFolder, audioFile)
+                        if os.path.isfile(audioFilePath):
+                            playlist.append(audioFilePath)
+        return playlist
+
     def playAudioBibleChapterVerseByVerse(self, text, b, c, startVerse=0):
         playlist = []
         folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
@@ -120,6 +155,9 @@ class RemoteCliMainWindow(CrossPlatform):
                     audioFilePath = os.path.join(folder, audioFile)
                     if os.path.isfile(audioFilePath):
                         playlist.append((audioFile, audioFilePath))
+        if config.runMode == "terminal":
+            playlist = [filepath for *_, filepath in playlist]
+            self.playAudioBibleFilePlayList(playlist)
         return playlist
         #return [("NET_1_1_3.mp3", "audio/bibles/NET-UK/default/1_1/NET_1_1_3.mp3"), ("NET_1_1_4.mp3", "audio/bibles/NET-UK/default/1_1/NET_1_1_4.mp3")]
 
@@ -141,10 +179,11 @@ class RemoteCliMainWindow(CrossPlatform):
                 WebtopUtil.run(f"{vlcCmd} --rate {config.vlcSpeed} {audioFiles}")
 
     def closeMediaPlayer(self):
-        if config.macVlc:
-            os.system("pkill VLC")
-        if WebtopUtil.isPackageInstalled("vlc") and WebtopUtil.isPackageInstalled("pkill"):
-            os.system("pkill vlc")
+        if WebtopUtil.isPackageInstalled("pkill"):
+            if config.macVlc:
+                os.system("pkill VLC")
+            if WebtopUtil.isPackageInstalled("vlc"):
+                os.system("pkill vlc")
 
     def enforceCompareParallelButtonClicked(self):
         config.enforceCompareParallel = not config.enforceCompareParallel

@@ -75,7 +75,7 @@ class RemoteCliHandler:
             elif len(command) > 0:
                 view, content, dict = textCommandParser.parser(command, "cli")
                 if not content:
-                    content = "Command was processed!"
+                    content = "Command processed!"
                 content = TextUtil.htmlToPlainText(content)
                 content = re.sub(r"\n", CRLF, content)
                 content = content.strip()

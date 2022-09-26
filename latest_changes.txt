@@ -1,3 +1,11 @@
+Changes in 31.93:
+Multiple improvements in terminal mode.
+* Fixed running readchapter:::, study::: command.
+* Added support of text coloring in terminal mode.
+* Added muliple dot command. For description, run ".dotcommands".
+* Support running clipboard text as command, via ".paste" command.
+* Support paging of long text.
+
 Changes in 31.92:
 * Terminal mode now supports startup plugins.
 

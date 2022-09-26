@@ -13,6 +13,11 @@ try:
 except:
     isBeautifulsoup4Installed = False
 
+if config.isColoramaInstalled:
+    from colorama import init
+    init()
+    from colorama import Fore, Back, Style
+
 class TextUtil:
 
     @staticmethod
@@ -42,7 +47,27 @@ class TextUtil:
             return re.sub("({0})".format(searchString), r"<z>\1</z>", text, flags=re.IGNORECASE)
 
     @staticmethod
+    def colourTerminalText(text):
+        if config.isColoramaInstalled:
+            # Reference: https://github.com/tartley/colorama/blob/master/colorama/ansi.py
+            # standard colours: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA,CYAN, WHITE, RESET
+            searchReplace = (
+                ("(<ref>|<ref .*?>)", r"\1「Fore.CYAN」"),
+                ("(<vid .*?>)", r"\1「Fore.CYAN」"),
+                ("</ref>|</vid>", "</ref>「Fore.RESET」"),
+                ("<z>", "「Back.YELLOW」「Fore.BLACK」"),
+                ("</z>", "「Style.RESET_ALL」"),
+            )
+            for search, replace in searchReplace:
+                #text = text.replace(search, replace)
+                text = re.sub(search, replace, text)
+        return text
+
+    @staticmethod
     def htmlToPlainText(content):
+        # Format text colours
+        if config.runMode == "terminal" and config.isColoramaInstalled:
+            content = TextUtil.colourTerminalText(content)
         if isHtmlTextInstalled:
             content = html_text.extract_text(content)
         elif isBeautifulsoup4Installed:
@@ -53,7 +78,25 @@ class TextUtil:
         else:
             content = re.sub("<br/?>|<br>", "\n", content)
             content = re.sub('<[^<]+?>', '', content)
-        content = re.sub("audiotrack ", "", content)
+        if config.runMode == "terminal" and config.isColoramaInstalled:
+            searchReplace = (
+                ("「Fore.CYAN」", Fore.CYAN),
+                ("「Back.YELLOW」「Fore.BLACK」", f"{Back.YELLOW}{Fore.BLACK}"),
+                ("[ ]*「Fore.RESET」", Fore.RESET),
+                ("[ ]*「Back.RESET」", Back.RESET),
+                ("[ ]*「Style.RESET_ALL」", Style.RESET_ALL),
+            )
+            for search, replace in searchReplace:
+                #content = content.replace(search, replace)
+                content = re.sub(search, replace, content)
+
+        searchReplace = (
+            (" audiotrack", ""),
+            (" [ ]+?([^ ])", r" \1"),
+        )
+        for search, replace in searchReplace:
+            #content = content.replace(search, replace)
+            content = re.sub(search, replace, content)
         return content
 
     @staticmethod

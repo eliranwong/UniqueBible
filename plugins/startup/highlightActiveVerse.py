@@ -1,13 +1,16 @@
 import config, re
 
+terminalTextStart = "「Back.YELLOW」「Fore.BLACK」" if config.runMode == "terminal" else ""
+terminalTextEnd = "「Style.RESET_ALL」" if config.runMode == "terminal" else ""
+
 def highlightActiveVerseMain(text):
     colour = config.darkThemeActiveVerseColor if config.theme in ("dark", "night") else config.lightThemeActiveVerseColor
     searchReplace = (
         # underline
         #('(<vid id="v{0}\.{1}\.{2}".*?</vid>)(.*?)</verse>'.format(config.mainB, config.mainC, config.mainV), r"\1<u>\2</u></verse>"),
         # color
-        ("(<span id='s{0}\.{1}\.{2}'.*?>)(.*?)</span>".format(config.mainB, config.mainC, config.mainV), r"\1<span style='color: {0};'>\2</span></span>".format(colour)),
-        ('(<vid id="v{0}\.{1}\.{2}".*?</vid>)(.*?)</verse>'.format(config.mainB, config.mainC, config.mainV), r"\1<span style='color: {0};'>\2</span></verse>".format(colour)),
+        ("(<span id='s{0}\.{1}\.{2}'.*?>)(.*?)</span>".format(config.mainB, config.mainC, config.mainV), r"\1<span style='color: {0};'>{1}\2{2}</span></span>".format(colour, terminalTextStart, terminalTextEnd)),
+        ('(<vid id="v{0}\.{1}\.{2}".*?</vid>)(.*?)</verse>'.format(config.mainB, config.mainC, config.mainV), r"\1<span style='color: {0};'>{1}\2{2}</span></verse>".format(colour, terminalTextStart, terminalTextEnd)),
     )
     for search, replace in searchReplace:
         text = re.sub(search, replace, text)
@@ -19,8 +22,8 @@ def highlightActiveVerseStudy(text):
         # underline
         #('(<vid id="v{0}\.{1}\.{2}".*?</vid>)(.*?)</verse>'.format(config.studyB, config.studyC, config.studyV), r"\1<u>\2</u></verse>"),
         # color
-        ("(<span id='s{0}\.{1}\.{2}'.*?>)(.*?)</span>".format(config.studyB, config.studyC, config.studyV), r"\1<span style='color: {0};'>\2</span></span>".format(colour)),
-        ('(<vid id="v{0}\.{1}\.{2}".*?</vid>)(.*?)</verse>'.format(config.studyB, config.studyC, config.studyV), r"\1<span style='color: {0};'>\2</span></verse>".format(colour)),
+        ("(<span id='s{0}\.{1}\.{2}'.*?>)(.*?)</span>".format(config.studyB, config.studyC, config.studyV), r"\1<span style='color: {0};'>{1}\2{2}</span></span>".format(colour, terminalTextStart, terminalTextEnd)),
+        ('(<vid id="v{0}\.{1}\.{2}".*?</vid>)(.*?)</verse>'.format(config.studyB, config.studyC, config.studyV), r"\1<span style='color: {0};'>{1}\2{2}</span></verse>".format(colour, terminalTextStart, terminalTextEnd)),
     )
     for search, replace in searchReplace:
         text = re.sub(search, replace, text)

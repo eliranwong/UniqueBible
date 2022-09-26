@@ -451,6 +451,13 @@ def isPrompt_toolkitInstalled():
     except:
         return False
 
+def isPyperclipInstalled():
+    try:
+        import pyperclip
+        return True
+    except:
+        return False
+
 def isGmplotInstalled():
     try:
         import gmplot
@@ -548,6 +555,8 @@ def setInstallConfig(module, isInstalled):
         config.isPrompt_toolkitInstalled = isInstalled
     elif module in ("colorama", "-U colorama", "--upgrade colorama"):
         config.isColoramaInstalled = isInstalled
+    elif module in ("pyperclip", "-U pyperclip", "--upgrade pyperclip"):
+        config.isPyperclipInstalled = isInstalled
 
 # Specify qtLibrary for particular os
 if config.docker and config.usePySide2onWebtop:
@@ -674,6 +683,7 @@ optional = [
     ("haversine", "Calculate the distance between two points", isHaversineInstalled),
     ("prompt_toolkit", "Command Line Interaction", isPrompt_toolkitInstalled),
     ("colorama", "Producing colored terminal text", isColoramaInstalled),
+    ("pyperclip", "Cross-platform clipboard utilities", isPyperclipInstalled),
 ] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -709,6 +719,7 @@ optional = [
     ("haversine", "Calculate the distance between two points", isHaversineInstalled),
     ("prompt_toolkit", "Command Line Interaction", isPrompt_toolkitInstalled),
     ("colorama", "Producing colored terminal text", isColoramaInstalled),
+    ("pyperclip", "Cross-platform clipboard utilities", isPyperclipInstalled),
 ]
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))
