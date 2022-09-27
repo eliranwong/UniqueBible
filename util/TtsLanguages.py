@@ -85,6 +85,7 @@ class TtsLanguages:
         "vi-sgn": ("vi-sgn", "vietnam_sgn", "asia/vi-sgn"),
         "zh-cn": ("zh", "mandarin", "asia/zh"),
         "zh-tw": ("zh-yue", "cantonese", "asia/zh-yue"),
+        "yue": ("zh-yue", "cantonese", "asia/zh-yue"),
         "he": ("he", "hebrew", "he"),
     }
 

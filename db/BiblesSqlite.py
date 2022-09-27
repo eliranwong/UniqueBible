@@ -400,29 +400,55 @@ input.addEventListener('keyup', function(event) {0}
             texts.remove(mainText)
         texts.insert(0, mainText)
 
-        verses = "<h2>{0}</h2>".format(self.bcvToVerseReference(b, c, v))
-        verses += "<table>"
-        from diff_match_patch import diff_match_patch
-        dmp = diff_match_patch()
         *_, mainVerseText = self.readTextVerse(mainText, b, c, v)
-        mainVerseText = TextUtil.htmlToPlainText(mainVerseText)
-        for text in texts:
-            verses += "<tr>"
-            verses += "<td>({0}{1}</ref>)</td>".format(self.formVerseTag(b, c, v, text), text)
-            book, chapter, verse, verseText = self.readTextVerse(text, b, c, v)
-            if not text == mainText and not text in config.originalTexts:
-                verseText = TextUtil.htmlToPlainText(verseText)
-                diff = dmp.diff_main(mainVerseText, verseText)
-                verseText = dmp.diff_prettyHtml(diff)
-                if config.theme in ("dark", "night"):
-                    verseText = self.adjustDarkThemeColorsForDiff(verseText)
-            divTag = "<div>"
-            if b < 40 and text in config.rtlTexts:
-                divTag = "<div style='direction: rtl;'>"
-            verses += "<td>{0}{1}</div></td>".format(divTag, verseText.strip())
-            verses += "</tr>"
-        config.mainText = mainText
-        verses += "</table>"
+        mainVerseText = TextUtil.htmlToPlainText(mainVerseText, False).strip()
+        mainVerseText = mainVerseText.replace("audiotrack ", "")
+
+        if config.runMode == "terminal":
+            #print(self.bcvToVerseReference(b, c, v))
+            verses = self.bcvToVerseReference(b, c, v)
+            verses += "<br><br>"
+
+            import difflib
+            d = difflib.Differ()
+
+            for text in texts:
+                *_, verseText = self.readTextVerse(text, b, c, v)
+                verseText = TextUtil.htmlToPlainText(verseText, False).strip()
+                verseText = verseText.replace("audiotrack ", "")
+                diff = d.compare([mainVerseText], [verseText])
+
+                #print(f"[{mainText} vs {text}]\n")
+                #print("\n".join(diff))
+                #print("\n")
+
+                verses += f"[{mainText} vs {text}]<br>"
+                verses += "<br>".join(diff)
+                verses += "<br>"
+
+        else:
+            verses = "<h2>{0}</h2>".format(self.bcvToVerseReference(b, c, v))
+            verses += "<table>"
+            from diff_match_patch import diff_match_patch
+            dmp = diff_match_patch()
+            for text in texts:
+                verses += "<tr>"
+                verses += "<td>({0}{1}</ref>)</td>".format(self.formVerseTag(b, c, v, text), text)
+                *_, verseText = self.readTextVerse(text, b, c, v)
+                if not text == mainText and not text in config.originalTexts:
+                    verseText = TextUtil.htmlToPlainText(verseText)
+                    diff = dmp.diff_main(mainVerseText, verseText)
+                    verseText = dmp.diff_prettyHtml(diff)
+                    if config.theme in ("dark", "night"):
+                        verseText = self.adjustDarkThemeColorsForDiff(verseText)
+                divTag = "<div>"
+                if b < 40 and text in config.rtlTexts:
+                    divTag = "<div style='direction: rtl;'>"
+                verses += "<td>{0}{1}</div></td>".format(divTag, verseText.strip())
+                verses += "</tr>"
+            config.mainText = mainText
+            verses += "</table>"
+        
         return verses
 
     def countSearchBible(self, text, searchString, interlinear=False, booksRange=""):

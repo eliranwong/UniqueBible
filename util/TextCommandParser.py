@@ -898,14 +898,18 @@ class TextCommandParser:
         else:
             keyword, command = commandList
             keyword = keyword.lower()
-            if keyword in ("_mc", "_mastercontrol", "editversenote", "editchapternote", "editbooknote", "epub", "anypdf", "searchpdf", "pdffind", "pdf", "readbible", "searchhighlight", "diff", "difference", "_editbooknote", "_editchapternote", "_editversenote", "_editfile", "_uba"):
+            if keyword in ("_mc", "_mastercontrol", "editversenote", "editchapternote", "editbooknote", "epub", "anypdf", "searchpdf", "pdffind", "pdf", "readbible", "searchhighlight", "_editbooknote", "_editchapternote", "_editversenote", "_editfile", "_uba") and config.runMode == "terminal":
                 return ("study", f"{keyword}::: command is currently not supported in terminal mode.", {})
             if keyword in self.interpreters:
                 if self.isDatabaseInstalled(keyword):
                     command = command.strip()
                     if not command:
-                        if keyword in ("bible", "study", "compare", "crossreference", "tske", "translation", "discourse", "words", "combo", "commentary", "index"):
-                            command = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+                        currentBibleReference = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+                        if keyword in ("bible", "study", "compare", "crossreference", "diff", "difference", "tske", "translation", "discourse", "words", "combo", "commentary", "index"):
+                            command = currentBibleReference
+                            print(f"Running '{keyword}:::{command}' ...")
+                        elif keyword in ("overview", "summary", "chapterindex"):
+                            command = currentBibleReference.split(":", 1)[0]
                             print(f"Running '{keyword}:::{command}' ...")
                         elif not keyword in ("_mastercontrol", "_paste", "_commentaries", "_comparison", "_menu", "import"):
                             return self.textWhatIs(keyword, source)
@@ -1112,7 +1116,8 @@ class TextCommandParser:
         confirmedTexts = [text for text in texts.split("_") if text in bibleList or text in self.getMarvelBibles()]
         if not confirmedTexts and not returnEmptyList:
             confirmedTexts = [config.favouriteBible]
-        return sorted(list(set(confirmedTexts)))
+        #return sorted(list(set(confirmedTexts)))
+        return list(set(confirmedTexts))
 
     def extractAllVerses(self, text, tagged=False):
         return BibleVerseParser(config.parserStandarisation).extractAllReferences(text, tagged)

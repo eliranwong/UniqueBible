@@ -1,3 +1,7 @@
+Changes in 31.99:
+* Added diff::: command output in terminal mode.
+* Added yue as an alias voice to Cantonese for running espeak.
+
 Changes in 31.97, 31.98:
 * Improved command parser to support terminal mode better.
 * Fixed DAY:::, DAYAUDIO::: commands.

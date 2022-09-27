@@ -43,14 +43,21 @@ class LocalCliHandler:
             ".copy": ("copy the last opened content", self.copy),
             ".copyhtml": ("copy the last opened content in html format", self.copyHtml),
             ".find": ("find a string in the last opened content", self.find),
+            #".openbookfeatures": ("open book features", self.openBookFeatures),
+            #".openchapterfeatures": ("open chapter features", self.openChapterFeatures),
+            #".openversefeatures": ("open verse features", self.openVerseFeatures),
         }
 
     def execPythonFile(self, script):
         self.crossPlatform.execPythonFile(script)
 
     def getContent(self, command):
+        if re.search('^(map:::|bible:::mab:::|bible:::mib:::|bible:::mob:::|bible:::mpb:::|bible:::mtb:::)', command.lower()):
+            return self.share(command)
+        # Dot commands
         if command.startswith("."):
             return self.getDotCommandContent(command.lower())
+        # Non-dot commands
         view, content, dict = self.textCommandParser.parser(command, "cli")
         if config.bibleWindowContentTransformers:
             for transformer in config.bibleWindowContentTransformers:
@@ -262,12 +269,14 @@ class LocalCliHandler:
         bibleReference = self.textCommandParser.bcvToVerseReference(config.commentaryB, config.commentaryC, config.commentaryV)
         return self.getContent(f"COMMENTARY:::{config.commentaryText}:::{bibleReference}")
 
-    def share(self):
+    def share(self, command=""):
         if config.isPyperclipInstalled:
             import pyperclip
-            weblink = TextUtil.getWeblink(self.command)
+            weblink = TextUtil.getWeblink(command if command else self.command)
             pyperclip.copy(weblink)
-            print(f"The following link is copied to clipboard for sharing:\n{weblink}")
+            print(f"The following link is copied to clipboard:\n")
+            print(weblink)
+            print("\nPaste and open it in a web browser or share with others.")
             return ""
         return self.noClipboardUtility()
 
@@ -302,3 +311,12 @@ class LocalCliHandler:
         else:
             content = re.sub(r"({0})".format(searchInput), r"[[[ \1 ]]]", self.plainText)
         return content
+
+    def openBookFeatures(self):
+        pass
+
+    def openChapterFeatures(self):
+        pass
+
+    def openVerseFeatures(self):
+        pass
