@@ -1,6 +1,5 @@
-from genericpath import isfile
-import re, config, pprint, os
-import urllib.parse
+import re, config, pprint, os, requests, platform
+from ast import literal_eval
 from util.TextUtil import TextUtil
 from util.RemoteCliMainWindow import RemoteCliMainWindow
 from util.TextCommandParser import TextCommandParser
@@ -8,6 +7,8 @@ from util.CrossPlatform import CrossPlatform
 from util.BibleBooks import BibleBooks
 from util.GitHubRepoInfo import GitHubRepoInfo
 from util.FileUtil import FileUtil
+from util.UpdateUtil import UpdateUtil
+from util.DateUtil import DateUtil
 from db.BiblesSqlite import Bible
 
 
@@ -48,6 +49,7 @@ class LocalCliHandler:
             #".openchapterfeatures": ("open chapter features", self.openChapterFeatures),
             #".openversefeatures": ("open verse features", self.openVerseFeatures),
             ".history": ("display history records", self.history),
+            ".update": ("update Unique Bible App to the latest version", self.update),
         }
 
     def execPythonFile(self, script):
@@ -329,3 +331,62 @@ class LocalCliHandler:
 
     def openVerseFeatures(self):
         pass
+
+    def displayMessage(self, message="", title="UniqueBible"):
+        print(title)
+        print(message)
+
+    def update(self, debug=False):
+        try:
+            try:
+                os.system("git pull")
+                return self.finishUpdate()
+            except:
+                # Old way to update
+                requestObject = requests.get("{0}patches.txt".format(UpdateUtil.repository))
+                for line in requestObject.text.split("\n"):
+                    if line:
+                        try:
+                            version, contentType, filePath = literal_eval(line)
+                            if version > config.version:
+                                localPath = os.path.join(*filePath.split("/"))
+                                if debug:
+                                    print("{0}:{1}".format(version, localPath))
+                                else:
+                                    if contentType == "folder":
+                                        if not os.path.isdir(localPath):
+                                            os.makedirs(localPath, exist_ok=True)
+                                    elif contentType == "file":
+                                        requestObject2 = requests.get("{0}{1}".format(UpdateUtil.repository, filePath))
+                                        with open(localPath, "wb") as fileObject:
+                                            fileObject.write(requestObject2.content)
+                                    elif contentType == "delete":
+                                        try:
+                                            if os.path.exists(localPath):
+                                                os.remove(localPath)
+                                        except:
+                                            print("Could not delete {0}".format(localPath))
+                        except Exception as e:
+                            return self.updateFailed()
+
+                return self.finishUpdate()
+        except:
+            return self.updateFailed()
+
+    def updateFailed(self):
+        print("Failed to update to the latest version.")
+        if not config.internet:
+            print("You may need to check your internet connection.")
+        return ""
+
+    def finishUpdate(self):
+        # set executable files on macOS or Linux
+        if not platform.system() == "Windows":
+            for filename in ("uba.py", "main.py", "BibleVerseParser.py", "RegexSearch.py"):
+                if os.path.isfile(filename):
+                    os.chmod(filename, 0o755)
+                # finish message
+        config.lastAppUpdateCheckDate = str(DateUtil.localDateNow())
+
+        print("Updated!")
+        return ".restart"

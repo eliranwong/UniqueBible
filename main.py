@@ -4,11 +4,12 @@
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
 import glob
-import os, platform, logging, re, sys, subprocess
+import os, platform, logging, re, sys, subprocess, requests
 import logging.handlers as handlers
 from util.FileUtil import FileUtil
 from util.NetworkUtil import NetworkUtil
 from util.WebtopUtil import WebtopUtil
+from util.UpdateUtil import UpdateUtil
 
 # Change working directory to UniqueBible directory
 thisFile = os.path.realpath(__file__)
@@ -101,10 +102,53 @@ def runStartupPlugins():
                 script = os.path.join(os.getcwd(), "plugins", "startup", "{0}.py".format(plugin))
                 config.mainWindow.execPythonFile(script)
 
+# Check if database migration is needed
+def checkMigration():
+    if config.version >= 0.56 and not config.databaseConvertedOnStartup:
+        try:
+            print("Updating database ... please wait ...")
+            biblesSqlite = BiblesSqlite()
+            biblesWithBothVersions = biblesSqlite.migratePlainFormattedBibles()
+            if biblesWithBothVersions:
+                biblesSqlite.proceedMigration(biblesWithBothVersions)
+            if config.migrateDatabaseBibleNameToDetailsTable:
+                biblesSqlite.migrateDatabaseContent()
+            del biblesSqlite
+            config.databaseConvertedOnStartup = True
+            print("Updated!")
+        except:
+            pass
+
+# manage latest update
+def checkApplicationUpdateCli():
+    try:
+        print("Checking the latest version ...")
+        checkFile = "{0}UniqueBibleAppVersion.txt".format(UpdateUtil.repository)
+        # latest version number is indicated in file "UniqueBibleAppVersion.txt"
+        request = requests.get(checkFile, timeout=5)
+        if request.status_code == 200:
+            # tell the rest that internet connection is available
+            config.internet = True
+            # compare with user's current version
+            if UpdateUtil.checkIfShouldCheckForAppUpdate() and not UpdateUtil.currentIsLatest(config.version, request.text):
+                #self.promptUpdate(request.text)
+                print(f"You are runing an older version {config.version}.")
+                print(f"Run '.update' to update to the latest version {request.text}.")
+            else:
+                print("You are running the latest version.")
+        else:
+            config.internet = False
+            print("Unable to read the latest version.  You may check your internet connection.")
+    except Exception as e:
+        config.internet = False
+        print("Failed to read '{0}'.".format(checkFile))
+
 # Local CLI
 if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     config.runMode = "terminal"
     print(f"Running Unique Bible App {config.version} in terminal mode ...")
+    checkMigration()
+    checkApplicationUpdateCli()
 
     import pydoc
     from util.LocalCliHandler import LocalCliHandler
@@ -151,6 +195,8 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
             if command:
                 content = config.mainWindow.getContent(command)
                 if content:
+                    if content == ".restart":
+                        command = ".restart"
                     if config.enableTerminalPager and not content in ("Command processed!", "INVALID_COMMAND_ENTERED") and not content.endswith("not supported in terminal mode."):
                         if platform.system() == "Windows":
                             # When you use remote powershell and want to pipe a command on the remote windows server through a pager, piping through  out-host -paging works as desired. Piping through more when running the remote command is of no use: the entire text is displayed at once.
@@ -219,20 +265,6 @@ if (len(sys.argv) > 1) and sys.argv[1] == "telnet-server":
 
 # HTTP Server
 from db.BiblesSqlite import BiblesSqlite
-
-def checkMigration():
-    if config.version >= 0.56 and not config.databaseConvertedOnStartup:
-        try:
-            biblesSqlite = BiblesSqlite()
-            biblesWithBothVersions = biblesSqlite.migratePlainFormattedBibles()
-            if biblesWithBothVersions:
-                biblesSqlite.proceedMigration(biblesWithBothVersions)
-            if config.migrateDatabaseBibleNameToDetailsTable:
-                biblesSqlite.migrateDatabaseContent()
-            del biblesSqlite
-            config.databaseConvertedOnStartup = True
-        except:
-            pass
 
 def startHttpServer():
     import socketserver
