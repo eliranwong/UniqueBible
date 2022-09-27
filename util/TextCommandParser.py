@@ -3952,7 +3952,14 @@ class TextCommandParser:
                     self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["alreadyExists"]))
                 else:
                     file = os.path.join(folder, shortFilename+".zip")
-                    github.downloadFile(file, repoData[filename])
+                    if filename in repoData.keys():
+                        github.downloadFile(file, repoData[filename])
+                    elif shortFilename in repoData.keys():
+                        github.downloadFile(file, repoData[shortFilename])
+                    else:
+                        self.parent.displayMessage(
+                            "{0} {1}".format(filename, config.thisTranslation["notFound"]))
+                        return
                     with zipfile.ZipFile(file, 'r') as zipped:
                         zipped.extractall(folder)
                     os.remove(file)

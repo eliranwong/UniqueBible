@@ -1,3 +1,6 @@
+Changes in 31.96:
+* Fixed issue with DOWNLOAD:::GitHubBible.
+
 Changes in 31.95:
 * Added .find command to terminal mode.
 
