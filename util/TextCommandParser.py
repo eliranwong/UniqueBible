@@ -1440,7 +1440,7 @@ class TextCommandParser:
             if platform.system() == "Linux" and config.espeak:
                 if WebtopUtil.isPackageInstalled("espeak"):
                     isoLang2epeakLang = TtsLanguages().isoLang2epeakLang
-                    languages = TtsLanguages().isoLang2epeakLang.keys()
+                    languages = isoLang2epeakLang.keys()
                     if not (config.ttsDefaultLangauge in languages):
                         config.ttsDefaultLangauge = "en"
                     if not (language in languages):
@@ -1450,7 +1450,6 @@ class TextCommandParser:
                         else:
                             self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
                         language = config.ttsDefaultLangauge
-                        print(f"Changed to language '{language}'")
                     language = isoLang2epeakLang[language][0]
                     print(f"Changed to language '{language}'")
                     # subprocess is used

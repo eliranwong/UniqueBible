@@ -1,4 +1,4 @@
-Changes in 31.97:
+Changes in 31.97, 31.98:
 * Improved command parser to support terminal mode better.
 * Fixed DAY:::, DAYAUDIO::: commands.
 
