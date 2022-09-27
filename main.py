@@ -120,7 +120,8 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
 
     if config.isPrompt_toolkitInstalled:
         from prompt_toolkit.formatted_text import HTML
-        from prompt_toolkit import print_formatted_text as print
+        # print_formatted_text does not support colorama
+        #from prompt_toolkit import print_formatted_text as print
         from prompt_toolkit import PromptSession
         from prompt_toolkit.completion import WordCompleter
         from prompt_toolkit.history import FileHistory
@@ -129,7 +130,7 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         session = PromptSession(history=FileHistory('myhistory'))
         command_completer = WordCompleter(config.mainWindow.getTextCommandSuggestion(), ignore_case=True)
         auto_suggestion=AutoSuggestFromHistory()
-        divider = HTML("<seagreen>--------------------</seagreen>") if config.isPrompt_toolkitInstalled else "--------------------"
+        divider = "--------------------"
 
     elif sys.platform in ("linux", "darwin"):
         import readline

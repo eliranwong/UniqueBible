@@ -1,4 +1,4 @@
-Changes in 32.00:
+Changes in 32.00, 32.01:
 * Terminal mode command session history is saved in myhistory.
 * Added auto-suggestion from history records in terminal mode.
 * Added a .history command in terminal mode.
