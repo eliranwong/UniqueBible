@@ -119,10 +119,18 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     runStartupPlugins()
 
     if config.isPrompt_toolkitInstalled:
+        from prompt_toolkit.formatted_text import HTML
+        from prompt_toolkit import print_formatted_text as print
         from prompt_toolkit import PromptSession
         from prompt_toolkit.completion import WordCompleter
+        from prompt_toolkit.history import FileHistory
+        from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+
+        session = PromptSession(history=FileHistory('myhistory'))
         command_completer = WordCompleter(config.mainWindow.getTextCommandSuggestion(), ignore_case=True)
-        session = PromptSession()
+        auto_suggestion=AutoSuggestFromHistory()
+        divider = HTML("<seagreen>--------------------</seagreen>") if config.isPrompt_toolkitInstalled else "--------------------"
+
     elif sys.platform in ("linux", "darwin"):
         import readline
 
@@ -133,7 +141,7 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
             config.mainWindow.initialDisplay()
             # User command input
             if config.isPrompt_toolkitInstalled:
-                command = session.prompt(">>> ", completer=command_completer).strip()
+                command = session.prompt(">>> ", completer=command_completer, auto_suggest=auto_suggestion, bottom_toolbar=f" Unique Bible App [{config.version}]").strip()
             elif sys.platform in ("linux", "darwin"):
                 import readline
                 command = input(">>> ").strip()
@@ -152,7 +160,7 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
                                     pydoc.pipepager(content, cmd='more')
                                 except:
                                     config.enableTerminalPager = False
-                                    print("--------------------")
+                                    print(divider)
                                     print(content)
                         else:
                             try:
@@ -162,10 +170,10 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
                                 pydoc.pipepager(content, cmd='less -R')
                             except:
                                 config.enableTerminalPager = False
-                                print("--------------------")
+                                print(divider)
                                 print(content)
                     else:
-                        print("--------------------")
+                        print(divider)
                         print(content)
         except:
             pass

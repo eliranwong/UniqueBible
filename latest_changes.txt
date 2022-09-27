@@ -1,3 +1,9 @@
+Changes in 32.00:
+* Terminal mode command session history is saved in myhistory.
+* Added auto-suggestion from history records in terminal mode.
+* Added a .history command in terminal mode.
+* Added a bottom toolbar in terminal mode.
+
 Changes in 31.99:
 * Added diff::: command output in terminal mode.
 * Added yue as an alias voice to Cantonese for running espeak.

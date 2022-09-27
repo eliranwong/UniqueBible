@@ -1,3 +1,4 @@
+from genericpath import isfile
 import re, config, pprint, os
 import urllib.parse
 from util.TextUtil import TextUtil
@@ -46,6 +47,7 @@ class LocalCliHandler:
             #".openbookfeatures": ("open book features", self.openBookFeatures),
             #".openchapterfeatures": ("open chapter features", self.openChapterFeatures),
             #".openversefeatures": ("open verse features", self.openVerseFeatures),
+            ".history": ("display history records", self.history),
         }
 
     def execPythonFile(self, script):
@@ -311,6 +313,13 @@ class LocalCliHandler:
         else:
             content = re.sub(r"({0})".format(searchInput), r"[[[ \1 ]]]", self.plainText)
         return content
+
+    def history(self):
+        if os.path.isfile("myhistory"):
+            with open("myhistory", "r", encoding="utf-8") as input_file:
+                text = input_file.read()
+        print(text)
+        return ""
 
     def openBookFeatures(self):
         pass
