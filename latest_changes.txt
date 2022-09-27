@@ -1,3 +1,7 @@
+Changes in 32.03:
+* Automatically restart terminal mode after a config value is changed via _setconfig command.
+* Improved update prompt in terminal mode.
+
 Changes in 32.02:
 * Added update utility to terminal mode.
 

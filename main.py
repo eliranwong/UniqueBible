@@ -130,8 +130,7 @@ def checkApplicationUpdateCli():
             # tell the rest that internet connection is available
             config.internet = True
             # compare with user's current version
-            if UpdateUtil.checkIfShouldCheckForAppUpdate() and not UpdateUtil.currentIsLatest(config.version, request.text):
-                #self.promptUpdate(request.text)
+            if not UpdateUtil.currentIsLatest(config.version, request.text):
                 print(f"You are runing an older version {config.version}.")
                 print(f"Run '.update' to update to the latest version {request.text}.")
             else:

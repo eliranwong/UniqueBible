@@ -3308,7 +3308,11 @@ class TextCommandParser:
                 newConfig = "{0} = {1}".format(item, value)
                 try:
                     exec("config."+newConfig)
-                    return ("study", "<p>Configuration changed to:<br>{0}</p>".format(newConfig), {})
+                    message = f"The value of config.{item} is now changed to {newConfig}."
+                    if config.runMode == "terminal":
+                        print(message)
+                        return ("study", ".restart", {})
+                    return ("study", message, {})
                 except:
                     return self.invalidCommand("study")
         else:
