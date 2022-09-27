@@ -1450,8 +1450,8 @@ class TextCommandParser:
                         else:
                             self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
                         language = config.ttsDefaultLangauge
+                        print(f"Language changed to '{language}'")
                     language = isoLang2epeakLang[language][0]
-                    print(f"Changed to language '{language}'")
                     # subprocess is used
                     # Discussion on use of "preexec_fn=os.setpgrp": https://stackoverflow.com/questions/23811650/is-there-a-way-to-make-os-killpg-not-kill-the-script-that-calls-it
                     self.cliTtsProcess = subprocess.Popen(["espeak -s {0} -v {1} '{2}'".format(config.espeakSpeed, language, text)], shell=True, preexec_fn=os.setpgrp, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
