@@ -639,12 +639,13 @@ class TextCommandParser:
             # [KEYWORD] DOWNLOAD
             # Feature - Download marvel data, github files
             # Usage - DOWNLOAD:::[source]:::[file]
-            # source can be MarvelData, HymnLyrics, GitHubBible, GitHubBook, GitHubCommentary
+            # Available sources: MarvelData, HymnLyrics, GitHubBible, GitHubBook, GitHubCommentary
             # e.g. DOWNLOAD:::MarvelBible:::KJV
             """),
             "import": (self.importResources, """
             # [KEYWORD] IMPORT
             # Feature - Import third party resources
+            # Usage - IMPORT:::
             # Usage - IMPORT:::[directory_path_containing_supported_3rd_party_files]
             # Remarks: If a directory is not specified, "import" is used by default.
             # e.g. IMPORT:::import
@@ -660,11 +661,14 @@ class TextCommandParser:
             #
             "_imv": (self.instantMainVerse, """
             # [KEYWORD] _imv
+            # Feature - Display a single verse text.  It takes book, chapter and verse numbers.
+            # Usage - _imv:::[BOOK_NO].[CHAPTER_NO].[VERSE_NO]
             # e.g. _imv:::1.1.1
             # e.g. _imv:::43.3.16"""),
             "_imvr": (self.instantMainVerseReference, """
             # [KEYWORD] _imvr
-            # 
+            # Feature - Display a single verse text.  It takes a bible reference.
+            # Usage - _imv:::[BIBLE_REFERENCE]
             # e.g. _imvr:::Gen 1:1
             # e.g. _imvr:::John 3:16"""),
             "_instantverse": (self.instantVerse, """
@@ -722,17 +726,17 @@ class TextCommandParser:
             # e.g. _commentaries:::"""),
             "_commentarychapters": (self.textCommentaryChapters, """
             # [KEYWORD] _commentarychapters
-            # Feature - Display all available chapters of a bible version.
-            # Usage - _commentarychapters:::[BIBLE_VERSION]
-            # e.g. _commentarychapters:::KJV
-            # e.g. _commentarychapters:::NET"""),
+            # Feature - Display commentary chapter menu.
+            # Usage - _commentarychapters:::[COMMENTARY]
+            # e.g. _commentarychapters:::BI
+            # e.g. _commentarychapters:::CBSC"""),
             "_commentaryverses": (self.textCommentaryVerses, """
             # [KEYWORD] _commentaryverses
-            # Feature - Display all available verses of a bible chapter.
-            # Usage - _commentaryverses:::[BIBLE_VERSION]:::[BIBLE_REFERENCE]
+            # Feature - Display commentary verse menu.
+            # Usage - _commentaryverses:::[COMMENTARY]:::[BIBLE_REFERENCE]
             # e.g. _commentaryverses:::Jn 3
-            # e.g. _commentaryverses:::KJV:::Jn 3
-            # e.g. _commentaryverses:::NET:::Jn 3"""),
+            # e.g. _commentaryverses:::BI:::Jn 3
+            # e.g. _commentaryverses:::CBSC:::Jn 3"""),
             "_commentary": (self.textCommentaryMenu, """
             # [KEYWORD] _commentary
             # e.g. _commentary:::CBSC.1.1.1"""),
@@ -762,7 +766,8 @@ class TextCommandParser:
             # [KEYWORD] _image
             # e.g. _image:::EXLBL:::1.jpg"""),
             "_htmlimage": (self.textHtmlImage, """
-            # [KEYWORD] _htmlimage"""),
+            # [KEYWORD] _htmlimage
+            # e.g. _htmlimage:::filename"""),
             "_openbooknote": (self.openBookNote, """
             # [KEYWORD] _openbooknote
             # e.g. _openbooknote:::43"""),
@@ -825,6 +830,7 @@ class TextCommandParser:
             # e.g. _promise:::4.1"""),
             "_paste": (self.pasteFromClipboard, """
             # [KEYWORD] _paste
+            # Feature - Display clipboard text.
             # e.g. _paste:::"""),
             "_mastercontrol": (self.openMasterControl, """
             # [KEYWORD] _mastercontrol
@@ -892,15 +898,19 @@ class TextCommandParser:
         else:
             keyword, command = commandList
             keyword = keyword.lower()
+            if keyword in ("_mc", "_mastercontrol", "editversenote", "editchapternote", "editbooknote", "epub", "anypdf", "searchpdf", "pdffind", "pdf", "readbible", "searchhighlight", "diff", "difference", "_editbooknote", "_editchapternote", "_editversenote", "_editfile", "_uba"):
+                return ("study", f"{keyword}::: command is currently not supported in terminal mode.", {})
             if keyword in self.interpreters:
                 if self.isDatabaseInstalled(keyword):
                     command = command.strip()
-                    if command:
-                        self.lastKeyword = keyword
-                        return self.interpreters[keyword][0](command, source)
-                    # TODO::: add exceptions later
-                    elif not keyword in ("xxxx",):
-                        return self.textWhatIs(keyword, source)
+                    if not command:
+                        if keyword in ("bible", "study", "compare", "crossreference", "tske", "translation", "discourse", "words", "combo", "commentary", "index"):
+                            command = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+                            print(f"Running '{keyword}:::{command}' ...")
+                        elif not keyword in ("_mastercontrol", "_paste", "_commentaries", "_comparison", "_menu", "import"):
+                            return self.textWhatIs(keyword, source)
+                    self.lastKeyword = keyword
+                    return self.interpreters[keyword][0](command, source)
                 else:
                     return self.databaseNotInstalled(keyword)
             else:
@@ -1428,15 +1438,21 @@ class TextCommandParser:
                 language = "grc"
 
             if platform.system() == "Linux" and config.espeak:
-                if self.isEspeakInstalled:
+                if WebtopUtil.isPackageInstalled("espeak"):
                     isoLang2epeakLang = TtsLanguages().isoLang2epeakLang
                     languages = TtsLanguages().isoLang2epeakLang.keys()
                     if not (config.ttsDefaultLangauge in languages):
                         config.ttsDefaultLangauge = "en"
                     if not (language in languages):
-                        self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
+                        if config.runMode == "terminal":
+                            print(f"'{language}' is not found!")
+                            print("Available languages:", languages)
+                        else:
+                            self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
                         language = config.ttsDefaultLangauge
+                        print(f"Changed to language '{language}'")
                     language = isoLang2epeakLang[language][0]
+                    print(f"Changed to language '{language}'")
                     # subprocess is used
                     # Discussion on use of "preexec_fn=os.setpgrp": https://stackoverflow.com/questions/23811650/is-there-a-way-to-make-os-killpg-not-kill-the-script-that-calls-it
                     self.cliTtsProcess = subprocess.Popen(["espeak -s {0} -v {1} '{2}'".format(config.espeakSpeed, language, text)], shell=True, preexec_fn=os.setpgrp, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -1737,8 +1753,10 @@ class TextCommandParser:
         try:
             if config.macVlc and not config.forceUseBuiltinMediaPlayer:
                 WebtopUtil.run(f'{config.macVlc} --rate {config.vlcSpeed} "{command}"')
-            elif WebtopUtil.isPackageInstalled("vlc") and not config.forceUseBuiltinMediaPlayer:
+            elif WebtopUtil.isPackageInstalled("vlc") and ((not config.forceUseBuiltinMediaPlayer) or (config.runMode == "terminal")):
                 vlcCmd = "vlc" if gui else "cvlc"
+                if config.runMode == "terminal":
+                    vlcCmd = "cvlc"
                 if '"' in command:
                     self.openBuiltinPlayer(command, gui)
                 else:
@@ -2820,7 +2838,12 @@ class TextCommandParser:
 
     # _paste:::
     def pasteFromClipboard(self, command, source):
-        self.parent.pasteFromClipboard()
+        if config.isPyperclipInstalled and config.runMode == "terminal":
+            import pyperclip
+            content = pyperclip.paste()
+            return ("study", content, {})
+        else:
+            self.parent.pasteFromClipboard()
         return ("", "", {})
 
     # _whatIs:::
@@ -3476,7 +3499,7 @@ class TextCommandParser:
                     config.mainText = "CUVs"
                     command = "CUVs:::{0}".format(command)
                 else:
-                    command = "{0}:::".format(config.mainText)
+                    command = "{0}:::{1}".format(config.mainText, command)
             commandPrefix, entry, *_ = command.split(":::")
             dayEntry = self.getDayEntry(entry)
             command = "{0}:::{1}".format(commandPrefix, dayEntry)
@@ -3494,7 +3517,7 @@ class TextCommandParser:
                     config.mainText = "CUVs"
                     command = "CUVs:::{0}".format(command)
                 else:
-                    command = "{0}:::".format(config.mainText)
+                    command = "{0}:::{1}".format(config.mainText, command)
             commandPrefix, entry, *_ = command.split(":::")
             dayEntry = self.getDayEntry(entry)
             command = "{0}:::{1}".format(commandPrefix, dayEntry)

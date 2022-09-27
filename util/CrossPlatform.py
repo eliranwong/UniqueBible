@@ -4,6 +4,9 @@ from db.ToolsSqlite import BookData, IndexesSqlite, Commentary
 from db.ToolsSqlite import LexiconData
 from util.CatalogUtil import CatalogUtil
 from util.ThirdParty import ThirdPartyDictionary
+from util.HebrewTransliteration import HebrewTransliteration
+from util.TextUtil import TextUtil
+from install.module import *
 
 class CrossPlatform:
 
@@ -174,3 +177,91 @@ class CrossPlatform:
                     exec(code, globals())
             except:
                 print("Failed to run '{0}'!".format(os.path.basename(script)))
+
+    # Google text-to-speech
+
+    def fineTuneGtts(self, text, language):
+        text = re.sub("[\[\]\(\)'\"]", "", text)
+        if not config.isGoogleCloudTTSAvailable:
+            language = re.sub("\-.*?$", "", language)
+        if language in ("iw", "he"):
+            text = HebrewTransliteration().transliterateHebrew(text)
+            language = "el-GR" if config.isGoogleCloudTTSAvailable else "el"
+        elif language == "el" or language.startswith("el-"):
+            text = TextUtil.removeVowelAccent(text)
+        return (text, language)
+
+    # Temporary filepath for tts export
+    def getGttsFilename(self):
+        folder = os.path.join(config.musicFolder, "tmp")
+        if not os.path.isdir(folder):
+            os.makedirs(folder, exist_ok=True)
+        return os.path.join(folder, "gtts.mp3")
+
+    # Python package gTTS, not created by Google
+    def saveGTTSAudio(self, inputText, languageCode, filename=""):
+        try:
+            from gtts import gTTS
+            moduleInstalled = True
+        except:
+            moduleInstalled = False
+        if not moduleInstalled:
+            installmodule("--upgrade gTTS")
+
+        from gtts import gTTS
+        tts = gTTS(inputText, lang=languageCode)
+        if not filename:
+            filename = self.getGttsFilename()
+        tts.save(filename)
+
+    # Official Google Cloud Text-to-speech Service
+    def saveCloudTTSAudio(self, inputText, languageCode, filename=""):
+        try:
+            from google.cloud import texttospeech
+            moduleInstalled = True
+        except:
+            moduleInstalled = False
+        if not moduleInstalled:
+            installmodule("--upgrade google-cloud-texttospeech")
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")
+        # Modified from ource: https://cloud.google.com/text-to-speech/docs/create-audio-text-client-libraries#client-libraries-install-python
+        """Synthesizes speech from the input string of text or ssml.
+        Make sure to be working in a virtual environment.
+
+        Note: ssml must be well-formed according to:
+            https://www.w3.org/TR/speech-synthesis/
+        """
+        from google.cloud import texttospeech
+        # Instantiates a client
+        client = texttospeech.TextToSpeechClient()
+
+        # Set the text input to be synthesized
+        synthesis_input = texttospeech.SynthesisInput(text=inputText)
+
+        # Build the voice request, select the language code (e.g. "yue-HK") and the ssml
+        # voice gender ("neutral")
+        voice = texttospeech.VoiceSelectionParams(
+            language_code=languageCode, ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
+        )
+
+        # Select the type of audio file you want returned
+        audio_config = texttospeech.AudioConfig(
+            audio_encoding=texttospeech.AudioEncoding.MP3,
+            # For more config, read https://cloud.google.com/text-to-speech/docs/reference/rest/v1/text/synthesize#audioconfig
+            speaking_rate=config.gcttsSpeed,
+        )
+
+        # Perform the text-to-speech request on the text input with the selected
+        # voice parameters and audio file type
+        response = client.synthesize_speech(
+            input=synthesis_input, voice=voice, audio_config=audio_config
+        )
+
+        # The response's audio_content is binary.
+        # Save into mp3
+        if not filename:
+            filename = self.getGttsFilename()
+        with open(filename, "wb") as out:
+            # Write the response to the output file.
+            out.write(response.audio_content)
+            #print('Audio content written to file "{0}"'.format(outputFile))

@@ -1,3 +1,7 @@
+Changes in 31.97:
+* Improved command parser to support terminal mode better.
+* Fixed DAY:::, DAYAUDIO::: commands.
+
 Changes in 31.96:
 * Fixed issue with DOWNLOAD:::GitHubBible.
 

@@ -142,7 +142,7 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
             if command:
                 content = config.mainWindow.getContent(command)
                 if content:
-                    if config.enableTerminalPager:
+                    if config.enableTerminalPager and not content in ("Command processed!", "INVALID_COMMAND_ENTERED") and not content.endswith("not supported in terminal mode."):
                         if platform.system() == "Windows":
                             # When you use remote powershell and want to pipe a command on the remote windows server through a pager, piping through  out-host -paging works as desired. Piping through more when running the remote command is of no use: the entire text is displayed at once.
                             try:

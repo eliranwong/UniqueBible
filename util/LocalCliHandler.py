@@ -25,6 +25,7 @@ class LocalCliHandler:
             ".stopaudio": ("stop audio playback", self.stopAudio),
             ".commands": ("display available commands", self.commands),
             ".dotcommands": ("display available dot commands", self.dotCommandsHelp),
+            ".bible": ("open the last opened bible passage", self.bible),
             ".bibles": ("display installed bibles", self.bibles),
             ".read": ("read available audio files", self.read),
             ".last": ("display last selected items", self.last),
@@ -34,13 +35,14 @@ class LocalCliHandler:
             ".verses": ("display bible verse list", self.verses),
             ".download": ("display available downloads", self.download),
             ".data": ("display installed data", self.data),
+            ".commentary": ("open the last opened commentary", self.commentary),
             ".commentaries": ("display installed commentaries", self.commentaries),
             ".referencebooks": ("display installed reference books", self.referencebooks),
             ".paste": ("run clipboard text as command", self.paste),
             ".share": ("copy a web link for sharing", self.share),
-            ".copy": ("copy the last loaded content", self.copy),
-            ".copyhtml": ("copy the last loaded content in html format", self.copyHtml),
-            ".find": ("find a string in the last loaded content", self.find),
+            ".copy": ("copy the last opened content", self.copy),
+            ".copyhtml": ("copy the last opened content in html format", self.copyHtml),
+            ".find": ("find a string in the last opened content", self.find),
         }
 
     def execPythonFile(self, script):
@@ -85,7 +87,8 @@ class LocalCliHandler:
         textCommands = [key + ":::" for key in self.textCommandParser.interpreters.keys()]
         bibleBooks = BibleBooks().getStandardBookAbbreviations()
         dotCommands = sorted(list(self.dotCommands.keys()))
-        return ['.quit', '.restart'] + dotCommands + [cmd[1:] for cmd in dotCommands] + sorted(textCommands) + bibleBooks
+        bibleReference = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+        return ['.quit', '.restart', 'quit', 'restart', bibleReference] + dotCommands + [cmd[1:] for cmd in dotCommands] + sorted(textCommands) + bibleBooks
 
     def togglePager(self):
         config.enableTerminalPager = not config.enableTerminalPager
@@ -251,6 +254,14 @@ class LocalCliHandler:
             return self.getContent(command)
         return self.noClipboardUtility()
 
+    def bible(self):
+        bibleReference = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+        return self.getContent(f"BIBLE:::{config.mainText}:::{bibleReference}")
+
+    def commentary(self):
+        bibleReference = self.textCommandParser.bcvToVerseReference(config.commentaryB, config.commentaryC, config.commentaryV)
+        return self.getContent(f"COMMENTARY:::{config.commentaryText}:::{bibleReference}")
+
     def share(self):
         if config.isPyperclipInstalled:
             import pyperclip
@@ -282,7 +293,7 @@ class LocalCliHandler:
         return ""
 
     def find(self):
-        searchInput = input("Enter search item here: ").strip()
+        searchInput = input("Enter a search pattern: ").strip()
         if config.isColoramaInstalled:
             from colorama import init
             init()
