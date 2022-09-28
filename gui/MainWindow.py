@@ -5479,6 +5479,12 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             except:
                 pass
             self.textCommandParser.cliTtsProcess = None
+        if self.textCommandParser.espeakProcess is not None:
+            try:
+                os.killpg(os.getpgid(self.textCommandParser.espeakProcess.pid), signal.SIGTERM)
+            except:
+                pass
+            self.textCommandParser.espeakProcess = None
         elif self.textCommandParser.qtTtsEngine is not None:
             self.textCommandParser.qtTtsEngine.stop()
 

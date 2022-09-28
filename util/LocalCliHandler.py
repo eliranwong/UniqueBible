@@ -67,7 +67,7 @@ class LocalCliHandler:
             for transformer in config.bibleWindowContentTransformers:
                 content = transformer(content)
         if content:
-            self.crossPlatform.addHistoryRecord(view, command)
+            #self.crossPlatform.addHistoryRecord(view, command)
             self.html = content
         else:
             content = "Command processed!"
@@ -81,6 +81,35 @@ class LocalCliHandler:
                 config.mainText = config.studyText
             config.mainB, config.mainC, config.mainV, *_ = references[-1]
         return plainText
+
+    def displayOutputOnTerminal(self, content):
+        divider = "--------------------"
+        if config.enableTerminalPager and not content in ("Command processed!", "INVALID_COMMAND_ENTERED") and not content.endswith("not supported in terminal mode."):
+            import pydoc
+            if platform.system() == "Windows":
+                # When you use remote powershell and want to pipe a command on the remote windows server through a pager, piping through  out-host -paging works as desired. Piping through more when running the remote command is of no use: the entire text is displayed at once.
+                try:
+                    pydoc.pipepager(content, cmd='out-host -paging')
+                except:
+                    try:
+                        pydoc.pipepager(content, cmd='more')
+                    except:
+                        config.enableTerminalPager = False
+                        print(divider)
+                        print(content)
+            else:
+                try:
+                    # paging without colours
+                    #pydoc.pager(content)
+                    # paging with colours
+                    pydoc.pipepager(content, cmd='less -R')
+                except:
+                    config.enableTerminalPager = False
+                    print(divider)
+                    print(content)
+        else:
+            print(divider)
+            print(content)
 
     def getDotCommandContent(self, command):
         if command in self.dotCommands:
@@ -149,7 +178,8 @@ class LocalCliHandler:
     def initialDisplay(self):
         print("--------------------")
         bibleReference = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
-        print("BIBLE:::{0}:::{1} [{2}.{3}.{4}]".format(config.mainText, bibleReference, config.mainB, config.mainC, config.mainV))
+        #print("BIBLE:::{0}:::{1} [{2}.{3}.{4}]".format(config.mainText, bibleReference, config.mainB, config.mainC, config.mainV))
+        print("{0} [{1}.{2}.{3}] - {4}, {5}".format(bibleReference, config.mainB, config.mainC, config.mainV, config.mainText, config.commentaryText))
         print("Enter an UBA command ('.help' for help):")
         return ""
 
@@ -388,5 +418,5 @@ class LocalCliHandler:
                 # finish message
         config.lastAppUpdateCheckDate = str(DateUtil.localDateNow())
 
-        print("Updated!")
+        print("You have the latest version.")
         return ".restart"

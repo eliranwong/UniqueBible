@@ -142,6 +142,20 @@ def checkApplicationUpdateCli():
         config.internet = False
         print("Failed to read '{0}'.".format(checkFile))
 
+# Get terminal mode history records
+def getHistoryRecords():
+    records = []
+    if os.path.isfile("myhistory"):
+        with open("myhistory", "r", encoding="utf-8") as input_file:
+            history = input_file.read()
+        for item in reversed(history.split("\n")):
+            item = item.strip()
+            if item and item.startswith("+"):
+                item = item[1:]
+                if not item.lower() in (".quit", ".restart", ".togglepager", ".history"):
+                    records.append(item)
+    return records
+
 # Local CLI
 if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     config.runMode = "terminal"
@@ -149,17 +163,19 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     checkMigration()
     checkApplicationUpdateCli()
 
-    import pydoc
     from util.LocalCliHandler import LocalCliHandler
 
     # get initial command
     command = " ".join(sys.argv[2:]).strip()
     if not command:
-        history = config.history["main"]
-        command = history[-1]
+        records = getHistoryRecords()
+        if records:
+            command = records[0]
 
     config.mainWindow = LocalCliHandler(command)
     runStartupPlugins()
+
+    promptIndicator = ">>> "
 
     if config.isPrompt_toolkitInstalled:
         from prompt_toolkit.formatted_text import HTML
@@ -173,56 +189,35 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         session = PromptSession(history=FileHistory('myhistory'))
         command_completer = WordCompleter(config.mainWindow.getTextCommandSuggestion(), ignore_case=True)
         auto_suggestion=AutoSuggestFromHistory()
-        divider = "--------------------"
-
+        toolbar = f" Unique Bible App [{config.version}]"
     elif sys.platform in ("linux", "darwin"):
         import readline
 
     if command:
-        print(config.mainWindow.getContent(command))
+        # display
+        content = config.mainWindow.getContent(command)
+        if content:
+            config.mainWindow.displayOutputOnTerminal(content)
     while not command.lower() in (".quit", ".restart"):
-        try:
-            config.mainWindow.initialDisplay()
-            # User command input
-            if config.isPrompt_toolkitInstalled:
-                command = session.prompt(">>> ", completer=command_completer, auto_suggest=auto_suggestion, bottom_toolbar=f" Unique Bible App [{config.version}]").strip()
-            elif sys.platform in ("linux", "darwin"):
-                import readline
-                command = input(">>> ").strip()
-            else:
-                command = input(">>> ").strip()
-            if command:
-                content = config.mainWindow.getContent(command)
-                if content:
-                    if content == ".restart":
-                        command = ".restart"
-                    if config.enableTerminalPager and not content in ("Command processed!", "INVALID_COMMAND_ENTERED") and not content.endswith("not supported in terminal mode."):
-                        if platform.system() == "Windows":
-                            # When you use remote powershell and want to pipe a command on the remote windows server through a pager, piping through  out-host -paging works as desired. Piping through more when running the remote command is of no use: the entire text is displayed at once.
-                            try:
-                                pydoc.pipepager(content, cmd='out-host -paging')
-                            except:
-                                try:
-                                    pydoc.pipepager(content, cmd='more')
-                                except:
-                                    config.enableTerminalPager = False
-                                    print(divider)
-                                    print(content)
-                        else:
-                            try:
-                                # paging without colours
-                                #pydoc.pager(content)
-                                # paging with colours
-                                pydoc.pipepager(content, cmd='less -R')
-                            except:
-                                config.enableTerminalPager = False
-                                print(divider)
-                                print(content)
-                    else:
-                        print(divider)
-                        print(content)
-        except:
-            pass
+        #try:
+        config.mainWindow.initialDisplay()
+        # User command input
+        if config.isPrompt_toolkitInstalled:
+            command = session.prompt(promptIndicator, completer=command_completer, auto_suggest=auto_suggestion, bottom_toolbar=toolbar).strip()
+        elif sys.platform in ("linux", "darwin"):
+            import readline
+            command = input(promptIndicator).strip()
+        else:
+            command = input(promptIndicator).strip()
+        if command:
+            content = config.mainWindow.getContent(command)
+            if content:
+                if content == ".restart":
+                    command = ".restart"
+                # display
+                config.mainWindow.displayOutputOnTerminal(content)
+        #except:
+        #    pass
 
     ConfigUtil.save()
     if command.lower() == ".restart":

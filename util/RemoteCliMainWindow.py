@@ -1,4 +1,4 @@
-import os, config, zipfile, gdown, shutil, re
+import os, config, zipfile, gdown, shutil, re, signal
 
 from util.LanguageUtil import LanguageUtil
 from util.TextCommandParser import TextCommandParser
@@ -118,6 +118,8 @@ class RemoteCliMainWindow(CrossPlatform):
         if found:
             text, b, c = found[1], found[2], found[3]
             text = FileUtil.getMP3TextFile(text)
+            # testing read plus display
+            #playlist = RemoteCliMainWindow().playAudioBibleChapterVerseByVerse(text, b, c, displayText=True)
             playlist = RemoteCliMainWindow().playAudioBibleChapterVerseByVerse(text, b, c)
         else:
             searchPattern = """[Rr][Ee][Aa][Dd][Vv][Ee][Rr][Ss][Ee]:::([A-Za-z0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)["']"""
@@ -144,20 +146,32 @@ class RemoteCliMainWindow(CrossPlatform):
                             playlist.append(audioFilePath)
         return playlist
 
-    def playAudioBibleChapterVerseByVerse(self, text, b, c, startVerse=0):
+    def playAudioBibleChapterVerseByVerse(self, text, b, c, startVerse=0, displayText=False):
         playlist = []
+        textList = []
         folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
         if os.path.isdir(folder):
-            verses = Bible(text).getVerseList(b, c)
+            bible = Bible(text)
+            verses = bible.getVerseList(b, c)
             for verse in verses:
                 if verse >= startVerse:
+                    # add audio file
                     audioFile = "{0}_{1}_{2}_{3}.mp3".format(text, b, c, verse)
                     audioFilePath = os.path.join(folder, audioFile)
                     if os.path.isfile(audioFilePath):
                         playlist.append((audioFile, audioFilePath))
+                    # add text
+                    if displayText:
+                        try:
+                            *_, verseText = bible.readTextVerse(b, c, verse)
+                            verseText = TextUtil.htmlToPlainText(verseText, False).strip()
+                            verseText = verseText.replace("audiotrack ", "")
+                            textList.append(verseText)
+                        except:
+                            textList.append("")
         if config.runMode == "terminal":
             playlist = [filepath for *_, filepath in playlist]
-            self.playAudioBibleFilePlayList(playlist)
+            self.playAudioBibleFilePlayListPlusDisplayText(playlist, textList) if displayText else self.playAudioBibleFilePlayList(playlist)
         return playlist
         #return [("NET_1_1_3.mp3", "audio/bibles/NET-UK/default/1_1/NET_1_1_3.mp3"), ("NET_1_1_4.mp3", "audio/bibles/NET-UK/default/1_1/NET_1_1_4.mp3")]
 
@@ -165,10 +179,12 @@ class RemoteCliMainWindow(CrossPlatform):
         # do not remove the dummy gui argument for this method
         self.closeMediaPlayer()
         if playlist:
+            # vlc on macOS
             if config.macVlc:
                 audioFiles = '" "'.join(playlist)
                 audioFiles = '"{0}"'.format(audioFiles)
                 WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFiles}")
+            # vlc on other platforms
             elif WebtopUtil.isPackageInstalled("vlc"):
                 audioFiles = '" "'.join(playlist)
                 audioFiles = '"{0}"'.format(audioFiles)
@@ -178,12 +194,40 @@ class RemoteCliMainWindow(CrossPlatform):
                 #os.system("pkill vlc")
                 WebtopUtil.run(f"{vlcCmd} --rate {config.vlcSpeed} {audioFiles}")
 
+    def playAudioBibleFilePlayListPlusDisplayText(self, playlist, textList, gui=False):
+        # do not remove the dummy gui argument for this method
+        self.closeMediaPlayer()
+        if playlist:
+            for index, audioFile in enumerate(playlist):
+                try:
+                    # display text
+                    print(textList[index])
+                    # vlc on macOS
+                    if config.macVlc:
+                        os.system(f"{config.macVlc} --play-and-exit --rate {config.vlcSpeed} {audioFile} &> /dev/null")
+                    # vlc on other platforms
+                    elif WebtopUtil.isPackageInstalled("vlc"):
+                        vlcCmd = "cvlc"
+                        os.system(f"{vlcCmd} --play-and-exit --rate {config.vlcSpeed} {audioFile} &> /dev/null")
+                except:
+                    pass
+                self.closeMediaPlayer()
+
     def closeMediaPlayer(self):
         if WebtopUtil.isPackageInstalled("pkill"):
+            # close vlc on macOS
             if config.macVlc:
                 os.system("pkill VLC")
+            # close vlc on other platforms
             if WebtopUtil.isPackageInstalled("vlc"):
                 os.system("pkill vlc")
+            # close espeak on Linux
+        elif config.mainWindow.textCommandParser.espeakProcess is not None:
+            try:
+                os.killpg(os.getpgid(self.textCommandParser.espeakProcess.pid), signal.SIGTERM)
+            except:
+                pass
+            self.textCommandParser.espeakProcess = None
 
     def enforceCompareParallelButtonClicked(self):
         config.enforceCompareParallel = not config.enforceCompareParallel

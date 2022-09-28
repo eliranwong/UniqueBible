@@ -51,6 +51,7 @@ class TextCommandParser:
         self.parent = parent
         self.lastKeyword = None
         self.cliTtsProcess = None
+        self.espeakProcess = None
         self.qtTtsEngine = None
         self.locationMap = {exlbl_entry: (name[0].upper(), name, float(latitude), float(longitude)) for exlbl_entry, name, latitude, longitude in allLocations}
 
@@ -1459,7 +1460,7 @@ class TextCommandParser:
                     language = isoLang2epeakLang[language][0]
                     # subprocess is used
                     # Discussion on use of "preexec_fn=os.setpgrp": https://stackoverflow.com/questions/23811650/is-there-a-way-to-make-os-killpg-not-kill-the-script-that-calls-it
-                    self.cliTtsProcess = subprocess.Popen(["espeak -s {0} -v {1} '{2}'".format(config.espeakSpeed, language, text)], shell=True, preexec_fn=os.setpgrp, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                    self.espeakProcess = subprocess.Popen(["espeak -s {0} -v {1} '{2}'".format(config.espeakSpeed, language, text)], shell=True, preexec_fn=os.setpgrp, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 else:
                     self.parent.displayMessage(config.thisTranslation["message_noEspeak"])
             else:
