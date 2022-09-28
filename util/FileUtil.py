@@ -35,7 +35,7 @@ class FileUtil:
         userFiles = ("config.py", customCssFile, customJsFile)
         for userFile in userFiles:
             if not os.path.isfile(userFile):
-                open(userFile, "w", encoding="utf-8").close()
+                open(userFile, "a", encoding="utf-8").close()
 
     @staticmethod
     def insertStringIntoFile(filename, data, offset):

@@ -771,7 +771,7 @@ if config.forceUseBuiltinMediaPlayer and not config.isVlcInstalled:
 macVlc = "/Applications/VLC.app/Contents/MacOS/VLC"
 config.macVlc = macVlc if platform.system() == "Darwin" and os.path.isfile(macVlc) else ""
 
-windowsVlc = r'"C:\Program Files\VideoLAN\VLC\vlc.exe"'
+windowsVlc = r'C:\Program Files\VideoLAN\VLC\vlc.exe'
 config.windowsVlc = windowsVlc if platform.system() == "Windows" and os.path.isfile(windowsVlc) else ""
 
 # Check if system tray is enabled

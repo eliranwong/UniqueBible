@@ -4,12 +4,11 @@
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
 import glob
-import os, platform, logging, re, sys, subprocess, requests
+import os, platform, logging, re, sys, subprocess
 import logging.handlers as handlers
 from util.FileUtil import FileUtil
 from util.NetworkUtil import NetworkUtil
 from util.WebtopUtil import WebtopUtil
-from util.UpdateUtil import UpdateUtil
 
 # Change working directory to UniqueBible directory
 thisFile = os.path.realpath(__file__)
@@ -19,6 +18,8 @@ if os.getcwd() != wd:
 
 # Create custom files
 FileUtil.createCustomFiles()
+if not platform.system() == "Windows" and os.path.isfile("config.py"):
+    os.system("touch config.py")
 
 # Make sure config.py exists before importing config and all other scripts which depends on config
 import config
@@ -70,6 +71,9 @@ initialCommandIsPython = True if initialCommand.endswith(".py") and os.path.isfi
 # Check for dependencies and other essential elements
 os.environ["PYTHONUNBUFFERED"] = "1"
 from util.checkup import *
+# The following two imports must not be placed before checkup utilities
+import requests
+from util.UpdateUtil import UpdateUtil
 
 if initialCommand == "setup-only":
     print("UniqueBibleApp installed!")
