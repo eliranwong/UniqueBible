@@ -1,3 +1,6 @@
+Changes in 32.06:
+* Added support of using Windows VLC to play bible audio.
+
 Changes in 32.05:
 Mulitple changes in terminal mode.
 * Improved initial text display

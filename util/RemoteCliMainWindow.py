@@ -234,11 +234,12 @@ class RemoteCliMainWindow(CrossPlatform):
         # do not remove the dummy gui argument for this method
         self.closeMediaPlayer()
         if playlist:
-            # vlc on macOS
-            if config.macVlc:
+            # vlc on macOS or Windows
+            if config.macVlc or config.windowsVlc:
+                vlcCmd = config.macVlc if config.macVlc else config.windowsVlc
                 audioFiles = '" "'.join(playlist)
                 audioFiles = '"{0}"'.format(audioFiles)
-                WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFiles}")
+                WebtopUtil.run(f"{vlcCmd} --rate {config.vlcSpeed} {audioFiles}")
             # vlc on other platforms
             elif WebtopUtil.isPackageInstalled("vlc"):
                 audioFiles = '" "'.join(playlist)
@@ -260,6 +261,9 @@ class RemoteCliMainWindow(CrossPlatform):
                     # vlc on macOS
                     if config.macVlc:
                         os.system(f"{config.macVlc} --intf rc --play-and-exit --rate {config.vlcSpeed} {audioFile} &> /dev/null")
+                    # vlc on windows
+                    elif config.windowsVlc:
+                        os.system(f"{config.windowsVlc} --play-and-exit --rate {config.vlcSpeed} {audioFile}")
                     # vlc on other platforms
                     elif WebtopUtil.isPackageInstalled("vlc"):
                         vlcCmd = "cvlc"
