@@ -1,3 +1,11 @@
+Changes in 32.05:
+Mulitple changes in terminal mode.
+* Improved initial text display
+* Organised .dot commands.
+* Added .readsync command to sync text display with audio playback.
+* Added .show* commands and a few alias commands.
+* Fixed ability to stop espeak on Linux.
+
 Changes in 32.04:
 * Improved handling of startup display.
 * Added ability to stop espeak on Linux.

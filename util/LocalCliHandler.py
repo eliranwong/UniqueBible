@@ -25,37 +25,52 @@ class LocalCliHandler:
             ".help": ("display help menu", self.help),
             ".togglepager": ("toggle paging for text output", self.togglePager),
             ".stopaudio": ("stop audio playback", self.stopAudio),
+            ".sa": ("an alias to the '.stopaudio' command", self.stopAudio),
             ".commands": ("display available commands", self.commands),
             ".dotcommands": ("display available dot commands", self.dotCommandsHelp),
-            ".bible": ("open the last opened bible passage", self.bible),
-            ".bibles": ("display installed bibles", self.bibles),
             ".read": ("read available audio files", self.read),
+            ".readsync": ("read available audio files with synchronised text display", self.readsync),
             ".last": ("display last selected items", self.last),
-            ".books": ("display bible book list", self.books),
-            ".booknames": ("display bible book name list", self.booknames),
-            ".chapters": ("display bible chapter list", self.chapters),
-            ".verses": ("display bible verse list", self.verses),
-            ".download": ("display available downloads", self.download),
-            ".data": ("display installed data", self.data),
-            ".commentary": ("open the last opened commentary", self.commentary),
-            ".commentaries": ("display installed commentaries", self.commentaries),
-            ".referencebooks": ("display installed reference books", self.referencebooks),
             ".paste": ("run clipboard text as command", self.paste),
+            ".p": ("an alias to the '.paste' command", self.paste),
             ".share": ("copy a web link for sharing", self.share),
             ".copy": ("copy the last opened content", self.copy),
             ".copyhtml": ("copy the last opened content in html format", self.copyHtml),
             ".find": ("find a string in the last opened content", self.find),
+            ".history": ("display history records", self.history),
+            ".update": ("update Unique Bible App to the latest version", self.update),
+            ".config": ("display UBA configurations", self.config),
+            ".showbibles": ("display installed bibles", self.showbibles),
+            ".showstrongbibles": ("display installed bibles with Strong's numbers", self.showstrongbibles),
+            ".showbiblebooks": ("display bible book list", self.showbiblebooks),
+            ".showbibleabbreviations": ("display bible book name list", self.showbibleabbreviations),
+            ".showbiblechapters": ("display bible chapter list", self.showbiblechapters),
+            ".showbibleverses": ("display bible verse list", self.showbibleverses),
+            ".showcommentaries": ("display installed commentaries", self.showcommentaries),
+            ".showtopics": ("display installed bible topic modules", self.showtopics),
+            ".showlexicons": ("display installed lexicons", self.showlexicons),
+            ".showencyclopedia": ("display installed encyclopedia", self.showencyclopedia),
+            ".showdictionaries": ("display installed dictionaries", self.showdictionaries),
+            ".showthirdpartydictionary": ("display installed third-party dictionaries", self.showthirdpartydictionary),
+            ".showreferencebooks": ("display installed reference books", self.showreferencebooks),
+            ".showdata": ("display installed data", self.showdata),
+            ".showdownloads": ("display available downloads", self.showdownloads),
             #".openbookfeatures": ("open book features", self.openBookFeatures),
             #".openchapterfeatures": ("open chapter features", self.openChapterFeatures),
             #".openversefeatures": ("open verse features", self.openVerseFeatures),
-            ".history": ("display history records", self.history),
-            ".update": ("update Unique Bible App to the latest version", self.update),
+            #".menu": ("display main menu", self.menu),
+            #".open": ("display open menu", self.open),
+            #".change": ("display change menu", self.change),
+            #".show": ("display show menu", self.show),
+            #".download": ("display download menu", self.download),
+            #".set": ("display set menu", self.set), # any or particular config
         }
 
     def execPythonFile(self, script):
         self.crossPlatform.execPythonFile(script)
 
     def getContent(self, command):
+        command = command.strip()
         if re.search('^(map:::|bible:::mab:::|bible:::mib:::|bible:::mob:::|bible:::mpb:::|bible:::mtb:::)', command.lower()):
             return self.share(command)
         # Dot commands
@@ -120,7 +135,8 @@ class LocalCliHandler:
         elif command == ".restart":
             print("Restarting ...")
             return ""
-        return f"Command not found: {command}"
+        print(f"Command not found: {command}")
+        return ""
 
     def getTextCommandSuggestion(self):
         # Text command autocompletion/autosuggest
@@ -155,8 +171,11 @@ class LocalCliHandler:
         return pprint.pformat(self.getTextCommandSuggestion())
 
     def read(self):
-        playlist = self.textCommandParser.parent.getPlaylistFromHTML(self.html)
-        self.textCommandParser.parent.playAudioBibleFilePlayList(playlist)
+        self.textCommandParser.parent.getPlaylistFromHTML(self.html)
+        return ""
+
+    def readsync(self):
+        self.textCommandParser.parent.getPlaylistFromHTML(self.html, displayText=True)
         return ""
 
     def last(self):
@@ -175,40 +194,76 @@ class LocalCliHandler:
         print(f"_promise:::{config.promises}.{config.promisesEntry}")
         return ""
 
+    def getPlusBible(self):
+        plusBible = ""
+        if not config.mainText == config.favouriteBible:
+            plusBible = config.favouriteBible
+        elif not config.mainText == config.favouriteBible2:
+            plusBible = config.favouriteBible2
+        elif not config.mainText == config.favouriteBible3:
+            plusBible = config.favouriteBible3
+        if plusBible:
+            return f", {plusBible}"
+        return plusBible
+
     def initialDisplay(self):
         print("--------------------")
         bibleReference = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
         #print("BIBLE:::{0}:::{1} [{2}.{3}.{4}]".format(config.mainText, bibleReference, config.mainB, config.mainC, config.mainV))
-        print("{0} [{1}.{2}.{3}] - {4}, {5}".format(bibleReference, config.mainB, config.mainC, config.mainV, config.mainText, config.commentaryText))
+        print("{0} [{1}.{2}.{3}] - {4}{5}, {6}".format(bibleReference, config.mainB, config.mainC, config.mainV, config.mainText, self.getPlusBible(), config.commentaryText))
         print("Enter an UBA command ('.help' for help):")
         return ""
 
-    def books(self):
+    def showbibleabbreviations(self):
         bible = Bible(config.mainText)
         bibleBooks = BibleBooks()
         print([f"[{b}] {bibleBooks.getStandardBookAbbreviation(b)}" for b in bible.getBookList()])
         return ""
 
-    def booknames(self):
+    def showbiblebooks(self):
         bible = Bible(config.mainText)
         bibleBooks = BibleBooks()
         print([f"[{b}] {bibleBooks.getStandardBookFullName(b)}" for b in bible.getBookList()])
         return ""
 
-    def chapters(self):
+    def showbiblechapters(self):
         bible = Bible(config.mainText)
         print(bible.getChapterList(config.mainB))
         return ""
 
-    def verses(self):
+    def showbibleverses(self):
         bible = Bible(config.mainText)
         print(bible.getVerseList(config.mainB, config.mainV))
         return ""
 
-    def bibles(self):
-        return TextUtil.htmlToPlainText(self.getBiblesContent()).strip()
+    def showtopics(self):
+        content = ""
+        content += "<h2>{0}</h2>".format(config.thisTranslation["menu5_topics"])
+        moduleList = []
+        for index, topic in enumerate(self.crossPlatform.topicListAbb):
+            moduleList.append(f"[<ref>SEARCHTOOL:::{topic}:::</ref> ] {self.crossPlatform.topicList[index]}")
+        content += "<br>".join(moduleList)
+        return TextUtil.htmlToPlainText(content).strip()
 
-    def getBiblesContent(self):
+    def showdictionaries(self):
+        content = ""
+        content += "<h2>{0}</h2>".format(config.thisTranslation["context1_dict"])
+        moduleList = []
+        for index, topic in enumerate(self.crossPlatform.dictionaryListAbb):
+            moduleList.append(f"[<ref>SEARCHTOOL:::{topic}:::</ref> ] {self.crossPlatform.dictionaryList[index]}")
+        content += "<br>".join(moduleList)
+        return TextUtil.htmlToPlainText(content).strip()
+
+    def showencyclopedia(self):
+        content = ""
+        content += "<h2>{0}</h2>".format(config.thisTranslation["context1_encyclopedia"])
+        moduleList = []
+        for index, topic in enumerate(self.crossPlatform.encyclopediaListAbb):
+            moduleList.append(f"[<ref>SEARCHTOOL:::{topic}:::</ref> ] {self.crossPlatform.encyclopediaList[index]}")
+        content += "<br>".join(moduleList)
+        return TextUtil.htmlToPlainText(content).strip()
+
+    def showbibles(self):
         #return pprint.pformat(dict(zip(self.crossPlatform.textList, self.crossPlatform.textFullNameList)))
         content = ""
         content += "<h2>{0}</h2>".format(config.thisTranslation["menu5_bible"])
@@ -216,44 +271,56 @@ class LocalCliHandler:
         for index, bible in enumerate(self.crossPlatform.textList):
             bibleList.append(f"[<ref>TEXT:::{bible}</ref> ] {self.crossPlatform.textFullNameList[index]}")
         content += "<br>".join(bibleList)
-        return content
+        return TextUtil.htmlToPlainText(content).strip()
 
-    def commentaries(self):
-        return TextUtil.htmlToPlainText(self.getCommentariesContent()).strip()
+    def showstrongbibles(self):
+        strongBiblesFullNameList = [Bible(text).bibleInfo() for text in self.crossPlatform.strongBibles]
+        content = ""
+        content += "<h2>{0} + {1}</h2>".format(config.thisTranslation["menu5_bible"], config.thisTranslation["bibleStrongNumber"])
+        bibleList = []
+        for index, bible in enumerate(self.crossPlatform.strongBibles):
+            bibleList.append(f"[<ref>TEXT:::{bible}</ref> ] {strongBiblesFullNameList[index]}")
+        content += "<br>".join(bibleList)
+        return TextUtil.htmlToPlainText(content).strip()
 
-    def getCommentariesContent(self):
+    def showthirdpartydictionary(self):
+        modules = []
+        for module in self.crossPlatform.thirdPartyDictionaryList:
+            modules.append(f"[<ref>SEARCHTHIRDDICTIONARY:::{module}:::</ref> ]")
+        content = "<br>".join(modules)
+        return TextUtil.htmlToPlainText(content).strip()
+
+    def showlexicons(self):
+        modules = []
+        for module in self.crossPlatform.lexiconList:
+            modules.append(f"[<ref>SEARCHLEXICON:::{module}:::</ref> ]")
+        content = "<br>".join(modules)
+        return TextUtil.htmlToPlainText(content).strip()
+
+    def showcommentaries(self):
         self.textCommandParser.parent.setupResourceLists()
         content = ""
         content += """<h2><ref onclick="window.parent.submitCommand('.commentarymenu')">{0}</ref></h2>""".format(config.thisTranslation["menu4_commentary"])
         content += "<br>".join(["""[<ref>COMMENTARY:::{0}:::</ref> ] {1}""".format(abb, self.textCommandParser.parent.commentaryFullNameList[index]) for index, abb in enumerate(self.textCommandParser.parent.commentaryList)])
-        return content
+        return TextUtil.htmlToPlainText(content).strip()
 
-    def referencebooks(self):
-        return TextUtil.htmlToPlainText(self.getReferencebooksContent()).strip()
-
-    def getReferencebooksContent(self):
+    def showreferencebooks(self):
         self.textCommandParser.parent.setupResourceLists()
         content = ""
         content += "<h2>{0}</h2>".format(config.thisTranslation["menu5_selectBook"])
         content += "<br>".join(["""[<ref>BOOK:::{0}</ref> ] {0}""".format(book) for book in self.textCommandParser.parent.referenceBookList])
-        return content
+        return TextUtil.htmlToPlainText(content).strip()
 
-    def data(self):
-        return TextUtil.htmlToPlainText(self.getDataContent()).strip()
-
-    def getDataContent(self):
+    def showdata(self):
         self.textCommandParser.parent.setupResourceLists()
         content = ""
         content += "<h2>{0}</h2>".format(config.thisTranslation["menu_data"])
         dataList = [item for item in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu", "Bible Data"), "txt")]
         content += "<br>".join(["""[<ref>DATA:::{0}</ref> ] {0}""".format(book)
             for book in dataList])
-        return content
+        return TextUtil.htmlToPlainText(content).strip()
 
-    def download(self):
-        return TextUtil.htmlToPlainText(self.getDownloadContent()).strip()
-
-    def getDownloadContent(self):
+    def showdownloads(self):
         content = ""
         from util.DatafileLocation import DatafileLocation
         from util.GithubUtil import GithubUtil
@@ -286,12 +353,14 @@ class LocalCliHandler:
                 else:
                     content += """[<ref>DOWNLOAD:::{1}:::{0}</ref> ]<br>""".format(file.replace(extension, ""), type)
         content += "<h2>Third-party Resources</h2><p>Read <ref>https://github.com/eliranwong/UniqueBible/wiki/Third-party-resources</ref> about third-party resources.</a></p>"
-        return content
+        return TextUtil.htmlToPlainText(content).strip()
 
     def paste(self):
         if config.isPyperclipInstalled:
             import pyperclip
             command = pyperclip.paste()
+            print("Running clipboard text:")
+            print(command)
             return self.getContent(command)
         return self.noClipboardUtility()
 
@@ -420,3 +489,9 @@ class LocalCliHandler:
 
         print("You have the latest version.")
         return ".restart"
+
+    def config(self):
+        intro = "<p>Unique Bible App Configurations</p>"
+        intro += "<p>Default settings are good for general use.  In case you want to make changes, you may run '<ref>_setconfig:::</ref>' command in terminal mode.  Alternately, you may manually edit the file 'config.py', located in UBA home directory, when UBA is not running.</p>"
+        content = "{0}<p>{1}</p>".format(intro, "</p><p>".join(["[ITEM] <ref>{0}</ref>{1}\nCurrent value: <z>{2}</z>".format(key, re.sub("        # ", "", value), eval("pprint.pformat(config."+key+")")) for key, value in config.help.items()]))
+        return TextUtil.htmlToPlainText(content).strip()

@@ -152,7 +152,8 @@ def getHistoryRecords():
             item = item.strip()
             if item and item.startswith("+"):
                 item = item[1:]
-                if not item.lower() in (".quit", ".restart", ".togglepager", ".history"):
+                startupException = (".quit", ".restart", ".togglepager", ".history", ".update", ".stopaudio", ".read", ".download", ".paste", ".share", ".copy", ".copyhtml")
+                if not item.lower() in startupException and not item.lower().startswith("_setconfig:::"):
                     records.append(item)
     return records
 

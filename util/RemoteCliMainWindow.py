@@ -8,7 +8,8 @@ from util.DatafileLocation import DatafileLocation
 from util.TextUtil import TextUtil
 from util.WebtopUtil import WebtopUtil
 from util.FileUtil import FileUtil
-from db.BiblesSqlite import Bible
+from db.BiblesSqlite import Bible, MorphologySqlite
+from util.BibleBooks import BibleBooks
 
 
 class RemoteCliMainWindow(CrossPlatform):
@@ -110,28 +111,38 @@ class RemoteCliMainWindow(CrossPlatform):
         else:
             return("main", "No file specified", {})
 
-    def getPlaylistFromHTML(self, html):
+    def getPlaylistFromHTML(self, html, displayText=False):
         playlist = []
+        textList = []
         #searchPattern = """[Rr][Ee][Aa][Dd][Cc][Hh][Aa][Pp][Tt][Ee][Rr]:::([A-Za-z0-9]+?)\.([0-9]+?)\.([0-9]+?)[\."']"""
         searchPattern = """_[Cc][Hh][Aa][Pp][Tt][Ee][Rr][Ss]:::([^\.>]+?)_([0-9]+?)\.([0-9]+?)["'].*onclick=["']rC\("""
         found = re.search(searchPattern, html)
         if found:
             text, b, c = found[1], found[2], found[3]
             text = FileUtil.getMP3TextFile(text)
-            # testing read plus display
-            #playlist = RemoteCliMainWindow().playAudioBibleChapterVerseByVerse(text, b, c, displayText=True)
-            playlist = RemoteCliMainWindow().playAudioBibleChapterVerseByVerse(text, b, c)
+            return RemoteCliMainWindow().playAudioBibleChapterVerseByVerse(text, b, c, displayText=displayText)
         else:
             searchPattern = """[Rr][Ee][Aa][Dd][Vv][Ee][Rr][Ss][Ee]:::([A-Za-z0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)["']"""
             found = re.findall(searchPattern, html)
             if found:
                 for entry in found:
                     text, b, c, v = entry
+                    if displayText:
+                        try:
+                            *_, verseText = Bible(text).readTextVerse(b, c, v)
+                            verseText = TextUtil.htmlToPlainText(f"[<ref>{config.mainWindow.textCommandParser.bcvToVerseReference(b, c, v)}</ref> ]{verseText}").strip()
+                            verseText = verseText.replace("audiotrack ", "")
+                            textList.append(verseText)
+                        except:
+                            textList.append("")
                     audioFolder = os.path.join("audio", "bibles", text, "default", "{1}_{2}".format(text, b, c))
                     audioFile = "{0}_{1}_{2}_{3}.mp3".format(text, b, c, v)
                     audioFilePath = os.path.join(audioFolder, audioFile)
                     if os.path.isfile(audioFilePath):
                         playlist.append(audioFilePath)
+                if config.runMode == "terminal":
+                    self.playAudioBibleFilePlayListPlusDisplayText(playlist, textList) if displayText else self.playAudioBibleFilePlayList(playlist)
+                    return []
             else:
                 searchPattern = """[Rr][Ee][Aa][Dd]([Ww][Oo][Rr][Dd]|[Ll][Ee][Xx][Ee][Mm][Ee]):::([A-Za-z0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)["']"""
                 found = re.findall(searchPattern, html)
@@ -139,12 +150,55 @@ class RemoteCliMainWindow(CrossPlatform):
                     for entry in found:
                         wordType, text, b, c, v, wordID = entry
                         audioFolder = os.path.join("audio", "bibles", text, "default", "{1}_{2}".format(text, b, c))
-                        prefix = "lex_" if wordType.lower() == "lexeme" else ""
+                        #prefix = "lex_" if wordType.lower() == "lexeme" else ""
+                        if wordType.lower() == "lexeme":
+                            prefix = "lex_"
+                            if displayText:
+                                try:
+                                    textList.append(self.getOriginalWord(("lex", text, b, c, v, wordID)))
+                                except:
+                                    textList.append("")
+                        else:
+                            prefix = ""
+                            if displayText:
+                                try:
+                                    textList.append(self.getOriginalWord((text, b, c, v, wordID)))
+                                except:
+                                    textList.append("")
                         audioFile = "{5}{0}_{1}_{2}_{3}_{4}.mp3".format(text, b, c, v, wordID, prefix)
                         audioFilePath = os.path.join(audioFolder, audioFile)
                         if os.path.isfile(audioFilePath):
                             playlist.append(audioFilePath)
+                if config.runMode == "terminal":
+                    self.playAudioBibleFilePlayListPlusDisplayText(playlist, textList) if displayText else self.playAudioBibleFilePlayList(playlist)
+                    return []
         return playlist
+
+    def getOriginalWord(self, elements):
+
+        books = BibleBooks().booksMap.get(config.standardAbbreviation, BibleBooks.abbrev["eng"])
+        morphology = MorphologySqlite()
+
+        if len(elements) == 5:
+            text, b, c, v, wordID = elements
+            #wordID = wordID[:-4]
+            if b in books:
+                word = morphology.getWord(b, wordID)
+                if not word:
+                    word = wordID
+                #title = "{1} {2}:{3} - {4} ({0})".format(text, books[b][0], c, v, word)
+                title = "[<ref>READWORD:::{0}.{5}.{2}.{3}.{6}</ref> ] {4}".format(text, books[b][0], c, v, word, b, wordID)
+        elif len(elements) == 6:
+            *_, text, b, c, v, wordID = elements
+            #wordID = wordID[:-4]
+            if b in books:
+                lexeme = morphology.getLexeme(int(b), int(wordID))
+                if not lexeme:
+                    lexeme = wordID
+                #title = "{1} {2}:{3} - {4} [{5}] ({0})".format(text, books[b][0], c, v, lexeme, lex)
+                title = "[<ref>READLEXEME:::{0}.{5}.{2}.{3}.{6}</ref> ] {4}".format(text, books[b][0], c, v, lexeme, b, wordID)
+        title = TextUtil.htmlToPlainText(title).strip()
+        return title
 
     def playAudioBibleChapterVerseByVerse(self, text, b, c, startVerse=0, displayText=False):
         playlist = []
@@ -164,7 +218,7 @@ class RemoteCliMainWindow(CrossPlatform):
                     if displayText:
                         try:
                             *_, verseText = bible.readTextVerse(b, c, verse)
-                            verseText = TextUtil.htmlToPlainText(verseText, False).strip()
+                            verseText = TextUtil.htmlToPlainText(f"[<ref>{config.mainWindow.textCommandParser.bcvToVerseReference(b, c, verse)}</ref> ]{verseText}").strip()
                             verseText = verseText.replace("audiotrack ", "")
                             textList.append(verseText)
                         except:
@@ -172,6 +226,7 @@ class RemoteCliMainWindow(CrossPlatform):
         if config.runMode == "terminal":
             playlist = [filepath for *_, filepath in playlist]
             self.playAudioBibleFilePlayListPlusDisplayText(playlist, textList) if displayText else self.playAudioBibleFilePlayList(playlist)
+            return []
         return playlist
         #return [("NET_1_1_3.mp3", "audio/bibles/NET-UK/default/1_1/NET_1_1_3.mp3"), ("NET_1_1_4.mp3", "audio/bibles/NET-UK/default/1_1/NET_1_1_4.mp3")]
 
@@ -204,11 +259,11 @@ class RemoteCliMainWindow(CrossPlatform):
                     print(textList[index])
                     # vlc on macOS
                     if config.macVlc:
-                        os.system(f"{config.macVlc} --play-and-exit --rate {config.vlcSpeed} {audioFile} &> /dev/null")
+                        os.system(f"{config.macVlc} --intf rc --play-and-exit --rate {config.vlcSpeed} {audioFile} &> /dev/null")
                     # vlc on other platforms
                     elif WebtopUtil.isPackageInstalled("vlc"):
                         vlcCmd = "cvlc"
-                        os.system(f"{vlcCmd} --play-and-exit --rate {config.vlcSpeed} {audioFile} &> /dev/null")
+                        os.system(f"{vlcCmd} --intf rc --play-and-exit --rate {config.vlcSpeed} {audioFile} &> /dev/null")
                 except:
                     pass
                 self.closeMediaPlayer()
@@ -222,12 +277,8 @@ class RemoteCliMainWindow(CrossPlatform):
             if WebtopUtil.isPackageInstalled("vlc"):
                 os.system("pkill vlc")
             # close espeak on Linux
-        elif config.mainWindow.textCommandParser.espeakProcess is not None:
-            try:
-                os.killpg(os.getpgid(self.textCommandParser.espeakProcess.pid), signal.SIGTERM)
-            except:
-                pass
-            self.textCommandParser.espeakProcess = None
+            if WebtopUtil.isPackageInstalled("espeak"):
+                os.system("pkill espeak")
 
     def enforceCompareParallelButtonClicked(self):
         config.enforceCompareParallel = not config.enforceCompareParallel

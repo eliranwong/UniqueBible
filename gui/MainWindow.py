@@ -5461,10 +5461,13 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.displayMessage(config.thisTranslation["noMediaPlayer"])
 
     def closeMediaPlayer(self):
-        if config.macVlc:
-            os.system("pkill VLC")
-        if WebtopUtil.isPackageInstalled("vlc") and WebtopUtil.isPackageInstalled("pkill"):
-            os.system("pkill vlc")
+        if WebtopUtil.isPackageInstalled("pkill"):
+            if config.macVlc:
+                os.system("pkill VLC")
+            if WebtopUtil.isPackageInstalled("vlc"):
+                os.system("pkill vlc")
+            if WebtopUtil.isPackageInstalled("espeak"):
+                os.system("pkill espeak")
         if self.vlcPlayer is not None:
             self.vlcPlayer.close()
         # stop individual offline TTS audio
@@ -5479,12 +5482,6 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             except:
                 pass
             self.textCommandParser.cliTtsProcess = None
-        if self.textCommandParser.espeakProcess is not None:
-            try:
-                os.killpg(os.getpgid(self.textCommandParser.espeakProcess.pid), signal.SIGTERM)
-            except:
-                pass
-            self.textCommandParser.espeakProcess = None
         elif self.textCommandParser.qtTtsEngine is not None:
             self.textCommandParser.qtTtsEngine.stop()
 
