@@ -1,3 +1,12 @@
+Changes in 32.08:
+* Add colour customisation in terminal mode, currently 6 options:
+    config.terminalVerseNumberColor
+    config.terminalResourceLinkColor
+    config.terminalSearchHighlightBackground
+    config.terminalSearchHighlightForeground
+    config.terminalFindHighlightBackground
+    config.terminalFindHighlightForeground
+
 Changes in 32.07:
 * Fixed setup import issues.
 
@@ -50,8 +59,8 @@ Changes in 31.93:
 Multiple improvements in terminal mode.
 * Fixed running readchapter:::, study::: command.
 * Added support of text coloring in terminal mode.
-* Added muliple dot command. For description, run ".dotcommands".
-* Support running clipboard text as command, via ".paste" command.
+* Added muliple dot command. For description, run .dotcommands.
+* Support running clipboard text as command, via .paste command.
 * Support paging of long text.
 
 Changes in 31.92:
@@ -76,7 +85,7 @@ Changes in 31.86:
 * Fixed UBA startup without an argument.
 
 Changes in 31.83, 31.84, 31.85:
-* Added "terminal" mode.
+* Added terminal mode.
     Users can now run in terminal, python3 uba.py terminal
     Wiki page: https://github.com/eliranwong/UniqueBible/wiki/Terminal-Mode
 
@@ -85,17 +94,17 @@ Changes in 31.82:
 
 Changes in 31.81:
 * Added two command keywords, dayaudio::: and dayaudioplus:::
-* Added "Reading Plan" to http-server side navigation menu.
+* Added Reading Plan to http-server side navigation menu.
 
 Changes in 31.80:
 * Added a command keyword DAY:::, to display 365 Day Bible Reading Content
 * Fixed the issue that multiple verse display was scrolled to the last verse.
 
 Changes in 31.79:
-* Added "Others" section in http-server library menu, to display available data lists.
+* Added Others section in http-server library menu, to display available data lists.
 
 Changes in 31.78:
-* Added a command keyword DATA:::, to display data lists, available in menu plugin "Bible Data", into a table.
+* Added a command keyword DATA:::, to display data lists, available in menu plugin Bible Data, into a table.
 
 Changes in 31.77:
 * Added interface to open a bible map on http-server display.
@@ -114,12 +123,12 @@ Changes in 31.75:
     e.g. MAP:::Acts 15:36-18:22
 
 Changes in 31.74:
-* Added "_comparison:::" command to open bible comparison menu.
+* Added _comparison::: command to open bible comparison menu.
     Http-server users can enter either _comparison::: or .comparison in command entry.
 
 Changes in 31.73:
 * Support vnc display.
-    To use UBA with VNC display, users need to manually add a file named "use_vnc" in UBA home folder.
+    To use UBA with VNC display, users need to manually add a file named use_vnc in UBA home folder.
 
 Changes in 31.72:
 * Support running without sandbox
@@ -129,14 +138,14 @@ Changes in 31.71:
 
 Changes in 31.70:
 * Added support of using installed system site packages.
-    To enable this feature, users need to manually add a file named "use_system_site_packages" in UBA home folder, BEFORE the first run or BEFORE setting up venv folder.
+    To enable this feature, users need to manually add a file named use_system_site_packages in UBA home folder, BEFORE the first run or BEFORE setting up venv folder.
 
 Changes in 31.69:
 * Fixed running UBA without Qt library.
 
 Changes in 31.68:
-* Integrated Google Earth links into plugin "Bible Locations".
-    Google Earth links are labeled as "[3D]", on information window when a location pin is clicked.
+* Integrated Google Earth links into plugin Bible Locations.
+    Google Earth links are labeled as [3D], on information window when a location pin is clicked.
 
 Changes in 31.67:
 * Set databaseConvertedOnStartup to True for new installations.
@@ -148,10 +157,10 @@ Changes in 31.65:
 * Fixed read word in http mode.
 
 Changes in 31.64:
-* Removed "saved" message dialog when worspace does autosaving.
+* Removed saved message dialog when worspace does autosaving.
 
 Changes in 31.63:
-* Added Windows icon file "UniqueBibleApp.ico".
+* Added Windows icon file UniqueBibleApp.ico.
 
 Changes in 31.62:
 * Fixed import MyBible RSV with Apocrypha.
@@ -185,7 +194,7 @@ Changes in 31.53:
 * Fixed displaying book content.
 
 Changes in 31.52:
-* Added a "Display on Study Window" button on note editor.
+* Added a Display on Study Window button on note editor.
 * Added tab title and tooltip for a Google map to be displayed on Study Window.
 
 Changes in 31.51:
@@ -196,11 +205,11 @@ Changes in 31.50:
     - Relocated buttons
     - Changed and added some icons
     - Group bible tool buttons together
-* Added "Edit" and "Others" buttons to Master Control Library 2 tab "Notes" session.
+* Added Edit and Others buttons to Master Control Library 2 tab Notes session.
 
 Changes in 31.49:
-* Added built-in map browser in menu plugin "Bible Locations".
-* Added a splitter to menu plugin "Bible Locations", so that users can maximise the map view by moving the splitter.
+* Added built-in map browser in menu plugin Bible Locations.
+* Added a splitter to menu plugin Bible Locations, so that users can maximise the map view by moving the splitter.
 * Fixed loading Google map from Study Window to full screen.
 * Enhanced integration of several more newly created menu plugins.
 
@@ -218,7 +227,7 @@ Changes in 31.45:
 - https://github.com/eliranwong/UniqueBible/wiki/Backup-with-Google-Drive
 
 Changes in 31.44:
-* Added a menu plugin "Bible Commentaries".
+* Added a menu plugin Bible Commentaries.
 * Integrated menu plugin into material menu.
 
 Changes in 31.43:
@@ -231,14 +240,14 @@ Changes in 31.42:
 
 Changes in 31.41:
 * Enhanced image viewer.
-    - Added "Previous" and "Next" buttons.
+    - Added Previous and Next buttons.
     - It now accepts initialScrollIndex.
 
 Changes in 31.40:
-* Improved menu plugin "Bible Timelines", to make it launch with a timeline related to the currently opened book.
+* Improved menu plugin Bible Timelines, to make it launch with a timeline related to the currently opened book.
 
 Changes in 31.39:
-* Added menu plugin "Bible Lexicons".
+* Added menu plugin Bible Lexicons.
 * Added config.parallels and config.promises.
 * Added ability in the following plugins, to load and save related configurations:
     - Bible Topics
@@ -249,14 +258,14 @@ Changes in 31.39:
     - Bible Dictionaries
     - Third Party Dictionaries
     - Reference Books
-* Added "Previous Chapter" and "Next Chapter" buttons to menu plugin "Reference Books".
+* Added Previous Chapter and Next Chapter buttons to menu plugin Reference Books.
 * Added support of using built-in image viewer with open::: command.
 
 Changes in 31.38:
 * Added refreshWindowsAfterSavingNote config flag.
 
 Changes in 31.37:
-* Added "Bible Names" to "Bible Data".
+* Added Bible Names to Bible Data.
 
 Changes in 31.36:
 * Hide close option of content view in some menu plugins.
@@ -268,12 +277,12 @@ Changes in 31.35:
     - Third Party Dictionaries
     - Reference Books
 * Integrated new plugins into material menu.
-* Updated "Bible Topics"
+* Updated Bible Topics
 
 Changes in 31.34:
-* Added menu plugin "Bible Topics"
-* Updated menu plugin "Bible Parallels"
-* Integrated menu plugin "Bible Topics" into material menu.
+* Added menu plugin Bible Topics
+* Updated menu plugin Bible Parallels
+* Integrated menu plugin Bible Topics into material menu.
 
 Changes in 31.33:
 * Trigger download helper to download missing but required database files for certain menu plugins when the plugins are launched.
@@ -291,9 +300,9 @@ Changes in 31.32:
 
 Changes in 31.31:
 * Added an image viewer for opening image files.
-* Added a menu plugin "Bible Timelines".
+* Added a menu plugin Bible Timelines.
     Wiki: https://github.com/eliranwong/UniqueBible/wiki/Bible-Timelines
-* Integrated "Bible Timelines" into material menu.
+* Integrated Bible Timelines into material menu.
 
 Changes in 31.30:
 * Added debugging to Google Drives Notes Backup.
@@ -302,28 +311,28 @@ Changes in 31.29:
 * Added ability to disable installing optional modules.
 
 Changes in 31.28:
-* Added "Notes" view to Master Control Library2 tab.
+* Added Notes view to Master Control Library2 tab.
 
 Changes in 31.27:
 Material menu layout:
-* Added "Bible Tools" menu button.
-* Changed "Bible Data" icon.
+* Added Bible Tools menu button.
+* Changed Bible Data icon.
 
 Changes in 31.26:
-Added 3 more datasets to "Bible Data":
+Added 3 more datasets to Bible Data:
 * Study Notes - The Servant King
 * Kings of Judah
 * Kings of Israel
 
 Changes in 31.25:
-* Added "Paul Chronology" to "Bible Data".
+* Added Paul Chronology to Bible Data.
 
 Changes in 31.24:
-* Added a menu plugin "Bible Data", read:
+* Added a menu plugin Bible Data, read:
     https://github.com/eliranwong/UniqueBible/wiki/Bible-Data
 * Material menu layout:
-    - Added a "Bible Data" button on the top toolbar.
-    - Relocated "Journal and Bible Reading Plan" button from first top toolbar to second top toolbar.
+    - Added a Bible Data button on the top toolbar.
+    - Relocated Journal and Bible Reading Plan button from first top toolbar to second top toolbar.
 
 Changes in 31.23:
 * Added a gui for command prompt.
@@ -332,10 +341,10 @@ Changes in 31.22:
 * Added support for post_parse_bible in PluginEventHandler.
 
 Changes in 31.21:
-* Added a menu plugin "Bible Characters".
+* Added a menu plugin Bible Characters.
     Read https://github.com/eliranwong/UniqueBible/wiki/Bible-Characters
-* Integrated "Bible Characters" to material menu.
-* Relocated "Interlinear Data" from top toolbar to right toolbar.
+* Integrated Bible Characters to material menu.
+* Relocated Interlinear Data from top toolbar to right toolbar.
 
 Changes in 31.20:
 * Uploaded two database files about bible people for potential development.
@@ -358,7 +367,7 @@ Changes in 31.15:
 * Reload tab page when tab is changed only when config.fixLoadingContent is set to True.
 
 Changes in 31.14:
-* Added menu plugin "Bible Locations", read the following wiki page:
+* Added menu plugin Bible Locations, read the following wiki page:
     https://github.com/eliranwong/UniqueBible/wiki/Bible-Locations
 
 Changes in 31.13:
@@ -397,26 +406,26 @@ Changes in 31.03:
 * Added bible passages to tooltip in 365-day bible reading plan.
 
 Changes in 31.02:
-* Renamed menu plugin "Bible Reading Plan" to "Journal and Bible Reading Plan".
-* Added features to "Journal and Bible Reading Plan":
+* Renamed menu plugin Bible Reading Plan to Journal and Bible Reading Plan.
+* Added features to Journal and Bible Reading Plan:
     - added a column to disply a list of journal according to the month shown on calendar.
     - added ability to search journal.
-    - added ability to quickly select "today" by clicking the label showing today's information.
+    - added ability to quickly select today by clicking the label showing today's information.
     - added display of Jewish dates.
     - added information about Jewish festivals.
 * Added a wiki page about the plugin:
     https://github.com/eliranwong/UniqueBible/wiki/Journal-and-Bible-Reading-Plan
 
 Changes in 31.01:
-* Integrated a Calendar into menu plugin "Bible Reading Plan".
-* Integrated journal features into menu plugin "Bible Reading Plan".
+* Integrated a Calendar into menu plugin Bible Reading Plan.
+* Integrated journal features into menu plugin Bible Reading Plan.
 * Added support of editing journal with UBA note editor.
 * Fixed saving notes.
 
 Changes in 31.00:
 * Reload Bible Window and Study Window after bible notes are saved.
 * Fixed note saving errors, which were recently introduced after switching to apsw for handling sqlite database files.
-    A note to UBA developers - apsw implements autocomit.  Therefore, running cursor.execute("COMMIT") causes errors.
+    A note to UBA developers - apsw implements autocomit.  Therefore, running cursor.execute(COMMIT) causes errors.
 
 Changes in 30.99:
 * Improved highlight of the hovered word in marvel bibles.
@@ -450,8 +459,8 @@ Changes in 30.92:
 * Added support of case sensitivity for searching resources other than bibles.
 * Added config.enableCaseSensitiveSearch to enable case-sensitive search when it is set to True.
     config.enableCaseSensitiveSearch define case sensitivity for searching of all resources.
-* Added option "enableCaseSensitiveSearch" in Set Config Flags window.
-* Added a "Case-sensitive" checkbox in Master Search tab.
+* Added option enableCaseSensitiveSearch in Set Config Flags window.
+* Added a Case-sensitive checkbox in Master Search tab.
     The checkbox is placed, right next to the search entry field.
     The checkbox offers a quick way to toggle config.enableCaseSensitiveSearch.
 * Removed config.regexCaseSensitive, which is now replaced by config.enableCaseSensitiveSearch for a wider purpose.
@@ -502,7 +511,7 @@ Changes in 30.78:
 Changes in 30.77:
 * Automate Workspace auto-saving when window activation is changed.
 * Automate Workspace editor auto-saving changes.
-* Added a shortcut to parse and open references.  Micron shortcut uses "Ctrl+E" for that.
+* Added a shortcut to parse and open references.  Micron shortcut uses Ctrl+E for that.
 * Changed a few Micron shortcuts.
 
 Changes in 30.76:
@@ -513,8 +522,8 @@ Changes in 30.75:
 
 Changes in 30.74:
 * Added support to open markdown file (*.md) in Workspace.
-* Added "Open in Reader" button on Workspace text editor toolbar.
-* Added "Open in Editor" option on Workspace reader context menu.
+* Added Open in Reader button on Workspace text editor toolbar.
+* Added Open in Editor option on Workspace reader context menu.
 * Set cursor focus when editor is added to workspace.
 
 Changes in 30.73:
@@ -527,7 +536,7 @@ Changes in 30.73:
     https://github.com/eliranwong/UniqueBible/wiki/Workspace
 
 Changes in 30.72:
-* Fixed launching "Charts and Table"
+* Fixed launching Charts and Table
 
 Changes in 30.71:
 * Multiple Workspace features are added:
@@ -535,32 +544,32 @@ Changes in 30.71:
     - add text selection for viewing or editing
     - add clipbaord text via system tray
     - open documents in Workspace reader or editor
-        supported formats: "txt", "uba", "csv", "doc", "docx", "eml", "epub", "gif", "jpg", "jpeg", "json", "html", "htm", "mp3", "msg", "odt", "ogg", "pdf", "png", "pptx", "ps", "rtf", "tiff", "tif", "wav", "xlsx", "xls"
+        supported formats: txt, uba, csv, doc, docx, eml, epub, gif, jpg, jpeg, json, html, htm, mp3, msg, odt, ogg, pdf, png, pptx, ps, rtf, tiff, tif, wav, xlsx, xls
     - insert images into Workspace reader or editor
     - auto saving feature
     - auto loading workspace content when UBA is launched
     - loading workspace from different directories
     - saving workspace into different directories
     - Workspace saving order configurable via Material menu 
-        "UniqueBible > Other Preferences > Select Workspace Saving Order"
+        UniqueBible > Other Preferences > Select Workspace Saving Order
     - a button to show Main Window
     - launch Workspace via System Tray
     - ability to change Workspace sub-window titles
-        on editor, use toolbar button "Change Window Title"
-        on reader, use right-click context menu "Change Window Title"
-    - "Clear All" button to remove all Workspace windows
+        on editor, use toolbar button Change Window Title
+        on reader, use right-click context menu Change Window Title
+    - Clear All button to remove all Workspace windows
     - a help button to open the wiki page about Workspace
     - Workspace mini text editor interface:
-        "Change Window Title" button
-        "Save as" button
-        "Swap" button, to swap between plain text and html Format
-        "search" field
+        Change Window Title button
+        Save as button
+        Swap button, to swap between plain text and html Format
+        search field
 
 Changes in 30.70:
 * Added ability to add table, charts and popover content to Workspace.
 
 Changes in 30.69:
-* Added "Display Content in > Note Editor" feature on context menu.
+* Added Display Content in > Note Editor feature on context menu.
 * Added Workspace window to which users can add multiple Content
     The added content can be either read-only or editable.
 * Added a toggle button on Material menu second top toolbar to toggle the Workspace window.
@@ -575,19 +584,19 @@ Changes in 30.67, 30.68
 * Enable config.doNotDockNoteEditorByDragging to work even config.dockNoteEditorOnStartup is set to False.
 
 Changes in 30.66
-* Improved context plugin "Charts and Table" with use of stack widget, which makes switching between charts and table easier.
+* Improved context plugin Charts and Table with use of stack widget, which makes switching between charts and table easier.
 * Make changes in WebEngineViewPopover.py so that context plugin can easily use it.
 
 Changes in 30.65
 * Fixed untranslated buttons in master control search
 
 Changes in 30.64:
-* Fixed displaying Note Editor when "edit" note button is clicked twice.
-* Added config.doNotDockNoteEditorByDragging, configurable via "Set Config Flags" window.
+* Fixed displaying Note Editor when edit note button is clicked twice.
+* Added config.doNotDockNoteEditorByDragging, configurable via Set Config Flags window.
     When it is set to True, Note Editor does not dock around main window by dragging.
 
 Changes in 30.63:
-* Changed a config option name from "dockNoteEditor" to "dockNoteEditorOnStartupOnStartup"
+* Changed a config option name from dockNoteEditor to dockNoteEditorOnStartupOnStartup
     - Note Editor can be docked around the main window whether config.dockNoteEditorOnStartupOnStartup is set to True or False.
     - The only difference is that Note Editor launches with a docked position when config.dockNoteEditorOnStartupOnStartup is set to True.
     - In contrast, Note Editor launches as a floating window when config.dockNoteEditorOnStartupOnStartup is set to False.
@@ -599,38 +608,38 @@ Changes in 30.61:
 * Added config.dockNoteEditor, to enable Note Editor both to dock around the main window and undock from it.
     - It is set to True by default.
     - Configurable via Config Flags Window.
-* "Note Editor" is now dockable:
-    - When "Note Editor" is first opened, it is docked on the right side of the main window.
-    - The "Note Editor" can be undocked from the main window by dragging the "Note Editor" menu bar out of the main window.
-    - The docking position of the "Note Editor" can also be changed to the left, top, right or bottom of the main window by dragging.
-* Changed the toolbar "Note Editor" button to toggle "Note Editor" instead of opening new note.
+* Note Editor is now dockable:
+    - When Note Editor is first opened, it is docked on the right side of the main window.
+    - The Note Editor can be undocked from the main window by dragging the Note Editor menu bar out of the main window.
+    - The docking position of the Note Editor can also be changed to the left, top, right or bottom of the main window by dragging.
+* Changed the toolbar Note Editor button to toggle Note Editor instead of opening new note.
 * Added two buttons on second top tool bar on Material menu layout.
     - To extract bible references from text selection and insert into Note Editor.
     - To insert selected text into Note Editor.
-* Fixed context plugins "Insert References into Note Editor" and "Insert Text into Note Editor_Ctrl+Shift+J" about text insertion when note editor is already opened.
+* Fixed context plugins Insert References into Note Editor and Insert Text into Note Editor_Ctrl+Shift+J about text insertion when note editor is already opened.
 
 Changes in 30.60:
-* Improved context plugin "Charts and Table":
+* Improved context plugin Charts and Table:
     When selected text contains bible references from more than one book, the plugins generates charts and a table to compare occurrence in books.
     When selected text contains references of a single book only, the plugin generates charts and table to compare occurrence in chapters instead.
-* Added an icon button on material menu toolbar to provide quick access of "Charts and Table" feature.
+* Added an icon button on material menu toolbar to provide quick access of Charts and Table feature.
     Clicking this newly added button to generate charts and table based on text in the following priority:
     1) Text selection in the Bible Window
     2) Text selection in the Study Window
     3) Text content in the Study Window
-* Improved "Interlinear Data" and "Search English Bible" buttons to work with text selection detection.
+* Improved Interlinear Data and Search English Bible buttons to work with text selection detection.
 
 Changes in 30.59:
 * Fixed displaying bible reference pie chart and bar chart on macOS.
-    - If "PySide6" is used, UBA uses QChart to display pie chart and bar chart.
+    - If PySide6 is used, UBA uses QChart to display pie chart and bar chart.
     - Otherwise, UBA uses HTML to display pie chart and bar chart.
-* Fixed downloading "Selection Monitoring" icon.
+* Fixed downloading Selection Monitoring icon.
 
 Changes in 30.58:
 * Added more styles to QToolButton.
 
 Changes in 30.57:
-* Improved "Text Selection Monitoring".
+* Improved Text Selection Monitoring.
 
 Changes in 30.55, 30.56:
 * Fixed button icons on Windows.
@@ -645,41 +654,41 @@ Changes in 30.52:
 
 Changes in 30.51:
 * Fixed radio button selection on Master Search Tab.
-* Added styles to Checkable Buttons, e.g. "Text Selection Monitoring" button, when they are pressed.
+* Added styles to Checkable Buttons, e.g. Text Selection Monitoring button, when they are pressed.
 * Save config.liveFilterBookFilter, config.bibleSearchRange, and config.customBooksRangeSearch when UBA quits.
     - They preseves book filter and search range settings for Master Search tab and Live Filter Dialog.
 
 Changes in 30.50:
-* Integrated "Hitchcock's Bible Names Dictionary" into "Text Selection Monitorning" feature.
-    When "Text Selection Monitoring" is turned on, UBA searches "Hitchcock's Bible Names Dictionary" first for meaning if the selected text is a bible name.
-    If the selected text does not match an entry in "Hitchcock's Bible Names Dictionary", UBA then searches English WordNet database for a definition.
+* Integrated Hitchcock's Bible Names Dictionary into Text Selection Monitorning feature.
+    When Text Selection Monitoring is turned on, UBA searches Hitchcock's Bible Names Dictionary first for meaning if the selected text is a bible name.
+    If the selected text does not match an entry in Hitchcock's Bible Names Dictionary, UBA then searches English WordNet database for a definition.
     To try this feature, you may open Matthew chapter one, select some names and check their meanings displayed on the bottom window.
 
 Changes in 30.49:
-* Added "Selection Monitoring", when enabled word definition is diplayed in the bottom window.
+* Added Selection Monitoring, when enabled word definition is diplayed in the bottom window.
 * Fixed quit application with system tray.
-* Fixed "Live Filter" book filter include favourite version in multi-verse fetching.
+* Fixed Live Filter book filter include favourite version in multi-verse fetching.
 * Relocated book filter row, which is now placed above text filter items.
-    - With this change, "add", "edit" buttons are placed right below text filter items.
+    - With this change, add, edit buttons are placed right below text filter items.
 * Master Control Search Tab:
     - Added tooltip about example of using custom book filter.
     - Relocated book filter row inside bible serach bible.
-* Copy feature in "Search Bible for English Word Forms" now uses "|" as separator, so that users can use copied items directly in "Live Filter" dialog.
+* Copy feature in Search Bible for English Word Forms now uses | as separator, so that users can use copied items directly in Live Filter dialog.
 
 Changes in 30.47, 30.48:
-* Added book filters in "Live Filter" dialog.
-* Changed the "abc" button tooltip to "Search English Bible".
+* Added book filters in Live Filter dialog.
+* Changed the abc button tooltip to Search English Bible.
 * Renamed a context plugin filename.
 
 Changes in 30.46:
-* Added config flat "updateDependenciesOnStartup". configurable via "Set Config Flags" window.
+* Added config flat updateDependenciesOnStartup. configurable via Set Config Flags window.
 * When config.updateDependenciesOnStartup is set to True, UBA updates all dependency packages on startup.
 
 Changes in 30.45:
-* Added context plugin "Search Bible for English Word Forms"
-* The "abc" button on the scond top toolbar now opens "Search Bible for English Word Forms" plugin instead of "English Dictionaries".
-* Users can still use "Ctrl+Shift+D" keyboard combo to quickly open "English Dictionaries".
-* Try, for example, higlight "believe" in John 3:16 and open the plugin.
+* Added context plugin Search Bible for English Word Forms
+* The abc button on the scond top toolbar now opens Search Bible for English Word Forms plugin instead of English Dictionaries.
+* Users can still use Ctrl+Shift+D keyboard combo to quickly open English Dictionaries.
+* Try, for example, higlight believe in John 3:16 and open the plugin.
 
 Changes in 30.44:
 * Changed system tray message title from UBA to Unique Bible App.
@@ -709,35 +718,35 @@ Changes in 30.39:
 * Fixed display favouriteBible bible version in fetching multiple verses.
 
 Changes in 30.38:
-* Fixed running "which" command on Windows.
+* Fixed running which command on Windows.
 * Disable system tray on webtop version.
 
 Changes in 30.37:
 * Fixed Windows shortcut *.bat file.
-* Added support to restart UBA on Windows with use of the created "UniqueBibleApp.bat".
+* Added support to restart UBA on Windows with use of the created UniqueBibleApp.bat.
 * AudioConverter is now installed only when UBA is running on macOS.
 
 Changes in 30.36:
-* Changed default menu layout to "Material".
+* Changed default menu layout to Material.
 
 Changes in 30.35:
 * Toggle fullscreen between fullscreen and maximised window instead of normal window.
 
 Changes in 30.33, 30.34:
-* Added config.displayChapterMenuTogetherWithBibleChapter to toggle "Display chapter menu above and below bible chapter"
+* Added config.displayChapterMenuTogetherWithBibleChapter to toggle Display chapter menu above and below bible chapter
 * Configurable via material menu layout.
 
 Changes in 30.32:
 * Prompt text entry if clipboard text is empty for running system tray features.
-* Added "Run Clipboard Text-to-speech" to system tray.
+* Added Run Clipboard Text-to-speech to system tray.
 
 Changes in 30.31:
 * Shows main window before running context plugins on clipboard content.
 
 Changes in 30.30:
 * Added support of using context plugins with system tray to run featues on clipboard text.
-* System tray "Search Other Resources" now does not require clipboard content.
-* Fixed downloading the icon for "Bible Collections" on material menu layout top toolbar.
+* System tray Search Other Resources now does not require clipboard content.
+* Fixed downloading the icon for Bible Collections on material menu layout top toolbar.
 * Changed shortcuts for a few context plugins.
 
 Changes in 30.29:
@@ -749,12 +758,12 @@ Changes in 30.28:
     - Added config.enableSystemTrayOnLinux for Linux uses to enable system tray.
         System tray is enabled by default on Windows and macOS.
         System tray is not enabled by default on Linux, as not all Linux desktops support system tray.
-        Linux users can enable UBA system tray manually via "Set Config Flags Window".
+        Linux users can enable UBA system tray manually via Set Config Flags Window.
     - Bring UBA window to the front when main window is called.
 * Fixed downloading UBA icons.
 
 Changes in 30.27:
-* Fixed startup issues on macOS, caused by command "vlc kill".
+* Fixed startup issues on macOS, caused by command vlc kill.
 
 Changes in 30.26:
 * Added system tray for macOS and Windows users.
@@ -771,7 +780,7 @@ Changes in 30.25:
 * Added config.doNotStop3rdPartyMediaPlayerOnExit so users can use third party VLC player to listen to bible audio even UBA is closed.
 * Added shortcut support of popover window.
 * Added shortcut display to menu plugins where applicable.
-* Fixed launching "Presentation" from popover window.
+* Fixed launching Presentation from popover window.
 
 Changes in 30.24:
 * Update instant text-to-speech button tooltip when default text-to-speech voice is changed.
@@ -785,8 +794,8 @@ Changes in 30.22:
 
 Changes in 30.21:
 * Added ability to export *.aiff and *.mp3 with text-to-speech features on macOS.
-    - Remarks: *.mp3 export with macOS tts is only available if users have "ffmpeg" package installed.
-    - Users may use home brew (https://brew.sh) to install "ffmpeg" by running:
+    - Remarks: *.mp3 export with macOS tts is only available if users have ffmpeg package installed.
+    - Users may use home brew (https://brew.sh) to install ffmpeg by running:
         brew install ffmpeg
     - A wiki page is created about macOS built-in tts feature at: 
         https://github.com/eliranwong/UniqueBible/wiki/Use-Apple-macOS-Built-in-Text-to-speech
@@ -805,7 +814,7 @@ Changes in 30.20:
 * Changed default value of config.updateMainReferenceOnChaningTabs to False.
 
 Changes in 30.19:
-* Changed micron shortcut to stop media player from playing, to avoid conflict with the built-in shortcut combo "Ctrl+Shift+Q" on macOS.
+* Changed micron shortcut to stop media player from playing, to avoid conflict with the built-in shortcut combo Ctrl+Shift+Q on macOS.
     Changed from Ctrl+Shift+Q to Ctrl+Shift+Z
 
 Changes in 30.18:
@@ -821,7 +830,7 @@ Changes in 30.17:
 * Master Control Miscellaneous tab now does not display speed adjustment slider when the chosen TTS engine does not support speed adjustment.
 
 Changes in 30.16:
-* Changed single version button appearance on material menu layout when control preference is set to "mini".
+* Changed single version button appearance on material menu layout when control preference is set to mini.
 * Added the following config flags to Set Config Flag window:
     forceUseBuiltinMediaPlayer
     usePySide2onWebtop
@@ -829,11 +838,11 @@ Changes in 30.16:
     fixLoadingContent
 
 Changes in 30.14, 30.15:
-* Fixed blank bible selection button when config.refButtonClickAction is set to "mini".
+* Fixed blank bible selection button when config.refButtonClickAction is set to mini.
 
 Changes in 30.13:
 * Added support to use third-party VLC player on macOS to work with GTTS::: and VLC::: commands.
-* Added a "Speak" button on the second top tool bar.
+* Added a Speak button on the second top tool bar.
 * Added config.forceUseBuiltinMediaPlayer for users to choose builtin media player for player audio even third-party VLC player is installed.
 * Removed config.textSelectionColor and use config.widgetBackgroundColorHover and config.widgetForegroundColorHover to display colours for text selection.
 * Updated color sample files sample.color and sample2.color.
@@ -845,14 +854,14 @@ Most changes in this release apply to Material menu layout only.
     - Users can now select bible versions, books, chapters and versions separately on both Bible and Study Window.
     - Drop down menu for both single version and multiple version selection is now replaced by menu buttons.
     - Bible Collection settings were integrated for both single version and multiple version selection.
-    - Remarks: Menu button for single version selection for Bible Window is only available for users who set "Control Preference" to "Master".
+    - Remarks: Menu button for single version selection for Bible Window is only available for users who set Control Preference to Master.
     - Book, chapter and verse features are note integrated into book, chapter and verse menu buttons, on both Bible and Study Window.
 * Reorganised items on the top horizontal tool bar.
-* Added "Bible Collections", "Bible Reading Plan", "English Dictionaries", "Epub Reader", "Clear All" button on horizontal toolbar.
-* Added "Instant Highlight", "Remove Instant Highlight", "Refresh", "Full Screen", and "Clear All" on both left and right toolbars.
+* Added Bible Collections, Bible Reading Plan, English Dictionaries, Epub Reader, Clear All button on horizontal toolbar.
+* Added Instant Highlight, Remove Instant Highlight, Refresh, Full Screen, and Clear All on both left and right toolbars.
 * Removed book, chapter and verse notes buttons from toolbars.
     - Users can use the new reference menu buttons to open or edit notes.
-* Relocated "Instant Lookup" and "Bottom Window" buttons from right tool bar to the second-top horizontal tool bar.
+* Relocated Instant Lookup and Bottom Window buttons from right tool bar to the second-top horizontal tool bar.
 * Bible Collection dialog now have to be closed before using the main UI.
     - This helps to make sure the main UI have all the latest changes about bible collections when they use it.
 * Added new colour styles to:
@@ -868,7 +877,7 @@ Most changes in this release apply to Material menu layout only.
 Changes in 30.11:
 * Improved support of macOS:
     - Users can now use VLC player for reading MP3 audio bibles.
-    - VLC player is a third-party free software.  Users can install via command, for exmaple, "brew install vlc", if homebrew (https://brew.sh) is in place.
+    - VLC player is a third-party free software.  Users can install via command, for exmaple, brew install vlc, if homebrew (https://brew.sh) is in place.
     - Fixed loading issues.
 * Fixed material menu layout contrast button.
 
@@ -877,10 +886,10 @@ Changes in 30.10:
 * Fallback support of PySide2 and PyQt5
 * Support multiple environment and multiple venv directory with a single uba.py file.
     The venv folder will be created and named according to platform and python version.
-    For example, at the time of writing, webtop version creates and uses "venv_Linux_3.10.4" as its venv directory.
+    For example, at the time of writing, webtop version creates and uses venv_Linux_3.10.4 as its venv directory.
     This feature is helpful for users who use both webtop or desktop versions, without duplicating resources.
     This is also helpful for those who place UBA directory in a USB stick and use it on different devices.
-    After upgrade, users may manually delete the old "venv" directory, to save storage space.
+    After upgrade, users may manually delete the old venv directory, to save storage space.
 * Added config options:
     usePySide2onWebtop - use PySide2 as Qt Library, even config.qtLibrary is set to a value other than 'pyside2'
     usePySide6onMacOS - use PySide6 as Qt Library, even config.qtLibrary is set to a value other than 'pyside6'
@@ -901,11 +910,11 @@ Changes in 30.06, 30.07:
 * Fixed book and note search result colour.
 
 Changes in 30.05:
-* Relocated "Collections" menu item from "Other Preferences" to "Master Control"
-* Added "Library Catalog" button on Material menu layout toolbar.
+* Relocated Collections menu item from Other Preferences to Master Control
+* Added Library Catalog button on Material menu layout toolbar.
 * Added micron shortcuts:
-    - Assign "Ctrl+Shift+K" to launch "Bible Collections"
-    - Assign "Ctrl+Shift+O" to launch "Library Catalog"
+    - Assign Ctrl+Shift+K to launch Bible Collections
+    - Assign Ctrl+Shift+O to launch Library Catalog
 
 Changes in 30.04:
 * Fix loading PDF from Library Catalog
@@ -918,7 +927,7 @@ Changes in 30.03:
     - UBA uses python package markdownify to implement the mardown export.
     - Users can define heading style for the export via menu, UniqueBible > Other Preferences > Select Markdown Export Heading Style
     - Read more about markdownify at https://pypi.org/project/markdownify/
-3) Added "Convert from Markdown" feature in Note Editor
+3) Added Convert from Markdown feature in Note Editor
 
 Changes in 30.02:
 * Fixed a few colours.
@@ -927,15 +936,15 @@ Changes in 30.01:
 * Added a wiki link to context menu.
 
 Changes in 30.00:
-* Added "Save File" items in Material menu layout menu.
-* Simplified "Compare Reference ..." features on context menu.
+* Added Save File items in Material menu layout menu.
+* Simplified Compare Reference ... features on context menu.
     When these features are triggered, the following bible versions are used for comparison:
-    - for Material menu layout users, versions selected in "Multiple Bible Version Selection" drop down menu are used.
+    - for Material menu layout users, versions selected in Multiple Bible Version Selection drop down menu are used.
     - for other menu layout users, favourite bibles defined in config.py are used. 
 
 Changes in 29.99:
 * Improved Material menu layouts
-    - display "tick" signs to show the currently selected values in preferences and bible toggle menu items, where applicable.
+    - display tick signs to show the currently selected values in preferences and bible toggle menu items, where applicable.
     - changed some preference settings to be selectable directly from menu.
 * Re-organised and improved context menu.
 * Now display context menu shortcuts on context menu item, where applicable.
@@ -947,14 +956,14 @@ Changes in 29.98:
     - add subheading option is displayed only in plain text mode
 
 Changes in 29.97:
-* Added an "Instant Highlight" button, right next to command entry field on material menu layout.
+* Added an Instant Highlight button, right next to command entry field on material menu layout.
     - With this button, users can toggle instant highlight on both Bible Window and Study Window of text entered in command field.
-    - For example, try to enter "a" in command field, toggle the button and see the changes.
+    - For example, try to enter a in command field, toggle the button and see the changes.
 
 Changes in 29.96:
 * Support instant highlight on both Bible Window and Study Window, via context menu.
 * If no text is selection, a text dialog will come up to ask for an entry.
-* Removed three "Find Text ..." context plugins.
+* Removed three Find Text ... context plugins.
 
 Changes in 29.95:
 * Fixed installing wps-office for webtop users.
@@ -973,35 +982,35 @@ Changes in 29.91:
 
 Changes in 29.90:
 * Changes in configuration settings:
-    - Added "lightThemeTextColor" for users to customise text colour in Light theme.
-    - Added "darkThemeTextColor" for users to customise text colour in Dark theme.
-    - Renamed "activeVerseColorLight" to "lightThemeActiveVerseColor"
-    - Renamed "activeVerseColorDark" to "darkThemeActiveVerseColor"
-    Remarks: Renaming of the two labels above affects users who previously define "activeVerseColorLight" or "activeVerseColorDark".
+    - Added lightThemeTextColor for users to customise text colour in Light theme.
+    - Added darkThemeTextColor for users to customise text colour in Dark theme.
+    - Renamed activeVerseColorLight to lightThemeActiveVerseColor
+    - Renamed activeVerseColorDark to darkThemeActiveVerseColor
+    Remarks: Renaming of the two labels above affects users who previously define activeVerseColorLight or activeVerseColorDark.
                 They may need to re-customise the colours.
-* Colour customisation dialog now supports customisation of "lightThemeTextColor" and "darkThemeTextColor".
+* Colour customisation dialog now supports customisation of lightThemeTextColor and darkThemeTextColor.
 * Colour customisation file now includes theme data.
-* Undated the colour customisation sample file "sample.color".
-* Added a colour customisation sample file "sample_eliran.color".
+* Undated the colour customisation sample file sample.color.
+* Added a colour customisation sample file sample_eliran.color.
 
 Changes in 29.88, 89:
 * Fixed Material Colour dialog - apply colour change immediately without a restart.
 
 Changes in 29.87:
 * Added support for Windows users to use GTTS::: command.
-* Added "Select Default Text-to-speech Voice" menu item in Material menu layout.
+* Added Select Default Text-to-speech Voice menu item in Material menu layout.
 * Now update context menu about default tts voice automatically.
 * Improved handling text-to-speech engine detection.
 * Changing text-to-speech voice in Master Control Miscellaneous tab no longer changes Default Text-to-speech Voice.
     - Use menu item to change the Default Text-to-speech Voice.
 
 Changes in 29.86:
-* Added "Reload Resources" button on Master Control.
-* Added "Open All" buttons to Master Control Media tab.
+* Added Reload Resources button on Master Control.
+* Added Open All buttons to Master Control Media tab.
 * Added support of Goggle Cloud text-to-speech feature in Master Control Miscellaneous tab, mini Control, Note Editor.
 * Added support of changing speed for Goggle Cloud text-to-speech feature.
 * Master Control Library tab now shows both abbreviations and full names of commentaries.
-* Master Control Miscellaneous tab "Stop" button now closes media player if one is opened.
+* Master Control Miscellaneous tab Stop button now closes media player if one is opened.
 * Removed config.gTTSDefaultLanguage.
 
 Changes in 29.85:
@@ -1016,10 +1025,10 @@ Changes in 29.84:
 * Changed a toolbar button to open Master Control media tab, instead of media player.
     - This skips a step for users who want to open a media file.
     - Users can still use menu item or shortcut to open media player directly.
-* Fixed opening media file with filename containing "'".
+* Fixed opening media file with filename containing '.
 
 Changes in 29.83:
-* Added context plugin "English Dictionaries" with a shortcut "Ctrl+Shift+D.
+* Added context plugin English Dictionaries with a shortcut Ctrl+Shift+D.
 * Added menu items and shortcuts to launch and stop media player.
 * Added support of using full vlc with Master Control Media tab.
 * Added wordnet third party dictionary.
@@ -1043,8 +1052,8 @@ Changes in 29.79:
 Changes in 29.78:
 * Added a configuration item config.favouriteOriginalBible for users to users to specify their most favourite Marvel Bible.
     - Default is 'MIB'.
-* Added menu items for users to select and open "Favourite Hebrew & Greek Bible"
-* Added "Micron" shortcuts "Ctrl+7" and "Ctrl+8" to open users favourite Hebrew & Greek bible directly.
+* Added menu items for users to select and open Favourite Hebrew & Greek Bible
+* Added Micron shortcuts Ctrl+7 and Ctrl+8 to open users favourite Hebrew & Greek bible directly.
 * Changed the previous Open Marvel Interlinear Bible on Study Window icon.
 * The previous Open Marvel Interlinear Bible on Study Window button now opens the bible version, defined in config.favouriteOriginalBible.
 * Removed Morphology tab for now, as it does not reflect morphology items UBA use.  We may fix it.
@@ -1060,19 +1069,19 @@ Changes in 29.77:
 
 Changes in 29.76:
 * Micron shortcuts:
-    - Assign "Ctrl+1", "Ctrl+2", "Ctrl+3" to open favourite bibles 1, 2, 3 in main bible window.
-    - Assign "Ctrl+4", "Ctrl+5", "Ctrl+6" to open favourite bibles 1, 2, 3 in main bible window.
+    - Assign Ctrl+1, Ctrl+2, Ctrl+3 to open favourite bibles 1, 2, 3 in main bible window.
+    - Assign Ctrl+4, Ctrl+5, Ctrl+6 to open favourite bibles 1, 2, 3 in main bible window.
 
 Changes in 29.75:
-* Fixed "sample.color".
+* Fixed sample.color.
 
 Changes in 29.74:
-* Added "STUDYTEXT:::" command to open bible text on Study view quickly.
-* Integrate config.favouriteBible, config.favouriteBible2 and config.favouriteBible3 in Master Control "Bible" and "Search" tabs:
+* Added STUDYTEXT::: command to open bible text on Study view quickly.
+* Integrate config.favouriteBible, config.favouriteBible2 and config.favouriteBible3 in Master Control Bible and Search tabs:
     - Users can now open or favourtie bibles directly.
     - Remarks: Users can define config.favouriteBible, config.favouriteBible2 and config.favouriteBible3 via menu UniqueBible > Other Preferences.
-* Added favourite bibles into Material menu layout "Bible" menu.
-* Shorten the commad "COMPARESIDEBYSIDE:::" to "SIDEBYSIDE:::".
+* Added favourite bibles into Material menu layout Bible menu.
+* Shorten the commad COMPARESIDEBYSIDE::: to SIDEBYSIDE:::.
 
 Changes in 29.73:
 * Removed a print command.
@@ -1081,12 +1090,12 @@ Changes in 29.72:
 * Added shortcut support of context menu built-in features.
 * Micron shorcuts:
     - Added two shortcuts for context menu:
-        "Ctrl+Shift+S" for searching the bible currently selected in the main bible window.
-        "Ctrl+Shift+T" for launching text-to-speech feature to read with default language.
-    - Changed "Swap Bibles" shortcut to "Ctrl+Shift+W
+        Ctrl+Shift+S for searching the bible currently selected in the main bible window.
+        Ctrl+Shift+T for launching text-to-speech feature to read with default language.
+    - Changed Swap Bibles shortcut to Ctrl+Shift+W
 
 Changes in 29.71:
-* Renamed config names "activeVerseColourLight" and "activeVerseColourLight" to "activeVerseColorLight" and "activeVerseColorDark".
+* Renamed config names activeVerseColourLight and activeVerseColourLight to activeVerseColorLight and activeVerseColorDark.
 * Make Colour Customisation Dialog config button labels more readable.
 * Added a sample set of colours, defined by a 10-year-old kid.
 
@@ -1117,16 +1126,16 @@ Changes in 29.62:
 * Allow users to configure private page in config.webUBAServer.
 
 Changes in 29.60, 61:
-* Added "Swap" bibles feature and shortcut support to material menu layout.
+* Added Swap bibles feature and shortcut support to material menu layout.
 * Micron shortcuts:
-    - Changed the shortcut to open Master Control Morpholo"G"y tab to "Ctrl+Shift+G"
-    - Added "Ctrl+Shift+S" to "S"wap bible versions between Main and Study windows.
+    - Changed the shortcut to open Master Control MorpholoGy tab to Ctrl+Shift+G
+    - Added Ctrl+Shift+S to Swap bible versions between Main and Study windows.
 * Changed two item translation description.
 
 Changes in 29.58, 59:
-* Added a bible toggle feature "Insert Favourite Version in Fetching Verses" on material menu layout menu.
-    - It toggles configuration flag "config.addFavouriteToMultiRef" and refresh current display.
-    - For example, enter "John 3:16-18; Deu 6:4" in search command field and press enter,
+* Added a bible toggle feature Insert Favourite Version in Fetching Verses on material menu layout menu.
+    - It toggles configuration flag config.addFavouriteToMultiRef and refresh current display.
+    - For example, enter John 3:16-18; Deu 6:4 in search command field and press enter,
         or opens a cross-reference result,
         then toggle this feature to see the difference.
     - The bible version being inserted is determined by config.favouriteBible and config.config.favouriteBible2
@@ -1134,8 +1143,8 @@ Changes in 29.58, 59:
         If the currently selection bible version is the same as the version specified in config.favouriteBible, verses of the config.favouriteBible2 version are inserted.
         On material menu layout, users can specify their favorite versions of config.favouriteBible and config.favouriteBible2 via menu:
             UniqueBible > Other Preferences > Select Favourite Bible & Select Favourite Bible 2
-* Added shortcut support for toggling "Insert Favourite Version in Fetching Verses".
-    - Micron uses "Ctrl+Shift+I" to toggle this feature by default.
+* Added shortcut support for toggling Insert Favourite Version in Fetching Verses.
+    - Micron uses Ctrl+Shift+I to toggle this feature by default.
 * Fixed an issue of verse reference display.
 
 Changes in 29.57:
@@ -1147,7 +1156,7 @@ Changes in 29.56:
 * Add clear and export buttons to Live Filter
 
 Changes in 29.55:
-* Added "Save as" and "Load my settings" buttons to Material colour customisation dialog.  
+* Added Save as and Load my settings buttons to Material colour customisation dialog.  
     Users can use them to save or load a copy of their customised settings.
 
 Changes in 29.54:
@@ -1191,7 +1200,7 @@ Changes in 29.44:
             # Feature - Read a single bible passage or multiple bible passages, with support of multiple bible versions.
             # Usage - BIBLE:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE(S)]
             # Remarks:
-            # 1) The bible version last opened on main view is opened by default if "[BIBLE_VERSION]:::" is omitted.
+            # 1) The bible version last opened on main view is opened by default if [BIBLE_VERSION]::: is omitted.
             # e.g. READ:::Jn 3:16-18
             # e.g. READ:::KJV:::Jn 3:16-18; Deut 6:4
             # e.g. READ:::KJV_CUV:::Jn 3:16-18; Deut 6:4
@@ -1199,7 +1208,7 @@ Changes in 29.44:
 
 Changes in 29.43:
 * Fixed duplicated versions selected for comparison view.
-* Relocated "Reload Resources" to "Resources" menu on Material menu layout.
+* Relocated Reload Resources to Resources menu on Material menu layout.
 
 Changes in 29.41, 42:
 * Fixed dynamic loading of menu layout without a restart.
@@ -1208,9 +1217,9 @@ Changes in 29.40:
 * Set maximum width to limit the width of a few combo boxes on material menu layout toolbar.
 
 Changes in 29.38, 39:
-* Added "Live Filter" icon button on the Material menu layout top toolbar.
-* Added "Ctrl+Shift+F" shortcut to open "Live Filter" dialog in "micron" shortcut set.
-* Removed duplicated entry in "micron" shortcut set.  Changed "toggleHideLexicalEntryInBible" to "Ctrl+Shift+X"
+* Added Live Filter icon button on the Material menu layout top toolbar.
+* Added Ctrl+Shift+F shortcut to open Live Filter dialog in micron shortcut set.
+* Removed duplicated entry in micron shortcut set.  Changed toggleHideLexicalEntryInBible to Ctrl+Shift+X
 
 Changes in 29.37:
 * Changing theme now does not require a restart.
@@ -1220,20 +1229,20 @@ Changes in 29.37:
 Changes in 29.36:
 * Upgraded quality of materials icons, used by material menu layout, for scaling to differnt sizes.
 * Added support to customise Icon size and other widget size in Material menu layout.  Users can either:
-    - manually edit "iconButtonSize" value when UBA is not running, or
+    - manually edit iconButtonSize value when UBA is not running, or
     - use GUI dialog available on material menu layout, UniqueBible > Appearance > Customise Icon Size.
     - This config value specifies the width and height of material icons.
     - All other widgets are scaled relatively to this value too.
     - Ideally, the value is a multiple of 3, within a range from 12 to 48.
 * Fixed issues about font size too small in table or list view.  Font size now changes relatively to button icon size value.
 * Apply colour and font customisation to more widgets, e.g. QToolTip, QToolButton, QTextEdit, QListView, QSlider
-* Added "Live Filter" to Material menu layout Bible menu.
-    - Watch https://www.youtube.com/watch?v=A08KTzWLwDc for demonstration about "Live Filter" feature.
+* Added Live Filter to Material menu layout Bible menu.
+    - Watch https://www.youtube.com/watch?v=A08KTzWLwDc for demonstration about Live Filter feature.
 
 Changes in 29.35:
 * Improved Material menu layout main menu arrangement, e.g.:
     - Preferences are divided into two main sections, Appearance & Other Preferences.
-    - Renamed "Reference Button Action" to "Select Control Preference"
+    - Renamed Reference Button Action to Select Control Preference
 * Added 20 new themes.
 
 Changes in 29.34:
@@ -1249,29 +1258,29 @@ Changes in 29.34:
     - QCheckBox
     - QGroupBox
 * Added 20 new themes, which work with Material menu layout only:
-            "Light MediumVioletRed",
-            "Light DarkRed",
-            "Light Indigo",
-            "Light DarkGreen",
-            "Light DarkOliveGreen",
-            "Light Teal",
-            "Light DarkBlue",
-            "Light MidnightBlue",
-            "Light Maroon",
-            "Light DarkSlateGray",
-            "Dark Pink",
-            "Dark LightYellow",
-            "Dark LightGoldenrodYellow",
-            "Dark Lavender",
-            "Dark GreenYellow",
-            "Dark SpringGreen",
-            "Dark Aqua",
-            "Dark LightCyan",
-            "Dark LightBlue",
-            "Dark Azure",
+            Light MediumVioletRed,
+            Light DarkRed,
+            Light Indigo,
+            Light DarkGreen,
+            Light DarkOliveGreen,
+            Light Teal,
+            Light DarkBlue,
+            Light MidnightBlue,
+            Light Maroon,
+            Light DarkSlateGray,
+            Dark Pink,
+            Dark LightYellow,
+            Dark LightGoldenrodYellow,
+            Dark Lavender,
+            Dark GreenYellow,
+            Dark SpringGreen,
+            Dark Aqua,
+            Dark LightCyan,
+            Dark LightBlue,
+            Dark Azure,
 * Renamed config attributes:
-    from "activeVerseNoColourLight, activeVerseNoColourDark, maskBackground, materialIconMaskColor, pushButtonBackgroundColor, pushButtonForegroundColor, pushButtonBackgroundColorHover, pushButtonForegroundColorHover, pushButtonBackgroundColorPressed, pushButtonForegroundColorPressed" 
-    to "activeVerseColorLight, activeVerseColorDark, maskMaterialIconBackground, maskMaterialIconColor, widgetBackgroundColor, widgetForegroundColor, widgetBackgroundColorHover, widgetForegroundColorHover, widgetBackgroundColorPressed, widgetForegroundColorPressed"
+    from activeVerseNoColourLight, activeVerseNoColourDark, maskBackground, materialIconMaskColor, pushButtonBackgroundColor, pushButtonForegroundColor, pushButtonBackgroundColorHover, pushButtonForegroundColorHover, pushButtonBackgroundColorPressed, pushButtonForegroundColorPressed 
+    to activeVerseColorLight, activeVerseColorDark, maskMaterialIconBackground, maskMaterialIconColor, widgetBackgroundColor, widgetForegroundColor, widgetBackgroundColorHover, widgetForegroundColorHover, widgetBackgroundColorPressed, widgetForegroundColorPressed
 * Removed QtMaterialTheme options from Material menu layout, as QtMaterialTheme would be in conflict with Colour Customisation with Material menu layout.
 * Added a button to open Interlinear Data directly.
 * Relocated the open-MIB-on-study-window button.
@@ -1289,16 +1298,16 @@ Changes in 29.31:
 Improved material menu layout:
 * Added a new drop down menu for selection of multiple bible versions to work with the four new buttons.
 * Added four new buttons:
-    - Single Version button.  Open a bible chapter of the bible version currectly selected.  It is basically the same action as the main reference button action when config.refButtonClickAction is set to "direct" on other menu layouts.
+    - Single Version button.  Open a bible chapter of the bible version currectly selected.  It is basically the same action as the main reference button action when config.refButtonClickAction is set to direct on other menu layouts.
     - Parallel Versions button.  Open a parallel chapter view of different bible versions selected from the newly added multiple bible version selection drop down menu.
     - Side by Side Comparison button.  Display a verse-by-verse comparison view of different bible versions, with a side by side layout.
     - Row by Row Comparison button.  Display a verse-by-verse comparison view of different bible versions, with a row by row layout.
 * Integrated config.enforceCompareParallel into running COMPARESIDEBYSIDE::: command.
 * Improved handling of config.enforceCompareParallel:
-    - Clicking the newly added "Single Version" button set config.enforceCompareParallel to False automatically.
-    - Clicking the newly added "Parallel Versions / Side by Side Comparison / Row by Row Comparison" buttons set config.enforceCompareParallel to True automatically.
-* Clicking the "Contrasts" button now directly contrast the currently opened bible version with all other versions of the currently opened verse.
-* Main reference button now always open chapter menu even config.refButtonClickAction is set to "direct" to avoid duplication.
+    - Clicking the newly added Single Version button set config.enforceCompareParallel to False automatically.
+    - Clicking the newly added Parallel Versions / Side by Side Comparison / Row by Row Comparison buttons set config.enforceCompareParallel to True automatically.
+* Clicking the Contrasts button now directly contrast the currently opened bible version with all other versions of the currently opened verse.
+* Main reference button now always open chapter menu even config.refButtonClickAction is set to direct to avoid duplication.
 * Relocated book / chapter / Verse note buttons to second menu bar from the top.
 * Renamed PARALLELVERSES::: command to COMPARESIDEBYSIDE::: command.
 * Added config.compareParallelList to record users selection of bible versions to work with compare / parallel features with material menu layout.
@@ -1314,7 +1323,7 @@ Changes in 29.29:
 
 Changes in 29.28:
 * Improved Button Colour Customisation dialog:
-    Apply colour changes on "Default" and "About" buttons immediately after a setting is changed.
+    Apply colour changes on Default and About buttons immediately after a setting is changed.
 
 Changes in 29.26, 29.27:
 * Fixed updated material menu layout colours after settings are changed.
@@ -1344,25 +1353,25 @@ Changes in 29.19:
 * Fixed opening commentary via chapter or verse selection menu on http-server.
 
 Changes in 29.18:
-* Removed a "Copy" button, which is duplicated, on _qr::: command content.
+* Removed a Copy button, which is duplicated, on _qr::: command content.
 
 Changes in 29.17:
 * Fixed http-server shared links with spaces.
 
 Changes in 29.16:
 Multiple improvements on Material menu layout:
-    * Added "Swap" button on material menu layout, to swap bible chapter between Bible Window and Study window.
-    * Added "Go online" and "Share" button on material menu layout.
+    * Added Swap button on material menu layout, to swap bible chapter between Bible Window and Study window.
+    * Added Go online and Share button on material menu layout.
     * Added config.webUBAServer to specify a web server to work with the share links created on desktop version.
-    * Added "More ..." button, right next to bible title on bible chapter menu, so that users can change bible versions easily.
-    * Added "More ..." button, right next to commentary title on commentary chapter menu.
+    * Added More ... button, right next to bible title on bible chapter menu, so that users can change bible versions easily.
+    * Added More ... button, right next to commentary title on commentary chapter menu.
     * Added _copy::: and _commentaries::: commands.
     * Fixed opening bible chapters menu for some bible modules having non-standard book numbers.
     * Fixed qrcode::: content copy button action on desktop version.
     * Changed compare all version button icon on material menu layout.
     * Improved handling when study bible reference button is clicked:
-        - When "Sync Study Window Bible with Bible Window" is turned on, bible is opened directly with the same passage with the Bible Window.
-        - When "Sync Study Window Bible with Bible Window" is turned off, chapter and verse selection are displayed first.
+        - When Sync Study Window Bible with Bible Window is turned on, bible is opened directly with the same passage with the Bible Window.
+        - When Sync Study Window Bible with Bible Window is turned off, chapter and verse selection are displayed first.
         - This logic is currently implemented on material menu layout only.
 
 Changes in 29.15:
@@ -1384,15 +1393,15 @@ Changes in 29.11:
 
 Changes in 29.10:
 * Further improvement of Material menu layout to work with Mini Control:
-    - Button, instead of dropdown menu, is displayed for bible selection when config.refButtonClickAction is set to "mini".
-    - Button, instead of dropdown menu, is displayed for commentary selection when config.refButtonClickAction is set to "mini".
+    - Button, instead of dropdown menu, is displayed for bible selection when config.refButtonClickAction is set to mini.
+    - Button, instead of dropdown menu, is displayed for commentary selection when config.refButtonClickAction is set to mini.
 * Improved commentary selection with Mini Control:
-    - If "Sync Commentary with Bible Window" feature is turned on and a commentary is selected, commentary is opened directly with the same passage with the Bible Window.
-    - If "Sync Commentary with Bible Window" feature is turned off and a commentary is selected, chapter and verse selection for a commentary are displayed first.
+    - If Sync Commentary with Bible Window feature is turned on and a commentary is selected, commentary is opened directly with the same passage with the Bible Window.
+    - If Sync Commentary with Bible Window feature is turned off and a commentary is selected, chapter and verse selection for a commentary are displayed first.
     - This same logic is used by Master Control.
 
 Changes in 29.09:
-* Mini Control "Active Only" button now work with materialIconMaskColor, pushButtonBackgroundColor, pushButtonForegroundColor, pushButtonBackgroundColorHover, pushButtonForegroundColorHover, pushButtonBackgroundColorPressed, pushButtonForegroundColorPressed.
+* Mini Control Active Only button now work with materialIconMaskColor, pushButtonBackgroundColor, pushButtonForegroundColor, pushButtonBackgroundColorHover, pushButtonForegroundColorHover, pushButtonBackgroundColorPressed, pushButtonForegroundColorPressed.
 
 Changes in 29.08:
 * Integrated config.refButtonClickAction into Material menu layout.
@@ -1405,10 +1414,10 @@ Changes in 29.05, 29.06:
     - Added chapter and verse selector for opening a passage on bible window.
     - Added chapter and verse selector for opening a passage on study window.
     - Added commentary drop down selection menu.
-    - "Sync Commentary with Bible Window" button is now placed right next to the new commentary drop down menu.
+    - Sync Commentary with Bible Window button is now placed right next to the new commentary drop down menu.
 * Improved commentary selection:
-    - If "Sync Commentary with Bible Window" feature is turned on and a commentary is selected, commentary is opened directly with the same passage with the Bible Window.
-    - If "Sync Commentary with Bible Window" feature is turned off and a commentary is selected, chapter and verse selection for a commentary are displayed first.
+    - If Sync Commentary with Bible Window feature is turned on and a commentary is selected, commentary is opened directly with the same passage with the Bible Window.
+    - If Sync Commentary with Bible Window feature is turned off and a commentary is selected, chapter and verse selection for a commentary are displayed first.
 * Also improved bible and commentary selection on http-server interface.
 * Added found commands, which works on both desktop and http-server versions:
     - _chapters:::
@@ -1446,8 +1455,8 @@ Changes in 29.00:
     - Configs for customisation of ui color: materialIconMaskColor, pushButtonBackgroundColor, pushButtonForegroundColor, pushButtonBackgroundColorHover, pushButtonForegroundColorHover, pushButtonBackgroundColorPressed, pushButtonForegroundColorPressed
 
 Changes in 28.99:
-* Initial support of "Material" menu layout.  When finished, it will replace "Focus" as default menu layout.
-* Multiple config values added for customisation of "Material" menu layout button color.
+* Initial support of Material menu layout.  When finished, it will replace Focus as default menu layout.
+* Multiple config values added for customisation of Material menu layout button color.
 * Fixed changing instant information button icon on Focus menu layout.
 
 Changes in 28.96, 28.97, 28.98:
@@ -1474,21 +1483,21 @@ Changes in 28.91:
 * Fixed loading bible note in http-server when private data are loaded.
 
 Changes in 28.90:
-* Added a ".play" command and a button to http-server to play all available bible audio linked with the current content.
+* Added a .play command and a button to http-server to play all available bible audio linked with the current content.
 * Relocate QR code scanner link in http-server.
 
 Changes in 28.89:
-* Added a context plugin "Read All Verses" to read all available single verse audio linked in the currently opened content.
+* Added a context plugin Read All Verses to read all available single verse audio linked in the currently opened content.
 
 Changes in 28.88:
-* Added a command keyword "CHAPTERS:::".
-* Added a command ".chapters" in http-server, to open a menu of all available chapters
+* Added a command keyword CHAPTERS:::.
+* Added a command .chapters in http-server, to open a menu of all available chapters
 * Changed the passage selection button on http-server side bar to a button for displaying chapter menu.
 
 Changes in 28.87:
 * Added chapter navigation to http-server media player page.
 * Added table of content on bible audio.
-* Added ".audio" command to http-server.
+* Added .audio command to http-server.
 
 Changes in 28.86:
 * Fixed default config.audioBibleIcon on fresh installation.
@@ -1512,7 +1521,7 @@ Changes in 28.81:
 Changes in 28.80:
 * Added support of READLEXEME::: and READWORD::: commands in http-server.
 * Added support of word-by-word audio to http-server.
-* Added ".wordaudiolinks" command to http-server.
+* Added .wordaudiolinks command to http-server.
 * Fixed plain mode chapter reading showing audio icons in http-server.
 * Added config value config.showHebrewGreekWordAudioLinksInMIB.  If it is set to True, MIB will display audio icons even config.config.showHebrewGreekWordAudioLinks is set to False.
 * Application of config.showHebrewGreekWordAudioLinks now check if bible text is one of the marvel bibles. 
@@ -1570,7 +1579,7 @@ Changes in 28.67:
 Changes in 28.66:
 * Added a wiki page on word-by-word Hebrew and Greek audio:
     https://github.com/eliranwong/UniqueBible/wiki/Word-by-word-Hebrew-and-Greek-Audio
-* Tips: Use "Ctrl + Shift + A" with "Focus" menu layout to toggle audio links in marvel bibles.
+* Tips: Use Ctrl + Shift + A with Focus menu layout to toggle audio links in marvel bibles.
 
 Changes in 28.65:
 * Added word-by-word Hebrew and Greek audio to bibles, OHGB and OHGBi.
@@ -1585,7 +1594,7 @@ Changes in 28.63:
 
 Changes in 28.62:
 * Added config item config.hideVlcInterfaceForSingleVerseReading to hide VlcInterface for single verse reading.  Currently, this works only on webtop version, desktop version on Linux and macOS.
-* Added audio links to lexemes on "Words" feature content.
+* Added audio links to lexemes on Words feature content.
 * Added config item config.showHebrewGreekWordAudioLinks to toggle feature to show or hide audio links for indiviudal Hebrew and Greek words in marvel bibles, MOB, MIB, MPB, MTB & MAB.
 * Hide word-by-word Hebrew / Greek audio links on http server content page.
 * Prompt users to download word-by-word Hebrew / Greek audio when a word audio link is clicked and its audio file is not installed.
@@ -1597,7 +1606,7 @@ Changes in 28.61:
 * Integrated Hebrew word-by-word audio into Word, Words, Translation, Discourse features.
 * Added download of MP3 word-by-word audio of the Hebrew bible BHS5.  Storage required: 15.08GB in total.
 * Fixed use of MP3 audio bible - BBE (British accent; verse-by-verse).
-* On webtop version, use "thunar" to open directories after YouTube audio / video is downloaded.
+* On webtop version, use thunar to open directories after YouTube audio / video is downloaded.
 
 Changes in 28.60:
 * Support creation of all Hebrew and Greek word audio.
@@ -1612,7 +1621,7 @@ Changes in 28.57:
 * Added verse-by-verse audio bible - American Standard Version (American accent)
 
 Changes in 28.56:
-* Use "thunar" to open directories on webtop version.
+* Use thunar to open directories on webtop version.
 
 Changes in 28.54:
 * Uploaded and integrated nine more verse-by-verse MP3 audio bibles.
@@ -1655,7 +1664,7 @@ Changes in 28.47:
 * Integrated read verse audio into multiple-verse display features.
 
 Changes in 28.46:
-* Fixed "Read through the Rest of the Chapter" feature, by using READCHAPTER::: command instead of READBIBLE::: command.
+* Fixed Read through the Rest of the Chapter feature, by using READCHAPTER::: command instead of READBIBLE::: command.
 
 Changes in 28.45:
 * Changed the default value of config.readTillChapterEnd to True.
@@ -1703,7 +1712,7 @@ Changes in 28.39:
 * Fix config issue in FileUtil
 
 Changes in 28.38:
-* Added utility to create audio bible on macOS.  Non-macOS developers can use "Create Audio Bible" plugin instead.
+* Added utility to create audio bible on macOS.  Non-macOS developers can use Create Audio Bible plugin instead.
 * Added support of verse-by-verse audio bibles on OHGB / OHGBi / MOB / MIB / MTB / MPB / MAB.  Audio files will be uploaded in a couple of days.
 * Fixed matching texts for MP3 audio bible.
 
@@ -1716,7 +1725,7 @@ Changes in 28.36:
 
 Changes in 28.35:
 * gTTS feature uses built-in vlc player to play created mp3 file.  This works in non-Linux device too.
-* gTTS feature uses official Google cloud text-to-speech service, if "credentials_GoogleCloudTextToSpeech.json" is placed in UBA root folder.
+* gTTS feature uses official Google cloud text-to-speech service, if credentials_GoogleCloudTextToSpeech.json is placed in UBA root folder.
 
 Changes in 28.34:
 * Moved verse-by-verse audio bible files to config.audioFolder.
@@ -1727,7 +1736,7 @@ Changes in 28.34:
 * Added CUV Cantonese audio bible for download.
 * Assign CUV Mandarin audio bible to CUVs instead of CUV.
 * Fixed reading audio bible chapter not playing if vlc player is opened before a command is triggered.
-* Fixed "partyly" audio/bibles path which is not cross-platform.
+* Fixed partyly audio/bibles path which is not cross-platform.
 
 Changes in 28.33:
 * Add NET to MP3 download in menu
@@ -1743,8 +1752,8 @@ Changes in 28.32:
 
 Changes in 28.31:
 * Added READCHAPTER::: READVERSE::: commands, to prepare gui integration of verse by verse audio bible next update.
-* Uploading a menu plugin "Create Audio Bible" to create MP3 files on every single verse of a bible version.  This plugin is created for developers only.  Developers may need to modify the script according to their needs.
-* Uploading audio bible "New English Translation" and "Chinese Union Version [Cantonese]" to prepare verse by verse audio bible integration next update.
+* Uploading a menu plugin Create Audio Bible to create MP3 files on every single verse of a bible version.  This plugin is created for developers only.  Developers may need to modify the script according to their needs.
+* Uploading audio bible New English Translation and Chinese Union Version [Cantonese] to prepare verse by verse audio bible integration next update.
     - NET MP3: https://github.com/eliranwong/NewEnglishTranslationMP3
     - CUV MP3: https://github.com/eliranwong/ChineseUnionVersionCantoneseMP3
 
@@ -1753,18 +1762,18 @@ Changes in 28.30:
 
 Changes in 28.29:
 * Uploaded a new context plugin at: https://github.com/eliranwong/UniqueBible_Plugins_Context/blob/main/Text-to-Cantonese.py.zip
-"""Important Notes:
+Important Notes:
 This plugin uses Google Cloud Text to Speech service.
 Read more at: https://cloud.google.com/text-to-speech
 
 To work with this plugin, you need to:
 1) Create a credential key and download it.  Read for details at https://cloud.google.com/text-to-speech/docs/before-you-begin
-2) Rename the credential key file to "credentials_GoogleCloudTextToSpeech.json"
-3) Place the credential key file "credentials_GoogleCloudTextToSpeech.json" in UniqueBibleApp folder.
+2) Rename the credential key file to credentials_GoogleCloudTextToSpeech.json
+3) Place the credential key file credentials_GoogleCloudTextToSpeech.json in UniqueBibleApp folder.
 
-Remarks: "Google Cloud Text-to-Speech is priced based on the number of characters sent to the service to be synthesized into audio each month. 
-The first 1 million characters for WaveNet voices are free each month."  1 million characters each month should be free enough for general use.
-"""
+Remarks: Google Cloud Text-to-Speech is priced based on the number of characters sent to the service to be synthesized into audio each month. 
+The first 1 million characters for WaveNet voices are free each month.  1 million characters each month should be free enough for general use.
+
 
 Changes in 28.28:
 * Fixed installing wps office on webtop version.
@@ -1776,7 +1785,7 @@ Changes in 28.26:
 * Fixed installing pycharm from developer menu on apple chip machine.  For webtop version only.
 
 Changes in 28.25:
-* webtop version: added "VS Code" & "Sqlite Browser" to developer menu.
+* webtop version: added VS Code & Sqlite Browser to developer menu.
 * Webtop version: install yay for users using old docker images.
 
 Changes in 28.24:
@@ -1790,16 +1799,16 @@ Changes in 28.22:
 
 Changes in 28.21:
 * Install pycharm on demand and open it on webtop version.
-* Added developer option "pycharm" to Focus and Aleph menu layouts.
+* Added developer option pycharm to Focus and Aleph menu layouts.
 
 Changes in 28.20:
-* Remove message "nohup: appending output to 'nohup.out'" when open third-party apps via webtop version.
+* Remove message nohup: appending output to 'nohup.out' when open third-party apps via webtop version.
 
 Changes in 28.19:
 * Webtop version now use PySide2 library by default.
 
 Changes in 28.18:
-* Added "Add Language Files" & "Update Language Files" to developer menu, available only if config.developer is set to True
+* Added Add Language Files & Update Language Files to developer menu, available only if config.developer is set to True
 
 Changes in 28.17:
 * Added items to config flag windows.
@@ -1816,7 +1825,7 @@ Changes in 28.16:
 * Added shortcuts for new toggle features.
 * Added items to language files.
 * Fixed display user note indicator issue on webtop version.
-* Fixed error message, "ERROR:command_buffer_proxy_impl.cc(141)] ContextResult::kTransientFailure: Failed to send GpuChannelMsg_CreateCommandBuffer.", on webtop version.
+* Fixed error message, ERROR:command_buffer_proxy_impl.cc(141)] ContextResult::kTransientFailure: Failed to send GpuChannelMsg_CreateCommandBuffer., on webtop version.
 
 Changes in 28.15:
 * Integrated restart UBA feature into Config Flags Window on supported os.
@@ -1869,7 +1878,7 @@ Changes in version 27.09, 28.00, 28.01:
 * Added venv option system_site_packages=True for docker version.
 
 Changes in version 27.07, 27.08:
-* Add ability to start UBA in fullscreen mode, by running "python3 uba.py fullscreen"
+* Add ability to start UBA in fullscreen mode, by running python3 uba.py fullscreen
 * Add config.startFullScreen
 
 Changes in version 27.04, 27.05, 27.06:
@@ -1919,7 +1928,7 @@ Added config.gTTS and GTTS::: command to run Google text-to-speech feature.
         # gTTS and sox are required to run this feature.
         # To install, e.g., on Arach Linux:
         # 'pip3 install gTTS'
-        # 'sudo pacman -S sox'"""
+        # 'sudo pacman -S sox'
 Will add this feature to context menu next update.
 
 Changes in version 26.53:
@@ -2021,7 +2030,7 @@ Change in version 26.26:
 Change in version 26.25:
 * Set style of Bible version button in toolbar in Focus layout
 * Move Reference button config in Focus layout
-* Remove "A copy of configurations is saved in file config.py" message
+* Remove A copy of configurations is saved in file config.py message
 
 Change in version 26.24:
 * Only display advanced options in Focus and Aleph menus in dev mode
@@ -2280,7 +2289,7 @@ Major change in version 25.63:
 * Merged pull request https://github.com/eliranwong/UniqueBible/pull/585
 
 Major change in version 25.62:
-* Added a context plugin "Search LN".
+* Added a context plugin Search LN.
 
 Major changes in version 25.61:
 * Fixed import MySword bible module.
@@ -2320,8 +2329,8 @@ Major changes in version 25.51:
 * Fixed changing bible version for concurrent users in web mode.
 
 Major changes in version 25.46, 25.47, 25.48, 25.49, 25.50:
-* Fixed ".bible" command for concurrent bible browsing in web mode.
-* Fixed ".bible" command entered directly via command input field.
+* Fixed .bible command for concurrent bible browsing in web mode.
+* Fixed .bible command entered directly via command input field.
 * Fixed verse feature commands in web mode.
 * Fixed chapter feature commands in web mode.
 * Fixed book feature commands in web mode.
@@ -2337,8 +2346,8 @@ Changes about web version:
 * Added selection of UBA icon colour.
 * Added support of organisation / church's icon and link.
 * Added config.webUBAIcon, config.webOrganisationIcon and config.webOrganisationLink
-* Added ".setWebUBAIcon" command to select UBA icon.
-* Added ".latest" command.
+* Added .setWebUBAIcon command to select UBA icon.
+* Added .latest command.
 * Added a help button.
 * Fixed the issue that _setconfig::: did not work even login as an administrator.
 
@@ -2347,14 +2356,14 @@ Major change in version 25.40, 25.41:
 
 Major changes in version 25.39:
 * Added admin login to web version.  Default password: UBA123.  Public server should change password.
-* Added .login and .login commands to web version.  To login, run ".login:::UBA123".  Run ".logout" to log out.
+* Added .login and .login commands to web version.  To login, run .login:::UBA123.  Run .logout to log out.
 * Added admin commands.
 * Removed config.httpServerStopCommand.
 
 Major changes in version 25.38:
 * Fixed a typo on .setVerseNoDoubleClickAction on web version.
 * Fixed command input on iOS.
-* Added translations to "Library" and "Search" pages headings.
+* Added translations to Library and Search pages headings.
 * Added links to user manual.
 
 Major changes in version 25.37:
@@ -2455,7 +2464,7 @@ Major change in version 25.14:
 Major changes in version 25.13:
 * Fixed hyperlinks on web version.
 * Added Bible Navigation Menu with book / chapter / verse selection to web version layout.
-* Changed default config.webUI to "mini", as more features are directly accessible via mini layout.
+* Changed default config.webUI to mini, as more features are directly accessible via mini layout.
 
 Major changes in version 25.12:
 * Apply changes in this PR: https://github.com/eliranwong/UniqueBible/pull/524/files
@@ -2481,12 +2490,12 @@ Major changes in version 25.05:
 Major changes in version 25.04:
 * Added a bible link to verse comparison heading.
 * Http-server page now loads _setconfig::: link automatically.
-* Http-server layout now updates favourite bible buttons after a change of "setfavouritebible", "setfavouritebible2" or "setfavouritebible3".
+* Http-server layout now updates favourite bible buttons after a change of setfavouritebible, setfavouritebible2 or setfavouritebible3.
 * Added command shortcuts to http-server:
-            ".setfavouritebible2"
-            ".setfavouritebible3"
-            ".setversenosingleclickaction"
-            ".setversenodoubleclickaction"
+            .setfavouritebible2
+            .setfavouritebible3
+            .setversenosingleclickaction
+            .setversenodoubleclickaction
 
 Major change in version 25.03:
 * Corrected a subheading in http-server download page.
@@ -2536,8 +2545,8 @@ Major changes in version 24.90:
 * Added '.setFavouriteBible' and 'setstandardabbreviation' as shortcut commands to http-server.
 
 Major changes in version 24.89:
-* Added ".presentationMode" command to http-server, to toggle presenatation mode.
-* Added ".globalViewer" command to http-server, to toggle global viewer for presentation mode.
+* Added .presentationMode command to http-server, to toggle presenatation mode.
+* Added .globalViewer command to http-server, to toggle global viewer for presentation mode.
 
 Major changes in version 24.88:
 Improved http-server:
@@ -2691,25 +2700,25 @@ Major change in version 24.51:
 * Improved display of download page.
 
 Major change in version 24.50:
-* Enable ".stop" command only when config.developer is set to True.
+* Enable .stop command only when config.developer is set to True.
 
 Major change in version 24.49:
-* Added a download page for http-server, accessible by running ".donload" command.
+* Added a download page for http-server, accessible by running .donload command.
 
 Major change in version 24.48:
 * Added support of downloading marvel datasets with download:::marveldata:::[resource].
 
 Major change in version 24.47:
-* Added config.webUI to specify web ui.  Currently available option: "" (default) or "mini".
+* Added config.webUI to specify web ui.  Currently available option:  (default) or mini.
 
 Major change in version 24.46:
-* Added a "Toggle fullscreen" button to http-server page. 
+* Added a Toggle fullscreen button to http-server page. 
 
 Major changes in version 24.45:
 Several enhancement about http-server:
 * Added buttons to navigate bible
 * Added ability to open content by clicking links.
-    e.g. do a bible search by running "searchNT:::love", then click a verse link to open that passage.
+    e.g. do a bible search by running searchNT:::love, then click a verse link to open that passage.
 
 Major change in version 24.44:
 * Added scrolling feature to bible display with http-server.
@@ -2718,7 +2727,7 @@ Major change in version 24.42, 43:
 * Added css and javascript support to http-server display.
 
 Major changes in version 24.39, 24.40, 24.41:
-* Changed "help" and "stop" commands in http-server to ".help" and ".stop", so users can search bible for word like "help".
+* Changed help and stop commands in http-server to .help and .stop, so users can search bible for word like help.
 * Fixed http-server charset issue.
 * Fixed http-server mobile view issue.
 
@@ -2726,8 +2735,8 @@ Major changes in version 24.38:
 * Added initial support of running UBA as a http-server.
     Known issues to be fixed:
         - non-English characters are not readable.
-        - html content is not properly displayed, e.g. run "text:::MIB"
-* Added support to run http-server with command "python3 uba.py http-server".
+        - html content is not properly displayed, e.g. run text:::MIB
+* Added support to run http-server with command python3 uba.py http-server.
 * Added loading Qt library when UBA is run as a http-server.
 * Changed http-server port from 80 to 8080, as 80 is blocked by default on some devices, like Android, Chromebook, etc.
 
@@ -2736,7 +2745,7 @@ Major change in version 24.37:
 
 Major changes in version 24.36:
 * Improved display of content via telnet-server.
-* Replaced "SHOWSEARCH" command with "SEARCHALL" command.
+* Replaced SHOWSEARCH command with SEARCHALL command.
 * Added commands to search specific portion / book of the bible:
     SEARCHTNK::: search Tanakh only
     SEARCHOT::: search OT only
@@ -2748,18 +2757,18 @@ Major changes in version 24.36:
 
 Major changes in version 24.35:
 * Added support of sending download::: command to telnet-server.
-* Added a config flag "enableCmd", to enable CMD::: command keyword.  It is set to False by default for security reason.
+* Added a config flag enableCmd, to enable CMD::: command keyword.  It is set to False by default for security reason.
 
 Major changes in version 24.34:
-* Added support of running "telnet-server" without installing PySide2 or PyQt5.
-* Added support of running "telnet-server" on Android with Termux (WITHOUT root)
+* Added support of running telnet-server without installing PySide2 or PyQt5.
+* Added support of running telnet-server on Android with Termux (WITHOUT root)
     Read https://github.com/eliranwong/UniqueBible/wiki/Running-telnet-server-on-Android
 
 Major change in version 24.33:
 * Fixed telnet-server.
 
 Major changes in version 24.32:
-* Added config.qtLibrary in config.py, allowing users to specify a Qt library for GUI.  Two valid options are "pyside2" and "pyqt5". 
+* Added config.qtLibrary in config.py, allowing users to specify a Qt library for GUI.  Two valid options are pyside2 and pyqt5. 
 * Limit filename length displayed on book and external file buttons.
 
 Major change in version 24.31:
@@ -2778,20 +2787,20 @@ Major change in version 24.27, 24.28:
 
 Major changes in version 24.26:
 * Now bring popover window to the front when new content is loaded and the window was placed behind the main window.
-* Renamed config flag "bookOnNewWindow" to "openBookInNewWindow".
-* Renamed config flag "pdfViewerOnNewWindow" to "openPdfViewerInNewWindow".
+* Renamed config flag bookOnNewWindow to openBookInNewWindow.
+* Renamed config flag pdfViewerOnNewWindow to openPdfViewerInNewWindow.
 * Added ability to swap display of pdf viewer between new window and study window without modifying config.openPdfViewInNewWindow.
-* Added option "Full screen" to context menu section "Open Content in".
+* Added option Full screen to context menu section Open Content in.
 * Added parsing options to context menu when PDF viewer is opened in a new window.
 * Partailly added fullscreen support to YouTube Browser for enabling fullscreen video. (will complete in upcoming update)
 
 Major change in version 24.25:
-* Added a config flag "openPdfViewerInNewWindow" to open PDF viewer on a new window.
+* Added a config flag openPdfViewerInNewWindow to open PDF viewer on a new window.
 
 Major changes in version 24.24:
 * Fixed compatability issues with PyQt5
 * Fixed Focus menu layout to work with PyQt5
-* Renamed config flag "useFastVerseParsing" to "useLiteVerseParsing"
+* Renamed config flag useFastVerseParsing to useLiteVerseParsing
 * Added 3 config flags about verse parsing:
     config.parseEnglishBooksOnly
     config.searchBibleIfCommandNotFound
@@ -2801,7 +2810,7 @@ Major change in version 24.23:
 * Fixed the issue that Strong's numbers were mistaken as bookless references in parsing bible verse references.
 
 Major change in version 24.22:
-* Corrected a text in "Find Text" plugin dialog.
+* Corrected a text in Find Text plugin dialog.
 
 Major change in version 24.21:
 * Fixed the issue that Study Window page was not being reloaded upon request.
@@ -2816,7 +2825,7 @@ If text is not selected, a input dialog is opened for users to enter text manual
     'plugins/context/Find Text_Ctrl+Alt+F.py'
     'plugins/context/Find Text Bible Window.py'
     'plugins/context/Find Text Study Window.py'
-Remarks: Using key combination "Ctrl+Alt+F" to search for text in both Bible page and Study Window pages.
+Remarks: Using key combination Ctrl+Alt+F to search for text in both Bible page and Study Window pages.
 
 Major changes in version 24.18, 19:
 * Added 2 menu plugins to find text on Bible Window and Study Window.
@@ -2829,10 +2838,10 @@ Major change in version 24.16:
 
 Major changes in version 24.15:
 * Renamed 1 context plugins to change its keyboard shortcut:
-    "plugins/menu/Google Drive Notes Backup_Ctrl+Shift+K.py"
+    plugins/menu/Google Drive Notes Backup_Ctrl+Shift+K.py
 * Added 2 context plugins with keyboard shortcuts to context menu features:
-    "plugins/context/Ctrl+Alt+B Open Verses in New Window_Ctrl+Alt+B.py"
-    "plugins/context/Ctrl+Shift+B Open Verses in Bible Window_Ctrl+Shift+B.py"
+    plugins/context/Ctrl+Alt+B Open Verses in New Window_Ctrl+Alt+B.py
+    plugins/context/Ctrl+Shift+B Open Verses in Bible Window_Ctrl+Shift+B.py
 
 Major change in version 24.14:
 * Added dark theme support to pdf reader.
@@ -2841,18 +2850,18 @@ Major change in version 24.13:
 * Fixed updating changes of active verse number colour without restart.
 
 Major changes in version 24.12:
-* Added a startup plugin "highlightActiveVerse" to highlight actively chosen verses.
+* Added a startup plugin highlightActiveVerse to highlight actively chosen verses.
     Remarks: Users can enable or disable individual plugins via plugin menu.
-* Added colour selection dialog to customise colours to work with "highlightActiveVerse" plugin.
+* Added colour selection dialog to customise colours to work with highlightActiveVerse plugin.
 
 Major change in version 24.11:
-* Added a menu plugin "Extract Text" to use python package "textract" to extract texts from various types of files.
+* Added a menu plugin Extract Text to use python package textract to extract texts from various types of files.
 
 Major change in version 24.10:
 * Added DOWNLOAD command to be able to download marvelData files from Google and Github repos.
 
 Major change in version 24.09:
-* Added a menu plugin "PowerPoint Text" to extract text from PowerPoint Files (*.pptx) and display on UBA.
+* Added a menu plugin PowerPoint Text to extract text from PowerPoint Files (*.pptx) and display on UBA.
 
 Major changes in version 24.08:
 * Improved display of differences in version comparison.
@@ -2897,7 +2906,7 @@ Major changes in version 23.97:
 * Added a toolbar icon button to save history of currently opened pdf page number.
 
 Major change in version 23.96:
-* Added a config flag config.updateWithGitPull, to update UBA with command "git pull".
+* Added a config flag config.updateWithGitPull, to update UBA with command git pull.
     This option is set to False by default.
     It works only if users use git clone to install UBA.
     Read more about use of git at: https://github.com/eliranwong/UniqueBible/wiki/Using-Git
@@ -2906,7 +2915,7 @@ Major changes in version 23.95:
 * Fixed updating toolbar 'external file button' when a pdf or docx file is opened.
 * Added a config variable 'pdfTextPath' to keep a record of the last opened pdf file path.
 * Added a command keyword ANYPDF::: to open pdf file anywhere locally where users have read permission.
-* Added a context plugin "Save PDF Page History".
+* Added a context plugin Save PDF Page History.
     User can select a page number and select 'Save PDF Page History' from right-click context menu 'plugins', to add a history record for opening pdf file with a specific page number.
     This plugin works on currently opened / the latest opened pdf, recorded in config.pdfTextPath.
     If no number is selected, a gui dialog will show up to allow users to specify a page number to be recroded in history.
@@ -2917,20 +2926,20 @@ Major change in version 23.94:
     This option enables UBA parser to parser references without space between book name and chapter number.
 
 Major change in version 23.93:
-* Fixed opening master control "Search" tab via context menu.
+* Fixed opening master control Search tab via context menu.
 
 Major changes in version 23.92:
 * Optimised the speed of parsing a single reference. e.g. Rm / Rm 5 / Rm 5:8.
 * Fixed parsing references with books having only one chapter.
-* Added "Open in Study Window" to single-click / doublick-click verse action.
-* Added a config flag "convertChapterVerseDotSeparator".
+* Added Open in Study Window to single-click / doublick-click verse action.
+* Added a config flag convertChapterVerseDotSeparator.
     This is an option to convert the dot sign, which separates chapter number and verse number in some bible references, to colon sign so that UBA parser can parse those referencces.
     If this option is enabled, UBA parser can parse references like 1Th 3.16-18, Rm 5.8.
-* Added "Open in Book" in right-click context menu.
+* Added Open in Book in right-click context menu.
     This option is especially useful when reading pdf / word document / epub / notes when there are bible verse references without book names
     It is common that references contain only a chapter number and verse number when book name is implied somewhere in the context.
-    Users can now select text containing only chapter and verse number, e.g. "3:16" and select a book from context menu "Open in Book", e.g. "John".
-    If a book is selected from context menu "Open in Book" without selected text, the first chapter of the selected book will be opened.
+    Users can now select text containing only chapter and verse number, e.g. 3:16 and select a book from context menu Open in Book, e.g. John.
+    If a book is selected from context menu Open in Book without selected text, the first chapter of the selected book will be opened.
 
 Major change in version 23.91:
 * Fixed tagging multiple Strong's numbers in simple reading mode.
@@ -2958,56 +2967,56 @@ Major changes in version 23.86:
 
 Major changes in version 23.85:
 * Fixed loading notes with embedded images.
-* Set "notes" directory as default directory when open / save dialog is opened in Note Editor.
+* Set notes directory as default directory when open / save dialog is opened in Note Editor.
 
 Major changes in version 23.84:
-* Renamed context plugin "Charts" to "Charts and Table"
-* On top of previously available charts, context plugin "Charts and Table" now displays an additional table of bible verse references sorted by books.
+* Renamed context plugin Charts to Charts and Table
+* On top of previously available charts, context plugin Charts and Table now displays an additional table of bible verse references sorted by books.
 
 Major changes in version 23.83:
-* Improved loading speed loading large-size Word Document when config flag "parseWordDocument" is enabled.
+* Improved loading speed loading large-size Word Document when config flag parseWordDocument is enabled.
 * Improved loading speed loading Word Document when document contains images.
-* Changed default value of config flag "parseWordDocument" to True.
-* Added a demo Word Document "marvelData/docx/demo.docx".
+* Changed default value of config flag parseWordDocument to True.
+* Added a demo Word Document marvelData/docx/demo.docx.
 
 Major changes in version 23.82:
 * UI tweaks, revised Info and Update dialogs.
 * Improved performance of parsing large-size text, by spliting huge text into chunks for parsing.
-* Added a config value "noOfLinesPerChunkForParsing":
+* Added a config value noOfLinesPerChunkForParsing:
         # Large-size text is divided into chunks before parsing, in order to improve performance.  
         # This option specify maximum number of lines included into each chunk.  
         # Too many or too little can affect performance.  
         # Choose a value suitable for your device.  
         # Generally, device with higher memory capacity can handle more numbers of line in each chunk.
-* Added a dialog to change value of "noOfLinesPerChunkForParsing".  The dialog is accessible via Focus, Aleph & Classic menu layout.
+* Added a dialog to change value of noOfLinesPerChunkForParsing.  The dialog is accessible via Focus, Aleph & Classic menu layout.
 
 Major change in version 23.80, 81:
-* Adjust programmatically the height of bar chart generated by context plugin "Charts".
+* Adjust programmatically the height of bar chart generated by context plugin Charts.
 
 Major changes in version 23.79:
-* Set initial window size of charts generated by context plugin "Charts"
+* Set initial window size of charts generated by context plugin Charts
 * Added total number of verses to chart display.
 
 Major changes in version 23.78:
 * Set globals options for running plugin scripts.  This would make writing a plugin more flexible.
-* Added a new context plugin "Charts".  It generates a pie chart and a bar chart based on bible references in selected text or whole page content.
+* Added a new context plugin Charts.  It generates a pie chart and a bar chart based on bible references in selected text or whole page content.
 * A wiki page is created about this new plugin https://github.com/eliranwong/UniqueBible/wiki/Charts
 
 Major changes in version 23.77:
-* PDF file paths are now added to "Files" history records when they are loaded with keyword command PDF:::.
-* Word Document file paths are now added to "Files" history records when they are open with open docx file dialog, e.g. plugin "Word Document".
+* PDF file paths are now added to Files history records when they are loaded with keyword command PDF:::.
+* Word Document file paths are now added to Files history records when they are open with open docx file dialog, e.g. plugin Word Document.
 
 Major change in version 23.76:
-* Plugin "ePub Viewer" does not run on Windows.  It is now prevented from loading, which causes crashes on Windows.
+* Plugin ePub Viewer does not run on Windows.  It is now prevented from loading, which causes crashes on Windows.
 
 Major changes in version 23.75:
 * Added support of loading Word Document with dark theme.
-* Added a config flag "parseWordDocument", to parse Word Document content on loading.
+* Added a config flag parseWordDocument, to parse Word Document content on loading.
 Remarks: It takes longer to load a Word document if this option is enabled.
-         Without enabling this option, users can still open bible references by selecting text and use "Open with" feature on right-click context menu.
+         Without enabling this option, users can still open bible references by selecting text and use Open with feature on right-click context menu.
 
 Major changes in version 23.74:
-* Added a menu plugin "Word Document EDIT".
+* Added a menu plugin Word Document EDIT.
 * Removed two unused packages.
 
 Major change in version 23.73:
@@ -3018,14 +3027,14 @@ Major changes in version 23.72:
 * Added command keyword DOCX::: to open imported word document on Study Window, e.g. DOCX:::test.docx, where test.docx is placed in marvelData/docx.
 * Added support of loading images and text styles in Microsoft word documents (*.docx).
 * Added support of loading pdf files in customised marvelData path.
-* Added "Word Document" section in Master Control > Libaray 2 for quick access of imported Word documents.
-* Added a menu plugin "Word Document".
+* Added Word Document section in Master Control > Libaray 2 for quick access of imported Word documents.
+* Added a menu plugin Word Document.
 
 Major changes in version 23.71:
-* Focus menu layout "Open File" now open "notes" directory as default.
-* Added PdfDialog to open pdf files located inside / outside "marvelData/pdf", accessible with pdf icon, right next to YouTube icon.
-* Added a menu plugin "PDF Document" to open the PdfDialog mentioned above.
-* Added "Import" button and "Others" button to Master Control > Library 2 > PDF.
+* Focus menu layout Open File now open notes directory as default.
+* Added PdfDialog to open pdf files located inside / outside marvelData/pdf, accessible with pdf icon, right next to YouTube icon.
+* Added a menu plugin PDF Document to open the PdfDialog mentioned above.
+* Added Import button and Others button to Master Control > Library 2 > PDF.
 
 Major changes in version 23.70:
 * Added ability to load pdf files located outside marvelData/pdf, without import.
@@ -3040,13 +3049,13 @@ Major change in version 23.68:
 Major changes in version 23.67:
 * Added ability to load pdf files
 * Users can add pdf files to folder marvelData/pdf or download some sample pdf files from github.
-* Added a new tab "Library 2" to master control
+* Added a new tab Library 2 to master control
 
 Major change in version 23.66:
 * Added hymns to presentation plugin.
 
 Major change in version 23.65:
-* Added a dropdown menu in plugin "Presentation" for users to select bible version for display.
+* Added a dropdown menu in plugin Presentation for users to select bible version for display.
 
 Major change in version 23.64:
 * Added support of downloading commentary, book / maps modules from @darrelwright github repos via UBA menu.
@@ -3055,16 +3064,16 @@ Major change in version 23.63:
 * Added support of downloading bible modules from @osteng github repo via UBA menu.
 
 Major change in version 23.62:
-* Corrected the file location of plugin "Run as Command".
+* Corrected the file location of plugin Run as Command.
 
 Major change in version 23.61:
 * Added a workaround to several context menu features to work with fast verse parsing.
 
 Major changes in version 23.60:
 * Added two menu plugins, to use keyboard shortcuts to switch to the next tab in Bible / Study Window without using mouse:
-  - "plugins/menu/Next Bible Window Tab_Ctrl+Shift+T.py"
-  - "plugins/menu/Next Study Window Tab_Ctrl+Alt+T.py"
-* Users can hide these plugins using "Enable Individual Plugins" window.
+  - plugins/menu/Next Bible Window Tab_Ctrl+Shift+T.py
+  - plugins/menu/Next Study Window Tab_Ctrl+Alt+T.py
+* Users can hide these plugins using Enable Individual Plugins window.
 * Users can also change the keyboard combintion by renaming these two files.
 
 Major change in version 23.59:
@@ -3077,8 +3086,8 @@ Major change in version 23.57:
 * Fixed loading content with COMPARE::: keyword command, which had an issue on verse reference range.
 
 Major changes in version 23.56:
-* Renamed two plugins "Google Drive Notes Backup / Restore"
-* Added two new features on context menu "Compare Verses with" and "Parallel Verses with"
+* Renamed two plugins Google Drive Notes Backup / Restore
+* Added two new features on context menu Compare Verses with and Parallel Verses with
     Users can select a verse reference or multiple verse references and compare / parallel the currently opened version with a choosen bible version from the context menu.
     Remarks: Stardard parsing is recommended for these features for users can quickly select a block of text and trigger these features.
     Read about standard parsing more at https://github.com/eliranwong/UniqueBible/wiki/Verse-parsing#remarks
@@ -3089,33 +3098,33 @@ Major changes in version 23.55:
     toolbarIconSizeFactor [default: 0.75], sidebarIconSizeFactor [default: 0.6]
 
 Major changes in version 23.54:
-* Added a file dialog to "Interlinear Data" plugins.  Users can now specify filepath of the exported spreadsheet.
+* Added a file dialog to Interlinear Data plugins.  Users can now specify filepath of the exported spreadsheet.
 * Fixed exporting spreadsheet on Windows.
 
 Major change in version 23.53:
 * Fixed patch file.
 
 Major change in version 23.52:
-* Added "Enable Individual Plugins" Window for users to enable / disable individual plugins.
+* Added Enable Individual Plugins Window for users to enable / disable individual plugins.
 * The window is accessible via menu > plugins or context menu > plugins.
 
 Major changes in version 23.51:
-* Fixed spreadsheet export with plugin "Interlinear Data"
+* Fixed spreadsheet export with plugin Interlinear Data
 * Added 'xlsxwriter' and 'csv' as alternatives to 'openpyxl' for exporting data into spreadsheet.
   - 'xlsxwriter' is used if 'openpyxl' is not installed.
   - *.csv file is exported instead of *.xlsx file if neither 'xlsxwriter' or 'openpyxl' is installed.
 
 Major changes in version 23.50:
 * Added a menu plugin and a context plugin, to view and export interlinear data:
-  - "plugins/context/Interlinear Data.py")
-  - "plugins/menu/Interlinear Data.py")
-* When plugin "Interlinear Data" is used as context plugin, data of the first bible verse reference in the selected text are displayed.
+  - plugins/context/Interlinear Data.py)
+  - plugins/menu/Interlinear Data.py)
+* When plugin Interlinear Data is used as context plugin, data of the first bible verse reference in the selected text are displayed.
 * A wiki page is created about this plugin: https://github.com/eliranwong/UniqueBible/wiki/Export-Interlinear-Data
 
 Major changes in version 23.49:
 * Added two menu plugins:
-  - "plugins/menu/Clear Main Tabs.py
-  - "plugins/menu/Clear Study Tabs.py
+  - plugins/menu/Clear Main Tabs.py
+  - plugins/menu/Clear Study Tabs.py
 
 Major changes in version 23.48:
 * Now distinguish full screen feature from maximised window feature triggered through menu.
@@ -3130,33 +3139,33 @@ Major changes in version 23.46:
 * Fixed main window resize issue on Linux.
 
 Major changes in version 23.45:
-Revised "Set Config Flags" Window:
+Revised Set Config Flags Window:
 * Added a column to show description on individual items.
 * Added a button to restored all config flags default values.
 
 Major changes in version 23.44:
 * Now support XML files for multiple import.
-* Added search field to plugin "Bible Reading Plan".
+* Added search field to plugin Bible Reading Plan.
 
 Major change in version 23.43:
 * Fixed missing translations in the following plugins:
-    - "plugins/menu/圣经阅读计划.py" <- Simplified Chinese
-    - "plugins/menu/聖經閱讀計劃.py" <- Traditional Chinese
+    - plugins/menu/圣经阅读计划.py <- Simplified Chinese
+    - plugins/menu/聖經閱讀計劃.py <- Traditional Chinese
 
 Major changes in version 23.42:
-* Added two Chinese versions of plugin "Bible Reading Plan"
-    Non-Chinese users can safely remove them from folder "plugins/menu/"
-    - "plugins/menu/圣经阅读计划.py" <- Simplified Chinese
-    - "plugins/menu/聖經閱讀計劃.py" <- Traditional Chinese
+* Added two Chinese versions of plugin Bible Reading Plan
+    Non-Chinese users can safely remove them from folder plugins/menu/
+    - plugins/menu/圣经阅读计划.py <- Simplified Chinese
+    - plugins/menu/聖經閱讀計劃.py <- Traditional Chinese
 
 Major change in version 23.41:
-* Fixed initial scrolling of plugin "Bible Reading Plan".
+* Fixed initial scrolling of plugin Bible Reading Plan.
 
 Major change in version 23.40:
 * Added Beblia XML import.
 
 Major change in version 23.39:
-* Added a menu plugin "Bible Reading Plan".
+* Added a menu plugin Bible Reading Plan.
     A wiki page is written about this plugin https://github.com/eliranwong/UniqueBible/wiki/Bible-Reading-Plan
 
 Major change in version 23.38:
@@ -3168,9 +3177,9 @@ Major change in version 23.37:
 
 Major change in version 23.36:
 * Added a simple context plugin for quickly searching for selected text in the currently opened bible, with keyboard shortcut.
-    The file is "plugins/context/Search Currently Opened Bible_Ctrl+Shift+F.py"
+    The file is plugins/context/Search Currently Opened Bible_Ctrl+Shift+F.py
     User cutomisation:
-    * You can change the keyboard shortcut combination by changing "Ctrl+Shift+F" in the filename.
+    * You can change the keyboard shortcut combination by changing Ctrl+Shift+F in the filename.
     * You can edit the search command in the file with a text editor, to specify searching which bible version or versions.
 
 Major change in version 23.35:
@@ -3180,10 +3189,10 @@ Major changes in version 23.34:
 * Fixed MIB display.
 
 Major changes in version 23.33:
-* Added a command keyword "_lexicaldata:::" to display lexical data on bottom window, e.g. _lexicaldata:::G1234
+* Added a command keyword _lexicaldata::: to display lexical data on bottom window, e.g. _lexicaldata:::G1234
 * Added a startup plugin to do two things:
     1) add mouse over action to existing links displaying lexical data on bottom window:
-        e.g. <ref onclick="lex('H1234')">
+        e.g. <ref onclick=lex('H1234')>
     2) tag Strong's number / in plain text
         e.g. H1234
 
@@ -3209,7 +3218,7 @@ Major changes in version 23.27:
 * Optimised display of OHGBi verses in OHGB concordance and morphology search result.
 * Added config.maximumOHGBiVersesDisplayedInSearchResult
     When search result exceeds this number, a OHGBi link is shown instead of full text.
-* Added "Select Maximum Number of OHGBi Verses" dialog to Focus / Aleph / Classic menu layout.
+* Added Select Maximum Number of OHGBi Verses dialog to Focus / Aleph / Classic menu layout.
 * Fixed Focus menu layout about missing 'enableInstantButton'.
 
 Major change in version 23.26:
@@ -3217,49 +3226,49 @@ Major change in version 23.26:
 
 Major changes in version 23.25:
 * Added a startup plugin to fix colours displayed in dark theme.
-* Added config flag "enableMenuUnderline"
+* Added config flag enableMenuUnderline
 
 Major change in version 23.24:
-* Added config variables "activeVerseNoColourLight" and "activeVerseNoColourDark" to customise active verse number colour.
+* Added config variables activeVerseNoColourLight and activeVerseNoColourDark to customise active verse number colour.
 
 Major changes in version 23.23:
-* Renamed "Lookup" submenu on right-click context menu to "Bible Resources".
+* Renamed Lookup submenu on right-click context menu to Bible Resources.
 
 Major changes in version 23.22:
-* Support change of Bible Window bible version when "Open with" feature is triggered from Study Window without selecting a bible verse reference and config.openBibleInMainViewOnly is set to True.
+* Support change of Bible Window bible version when Open with feature is triggered from Study Window without selecting a bible verse reference and config.openBibleInMainViewOnly is set to True.
 * Improved morphology search result display by including OHGBi verse text as immediate context.
-* Added a config flag "addOHGBiToMorphologySearch".  When it is set to True, OHGBi verses are included with morphology search result to provide immediate context.
-* Added "addOHGBiToMorphologySearch" and "openBibleInMainViewOnly" to "Display Config Options Window".
-* Added option "ALL" to "Open with" submenu on right-click context menu, to compare all bible versions of selected reference.
+* Added a config flag addOHGBiToMorphologySearch.  When it is set to True, OHGBi verses are included with morphology search result to provide immediate context.
+* Added addOHGBiToMorphologySearch and openBibleInMainViewOnly to Display Config Options Window.
+* Added option ALL to Open with submenu on right-click context menu, to compare all bible versions of selected reference.
 * Added multiple submenus to right-click context menu, allowing users to quickly search an installed resource:
     Fvaourite references books, Topics, Dictionaries, Encyclopedia, Lexicons, Thirty-party dictionaries
 * Added a link to lexicon in condorance content.
 * Added a link to concordance in lexicon content.
 * Added two javascript functions for lookup lexical entry in concordance.
 * Set OHGBi as default concordance module on Hebrew / Greek word lookup result.
-* Set OHGBi as default concordance module if module is not specified when command keyword "CONCORDANCE:::" is used.
+* Set OHGBi as default concordance module if module is not specified when command keyword CONCORDANCE::: is used.
 * Minor adjustment about interlinear translation display colour in dark theme.
 
 Major changes in version 23.21:
 * Added support of searching Hebrew lexeme codes in OHGB concordance.
 * Added support of searching Hebrew lexeme codes in Strong's number lexicons.
-* Added submenu "Open with" to right-click context menu for opening selected verse references with selected bible version.
+* Added submenu Open with to right-click context menu for opening selected verse references with selected bible version.
     # This feature works well with standard verse parsing.  To use this feature with fast verse-parser, you need to select verse reference without mixed text.
     # If no reference is selected this feature opens the current reference with the selected bible version.
-* Added submenu "Bible Book" to right-click context menu for quick search of a bible book.
-* Added submenu "Bible Version" to right-click context menu for quick search of a bible version.
-* Changed command keyword "STRONGBIBLE:::" to "CONCORDANCE:::".
-* Searching for a Strong's number with command keyword "SEARCH:::" activates concordance feature.
+* Added submenu Bible Book to right-click context menu for quick search of a bible book.
+* Added submenu Bible Version to right-click context menu for quick search of a bible version.
+* Changed command keyword STRONGBIBLE::: to CONCORDANCE:::.
+* Searching for a Strong's number with command keyword SEARCH::: activates concordance feature.
     i.e. SEARCH:::KJVx:::H7225 is effectively equal to CONCORDANCE:::KJVx:::H7225.
 * UBA now re-directs searching for a Strong's number or Hebrew lexeme code in MOB, MIB, MTB, MAB, MPB, OHGB, OHGBi to OHGB concordance feature.
     i.e. SEARCH:::MOB:::H7225 or SEARCH:::MAB:::H7225 is effectively equal to CONCORDANCE:::OHGBi:::H7225.
 * Fixed OHGB concordance Hebrew text direction, now reading from right to left.
-* "No bible verse reference is found!" message is displayed when users use "Display Verses" feature without selecting a reference.
+* No bible verse reference is found! message is displayed when users use Display Verses feature without selecting a reference.
 
 Major changes in version 23.20:
 * Improved display of Strong's number concordance content.
 * Fixed verse reference links in Strong's number concordance.
-* Added support to search multiple anad all versions with command keyword "STRONGBIBLE:::"
+* Added support to search multiple anad all versions with command keyword STRONGBIBLE:::
 * Added OHGBi and ALL to Strong's number bibles list on right-click context menu.
 
 Major changes in version 23.19:
@@ -3267,7 +3276,7 @@ Major changes in version 23.19:
 * Fixed importing MyBible bible modules
 * Added right-click context menu to search for a Strong number in Strong's number bibles.
             # Support bibles with Strong's numbers and Strong in 'Details' table set to 1.
-            # Select "Allow search for Strong's number" when importing 3rd-party bibles to support this feature.  By doing this imported bible will appear on the right-click context menu.
+            # Select Allow search for Strong's number when importing 3rd-party bibles to support this feature.  By doing this imported bible will appear on the right-click context menu.
 * Added a command keyword to search for a Strong's number in a Strong's nubmer bible
             # [KEYWORD] STRONGBIBLE
             # Feature - Search a Strong's number bible
@@ -3275,15 +3284,15 @@ Major changes in version 23.19:
             # e.g. STRONGBIBLE:::KJVx:::G1234
 
 Major change in version 23.18:
-* Added data for display with plugin "Strong Number Concordance AV1769".
+* Added data for display with plugin Strong Number Concordance AV1769.
 
 Major changes in version 23.17:
-* Added a context plugin "Strong Number Concordance AV1769" for lookup of Strong's numbers.
+* Added a context plugin Strong Number Concordance AV1769 for lookup of Strong's numbers.
 * Fixed an issue about opening popover window.
 
 Major changes in version 23.16:
-* Added a startup plugin "plugins/startup/fixNonHtmlColour.py" to fix non-html colour codes in some 3rd-party resources.
-* Added a context plugin "plugins/context/Strong Number to CSV.py" to generate CSV spreadsheet by selecting a Strong's number and selecting the plugin from right-click context menu.
+* Added a startup plugin plugins/startup/fixNonHtmlColour.py to fix non-html colour codes in some 3rd-party resources.
+* Added a context plugin plugins/context/Strong Number to CSV.py to generate CSV spreadsheet by selecting a Strong's number and selecting the plugin from right-click context menu.
     A wiki page is created about the use of this plugin: https://github.com/eliranwong/UniqueBible/wiki/Strong-Number-to-CSV
     Special thanks to Tim Morton, who shared his work on Strongs2csv at: https://github.com/tsmorton60/Strongs2csv
 
@@ -3312,7 +3321,7 @@ Major change in version 23.09:
     If note editor is not currently opened, a new note will be opened with selected text placed into it.
 
 Major change in version 23.08:
-* Added config option 'miniBrowserHome'.  Its value is "https://www.youtube.com/" by default.
+* Added config option 'miniBrowserHome'.  Its value is https://www.youtube.com/ by default.
     A church or an organisation may change to its home page by editing its value.
 
 Major change in version 23.07:
@@ -3341,7 +3350,7 @@ Major change in version 23.02:
 * Fixed a bug introduced in version 23.01 about opening YouTube Downloader.
 
 Major changes in version 23.01:
-* Added two context plugins "YouTube" and "YouTube Downloader" for searching selected text in YouTube.
+* Added two context plugins YouTube and YouTube Downloader for searching selected text in YouTube.
 
 Major changes in version 23.0:
 * Revised right-click context menu of built-in YouTube browser
@@ -3381,7 +3390,7 @@ Major changes in version 22.90:
 # This plugin does three things:
 # 1) Lemmatise selected English word
 # 2) Read lemmatised word with text-to-speech engine
-# 3) Lookup lemmatised word in third-party dictionary "webster"
+# 3) Lookup lemmatised word in third-party dictionary webster
 # User can change or add more dictionaries in the tuple on line 29
 2) Search ALL English forms
 # This plugin search currently opened bible for all forms of selected English word.
@@ -3396,11 +3405,11 @@ Major changes in version 22.87:
 * Fixed an issues some UBA commands were ignored after a website is opened.
 
 Major changes in version 22.86:
-* Renamed menu plugin "Configure Presentation" to "Presentation" so that it is visible on menu on mac platform.
+* Renamed menu plugin Configure Presentation to Presentation so that it is visible on menu on mac platform.
 * Revised documentation on screen command.
 
 Major changes in version 22.85:
-* Added a gui menu plugin "Configure Presentation".
+* Added a gui menu plugin Configure Presentation.
 * Added option to hide blank verses when bible versions are compared.
 
 Major changes in version 22.84:
@@ -3433,10 +3442,10 @@ Major change in version 22.80:
 * Sorts plugins alphabetically.
 
 Major change in version 22.79:
-* Added a context plugin "Go to Presentation TEXT ONLY
+* Added a context plugin Go to Presentation TEXT ONLY
 
 Major change in version 22.78:
-* Set default config.windowStyle to "Fusion"
+* Set default config.windowStyle to Fusion
 
 Major change in version 22.77:
 * Fixed SCREEN::: command after merging the last PR.
@@ -3453,8 +3462,8 @@ Major change in version 22.74:
 
 Major changes in version 22.73:
 * Added config.presentationScreenNo - default screen number if users does not specify one; -1 by default; 0 = 1st screen, 1 = 2nd screen, 3 = 3rd screen, etc.
-* Revised documentation on command keyword "SCREEN:::"
-* Added a context plugin "Go to Presentation".
+* Revised documentation on command keyword SCREEN:::
+* Added a context plugin Go to Presentation.
     This displays bible verse(s) in presentation mode if the selected text contains bible reference(s).
     If the selected text does not contain a bible reference, selected text is displayed in presentation mode.
 
@@ -3462,10 +3471,10 @@ Major change in version 22.72:
 * Fixed an issue multiple references overlaps on presentation mode.
 
 Major changes in version 22.71:
-* Renamed a config variable from "presentationVerticalTopPosition" to "presentationVerticalPosition"
+* Renamed a config variable from presentationVerticalTopPosition to presentationVerticalPosition
 
 Major changes in version 22.70:
-* Fixed an issue config values "presentationColorOnDarkTheme" and "presentationColorOnLightTheme" were ignored.
+* Fixed an issue config values presentationColorOnDarkTheme and presentationColorOnLightTheme were ignored.
 
 Major changes in version 22.69:
 * Loading a new SCREEN::: command now does not close currently opened window.
@@ -3482,8 +3491,8 @@ Major changes in version 22.69:
 
 Major changes in version 22.68:
 * Added two startup plugins to add initial support of presentation mode.
-* Two command keywords are added through startup plugins, "SCREEN:::" and "PRESENT:::".
-    "SCREEN:::" presents verse reference in fullscreen with a new window, "PRESENT:::" mainly works with macros.
+* Two command keywords are added through startup plugins, SCREEN::: and PRESENT:::.
+    SCREEN::: presents verse reference in fullscreen with a new window, PRESENT::: mainly works with macros.
     Use in-app reference on UBA commands to read more about documentation on these two command keywords.
 
 Major change in version 22.67:
@@ -3495,12 +3504,12 @@ Major change in version 22.66:
 
 Major change in version 22.65:
 * Fixed an issue that new command was ignored.
-* Fixe use of config flag "useWebbrowser"
+* Fixe use of config flag useWebbrowser
 
 Major change in version 22.64:
 * Added in-app reference on UBA commands:
-    A window showing UBA commands is accessible through menu under "Information" or "About" section.
-    On cli, users can enter ".help" to view documentation on UBA commands.
+    A window showing UBA commands is accessible through menu under Information or About section.
+    On cli, users can enter .help to view documentation on UBA commands.
 
 Major change in version 22.63:
 * Fixed an issue that telnet-server was not able to be stopped with Ctrl+C.
@@ -3524,8 +3533,8 @@ Major change in version 22.57:
 * Fixed href hyperlinks in user-created modules.
 
 Major change in version 22.56:
-* Added "Command Line Interface" to menu, visible only when cli feature is enabled.
-* Added command keywords "_cp" and "_mastercontrol"
+* Added Command Line Interface to menu, visible only when cli feature is enabled.
+* Added command keywords _cp and _mastercontrol
 
 Major change in version 22.55:
 * Fixed an issue launching UBA without cli feature.
@@ -3545,19 +3554,19 @@ Major changes in version 22.50:
 * Added bible version full names as tooltips to starter menu layout dropdown menu.
 
 Major changes in version 22.49:
-* Added support of "uba.py gui" to launch straight with gui, but also have cli enabled.
-    The difference between "uba.py" and "uba.py gui" is that the later have an extra option to switch to cli by selecting "Command Line Interface" from context menu.
+* Added support of uba.py gui to launch straight with gui, but also have cli enabled.
+    The difference between uba.py and uba.py gui is that the later have an extra option to switch to cli by selecting Command Line Interface from context menu.
 
 Major changes in version 22.48:
 * Added layout plugin
 * Added starter menu layout
 * Added ability to switch between cli and gui at any time.
-    To start uba with "uba.py cli", users can select "Command Line Interface" from right-click context menu to switch to cli.
+    To start uba with uba.py cli, users can select Command Line Interface from right-click context menu to switch to cli.
 
 Major changes in version 22.47:
 * Added local cli feature.
-* Now run "uba.py cli" to run UBA with command line interface.
-* Now run "uba.py telnet-server" to run UBA as a telnet server.
+* Now run uba.py cli to run UBA with command line interface.
+* Now run uba.py telnet-server to run UBA as a telnet server.
 
 Major changes in version 22.46:
 * Added translation on program interface in Malayalam.
@@ -3565,8 +3574,8 @@ Major changes in version 22.46:
 Major changes in version 22.45:
 * Added Chinese, French, Spanish hymn lyrics.
 * UBA now runs startup plugins before running initial commands.
-* Added two startup plugins to enhance hovering feature of bible links, "addHoverFeatureToBibleLinks.py" and "transformSingleVerseLinkToRange.py".
-Remarks: To use plugins, make sure you have "enablePlugins" checked on "Set Config Flags" window.
+* Added two startup plugins to enhance hovering feature of bible links, addHoverFeatureToBibleLinks.py and transformSingleVerseLinkToRange.py.
+Remarks: To use plugins, make sure you have enablePlugins checked on Set Config Flags window.
 
 Major changes in version 22.44:
 * reorganised plugins folders
@@ -3594,7 +3603,7 @@ Major changes in version 22.39:
 
 Major changes in version 22.38:
 * Fixed running UBA Context Plugins from right-click context menu
-* Added two sample context plugins, "Speak Hebrew" and "Speak Greek"
+* Added two sample context plugins, Speak Hebrew and Speak Greek
 
 Major changes in version 22.37:
 * Now open setup instructions on Watson translator and google drive for users.
@@ -3612,8 +3621,8 @@ Major changes in version 22.31, 32, 33:
 
 Major changes in version 22.29, 30:
 * Fixed loading plugins from menu.
-* To use plugins, you need to check "enablePlugins" via "Set Config Flags" window.
-* Added a couple of plugins: "Backup Notes to GDrive" and "Restore Notes to G-Drive".  (Remarks: G-Drive denotes Google Drive).
+* To use plugins, you need to check enablePlugins via Set Config Flags window.
+* Added a couple of plugins: Backup Notes to GDrive and Restore Notes to G-Drive.  (Remarks: G-Drive denotes Google Drive).
   To use these new plugins, you need to download 'credentials.json' from https://developers.google.com/drive/api/v3/quickstart/python and place it in UniqueBible root directory.
 
 Major change in version 22.28:
@@ -3624,17 +3633,17 @@ Major change in version 22.27:
 * Added config.masterControlWidth to specify the width of Master Control panel.
 
 Major changes in version 22.26:
-* Added "UBA Plugins"
+* Added UBA Plugins
     Read more at: https://github.com/eliranwong/UniqueBible/wiki/UBA-Plugins
-* Added "UBA Context Plugins"
+* Added UBA Context Plugins
     Read more at: https://github.com/eliranwong/UniqueBible/wiki/UBA-Context-Plugins
 * Added support of passing a python script to uba.py on startup
     Read more at: https://github.com/eliranwong/UniqueBible/wiki/Pass-Argument-to-uba.py
 
 Major change in version 22.25:
 * Now assign UBA's main window to config.mainWindow
-    This opens up a lot of possiblity for users for use "customised python script" on startup.
-    This featuer may also allow python programmers to develop "plugins" for use with UBA.
+    This opens up a lot of possiblity for users for use customised python script on startup.
+    This featuer may also allow python programmers to develop plugins for use with UBA.
     Read https://github.com/eliranwong/UniqueBible/wiki/Custom-Python-Script for more information.
 
 Major change in version 22.24:
@@ -3643,18 +3652,18 @@ Major change in version 22.24:
 Major changes in version 22.23:
 * Added config options, popoverWindowWidth & popoverWindowHeight, to set popover window height and width.
 * Fixed width of Master Control window.
-* Setting "populateTabsOnStartup" to True no longer changes "openBibleWindowContentOnNextTab" and "openStudyWindowContentOnNextTab" on startup.
-* Added support of custom python script on startup.  "custom.py" is created on startup if it doen't exist.
+* Setting populateTabsOnStartup to True no longer changes openBibleWindowContentOnNextTab and openStudyWindowContentOnNextTab on startup.
+* Added support of custom python script on startup.  custom.py is created on startup if it doen't exist.
 
 Major changes in version 22.22:
 * Added tooltips to Master Control tabs
 
 Major changes in version 22.21:
-* Added a column to "Set Config Flags" window.
+* Added a column to Set Config Flags window.
 
 Major changes in version 22.19, 20:
-* Added a config flat "populateTabsOnStartup", configurable via "Set Config Flags" window.  It is set to False by default.
-* Added ability to start up UBA with all tabs populated with latest history records by setting "config.populateTabsOnStartup" to True
+* Added a config flat populateTabsOnStartup, configurable via Set Config Flags window.  It is set to False by default.
+* Added ability to start up UBA with all tabs populated with latest history records by setting config.populateTabsOnStartup to True
     Remarks: Turning on this feature takes longer time to start up UBA, especially if you have a lots of tabs.
 * Note Editor is now brought to foreground when user cancel closing it if changes are not saved.
 
@@ -3663,13 +3672,13 @@ Major changes in version 22.18:
 * Revised simplified Chinese interface
 
 Major changes in version 22.17:
-* Added Hymm Lyrics; downloadable via "Resources" menu.
-* Renamed "Open on New Window" to "New Window"
-* Relocated "New Window" on right-click context menu.
+* Added Hymm Lyrics; downloadable via Resources menu.
+* Renamed Open on New Window to New Window
+* Relocated New Window on right-click context menu.
 * Updated language files
 
 Major changes in version 22.16:
-* Added "Open on New Window" on right-click context menu.
+* Added Open on New Window on right-click context menu.
 * Updated language files.
 
 Major change in version 22.15:
@@ -3698,11 +3707,11 @@ Major change in version 22.09:
 * Added support converting commands during book creation.
 
 Major change in version 22.08:
-* Added "Select Tooltip Translation" in developer menu.
+* Added Select Tooltip Translation in developer menu.
 
 Major changes in version 22.07:
 * Added Macro support commands, Createed Book Module From Hymn Lyrics File
-* Now automatically save option of language file as config.workingTranslation when user select a language from dropdown menu displayed with "Edit language file".
+* Now automatically save option of language file as config.workingTranslation when user select a language from dropdown menu displayed with Edit language file.
 
 Major changes in version 22.06:
 * Fixed automatic setup
@@ -3738,7 +3747,7 @@ Major change in version 21.99:
 * Added fcitx support for Linux users.
 
 Major change in version 21.98:
-* Added commentary "CBSC" to automatic setup for fresh installation.
+* Added commentary CBSC to automatic setup for fresh installation.
 
 Major change in version 21.97:
 * Fixed an issue that new users were not able to use Smart Index feature and some other features due to missing files.
@@ -3768,7 +3777,7 @@ Major change in version 21.91:
 
 Major change in version 21.88, 21.89, 21.90:
 * Added support to automate installation
-* Running "python3 main.py" now automatically install missing modules for users.
+* Running python3 main.py now automatically install missing modules for users.
 
 Major change in version 21.87:
 * Added font styling for individual bibles
@@ -3805,7 +3814,7 @@ Major changes in version 21.79:
     - Ctrl+C - Commentaries
     - Ctrl+L - lexicons
     - Ctrl+D - Dictionaries
-* Added "New Note" to right-click context menu, to open a new note and insert selected text into it.
+* Added New Note to right-click context menu, to open a new note and insert selected text into it.
 * Fixed the issue that note editor was not bring to foreground after user being warned of unsaved changes.
 
 Major change in version 21.78:
@@ -3814,8 +3823,8 @@ Major change in version 21.78:
 * Read more at: https://github.com/eliranwong/UniqueBible/wiki/Text-to-Speech
 
 Major change in version 21.77:
-* Added a config flag "useLangDetectOnTts", It is set to False by default, because the feature is not always reliable.
-    - Turning it on will use python module "langdetect" to detect language on selected text when user uses "Speak" feature from right-click context menu.
+* Added a config flag useLangDetectOnTts, It is set to False by default, because the feature is not always reliable.
+    - Turning it on will use python module langdetect to detect language on selected text when user uses Speak feature from right-click context menu.
     - Turning it off will use Default Text-to-Speech language specified by user.
     - Default text-to-speech language is configurable via Focus menu layout: UniqueBible > Language Settings > Text-to-Speech Language
 
@@ -3840,8 +3849,8 @@ Major changes in version 21.73:
 
 Major changes in version 21.72:
 Revised right-click context menu:
-- Added "Search Panel" to context menu so that users can select word(s) and launch Master Control Search panel with selected word(s) placed in search field.
-- Hide "Translation" option from right-click context menu if user does not select language for translation.
+- Added Search Panel to context menu so that users can select word(s) and launch Master Control Search panel with selected word(s) placed in search field.
+- Hide Translation option from right-click context menu if user does not select language for translation.
 
 Major changes in version 21.71:
 * Revised Aleph menu layout
@@ -3850,7 +3859,7 @@ Major changes in version 21.71:
 
 Major change in version 21.70:
 * Now convert text string formatted as ***[uba_command@display_text] into hyperlink automatically.  This feature works on all content displayed on Study Window.
-* Check our sample file "note_command_hyperlink_example.uba" if you are interested.
+* Check our sample file note_command_hyperlink_example.uba if you are interested.
 
 Major changes in version 21.69:
 * Master Control panel now reloads resources after downloading a module with download helper or importing a module through our menu.
@@ -3869,8 +3878,8 @@ Major change in version 21.67:
 
 Major change in version 21.66:
 * Now add verse number single-click and double-click actions to history.
-* Now open Master Control panel "Bible" tab by default when a bible chapter heading is clicked.
-* Added a config flag "preferHtmlMenu" to opt for opening classic html menu when a bible chapter heading is clicked.
+* Now open Master Control panel Bible tab by default when a bible chapter heading is clicked.
+* Added a config flag preferHtmlMenu to opt for opening classic html menu when a bible chapter heading is clicked.
 * Added verse number single-click and double-click options to classic menu layout.
 
 Major change in version 21.65:
@@ -3878,7 +3887,7 @@ Major change in version 21.65:
 
 Major change in version 21.64:
 * Dynamic changing program interface now applies to Master Control panel.
-* Add "Reload Resources" under "Master Control" section on "Focus menu layout".
+* Add Reload Resources under Master Control section on Focus menu layout.
     - This is useful for reloading resources displayed on Master Control panel without restarting the app.
 
 Major change in version 21.63:
@@ -3897,7 +3906,7 @@ Major changes in version 21.60:
 * Added recording ONLINE::: commands to history.
 
 Major changes in version 21.59:
-* Added "Instant Highlight" feature that highlight word(s) on Main Window
+* Added Instant Highlight feature that highlight word(s) on Main Window
 * Added itmes to right-click context menu:
     - Instant Highlight (Main Window ONLY)
     - Remove Instant Highlight (Main Window ONLY)
@@ -3908,7 +3917,7 @@ Major changes in version 21.59:
     - Remove Book Highlight
 
 Major change in version 21.58:
-* Add "All Books" button on control panel "Search" tab, for users to search all book modules.
+* Add All Books button on control panel Search tab, for users to search all book modules.
 * Fixed debug report feature.
 
 Major change in version 21.57:
@@ -3980,14 +3989,14 @@ Major changes in version 21.47:
 * Fixed auto-copy to clipboard after a translation is done.
 * Fixed Focus menu layout version dropdown menu not updating
 * To use translation interface in UBA, users need to register an IBM Cloud account.
-* IBM Cloud Lite account is FREE! With this, users can translate "1,000,000 characters per month at no cost"
+* IBM Cloud Lite account is FREE! With this, users can translate 1,000,000 characters per month at no cost
 To enable IBM-Watson Language Trans:
 1) Register an IBM CLoud account (there are several types, the Lite one is FREE)
    You can find a registration link at https://www.ibm.com/cloud/watson-language-translator/pricing
 2) After registration, go to login page https://cloud.ibm.com/login to login into your IBM cloud account.
 3) Go to Menu > Resource list > Service > Language 
    We have two screenshots in this wiki page: https://github.com/eliranwong/UniqueBible/wiki/IBM-Watson-Language-Translator
-4) Copy the "API key" and "URL"
+4) Copy the API key and URL
 5) You are about to edit UBA file config.py, so make sure you are not running UBA while editing this file.
    Close UBA first if it is running.
 6) Use a simple text editor to open config.py
@@ -3996,7 +4005,7 @@ To enable IBM-Watson Language Trans:
 9) Save the file config.py
 10) Start UBA
 11) To test, run a command on main window command field, TRANSLATE:::en-zh:::testing
-12) Or, select a word from a bible chapter, right click and select "Translate into my language"
+12) Or, select a word from a bible chapter, right click and select Translate into my language
 13) Config flag, 'autoCopyTranslateResult' is turned on for you by default.  Therefore after a translation is done, you can paste the result whereever you like.
 
 Major change in version 21.46:
@@ -4036,9 +4045,9 @@ Major changes in version 21.40:
 
 Major change in version 21.39:
 * added support of loading website directly on Study Window
-* To use this feature, enter a valid and full url in Main Window command field with prefix "online:::"
+* To use this feature, enter a valid and full url in Main Window command field with prefix online:::
 * e.g. online:::https://google.co.uk
-* Remarks: you need to state the protocol, "online:::https://google.co.uk" works, but "online:::google.co.uk" does not.
+* Remarks: you need to state the protocol, online:::https://google.co.uk works, but online:::google.co.uk does not.
 
 Major change in version 21.38:
 * added custom javascript feature for developers or module creators, read the following link for more information:
@@ -4110,12 +4119,12 @@ Multiple improvement on Master Control Panel:
 Major changes in version 21.28:
 * Improved Focus menu layout:
     - added a dropdown menu on toolbar for quick change of bible versions on main window without opening control panel
-    - added to menu "Enable Qt-material theme" when built-in theme is in use
-    - added to menu "Switch to built-in theme" when qt-material theme theme is use
+    - added to menu Enable Qt-material theme when built-in theme is in use
+    - added to menu Switch to built-in theme when qt-material theme theme is use
     - added selection dialogs of built-in themes and qt-material themes
     - added a menu item for downloading books
 * Improved Master Control Panel:
-    - added an "EDIT" button on history tab for opening note editor
+    - added an EDIT button on history tab for opening note editor
     - now automatically update bible reference on Bible tab when it is opened
 
 Major change in version 21.27:
@@ -4125,7 +4134,7 @@ Major changes in version 21.26:
 * Substantial changes in this upgrade.  A total of 36 files changed
 * New exciting featuers, e.g. Remote CLI, 
 * User interface is substantial changed with a newly designed Control Panel
-* A new menu layout name "Focus" is created.
+* A new menu layout name Focus is created.
     This menu is designed to focus on bible study and have quick access to study tools.
     This menu layout is fully integrated with latest features introduced in recent versions, such as new Control Panel, qt-material themes
 * Important fixes on download issues for new installation.
@@ -4152,7 +4161,7 @@ Major changes in version 21.22:
 * Ability to share Bibles notes across computers is added in last version.
     To enable it, current users need to install a new module, by running:
     > pip3 install pygithub
-    After installing pygithub, you need to enable "enableGist" via "Select More ..." settings dialog.
+    After installing pygithub, you need to enable enableGist via Select More ... settings dialog.
 
 Major changes in version 21.21:
 * Added ability to share Bibles notes across computers.  Thanks to Oliver Tseng for this helpful feature.
@@ -4179,8 +4188,8 @@ Major changes in version 21.20:
     * SEARCHVERSENOTE:::faith
     * Read more about notes at: https://github.com/eliranwong/UniqueBible/wiki/Notes
 - Added a developer column in classcial menu layout for testing new features
-    * Developer column is visible only "developer" option in config.py is set to true.
-- New "Bible Explorer" Window added to developer menu
+    * Developer column is visible only developer option in config.py is set to true.
+- New Bible Explorer Window added to developer menu
 
 Major changes in version 21.19:
 - separated download process from the main thread, so users can continue reading during downloading files, 
@@ -4201,7 +4210,7 @@ Major change in version 21.15:
 - Fix an issue to make sure text-to-speech audio is turned off upon closing.
 
 Major change in version 21.14:
-- Fixed "Select more ..." dialog item order.
+- Fixed Select more ... dialog item order.
 
 Major change in version 21.13:
 - Fixed stop audio button for qt text-to-speech engine.
@@ -4211,13 +4220,13 @@ Major changes in version 21.12:
     * set default text-to-speech language through control panel
     * play audio of entered text in control panel command field.
     * select lanuage for text-to-speech feature triggered from control panel.
-    * stop text-to-speech audio at any time with the "Stop" button.
+    * stop text-to-speech audio at any time with the Stop button.
 
 Major change in version 21.11:
 - Fixed saving tts settings on exit.
 
 Major change in version 21.10:
-- Added a column to "Select More ..." dialog
+- Added a column to Select More ... dialog
 
 Major changes in version 21.09:
 - Enhance text-to-speech feature:
@@ -4225,13 +4234,13 @@ Major changes in version 21.09:
         * Remarks: espeak users need to install additional data for espeak to read Chinese or Russian texts.
         * For espeak setup, you may read https://github.com/eliranwong/ChromeOSLinux/blob/main/multimedia/espeak.md
     Added config.ttsDefaultLanguage for users to specify the default language for text-to-speech feature
-        * If language is not specified with entered command, e.g. "SPEAK:::testing", ttsDefaultLanguage is used by default.
-        * ttsDefaultLanguage is set to "en" by default, users can edit file config.py to change its value.
+        * If language is not specified with entered command, e.g. SPEAK:::testing, ttsDefaultLanguage is used by default.
+        * ttsDefaultLanguage is set to en by default, users can edit file config.py to change its value.
         * References for supported language codes can be found at: https://github.com/eliranwong/UniqueBible/blob/master/TtsLanguages.py
-            If you use espeak, supported languages are the key codes of variable "isoLang2epeakLang" in the file above.
-            If you use built-in qt tts engine, supported languages are the key codes in variable "isoLang2qlocaleLang" in the file above.
+            If you use espeak, supported languages are the key codes of variable isoLang2epeakLang in the file above.
+            If you use built-in qt tts engine, supported languages are the key codes in variable isoLang2qlocaleLang in the file above.
 - Added four more configuration flags:
-    You can configure the following new flags through "Select More ..." dialog or by editing file config.py
+    You can configure the following new flags through Select More ... dialog or by editing file config.py
         * ttsEnglishAlwaysUS
             always speak US English when detected/specified language is en or en-gb
         * ttsEnglishAlwaysUK
@@ -4243,10 +4252,10 @@ Major changes in version 21.09:
 A note to Windows users, in order for built-in qt tts engine to read text of a particular language, you have to install Windows language package via Windows settings / control panel.
 
 Major changes in version 21.08:
-- Added initial support of "espeak" to run text-to-speech feature.
+- Added initial support of espeak to run text-to-speech feature.
     * To set up espeak on Linux, you may read https://github.com/eliranwong/ChromeOSLinux/blob/main/multimedia/espeak.md
     * Further support will be added in next upgrade.
-- Added configuration flag, espeak, for linux users to use espeak as text-to-speech engine instead of qt text-to-speech engine.  This is accessible via menu > "Select More ...".
+- Added configuration flag, espeak, for linux users to use espeak as text-to-speech engine instead of qt text-to-speech engine.  This is accessible via menu > Select More ....
 - Fixed Zefania import
 
 Major changes in version 21.07:
@@ -4256,7 +4265,7 @@ Major changes in version 21.06:
 - Added support of custom css.  Users can now customise fonts, text styles, etc.
 - A wiki page created for custom css feature: https://github.com/eliranwong/UniqueBible/wiki/custom_css
 - Added a configuration flag: closeControlPanelAfterRunningCommand
-- now automatically detects if UniqueBible.app is installed on a chromebook, option "preferMiniControlForCommandLineEntry" will be automatically configured.
+- now automatically detects if UniqueBible.app is installed on a chromebook, option preferMiniControlForCommandLineEntry will be automatically configured.
 
 Major changes in version 21.05:
 - Fixed issues #80 and #82
@@ -4267,12 +4276,12 @@ Major changes in version 21.04:
 - Improved classic menu layout: new items added; previous items reorganised.
 
 Major changes in version 21.03:
-- "Remote Control" is renamed to "Control Panel"
-- Configuration option "preferMiniControlForCommandLineEntry" introduced in version 20.8 is renamed to "preferControlPanelForCommandLineEntry".
+- Remote Control is renamed to Control Panel
+- Configuration option preferMiniControlForCommandLineEntry introduced in version 20.8 is renamed to preferControlPanelForCommandLineEntry.
 - Options to enforce comparison / parallel: True / False
 * When it is enabled after comparison / parallel feature is loaded once, subsequence entries of bible references will be treated as launching comparison / parallel even COMPARE::: or PARALLEL::: keywords is not used.
 * Please note that change in bible version for chapter reading is ignored when this option is enabled.
-* This feature is accessible via a left toolbar button, newly created under the "Comparison / Parallel Reading / Difference" button.
+* This feature is accessible via a left toolbar button, newly created under the Comparison / Parallel Reading / Difference button.
 
 Major changes in version 21.02:
 - Added command prefix to remote control when tab is changed, so as to save time for typing
@@ -4287,7 +4296,7 @@ Added two desktop shortcuts for Chrome users:
     shortcut_uba_chromeOS.desktop
     shortcut_uba_chromeOS_fcitx.desktop
 Chrome OS users can launch Unique Bible App through Chrome OS launcher.
-IMPORTANT! Before you can use this file, you need to edit these files and change "yourUserName" to your user name.
+IMPORTANT! Before you can use this file, you need to edit these files and change yourUserName to your user name.
 For details, you may read our instructions on installing UBA on Chrome OS at:
 https://github.com/eliranwong/ChromeOSLinux/blob/main/bible/UniqueBibleApp.md
 
@@ -4428,12 +4437,12 @@ Latest changes in version 18.9:
 Thank you, Oliver.
 
 Latest changes in version 18.8:
-- Use of plugin "langdetect" is now made optional to avoid startup errors.
+- Use of plugin langdetect is now made optional to avoid startup errors.
 - Merged several fixes contributed by Oliver Tseng.  Thanks to Oliver.
 
 Latest changes in version 18.7:
 - Merged Oliver Tseng's work on text-to-speech feature.  For details, please read: https://github.com/eliranwong/UniqueBible/pull/28
-- This new feature need to install a plugin by running: "pip install langdetect"
+- This new feature need to install a plugin by running: pip install langdetect
 - Thanks to Oliver!
 
 Latest changes in version 18.6:
@@ -4457,35 +4466,35 @@ Latest changes in version 18.1:
 Latest changes in version 18.0:
 * Added an config.py option, bibleNotes, that users may switch between note files on bible chapters and verses.
 Remarks:
-- The note database file by default is named as "note.sqlite", located in folder "marvelData".
-- If users want to have multiple copies of note database in different names.  They have to be located inside the folder specified in option "marvelData" in file config.py.
+- The note database file by default is named as note.sqlite, located in folder marvelData.
+- If users want to have multiple copies of note database in different names.  They have to be located inside the folder specified in option marvelData in file config.py.
 - Entry specified in option bibleNotes must be a file path, relative to the marvelData folder.
 
 Latest changes in version 17.9:
 * Increase the maximum number of tabs allowed from 15 to 20.  This limitation applies only to use gui dialog box to set the number of tabs.  Advanced users may adjust the number directly in config.py.
 
 Latest changes in version 17.8:
-* Turned on "openStudyWindowContentOnNextTab" by default for new users.
+* Turned on openStudyWindowContentOnNextTab by default for new users.
 * Now display content of bible promises, harmonies and parallels on Study Window instead of BIble Window.
-* Now display of result of running command with keyword "PASSAGES:::" on Study Window instead of BIble Window.
+* Now display of result of running command with keyword PASSAGES::: on Study Window instead of BIble Window.
 
 Latest changes in version 17.7:
-* Fine-tuned features "openBibleWindowContentOnNextTab" and "openStudyWindowContentOnNextTab", with several more exceptions added.
-* Added options "open on Study Window" and "open on Bible Window" to open a selected bible version on chosen window, when "Open Bible References on Study Window" is enabled.
+* Fine-tuned features openBibleWindowContentOnNextTab and openStudyWindowContentOnNextTab, with several more exceptions added.
+* Added options open on Study Window and open on Bible Window to open a selected bible version on chosen window, when Open Bible References on Study Window is enabled.
 
 Latest changes in version 17.6:
 * Fixed a download issue in version 17.5.
 
 Latest changes in version 17.5:
-* Added one more exception to the features "openBibleWindowContentOnNextTab" and "openStudyWindowContentOnNextTab".  When a verse number is clicked on a bible chapter, update is displayed on the same tab.
+* Added one more exception to the features openBibleWindowContentOnNextTab and openStudyWindowContentOnNextTab.  When a verse number is clicked on a bible chapter, update is displayed on the same tab.
 
 Latest changes in version 17.4:
-* Added some exceptions to the features "openBibleWindowContentOnNextTab" and "openStudyWindowContentOnNextTab".
+* Added some exceptions to the features openBibleWindowContentOnNextTab and openStudyWindowContentOnNextTab.
 
 Latest changes in version 17.3:
-* Added two more configuration options to config.py and "Select more ..." dialog:
-    - "overwriteNoteFont", which overwrite font of notes displayed on Study Window
-    - "overwriteNoteFontSize", which overwrite font size of notes displayed on Study Window.
+* Added two more configuration options to config.py and Select more ... dialog:
+    - overwriteNoteFont, which overwrite font of notes displayed on Study Window
+    - overwriteNoteFontSize, which overwrite font size of notes displayed on Study Window.
     - These options have no effect on the font settings of Note Editor.
 
 Latest changes in version 17.2:
@@ -4497,9 +4506,9 @@ Latest changes in version 17.1:
 Latest changes in version 17.0:
 * Fixed previous failure to open content when number of tabs is more than five.
 * Added two new options:
-    - "openBibleWindowContentOnNextTab", which open Bible Window's content on the tab next to the current one when it is enabled.
-    - "openStudyWindowContentOnNextTab", which open Study Window's content on the tab next to the current one when it is enabled.
-    - These two options are configurable from menu "Select more ..."
+    - openBibleWindowContentOnNextTab, which open Bible Window's content on the tab next to the current one when it is enabled.
+    - openStudyWindowContentOnNextTab, which open Study Window's content on the tab next to the current one when it is enabled.
+    - These two options are configurable from menu Select more ...
 
 Latest changes in version 16.9:
 * Increased the default height of Bottom Window.
@@ -4530,13 +4539,13 @@ Latest changes in version 16.1:
 * Improved import of MyBible interlinear bibles.
 * Added support of conversion of a reverse-interlinear bible.
 * With regards to interlinear bibles, the app supports conversion of formats:
-    - e.g. "Βίβλος<S>976</S><m>N-NSF</m> <n>The book</n>"
-    - e.g. "The book <n>Βίβλος</n><S>976</S><m>N-NSF</m>"
+    - e.g. Βίβλος<S>976</S><m>N-NSF</m> <n>The book</n>
+    - e.g. The book <n>Βίβλος</n><S>976</S><m>N-NSF</m>
 
 Latest changes in version 16.0:
-* Moved "Wiki Pages" to menu section "Information"
-* Added a command keyword "SEARCHREFERENCE".  For example, entering command "SEARCHREFERENCE:::KJV:::love" shows verse references of verses containing the word "love".
-* "SEARCHREFERENCE" feature is also accessible by selecting "SEARCHREFERENCE" on search bible menu or by clicking the link "***" on search result page.
+* Moved Wiki Pages to menu section Information
+* Added a command keyword SEARCHREFERENCE.  For example, entering command SEARCHREFERENCE:::KJV:::love shows verse references of verses containing the word love.
+* SEARCHREFERENCE feature is also accessible by selecting SEARCHREFERENCE on search bible menu or by clicking the link *** on search result page.
 
 Latest changes in version 15.9:
 * Fixed errors on hovering over bible references.
@@ -4558,25 +4567,25 @@ Latest changes in version 15.5:
 * Corrected Bottom Window's content when a verse number is hovered on a bible chapter in simple style format.
 
 Latest changes in version 15.4:
-* Added an option to show note indicators on bible chapters.  This feature can be enabled / disabled through menu item "Select more ...".  If this feature is enabled, a writing hand icons appear next to verse numbers or chapter heading if notes are available.
-* Items on dialog "Select more ..." are now arranged on two columns.
+* Added an option to show note indicators on bible chapters.  This feature can be enabled / disabled through menu item Select more ....  If this feature is enabled, a writing hand icons appear next to verse numbers or chapter heading if notes are available.
+* Items on dialog Select more ... are now arranged on two columns.
 
 Latest changes in version 15.3:
 * Added an option to sync commentary with Main Window's verse reference.
-* Revised wordings under menu section "Note Files"
+* Revised wordings under menu section Note Files
 
 Latest changes in version 15.2:
-* Improved built-in "Note Editor":
+* Improved built-in Note Editor:
     - now all new notes use the app's default font and font size.
     - improved updating of changes in formatting
-    - added a function and a button to export "embedded" embedded images to a folder.
+    - added a function and a button to export embedded embedded images to a folder.
     - added a function and a button to set font of selected text.
     - added a function and a button to set colour of selected text.
     - added a function and a button to set background colour of selected text.
     - rearranged buttons
 
 Latest changes in version 15.1:
-* Note editor can now "Embed an Image" within a note.  "Embed an Image" is different from "Link to an External Image File" that the image is stored within a note.  Remarks: Embedding an image within a note increases file size of the note.
+* Note editor can now Embed an Image within a note.  Embed an Image is different from Link to an External Image File that the image is stored within a note.  Remarks: Embedding an image within a note increases file size of the note.
 
 Latest changes in version 15.0:
 * Improved converter to export images from modules with names containing spaces.
@@ -4585,35 +4594,35 @@ Latest changes in version 14.9:
 * Fixed an issue on opening image file with external application.
 
 Latest changes in version 14.8:
-* Improved hovering over bible reference links.  The app now supports display of multiple verses together with favourite version on "Bottom Window".
+* Improved hovering over bible reference links.  The app now supports display of multiple verses together with favourite version on Bottom Window.
 
 Latest changes in version 14.7:
-* Book creation from html files now supports files with extension "*.xhtml"
+* Book creation from html files now supports files with extension *.xhtml
 ******* Tips on converting epub files into UniqueBible.app: *******
 Step 1. Unzip a epub file:
-            - with gui apps, you can add an extension ".zip" at the end of a epub filename.  You can then use gui apps to extract all files inside a epub file.
-            - on Linux / macOS, you can simply use "unzip" command to unzip an epub file.
+            - with gui apps, you can add an extension .zip at the end of a epub filename.  You can then use gui apps to extract all files inside a epub file.
+            - on Linux / macOS, you can simply use unzip command to unzip an epub file.
 Step 2. Locate the folder containing html files (*.htm, *.html, *.xhtml), e.g. \OEBPS\Text.
-Step 3. Open UniqueBible.app and select from menu "Books > Create a Reference Book from HTML Files".
+Step 3. Open UniqueBible.app and select from menu Books > Create a Reference Book from HTML Files.
 Step 4. Select the folder containing html files.  Bible links are automatically parsed in the book creation process.
 
 Latest changes in version 14.6:
 * The apps now checks availability of books in favourite book list on startup.
-* Added a book module "Maps_ABS.book"
+* Added a book module Maps_ABS.book
 * Removed some modules from google drive download.  The removed modules will be made available for download in a github repository.
 
 Latest changes in version 14.5:
 * Fixed missing files in version 14.4.
 
 Latest changes in version 14.4:
-* Added a "Refresh" button on second toolbar.
+* Added a Refresh button on second toolbar.
 
 Latest changes in version 14.3:
 * Fixed automatically scrolling to the first instance of book search result when a chapter is opened.
 * Corrected two chapter titles in Maps_ASB.
 * 71 more bible locations added to Maps_NET's Index to enhance search of bible places.
 * Added support of importing multiple MySword book modules placed in a single folder.
-* Renamed a book module from "Boyce.book" to "Boyce_Abstract_of_Systematic_Theology.book".
+* Renamed a book module from Boyce.book to Boyce_Abstract_of_Systematic_Theology.book.
 * Now include the last open reference book for searching my favourite books.
 
 Latest changes in version 14.2:
@@ -4626,7 +4635,7 @@ Latest changes in version 14.0:
 * Fixed encoding issue on saving customised program interface translation in myTranslation.py.
 * Corrected checking availability of program interface translation.
 * Removed French and Korean translations from translations.py.
-* All text files are now read / written with encoding "utf-8" specified, to avoid potential encoding issues when the app is running on Windows.
+* All text files are now read / written with encoding utf-8 specified, to avoid potential encoding issues when the app is running on Windows.
 
 Latest changes in version 13.9:
 * Fixed loading translated program interface on Windows.  For description on translation feature, you may read https://github.com/eliranwong/UniqueBible/wiki/Translate-program-interface
@@ -4635,10 +4644,10 @@ Latest changes in version 13.9:
     - Header 1
     - Header 2
     - Header 3
-* Added two options in a file config.py and a gui dialog box opened via menu "Select More ...":
+* Added two options in a file config.py and a gui dialog box opened via menu Select More ...:
     - overwriteBookFont
     - overwriteBookFontSize
-* Added a menu item "Books > Clear Search Result Highlights".
+* Added a menu item Books > Clear Search Result Highlights.
 * Added French translation of program interface [translated with Google Translate] to translations.py.
 
 Latest changes in version 13.8:
@@ -4646,13 +4655,13 @@ Latest changes in version 13.8:
     - image files (*.png, *.jpg, *.jpeg, *.bmp, *.gif)
     - html files (*.htm, *.html)
     - UniqueBible.app Note Files (*.uba)
-* Book creation features are accessible via menu under section "Books".
+* Book creation features are accessible via menu under section Books.
 * To create a reference book module from file types mentioned above:
     1. create a folder.
     2. name the folder as you want to name the book module you are about to create.
     3. place files of supported file types in this folder.  [Remarks: Individual filenames are used for chapter titles.]
-    4. select from menu "Books > Create a Reference Book from ... Files".
-    5. select the "folder" created in step (1) above.
+    4. select from menu Books > Create a Reference Book from ... Files.
+    5. select the folder created in step (1) above.
 
 Latest changes in version 13.7:
 * Added ability to export and open embedded images, when book modules are displayed on new window.
@@ -4662,7 +4671,7 @@ Latest changes in version 13.7:
 Latest changes in version 13.6:
 * Added a config.py option: showGoogleTranslateEnglishOptions.
     - The app now hides option of google translate into English by default, to avoid potential duplication for English users.
-    - This option can be changed through a gui dialog "Select more ..."
+    - This option can be changed through a gui dialog Select more ...
 * Improved display of results of searching books.
     - The apps now automatically scroll to the first instance of book search result when a chapter is opened.
 
@@ -4688,7 +4697,7 @@ Latest changes in version 13.1:
     (For description on these options, please read our wiki page: https://github.com/eliranwong/UniqueBible/wiki/Config-file-reference)
 
 Latest changes in version 13.0:
-* Fixed menu items, which are not displayed on macOS.  In previous versions, menu items beginning with English words "Configure" are not displayed.  This issue is now fixed by changing "Configure" to "Select"
+* Fixed menu items, which are not displayed on macOS.  In previous versions, menu items beginning with English words Configure are not displayed.  This issue is now fixed by changing Configure to Select
 
 Latest changes in version 12.9:
 * Main window's title now display version number
@@ -4711,82 +4720,82 @@ Latest changes in version 12.5:
 * Improved module converter to add support of Strong's numbers links in MySword non-bible modules.
 
 Latest changes in version 12.4:
-* Added a menu item to open folder "marvelData"
+* Added a menu item to open folder marvelData
 * Fixed the issue about the same map being repeatedly opened
 
 Latest changes in version 12.3:
 * An important fix on failed startup issue when the app is launched offline.  The error was introduced since version 10.6.
-* Added support to import MySword book modules with table "data" containing binary images
+* Added support to import MySword book modules with table data containing binary images
 
 Latest changes in version 12.2:
-* One more option added to "Configure More ...":
-    - "parserStandarisation"
+* One more option added to Configure More ...:
+    - parserStandarisation
 
 Latest changes in version 12.1:
-* Two more options added to "Configure More ...":
-    - "openBookInNewWindow"
-    - "alwaysDisplayStaticMaps"
+* Two more options added to Configure More ...:
+    - openBookInNewWindow
+    - alwaysDisplayStaticMaps
 
 Latest changes in version 12.0:
-* The app now reads "UniqueBibleAppVersion.txt" for checking current version on startup.
+* The app now reads UniqueBibleAppVersion.txt for checking current version on startup.
 * Added a function to import MySword book modules
-* Added a dialog "Configure More ..."
-* Added a dialog "Configure Number of Tabs"
-* Added a dialog "Third Party Dictionaries"
+* Added a dialog Configure More ...
+* Added a dialog Configure Number of Tabs
+* Added a dialog Third Party Dictionaries
 
 Latest changes in version 11.9:
 * changed the update method to minimise the time for updating the application.
 
 Latest changes in version 11.8:
-* Upgraded database file from "exlb2.data" to exlb3.data
+* Upgraded database file from exlb2.data to exlb3.data
 * Enhanced Exhaustive Library of Bible Locations, with 3 sets of offline google maps of different coverage, and quality.  All together, there is a total of 3441 offline google maps on bible locations.
-* Fixed the missing menu item "Download More Reference Books" in version 11.7.
+* Fixed the missing menu item Download More Reference Books in version 11.7.
 * Now clear config.bookSearchString and config.noteSearchString when the application is closed.
 
 Latest changes in version 11.7:
-* Added a link to Darrel Wright's repository "UniqueBible_Books": https://github.com/darrelwright/UniqueBible_Books
+* Added a link to Darrel Wright's repository UniqueBible_Books: https://github.com/darrelwright/UniqueBible_Books
 * Added a wiki page on how to download more books: https://github.com/eliranwong/UniqueBible/wiki/Download-more-books
 * Use google translate to translate a few interface items to Korean.
 
 Latest changes in version 11.6:
-* upgrade data file "exlb.data" to exlb2.data
-    - added links "Click HERE for a Live Google Map" to 1147 articles
+* upgrade data file exlb.data to exlb2.data
+    - added links Click HERE for a Live Google Map to 1147 articles
     - support display google static maps
 * added 1147 static google maps of bible locations
 * now display static google maps of bible locations when google api key is not entered or internet connection is not available.
 
 Latest changes in version 11.5:
-* fixed display of two buttons, "Search Reference Book" and "Download YouTube Audio / Video"
+* fixed display of two buttons, Search Reference Book and Download YouTube Audio / Video
 
 Latest changes in version 11.4:
-* added options "musicFolder" and "videoFolder" in config.py to allow users to specfy the paths of music and video folders for storing YouTube files.
-* added two buttons on second-top toolbar, "Search Reference Book" and "Download YouTube Audio / Video"
+* added options musicFolder and videoFolder in config.py to allow users to specfy the paths of music and video folders for storing YouTube files.
+* added two buttons on second-top toolbar, Search Reference Book and Download YouTube Audio / Video
 
 Latest changes in version 11.3:
 * Fixed downloading YouTube video in mp4 format on Windows
 
 Latest changes in version 11.2:
-* added "Copy Opened Link" to right-click context menu of built-in YouTube browser.
+* added Copy Opened Link to right-click context menu of built-in YouTube browser.
 * prevent download actions on YouTube's home page and search results.  Download action is expected to work after a video or play list is opened.
 
 Latest changes in version 11.1:
 * Enhanced built-in YouTube browser
 * Added instructions for setup and use of built-in YouTube browser for downloading video / audio files:
     https://github.com/eliranwong/UniqueBible/wiki/Download-Youtube-audio-video
-* Added a new section "Multimedia" to user menu
+* Added a new section Multimedia to user menu
 * Added items for interface translation
-* Added "Donate to us" to menu items.
+* Added Donate to us to menu items.
 This app is made out of labour of love.  Please consider a donation to support our development.
 
 Latest changes in version 11.0:
 Enhanced Downloading YouTube Audio in mp3 format / Video in mp4 format
 - Load youtube.com directly in a new window, so that users can search a video.
 - After navigating to a desired video, right-click on area outside the video,
-- Select "Downalod Video in mp4 Format" or "Download Audio in mp3 Format"
+- Select Downalod Video in mp4 Format or Download Audio in mp3 Format
 
 Latest changes in version 10.9:
 * Added support of using youtube-dl on Windows, macOS & Linux
-* This feature downloads a video file from a youtube link user provides, convert it into a mp3 file and saved in folder "music" inside "UniqueBible" folder.
+* This feature downloads a video file from a youtube link user provides, convert it into a mp3 file and saved in folder music inside UniqueBible folder.
 * Users need to install youtube-dl and ffmpeg before they can run this feature.
 * Read: http://ytdl-org.github.io/youtube-dl/download.html for details on downloading youtube-dl
 * Below are the methods we tested to download youtube-dl and ffmpeg:
@@ -4796,21 +4805,21 @@ Latest changes in version 10.9:
     > sudo chmod a+rx /usr/local/bin/youtube-dl
     > sudo apt install ffmpeg
     [on Windows]
-    - Install "chocolatey" first. read https://chocolatey.org/install
+    - Install chocolatey first. read https://chocolatey.org/install
     - open Windows PowerShell (Admin), and run:
     > choco install youtube-dl
     > choco install ffmpeg
     [on macOS]
-    - Install "homebrew" first. read https://brew.sh/
+    - Install homebrew first. read https://brew.sh/
     - Run in terminal:
     > brew install youtube-dl
     > brew install ffmpeg
-* To use keyword in UniqueBible.app "mp3:::[a_youtube_link]", enter in command line field, e.g.
+* To use keyword in UniqueBible.app mp3:::[a_youtube_link], enter in command line field, e.g.
     > mp3:::https://www.youtube.com/watch?v=CDdvReNKKuk
 * To use a graphical dialog box to run this feature in UniqueBible.app,
-    - Select from menu "Resources > YouTube -> mp3"
+    - Select from menu Resources > YouTube -> mp3
     - Enter a link, e.g. https://www.youtube.com/watch?v=CDdvReNKKuk
-    - Select "OK"
+    - Select OK
 
 Latest changes in version 10.8:
 * fixed program inteface translation on Windows
@@ -4820,11 +4829,11 @@ Latest changes in version 10.7:
 * fixed an error introuced in version 10.6 on opening pdf file on non-Linux platforms
 * added 3 interface translations for Windows users: Traditional Chinese, Simplified Chinese, Korean
 * Windows users can send us email to request a copy of your language if it is not yet available.
-* macOS or Linux users can use "Translate Program Interface into my Language" to translate interface into 106 languages.
+* macOS or Linux users can use Translate Program Interface into my Language to translate interface into 106 languages.
 
 Latest changes in version 10.6:
 * fixed:
-    - "edit" button displayed on chapter / verse notes
+    - edit button displayed on chapter / verse notes
     - display of smart indexes for multiple verses
     - note editor was opened twice with the same command
 * changed:
@@ -4849,11 +4858,11 @@ Latest changes in version 10.6:
     - added option to display chapter / verse notes on Study Window each time a chapter / verse not is saved
 * new command keywords:
     (you may find brief description below, more details will be given on https://github.com/eliranwong/UniqueBible/wiki/Command-line)
-    - "overview:::" chapter overview
-    - "summary:::" chapter summary
-    - "chapterindex:::" list all bible characters and locations of a chapter 
-    - "_open:::" open a file / directory inside folder "marvelData"
-    - "mp3:::" [experimental] integrate youtube-dl in UB to download a mp3 audio file from Youtube.com
+    - overview::: chapter overview
+    - summary::: chapter summary
+    - chapterindex::: list all bible characters and locations of a chapter 
+    - _open::: open a file / directory inside folder marvelData
+    - mp3::: [experimental] integrate youtube-dl in UB to download a mp3 audio file from Youtube.com
 * new config options:
    (more details will be given on https://github.com/eliranwong/UniqueBible/wiki/Config-file-reference)
     - openBibleNoteAfterSave

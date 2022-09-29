@@ -82,10 +82,37 @@ class ConfigUtil:
         # Use PySide6 as Qt Library, even config.qtLibrary is set to a value other than 'pyside6'."""
         if not hasattr(config, "usePySide6onMacOS"):
             config.usePySide6onMacOS = True
+        # Start of erminal mode setting
+        config.terminalColors = ("RESET", "BLACK", "WHITE", "RED", "GREEN", "YELLOW", "BLUE", "MAGENTA", "CYAN", "LIGHTBLACK_EX", "LIGHTRED_EX", "LIGHTGREEN_EX", "LIGHTYELLOW_EX", "LIGHTBLUE_EX", "LIGHTMAGENTA_EX", "LIGHTCYAN_EX", "LIGHTWHITE_EX")
+        config.help["terminalVerseNumberColor"] = """
+        # Terminal mode verse number color."""
+        if not hasattr(config, "terminalVerseNumberColor"):
+            config.terminalVerseNumberColor = "CYAN"
+        config.help["terminalResourceLinkColor"] = """
+        # Terminal mode resource link color."""
+        if not hasattr(config, "terminalResourceLinkColor"):
+            config.terminalResourceLinkColor = "CYAN"
+        config.help["terminalSearchHighlightBackground"] = """
+        # Terminal mode search highlight background color."""
+        if not hasattr(config, "terminalSearchHighlightBackground"):
+            config.terminalSearchHighlightBackground = "GREEN"
+        config.help["terminalSearchHighlightForeground"] = """
+        # Terminal mode search highlight foreground color."""
+        if not hasattr(config, "terminalSearchHighlightForeground"):
+            config.terminalSearchHighlightForeground = "RESET"
+        config.help["terminalFindHighlightBackground"] = """
+        # Terminal mode find highlight background color."""
+        if not hasattr(config, "terminalFindHighlightBackground"):
+            config.terminalFindHighlightBackground = "RED"
+        config.help["terminalFindHighlightForeground"] = """
+        # Terminal mode find highlight foreground color."""
+        if not hasattr(config, "terminalFindHighlightForeground"):
+            config.terminalFindHighlightForeground = "RESET"
         config.help["enableTerminalPager"] = """
         # To enable paging of terminal output when UBA runs in terminal mode."""
         if not hasattr(config, "enableTerminalPager"):
             config.enableTerminalPager = False
+        # End of terminal mode settings
         config.help["telnetServerPort"] = """
         # To specify the port used by telnet-server."""
         if not hasattr(config, "telnetServerPort"):
@@ -1409,6 +1436,12 @@ class ConfigUtil:
             ("usePySide2onWebtop", config.usePySide2onWebtop),
             ("usePySide6onMacOS", config.usePySide6onMacOS),
             ("enableTerminalPager", config.enableTerminalPager),
+            ("terminalVerseNumberColor", config.terminalVerseNumberColor),
+            ("terminalResourceLinkColor", config.terminalResourceLinkColor),
+            ("terminalSearchHighlightBackground", config.terminalSearchHighlightBackground),
+            ("terminalSearchHighlightForeground", config.terminalSearchHighlightForeground),
+            ("terminalFindHighlightBackground", config.terminalFindHighlightBackground),
+            ("terminalFindHighlightForeground", config.terminalFindHighlightForeground),
             ("telnetServerPort", config.telnetServerPort),
             ("httpServerUbaFile", config.httpServerUbaFile),
             ("httpServerPort", config.httpServerPort),

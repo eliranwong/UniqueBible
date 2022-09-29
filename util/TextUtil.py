@@ -45,12 +45,14 @@ class TextUtil:
     def colourTerminalText(text):
         if config.isColoramaInstalled:
             # Reference: https://github.com/tartley/colorama/blob/master/colorama/ansi.py
-            # standard colours: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA,CYAN, WHITE, RESET
+            # standard colours: "RESET", "BLACK", "WHITE", "RED", "GREEN", "YELLOW", "BLUE", "MAGENTA", "CYAN"
+            # extended colours: "LIGHTBLACK_EX", "LIGHTRED_EX", "LIGHTGREEN_EX", "LIGHTYELLOW_EX", "LIGHTBLUE_EX", "LIGHTMAGENTA_EX", "LIGHTCYAN_EX", "LIGHTWHITE_EX"
+
             searchReplace = (
-                ("(<ref>|<ref .*?>)", r"\1「Fore.CYAN」"),
-                ("(<vid .*?>)", r"\1「Fore.CYAN」"),
+                ("(<ref>|<ref .*?>)", r"\1「Fore.{0}」".format(config.terminalResourceLinkColor)),
+                ("(<vid .*?>)", r"\1「Fore.{0}」".format(config.terminalVerseNumberColor)),
                 ("(</ref>|</vid>)", r"\1「Fore.RESET」"),
-                ("<z>", "「Back.YELLOW」「Fore.BLUE」"),
+                ("<z>", "「Back.{0}」「Fore.{1}」".format(config.terminalSearchHighlightBackground, config.terminalSearchHighlightForeground)),
                 ("</z>", "「Style.RESET_ALL」"),
             )
             for search, replace in searchReplace:
@@ -78,8 +80,38 @@ class TextUtil:
             init()
             from colorama import Fore, Back, Style
             searchReplace = (
+                ("「Fore.BLACK」", Fore.BLACK),
+                ("「Fore.WHITE」", Fore.WHITE),
+                ("「Fore.RED」", Fore.RED),
+                ("「Fore.GREEN」", Fore.GREEN),
+                ("「Fore.YELLOW」", Fore.YELLOW),
+                ("「Fore.BLUE」", Fore.BLUE),
+                ("「Fore.MAGENTA」", Fore.MAGENTA),
                 ("「Fore.CYAN」", Fore.CYAN),
-                ("「Back.YELLOW」「Fore.BLUE」", f"{Back.YELLOW}{Fore.BLUE}"),
+                ("「Fore.LIGHTBLACK_EX」", Fore.LIGHTBLACK_EX),
+                ("「Fore.LIGHTRED_EX」", Fore.LIGHTRED_EX),
+                ("「Fore.LIGHTGREEN_EX」", Fore.LIGHTGREEN_EX),
+                ("「Fore.LIGHTYELLOW_EX」", Fore.LIGHTYELLOW_EX),
+                ("「Fore.LIGHTBLUE_EX」", Fore.LIGHTBLUE_EX),
+                ("「Fore.LIGHTMAGENTA_EX」", Fore.LIGHTMAGENTA_EX),
+                ("「Fore.LIGHTCYAN_EX」", Fore.LIGHTCYAN_EX),
+                ("「Fore.LIGHTWHITE_EX」", Fore.LIGHTWHITE_EX),
+                ("「Back.BLACK」", Back.BLACK),
+                ("「Back.WHITE」", Back.WHITE),
+                ("「Back.RED」", Back.RED),
+                ("「Back.GREEN」", Back.GREEN),
+                ("「Back.YELLOW」", Back.YELLOW),
+                ("「Back.BLUE」", Back.BLUE),
+                ("「Back.MAGENTA」", Back.MAGENTA),
+                ("「Back.CYAN」", Back.CYAN),
+                ("「Back.LIGHTBLACK_EX」", Back.LIGHTBLACK_EX),
+                ("「Back.LIGHTRED_EX」", Back.LIGHTRED_EX),
+                ("「Back.LIGHTGREEN_EX」", Back.LIGHTGREEN_EX),
+                ("「Back.LIGHTYELLOW_EX」", Back.LIGHTYELLOW_EX),
+                ("「Back.LIGHTBLUE_EX」", Back.LIGHTBLUE_EX),
+                ("「Back.LIGHTMAGENTA_EX」", Back.LIGHTMAGENTA_EX),
+                ("「Back.LIGHTCYAN_EX」", Back.LIGHTCYAN_EX),
+                ("「Back.LIGHTWHITE_EX」", Back.LIGHTWHITE_EX),
                 ("[ ]*「Fore.RESET」", Fore.RESET),
                 ("[ ]*「Back.RESET」", Back.RESET),
                 ("[ ]*「Style.RESET_ALL」", Style.RESET_ALL),
