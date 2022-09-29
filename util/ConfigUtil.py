@@ -99,7 +99,7 @@ class ConfigUtil:
         config.help["terminalVerseSelectionBackground"] = """
         # Terminal mode verse selection background color."""
         if not hasattr(config, "terminalVerseSelectionBackground"):
-            config.terminalVerseSelectionBackground = "CYAN"
+            config.terminalVerseSelectionBackground = "GREEN"
         config.help["terminalVerseSelectionForeground"] = """
         # Terminal mode verse selection foreground color."""
         if not hasattr(config, "terminalVerseSelectionForeground"):

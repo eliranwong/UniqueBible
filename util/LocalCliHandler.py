@@ -38,6 +38,8 @@ class LocalCliHandler:
             ".backward": ("open one bible chapter backward", self.backward),
             ".f": ("an alias to the '.forward' command", self.forward),
             ".b": ("an alias to the '.backward' command", self.backward),
+            ".swap": ("swap to a favourite bible", self.swap),
+            ".s": ("an alias to the '.swap' command", self.swap),
             ".share": ("copy a web link for sharing", self.share),
             ".copy": ("copy the last opened content", self.copy),
             ".copyhtml": ("copy the last opened content in html format", self.copyHtml),
@@ -588,10 +590,14 @@ class LocalCliHandler:
                     color = config.terminalColors[int(text)]
                     command = f"_setconfig:::{configitem}:::'{color}'"
                     print(f"Running {command} ...")
-                    print(self.getContent(command))
-                    return ""
+                    return self.getContent(command)
             except:
                 print("Invalid option entered!")
                 return ""
         else:
             return self.noPromptToolkit()
+
+    def swap(self):
+        command = f"TEXT:::{(self.getPlusBible()[2:])}"
+        print(f"Running {command} ...")
+        return self.getContent(command)

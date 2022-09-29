@@ -1,3 +1,9 @@
+Changes in 32.11:
+Terminal mode:
+* Added a '.swap' command to open the next favourite bible.
+* Added an alias '.s' to run '.swap' command.
+* Fixed restart UBA after changing colours
+
 Changes in 32.09, 32.10:
 Changes in terminal mode:
 * Added config.terminalHeadingTextColor, config.terminalVerseSelectionBackground and config.terminalVerseSelectionForeground to customise text colours.
@@ -13,7 +19,17 @@ Changes in terminal mode:
     Run '.changecolors' to take a look.
     Remarks: colour customisation mainly applies to text highlights.
     For general change in terminal background and text colours, change from individual terminal settings.
-    For example, Android Termux users may install Termux:Styling [https://github.com/termux/termux-styling] to choose a theme colour from numerous options.
+    For example, Android Termux users may install Termux:Styling [https://github.com/termux/termux-styling] to choose a theme colour from numerous options, 
+        e.g. Try "Google Dark" with Termux:Styling, combined with the following settings.
+            terminalHeadingTextColor = 'GREEN'
+            terminalVerseNumberColor = 'YELLOW'
+            terminalResourceLinkColor = 'YELLOW'
+            terminalVerseSelectionBackground = 'MAGENTA'
+            terminalVerseSelectionForeground = 'RESET'
+            terminalSearchHighlightBackground = 'BLUE'
+            terminalSearchHighlightForeground = 'RESET'
+            terminalFindHighlightBackground = 'RED'
+            terminalFindHighlightForeground = 'RESET'
 
 Changes in 32.08:
 * Add colour customisation in terminal mode, currently 6 options:
