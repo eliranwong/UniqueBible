@@ -53,7 +53,7 @@ class TextUtil:
                 ("(<ref>|<ref .*?>)", r"\1「Fore.{0}」".format(config.terminalResourceLinkColor)),
                 ("(<vid .*?>)", r"\1「Fore.{0}」".format(config.terminalVerseNumberColor)),
                 ("(</ref>|</vid>)", r"\1「Fore.RESET」"),
-                ("<z>", "「Back.{0}」「Fore.{1}」".format(config.terminalSearchHighlightBackground, config.terminalSearchHighlightForeground)),
+                ("<z>", "「Fore.{1}」「Back.{0}」".format(config.terminalSearchHighlightBackground, config.terminalSearchHighlightForeground)),
                 ("</z>", "「Style.RESET_ALL」"),
             )
             for search, replace in searchReplace:

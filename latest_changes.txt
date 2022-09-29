@@ -1,4 +1,4 @@
-Changes in 32.09:
+Changes in 32.09, 32.10:
 Changes in terminal mode:
 * Added config.terminalHeadingTextColor, config.terminalVerseSelectionBackground and config.terminalVerseSelectionForeground to customise text colours.
 * Created shortcuts for changing chapter, verse or both for bible reading:

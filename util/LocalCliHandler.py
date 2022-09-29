@@ -21,6 +21,7 @@ class LocalCliHandler:
         self.html = "<ref >Unique Bible App</ref>"
         self.plainText = "Unique Bible App"
         self.command = command
+        self.divider = divider = "--------------------"
         self.dotCommands = {
             ".help": ("display help menu", self.help),
             ".togglepager": ("toggle paging for text output", self.togglePager),
@@ -124,7 +125,7 @@ class LocalCliHandler:
         return plainText
 
     def displayOutputOnTerminal(self, content):
-        divider = "--------------------"
+        divider = self.divider
         if config.enableTerminalPager and not content in ("Command processed!", "INVALID_COMMAND_ENTERED") and not content.endswith("not supported in terminal mode."):
             import pydoc
             if platform.system() == "Windows":
@@ -545,6 +546,7 @@ class LocalCliHandler:
     def changecolors(self):
         if config.isPrompt_toolkitInstalled:
             from prompt_toolkit import prompt
+            from prompt_toolkit.completion import WordCompleter
 
             optionMap = {
                 "Terminal Heading Text Color": "terminalHeadingTextColor",
@@ -558,9 +560,12 @@ class LocalCliHandler:
                 "Terminal Find Highlight Foreground": "terminalFindHighlightForeground",
             }
             options = [f"[{i}] {item}" for i, item in enumerate(optionMap.keys())]
+            print(self.divider)
             print("Choose an item you want to change:")
             print(pprint.pformat(options))
-            text = prompt(f"Enter a number [0 ... {(len(options) - 1)}] or '.c' to cancel: ")
+            print(self.divider)
+            completer = WordCompleter([str(i) for i in range(len(options))])
+            text = prompt(f"Enter a number [0 ... {(len(options) - 1)}] or '.c' to cancel: ", completer=completer)
             if text == ".c":
                 print("Action cancelled!")
                 return ""
@@ -570,9 +575,12 @@ class LocalCliHandler:
                 option = re.sub("^\[[0-9]+?\] ", "", option)
                 configitem = optionMap[option]
                 options = [f"[{i}] {item}" for i, item in enumerate(config.terminalColors)]
+                print(self.divider)
                 print("Choose a color:")
-                print(options)
-                text = prompt(f"Enter a number [0 ... {(len(options) - 1)}] or '.c' to cancel: ")
+                print(pprint.pformat(options))
+                print(self.divider)
+                completer = WordCompleter([str(i) for i in range(len(options))])
+                text = prompt(f"Enter a number [0 ... {(len(options) - 1)}] or '.c' to cancel: ", completer=completer)
                 if text == ".c":
                     print("Action cancelled!")
                     return ""
@@ -580,7 +588,8 @@ class LocalCliHandler:
                     color = config.terminalColors[int(text)]
                     command = f"_setconfig:::{configitem}:::'{color}'"
                     print(f"Running {command} ...")
-                    return self.getContent(command)
+                    print(self.getContent(command))
+                    return ""
             except:
                 print("Invalid option entered!")
                 return ""
