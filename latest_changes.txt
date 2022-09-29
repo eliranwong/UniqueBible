@@ -1,3 +1,20 @@
+Changes in 32.09:
+Changes in terminal mode:
+* Added config.terminalHeadingTextColor, config.terminalVerseSelectionBackground and config.terminalVerseSelectionForeground to customise text colours.
+* Created shortcuts for changing chapter, verse or both for bible reading:
+    e.g. run "3:16" to change to verse 16 in chapter 3 of the same book.
+    e.g. run "3:" to change to chapter 3 of the same book.
+    e.g. run ":16" to change to verse 16 of the same book and same chapter.
+* Added READSYNC::: command to sync bible text disply with audio playing.
+    Run 'READSYNC:::' for more information.
+* Added '.forward' and '.backward' commands to open one bible chapter forward and backward.
+* Added '.f' and '.b' commands as aliases to '.forward' and '.backward' commands.
+* Added colour customisation user interaction menu.
+    Run '.changecolors' to take a look.
+    Remarks: colour customisation mainly applies to text highlights.
+    For general change in terminal background and text colours, change from individual terminal settings.
+    For example, Android Termux users may install Termux:Styling [https://github.com/termux/termux-styling] to choose a theme colour from numerous options.
+
 Changes in 32.08:
 * Add colour customisation in terminal mode, currently 6 options:
     config.terminalVerseNumberColor

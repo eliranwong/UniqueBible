@@ -1,6 +1,6 @@
 import config, re
 
-terminalTextStart = "「Back.{0}」「Fore.{1}」".format(config.terminalSearchHighlightBackground, config.terminalSearchHighlightForeground) if config.runMode == "terminal" else ""
+terminalTextStart = "「Back.{0}」「Fore.{1}」".format(config.terminalVerseSelectionBackground, config.terminalVerseSelectionForeground) if config.runMode == "terminal" else ""
 terminalTextEnd = "「Style.RESET_ALL」" if config.runMode == "terminal" else ""
 
 def highlightActiveVerseMain(text):

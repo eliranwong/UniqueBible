@@ -507,13 +507,23 @@ class TextCommandParser:
             "read": (self.textRead, """
             # [KEYWORD] READ
             # Feature - Read a single bible passage or multiple bible passages.
-            # Usage - BIBLE:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE(S)]
+            # Usage - READ:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE(S)]
             # Remarks:
             # 1) The bible version last opened on main view is opened by default if "[BIBLE_VERSION]:::" is omitted.
             # e.g. READ:::Jn 3:16-18
             # e.g. READ:::KJV:::Jn 3:16-18; Deut 6:4
             # e.g. READ:::KJV_CUV:::Jn 3:16-18; Deut 6:4
             """),
+            "readsync": (self.textReadSync, """
+            # [KEYWORD] READSYNC
+            # Feature - Read a single bible passage or multiple bible passages, with text display synchronisation.
+            # Usage - READSYNC:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE(S)]
+            # Remarks:
+            # 1) The bible version last opened on main view is opened by default if "[BIBLE_VERSION]:::" is omitted.
+            # e.g. READSYNC:::Jn 3:16-18
+            # e.g. READSYNC:::KJV:::Jn 3:16-18; Deut 6:4
+            # e.g. READSYNC:::KJV_CUV:::Jn 3:16-18; Deut 6:4
+            """), #textReadSync
             "readchapter": (self.readChapter, """
             # [KEYWORD] READCHAPTER
             # Feature: read a bible chapter verse by verse
@@ -1590,8 +1600,12 @@ class TextCommandParser:
             else:
                 webbrowser.open(wikiPage)
 
+    # READSYNC:::
+    def textReadSync(self, command, source):
+        return self.textRead(command, source, True) if config.runMode == "terminal" else ("study", "Currently, only terminal mode supports running READSYNC::: command.", {})
+
     # READ:::
-    def textRead(self, command, source):
+    def textRead(self, command, source, displayText=False):
         if command.count(":::") == 0:
             updateViewConfig, viewText, *_ = self.getViewConfig(source)
             command = "{0}:::{1}".format(viewText, command)
@@ -1600,16 +1614,27 @@ class TextCommandParser:
         verseList = self.extractAllVerses(references)
         if verseList:
             allPlayList = []
+            allTextList = []
             for verse in verseList:
                 for text in texts:
                     everySingleVerseList = Bible(text).getEverySingleVerseList((verse,))
                     playlist = []
+                    textList = []
                     for b, c, v in everySingleVerseList:
                         folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
                         audioFile = os.path.join(folder, "{0}_{1}_{2}_{3}.mp3".format(text, b, c, v))
                         if os.path.isfile(audioFile):
                             playlist.append(audioFile)
+                            if config.runMode == "terminal" and displayText:
+                                try:
+                                    *_, verseText = Bible(text).readTextVerse(b, c, v)
+                                    verseText = TextUtil.htmlToPlainText(f"[<ref>{self.bcvToVerseReference(b, c, v)}</ref> ]{verseText}").strip()
+                                    verseText = verseText.replace("audiotrack ", "")
+                                    textList.append(verseText)
+                                except:
+                                    textList.append("")
                     allPlayList += playlist
+                    allTextList += textList
             if config.enableHttpServer:
                 target = "study"
                 allPlayList = [(os.path.basename(fullpath), fullpath) for fullpath in allPlayList]
@@ -1617,7 +1642,10 @@ class TextCommandParser:
             else:
                 target = ""
                 content = ""
-                self.parent.playAudioBibleFilePlayList(allPlayList)
+                if config.runMode == "terminal":
+                    self.parent.playAudioBibleFilePlayListPlusDisplayText(allPlayList, allTextList) if displayText else self.parent.playAudioBibleFilePlayList(allPlayList)
+                else:
+                    self.parent.playAudioBibleFilePlayList(allPlayList)
             return (target, content, {})
         else:
             return self.invalidCommand()

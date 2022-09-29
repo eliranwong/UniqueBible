@@ -156,7 +156,7 @@ def getHistoryRecords():
             item = item.strip()
             if item and item.startswith("+"):
                 item = item[1:]
-                startupException = (".quit", ".restart", ".togglepager", ".history", ".update", ".stopaudio", ".read", ".download", ".paste", ".share", ".copy", ".copyhtml")
+                startupException = (".quit", ".restart", ".togglepager", ".history", ".update", ".stopaudio", ".changecolors", ".read", ".download", ".paste", ".share", ".copy", ".copyhtml")
                 if not item.lower() in startupException and not item.lower().startswith("_setconfig:::"):
                     records.append(item)
     return records
@@ -194,7 +194,7 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         session = PromptSession(history=FileHistory('myhistory'))
         command_completer = WordCompleter(config.mainWindow.getTextCommandSuggestion(), ignore_case=True)
         auto_suggestion=AutoSuggestFromHistory()
-        toolbar = f" Unique Bible App [{config.version}]"
+        toolbar = f" Unique Bible App [{config.version}] "
     elif sys.platform in ("linux", "darwin"):
         import readline
 

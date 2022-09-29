@@ -84,6 +84,10 @@ class ConfigUtil:
             config.usePySide6onMacOS = True
         # Start of erminal mode setting
         config.terminalColors = ("RESET", "BLACK", "WHITE", "RED", "GREEN", "YELLOW", "BLUE", "MAGENTA", "CYAN", "LIGHTBLACK_EX", "LIGHTRED_EX", "LIGHTGREEN_EX", "LIGHTYELLOW_EX", "LIGHTBLUE_EX", "LIGHTMAGENTA_EX", "LIGHTCYAN_EX", "LIGHTWHITE_EX")
+        config.help["terminalHeadingTextColor"] = """
+        # Terminal mode heading text color."""
+        if not hasattr(config, "terminalHeadingTextColor"):
+            config.terminalHeadingTextColor = "BLUE"
         config.help["terminalVerseNumberColor"] = """
         # Terminal mode verse number color."""
         if not hasattr(config, "terminalVerseNumberColor"):
@@ -92,10 +96,18 @@ class ConfigUtil:
         # Terminal mode resource link color."""
         if not hasattr(config, "terminalResourceLinkColor"):
             config.terminalResourceLinkColor = "CYAN"
+        config.help["terminalVerseSelectionBackground"] = """
+        # Terminal mode verse selection background color."""
+        if not hasattr(config, "terminalVerseSelectionBackground"):
+            config.terminalVerseSelectionBackground = "CYAN"
+        config.help["terminalVerseSelectionForeground"] = """
+        # Terminal mode verse selection foreground color."""
+        if not hasattr(config, "terminalVerseSelectionForeground"):
+            config.terminalVerseSelectionForeground = "RESET"
         config.help["terminalSearchHighlightBackground"] = """
         # Terminal mode search highlight background color."""
         if not hasattr(config, "terminalSearchHighlightBackground"):
-            config.terminalSearchHighlightBackground = "GREEN"
+            config.terminalSearchHighlightBackground = "BLUE"
         config.help["terminalSearchHighlightForeground"] = """
         # Terminal mode search highlight foreground color."""
         if not hasattr(config, "terminalSearchHighlightForeground"):
@@ -1436,8 +1448,11 @@ class ConfigUtil:
             ("usePySide2onWebtop", config.usePySide2onWebtop),
             ("usePySide6onMacOS", config.usePySide6onMacOS),
             ("enableTerminalPager", config.enableTerminalPager),
+            ("terminalHeadingTextColor", config.terminalHeadingTextColor),
             ("terminalVerseNumberColor", config.terminalVerseNumberColor),
             ("terminalResourceLinkColor", config.terminalResourceLinkColor),
+            ("terminalVerseSelectionBackground", config.terminalVerseSelectionBackground),
+            ("terminalVerseSelectionForeground", config.terminalVerseSelectionForeground),
             ("terminalSearchHighlightBackground", config.terminalSearchHighlightBackground),
             ("terminalSearchHighlightForeground", config.terminalSearchHighlightForeground),
             ("terminalFindHighlightBackground", config.terminalFindHighlightBackground),

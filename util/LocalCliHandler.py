@@ -33,6 +33,10 @@ class LocalCliHandler:
             ".last": ("display last selected items", self.last),
             ".paste": ("run clipboard text as command", self.paste),
             ".p": ("an alias to the '.paste' command", self.paste),
+            ".forward": ("open one bible chapter forward", self.forward),
+            ".backward": ("open one bible chapter backward", self.backward),
+            ".f": ("an alias to the '.forward' command", self.forward),
+            ".b": ("an alias to the '.backward' command", self.backward),
             ".share": ("copy a web link for sharing", self.share),
             ".copy": ("copy the last opened content", self.copy),
             ".copyhtml": ("copy the last opened content in html format", self.copyHtml),
@@ -55,6 +59,7 @@ class LocalCliHandler:
             ".showreferencebooks": ("display installed reference books", self.showreferencebooks),
             ".showdata": ("display installed data", self.showdata),
             ".showdownloads": ("display available downloads", self.showdownloads),
+            ".changecolors": ("display available downloads", self.changecolors),
             #".openbookfeatures": ("open book features", self.openBookFeatures),
             #".openchapterfeatures": ("open chapter features", self.openChapterFeatures),
             #".openversefeatures": ("open verse features", self.openVerseFeatures),
@@ -71,6 +76,27 @@ class LocalCliHandler:
 
     def getContent(self, command):
         command = command.strip()
+        originalCommand = command
+        # Shortcuts to change chapter or verse or both chapter and verse for bible reading.
+        if command:
+            try:
+                bc = command.split(":", 1)
+                bci = [int(i) for i in bc if i]
+                if len(bc) == 2 and len(bci) == 1:
+                    # Users specify a verse number, e.g. :16
+                    if command.startswith(":"):
+                        command = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, bci[0])
+                    # Users specify a chapter number, e.g. 3:
+                    elif command.endswith(":"):
+                        command = self.textCommandParser.bcvToVerseReference(config.mainB, bci[0], 1)
+                # Users specify both a chapter number and a verse number, e.g. 3:16
+                elif len(bc) == 2 and len(bci) == 2:
+                    command = self.textCommandParser.bcvToVerseReference(config.mainB, bci[0], bci[1])
+                if not originalCommand == command:
+                    print(f"Running {command} ...")
+            except:
+                pass
+        # Redirection when certain commands are used.
         if re.search('^(map:::|bible:::mab:::|bible:::mib:::|bible:::mob:::|bible:::mpb:::|bible:::mtb:::)', command.lower()):
             return self.share(command)
         # Dot commands
@@ -491,7 +517,72 @@ class LocalCliHandler:
         return ".restart"
 
     def config(self):
-        intro = "<p>Unique Bible App Configurations</p>"
+        intro = "<h2>Unique Bible App Configurations</h2>"
         intro += "<p>Default settings are good for general use.  In case you want to make changes, you may run '<ref>_setconfig:::</ref>' command in terminal mode.  Alternately, you may manually edit the file 'config.py', located in UBA home directory, when UBA is not running.</p>"
         content = "{0}<p>{1}</p>".format(intro, "</p><p>".join(["[ITEM] <ref>{0}</ref>{1}\nCurrent value: <z>{2}</z>".format(key, re.sub("        # ", "", value), eval("pprint.pformat(config."+key+")")) for key, value in config.help.items()]))
         return TextUtil.htmlToPlainText(content).strip()
+
+    def backward(self):
+        newChapter = config.mainC - 1
+        if newChapter < 1:
+            newChapter = 1
+        command = self.textCommandParser.bcvToVerseReference(config.mainB, newChapter, 1)
+        print(f"Running {command} ...")
+        return self.getContent(command)
+
+    def forward(self):
+        newChapter = config.mainC
+        if config.mainC < BibleBooks.getLastChapter(config.mainB):
+            newChapter += 1
+        command = self.textCommandParser.bcvToVerseReference(config.mainB, newChapter, 1)
+        print(f"Running {command} ...")
+        return self.getContent(command)
+
+    def noPromptToolkit(self):
+        print("Install package 'prompt_toolkit' first!")
+        return ""
+
+    def changecolors(self):
+        if config.isPrompt_toolkitInstalled:
+            from prompt_toolkit import prompt
+
+            optionMap = {
+                "Terminal Heading Text Color": "terminalHeadingTextColor",
+                "Terminal Verse Number Color": "terminalVerseNumberColor",
+                "Terminal Resource Link Color": "terminalResourceLinkColor",
+                "Terminal Verse Selection Background": "terminalVerseSelectionBackground",
+                "Terminal Verse Selection Foreground": "terminalVerseSelectionForeground",
+                "Terminal Search Highlight Background": "terminalSearchHighlightBackground",
+                "Terminal Search Highlight Foreground": "terminalSearchHighlightForeground",
+                "Terminal Find Highlight Background": "terminalFindHighlightBackground",
+                "Terminal Find Highlight Foreground": "terminalFindHighlightForeground",
+            }
+            options = [f"[{i}] {item}" for i, item in enumerate(optionMap.keys())]
+            print("Choose an item you want to change:")
+            print(pprint.pformat(options))
+            text = prompt(f"Enter a number [0 ... {(len(options) - 1)}] or '.c' to cancel: ")
+            if text == ".c":
+                print("Action cancelled!")
+                return ""
+            try:
+                optionIndex = int(text.strip())
+                option = options[optionIndex]
+                option = re.sub("^\[[0-9]+?\] ", "", option)
+                configitem = optionMap[option]
+                options = [f"[{i}] {item}" for i, item in enumerate(config.terminalColors)]
+                print("Choose a color:")
+                print(options)
+                text = prompt(f"Enter a number [0 ... {(len(options) - 1)}] or '.c' to cancel: ")
+                if text == ".c":
+                    print("Action cancelled!")
+                    return ""
+                else:
+                    color = config.terminalColors[int(text)]
+                    command = f"_setconfig:::{configitem}:::'{color}'"
+                    print(f"Running {command} ...")
+                    return self.getContent(command)
+            except:
+                print("Invalid option entered!")
+                return ""
+        else:
+            return self.noPromptToolkit()
