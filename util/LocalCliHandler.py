@@ -1,4 +1,8 @@
 import re, config, pprint, os, requests, platform
+
+from regex import F
+
+from matplotlib import use
 from ast import literal_eval
 from util.TextUtil import TextUtil
 from util.RemoteCliMainWindow import RemoteCliMainWindow
@@ -21,8 +25,28 @@ class LocalCliHandler:
         self.html = "<ref >Unique Bible App</ref>"
         self.plainText = "Unique Bible App"
         self.command = command
-        self.divider = divider = "--------------------"
-        self.dotCommands = {
+        self.dotCommands = self.getDotCommands()
+        self.initPromptElements()
+
+    def initPromptElements(self):
+        self.divider = "--------------------"
+        self.inputIndicator = ">>> "
+        if config.isPrompt_toolkitInstalled:
+            from prompt_toolkit import PromptSession
+            from prompt_toolkit.history import FileHistory
+
+            find_history = os.path.join("terminal_history", "find")
+            module_history_bibles = os.path.join("terminal_history", "bibles")
+            module_history_commentaries = os.path.join("terminal_history", "commentaries")
+            search_bible_history = os.path.join("terminal_history", "search_bible")
+
+            self.terminal_find_session = PromptSession(history=FileHistory(find_history))
+            self.terminal_search_bible_session = PromptSession(history=FileHistory(search_bible_history))
+            self.terminal_bible_selection_session = PromptSession(history=FileHistory(module_history_bibles))
+            self.terminal_commentary_selection_session = PromptSession(history=FileHistory(module_history_commentaries))
+
+    def getDotCommands(self):
+        return {
             ".help": ("display help menu", self.help),
             ".togglepager": ("toggle paging for text output", self.togglePager),
             ".stopaudio": ("stop audio playback", self.stopAudio),
@@ -63,6 +87,7 @@ class LocalCliHandler:
             ".showdata": ("display installed data", self.showdata),
             ".showdownloads": ("display available downloads", self.showdownloads),
             ".changecolors": ("display available downloads", self.changecolors),
+            ".openbible": ("open bible or bibles", self.openbible),
             #".openbookfeatures": ("open book features", self.openBookFeatures),
             #".openchapterfeatures": ("open chapter features", self.openChapterFeatures),
             #".openversefeatures": ("open verse features", self.openVerseFeatures),
@@ -96,7 +121,7 @@ class LocalCliHandler:
                 elif len(bc) == 2 and len(bci) == 2:
                     command = self.textCommandParser.bcvToVerseReference(config.mainB, bci[0], bci[1])
                 if not originalCommand == command:
-                    print(f"Running {command} ...")
+                    self.printRunningCommand(command)
             except:
                 pass
         # Redirection when certain commands are used.
@@ -243,26 +268,37 @@ class LocalCliHandler:
         print("Enter an UBA command ('.help' for help):")
         return ""
 
-    def showbibleabbreviations(self):
-        bible = Bible(config.mainText)
+    def showbibleabbreviations(self, text=""):
+        bible = Bible(config.mainText if not text else text)
         bibleBooks = BibleBooks()
-        print([f"[{b}] {bibleBooks.getStandardBookAbbreviation(b)}" for b in bible.getBookList()])
+        bookNumbers = bible.getBookList()
+        print([f"[{b}] {bibleBooks.getStandardBookAbbreviation(b)}" for b in bookNumbers])
+        self.currentBibleAbbs = [bibleBooks.getStandardBookAbbreviation(b) for b in bookNumbers]
+        try:
+            self.currentBibleAbb = bibleBooks.getStandardBookAbbreviation(config.mainB)
+        except:
+            self.currentBibleAbb = self.currentBibleAbbs[0]
+        self.bookNumbers = bookNumbers
         return ""
 
-    def showbiblebooks(self):
-        bible = Bible(config.mainText)
+    def showbiblebooks(self, text=""):
+        bible = Bible(config.mainText if not text else text)
         bibleBooks = BibleBooks()
         print([f"[{b}] {bibleBooks.getStandardBookFullName(b)}" for b in bible.getBookList()])
         return ""
 
-    def showbiblechapters(self):
-        bible = Bible(config.mainText)
-        print(bible.getChapterList(config.mainB))
+    def showbiblechapters(self, text="", b=None):
+        bible = Bible(config.mainText if not text else text)
+        chapterList = bible.getChapterList(config.mainB if b is None else b)
+        print(chapterList)
+        self.currentBibleChapters = chapterList
         return ""
 
-    def showbibleverses(self):
-        bible = Bible(config.mainText)
-        print(bible.getVerseList(config.mainB, config.mainV))
+    def showbibleverses(self, text="", b=None, c=None):
+        bible = Bible(config.mainText if not text else text)
+        verseList = bible.getVerseList(config.mainB if b is None else b, config.mainC if c is None else c)
+        print(verseList)
+        self.currentBibleVerses = verseList
         return ""
 
     def showtopics(self):
@@ -298,7 +334,7 @@ class LocalCliHandler:
         content += "<h2>{0}</h2>".format(config.thisTranslation["menu5_bible"])
         bibleList = []
         for index, bible in enumerate(self.crossPlatform.textList):
-            bibleList.append(f"[<ref>TEXT:::{bible}</ref> ] {self.crossPlatform.textFullNameList[index]}")
+            bibleList.append(f"[<ref>{bible}</ref> ] {self.crossPlatform.textFullNameList[index]}")
         content += "<br>".join(bibleList)
         return TextUtil.htmlToPlainText(content).strip()
 
@@ -434,14 +470,15 @@ class LocalCliHandler:
         return ""
 
     def find(self):
-        searchInput = input("Enter a search pattern: ").strip()
+        print("Enter a search pattern: ")
+        userInput = self.terminal_find_session.prompt(self.inputIndicator).strip() if config.isPrompt_toolkitInstalled else input(self.inputIndicator).strip()
         if config.isColoramaInstalled:
             from colorama import init
             init()
             from colorama import Fore, Back, Style
-            content = re.sub(r"({0})".format(searchInput), r"{0}{1}\1{2}".format(Back.RED, Fore.WHITE, Style.RESET_ALL), self.plainText)
+            content = re.sub(r"({0})".format(userInput), r"{0}{1}\1{2}".format(Back.RED, Fore.WHITE, Style.RESET_ALL), self.plainText, flags=re.IGNORECASE)
         else:
-            content = re.sub(r"({0})".format(searchInput), r"[[[ \1 ]]]", self.plainText)
+            content = re.sub(r"({0})".format(userInput), r"[[[ \1 ]]]", self.plainText, flags=re.IGNORECASE)
         return content
 
     def history(self):
@@ -530,7 +567,7 @@ class LocalCliHandler:
         if newChapter < 1:
             newChapter = 1
         command = self.textCommandParser.bcvToVerseReference(config.mainB, newChapter, 1)
-        print(f"Running {command} ...")
+        self.printRunningCommand(command)
         return self.getContent(command)
 
     def forward(self):
@@ -538,66 +575,185 @@ class LocalCliHandler:
         if config.mainC < BibleBooks.getLastChapter(config.mainB):
             newChapter += 1
         command = self.textCommandParser.bcvToVerseReference(config.mainB, newChapter, 1)
-        print(f"Running {command} ...")
+        self.printRunningCommand(command)
         return self.getContent(command)
 
     def noPromptToolkit(self):
         print("Install package 'prompt_toolkit' first!")
         return ""
 
+    def openbible(self):
+        try:
+            if config.isPrompt_toolkitInstalled:
+                from prompt_toolkit import prompt
+                from prompt_toolkit.completion import WordCompleter
+
+            print(self.divider)
+            print(self.showbibles())
+            print(self.divider)
+            self.printChooseItem()
+            print("Enter a version abbreviation to open a single version, e.g. 'KJV'")
+            print("To compare multiple versions, use '_' as a delimiter, e.g. 'KJV_NET_OHGBi'")
+            if config.isPrompt_toolkitInstalled:
+                completer = WordCompleter(self.crossPlatform.textList, ignore_case=True)
+                defaultText = self.getDefaultText()
+                userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, completer=completer, default=defaultText)
+            else:
+                userInput = input(self.inputIndicator)
+            if self.isValidBibles(userInput):
+                bible = userInput
+                firstBible = bible.split("_")[0]
+                print(self.divider)
+                print(self.showbibleabbreviations(text=firstBible))
+                print(self.divider)
+                self.printChooseItem()
+                print("(enter a book abbreviation)")
+                if config.isPrompt_toolkitInstalled:
+                    completer = WordCompleter(self.currentBibleAbbs, ignore_case=True)
+                    userInput = prompt(self.inputIndicator, completer=completer, default=self.currentBibleAbb)
+                else:
+                    userInput = input(self.inputIndicator)
+                if userInput in self.currentBibleAbbs:
+                    abbIndex = self.currentBibleAbbs.index(userInput)
+                    bibleBookNumber = self.bookNumbers[abbIndex]
+                    bibleAbb = userInput
+                    print(self.divider)
+                    self.showbiblechapters(text=firstBible, b=bibleBookNumber)
+                    print(self.divider)
+                    self.printChooseItem()
+                    print("(enter a chapter number)")
+                    if config.isPrompt_toolkitInstalled:
+                        defaultChapter = str(config.mainC) if config.mainC in self.currentBibleChapters else str(self.currentBibleChapters[0])
+                        userInput = prompt(self.inputIndicator, default=defaultChapter)
+                    else:
+                        userInput = input(self.inputIndicator)
+                    if int(userInput) in self.currentBibleChapters:
+                        bibleChapter = userInput
+                        print(self.divider)
+                        self.showbibleverses(text=firstBible, b=bibleBookNumber, c=int(userInput))
+                        print(self.divider)
+                        self.printChooseItem()
+                        print("(enter a verse number)")
+                        if config.isPrompt_toolkitInstalled:
+                            defaultVerse = str(config.mainV) if config.mainV in self.currentBibleVerses else str(self.currentBibleVerses[0])
+                            userInput = prompt(self.inputIndicator, default=defaultVerse)
+                        else:
+                            userInput = input(self.inputIndicator)
+                        if int(userInput) in self.currentBibleVerses:
+                            bibleVerse = userInput
+                            if "_" in bible:
+                                command = f"COMPARE:::{bible}:::{bibleAbb} {bibleChapter}:{bibleVerse}"
+                            else:
+                                command = f"BIBLE:::{bible}:::{bibleAbb} {bibleChapter}:{bibleVerse}"
+                            self.printRunningCommand(command)
+                            return self.getContent(command)
+                        else:
+                            self.printInvalidOptionEntered()
+                else:
+                    self.printInvalidOptionEntered()
+        except:
+            self.printInvalidOptionEntered()
+
+    def getDefaultText(self):
+        if config.mainText in self.crossPlatform.textList:
+            defaultText = config.mainText
+        elif config.favouriteBible in self.crossPlatform.textList:
+            defaultText = config.favouriteBible
+        elif config.favouriteBible2 in self.crossPlatform.textList:
+            defaultText = config.favouriteBible2
+        elif config.favouriteBible3 in self.crossPlatform.textList:
+            defaultText = config.favouriteBible3
+        else:
+            defaultText = self.crossPlatform.textList[0]
+        return defaultText
+
+    def isValidBibles(self, userInput):
+        if userInput:
+            for bible in userInput.split("_"):
+                if not bible in self.crossPlatform.textList:
+                    return False
+            return True
+        return False
+
     def changecolors(self):
         if config.isPrompt_toolkitInstalled:
             from prompt_toolkit import prompt
             from prompt_toolkit.completion import WordCompleter
 
-            optionMap = {
-                "Terminal Heading Text Color": "terminalHeadingTextColor",
-                "Terminal Verse Number Color": "terminalVerseNumberColor",
-                "Terminal Resource Link Color": "terminalResourceLinkColor",
-                "Terminal Verse Selection Background": "terminalVerseSelectionBackground",
-                "Terminal Verse Selection Foreground": "terminalVerseSelectionForeground",
-                "Terminal Search Highlight Background": "terminalSearchHighlightBackground",
-                "Terminal Search Highlight Foreground": "terminalSearchHighlightForeground",
-                "Terminal Find Highlight Background": "terminalFindHighlightBackground",
-                "Terminal Find Highlight Foreground": "terminalFindHighlightForeground",
-            }
-            options = [f"[{i}] {item}" for i, item in enumerate(optionMap.keys())]
+        optionMap = {
+            "Terminal Heading Text Color": "terminalHeadingTextColor",
+            "Terminal Verse Number Color": "terminalVerseNumberColor",
+            "Terminal Resource Link Color": "terminalResourceLinkColor",
+            "Terminal Verse Selection Background": "terminalVerseSelectionBackground",
+            "Terminal Verse Selection Foreground": "terminalVerseSelectionForeground",
+            "Terminal Search Highlight Background": "terminalSearchHighlightBackground",
+            "Terminal Search Highlight Foreground": "terminalSearchHighlightForeground",
+            "Terminal Find Highlight Background": "terminalFindHighlightBackground",
+            "Terminal Find Highlight Foreground": "terminalFindHighlightForeground",
+        }
+        options = [f"[{i}] {item}" for i, item in enumerate(optionMap.keys())]
+        print(self.divider)
+        self.printChooseItem()
+        print(pprint.pformat(options))
+        print(self.divider)
+        self.printEnterNumber((len(options) - 1))
+        self.printCancelOption()
+        if config.isPrompt_toolkitInstalled:
+            completer = WordCompleter([str(i) for i in range(len(options))])
+            userInput = prompt(self.inputIndicator, completer=completer)
+        else:
+            userInput = input(self.inputIndicator)
+        if userInput == ".c":
+            return self.cancelAction()
+        try:
+            optionIndex = int(userInput.strip())
+            option = options[optionIndex]
+            option = re.sub("^\[[0-9]+?\] ", "", option)
+            configitem = optionMap[option]
+            options = [f"[{i}] {item}" for i, item in enumerate(config.terminalColors)]
             print(self.divider)
-            print("Choose an item you want to change:")
+            self.printChooseItem()
             print(pprint.pformat(options))
             print(self.divider)
-            completer = WordCompleter([str(i) for i in range(len(options))])
-            text = prompt(f"Enter a number [0 ... {(len(options) - 1)}] or '.c' to cancel: ", completer=completer)
-            if text == ".c":
-                print("Action cancelled!")
-                return ""
-            try:
-                optionIndex = int(text.strip())
-                option = options[optionIndex]
-                option = re.sub("^\[[0-9]+?\] ", "", option)
-                configitem = optionMap[option]
-                options = [f"[{i}] {item}" for i, item in enumerate(config.terminalColors)]
-                print(self.divider)
-                print("Choose a color:")
-                print(pprint.pformat(options))
-                print(self.divider)
+            self.printEnterNumber((len(options) - 1))
+            self.printCancelOption()
+            if config.isPrompt_toolkitInstalled:
                 completer = WordCompleter([str(i) for i in range(len(options))])
-                text = prompt(f"Enter a number [0 ... {(len(options) - 1)}] or '.c' to cancel: ", completer=completer)
-                if text == ".c":
-                    print("Action cancelled!")
-                    return ""
-                else:
-                    color = config.terminalColors[int(text)]
-                    command = f"_setconfig:::{configitem}:::'{color}'"
-                    print(f"Running {command} ...")
-                    return self.getContent(command)
-            except:
-                print("Invalid option entered!")
-                return ""
-        else:
-            return self.noPromptToolkit()
+                userInput = prompt(self.inputIndicator, completer=completer)
+            else:
+                userInput = input(self.inputIndicator)
+            if userInput == ".c":
+                return self.cancelAction()
+            else:
+                color = config.terminalColors[int(userInput)]
+                command = f"_setconfig:::{configitem}:::'{color}'"
+                self.printRunningCommand(command)
+                return self.getContent(command)
+        except:
+            return self.printInvalidOptionEntered()
 
     def swap(self):
         command = f"TEXT:::{(self.getPlusBible()[2:])}"
+        self.printRunningCommand(command)
+
+    # Shared prompt message
+
+    def cancelAction(self):
+        print("Action cancelled!")
+        return ""
+
+    def printChooseItem(self):
+        print("Choose an item:")
+
+    def printCancelOption(self):
+        print("(Or enter '.c' to cancel)")
+
+    def printInvalidOptionEntered(self):
+        print("Invalid option entered!")
+        return ""
+
+    def printRunningCommand(self, command):
         print(f"Running {command} ...")
-        return self.getContent(command)
+
+    def printEnterNumber(self, number):
+        print(f"Enter a number [0 ... {number}]:")

@@ -84,3 +84,6 @@ secrets/github/*.txt
 config.ini
 disabled_modules.txt
 myhistory
+terminal_history/commands
+terminal_history/bibles
+terminal_history/find

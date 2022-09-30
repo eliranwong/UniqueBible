@@ -149,14 +149,15 @@ def checkApplicationUpdateCli():
 # Get terminal mode history records
 def getHistoryRecords():
     records = []
-    if os.path.isfile("myhistory"):
-        with open("myhistory", "r", encoding="utf-8") as input_file:
+    command_history = os.path.join("terminal_history", "commands")
+    if os.path.isfile(command_history):
+        with open(command_history, "r", encoding="utf-8") as input_file:
             history = input_file.read()
         for item in reversed(history.split("\n")):
             item = item.strip()
             if item and item.startswith("+"):
                 item = item[1:]
-                startupException = (".quit", ".restart", ".togglepager", ".history", ".update", ".stopaudio", ".changecolors", ".read", ".download", ".paste", ".share", ".copy", ".copyhtml")
+                startupException = (".quit", ".restart", ".togglepager", ".history", ".update", ".find", ".stopaudio", ".changecolors", ".read", ".download", ".paste", ".share", ".copy", ".copyhtml")
                 if not item.lower() in startupException and not item.lower().startswith("_setconfig:::"):
                     records.append(item)
     return records
@@ -191,7 +192,8 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         from prompt_toolkit.history import FileHistory
         from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 
-        session = PromptSession(history=FileHistory('myhistory'))
+        command_history = os.path.join("terminal_history", "commands")
+        session = PromptSession(history=FileHistory(command_history))
         command_completer = WordCompleter(config.mainWindow.getTextCommandSuggestion(), ignore_case=True)
         auto_suggestion=AutoSuggestFromHistory()
         toolbar = f" Unique Bible App [{config.version}] "

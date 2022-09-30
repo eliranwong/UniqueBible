@@ -49,10 +49,10 @@ class TextUtil:
             # extended colours: "LIGHTBLACK_EX", "LIGHTRED_EX", "LIGHTGREEN_EX", "LIGHTYELLOW_EX", "LIGHTBLUE_EX", "LIGHTMAGENTA_EX", "LIGHTCYAN_EX", "LIGHTWHITE_EX"
 
             searchReplace = (
-                ("(<h[0-9]>|<h[0-9] .*?>)", r"\1「Fore.{0}」".format(config.terminalHeadingTextColor)),
+                ("(<u><b>|<h>|<h[0-9]>|<h[0-9] .*?>)", r"\1「Fore.{0}」".format(config.terminalHeadingTextColor)),
                 ("(<ref>|<ref .*?>)", r"\1「Fore.{0}」".format(config.terminalResourceLinkColor)),
                 ("(<vid .*?>)", r"\1「Fore.{0}」".format(config.terminalVerseNumberColor)),
-                ("(</ref>|</vid>)", r"\1「Fore.RESET」"),
+                ("(</ref>|</vid>|</h[0-9]+?>|</h>|</b></u>)", r"\1「Fore.RESET」"),
                 ("<z>", "「Fore.{1}」「Back.{0}」".format(config.terminalSearchHighlightBackground, config.terminalSearchHighlightForeground)),
                 ("</z>", "「Style.RESET_ALL」"),
             )
