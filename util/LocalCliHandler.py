@@ -43,15 +43,11 @@ class LocalCliHandler:
 
     def getDotCommands(self):
         return {
-            ".help": ("display help menu", self.help),
             ".togglepager": ("toggle paging for text output", self.togglePager),
             ".stopaudio": ("stop audio playback", self.stopAudio),
             ".sa": ("an alias to the '.stopaudio' command", self.stopAudio),
-            ".commands": ("display available commands", self.commands),
-            ".dotcommands": ("display available dot commands", self.dotCommandsHelp),
             ".read": ("read available audio files", self.read),
             ".readsync": ("read available audio files with synchronised text display", self.readsync),
-            ".last": ("display last selected items", self.last),
             ".paste": ("run clipboard text as command", self.paste),
             ".p": ("an alias to the '.paste' command", self.paste),
             ".forward": ("open one bible chapter forward", self.forward),
@@ -65,7 +61,9 @@ class LocalCliHandler:
             ".copyhtml": ("copy the last opened content in html format", self.copyHtml),
             ".find": ("find a string in the last opened content", self.find),
             ".history": ("display history records", self.history),
+            ".last": ("display last selected items", self.last),
             ".update": ("update Unique Bible App to the latest version", self.update),
+            ".commands": ("display available commands", self.commands),
             ".config": ("display UBA configurations", self.config),
             ".showbibles": ("display installed bibles", self.showbibles),
             ".showstrongbibles": ("display installed bibles with Strong's numbers", self.showstrongbibles),
@@ -82,17 +80,39 @@ class LocalCliHandler:
             ".showreferencebooks": ("display installed reference books", self.showreferencebooks),
             ".showdata": ("display installed data", self.showdata),
             ".showdownloads": ("display available downloads", self.showdownloads),
-            ".changecolors": ("display available downloads", self.changecolors),
-            ".openbible": ("open bible or bibles", self.openbible),
-            #".openbookfeatures": ("open book features", self.openBookFeatures),
-            #".openchapterfeatures": ("open chapter features", self.openChapterFeatures),
-            #".openversefeatures": ("open verse features", self.openVerseFeatures),
-            #".menu": ("display main menu", self.menu),
-            #".open": ("display open menu", self.open),
-            #".change": ("display change menu", self.change),
-            #".show": ("display show menu", self.show),
+            ".changecolors": ("change text highlight colors", self.changecolors),
+            ".openbible": ("open bible", self.openbible),
+            ".opencommentary": ("open commentary", self.opencommentary),
+            ".opencrossreference": ("open cross reference", self.openversefeature),
+            ".opencomparison": ("open verse comparison", lambda: self.openversefeature("COMPARE")),
+            ".opendifference": ("open verse comparison with differences", lambda: self.openversefeature("DIFFERENCE")),
+            ".opentske": ("open Treasury of Scripture Knowledge (Enhanced)", lambda: self.openversefeature("TSKE")),
+            ".opensmartindex": ("open smart index", lambda: self.openversefeature("INDEX")),
+            ".opencombo": ("open combination of translation, discourse and words features", lambda: self.openversefeature("COMBO")),
+            ".openwords": ("open original words", lambda: self.openversefeature("WORDS")),
+            ".opendiscourse": ("open discourse feature", lambda: self.openversefeature("DISCOURSE")),
+            ".opentranslation": ("open original word translation", lambda: self.openversefeature("TRANSLATION")),
+            ".openoverview": ("open chapter overview", self.openchapterfeature),
+            ".opensummary": ("open chapter summary", lambda: self.openchapterfeature("SUMMARY")),
+            ".openchapterindex": ("open chapter index", lambda: self.openchapterfeature("CHAPTERINDEX")),
+            ".openintroduction": ("open book introduction", self.openbookfeature),
+            ".opendictionarybookentry": ("open bible book entry in dictionary", lambda: self.openbookfeature("dictionary")),
+            ".openencyclopediabookentry": ("open bible book entry in encyclopedia", lambda: self.openbookfeature("encyclopedia")),
+            #".opentimelines": ("open book timelines", lambda: self.openBookFeature("timelines")),
+            ".openbookfeatures": ("open bible book features", self.openbookfeatures),
+            ".openchapterfeatures": ("open bible chapter features", self.openchapterfeatures),
+            ".openversefeatures": ("open bible verse features", self.openversefeatures),
+            ".helpubacommands": ("display standard UBA command help menu", self.helpubacommands),
+            ".helpterminalcommands": ("display terminal mode commands", self.helpterminalcommands),
+            ".menu": ("display main menu", self.menu),
+            ".open": ("display open menu", self.open),
+            ".change": ("display change menu", self.change),
+            ".search": ("display search menu", self.search),
+            ".show": ("display show menu", self.show),
+            ".maintain": ("display maintain menu", self.maintain),
+            ".control": ("display control menu", self.control),
+            ".help": ("display help menu", self.help),
             #".download": ("display download menu", self.download),
-            #".set": ("display set menu", self.set), # any or particular config
         }
 
     def execPythonFile(self, script):
@@ -200,13 +220,13 @@ class LocalCliHandler:
         config.enableTerminalPager = not config.enableTerminalPager
         return self.plainText
 
-    def help(self):
+    def helpubacommands(self):
         content = "UBA commands:"
         content += "\n".join([f"{key} - {self.dotCommands[key][0]}" for key in sorted(self.dotCommands.keys())])
         content += "\n".join([re.sub("            #", "#", value[-1]) for value in self.textCommandParser.interpreters.values()])
         return content
 
-    def dotCommandsHelp(self):
+    def helpterminalcommands(self):
         content = "UBA terminal dot commands:"
         content += "\n".join([f"{key} - {self.dotCommands[key][0]}" for key in sorted(self.dotCommands.keys())])
         print(content)
@@ -261,17 +281,20 @@ class LocalCliHandler:
         bibleReference = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
         #print("BIBLE:::{0}:::{1} [{2}.{3}.{4}]".format(config.mainText, bibleReference, config.mainB, config.mainC, config.mainV))
         print("{0} [{1}.{2}.{3}] - {4}{5}, {6}".format(bibleReference, config.mainB, config.mainC, config.mainV, config.mainText, self.getPlusBible(), config.commentaryText))
-        print("Enter an UBA command ('.help' for help):")
+        print("Enter an UBA command ('.menu' for menu):")
         return ""
 
-    def showbibleabbreviations(self, text=""):
+    def showbibleabbreviations(self, text="", commentary=False):
         bible = Bible(config.mainText if not text else text)
         bibleBooks = BibleBooks()
         bookNumbers = bible.getBookList()
         print([f"[{b}] {bibleBooks.getStandardBookAbbreviation(b)}" for b in bookNumbers])
         self.currentBibleAbbs = [bibleBooks.getStandardBookAbbreviation(b) for b in bookNumbers]
         try:
-            self.currentBibleAbb = bibleBooks.getStandardBookAbbreviation(config.mainB)
+            if commentary:
+                self.currentBibleAbb = bibleBooks.getStandardBookAbbreviation(config.commentaryB)
+            else:
+                self.currentBibleAbb = bibleBooks.getStandardBookAbbreviation(config.mainB)
         except:
             self.currentBibleAbb = self.currentBibleAbbs[0]
         self.bookNumbers = bookNumbers
@@ -280,7 +303,14 @@ class LocalCliHandler:
     def showbiblebooks(self, text=""):
         bible = Bible(config.mainText if not text else text)
         bibleBooks = BibleBooks()
-        print([f"[{b}] {bibleBooks.getStandardBookFullName(b)}" for b in bible.getBookList()])
+        bookNumbers = bible.getBookList()
+        print([f"[{b}] {bibleBooks.getStandardBookFullName(b)}" for b in bookNumbers])
+        self.currentBibleBooks = [bibleBooks.getStandardBookFullName(b) for b in bookNumbers]
+        try:
+            self.currentBibleBook = bibleBooks.getStandardBookFullName(config.mainB)
+        except:
+            self.currentBibleBook = self.currentBibleBooks[0]
+        self.bookNumbers = bookNumbers
         return ""
 
     def showbiblechapters(self, text="", b=None):
@@ -362,7 +392,7 @@ class LocalCliHandler:
         self.textCommandParser.parent.setupResourceLists()
         content = ""
         content += """<h2><ref onclick="window.parent.submitCommand('.commentarymenu')">{0}</ref></h2>""".format(config.thisTranslation["menu4_commentary"])
-        content += "<br>".join(["""[<ref>COMMENTARY:::{0}:::</ref> ] {1}""".format(abb, self.textCommandParser.parent.commentaryFullNameList[index]) for index, abb in enumerate(self.textCommandParser.parent.commentaryList)])
+        content += "<br>".join(["""[<ref>{0}:::</ref> ] {1}""".format(abb, self.textCommandParser.parent.commentaryFullNameList[index]) for index, abb in enumerate(self.textCommandParser.parent.commentaryList)])
         return TextUtil.htmlToPlainText(content).strip()
 
     def showreferencebooks(self):
@@ -484,15 +514,6 @@ class LocalCliHandler:
         print(text)
         return ""
 
-    def openBookFeatures(self):
-        pass
-
-    def openChapterFeatures(self):
-        pass
-
-    def openVerseFeatures(self):
-        pass
-
     def displayMessage(self, message="", title="UniqueBible"):
         print(title)
         print(message)
@@ -578,6 +599,152 @@ class LocalCliHandler:
         print("Install package 'prompt_toolkit' first!")
         return ""
 
+    def openversefeature(self, feature="CROSSREFERENCE"):
+        try:
+            if config.isPrompt_toolkitInstalled:
+                from prompt_toolkit import prompt
+                from prompt_toolkit.completion import WordCompleter
+
+            firstBible = config.mainText
+            print(self.divider)
+            print(self.showbibleabbreviations(text=firstBible))
+            print(self.divider)
+            self.printChooseItem()
+            print("(enter a book abbreviation)")
+            if config.isPrompt_toolkitInstalled:
+                completer = WordCompleter(self.currentBibleAbbs, ignore_case=True)
+                userInput = prompt(self.inputIndicator, completer=completer, default=self.currentBibleAbb).strip()
+            else:
+                userInput = input(self.inputIndicator).strip()
+            if not userInput or userInput == ".c":
+                return self.cancelAction()
+            if userInput in self.currentBibleAbbs:
+                abbIndex = self.currentBibleAbbs.index(userInput)
+                bibleBookNumber = self.bookNumbers[abbIndex]
+                bibleAbb = userInput
+                print(self.divider)
+                self.showbiblechapters(text=firstBible, b=bibleBookNumber)
+                print(self.divider)
+                self.printChooseItem()
+                print("(enter a chapter number)")
+                if config.isPrompt_toolkitInstalled:
+                    defaultChapter = str(config.mainC) if config.mainC in self.currentBibleChapters else str(self.currentBibleChapters[0])
+                    userInput = prompt(self.inputIndicator, default=defaultChapter).strip()
+                else:
+                    userInput = input(self.inputIndicator).strip()
+                if not userInput or userInput == ".c":
+                    return self.cancelAction()
+                if int(userInput) in self.currentBibleChapters:
+                    bibleChapter = userInput
+                    print(self.divider)
+                    self.showbibleverses(text=firstBible, b=bibleBookNumber, c=int(userInput))
+                    print(self.divider)
+                    self.printChooseItem()
+                    print("(enter a verse number)")
+                    if config.isPrompt_toolkitInstalled:
+                        defaultVerse = str(config.mainV) if config.mainV in self.currentBibleVerses else str(self.currentBibleVerses[0])
+                        userInput = prompt(self.inputIndicator, default=defaultVerse).strip()
+                    else:
+                        userInput = input(self.inputIndicator).strip()
+                    if not userInput or userInput == ".c":
+                        return self.cancelAction()
+                    if int(userInput) in self.currentBibleVerses:
+                        bibleVerse = userInput
+                        command = f"{feature}:::{bibleAbb} {bibleChapter}:{bibleVerse}"
+                        self.printRunningCommand(command)
+                        return self.getContent(command)
+                    else:
+                        self.printInvalidOptionEntered()
+            else:
+                self.printInvalidOptionEntered()
+        except:
+            self.printInvalidOptionEntered()
+
+    def openchapterfeature(self, feature="OVERVIEW"):
+        try:
+            if config.isPrompt_toolkitInstalled:
+                from prompt_toolkit import prompt
+                from prompt_toolkit.completion import WordCompleter
+
+            firstBible = config.mainText
+            print(self.divider)
+            print(self.showbibleabbreviations(text=firstBible))
+            print(self.divider)
+            self.printChooseItem()
+            print("(enter a book abbreviation)")
+            if config.isPrompt_toolkitInstalled:
+                completer = WordCompleter(self.currentBibleAbbs, ignore_case=True)
+                userInput = prompt(self.inputIndicator, completer=completer, default=self.currentBibleAbb).strip()
+            else:
+                userInput = input(self.inputIndicator).strip()
+            if not userInput or userInput == ".c":
+                return self.cancelAction()
+            if userInput in self.currentBibleAbbs:
+                abbIndex = self.currentBibleAbbs.index(userInput)
+                bibleBookNumber = self.bookNumbers[abbIndex]
+                bibleAbb = userInput
+                print(self.divider)
+                self.showbiblechapters(text=firstBible, b=bibleBookNumber)
+                print(self.divider)
+                self.printChooseItem()
+                print("(enter a chapter number)")
+                if config.isPrompt_toolkitInstalled:
+                    defaultChapter = str(config.mainC) if config.mainC in self.currentBibleChapters else str(self.currentBibleChapters[0])
+                    userInput = prompt(self.inputIndicator, default=defaultChapter).strip()
+                else:
+                    userInput = input(self.inputIndicator).strip()
+                if not userInput or userInput == ".c":
+                    return self.cancelAction()
+                if int(userInput) in self.currentBibleChapters:
+                    bibleChapter = userInput
+                    command = f"{feature}:::{bibleAbb} {bibleChapter}"
+                    self.printRunningCommand(command)
+                    return self.getContent(command)
+                else:
+                    self.printInvalidOptionEntered()
+            else:
+                self.printInvalidOptionEntered()
+        except:
+            self.printInvalidOptionEntered()
+
+    def openbookfeature(self, feature="introduction"):
+        try:
+            if config.isPrompt_toolkitInstalled:
+                from prompt_toolkit import prompt
+                from prompt_toolkit.completion import WordCompleter
+
+            firstBible = config.mainText
+            print(self.divider)
+            print(self.showbiblebooks(text=firstBible))
+            print(self.divider)
+            self.printChooseItem()
+            print("(enter a book abbreviation)")
+            if config.isPrompt_toolkitInstalled:
+                completer = WordCompleter(self.currentBibleBooks, ignore_case=True)
+                userInput = prompt(self.inputIndicator, completer=completer, default=self.currentBibleBook).strip()
+            else:
+                userInput = input(self.inputIndicator).strip()
+            if not userInput or userInput == ".c":
+                return self.cancelAction()
+            if userInput in self.currentBibleBooks:
+                #bookIndex = self.currentBibleBooks.index(userInput)
+                #bibleBookNumber = self.bookNumbers[bookIndex]
+                bibleBook = userInput
+                features = {
+                    "introduction": "SEARCHBOOKCHAPTER:::Tidwell_The_Bible_Book_by_Book",
+                    "dictionary": f"SEARCHTOOL:::{config.dictionary}",
+                    "encyclopedia": f"SEARCHTOOL:::{config.encyclopedia}",
+                    "timelines": "SEARCHBOOKCHAPTER:::Timelines",
+                }
+                feature = features[feature]
+                command = f"{feature}:::{bibleBook}"
+                self.printRunningCommand(command)
+                return self.getContent(command)
+            else:
+                self.printInvalidOptionEntered()
+        except:
+            self.printInvalidOptionEntered()
+
     def openbible(self):
         try:
             if config.isPrompt_toolkitInstalled:
@@ -588,14 +755,16 @@ class LocalCliHandler:
             print(self.showbibles())
             print(self.divider)
             self.printChooseItem()
-            print("Enter a version abbreviation to open a single version, e.g. 'KJV'")
+            print("Enter a bible abbreviation to open a single version, e.g. 'KJV'")
             print("To compare multiple versions, use '_' as a delimiter, e.g. 'KJV_NET_OHGBi'")
             if config.isPrompt_toolkitInstalled:
                 completer = WordCompleter(self.crossPlatform.textList, ignore_case=True)
                 defaultText = self.getDefaultText()
-                userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, completer=completer, default=defaultText)
+                userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, completer=completer, default=defaultText).strip()
             else:
-                userInput = input(self.inputIndicator)
+                userInput = input(self.inputIndicator).strip()
+            if not userInput or userInput == ".c":
+                return self.cancelAction()
             if self.isValidBibles(userInput):
                 bible = userInput
                 firstBible = bible.split("_")[0]
@@ -606,9 +775,11 @@ class LocalCliHandler:
                 print("(enter a book abbreviation)")
                 if config.isPrompt_toolkitInstalled:
                     completer = WordCompleter(self.currentBibleAbbs, ignore_case=True)
-                    userInput = prompt(self.inputIndicator, completer=completer, default=self.currentBibleAbb)
+                    userInput = prompt(self.inputIndicator, completer=completer, default=self.currentBibleAbb).strip()
                 else:
-                    userInput = input(self.inputIndicator)
+                    userInput = input(self.inputIndicator).strip()
+                if not userInput or userInput == ".c":
+                    return self.cancelAction()
                 if userInput in self.currentBibleAbbs:
                     abbIndex = self.currentBibleAbbs.index(userInput)
                     bibleBookNumber = self.bookNumbers[abbIndex]
@@ -620,9 +791,11 @@ class LocalCliHandler:
                     print("(enter a chapter number)")
                     if config.isPrompt_toolkitInstalled:
                         defaultChapter = str(config.mainC) if config.mainC in self.currentBibleChapters else str(self.currentBibleChapters[0])
-                        userInput = prompt(self.inputIndicator, default=defaultChapter)
+                        userInput = prompt(self.inputIndicator, default=defaultChapter).strip()
                     else:
-                        userInput = input(self.inputIndicator)
+                        userInput = input(self.inputIndicator).strip()
+                    if not userInput or userInput == ".c":
+                        return self.cancelAction()
                     if int(userInput) in self.currentBibleChapters:
                         bibleChapter = userInput
                         print(self.divider)
@@ -632,15 +805,93 @@ class LocalCliHandler:
                         print("(enter a verse number)")
                         if config.isPrompt_toolkitInstalled:
                             defaultVerse = str(config.mainV) if config.mainV in self.currentBibleVerses else str(self.currentBibleVerses[0])
-                            userInput = prompt(self.inputIndicator, default=defaultVerse)
+                            userInput = prompt(self.inputIndicator, default=defaultVerse).strip()
                         else:
-                            userInput = input(self.inputIndicator)
+                            userInput = input(self.inputIndicator).strip()
+                        if not userInput or userInput == ".c":
+                            return self.cancelAction()
                         if int(userInput) in self.currentBibleVerses:
                             bibleVerse = userInput
                             if "_" in bible:
                                 command = f"COMPARE:::{bible}:::{bibleAbb} {bibleChapter}:{bibleVerse}"
                             else:
                                 command = f"BIBLE:::{bible}:::{bibleAbb} {bibleChapter}:{bibleVerse}"
+                            self.printRunningCommand(command)
+                            return self.getContent(command)
+                        else:
+                            self.printInvalidOptionEntered()
+                else:
+                    self.printInvalidOptionEntered()
+        except:
+            self.printInvalidOptionEntered()
+
+    def opencommentary(self):
+        try:
+            if config.isPrompt_toolkitInstalled:
+                from prompt_toolkit import prompt
+                from prompt_toolkit.completion import WordCompleter
+
+            print(self.divider)
+            print(self.showcommentaries())
+            print(self.divider)
+            self.printChooseItem()
+            print("Enter a commentary abbreviation, e.g. 'CBSC'")
+            if config.isPrompt_toolkitInstalled:
+                completer = WordCompleter(self.crossPlatform.commentaryList, ignore_case=True)
+                defaultText = config.commentaryText
+                userInput = self.terminal_commentary_selection_session.prompt(self.inputIndicator, completer=completer, default=defaultText).strip()
+            else:
+                userInput = input(self.inputIndicator).strip()
+            if not userInput or userInput == ".c":
+                return self.cancelAction()
+            if userInput in self.crossPlatform.commentaryList:
+                module = userInput
+                firstBible = "KJV"
+                print(self.divider)
+                print(self.showbibleabbreviations(text=firstBible, commentary=True))
+                print(self.divider)
+                self.printChooseItem()
+                print("(enter a book abbreviation)")
+                if config.isPrompt_toolkitInstalled:
+                    completer = WordCompleter(self.currentBibleAbbs, ignore_case=True)
+                    userInput = prompt(self.inputIndicator, completer=completer, default=self.currentBibleAbb).strip()
+                else:
+                    userInput = input(self.inputIndicator).strip()
+                if not userInput or userInput == ".c":
+                    return self.cancelAction()
+                if userInput in self.currentBibleAbbs:
+                    abbIndex = self.currentBibleAbbs.index(userInput)
+                    bibleBookNumber = self.bookNumbers[abbIndex]
+                    bibleAbb = userInput
+                    print(self.divider)
+                    self.showbiblechapters(text=firstBible, b=bibleBookNumber)
+                    print(self.divider)
+                    self.printChooseItem()
+                    print("(enter a chapter number)")
+                    if config.isPrompt_toolkitInstalled:
+                        defaultChapter = str(config.commentaryC) if config.commentaryC in self.currentBibleChapters else str(self.currentBibleChapters[0])
+                        userInput = prompt(self.inputIndicator, default=defaultChapter).strip()
+                    else:
+                        userInput = input(self.inputIndicator).strip()
+                    if not userInput or userInput == ".c":
+                        return self.cancelAction()
+                    if int(userInput) in self.currentBibleChapters:
+                        bibleChapter = userInput
+                        print(self.divider)
+                        self.showbibleverses(text=firstBible, b=bibleBookNumber, c=int(userInput))
+                        print(self.divider)
+                        self.printChooseItem()
+                        print("(enter a verse number)")
+                        if config.isPrompt_toolkitInstalled:
+                            defaultVerse = str(config.commentaryV) if config.commentaryV in self.currentBibleVerses else str(self.currentBibleVerses[0])
+                            userInput = prompt(self.inputIndicator, default=defaultVerse).strip()
+                        else:
+                            userInput = input(self.inputIndicator).strip()
+                        if not userInput or userInput == ".c":
+                            return self.cancelAction()
+                        if int(userInput) in self.currentBibleVerses:
+                            bibleVerse = userInput
+                            command = f"COMMENTARY:::{module}:::{bibleAbb} {bibleChapter}:{bibleVerse}"
                             self.printRunningCommand(command)
                             return self.getContent(command)
                         else:
@@ -753,3 +1004,85 @@ class LocalCliHandler:
 
     def printEnterNumber(self, number):
         print(f"Enter a number [0 ... {number}]:")
+
+    # organise use interactive menu
+
+    def displayFeatureMenu(self, heading, features):
+        featureItems = [f"[<ref>{index}</ref> ] {self.dotCommands[item][0]}" for index, item in enumerate(features)]
+        content = f"<h2>{heading}</h2><p>"
+        content += "<br>".join(featureItems)
+        content += "</p>"
+        print(self.divider)
+        print(TextUtil.htmlToPlainText(content).strip())
+        print(self.divider)
+        self.printChooseItem()
+        if config.isPrompt_toolkitInstalled:
+            from prompt_toolkit import prompt
+            userInput = prompt(self.inputIndicator).strip()
+        else:
+            userInput = input(self.inputIndicator).strip()
+        if not userInput or userInput == ".c":
+            return self.cancelAction()
+        try:
+            command = features[int(userInput)]
+            self.printRunningCommand(command)
+            return self.getContent(command)
+        except:
+            return self.printInvalidOptionEntered()
+
+    def menu(self):
+        heading = "UBA Terminal Mode Menu"
+        features = (".open", ".show", ".search", ".control", ".change", ".maintain", ".help")
+        return self.displayFeatureMenu(heading, features)
+
+    def open(self):
+        heading = "Open"
+        features = (".openbible", ".opencommentary", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures")
+        return self.displayFeatureMenu(heading, features)
+
+    def control(self):
+        heading = "Control"
+        features = (".find", ".togglepager", ".stopaudio", ".read", ".readsync", ".paste", ".forward", ".backward", ".swap", ".share", ".copy", ".copyhtml")
+        return self.displayFeatureMenu(heading, features)
+
+    def search(self):
+        print("user interactive search menu is in progress ...")
+        return ""
+        #heading = "Search"
+        #features = ("",)
+        #return self.displayFeatureMenu(heading, features)
+
+    def show(self):
+        heading = "Show"
+        features = (".last", ".history", ".showbibles", ".showstrongbibles", ".showbiblebooks", ".showbibleabbreviations", ".showbiblechapters", ".showbibleverses", ".showcommentaries", ".showtopics", ".showlexicons", ".showencyclopedia", ".showdictionaries", ".showthirdpartydictionary", ".showreferencebooks", ".showdata", ".commands", ".config")
+        return self.displayFeatureMenu(heading, features)
+
+    def change(self):
+        heading = "Change"
+        features = (".changecolors",)
+        return self.displayFeatureMenu(heading, features)
+
+    def help(self):
+        heading = "Help"
+        features = (".helpterminalcommands", ".helpubacommands",)
+        return self.displayFeatureMenu(heading, features)
+
+    def maintain(self):
+        heading = "Maintain"
+        features = (".update", ".showdownloads",)
+        return self.displayFeatureMenu(heading, features)
+
+    def openbookfeatures(self):
+        heading = "Bible Book Featues"
+        features = (".openintroduction", ".opendictionarybookentry", ".openencyclopediabookentry")
+        return self.displayFeatureMenu(heading, features)
+
+    def openchapterfeatures(self):
+        heading = "Bible Chapter Featues"
+        features = (".openoverview", ".opensummary", ".openchapterindex")
+        return self.displayFeatureMenu(heading, features)
+
+    def openversefeatures(self):
+        heading = "Bible Verse Featues"
+        features = (".opencrossreference", ".opentske", ".opencomparison", ".opendifference", ".opensmartindex", ".openwords", ".opendiscourse", ".opentranslation", ".opencombo")
+        return self.displayFeatureMenu(heading, features)

@@ -1,3 +1,8 @@
+Changes in 32.14:
+Terminal mode:
+* Added multiple user-interactive menu.
+* Orgnised all terminal mode commands under a single command '.menu'.
+
 Changes in 32.13:
 * Fixed import statements
 

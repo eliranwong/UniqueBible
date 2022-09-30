@@ -162,7 +162,7 @@ def getHistoryRecords():
                     records.append(item)
     return records
 
-# Local CLI
+# Local CLI - Terminal Mode
 if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     config.runMode = "terminal"
     print(f"Running Unique Bible App {config.version} in terminal mode ...")
