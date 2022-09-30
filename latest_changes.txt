@@ -1,6 +1,10 @@
+Changes in 32.13:
+* Fixed import statements
+
 Changes in 32.12:
 Terminal mode:
 * Added user interaction menu to open bibles, run '.openbible'.
+* Relocated command history file
 
 Changes in 32.11:
 Terminal mode:

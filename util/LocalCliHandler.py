@@ -1,8 +1,4 @@
 import re, config, pprint, os, requests, platform
-
-from regex import F
-
-from matplotlib import use
 from ast import literal_eval
 from util.TextUtil import TextUtil
 from util.RemoteCliMainWindow import RemoteCliMainWindow
