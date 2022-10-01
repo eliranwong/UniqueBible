@@ -45,6 +45,7 @@ class LocalCliHandler:
         return {
             ".togglepager": ("toggle paging for text output", self.togglePager),
             ".togglebiblechapterformat": ("toggle between plain and formatted bible chapter", self.toggleBibleChapterFormat),
+            ".togglebiblecomparison": ("toggle bible comparison view", self.togglebiblecomparison),
             ".stopaudio": ("stop audio playback", self.stopAudio),
             ".sa": ("an alias to the '.stopaudio' command", self.stopAudio),
             ".read": ("read available audio files", self.read),
@@ -595,6 +596,10 @@ class LocalCliHandler:
         self.printRunningCommand(command)
         return self.getContent(command)
 
+    def togglebiblecomparison(self):
+        config.terminalBibleComparison = not config.terminalBibleComparison
+        return self.latestBible()
+
     def backward(self):
         newChapter = config.mainC - 1
         if newChapter < 1:
@@ -1058,7 +1063,7 @@ class LocalCliHandler:
 
     def control(self):
         heading = "Control"
-        features = (".find", ".togglepager", ".togglebiblechapterformat", ".stopaudio", ".read", ".readsync", ".paste", ".forward", ".latestbible", ".backward", ".swap", ".share", ".copy", ".copyhtml")
+        features = (".find", ".togglebiblecomparison", ".togglepager", ".togglebiblechapterformat", ".stopaudio", ".read", ".readsync", ".paste", ".forward", ".latestbible", ".backward", ".swap", ".share", ".copy", ".copyhtml")
         return self.displayFeatureMenu(heading, features)
 
     def search(self):

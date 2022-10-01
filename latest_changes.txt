@@ -1,3 +1,6 @@
+Changes in 32.16:
+* Added '.togglebiblecomparison' command to toggle bible comparison view in terminal mode.
+
 Changes in 32.15:
 * Support persistence of bible comparison view in terminal mode.
     - use of COMPARE::: command or choose multiple bible versions from .openbible menu enables bible comparison view.
