@@ -124,6 +124,10 @@ class ConfigUtil:
         # To enable paging of terminal output when UBA runs in terminal mode."""
         if not hasattr(config, "enableTerminalPager"):
             config.enableTerminalPager = False
+        config.help["terminalBibleComparison"] = """
+        # To display bible chapter in comparison mode when users enter a reference in terminal mode."""
+        if not hasattr(config, "terminalBibleComparison"):
+            config.terminalBibleComparison = False
         # End of terminal mode settings
         config.help["telnetServerPort"] = """
         # To specify the port used by telnet-server."""
@@ -1448,6 +1452,7 @@ class ConfigUtil:
             ("usePySide2onWebtop", config.usePySide2onWebtop),
             ("usePySide6onMacOS", config.usePySide6onMacOS),
             ("enableTerminalPager", config.enableTerminalPager),
+            ("terminalBibleComparison", config.terminalBibleComparison),
             ("terminalHeadingTextColor", config.terminalHeadingTextColor),
             ("terminalVerseNumberColor", config.terminalVerseNumberColor),
             ("terminalResourceLinkColor", config.terminalResourceLinkColor),

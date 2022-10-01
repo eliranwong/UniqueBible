@@ -44,6 +44,7 @@ class LocalCliHandler:
     def getDotCommands(self):
         return {
             ".togglepager": ("toggle paging for text output", self.togglePager),
+            ".togglebiblechapterformat": ("toggle between plain and formatted bible chapter", self.toggleBibleChapterFormat),
             ".stopaudio": ("stop audio playback", self.stopAudio),
             ".sa": ("an alias to the '.stopaudio' command", self.stopAudio),
             ".read": ("read available audio files", self.read),
@@ -61,7 +62,9 @@ class LocalCliHandler:
             ".copyhtml": ("copy the last opened content in html format", self.copyHtml),
             ".find": ("find a string in the last opened content", self.find),
             ".history": ("display history records", self.history),
-            ".last": ("display last selected items", self.last),
+            ".latest": ("display the lastest module selection", self.latest),
+            ".latestbible": ("display the lastest bible chapter", self.latestBible),
+            ".l": ("an alias to the '.lastestbible' command", self.latestBible),
             ".update": ("update Unique Bible App to the latest version", self.update),
             ".commands": ("display available commands", self.commands),
             ".config": ("display UBA configurations", self.config),
@@ -137,6 +140,8 @@ class LocalCliHandler:
                 elif len(bc) == 2 and len(bci) == 2:
                     command = self.textCommandParser.bcvToVerseReference(config.mainB, bci[0], bci[1])
                 if not originalCommand == command:
+                    prefix = f"COMPARE:::{config.compareParallelList}:::" if config.terminalBibleComparison else "BIBLE:::"
+                    command = f"{prefix}{command}"
                     self.printRunningCommand(command)
             except:
                 pass
@@ -248,7 +253,7 @@ class LocalCliHandler:
         self.textCommandParser.parent.getPlaylistFromHTML(self.html, displayText=True)
         return ""
 
-    def last(self):
+    def latest(self):
         bibleReference = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
         print("BIBLE:::{0}:::{1} [{2}.{3}.{4}]".format(config.mainText, bibleReference, config.mainB, config.mainC, config.mainV))
         commentaryReference = self.textCommandParser.bcvToVerseReference(config.commentaryB, config.commentaryC, config.commentaryV)
@@ -463,6 +468,12 @@ class LocalCliHandler:
         bibleReference = self.textCommandParser.bcvToVerseReference(config.commentaryB, config.commentaryC, config.commentaryV)
         return self.getContent(f"COMMENTARY:::{config.commentaryText}:::{bibleReference}")
 
+    def toggleBibleChapterFormat(self):
+        config.readFormattedBibles = not config.readFormattedBibles
+        command = "BIBLE:::"
+        self.printRunningCommand(command)
+        return self.getContent(command)
+
     def share(self, command=""):
         if config.isPyperclipInstalled:
             import pyperclip
@@ -578,6 +589,11 @@ class LocalCliHandler:
         intro += "<p>Default settings are good for general use.  In case you want to make changes, you may run '<ref>_setconfig:::</ref>' command in terminal mode.  Alternately, you may manually edit the file 'config.py', located in UBA home directory, when UBA is not running.</p>"
         content = "{0}<p>{1}</p>".format(intro, "</p><p>".join(["[ITEM] <ref>{0}</ref>{1}\nCurrent value: <z>{2}</z>".format(key, re.sub("        # ", "", value), eval("pprint.pformat(config."+key+")")) for key, value in config.help.items()]))
         return TextUtil.htmlToPlainText(content).strip()
+
+    def latestBible(self):
+        command = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+        self.printRunningCommand(command)
+        return self.getContent(command)
 
     def backward(self):
         newChapter = config.mainC - 1
@@ -1000,18 +1016,18 @@ class LocalCliHandler:
         return ""
 
     def printRunningCommand(self, command):
+        self.command = command
         print(f"Running {command} ...")
 
     def printEnterNumber(self, number):
         print(f"Enter a number [0 ... {number}]:")
 
-    # organise use interactive menu
+    # organise user interactive menu
 
     def displayFeatureMenu(self, heading, features):
         featureItems = [f"[<ref>{index}</ref> ] {self.dotCommands[item][0]}" for index, item in enumerate(features)]
-        content = f"<h2>{heading}</h2><p>"
+        content = f"<h2>{heading}</h2>"
         content += "<br>".join(featureItems)
-        content += "</p>"
         print(self.divider)
         print(TextUtil.htmlToPlainText(content).strip())
         print(self.divider)
@@ -1042,7 +1058,7 @@ class LocalCliHandler:
 
     def control(self):
         heading = "Control"
-        features = (".find", ".togglepager", ".stopaudio", ".read", ".readsync", ".paste", ".forward", ".backward", ".swap", ".share", ".copy", ".copyhtml")
+        features = (".find", ".togglepager", ".togglebiblechapterformat", ".stopaudio", ".read", ".readsync", ".paste", ".forward", ".latestbible", ".backward", ".swap", ".share", ".copy", ".copyhtml")
         return self.displayFeatureMenu(heading, features)
 
     def search(self):
@@ -1054,7 +1070,7 @@ class LocalCliHandler:
 
     def show(self):
         heading = "Show"
-        features = (".last", ".history", ".showbibles", ".showstrongbibles", ".showbiblebooks", ".showbibleabbreviations", ".showbiblechapters", ".showbibleverses", ".showcommentaries", ".showtopics", ".showlexicons", ".showencyclopedia", ".showdictionaries", ".showthirdpartydictionary", ".showreferencebooks", ".showdata", ".commands", ".config")
+        features = (".latest", ".history", ".showbibles", ".showstrongbibles", ".showbiblebooks", ".showbibleabbreviations", ".showbiblechapters", ".showbibleverses", ".showcommentaries", ".showtopics", ".showlexicons", ".showencyclopedia", ".showdictionaries", ".showthirdpartydictionary", ".showreferencebooks", ".showdata", ".commands", ".config")
         return self.displayFeatureMenu(heading, features)
 
     def change(self):

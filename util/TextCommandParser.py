@@ -908,7 +908,9 @@ class TextCommandParser:
         else:
             keyword, command = commandList
             keyword = keyword.lower()
-            if keyword in ("_mc", "_mastercontrol", "editversenote", "editchapternote", "editbooknote", "epub", "anypdf", "searchpdf", "pdffind", "pdf", "readbible", "searchhighlight", "_editbooknote", "_editchapternote", "_editversenote", "_editfile", "_uba") and config.runMode == "terminal":
+            if keyword in ("bible", "study", "text") and config.runMode == "terminal":
+                config.terminalBibleComparison = False
+            if keyword in ("_mc", "_mastercontrol", "editversenote", "editchapternote", "editbooknote", "epub", "anypdf", "searchpdf", "pdffind", "pdf", "readbible", "searchhighlight", "sidebyside", "parallel", "_editbooknote", "_editchapternote", "_editversenote", "_editfile", "_uba") and config.runMode == "terminal":
                 return ("study", f"{keyword}::: command is currently not supported in terminal mode.", {})
             if keyword in self.interpreters:
                 if self.isDatabaseInstalled(keyword):
@@ -1187,6 +1189,7 @@ class TextCommandParser:
         else:
             verseList = self.extractAllVerses(command)
         if not verseList:
+            # Direct to search if no reference is found.
             if config.regexSearchBibleIfCommandNotFound:
                 return self.textSearchRegex("{0}:::{1}".format(text, command), "main")
             elif config.searchBibleIfCommandNotFound:
@@ -1210,6 +1213,9 @@ class TextCommandParser:
             elif view == "study":
                 config.studyCssBibleFontStyle = css
             if (len(verseList) == 1) and (len(verseList[0]) == 3):
+                if config.runMode == "terminal" and config.terminalBibleComparison:
+                    compareParallelList = "_".join(config.compareParallelList)
+                    return self.textCompare(f"{compareParallelList}:::{command}", view)
                 # i.e. only one verse reference is specified
                 bcvTuple = verseList[0]
                 # Force book to 1 if it's 0 (when viewing a commentary intro)
@@ -2201,6 +2207,9 @@ class TextCommandParser:
         if not confirmedTexts or not verseList:
             return self.invalidCommand()
         else:
+            if config.runMode == "terminal" and not confirmedTexts == ["ALL"]:
+                config.compareParallelList = confirmedTexts
+                config.terminalBibleComparison = True
             biblesSqlite = BiblesSqlite()
             config.mainCssBibleFontStyle = ""
             texts = confirmedTexts
