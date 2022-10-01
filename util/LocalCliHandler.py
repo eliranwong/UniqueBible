@@ -114,6 +114,7 @@ class LocalCliHandler:
             ".change": ("display change menu", self.change),
             ".search": ("display search menu", self.search),
             ".show": ("display show menu", self.show),
+            ".edit": ("display edit menu", self.edit),
             ".maintain": ("display maintain menu", self.maintain),
             ".control": ("display control menu", self.control),
             ".help": ("display help menu", self.help),
@@ -1071,7 +1072,7 @@ class LocalCliHandler:
 
     def menu(self):
         heading = "UBA Terminal Mode Menu"
-        features = (".open", ".show", ".search", ".control", ".change", ".maintain", ".help")
+        features = (".open", ".show", ".search", ".control", ".edit", ".change", ".maintain", ".help")
         return self.displayFeatureMenu(heading, features)
 
     def open(self):
@@ -1094,6 +1095,11 @@ class LocalCliHandler:
     def show(self):
         heading = "Show"
         features = (".latest", ".history", ".showbibles", ".showstrongbibles", ".showbiblebooks", ".showbibleabbreviations", ".showbiblechapters", ".showbibleverses", ".showcommentaries", ".showtopics", ".showlexicons", ".showencyclopedia", ".showdictionaries", ".showthirdpartydictionary", ".showreferencebooks", ".showdata", ".commands", ".config")
+        return self.displayFeatureMenu(heading, features)
+
+    def edit(self):
+        heading = "Edit"
+        features = (".nano", ".nanonew", ".vi", ".vinew", ".vim", ".vimnew")
         return self.displayFeatureMenu(heading, features)
 
     def change(self):
