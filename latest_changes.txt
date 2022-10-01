@@ -2,7 +2,7 @@ Changes in 32.15:
 * Support persistence of bible comparison view in terminal mode.
     - use of COMPARE::: command or choose multiple bible versions from .openbible menu enables bible comparison view.
     - use of BIBLE:::, TEXT:::, or STUDY::: commands or choose single bible version from .openbible menu disables bible comparison view.
-    - when bible comparison view is enabled, runing a single bible reference or one of the following commands opens comparison view
+    - when bible comparison view is enabled, runing a single bible reference, '[chapter_number]:', ':[verse_number]' or one of the following commands opens comparison view
         ".latestbible", ".backward", ".forward", ".l", ".b", ".f"
 
 Changes in 32.14:
