@@ -1,4 +1,4 @@
-import re, config, pprint, os, requests, platform
+import re, config, pprint, os, requests, platform, pydoc
 from ast import literal_eval
 from util.TextUtil import TextUtil
 from util.RemoteCliMainWindow import RemoteCliMainWindow
@@ -10,6 +10,7 @@ from util.FileUtil import FileUtil
 from util.UpdateUtil import UpdateUtil
 from util.DateUtil import DateUtil
 from db.BiblesSqlite import Bible
+from util.WebtopUtil import WebtopUtil
 
 
 class LocalCliHandler:
@@ -106,8 +107,8 @@ class LocalCliHandler:
             ".openbookfeatures": ("open bible book features", self.openbookfeatures),
             ".openchapterfeatures": ("open bible chapter features", self.openchapterfeatures),
             ".openversefeatures": ("open bible verse features", self.openversefeatures),
-            ".helpubacommands": ("display standard UBA command help menu", self.helpubacommands),
-            ".helpterminalcommands": ("display terminal mode commands", self.helpterminalcommands),
+            ".standardcommands": ("display standard UBA command help menu", self.standardcommands),
+            ".terminalcommands": ("display terminal mode commands", self.terminalcommands),
             ".menu": ("display main menu", self.menu),
             ".open": ("display open menu", self.open),
             ".change": ("display change menu", self.change),
@@ -116,6 +117,12 @@ class LocalCliHandler:
             ".maintain": ("display maintain menu", self.maintain),
             ".control": ("display control menu", self.control),
             ".help": ("display help menu", self.help),
+            ".nano": ("edit content with text editor 'nano'", lambda: self.texteditor("nano --softwrap --atblanks", self.getPlainText())),
+            ".nanonew": ("open new file in text editor 'nano'", lambda: self.texteditor("nano --softwrap --atblanks")),
+            ".vi": ("edit content with text editor 'vi'", lambda: self.texteditor("vi", self.getPlainText())),
+            ".vinew": ("open new file in text editor 'vi'", lambda: self.texteditor("vi")),
+            ".vim": ("edit content with text editor 'vim'", lambda: self.texteditor("vim", self.getPlainText())),
+            ".vimnew": ("open new file in text editor 'vim'", lambda: self.texteditor("vim")),
             #".download": ("display download menu", self.download),
         }
 
@@ -176,7 +183,6 @@ class LocalCliHandler:
     def displayOutputOnTerminal(self, content):
         divider = self.divider
         if config.enableTerminalPager and not content in ("Command processed!", "INVALID_COMMAND_ENTERED") and not content.endswith("not supported in terminal mode."):
-            import pydoc
             if platform.system() == "Windows":
                 # When you use remote powershell and want to pipe a command on the remote windows server through a pager, piping through  out-host -paging works as desired. Piping through more when running the remote command is of no use: the entire text is displayed at once.
                 try:
@@ -226,13 +232,13 @@ class LocalCliHandler:
         config.enableTerminalPager = not config.enableTerminalPager
         return self.plainText
 
-    def helpubacommands(self):
+    def standardcommands(self):
         content = "UBA commands:"
         content += "\n".join([f"{key} - {self.dotCommands[key][0]}" for key in sorted(self.dotCommands.keys())])
         content += "\n".join([re.sub("            #", "#", value[-1]) for value in self.textCommandParser.interpreters.values()])
         return content
 
-    def helpterminalcommands(self):
+    def terminalcommands(self):
         content = "UBA terminal dot commands:"
         content += "\n".join([f"{key} - {self.dotCommands[key][0]}" for key in sorted(self.dotCommands.keys())])
         print(content)
@@ -489,7 +495,7 @@ class LocalCliHandler:
     def copy(self):
         if config.isPyperclipInstalled:
             import pyperclip
-            plainText = TextUtil.htmlToPlainText(self.html, False).strip()
+            plainText = self.getPlainText()
             pyperclip.copy(plainText)
             print("Content is copied to clipboard.")
             return ""
@@ -1027,6 +1033,18 @@ class LocalCliHandler:
     def printEnterNumber(self, number):
         print(f"Enter a number [0 ... {number}]:")
 
+    # Get latest content in plain text
+    def getPlainText(self):
+        return TextUtil.htmlToPlainText(self.html, False).strip()
+
+    # text editor
+    def texteditor(self, editor, content=""):
+        if WebtopUtil.isPackageInstalled(editor):
+            pydoc.pipepager(content, cmd=f"{editor} -")
+        else:
+            print(f"Text editor '{editor}' is not found in your system!")
+        return ""
+
     # organise user interactive menu
 
     def displayFeatureMenu(self, heading, features):
@@ -1085,7 +1103,7 @@ class LocalCliHandler:
 
     def help(self):
         heading = "Help"
-        features = (".helpterminalcommands", ".helpubacommands",)
+        features = (".terminalcommands", ".standardcommands",)
         return self.displayFeatureMenu(heading, features)
 
     def maintain(self):

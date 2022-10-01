@@ -1,3 +1,9 @@
+Changes in 32.17:
+* Added ability to edit content with text editors 'nano', 'vi' or 'vim'
+    run commands '.nano', '.vi', '.vim'
+* Added ability to open new file in text editors 'nano', 'vi' or 'vim'
+    run commands '.nanonew', '.vinew', '.vimnew'
+
 Changes in 32.16:
 * Added '.togglebiblecomparison' command to toggle bible comparison view in terminal mode.
 
