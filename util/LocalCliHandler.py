@@ -1,8 +1,10 @@
 import re, config, pprint, os, requests, platform, pydoc
+from urllib.parse import uses_fragment
 from ast import literal_eval
 from util.TextUtil import TextUtil
 from util.RemoteCliMainWindow import RemoteCliMainWindow
 from util.TextCommandParser import TextCommandParser
+from util.BibleVerseParser import BibleVerseParser
 from util.CrossPlatform import CrossPlatform
 from util.BibleBooks import BibleBooks
 from util.GitHubRepoInfo import GitHubRepoInfo
@@ -36,11 +38,15 @@ class LocalCliHandler:
             module_history_bibles = os.path.join("terminal_history", "bibles")
             module_history_commentaries = os.path.join("terminal_history", "commentaries")
             search_bible_history = os.path.join("terminal_history", "search_bible")
+            search_bible_book_range_history = os.path.join("terminal_history", "search_bible_book_range")
+            config_history = os.path.join("terminal_history", "config")
 
             self.terminal_find_session = PromptSession(history=FileHistory(find_history))
             self.terminal_search_bible_session = PromptSession(history=FileHistory(search_bible_history))
+            self.terminal_search_bible_book_range_session = PromptSession(history=FileHistory(search_bible_book_range_history))
             self.terminal_bible_selection_session = PromptSession(history=FileHistory(module_history_bibles))
             self.terminal_commentary_selection_session = PromptSession(history=FileHistory(module_history_commentaries))
+            self.terminal_config_selection_session = PromptSession(history=FileHistory(config_history))
 
     def getDotCommands(self):
         return {
@@ -70,6 +76,7 @@ class LocalCliHandler:
             ".update": ("update Unique Bible App to the latest version", self.update),
             ".commands": ("display available commands", self.commands),
             ".config": ("display UBA configurations", self.config),
+            ".changeconfig": ("change UBA configurations", self.changeconfig),
             ".showbibles": ("display installed bibles", self.showbibles),
             ".showstrongbibles": ("display installed bibles with Strong's numbers", self.showstrongbibles),
             ".showbiblebooks": ("display bible book list", self.showbiblebooks),
@@ -125,6 +132,11 @@ class LocalCliHandler:
             ".vim": ("edit content with text editor 'vim'", lambda: self.texteditor("vim", self.getPlainText())),
             ".vimnew": ("open new file in text editor 'vim'", lambda: self.texteditor("vim")),
             #".download": ("display download menu", self.download),
+            ".searchbible": ("search bible", self.searchbible),
+            ".whatis": ("read description about a command", self.whatis),
+            ".nanoconfig": ("edit 'config.py' with nano", lambda: self.editConfig("nano --softwrap --atblanks")),
+            ".viconfig": ("edit 'config.py' with vi", lambda: self.editConfig("vi")),
+            ".vimconfig": ("edit 'config.py' with vim", lambda: self.editConfig("vim")),
         }
 
     def execPythonFile(self, script):
@@ -221,13 +233,19 @@ class LocalCliHandler:
         print(f"Command not found: {command}")
         return ""
 
-    def getTextCommandSuggestion(self):
+    def getTextCommandSuggestion(self, addDotCommandWordOnly=True):
         # Text command autocompletion/autosuggest
         textCommands = [key + ":::" for key in self.textCommandParser.interpreters.keys()]
         bibleBooks = BibleBooks().getStandardBookAbbreviations()
         dotCommands = sorted(list(self.dotCommands.keys()))
         bibleReference = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
-        return ['.quit', '.restart', 'quit', 'restart', bibleReference] + dotCommands + [cmd[1:] for cmd in dotCommands] + sorted(textCommands) + bibleBooks
+        if addDotCommandWordOnly:
+            suggestion = ['.quit', '.restart', 'quit', 'restart', bibleReference] + dotCommands + [cmd[1:] for cmd in dotCommands] + sorted(textCommands) + bibleBooks
+        else:
+            suggestion = ['.quit', '.restart'] + dotCommands + sorted(textCommands) + bibleBooks
+            suggestion.sort()
+        return suggestion
+
 
     def togglePager(self):
         config.enableTerminalPager = not config.enableTerminalPager
@@ -250,8 +268,7 @@ class LocalCliHandler:
         return ""
 
     def commands(self):
-        #pprint.pprint(self.getTextCommandSuggestion())
-        return pprint.pformat(self.getTextCommandSuggestion())
+        return pprint.pformat(self.getTextCommandSuggestion(False))
 
     def read(self):
         self.textCommandParser.parent.getPlaylistFromHTML(self.html)
@@ -483,7 +500,7 @@ class LocalCliHandler:
         return self.getContent(command)
 
     def share(self, command=""):
-        if config.isPyperclipInstalled:
+        try:
             import pyperclip
             weblink = TextUtil.getWeblink(command if command else self.command)
             pyperclip.copy(weblink)
@@ -491,24 +508,27 @@ class LocalCliHandler:
             print(weblink)
             print("\nPaste and open it in a web browser or share with others.")
             return ""
-        return self.noClipboardUtility()
+        except:
+            return self.noClipboardUtility()
 
     def copy(self):
-        if config.isPyperclipInstalled:
+        try:
             import pyperclip
             plainText = self.getPlainText()
             pyperclip.copy(plainText)
             print("Content is copied to clipboard.")
             return ""
-        return self.noClipboardUtility()
+        except:
+            return self.noClipboardUtility()
 
     def copyHtml(self):
-        if config.isPyperclipInstalled:
+        try:
             import pyperclip
             pyperclip.copy(self.html)
             print("HTML content is copied to clipboard.")
             return ""
-        return self.noClipboardUtility()
+        except:
+            return self.noClipboardUtility()
 
     def noClipboardUtility(self):
         print("Clipboard utility 'pyperclip' is not installed.")
@@ -785,6 +805,7 @@ class LocalCliHandler:
             self.printChooseItem()
             print("Enter a bible abbreviation to open a single version, e.g. 'KJV'")
             print("To compare multiple versions, use '_' as a delimiter, e.g. 'KJV_NET_OHGBi'")
+            # select bible or bibles
             if config.isPrompt_toolkitInstalled:
                 completer = WordCompleter(self.crossPlatform.textList, ignore_case=True)
                 defaultText = self.getDefaultText()
@@ -801,6 +822,7 @@ class LocalCliHandler:
                 print(self.divider)
                 self.printChooseItem()
                 print("(enter a book abbreviation)")
+                # select bible book
                 if config.isPrompt_toolkitInstalled:
                     completer = WordCompleter(self.currentBibleAbbs, ignore_case=True)
                     userInput = prompt(self.inputIndicator, completer=completer, default=self.currentBibleAbb).strip()
@@ -817,6 +839,7 @@ class LocalCliHandler:
                     print(self.divider)
                     self.printChooseItem()
                     print("(enter a chapter number)")
+                    # select bible chapter
                     if config.isPrompt_toolkitInstalled:
                         defaultChapter = str(config.mainC) if config.mainC in self.currentBibleChapters else str(self.currentBibleChapters[0])
                         userInput = prompt(self.inputIndicator, default=defaultChapter).strip()
@@ -831,6 +854,7 @@ class LocalCliHandler:
                         print(self.divider)
                         self.printChooseItem()
                         print("(enter a verse number)")
+                        # select verse number
                         if config.isPrompt_toolkitInstalled:
                             defaultVerse = str(config.mainV) if config.mainV in self.currentBibleVerses else str(self.currentBibleVerses[0])
                             userInput = prompt(self.inputIndicator, default=defaultVerse).strip()
@@ -840,6 +864,7 @@ class LocalCliHandler:
                             return self.cancelAction()
                         if int(userInput) in self.currentBibleVerses:
                             bibleVerse = userInput
+                            # formulate UBA command
                             if "_" in bible:
                                 command = f"COMPARE:::{bible}:::{bibleAbb} {bibleChapter}:{bibleVerse}"
                             else:
@@ -850,6 +875,146 @@ class LocalCliHandler:
                             self.printInvalidOptionEntered()
                 else:
                     self.printInvalidOptionEntered()
+        except:
+            self.printInvalidOptionEntered()
+
+    def whatis(self):
+        try:
+            if config.isPrompt_toolkitInstalled:
+                from prompt_toolkit import prompt
+                from prompt_toolkit.completion import WordCompleter
+
+            print(self.divider)
+            print(self.commands())
+            print(self.divider)
+            self.printChooseItem()
+            commands = self.getTextCommandSuggestion(False)
+            if config.isPrompt_toolkitInstalled:
+                completer = WordCompleter(commands, ignore_case=True)
+                userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, completer=completer).strip()
+            else:
+                userInput = input(self.inputIndicator).strip()
+            if not userInput or userInput == ".c":
+                return self.cancelAction()
+            if userInput in commands:
+                return self.whatiscontent(userInput)
+        except:
+            self.printInvalidOptionEntered()
+
+    def whatiscontent(self, command):
+        if command in self.dotCommands:
+            print(self.dotCommands[command][0])
+        else:
+            print(self.getContent(f"_whatis:::{command}"))
+        return ""
+
+    def searchbible(self):
+        try:
+            if config.isPrompt_toolkitInstalled:
+                from prompt_toolkit import prompt
+                from prompt_toolkit.completion import WordCompleter
+
+            print(self.divider)
+            print(self.showbibles())
+            print(self.divider)
+            self.printChooseItem()
+            print("Enter a bible abbreviation to open a single version, e.g. 'KJV'")
+            print("To compare multiple versions, use '_' as a delimiter, e.g. 'KJV_NET_OHGBi'")
+            if config.isPrompt_toolkitInstalled:
+                completer = WordCompleter(self.crossPlatform.textList, ignore_case=True)
+                defaultText = self.getDefaultText()
+                userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, completer=completer, default=defaultText).strip()
+            else:
+                userInput = input(self.inputIndicator).strip()
+            if not userInput or userInput == ".c":
+                return self.cancelAction()
+            if self.isValidBibles(userInput):
+                # bible version(s) defined
+                bible = userInput
+
+                firstBible = bible.split("_")[0]
+                print(self.divider)
+                print(self.showbibleabbreviations(text=firstBible))
+                print(self.divider)
+                self.printChooseItem()
+                print("(enter bible books for search)")
+                print("(use ',' as a delimiter between books)")
+                print("(use '-' as a range indicator)")
+                print("(e.g. 'ALL', 'OT', 'NT', 'Gen, John', 'Matt-John, 1Cor, Rev', etc.)")
+                # select bible book range
+                if config.isPrompt_toolkitInstalled:
+                    completer = WordCompleter(["ALL", "OT", "NT"] + self.currentBibleAbbs, ignore_case=True)
+                    userInput = self.terminal_search_bible_book_range_session.prompt(self.inputIndicator, completer=completer, default="ALL").strip()
+                else:
+                    userInput = input(self.inputIndicator).strip()
+                if not userInput or userInput == ".c":
+                    return self.cancelAction()
+                if BibleVerseParser(config.parserStandarisation).extractBookListAsString(userInput):
+                    # define book range
+                    bookRange = userInput
+
+                    searchOptions = {
+                        "SEARCH": ("search for occurrence of a string", "plain text", "Jesus love"),
+                        "SEARCHALL": ("search for string", "plain text", "Jesus love"),
+                        "ANDSEARCH": ("search for a combination of strings appeared in the same verse", "multiple plain text strings, delimited by '|'", "Jesus|love|disciple"),
+                        "ORSEARCH": ("search for either one of the entered strings appeared in a single verse", "multiple plain text strings, delimited by '|'", "Jesus|love|disciple"),
+                        "ADVANCEDSEARCH": ("search for a condition or a combination of conditions", "condition statement placed after the keyword 'WHERE' in a SQL query", 'Book = 1 AND Scripture LIKE "%worship%"'),
+                        "REGEXSEARCH": ("search for a regular expression", "regular expression", "Jesus.*?love"),
+                    }
+                    searchOptionsList = list(searchOptions.keys())
+                    print(self.divider)
+                    display = "<br>".join([f"[<ref>{index}</ref> ] {searchOptions[item][0]}" for index, item in enumerate(searchOptionsList)])
+                    display = f"<h2>Search Options</h2>{display}"
+                    print(TextUtil.htmlToPlainText(display).strip())
+                    print(self.divider)
+                    self.printChooseItem()
+                    print("(enter a number)")
+                    if config.isPrompt_toolkitInstalled:
+                        userInput = prompt(self.inputIndicator, default=str(config.bibleSearchMode)).strip()
+                    else:
+                        userInput = input(self.inputIndicator).strip()
+                    if not userInput or userInput == ".c":
+                        return self.cancelAction()
+                    userInput = int(userInput)
+                    if -1 < userInput < 6:
+                        # define bibleSearchMode
+                        config.bibleSearchMode = userInput
+                        # define command keyword
+                        keyword = searchOptionsList[userInput]
+                        print(self.divider)
+                        print("Enter a search item:")
+                        *_, stringFormat, example = searchOptions[searchOptionsList[userInput]]
+                        print(f"(format: {stringFormat})")
+                        print(f"(example: {example})")
+                        if config.isPrompt_toolkitInstalled:
+                            userInput = self.terminal_search_bible_session.prompt(self.inputIndicator).strip()
+                        else:
+                            userInput = input(self.inputIndicator).strip()
+                        if not userInput or userInput == ".c":
+                            return self.cancelAction()
+                        command = f"{keyword}:::{bible}:::{userInput}:::{bookRange}"
+
+                        # Check if it is a case-sensitive search
+                        print(self.divider)
+                        print("Is it case sensitive? ([Y]es or [N]o)")
+                        if config.isPrompt_toolkitInstalled:
+                            userInput = prompt(self.inputIndicator, default="Y" if config.enableCaseSensitiveSearch else "N").strip()
+                        else:
+                            userInput = input(self.inputIndicator).strip()
+                        if not userInput or userInput == ".c":
+                            return self.cancelAction()
+                        if userInput.lower() in ("yes", "y", "no", "n"):
+                            config.enableCaseSensitiveSearch = (userInput.lower()[0] == "y")
+                            self.printRunningCommand(command)
+                            return self.getContent(command)
+                        else:
+                            self.printInvalidOptionEntered()
+                    else:
+                        self.printInvalidOptionEntered()
+                else:
+                    self.printInvalidOptionEntered()
+            else:
+                self.printInvalidOptionEntered()
         except:
             self.printInvalidOptionEntered()
 
@@ -1010,6 +1175,7 @@ class LocalCliHandler:
     def swap(self):
         command = f"TEXT:::{(self.getPlusBible()[2:])}"
         self.printRunningCommand(command)
+        return self.getContent(command)
 
     # Shared prompt message
 
@@ -1038,10 +1204,75 @@ class LocalCliHandler:
     def getPlainText(self):
         return TextUtil.htmlToPlainText(self.html, False).strip()
 
+    def changeconfig(self):
+        try:
+            print(self.divider)
+            print("Caution! Editing 'config.py' incorrectly may stop UBA from working.")
+            print(self.getContent("_setconfig:::"))
+            print(self.divider)
+            print("Enter the item you want to change:")
+            configurablesettings = list(config.help.keys())
+            if config.isPrompt_toolkitInstalled:
+                from prompt_toolkit.completion import WordCompleter
+                completer = WordCompleter(configurablesettings, ignore_case=True)
+                userInput = self.terminal_config_selection_session.prompt(self.inputIndicator, completer=completer).strip()
+            else:
+                userInput = input(self.inputIndicator).strip()
+            if not userInput or userInput == ".c":
+                return self.cancelAction()
+            # define key
+            if userInput in configurablesettings:
+                value = userInput
+                print(self.divider)
+                print(self.getContent(f"_setconfig:::{value}"))
+                print(self.divider)
+                print("Enter a value:")
+                if config.isPrompt_toolkitInstalled:
+                    from prompt_toolkit import prompt
+                    userInput = prompt(self.inputIndicator).strip()
+                else:
+                    userInput = input(self.inputIndicator).strip()
+                if not userInput or userInput == ".c":
+                    return self.cancelAction()
+                print(self.getContent(f"_setconfig:::{value}:::{userInput}"))
+                return ".restart"
+            else:
+                self.printInvalidOptionEntered()
+        except:
+            self.printInvalidOptionEntered()
+
+    def editConfig(self, editor):
+        print(self.divider)
+        print("Caution! Editing 'config.py' incorrectly may stop UBA from working.")
+        print("Do you want to proceed? [Y]es / [N]o")
+        if config.isPrompt_toolkitInstalled:
+            from prompt_toolkit import prompt
+            userInput = prompt(self.inputIndicator, default="N").strip()
+        else:
+            userInput = input(self.inputIndicator).strip()
+        userInput = userInput.lower()
+        if userInput in ("n", "no"):
+            return self.cancelAction()
+        elif userInput in ("y", "yes"):
+            print("reading config content ...")
+            if os.path.isfile("config.py"):
+                with open("config.py", "r", encoding="utf-8") as input_file:
+                    content = input_file.read()
+                print("config is ready for editing ...")
+                print("To apply changes, save as 'config.py' and replace the existing 'config.py' when you finish editing.")
+            self.texteditor(editor, content)
+            config.saveConfigOnExit = False
+            print(self.divider)
+            print("Restarting ...")
+            return ".restart"
+
     # text editor
     def texteditor(self, editor, content=""):
         if WebtopUtil.isPackageInstalled(editor):
             pydoc.pipepager(content, cmd=f"{editor} -")
+            if WebtopUtil.isPackageInstalled("pkill"):
+                editor = editor.strip().split(" ")[0]
+                os.system(f"pkill {editor}")
         else:
             print(f"Text editor '{editor}' is not found in your system!")
         return ""
@@ -1086,11 +1317,9 @@ class LocalCliHandler:
         return self.displayFeatureMenu(heading, features)
 
     def search(self):
-        print("user interactive search menu is in progress ...")
-        return ""
-        #heading = "Search"
-        #features = ("",)
-        #return self.displayFeatureMenu(heading, features)
+        heading = "Search"
+        features = (".searchbible",)
+        return self.displayFeatureMenu(heading, features)
 
     def show(self):
         heading = "Show"
@@ -1099,17 +1328,17 @@ class LocalCliHandler:
 
     def edit(self):
         heading = "Edit"
-        features = (".nano", ".nanonew", ".vi", ".vinew", ".vim", ".vimnew")
+        features = (".nano", ".nanonew", ".nanoconfig", ".vi", ".vinew", ".viconfig", ".vim", ".vimnew", ".vimconfig")
         return self.displayFeatureMenu(heading, features)
 
     def change(self):
         heading = "Change"
-        features = (".changecolors",)
+        features = (".changecolors", ".changeconfig")
         return self.displayFeatureMenu(heading, features)
 
     def help(self):
         heading = "Help"
-        features = (".terminalcommands", ".standardcommands",)
+        features = (".terminalcommands", ".standardcommands", ".whatis")
         return self.displayFeatureMenu(heading, features)
 
     def maintain(self):

@@ -157,14 +157,16 @@ def getHistoryRecords():
             item = item.strip()
             if item and item.startswith("+"):
                 item = item[1:]
-                startupException = (".quit", ".restart", ".togglepager", ".history", ".update", ".find", ".stopaudio", ".changecolors", ".read", ".download", ".paste", ".share", ".copy", ".copyhtml")
-                if not item.lower() in startupException and not item.lower().startswith("_setconfig:::"):
+                startupException1 = (".quit", ".restart", ".togglepager", ".history", ".update", ".find", ".stopaudio", ".changecolors", ".read", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".changeconfig")
+                startupException2 = "^(_setconfig:::|\.vi|\.nano)"
+                if not item.lower() in startupException1 and not re.search(startupException2, item.lower()):
                     records.append(item)
     return records
 
 # Local CLI - Terminal Mode
 if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     config.runMode = "terminal"
+    config.saveConfigOnExit = True
     print(f"Running Unique Bible App {config.version} in terminal mode ...")
     checkMigration()
     checkApplicationUpdateCli()
@@ -221,12 +223,14 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
             if content:
                 if content == ".restart":
                     command = ".restart"
-                # display
-                config.mainWindow.displayOutputOnTerminal(content)
+                else:
+                    # display
+                    config.mainWindow.displayOutputOnTerminal(content)
         #except:
         #    pass
 
-    ConfigUtil.save()
+    if config.saveConfigOnExit:
+        ConfigUtil.save()
     if command.lower() == ".restart":
         os.system("{0} {1} terminal".format(sys.executable, "uba.py"))
     sys.exit(0)

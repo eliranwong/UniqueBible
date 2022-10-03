@@ -1,3 +1,9 @@
+Changes in 32.19:
+* Added highlight to latest verse selection in compare view.
+* Added '.searchbible', '.whatis', '.setconfig' commands in terminal mode.
+* Added ability to edit 'config.py' with nano, vi or vim via '.nanoconfig', '.viconfig', '.vimconfig' commands in terminal mode.
+* Improved "_setconfig:::" command.
+
 Changes in 32.17, 32.18:
 * Added ability to edit content with text editors 'nano', 'vi' or 'vim'
     run commands '.nano', '.vi', '.vim'

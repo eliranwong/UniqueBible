@@ -1,5 +1,5 @@
 # coding=utf-8
-import glob
+import glob, pprint
 import os, re, webbrowser, platform, multiprocessing, zipfile, subprocess, config
 from datetime import date
 from util.exlbl import allLocations
@@ -866,8 +866,13 @@ class TextCommandParser:
             # Feature - Set a config value in config.py.
             # Usage - _setconfig:::[item]:::[value]
             # WARNING! Do NOT use this command unless you know well about config.py.  A mistake can prevent UBA from startup.
-            # Remarks: This command works ONLY when config.developer is set to True.
+            # Remarks: This command works ONLY when config.developer or config.webFullAccess is set to True.
+            # Remarks: All configurable settings are displayed if both item and value are not provided.
+            # Remarks: Help content about an item if an item is provided without value.
+            # Remarks: Use single quotation mark ' for string value.
             # Example:
+            # e.g. _setconfig:::
+            # e.g. _setconfig:::favouriteBible
             # e.g. _setconfig:::favouriteBible:::'BSB'"""),
             "_fixlinksincommentary": (self.fixLinksInCommentary, """
             # Usage - _fixlinksincommentary:::[commentary]
@@ -923,7 +928,7 @@ class TextCommandParser:
                         elif keyword in ("overview", "summary", "chapterindex"):
                             command = currentBibleReference.split(":", 1)[0]
                             print(f"Running '{keyword}:::{command}' ...")
-                        elif not keyword in ("_mastercontrol", "_paste", "_commentaries", "_comparison", "_menu", "import"):
+                        elif not keyword in ("_mastercontrol", "_paste", "_commentaries", "_comparison", "_menu", "import", "_setconfig"):
                             return self.textWhatIs(keyword, source)
                     self.lastKeyword = keyword
                     return self.interpreters[keyword][0](command, source)
@@ -2890,6 +2895,8 @@ class TextCommandParser:
     def textWhatIs(self, command, source):
         try:
             command = command.lower().strip()
+            if ":::"in command:
+                command, *_ = command.split(":::", 1)
             content = self.interpreters[command][-1]
             content = re.sub("            #", "<br>#", content)
             return ("study", content, {})
@@ -3336,22 +3343,37 @@ class TextCommandParser:
 
     # _setconfig:::
     def textSetConfig(self, command, source):
-        if config.developer or config.webFullAccess:
-            item, value = self.splitCommand(command)
-            if not item in config.help.keys():
-                return self.invalidCommand("study")
-            else:
-                newConfig = "{0} = {1}".format(item, value)
-                try:
+        try:
+            # empty
+            if not command:
+                content = "<h2>Configurable Settings</h2>"
+                content += pprint.pformat(list(config.help.keys()))
+                return ("study", content, {})
+            elements = self.splitCommand(command)
+            # key only without value
+            if len(elements) == 1:
+                key = elements[0]
+                content = f"<h2>{key}</h2>"
+                content += f"<ref>Description:</ref><br>{config.help[key]}<br>"
+                content += f"<ref>Current value</ref>: {(eval('pprint.pformat(config.'+key+')'))}<br>"
+                typeString = type(eval(f"config.{key}")).__name__
+                content += f"<ref>Type</ref>: {typeString}"
+                return ("study", content, {})
+            if config.developer or config.webFullAccess:
+                item, value = self.splitCommand(command)
+                if not item in config.help.keys():
+                    return self.invalidCommand("study")
+                else:
+                    newConfig = "{0} = {1}".format(item, value)
                     exec("config."+newConfig)
                     message = f"The value of config.{item} is now changed to {newConfig}."
                     if config.runMode == "terminal":
                         print(message)
                         return ("study", ".restart", {})
                     return ("study", message, {})
-                except:
-                    return self.invalidCommand("study")
-        else:
+            else:
+                return self.invalidCommand("study")
+        except:
             return self.invalidCommand("study")
 
     # EXLB:::

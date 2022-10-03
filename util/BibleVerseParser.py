@@ -426,13 +426,9 @@ class BibleVerseParser:
 
     def extractBookListAsString(self, inputString):
         books = self.extractBookList(inputString)
-        bookStr = ""
-        for book in books:
-            if book is not None:
-                if len(bookStr) > 0:
-                    bookStr += ","
-                bookStr += "{0}".format(book)
-        return bookStr
+        if books:
+            return ",".join([str(book) for book in books if book])
+        return ""
 
     def extractBookListAsBookNameList(self, inputString):
         books = self.extractBookList(inputString)
