@@ -915,7 +915,7 @@ class TextCommandParser:
             keyword = keyword.lower()
             if keyword in ("bible", "study", "text") and config.runMode == "terminal":
                 config.terminalBibleComparison = False
-            if keyword in ("_mc", "_mastercontrol", "editversenote", "editchapternote", "editbooknote", "epub", "anypdf", "searchpdf", "pdffind", "pdf", "readbible", "searchhighlight", "sidebyside", "parallel", "_editbooknote", "_editchapternote", "_editversenote", "_editfile", "_uba") and config.runMode == "terminal":
+            if keyword in ("_mc", "_mastercontrol", "editversenote", "editchapternote", "editbooknote", "epub", "anypdf", "searchpdf", "pdffind", "pdf", "readbible", "searchhighlight", "sidebyside", "parallel", "_editfile", "_uba") and config.runMode == "terminal":
                 return ("study", f"{keyword}::: command is currently not supported in terminal mode.", {})
             if keyword in self.interpreters:
                 if self.isDatabaseInstalled(keyword):
@@ -2473,7 +2473,9 @@ class TextCommandParser:
             v = 1
         else:
             b, c, v = None, None, None
-        if self.parent.noteSaved or self.parent.warningNotSaved():
+        if config.runMode == "terminal":
+            config.mainWindow.openNoteEditor("book", b=b, c=c, v=v)
+        elif self.parent.noteSaved or self.parent.warningNotSaved():
             self.parent.openNoteEditor("book", b=b, c=c, v=v)
         return ("", "", {})
 

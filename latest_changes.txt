@@ -1,3 +1,6 @@
+Changes in 32.20:
+* Initial support of editing note in terminal mode.
+
 Changes in 32.19:
 * Added highlight to latest verse selection in compare view.
 * Added '.searchbible', '.whatis', '.setconfig' commands in terminal mode.

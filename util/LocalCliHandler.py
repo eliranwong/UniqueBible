@@ -1,6 +1,9 @@
-import re, config, pprint, os, requests, platform, pydoc
-from urllib.parse import uses_fragment
+import re, config, pprint, os, requests, platform, pydoc, markdown
 from ast import literal_eval
+from db.BiblesSqlite import Bible
+from db.JournalSqlite import JournalSqlite
+from db.NoteSqlite import NoteSqlite
+from util.DateUtil import DateUtil
 from util.TextUtil import TextUtil
 from util.RemoteCliMainWindow import RemoteCliMainWindow
 from util.TextCommandParser import TextCommandParser
@@ -11,8 +14,8 @@ from util.GitHubRepoInfo import GitHubRepoInfo
 from util.FileUtil import FileUtil
 from util.UpdateUtil import UpdateUtil
 from util.DateUtil import DateUtil
-from db.BiblesSqlite import Bible
 from util.WebtopUtil import WebtopUtil
+#from util.NoteService import NoteService
 
 
 class LocalCliHandler:
@@ -1201,8 +1204,8 @@ class LocalCliHandler:
         print(f"Enter a number [0 ... {number}]:")
 
     # Get latest content in plain text
-    def getPlainText(self):
-        return TextUtil.htmlToPlainText(self.html, False).strip()
+    def getPlainText(self, content=None):
+        return TextUtil.htmlToPlainText(self.html if content is None else content, False).strip()
 
     def changeconfig(self):
         try:
@@ -1276,6 +1279,53 @@ class LocalCliHandler:
         else:
             print(f"Text editor '{editor}' is not found in your system!")
         return ""
+
+    def openNoteEditor(self, noteType, b=None, c=None, v=None, year=None, month=None, day=None, editor="nano --softwrap --atblanks"):
+        noteDB = NoteSqlite()
+        if noteType == "book":
+            note = noteDB.getBookNote(b)[0]
+        elif noteType == "chapter":
+            note = noteDB.getChapterNote(b, c)
+        elif noteType == "verse":
+            note = noteDB.getVerseNote(b, c, v)
+        if config.isMarkdownifyInstalled:
+            # convert html into markdown
+            from markdownify import markdownify
+            note = markdownify(note, heading_style=config.markdownifyHeadingStyle)
+            note = note.replace("\n\np, li { white-space: pre-wrap; }\n", "")
+            note = note.replace("hr { height: 1px; border-width: 0; }\n", "")
+        else:
+            note = self.getPlainText(note)
+        # display in editor
+        self.texteditor(editor, note)
+        # check if file is saved
+        notePath = "note"
+        if os.path.isfile(notePath):
+            with open(notePath, "r", encoding="utf-8") as input_file:
+                text = input_file.read()
+            # convert markdown into html
+            text = markdown.markdown(text)
+            text = TextUtil.fixNoteFontDisplay(text)
+            #text = TextUtil.htmlWrapper(text, True, "study", False)
+            # save into note databse
+            self.saveNote(noteDB, noteType, b, c, v, year, month, day, text)
+            # remove file after saving
+            os.remove(notePath)
+        
+    def saveNote(self, noteDB, noteType, b=None, c=None, v=None, year=None, month=None, day=None, note=""):
+        note = TextUtil.fixNoteFont(note)
+        if noteType == "book":
+            #NoteService.saveBookNote(b, note)
+            #noteDB = NoteSqlite()
+            #noteDB.saveBookNote(b, note)
+            noteDB.saveBookNote(b, note, DateUtil.epoch())
+        elif noteType == "chapter":
+            noteDB.saveChapterNote(b, c, note, DateUtil.epoch())
+        elif noteType == "verse":
+            noteDB.saveVerseNote(b, c, v, note, DateUtil.epoch())
+        elif noteType == "journal":
+            JournalSqlite().saveJournalNote(year, month, day, note)
+        print("Note saved!")
 
     # organise user interactive menu
 

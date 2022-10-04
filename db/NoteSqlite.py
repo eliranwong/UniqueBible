@@ -10,6 +10,7 @@ class NoteSqlite:
         # connect the note file specified in config.py > config.bibleNotes
         self.database = os.path.join(config.marvelData, config.bibleNotes)
         self.connection = apsw.Connection(self.database)
+        #self.connection.setbusytimeout(500)
         self.cursor = self.connection.cursor()
         create = (
             "CREATE TABLE IF NOT EXISTS BookNote (Book INT, Note TEXT)",

@@ -1,6 +1,5 @@
 import os, signal, sys, re, config, base64, webbrowser, platform, subprocess, requests, update, logging, zipfile, glob
 import markdown
-import urllib.parse
 from datetime import datetime
 from distutils import util
 from functools import partial

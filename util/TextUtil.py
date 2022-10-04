@@ -1,4 +1,5 @@
 import re, html, base64, os, config
+from util.BibleVerseParser import BibleVerseParser
 import urllib.parse
 try:
     import html_text
@@ -219,6 +220,154 @@ class TextUtil:
         for search, replace in searchReplace:
             text = re.sub(search, replace, text)
         return text
+
+    # fix note font display
+    @staticmethod
+    def fixNoteFontDisplay(content):
+        if config.overwriteNoteFont:
+            content = re.sub("font-family:[^<>]*?([;'{0}])".format('"'), r"font-family:{0}\1".format(config.font),
+                             content)
+        if config.overwriteNoteFontSize:
+            content = re.sub("font-size:[^<>]*?;", "", content)
+        return content
+
+    # fix note font display
+    @staticmethod
+    def fixNoteFont(note):
+        note = re.sub("<body style={0}[ ]*?font-family:[ ]*?'[^']*?';[ ]*?font-size:[ ]*?[0-9]+?pt;".format('"'), "<body style={0}font-family:'{1}'; font-size:{2}pt;".format('"', config.font, config.fontSize), note)
+        if not config.includeStrictDocTypeInNote:
+            note = re.sub("""<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">\n""", "", note)
+        return note
+
+    # wrap with html
+    @staticmethod
+    def htmlWrapper(text, parsing=False, view="study", linebreak=True, html=True):
+        searchReplace1 = (
+            ("\r\n|\r|\n", "<br>"),
+            ("\t", "&emsp;&emsp;"),
+        )
+        searchReplace2 = (
+            ("<br>(<table>|<ol>|<ul>)", r"\1"),
+            ("(</table>|</ol>|</ul>)<br>", r"\1"),
+            ("<a [^\n<>]*?href=['{0}]([^\n<>]*?)['{0}][^\n<>]*?>".format('"'),
+             r"<a href='javascript:void(0)' onclick='website({0}\1{0})'>".format('"')),
+            ("onclick='website\({0}([^\n<>]*?).uba{0}\)'".format('"'), r"onclick='uba({0}\1.uba{0})'".format('"'))
+        )
+        if linebreak:
+            for search, replace in searchReplace1:
+                text = re.sub(search, replace, text)
+        if html:
+            for search, replace in searchReplace2:
+                text = re.sub(search, replace, text)
+        if parsing:
+            # Export inline images to external files, so as to improve parsing performance. 
+            text = TextUtil.exportAllImages(text)
+            text = TextUtil.formulateUBACommandHyperlink(text)
+            text = BibleVerseParser(config.parserStandarisation).parseText(text)
+        if not "<!DOCTYPE html><html><head><meta charset='utf-8'><title>UniqueBible.app</title>" in text:
+            text = TextUtil.wrapHtml(text, view)
+        return text
+
+    # export images
+    @staticmethod
+    def exportAllImages(htmlText):
+        config.exportImageNumber = 0
+        searchPattern = r'src=(["{0}])data:image/([^<>]+?);[ ]*?base64,[ ]*?([^ <>]+?)\1'.format("'")
+        htmlText = re.sub(searchPattern, TextUtil.exportAnImage, htmlText)
+        return htmlText
+
+    @staticmethod
+    def exportAnImage(match):
+        exportFolder = os.path.join("htmlResources", "images", "export")
+        if not os.path.isdir(exportFolder):
+            os.makedirs(exportFolder)
+        quotationMark, ext, asciiString = match.groups()
+        # Note the difference between "groups" and "group"
+        # wholeString = match.group(0)
+        # quotationMark = match.group(1)
+        # ext = match.group(2)
+        # asciiString = match.group(3)
+        config.exportImageNumber += 1
+        binaryString = asciiString.encode("ascii")
+        binaryData = base64.b64decode(binaryString)
+        imageFilename = "tab{0}_image{1}.{2}".format(100, config.exportImageNumber, ext)
+        exportPath = os.path.join(exportFolder, imageFilename)
+        with open(exportPath, "wb") as fileObject2:
+            fileObject2.write(binaryData)
+        return "src={0}images/export/{1}{0}".format(quotationMark, imageFilename)
+
+    # wrap with html 2
+    @staticmethod
+    def wrapHtml(content, view="", book=False):
+        fontFamily = config.font
+        fontSize = "{0}px".format(config.fontSize)
+        if book:
+            if config.overwriteBookFontFamily:
+                fontFamily = config.overwriteBookFontFamily
+            if config.overwriteBookFontSize:
+                if type(config.overwriteBookFontSize) == str:
+                    fontSize = config.overwriteBookFontSize
+                elif type(config.overwriteBookFontSize) == int:
+                    fontSize = "{0}px".format(config.overwriteBookFontSize)
+        bcv = (config.studyText, config.studyB, config.studyC, config.studyV) if view == "study" else (config.mainText, config.mainB, config.mainC, config.mainV)
+        activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
+        html = ("""<!DOCTYPE html><html><head><link rel="icon" href="icons/{9}"><title>UniqueBible.app</title>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+                <meta http-equiv="Pragma" content="no-cache" />
+                <meta http-equiv="Expires" content="0" />"""
+                "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
+                "zh {2} font-family:'{6}'; {3} "
+                ".ubaButton {2} background-color: {10}; color: {11}; border: none; padding: 2px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 17px; margin: 2px 2px; cursor: pointer; {3}"
+                "{8}</style>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.064'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.064'>"
+                "<script src='js/common.js?v=1.064'></script>"
+                "<script src='js/{7}.js?v=1.064'></script>"
+                "<script src='w3.js?v=1.064'></script>"
+                "<script src='js/http_server.js?v=1.064'></script>"
+                """<script>
+                var target = document.querySelector('title');
+                var observer = new MutationObserver(function(mutations) {2}
+                    mutations.forEach(function(mutation) {2}
+                        ubaCommandChanged(document.title);
+                    {3});
+                {3});
+                var config = {2}
+                    childList: true,
+                {3};
+                observer.observe(target, config);
+                </script>"""
+                "{0}"
+                """<script>var versionList = []; var compareList = []; var parallelList = [];
+                var diffList = []; var searchList = [];</script>"""
+                "<script src='js/custom.js?v=1.064'></script>"
+                "</head><body><span id='v0.0.0'></span>{1}"
+                "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible();document.querySelector('body').addEventListener('click', window.parent.closeSideNav);</script></body></html>"
+                ).format(activeBCVsettings,
+                         content,
+                         "{",
+                         "}",
+                         fontSize,
+                         fontFamily,
+                         config.fontChinese,
+                         config.theme,
+                         TextUtil.getHighlightCss(),
+                         config.webUBAIcon,
+                         config.widgetBackgroundColor,
+                         config.widgetForegroundColor,
+                         )
+        return html
+
+    # get highlight css
+    @staticmethod
+    def getHighlightCss():
+        css = ""
+        for i in range(len(config.highlightCollections)):
+            code = "hl{0}".format(i + 1)
+            css += ".{2} {0} background: {3}; {1} ".format("{", "}", code, config.highlightDarkThemeColours[i] if config.theme == "dark" else config.highlightLightThemeColours[i])
+        return css
 
     # Remove special characters
     @staticmethod
