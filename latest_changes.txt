@@ -1,5 +1,9 @@
-Changes in 32.20:
-* Initial support of editing note in terminal mode.
+Changes in 32.20, 32.21:
+* support the following commands in terminal mode.
+    openjournal::: searchjournal::: editjournal::: 
+    openbooknote::: searchbooknote::: editbooknote:::
+    openchapternote::: searchchapternote::: editchapternote:::
+    openversenote::: searchversenote::: editversenote:::
 
 Changes in 32.19:
 * Added highlight to latest verse selection in compare view.

@@ -83,7 +83,6 @@ plugins/event/*.py
 secrets/github/*.txt
 config.ini
 disabled_modules.txt
-myhistory
 .swp
 nano.*
 config.py.save

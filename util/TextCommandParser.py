@@ -637,14 +637,17 @@ class TextCommandParser:
             "searchversenote": (self.textSearchVerseNote, """
             # [KEYWORD] SEARCHVERSENOTE
             # e.g. SEARCHVERSENOTE:::faith"""),
-#            "openjournal": (self.openJournalNote, """
-#            # [KEYWORD] OPENJOURNAL
-#            # e.g. OPENJOURNAL:::
-#            # e.g. OPENJOURNAL:::2022.12.25"""),
-#            "editjournal": (self.editJournalNote, """
-#            # [KEYWORD] EDITJOURNAL
-#            # e.g. EDITJOURNAL:::
-#            # e.g. EDITJOURNAL:::2022.12.25"""),
+            "openjournal": (self.openJournalNote, """
+            # [KEYWORD] OPENJOURNAL
+            # e.g. OPENJOURNAL:::
+            # e.g. OPENJOURNAL:::2022.12.25"""),
+            "editjournal": (self.editJournalNote, """
+            # [KEYWORD] EDITJOURNAL
+            # e.g. EDITJOURNAL:::
+            # e.g. EDITJOURNAL:::2022.12.25"""),
+            "searchjournal": (self.searchJournalNote, """
+            # [KEYWORD] SEARCHJOURNAL
+            # e.g. SEARCHJOURNAL:::faith"""),
             "download": (self.download, """
             # [KEYWORD] DOWNLOAD
             # Feature - Download marvel data, github files
@@ -915,7 +918,7 @@ class TextCommandParser:
             keyword = keyword.lower()
             if keyword in ("bible", "study", "text") and config.runMode == "terminal":
                 config.terminalBibleComparison = False
-            if keyword in ("_mc", "_mastercontrol", "editversenote", "editchapternote", "editbooknote", "epub", "anypdf", "searchpdf", "pdffind", "pdf", "readbible", "searchhighlight", "sidebyside", "parallel", "_editfile", "_uba") and config.runMode == "terminal":
+            if keyword in ("_mc", "_mastercontrol", "epub", "anypdf", "searchpdf", "pdffind", "pdf", "docx", "_savepdfcurrentpage", "searchallbookspdf", "readbible", "searchhighlight", "sidebyside", "parallel", "_editfile", "_openfile", "_uba", "opennote", "open", "_open") and config.runMode == "terminal":
                 return ("study", f"{keyword}::: command is currently not supported in terminal mode.", {})
             if keyword in self.interpreters:
                 if self.isDatabaseInstalled(keyword):
@@ -2419,7 +2422,11 @@ class TextCommandParser:
     def openBookNote(self, command, source):
         b, *_ = command.split(".")
         b = int(b)
-        self.parent.openBookNote(b)
+        if config.runMode == "terminal":
+            content = NoteSqlite().getBookNote(b)[0]
+            return ("", content, {})
+        else:
+            self.parent.openBookNote(b)
         return ("", "", {})
 
     # openchapternote:::
@@ -2435,7 +2442,11 @@ class TextCommandParser:
     def openChapterNote(self, command, source):
         b, c, *_ = command.split(".")
         b, c = int(b), int(c)
-        self.parent.openChapterNote(b, c)
+        if config.runMode == "terminal":
+            content = NoteSqlite().getChapterNote(b, c)[0]
+            return ("", content, {})
+        else:
+            self.parent.openChapterNote(b, c)
         return ("", "", {})
 
     # openversenote:::
@@ -2451,7 +2462,11 @@ class TextCommandParser:
     def openVerseNote(self, command, source):
         b, c, v, *_ = command.split(".")
         b, c, v = int(b), int(c), int(v)
-        self.parent.openVerseNote(b, c, v)
+        if config.runMode == "terminal":
+            content = NoteSqlite().getVerseNote(b, c, v)[0]
+            return ("", content, {})
+        else:
+            self.parent.openVerseNote(b, c, v)
         return ("", "", {})
 
     # editbooknote:::
@@ -2475,6 +2490,7 @@ class TextCommandParser:
             b, c, v = None, None, None
         if config.runMode == "terminal":
             config.mainWindow.openNoteEditor("book", b=b, c=c, v=v)
+            return ("", "[MESSAGE]Text Editor Closed", {})
         elif self.parent.noteSaved or self.parent.warningNotSaved():
             self.parent.openNoteEditor("book", b=b, c=c, v=v)
         return ("", "", {})
@@ -2495,7 +2511,10 @@ class TextCommandParser:
             v = 1
         else:
             b, c, v = None, None, None
-        if self.parent.noteSaved or self.parent.warningNotSaved():
+        if config.runMode == "terminal":
+            config.mainWindow.openNoteEditor("chapter", b=b, c=c, v=v)
+            return ("", "[MESSAGE]Text Editor Closed", {})
+        elif self.parent.noteSaved or self.parent.warningNotSaved():
             self.parent.openNoteEditor("chapter", b=b, c=c, v=v)
         return ("", "", {})
 
@@ -2514,7 +2533,10 @@ class TextCommandParser:
             b, c, v, *_ = command.split(".")
         else:
             b, c, v = None, None, None
-        if self.parent.noteSaved or self.parent.warningNotSaved():
+        if config.runMode == "terminal":
+            config.mainWindow.openNoteEditor("verse", b=b, c=c, v=v)
+            return ("", "[MESSAGE]Text Editor Closed", {})
+        elif self.parent.noteSaved or self.parent.warningNotSaved():
             self.parent.openNoteEditor("verse", b=b, c=c, v=v)
         #else:
             #self.parent.noteEditor.raise_()
@@ -2539,7 +2561,10 @@ class TextCommandParser:
         else:
             today = date.today()
             year, month, day = today.year, today.month, today.day
-        if self.parent.noteSaved or self.parent.warningNotSaved():
+        if config.runMode == "terminal":
+            config.mainWindow.openNoteEditor("journal", year=year, month=month, day=day)
+            return ("", "[MESSAGE]Text Editor Closed", {})
+        elif self.parent.noteSaved or self.parent.warningNotSaved():
             self.parent.openNoteEditor("journal", year=year, month=month, day=day)
         return ("", "", {})
 
@@ -3514,6 +3539,18 @@ class TextCommandParser:
         view, content2, *_ = self.searchPdf(command, source)
         return ("study", content1+content2, {'tab_title': "Books/PDF"})
 
+    # SEARCHJOURNAL:::
+    def searchJournalNote(self, command, source):
+        if not command:
+            return self.invalidCommand("study")
+        else:
+            config.noteSearchString = command
+            noteSqlite = JournalSqlite()
+            days = noteSqlite.getSearchJournalList(command)
+            days = [f"{y}-{m}-{d}" for y, m, d in days]
+            prefix = "[MESSAGE]" if config.runMode == "terminal" else ""
+            return ("study", "{3}<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on book(s)</p><p>{2}</p>".format(command, len(days), "; ".join(days), prefix), {})
+
     # SEARCHBOOKNOTE:::
     def textSearchBookNote(self, command, source):
         if not command:
@@ -3522,7 +3559,8 @@ class TextCommandParser:
             config.noteSearchString = command
             noteSqlite = NoteSqlite()
             books = noteSqlite.getSearchedBookList(command)
-            return ("study", "<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on book(s)</p><p>{2}</p>".format(command, len(books), "; ".join(books)), {})
+            prefix = "[MESSAGE]" if config.runMode == "terminal" else ""
+            return ("study", "{3}<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on book(s)</p><p>{2}</p>".format(command, len(books), "; ".join(books), prefix), {})
 
     # SEARCHCHAPTERNOTE:::
     def textSearchChapterNote(self, command, source):
@@ -3532,7 +3570,8 @@ class TextCommandParser:
             config.noteSearchString = command
             noteSqlite = NoteSqlite()
             chapters = noteSqlite.getSearchedChapterList(command)
-            return ("study", "<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on chapter(s)</p><p>{2}</p>".format(command, len(chapters), "; ".join(chapters)), {})
+            prefix = "[MESSAGE]" if config.runMode == "terminal" else ""
+            return ("study", "{3}<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on chapter(s)</p><p>{2}</p>".format(command, len(chapters), "; ".join(chapters), prefix), {})
 
     # SEARCHVERSENOTE:::
     def textSearchVerseNote(self, command, source):
@@ -3542,11 +3581,14 @@ class TextCommandParser:
             config.noteSearchString = command
             noteSqlite = NoteSqlite()
             verses = noteSqlite.getSearchedVerseList(command)
-            return ("study", "<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on verse(s)</p><p>{2}</p>".format(command, len(verses), "; ".join(verses)), {})
+            prefix = "[MESSAGE]" if config.runMode == "terminal" else ""
+            return ("study", "{3}<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on verse(s)</p><p>{2}</p>".format(command, len(verses), "; ".join(verses), prefix), {})
 
     # DAY:::
     def getDayEntry(self, entry): 
         dayEntry = allDays[int(entry)][-1]
+        if config.runMode == "terminal":
+            print(f"Scripture: {dayEntry}")
         dayEntry = dayEntry.split(", ")
         parser = BibleVerseParser(config.parserStandarisation)
         for index, reference in enumerate(dayEntry):
@@ -3575,6 +3617,7 @@ class TextCommandParser:
         except:
             return self.invalidCommand("study")
 
+    # DAYAUDIO:::
     def textDayAudio(self, command, source):
         try:
             if command.count(":::") == 0:
@@ -3593,6 +3636,7 @@ class TextCommandParser:
         except:
             return self.invalidCommand("study")
 
+    # DAYAUDIOPLUS:::
     def textDayAudioPlus(self, command, source):
         try:
             if command.count(":::") == 0:

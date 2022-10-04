@@ -198,7 +198,7 @@ class LocalCliHandler:
 
     def displayOutputOnTerminal(self, content):
         divider = self.divider
-        if config.enableTerminalPager and not content in ("Command processed!", "INVALID_COMMAND_ENTERED") and not content.endswith("not supported in terminal mode."):
+        if config.enableTerminalPager and not content in ("Command processed!", "INVALID_COMMAND_ENTERED") and not content.endswith("not supported in terminal mode.") and not content.startswith("[MESSAGE]"):
             if platform.system() == "Windows":
                 # When you use remote powershell and want to pipe a command on the remote windows server through a pager, piping through  out-host -paging works as desired. Piping through more when running the remote command is of no use: the entire text is displayed at once.
                 try:
@@ -221,6 +221,8 @@ class LocalCliHandler:
                     print(divider)
                     print(content)
         else:
+            if content.startswith("[MESSAGE]"):
+                content = content[9:]
             print(divider)
             print(content)
 
@@ -550,11 +552,13 @@ class LocalCliHandler:
         return content
 
     def history(self):
-        if os.path.isfile("myhistory"):
-            with open("myhistory", "r", encoding="utf-8") as input_file:
+        return self.readPlainTextFile(os.path.join("terminal_history", "commands"))
+
+    def readPlainTextFile(self, filename):
+        if os.path.isfile(filename):
+            with open(filename, "r", encoding="utf-8") as input_file:
                 text = input_file.read()
-        print(text)
-        return ""
+        return text
 
     def displayMessage(self, message="", title="UniqueBible"):
         print(title)
@@ -1281,13 +1285,15 @@ class LocalCliHandler:
         return ""
 
     def openNoteEditor(self, noteType, b=None, c=None, v=None, year=None, month=None, day=None, editor="nano --softwrap --atblanks"):
-        noteDB = NoteSqlite()
-        if noteType == "book":
+        noteDB = JournalSqlite() if noteType == "journal" else NoteSqlite()
+        if noteType == "journal":
+            note = noteDB.getJournalNote(year, month, day)
+        elif noteType == "book":
             note = noteDB.getBookNote(b)[0]
         elif noteType == "chapter":
-            note = noteDB.getChapterNote(b, c)
+            note = noteDB.getChapterNote(b, c)[0]
         elif noteType == "verse":
-            note = noteDB.getVerseNote(b, c, v)
+            note = noteDB.getVerseNote(b, c, v)[0]
         if config.isMarkdownifyInstalled:
             # convert html into markdown
             from markdownify import markdownify
@@ -1297,6 +1303,8 @@ class LocalCliHandler:
         else:
             note = self.getPlainText(note)
         # display in editor
+        print("Opening text editor ...")
+        print("When you finish editing, save content in a file and enter 'note' as its filename.")
         self.texteditor(editor, note)
         # check if file is saved
         notePath = "note"
@@ -1324,7 +1332,7 @@ class LocalCliHandler:
         elif noteType == "verse":
             noteDB.saveVerseNote(b, c, v, note, DateUtil.epoch())
         elif noteType == "journal":
-            JournalSqlite().saveJournalNote(year, month, day, note)
+            noteDB.saveJournalNote(year, month, day, note)
         print("Note saved!")
 
     # organise user interactive menu
