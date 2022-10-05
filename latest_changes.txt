@@ -1,3 +1,8 @@
+Changes in 32.22:
+* Added note and journal commands to terminal mode.  To try, run '.note'.
+* Added config.terminalAutoUpdate
+* Changed config.enableTerminalPager to config.terminalEnablePager
+
 Changes in 32.20, 32.21:
 * support the following commands in terminal mode.
     openjournal::: searchjournal::: editjournal::: 

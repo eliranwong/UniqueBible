@@ -137,6 +137,7 @@ def checkApplicationUpdateCli():
             if not UpdateUtil.currentIsLatest(config.version, request.text):
                 print(f"You are runing an older version {config.version}.")
                 print(f"Run '.update' to update to the latest version {request.text}.")
+                return True
             else:
                 print("You are running the latest version.")
         else:
@@ -145,6 +146,7 @@ def checkApplicationUpdateCli():
     except Exception as e:
         config.internet = False
         print("Failed to read '{0}'.".format(checkFile))
+    return False
 
 # Get terminal mode history records
 def getHistoryRecords():
@@ -157,8 +159,8 @@ def getHistoryRecords():
             item = item.strip()
             if item and item.startswith("+"):
                 item = item[1:]
-                startupException1 = (".quit", ".restart", ".togglepager", ".history", ".update", ".find", ".stopaudio", ".changecolors", ".read", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".changeconfig")
-                startupException2 = "^(_setconfig:::|\.vi|\.nano)"
+                startupException1 = (".quit", ".restart", ".togglepager", ".history", ".update", ".find", ".stopaudio", ".read", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible")
+                startupException2 = "^(_setconfig:::|\.vi|\.nano|\.change)"
                 if not item.lower() in startupException1 and not re.search(startupException2, item.lower()):
                     records.append(item)
     return records
@@ -169,7 +171,7 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     config.saveConfigOnExit = True
     print(f"Running Unique Bible App {config.version} in terminal mode ...")
     checkMigration()
-    checkApplicationUpdateCli()
+    needUpdate = checkApplicationUpdateCli()
 
     from util.LocalCliHandler import LocalCliHandler
 
@@ -179,6 +181,9 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         records = getHistoryRecords()
         if records:
             command = records[0]
+
+    if needUpdate and config.terminalAutoUpdate:
+        command = ".update"
 
     config.mainWindow = LocalCliHandler(command)
     runStartupPlugins()

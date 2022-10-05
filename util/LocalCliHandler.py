@@ -1,4 +1,5 @@
 import re, config, pprint, os, requests, platform, pydoc, markdown
+from datetime import date
 from ast import literal_eval
 from db.BiblesSqlite import Bible
 from db.JournalSqlite import JournalSqlite
@@ -98,6 +99,19 @@ class LocalCliHandler:
             ".changecolors": ("change text highlight colors", self.changecolors),
             ".openbible": ("open bible", self.openbible),
             ".opencommentary": ("open commentary", self.opencommentary),
+            ".openbooknote": ("open bible book note", lambda: self.openbookfeature("OPENBOOKNOTE")),
+            ".openchapternote": ("open bible chapter note", lambda: self.openchapterfeature("OPENCHAPTERNOTE")),
+            ".openversenote": ("open bible verse note", lambda: self.openversefeature("OPENVERSENOTE")),
+            ".openjournal": ("open journal", lambda: self.journalFeature("OPENJOURNAL")),
+            ".editbooknote": ("edit bible book note", lambda: self.openbookfeature("EDITBOOKNOTE")),
+            ".editchapternote": ("edit bible chapter note", lambda: self.openchapterfeature("EDITCHAPTERNOTE")),
+            ".editversenote": ("edit bible verse note", lambda: self.openversefeature("EDITVERSENOTE")),
+            ".editjournal": ("edit journal", lambda: self.journalFeature("EDITJOURNAL")),
+            ".searchbooknote": ("search bible book note", lambda: self.searchNote("SEARCHBOOKNOTE")),
+            ".searchchapternote": ("search bible chapter note", lambda: self.searchNote("SEARCHCHAPTERNOTE")),
+            ".searchversenote": ("search bible verse note", lambda: self.searchNote("SEARCHVERSENOTE")),
+            ".searchjournal": ("search journal", lambda: self.searchNote("SEARCHJOURNAL")),
+            ".changenoteeditor": ("change default note editor", self.changenoteeditor),
             ".opencrossreference": ("open cross reference", self.openversefeature),
             ".opencomparison": ("open verse comparison", lambda: self.openversefeature("COMPARE")),
             ".opendifference": ("open verse comparison with differences", lambda: self.openversefeature("DIFFERENCE")),
@@ -124,6 +138,7 @@ class LocalCliHandler:
             ".change": ("display change menu", self.change),
             ".search": ("display search menu", self.search),
             ".show": ("display show menu", self.show),
+            ".note": ("display note / journal menu", self.accessNoteFeatures),
             ".edit": ("display edit menu", self.edit),
             ".maintain": ("display maintain menu", self.maintain),
             ".control": ("display control menu", self.control),
@@ -198,7 +213,7 @@ class LocalCliHandler:
 
     def displayOutputOnTerminal(self, content):
         divider = self.divider
-        if config.enableTerminalPager and not content in ("Command processed!", "INVALID_COMMAND_ENTERED") and not content.endswith("not supported in terminal mode.") and not content.startswith("[MESSAGE]"):
+        if config.terminalEnablePager and not content in ("Command processed!", "INVALID_COMMAND_ENTERED") and not content.endswith("not supported in terminal mode.") and not content.startswith("[MESSAGE]"):
             if platform.system() == "Windows":
                 # When you use remote powershell and want to pipe a command on the remote windows server through a pager, piping through  out-host -paging works as desired. Piping through more when running the remote command is of no use: the entire text is displayed at once.
                 try:
@@ -207,7 +222,7 @@ class LocalCliHandler:
                     try:
                         pydoc.pipepager(content, cmd='more')
                     except:
-                        config.enableTerminalPager = False
+                        config.terminalEnablePager = False
                         print(divider)
                         print(content)
             else:
@@ -217,7 +232,7 @@ class LocalCliHandler:
                     # paging with colours
                     pydoc.pipepager(content, cmd='less -R')
                 except:
-                    config.enableTerminalPager = False
+                    config.terminalEnablePager = False
                     print(divider)
                     print(content)
         else:
@@ -253,7 +268,7 @@ class LocalCliHandler:
 
 
     def togglePager(self):
-        config.enableTerminalPager = not config.enableTerminalPager
+        config.terminalEnablePager = not config.terminalEnablePager
         return self.plainText
 
     def standardcommands(self):
@@ -654,6 +669,51 @@ class LocalCliHandler:
         print("Install package 'prompt_toolkit' first!")
         return ""
 
+    def journalFeature(self, feature="OPENJOURNAL"):
+        try:
+            if config.isPrompt_toolkitInstalled:
+                from prompt_toolkit import prompt
+            today = date.today()
+            print(self.divider)
+            print(f"Enter a year, e.g. {today.year}:")
+            if config.isPrompt_toolkitInstalled:
+                userInput = prompt(self.inputIndicator, default=str(today.year)).strip()
+            else:
+                userInput = input(self.inputIndicator).strip()
+            if not userInput or userInput == ".c":
+                return self.cancelAction()
+            if int(userInput):
+                year = userInput
+                print(self.divider)
+                print(f"Enter a month, e.g. {today.month}:")
+                if config.isPrompt_toolkitInstalled:
+                    userInput = prompt(self.inputIndicator, default=str(today.month)).strip()
+                else:
+                    userInput = input(self.inputIndicator).strip()
+                if not userInput or userInput == ".c":
+                    return self.cancelAction()
+                if int(userInput):
+                    month = userInput
+                    print(self.divider)
+                    print(f"Enter a day, e.g. {today.day}:")
+                    if config.isPrompt_toolkitInstalled:
+                        userInput = prompt(self.inputIndicator, default=str(today.day)).strip()
+                    else:
+                        userInput = input(self.inputIndicator).strip()
+                    if not userInput or userInput == ".c":
+                        return self.cancelAction()
+                    if int(userInput):
+                        day = userInput
+                        command = f"{feature}:::{year}-{month}-{day}"
+                        self.printRunningCommand(command)
+                        return self.getContent(command)
+                    else:
+                        return self.printInvalidOptionEntered()
+            else:
+                return self.printInvalidOptionEntered()
+        except:
+            return self.printInvalidOptionEntered()
+
     def openversefeature(self, feature="CROSSREFERENCE"):
         try:
             if config.isPrompt_toolkitInstalled:
@@ -709,11 +769,11 @@ class LocalCliHandler:
                         self.printRunningCommand(command)
                         return self.getContent(command)
                     else:
-                        self.printInvalidOptionEntered()
+                        return self.printInvalidOptionEntered()
             else:
-                self.printInvalidOptionEntered()
+                return self.printInvalidOptionEntered()
         except:
-            self.printInvalidOptionEntered()
+            return self.printInvalidOptionEntered()
 
     def openchapterfeature(self, feature="OVERVIEW"):
         try:
@@ -756,11 +816,11 @@ class LocalCliHandler:
                     self.printRunningCommand(command)
                     return self.getContent(command)
                 else:
-                    self.printInvalidOptionEntered()
+                    return self.printInvalidOptionEntered()
             else:
-                self.printInvalidOptionEntered()
+                return self.printInvalidOptionEntered()
         except:
-            self.printInvalidOptionEntered()
+            return self.printInvalidOptionEntered()
 
     def openbookfeature(self, feature="introduction"):
         try:
@@ -791,14 +851,14 @@ class LocalCliHandler:
                     "encyclopedia": f"SEARCHTOOL:::{config.encyclopedia}",
                     "timelines": "SEARCHBOOKCHAPTER:::Timelines",
                 }
-                feature = features[feature]
+                feature = features.get(feature, feature)
                 command = f"{feature}:::{bibleBook}"
                 self.printRunningCommand(command)
                 return self.getContent(command)
             else:
-                self.printInvalidOptionEntered()
+                return self.printInvalidOptionEntered()
         except:
-            self.printInvalidOptionEntered()
+            return self.printInvalidOptionEntered()
 
     def openbible(self):
         try:
@@ -879,11 +939,11 @@ class LocalCliHandler:
                             self.printRunningCommand(command)
                             return self.getContent(command)
                         else:
-                            self.printInvalidOptionEntered()
+                            return self.printInvalidOptionEntered()
                 else:
-                    self.printInvalidOptionEntered()
+                    return self.printInvalidOptionEntered()
         except:
-            self.printInvalidOptionEntered()
+            return self.printInvalidOptionEntered()
 
     def whatis(self):
         try:
@@ -906,7 +966,7 @@ class LocalCliHandler:
             if userInput in commands:
                 return self.whatiscontent(userInput)
         except:
-            self.printInvalidOptionEntered()
+            return self.printInvalidOptionEntered()
 
     def whatiscontent(self, command):
         if command in self.dotCommands:
@@ -1015,15 +1075,15 @@ class LocalCliHandler:
                             self.printRunningCommand(command)
                             return self.getContent(command)
                         else:
-                            self.printInvalidOptionEntered()
+                            return self.printInvalidOptionEntered()
                     else:
-                        self.printInvalidOptionEntered()
+                        return self.printInvalidOptionEntered()
                 else:
-                    self.printInvalidOptionEntered()
+                    return self.printInvalidOptionEntered()
             else:
-                self.printInvalidOptionEntered()
+                return self.printInvalidOptionEntered()
         except:
-            self.printInvalidOptionEntered()
+            return self.printInvalidOptionEntered()
 
     def opencommentary(self):
         try:
@@ -1095,11 +1155,11 @@ class LocalCliHandler:
                             self.printRunningCommand(command)
                             return self.getContent(command)
                         else:
-                            self.printInvalidOptionEntered()
+                            return self.printInvalidOptionEntered()
                 else:
-                    self.printInvalidOptionEntered()
+                    return self.printInvalidOptionEntered()
         except:
-            self.printInvalidOptionEntered()
+            return self.printInvalidOptionEntered()
 
     def getDefaultText(self):
         if config.mainText in self.crossPlatform.textList:
@@ -1211,6 +1271,54 @@ class LocalCliHandler:
     def getPlainText(self, content=None):
         return TextUtil.htmlToPlainText(self.html if content is None else content, False).strip()
 
+    def searchNote(self, keyword="SEARCHBOOKNOTE"):
+        try:
+            print(self.divider)
+            print("Enter a search item:")
+            if config.isPrompt_toolkitInstalled:
+                from prompt_toolkit import prompt
+                userInput = prompt(self.inputIndicator).strip()
+            else:
+                userInput = input(self.inputIndicator).strip()
+            if userInput == ".c":
+                return self.cancelAction()
+            command = f"{keyword}:::{userInput}"
+            self.printRunningCommand(command)
+            return self.getContent(command)
+        except:
+            return self.printInvalidOptionEntered()
+
+    def changenoteeditor(self):
+        try:
+            print(self.divider)
+            print("Select default note / journal editor:")
+            editors = {
+                "nano": "nano --softwrap --atblanks",
+                "vi": "vi",
+                "vim": "vim",
+            }
+            configurablesettings = list(editors.keys())
+            print(configurablesettings)
+            print(self.divider)
+            print("Enter your favourite text editor:")
+            if config.isPrompt_toolkitInstalled:
+                from prompt_toolkit.completion import WordCompleter
+                from prompt_toolkit import prompt
+                completer = WordCompleter(configurablesettings)
+                userInput = prompt(self.inputIndicator, completer=completer).strip()
+            else:
+                userInput = input(self.inputIndicator).strip()
+            if not userInput or userInput == ".c":
+                return self.cancelAction()
+            # define key
+            if userInput in configurablesettings:
+                #config.terminalNoteEditor = editors[userInput]
+                return self.getContent(f"_setconfig:::terminalNoteEditor:::'{editors[userInput]}'")
+            else:
+                return self.printInvalidOptionEntered()
+        except:
+            return self.printInvalidOptionEntered()
+
     def changeconfig(self):
         try:
             print(self.divider)
@@ -1244,9 +1352,9 @@ class LocalCliHandler:
                 print(self.getContent(f"_setconfig:::{value}:::{userInput}"))
                 return ".restart"
             else:
-                self.printInvalidOptionEntered()
+                return self.printInvalidOptionEntered()
         except:
-            self.printInvalidOptionEntered()
+            return self.printInvalidOptionEntered()
 
     def editConfig(self, editor):
         print(self.divider)
@@ -1281,45 +1389,51 @@ class LocalCliHandler:
                 editor = editor.strip().split(" ")[0]
                 os.system(f"pkill {editor}")
         else:
-            print(f"Text editor '{editor}' is not found in your system!")
+            print(f"Text editor '{editor}' is not found on your system!")
         return ""
 
-    def openNoteEditor(self, noteType, b=None, c=None, v=None, year=None, month=None, day=None, editor="nano --softwrap --atblanks"):
-        noteDB = JournalSqlite() if noteType == "journal" else NoteSqlite()
-        if noteType == "journal":
-            note = noteDB.getJournalNote(year, month, day)
-        elif noteType == "book":
-            note = noteDB.getBookNote(b)[0]
-        elif noteType == "chapter":
-            note = noteDB.getChapterNote(b, c)[0]
-        elif noteType == "verse":
-            note = noteDB.getVerseNote(b, c, v)[0]
-        if config.isMarkdownifyInstalled:
-            # convert html into markdown
-            from markdownify import markdownify
-            note = markdownify(note, heading_style=config.markdownifyHeadingStyle)
-            note = note.replace("\n\np, li { white-space: pre-wrap; }\n", "")
-            note = note.replace("hr { height: 1px; border-width: 0; }\n", "")
+    def openNoteEditor(self, noteType, b=None, c=None, v=None, year=None, month=None, day=None, editor=None):
+        if editor is None:
+            editor = config.terminalNoteEditor # default: vi
+        if WebtopUtil.isPackageInstalled(editor.split(" ")[0]):
+            noteDB = JournalSqlite() if noteType == "journal" else NoteSqlite()
+            if noteType == "journal":
+                note = noteDB.getJournalNote(year, month, day)
+            elif noteType == "book":
+                note = noteDB.getBookNote(b)[0]
+            elif noteType == "chapter":
+                note = noteDB.getChapterNote(b, c)[0]
+            elif noteType == "verse":
+                note = noteDB.getVerseNote(b, c, v)[0]
+            if config.isMarkdownifyInstalled:
+                # convert html into markdown
+                from markdownify import markdownify
+                note = markdownify(note, heading_style=config.markdownifyHeadingStyle)
+                note = note.replace("\n\np, li { white-space: pre-wrap; }\n", "")
+                note = note.replace("hr { height: 1px; border-width: 0; }\n", "")
+            else:
+                note = self.getPlainText(note)
+            # display in editor
+            print("Opening text editor ...")
+            print("When you finish editing, save content in a file and enter 'note' as its filename.")
+            self.texteditor(editor, note)
+            # check if file is saved
+            notePath = "note"
+            if os.path.isfile(notePath):
+                with open(notePath, "r", encoding="utf-8") as input_file:
+                    text = input_file.read()
+                # convert markdown into html
+                text = markdown.markdown(text)
+                text = TextUtil.fixNoteFontDisplay(text)
+                #text = TextUtil.htmlWrapper(text, True, "study", False)
+                # save into note databse
+                self.saveNote(noteDB, noteType, b, c, v, year, month, day, text)
+                # remove file after saving
+                os.remove(notePath)
         else:
-            note = self.getPlainText(note)
-        # display in editor
-        print("Opening text editor ...")
-        print("When you finish editing, save content in a file and enter 'note' as its filename.")
-        self.texteditor(editor, note)
-        # check if file is saved
-        notePath = "note"
-        if os.path.isfile(notePath):
-            with open(notePath, "r", encoding="utf-8") as input_file:
-                text = input_file.read()
-            # convert markdown into html
-            text = markdown.markdown(text)
-            text = TextUtil.fixNoteFontDisplay(text)
-            #text = TextUtil.htmlWrapper(text, True, "study", False)
-            # save into note databse
-            self.saveNote(noteDB, noteType, b, c, v, year, month, day, text)
-            # remove file after saving
-            os.remove(notePath)
-        
+            print(f"Text editor '{editor}' is not found on your system!  Please install it first of run '.changenoteeditor' to change the default note editor.")
+            return ""
+
     def saveNote(self, noteDB, noteType, b=None, c=None, v=None, year=None, month=None, day=None, note=""):
         note = TextUtil.fixNoteFont(note)
         if noteType == "book":
@@ -1361,7 +1475,7 @@ class LocalCliHandler:
 
     def menu(self):
         heading = "UBA Terminal Mode Menu"
-        features = (".open", ".show", ".search", ".control", ".edit", ".change", ".maintain", ".help")
+        features = (".open", ".show", ".note", ".search", ".control", ".edit", ".change", ".maintain", ".help")
         return self.displayFeatureMenu(heading, features)
 
     def open(self):
@@ -1391,7 +1505,7 @@ class LocalCliHandler:
 
     def change(self):
         heading = "Change"
-        features = (".changecolors", ".changeconfig")
+        features = (".changecolors", ".changenoteeditor", ".changeconfig")
         return self.displayFeatureMenu(heading, features)
 
     def help(self):
@@ -1417,4 +1531,9 @@ class LocalCliHandler:
     def openversefeatures(self):
         heading = "Bible Verse Featues"
         features = (".opencrossreference", ".opentske", ".opencomparison", ".opendifference", ".opensmartindex", ".openwords", ".opendiscourse", ".opentranslation", ".opencombo")
+        return self.displayFeatureMenu(heading, features)
+
+    def accessNoteFeatures(self):
+        heading = "Note / Journal Features"
+        features = (".openbooknote", ".openchapternote", ".openversenote", ".openjournal", ".searchbooknote", ".searchchapternote", ".searchversenote", ".searchjournal", ".editbooknote", ".editchapternote", ".editversenote", ".editjournal", ".changenoteeditor")
         return self.displayFeatureMenu(heading, features)

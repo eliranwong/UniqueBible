@@ -120,10 +120,19 @@ class ConfigUtil:
         # Terminal mode find highlight foreground color."""
         if not hasattr(config, "terminalFindHighlightForeground"):
             config.terminalFindHighlightForeground = "RESET"
-        config.help["enableTerminalPager"] = """
+        config.help["terminalNoteEditor"] = """
+        # Default note editor used in terminal mode.
+        # Suggested options: 'nano --softwrap --atblanks', 'vi' and 'vim'."""
+        if not hasattr(config, "terminalNoteEditor"):
+            config.terminalNoteEditor = "vi"
+        config.help["terminalAutoUpdate"] = """
+        # Option to update UBA automatically on startup if newer version is found."""
+        if not hasattr(config, "terminalAutoUpdate"):
+            config.terminalAutoUpdate = False
+        config.help["terminalEnablePager"] = """
         # To enable paging of terminal output when UBA runs in terminal mode."""
-        if not hasattr(config, "enableTerminalPager"):
-            config.enableTerminalPager = False
+        if not hasattr(config, "terminalEnablePager"):
+            config.terminalEnablePager = False
         config.help["terminalBibleComparison"] = """
         # To display bible chapter in comparison mode when users enter a reference in terminal mode."""
         if not hasattr(config, "terminalBibleComparison"):
@@ -1451,7 +1460,9 @@ class ConfigUtil:
             ("qtLibrary", config.qtLibrary),
             ("usePySide2onWebtop", config.usePySide2onWebtop),
             ("usePySide6onMacOS", config.usePySide6onMacOS),
-            ("enableTerminalPager", config.enableTerminalPager),
+            ("terminalAutoUpdate", config.terminalAutoUpdate),
+            ("terminalEnablePager", config.terminalEnablePager),
+            ("terminalNoteEditor", config.terminalNoteEditor),
             ("terminalBibleComparison", config.terminalBibleComparison),
             ("terminalHeadingTextColor", config.terminalHeadingTextColor),
             ("terminalVerseNumberColor", config.terminalVerseNumberColor),

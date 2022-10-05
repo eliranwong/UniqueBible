@@ -344,7 +344,8 @@ class SearchSqlite:
         if not content:
             return "[not found]"
         else:
-            return content[0]
+            content = re.sub("""(<ref onclick="[^<>]+?\(')([^<>]+?)('\)">)""", r"[<ref>\2</ref> ] " if config.runMode == "terminal" else r"\1\2\3", content[0])
+            return content
 
     def getSimilarContent(self, module, entry):
         query = TextUtil.getQueryPrefix()
@@ -354,7 +355,9 @@ class SearchSqlite:
         if not contentList:
             return "[not found]"
         else:
-            return "<br>".join(contentList)
+            content = "<br>".join(contentList)
+            content = re.sub("""(<ref onclick="[^<>]+?\(')([^<>]+?)('\)">)""", r"[<ref>\2</ref> ] " if config.runMode == "terminal" else r"\1\2\3", content)
+            return content
 
 
 class DictionaryData:

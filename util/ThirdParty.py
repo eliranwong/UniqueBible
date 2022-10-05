@@ -2174,7 +2174,8 @@ class ThirdPartyDictionary:
             optionList = [(m, m) for m in self.moduleList]
             selectList = self.formatSelectList(action, optionList) if showMenu else ""
             config.thirdDictionary = self.module
-            return "<h2>Search <span style='color: brown;'>{0}</span> for <span style='color: brown;'>{1}</span></h2><p>{4}</p><p><b>Exact match:</b><br><br>{2}</p><p><b>Partial match:</b><br><br>{3}".format(self.module, entry, exactMatch, similarMatch, selectList)
+            selectList = f"<p>{selectList}</p><p>" if not config.runMode == "terminal" else ""
+            return "<h2>Search <span style='color: brown;'>{0}</span> for <span style='color: brown;'>{1}</span></h2>{4}<b>Exact match:</b><br><br>{2}</p><p><b>Partial match:</b><br><br>{3}".format(self.module, entry, exactMatch, similarMatch, selectList)
 
     def formatSelectList(self, action, optionList):
         selectForm = "<select onchange='{0}'>".format(action)
