@@ -1,4 +1,4 @@
-Changes in 32.24:
+Changes in 32.24, 32.25:
 * Added 6 more items to search menu in terminal mode.
 * Added '.textract' command in terminal mode, to extract text from documents.
 * Support youtube downloads in terminal mode.

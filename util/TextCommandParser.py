@@ -1561,11 +1561,12 @@ class TextCommandParser:
     def terminalDownloadYoutubeFile(self, downloadCommand, command, outputFolder):
         if self.isFfmpegInstalled():
             try:
+                print(config.mainWindow.divider)
                 print("Downloading ...")
                 subprocess.run(["cd {2}; {0} {1}".format(downloadCommand, command, outputFolder)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
                 if WebtopUtil.isPackageInstalled("pkill"):
                     os.system("pkill yt-dlp")
-                print("Downloaded!")
+                print(f"Downloaded in directory '{outputFolder}'!")
             except subprocess.CalledProcessError as err:
                 config.mainWindow.displayMessage(err, title="ERROR:")
         else:
