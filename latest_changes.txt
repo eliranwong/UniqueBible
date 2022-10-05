@@ -1,3 +1,6 @@
+Changes in 32.23:
+* Added 6 items to search menu in terminal mode.
+
 Changes in 32.22:
 * Added note and journal commands to terminal mode.  To try, run '.note'.
 * Added config.terminalAutoUpdate

@@ -39,18 +39,44 @@ class LocalCliHandler:
             from prompt_toolkit.history import FileHistory
 
             find_history = os.path.join("terminal_history", "find")
+            module_history_books = os.path.join("terminal_history", "books")
             module_history_bibles = os.path.join("terminal_history", "bibles")
+            module_history_topics = os.path.join("terminal_history", "topics")
+            module_history_dictionaries = os.path.join("terminal_history", "dictionaries")
+            module_history_encyclopedia = os.path.join("terminal_history", "encyclopedia")
+            module_history_lexicons = os.path.join("terminal_history", "lexicons")
+            module_history_thirdDict = os.path.join("terminal_history", "thirdPartyDictionaries")
             module_history_commentaries = os.path.join("terminal_history", "commentaries")
             search_bible_history = os.path.join("terminal_history", "search_bible")
             search_bible_book_range_history = os.path.join("terminal_history", "search_bible_book_range")
             config_history = os.path.join("terminal_history", "config")
 
+            self.terminal_books_selection_session = PromptSession(history=FileHistory(module_history_books))
             self.terminal_find_session = PromptSession(history=FileHistory(find_history))
             self.terminal_search_bible_session = PromptSession(history=FileHistory(search_bible_history))
             self.terminal_search_bible_book_range_session = PromptSession(history=FileHistory(search_bible_book_range_history))
             self.terminal_bible_selection_session = PromptSession(history=FileHistory(module_history_bibles))
+            self.terminal_topics_selection_session = PromptSession(history=FileHistory(module_history_topics))
+            self.terminal_dictionary_selection_session = PromptSession(history=FileHistory(module_history_dictionaries))
+            self.terminal_encyclopedia_selection_session = PromptSession(history=FileHistory(module_history_encyclopedia))
+            self.terminal_lexicons_selection_session = PromptSession(history=FileHistory(module_history_lexicons))
+            self.terminal_thridPartyDictionaries_selection_session = PromptSession(history=FileHistory(module_history_thirdDict))
             self.terminal_commentary_selection_session = PromptSession(history=FileHistory(module_history_commentaries))
             self.terminal_config_selection_session = PromptSession(history=FileHistory(config_history))
+
+        else:
+            self.terminal_books_selection_session = None
+            self.terminal_find_session = None
+            self.terminal_search_bible_session = None
+            self.terminal_search_bible_book_range_session = None
+            self.terminal_bible_selection_session = None
+            self.terminal_topics_selection_session = None
+            self.terminal_dictionary_selection_session = None
+            self.terminal_encyclopedia_selection_session = None
+            self.terminal_lexicons_selection_session = None
+            self.terminal_thridPartyDictionaries_selection_session = None
+            self.terminal_commentary_selection_session = None
+            self.terminal_config_selection_session = None
 
     def getDotCommands(self):
         return {
@@ -112,6 +138,13 @@ class LocalCliHandler:
             ".searchversenote": ("search bible verse note", lambda: self.searchNote("SEARCHVERSENOTE")),
             ".searchjournal": ("search journal", lambda: self.searchNote("SEARCHJOURNAL")),
             ".changenoteeditor": ("change default note editor", self.changenoteeditor),
+            ".searchdictionaries": ("search dictionaries", lambda: self.searchTools("DICTIONARY", self.showdictionaries)),
+            ".searchencyclopedia": ("search encyclopedia", lambda: self.searchTools("ENCYCLOPEDIA", self.showencyclopedia)),
+            ".searchlexicons": ("search lexicons", lambda: self.searchTools("LEXICON", self.showlexicons)),
+            ".searchreferencebooks": ("search reference books", lambda: self.searchTools("BOOK", self.showreferencebooks)),
+            ".searchtopics": ("search topics", lambda: self.searchTools("TOPICS", self.showtopics)),
+            ".searchthirdpartydictionaries": ("search third-party dictionaries", lambda: self.searchTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
+            ".search3dict": ("an alias to the '.searchthirdpartydictionaries' command", lambda: self.searchTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
             ".opencrossreference": ("open cross reference", self.openversefeature),
             ".opencomparison": ("open verse comparison", lambda: self.openversefeature("COMPARE")),
             ".opendifference": ("open verse comparison with differences", lambda: self.openversefeature("DIFFERENCE")),
@@ -382,7 +415,7 @@ class LocalCliHandler:
         content += "<h2>{0}</h2>".format(config.thisTranslation["menu5_topics"])
         moduleList = []
         for index, topic in enumerate(self.crossPlatform.topicListAbb):
-            moduleList.append(f"[<ref>SEARCHTOOL:::{topic}:::</ref> ] {self.crossPlatform.topicList[index]}")
+            moduleList.append(f"[<ref>{topic}</ref> ] {self.crossPlatform.topicList[index]}")
         content += "<br>".join(moduleList)
         return TextUtil.htmlToPlainText(content).strip()
 
@@ -391,7 +424,7 @@ class LocalCliHandler:
         content += "<h2>{0}</h2>".format(config.thisTranslation["context1_dict"])
         moduleList = []
         for index, topic in enumerate(self.crossPlatform.dictionaryListAbb):
-            moduleList.append(f"[<ref>SEARCHTOOL:::{topic}:::</ref> ] {self.crossPlatform.dictionaryList[index]}")
+            moduleList.append(f"[<ref>{topic}</ref> ] {self.crossPlatform.dictionaryList[index]}")
         content += "<br>".join(moduleList)
         return TextUtil.htmlToPlainText(content).strip()
 
@@ -400,7 +433,7 @@ class LocalCliHandler:
         content += "<h2>{0}</h2>".format(config.thisTranslation["context1_encyclopedia"])
         moduleList = []
         for index, topic in enumerate(self.crossPlatform.encyclopediaListAbb):
-            moduleList.append(f"[<ref>SEARCHTOOL:::{topic}:::</ref> ] {self.crossPlatform.encyclopediaList[index]}")
+            moduleList.append(f"[<ref>{topic}</ref> ] {self.crossPlatform.encyclopediaList[index]}")
         content += "<br>".join(moduleList)
         return TextUtil.htmlToPlainText(content).strip()
 
@@ -427,14 +460,14 @@ class LocalCliHandler:
     def showthirdpartydictionary(self):
         modules = []
         for module in self.crossPlatform.thirdPartyDictionaryList:
-            modules.append(f"[<ref>SEARCHTHIRDDICTIONARY:::{module}:::</ref> ]")
+            modules.append(f"[<ref>{module}</ref> ]")
         content = "<br>".join(modules)
         return TextUtil.htmlToPlainText(content).strip()
 
     def showlexicons(self):
         modules = []
         for module in self.crossPlatform.lexiconList:
-            modules.append(f"[<ref>SEARCHLEXICON:::{module}:::</ref> ]")
+            modules.append(f"[<ref>{module}</ref> ]")
         content = "<br>".join(modules)
         return TextUtil.htmlToPlainText(content).strip()
 
@@ -442,14 +475,14 @@ class LocalCliHandler:
         self.textCommandParser.parent.setupResourceLists()
         content = ""
         content += """<h2><ref onclick="window.parent.submitCommand('.commentarymenu')">{0}</ref></h2>""".format(config.thisTranslation["menu4_commentary"])
-        content += "<br>".join(["""[<ref>{0}:::</ref> ] {1}""".format(abb, self.textCommandParser.parent.commentaryFullNameList[index]) for index, abb in enumerate(self.textCommandParser.parent.commentaryList)])
+        content += "<br>".join(["""[<ref>{0}</ref> ] {1}""".format(abb, self.textCommandParser.parent.commentaryFullNameList[index]) for index, abb in enumerate(self.textCommandParser.parent.commentaryList)])
         return TextUtil.htmlToPlainText(content).strip()
 
     def showreferencebooks(self):
         self.textCommandParser.parent.setupResourceLists()
         content = ""
         content += "<h2>{0}</h2>".format(config.thisTranslation["menu5_selectBook"])
-        content += "<br>".join(["""[<ref>BOOK:::{0}</ref> ] {0}""".format(book) for book in self.textCommandParser.parent.referenceBookList])
+        content += "<br>".join(["""[<ref>{0}</ref> ] {0}""".format(book) for book in self.textCommandParser.parent.referenceBookList])
         return TextUtil.htmlToPlainText(content).strip()
 
     def showdata(self):
@@ -668,6 +701,66 @@ class LocalCliHandler:
     def noPromptToolkit(self):
         print("Install package 'prompt_toolkit' first!")
         return ""
+
+    def searchTools(self, moduleType, showModules):
+        try:
+            if config.isPrompt_toolkitInstalled:
+                from prompt_toolkit import prompt
+                from prompt_toolkit.completion import WordCompleter
+            elements = {
+                "BOOK": (config.book, self.crossPlatform.referenceBookList, config.bookChapter, self.terminal_books_selection_session, "SEARCHBOOK"),
+                "TOPICS": (config.topic, self.crossPlatform.topicListAbb, config.topicEntry, self.terminal_topics_selection_session, ""),
+                "DICTIONARY": (config.dictionary, self.crossPlatform.dictionaryListAbb, config.dictionaryEntry, self.terminal_dictionary_selection_session, ""),
+                "ENCYCLOPEDIA": (config.encyclopedia, self.crossPlatform.encyclopediaListAbb, config.encyclopediaEntry, self.terminal_encyclopedia_selection_session, ""),
+                "LEXICON": (config.lexicon, self.crossPlatform.lexiconList, config.lexiconEntry, self.terminal_lexicons_selection_session, "SEARCHLEXICON"),
+                "THIRDDICTIONARY": (config.thirdDictionary, self.crossPlatform.thirdPartyDictionaryList, config.thirdDictionaryEntry, self.terminal_thridPartyDictionaries_selection_session, "SEARCHTHIRDDICTIONARY"),
+            }
+            print(self.divider)
+            print(showModules())
+            default, abbList, latestEntry, historySession, searchKeyword = elements[moduleType]
+            if not searchKeyword:
+                searchKeyword = "SEARCHTOOL"
+            if config.isPrompt_toolkitInstalled:
+                completer = WordCompleter(abbList, ignore_case=True)
+                userInput = historySession.prompt(self.inputIndicator, completer=completer, default=default).strip()
+            else:
+                userInput = input(self.inputIndicator).strip()
+            if not userInput or userInput == ".c":
+                return self.cancelAction()
+            if userInput in abbList:
+                module = userInput
+                print(self.divider)
+                self.printSearchEntryPrompt()
+                if config.isPrompt_toolkitInstalled:
+                    userInput = prompt(self.inputIndicator).strip()
+                else:
+                    userInput = input(self.inputIndicator).strip()
+                if not userInput or userInput == ".c":
+                    return self.cancelAction()
+                command = f"{searchKeyword}:::{module}:::{userInput}"
+                self.printRunningCommand(command)
+                print(self.divider)
+                print(self.getContent(command)[10:])
+                print(self.divider)
+                print(f"To open, enter a module entry (e.g. {latestEntry}):")
+                if config.isPrompt_toolkitInstalled:
+                    userInput = prompt(self.inputIndicator).strip()
+                else:
+                    userInput = input(self.inputIndicator).strip()
+                if not userInput or userInput == ".c":
+                    return self.cancelAction()
+                print(self.divider)
+
+                if moduleType == "TOPICS":
+                    command = f"EXLB:::exlbt:::{userInput}"
+                elif moduleType == "DICTIONARY":
+                    command = f"{moduleType}:::{userInput}"
+                else:
+                    command = f"{moduleType}:::{module}:::{userInput}"
+                self.printRunningCommand(command)
+                return self.getContent(command)
+        except:
+            return self.printInvalidOptionEntered()
 
     def journalFeature(self, feature="OPENJOURNAL"):
         try:
@@ -1049,7 +1142,7 @@ class LocalCliHandler:
                         # define command keyword
                         keyword = searchOptionsList[userInput]
                         print(self.divider)
-                        print("Enter a search item:")
+                        self.printSearchEntryPrompt()
                         *_, stringFormat, example = searchOptions[searchOptionsList[userInput]]
                         print(f"(format: {stringFormat})")
                         print(f"(example: {example})")
@@ -1271,10 +1364,13 @@ class LocalCliHandler:
     def getPlainText(self, content=None):
         return TextUtil.htmlToPlainText(self.html if content is None else content, False).strip()
 
+    def printSearchEntryPrompt(self):
+        print("Enter a search item:")
+
     def searchNote(self, keyword="SEARCHBOOKNOTE"):
         try:
             print(self.divider)
-            print("Enter a search item:")
+            self.printSearchEntryPrompt()
             if config.isPrompt_toolkitInstalled:
                 from prompt_toolkit import prompt
                 userInput = prompt(self.inputIndicator).strip()
@@ -1490,7 +1586,7 @@ class LocalCliHandler:
 
     def search(self):
         heading = "Search"
-        features = (".searchbible",)
+        features = (".searchbible", ".searchtopics", ".searchreferencebooks", ".searchencyclopedia", ".searchdictionaries", ".searchthirdpartydictionaries", ".searchlexicons")
         return self.displayFeatureMenu(heading, features)
 
     def show(self):

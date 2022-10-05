@@ -982,9 +982,15 @@ class BookData:
     def getContent(self, module, entry):
         entry = re.sub("@", "'", entry)
         if entry.isdecimal():
-            return Book(module).getContentByRowId(entry)
+            content = Book(module).getContentByRowId(entry)
         else:
-            return Book(module).getContentByChapter(entry)
+            content = Book(module).getContentByChapter(entry)
+        if config.runMode == "terminal":
+            #<ref onclick="promise(0, 86)">[Go to]</ref>
+            #_promise:::0.86
+            content = re.sub("""<ref onclick="promise\(([0-9]+?), ([0-9]+?)\)">\[Go to\]</ref>""", r"[<ref>_promise:::\1.\2</ref> ]", content)
+            content = re.sub("""<ref onclick="harmony\(([0-9]+?), ([0-9]+?)\)">\[Go to\]</ref>""", r"[<ref>_harmony:::\1.\2</ref> ]", content)
+        return content
 
 
 class Book:

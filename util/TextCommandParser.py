@@ -432,7 +432,8 @@ class TextCommandParser:
             # e.g. ENCYCLOPEDIA:::ISB:::ISBE3333"""),
             "searchthirddictionary": (self.thirdDictionarySearch, """
             # [KEYWORD] SEARCHTHIRDDICTIONARY
-            # e.g. SEARCHTHIRDDICTIONARY:::faith"""),
+            # e.g. SEARCHTHIRDDICTIONARY:::faith
+            # e.g. SEARCHTHIRDDICTIONARY:::webster:::faith"""),
             "thirddictionary": (self.thirdDictionaryOpen, """
             # [KEYWORD] THIRDDICTIONARY
             # e.g. THIRDDICTIONARY:::webster:::FAITH"""),
