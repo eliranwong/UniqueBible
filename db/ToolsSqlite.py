@@ -963,7 +963,10 @@ class BookData:
                     searchCommand = "SEARCHBOOKCHAPTER"
                 else:
                     searchCommand = "SEARCHBOOK"
-                return "<p>{0} &ensp;<button class='ubaButton' onclick='document.title=\"_command:::{3}:::{1}:::\"'>search</button></p><p>{2}</p>".format(books, module, topics, searchCommand)
+                if config.runMode == "terminal":
+                    return topics
+                else:
+                    return "<p>{0} &ensp;<button class='ubaButton' onclick='document.title=\"_command:::{3}:::{1}:::\"'>search</button></p><p>{2}</p>".format(books, module, topics, searchCommand)
             else:
                 return ""
         else:

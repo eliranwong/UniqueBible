@@ -138,9 +138,15 @@ class LocalCliHandler:
             ".searchversenote": ("search bible verse note", lambda: self.searchNote("SEARCHVERSENOTE")),
             ".searchjournal": ("search journal", lambda: self.searchNote("SEARCHJOURNAL")),
             ".changenoteeditor": ("change default note editor", self.changenoteeditor),
+            ".searchpromises": ("search bible promises", lambda: self.searchTools2("promises")),
+            ".searchparallels": ("search bible parallels", lambda: self.searchTools2("parallels")),
+            ".searchnames": ("search bible names", lambda: self.searchTools2("names")),
+            ".searchcharacters": ("search bible characters", lambda: self.searchTools2("characters")),
+            ".searchlocations": ("search bible locations", lambda: self.searchTools2("locations")),
             ".searchdictionaries": ("search dictionaries", lambda: self.searchTools("DICTIONARY", self.showdictionaries)),
             ".searchencyclopedia": ("search encyclopedia", lambda: self.searchTools("ENCYCLOPEDIA", self.showencyclopedia)),
             ".searchlexicons": ("search lexicons", lambda: self.searchTools("LEXICON", self.showlexicons)),
+            ".searchlexiconsreversely": ("search lexicons reversely", lambda: self.searchTools("REVERSELEXICON", self.showlexicons)),
             ".searchreferencebooks": ("search reference books", lambda: self.searchTools("BOOK", self.showreferencebooks)),
             ".searchtopics": ("search topics", lambda: self.searchTools("TOPICS", self.showtopics)),
             ".searchthirdpartydictionaries": ("search third-party dictionaries", lambda: self.searchTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
@@ -176,6 +182,9 @@ class LocalCliHandler:
             ".maintain": ("display maintain menu", self.maintain),
             ".control": ("display control menu", self.control),
             ".help": ("display help menu", self.help),
+            ".w3m": ("open html content in w3m", lambda: self.cliTool("w3m -T text/html", self.html)),
+            ".lynx": ("open html content in lynx", lambda: self.cliTool("lynx -stdin", self.html)),
+            ".textract": ("open text from document.", self.textract),
             ".nano": ("edit content with text editor 'nano'", lambda: self.texteditor("nano --softwrap --atblanks", self.getPlainText())),
             ".nanonew": ("open new file in text editor 'nano'", lambda: self.texteditor("nano --softwrap --atblanks")),
             ".vi": ("edit content with text editor 'vi'", lambda: self.texteditor("vi", self.getPlainText())),
@@ -298,7 +307,6 @@ class LocalCliHandler:
             suggestion = ['.quit', '.restart'] + dotCommands + sorted(textCommands) + bibleBooks
             suggestion.sort()
         return suggestion
-
 
     def togglePager(self):
         config.terminalEnablePager = not config.terminalEnablePager
@@ -702,6 +710,74 @@ class LocalCliHandler:
         print("Install package 'prompt_toolkit' first!")
         return ""
 
+    def textract(self):
+        if config.isTextractInstalled:
+            print(self.divider)
+            print("Enter a file path below:")
+            if config.isPrompt_toolkitInstalled:
+                from prompt_toolkit import prompt
+                userInput = prompt(self.inputIndicator).strip()
+            else:
+                userInput = input(self.inputIndicator).strip()
+            if not userInput or userInput == ".c":
+                return self.cancelAction()
+            if os.path.isfile(userInput):
+                import textract
+                return textract.process(userInput).decode()
+            else:
+                return self.printInvalidOptionEntered()
+        print("Tool 'textract' is not found on your system!")
+        return ""
+
+    def searchTools2(self, moduleType):
+        try:
+            if config.isPrompt_toolkitInstalled:
+                from prompt_toolkit import prompt
+            elements = {
+                "parallels": ("SEARCHBOOK:::Harmonies_and_Parallels:::", "SEARCHBOOK:::Harmonies_and_Parallels", "BOOK:::Harmonies_and_Parallels:::"),
+                "promises": ("SEARCHBOOK:::Bible_Promises:::", "SEARCHBOOK:::Bible_Promises", "BOOK:::Bible_Promises:::"),
+                "names": ("SEARCHTOOL:::HBN:::", "SEARCHTOOL:::HBN:::", ""),
+                "characters": ("SEARCHTOOL:::EXLBP:::", "SEARCHTOOL:::EXLBP:::", "EXLB:::exlbp:::"),
+                "locations": ("SEARCHTOOL:::EXLBL:::", "SEARCHTOOL:::EXLBL:::", "EXLB:::exlbl:::"),
+            }
+            searchPrefix, showAll, openPrefix = elements[moduleType]
+            print(self.divider)
+            self.printSearchEntryPrompt()
+            if config.isPrompt_toolkitInstalled:
+                userInput = prompt(self.inputIndicator).strip()
+            else:
+                userInput = input(self.inputIndicator).strip()
+            if userInput == ".c":
+                return self.cancelAction()
+            elif not userInput:
+                command = showAll
+            else:
+                command = f"{searchPrefix}{userInput}"
+            self.printRunningCommand(command)
+            print(self.divider)
+            content = self.getContent(command)
+            if content.startswith("[MESSAGE]"):
+                content = content[10:]
+            if openPrefix:
+                print(content)
+                print(self.divider)
+                print(f"Enter an item to open:")
+                if config.isPrompt_toolkitInstalled:
+                    userInput = prompt(self.inputIndicator).strip()
+                else:
+                    userInput = input(self.inputIndicator).strip()
+                if not userInput or userInput == ".c":
+                    return self.cancelAction()
+                print(self.divider)
+                command = f"{openPrefix}{userInput}"
+                self.printRunningCommand(command)
+                print(self.divider)
+                return self.getContent(command)
+            else:
+                return content
+        except:
+            return self.printInvalidOptionEntered()
+
     def searchTools(self, moduleType, showModules):
         try:
             if config.isPrompt_toolkitInstalled:
@@ -713,6 +789,7 @@ class LocalCliHandler:
                 "DICTIONARY": (config.dictionary, self.crossPlatform.dictionaryListAbb, config.dictionaryEntry, self.terminal_dictionary_selection_session, ""),
                 "ENCYCLOPEDIA": (config.encyclopedia, self.crossPlatform.encyclopediaListAbb, config.encyclopediaEntry, self.terminal_encyclopedia_selection_session, ""),
                 "LEXICON": (config.lexicon, self.crossPlatform.lexiconList, config.lexiconEntry, self.terminal_lexicons_selection_session, "SEARCHLEXICON"),
+                "REVERSELEXICON": (config.lexicon, self.crossPlatform.lexiconList, "", self.terminal_lexicons_selection_session, "REVERSELEXICON"),
                 "THIRDDICTIONARY": (config.thirdDictionary, self.crossPlatform.thirdPartyDictionaryList, config.thirdDictionaryEntry, self.terminal_thridPartyDictionaries_selection_session, "SEARCHTHIRDDICTIONARY"),
             }
             print(self.divider)
@@ -740,7 +817,10 @@ class LocalCliHandler:
                 command = f"{searchKeyword}:::{module}:::{userInput}"
                 self.printRunningCommand(command)
                 print(self.divider)
-                print(self.getContent(command)[10:])
+                content = self.getContent(command)
+                if moduleType == "REVERSELEXICON":
+                    return content
+                print(content[10:] if content.startswith("[MESSAGE]") else content)
                 print(self.divider)
                 print(f"To open, enter a module entry (e.g. {latestEntry}):")
                 if config.isPrompt_toolkitInstalled:
@@ -1478,6 +1558,17 @@ class LocalCliHandler:
             return ".restart"
 
     # text editor
+    def cliTool(self, tool, content=""):
+        if WebtopUtil.isPackageInstalled(tool):
+            pydoc.pipepager(content, cmd=tool)
+            if WebtopUtil.isPackageInstalled("pkill"):
+                tool = tool.strip().split(" ")[0]
+                os.system(f"pkill {tool}")
+        else:
+            print(f"Tool '{tool}' is not found on your system!")
+        return ""
+
+    # text editor
     def texteditor(self, editor, content=""):
         if WebtopUtil.isPackageInstalled(editor):
             pydoc.pipepager(content, cmd=f"{editor} -")
@@ -1576,7 +1667,7 @@ class LocalCliHandler:
 
     def open(self):
         heading = "Open"
-        features = (".openbible", ".opencommentary", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures")
+        features = (".openbible", ".opencommentary", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".textract", ".w3m", ".lynx")
         return self.displayFeatureMenu(heading, features)
 
     def control(self):
@@ -1586,7 +1677,7 @@ class LocalCliHandler:
 
     def search(self):
         heading = "Search"
-        features = (".searchbible", ".searchtopics", ".searchreferencebooks", ".searchencyclopedia", ".searchdictionaries", ".searchthirdpartydictionaries", ".searchlexicons")
+        features = (".searchbible", ".searchpromises", ".searchparallels", ".searchnames", ".searchcharacters", ".searchlocations", ".searchtopics", ".searchreferencebooks", ".searchencyclopedia", ".searchdictionaries", ".searchthirdpartydictionaries", ".searchlexicons", ".searchlexiconsreversely")
         return self.displayFeatureMenu(heading, features)
 
     def show(self):

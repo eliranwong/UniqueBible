@@ -1,3 +1,10 @@
+Changes in 32.24:
+* Added 6 more items to search menu in terminal mode.
+* Added '.textract' command in terminal mode, to extract text from documents.
+* Support youtube downloads in terminal mode.
+* Optimised diplay of search result in terminal mode.
+* Support 2 cli web browsers, w3m and lynx, in terminal mode via '.w3m' and '.lynx' commands.
+
 Changes in 32.23:
 * Added 6 items to search menu in terminal mode.
 

@@ -1558,9 +1558,27 @@ class TextCommandParser:
 #        elif self.qtTtsEngine is not None:
 #            self.qtTtsEngine.stop()
 
+    def terminalDownloadYoutubeFile(self, downloadCommand, command, outputFolder):
+        if self.isFfmpegInstalled():
+            try:
+                print("Downloading ...")
+                subprocess.run(["cd {2}; {0} {1}".format(downloadCommand, command, outputFolder)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+                if WebtopUtil.isPackageInstalled("pkill"):
+                    os.system("pkill yt-dlp")
+                print("Downloaded!")
+            except subprocess.CalledProcessError as err:
+                config.mainWindow.displayMessage(err, title="ERROR:")
+        else:
+            print("Tool 'ffmpeg' is not found on your system!")
+        return ("", "", {})
+
     # mp3:::
     def mp3Download(self, command, source):
         downloadCommand = "yt-dlp -x --audio-format mp3"
+
+        if config.runMode == "terminal":
+            return self.terminalDownloadYoutubeFile(downloadCommand, command, config.musicFolder)
+
         if not platform.system() == "Linux":
             # version 1: known issue - the download process blocks the main window
             self.downloadYouTubeFile(downloadCommand, command, config.musicFolder)
@@ -1574,6 +1592,10 @@ class TextCommandParser:
     # mp4:::
     def mp4Download(self, command, source):
         downloadCommand = "yt-dlp -f bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4"
+
+        if config.runMode == "terminal":
+            return self.terminalDownloadYoutubeFile(downloadCommand, command, config.videoFolder)
+
         if not platform.system() == "Linux":
             # version 1: known issue - the download process blocks the main window
             self.downloadYouTubeFile(downloadCommand, command, config.videoFolder)
@@ -3243,7 +3265,7 @@ class TextCommandParser:
             showLexiconMenu = False
         else:
             modules = [module]
-            showLexiconMenu = True
+            showLexiconMenu = True if not config.runMode == "terminal" else False
         entries = entries.strip()
         if config.useLiteVerseParsing and not config.noQt:
             try:
@@ -3480,6 +3502,9 @@ class TextCommandParser:
                     config.topic = "EXLBT"
                 exlbData = ExlbData()
                 content = exlbData.getContent(commandList[0], commandList[1])
+                if config.runMode == "terminal" and module == "exlbl":
+                    #<p align="center">[<ref onclick="website('https://maps.google.com/?q=31.777444,35.234935&ll=31.777444,35.234935&z=10')">Click HERE for a Live Google Map</ref>]</p>
+                    content = re.sub("""<p align="center">\[<ref onclick="website\('(.*?)'\)">Click HERE for a Live Google Map</ref>\]</p>""", r"[<ref>\1</ref> ]", content)
                 if config.theme in ("dark", "night"):
                     content = self.adjustDarkThemeColorsForExl(content)
                 return ("study", content, {})

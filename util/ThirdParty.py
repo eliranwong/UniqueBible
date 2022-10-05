@@ -2178,6 +2178,8 @@ class ThirdPartyDictionary:
             return "<h2>Search <span style='color: brown;'>{0}</span> for <span style='color: brown;'>{1}</span></h2>{4}<b>Exact match:</b><br><br>{2}</p><p><b>Partial match:</b><br><br>{3}".format(self.module, entry, exactMatch, similarMatch, selectList)
 
     def formatSelectList(self, action, optionList):
+        if config.runMode == "terminal":
+            return ""
         selectForm = "<select onchange='{0}'>".format(action)
         for value, description in optionList:
             if value == self.module:
