@@ -594,7 +594,8 @@ class LocalCliHandler:
         try:
             plainText = self.getPlainText()
             if config.terminalEnableTermuxAPI:
-                return self.termux_clipboard_get(plainText)
+                pydoc.pipepager(plainText, cmd="termux-clipboard-set")
+                #return self.termux_clipboard_get(plainText)
             else:
                 import pyperclip
                 pyperclip.copy(plainText)
