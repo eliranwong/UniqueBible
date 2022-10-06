@@ -3147,6 +3147,7 @@ class TextCommandParser:
 
     # REGEXSEARCH:::
     def textSearchRegex(self, command, source):
+        print("check", command)
         return self.textSearch(command, source, "REGEX", config.addFavouriteToMultiRef)
 
     # ADVANCEDSEARCH:::

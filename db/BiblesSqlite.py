@@ -484,6 +484,7 @@ input.addEventListener('keyup', function(event) {0}
             return Bible(text).countSearchBook(book, searchString)
 
     def searchBible(self, text, mode, searchString, interlinear=False, referenceOnly=False, booksRange=""):
+        print(mode)
         if text in self.marvelBibles and not text in ["LXX1", "LXX1i", "LXX2", "LXX2i"]:
             searchString = TextUtil.removeVowelAccent(searchString)
         if not mode == "REGEX":
@@ -515,6 +516,7 @@ input.addEventListener('keyup', function(event) {0}
             formatedText = "REGEXSEARCH:::<aa>{0}</aa>:::{1}".format(text, searchString)
             t = (searchString,)
             query += "(Scripture REGEXP ?)"
+            print(query)
         else:
             query += " 1=1"
         if booksRange:
@@ -566,7 +568,8 @@ input.addEventListener('keyup', function(event) {0}
                     formatedText = TextUtil.highlightSearchString(formatedText, eachString)
             # fix highlighting
             formatedText = TextUtil.fixTextHighlighting(formatedText)
-            formatedText += "</p>"
+            formatedText += "</p>"\
+            print(formatedText)
         return formatedText
 
     def getSearchVerses(self, query, binding):
