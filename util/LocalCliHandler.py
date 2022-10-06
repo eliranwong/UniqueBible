@@ -549,13 +549,19 @@ class LocalCliHandler:
         return TextUtil.htmlToPlainText(content).strip()
 
     def paste(self):
-        if config.isPyperclipInstalled:
-            import pyperclip
-            command = pyperclip.paste()
+        try:
+            if config.terminalEnableTermuxAPI:
+                process = subprocess.Popen("termux-clipboard-get", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                stdout, *_ = process.communicate()
+                command = stdout.decode("utf-8")
+            elif config.isPyperclipInstalled:
+                import pyperclip
+                command = pyperclip.paste()
             print("Running clipboard text:")
             print(command)
             return self.getContent(command)
-        return self.noClipboardUtility()
+        except:
+            return self.noClipboardUtility()
 
     def bible(self):
         bibleReference = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
@@ -573,9 +579,12 @@ class LocalCliHandler:
 
     def share(self, command=""):
         try:
-            import pyperclip
             weblink = TextUtil.getWeblink(command if command else self.command)
-            pyperclip.copy(weblink)
+            if config.terminalEnableTermuxAPI:
+                pydoc.pipepager(weblink, cmd="termux-clipboard-set")
+            else:
+                import pyperclip
+                pyperclip.copy(weblink)
             print(f"The following link is copied to clipboard:\n")
             print(weblink)
             print("\nPaste and open it in a web browser or share with others.")
@@ -583,12 +592,12 @@ class LocalCliHandler:
         except:
             return self.noClipboardUtility()
 
-    def termux_clipboard_get(self, text):
-        outputFile = os.path.join("terminal_history", "tempText.txt")
-        with open(outputFile, "w", encoding="utf-8") as fileObject:
-            fileObject.write(text)
-        os.system(f"cat {outputFile} | termux-clipboard-set")
-        return ""
+#    def termux_clipboard_get(self, text):
+#        outputFile = os.path.join("terminal_history", "tempText.txt")
+#        with open(outputFile, "w", encoding="utf-8") as fileObject:
+#            fileObject.write(text)
+#        os.system(f"cat {outputFile} | termux-clipboard-set")
+#        return ""
 
     def copy(self):
         try:
@@ -600,24 +609,25 @@ class LocalCliHandler:
                 import pyperclip
                 pyperclip.copy(plainText)
                 print("Content is copied to clipboard.")
-                return ""
+            return ""
         except:
             return self.noClipboardUtility()
 
     def copyHtml(self):
         try:
             if config.terminalEnableTermuxAPI:
-                return self.termux_clipboard_get(self.html)
+                pydoc.pipepager(self.html, cmd="termux-clipboard-set")
+                #return self.termux_clipboard_get(self.html)
             else:
                 import pyperclip
                 pyperclip.copy(self.html)
                 print("HTML content is copied to clipboard.")
-                return ""
+            return ""
         except:
             return self.noClipboardUtility()
 
     def noClipboardUtility(self):
-        print("Clipboard utility 'pyperclip' is not installed.")
+        print("Clipboard utility is not found!")
         return ""
 
     def find(self):

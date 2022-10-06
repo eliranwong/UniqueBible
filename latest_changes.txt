@@ -1,3 +1,6 @@
+Changes in 32.28:
+* Initial support of Termux API in terminal mode.
+
 Changes in 32.27:
 * Added ".searchconcordance", ".starthttpserver", ".stophttpserver", ".openreferencebook" interactive features in terminal mode.
 
