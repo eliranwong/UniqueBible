@@ -1,11 +1,14 @@
-import re, config, pprint, os, requests, platform, pydoc, markdown
+import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess
 from datetime import date
+#import urllib.request
 from ast import literal_eval
 from db.BiblesSqlite import Bible
 from db.JournalSqlite import JournalSqlite
+from db.ToolsSqlite import Book
 from db.NoteSqlite import NoteSqlite
 from util.DateUtil import DateUtil
 from util.TextUtil import TextUtil
+from util.NetworkUtil import NetworkUtil
 from util.RemoteCliMainWindow import RemoteCliMainWindow
 from util.TextCommandParser import TextCommandParser
 from util.BibleVerseParser import BibleVerseParser
@@ -48,11 +51,13 @@ class LocalCliHandler:
             module_history_thirdDict = os.path.join("terminal_history", "thirdPartyDictionaries")
             module_history_commentaries = os.path.join("terminal_history", "commentaries")
             search_bible_history = os.path.join("terminal_history", "search_bible")
+            search_strong_bible_history = os.path.join("terminal_history", "search_strong_bible")
             search_bible_book_range_history = os.path.join("terminal_history", "search_bible_book_range")
             config_history = os.path.join("terminal_history", "config")
 
             self.terminal_books_selection_session = PromptSession(history=FileHistory(module_history_books))
             self.terminal_find_session = PromptSession(history=FileHistory(find_history))
+            self.terminal_search_strong_bible_session = PromptSession(history=FileHistory(search_strong_bible_history))
             self.terminal_search_bible_session = PromptSession(history=FileHistory(search_bible_history))
             self.terminal_search_bible_book_range_session = PromptSession(history=FileHistory(search_bible_book_range_history))
             self.terminal_bible_selection_session = PromptSession(history=FileHistory(module_history_bibles))
@@ -65,6 +70,8 @@ class LocalCliHandler:
             self.terminal_config_selection_session = PromptSession(history=FileHistory(config_history))
 
         else:
+
+            self.terminal_search_strong_bible_session = None
             self.terminal_books_selection_session = None
             self.terminal_find_session = None
             self.terminal_search_bible_session = None
@@ -125,6 +132,7 @@ class LocalCliHandler:
             ".changecolors": ("change text highlight colors", self.changecolors),
             ".openbible": ("open bible", self.openbible),
             ".opencommentary": ("open commentary", self.opencommentary),
+            ".openreferencebook": ("open reference book", self.openreferencebook),
             ".openbooknote": ("open bible book note", lambda: self.openbookfeature("OPENBOOKNOTE")),
             ".openchapternote": ("open bible chapter note", lambda: self.openchapterfeature("OPENCHAPTERNOTE")),
             ".openversenote": ("open bible verse note", lambda: self.openversefeature("OPENVERSENOTE")),
@@ -151,6 +159,7 @@ class LocalCliHandler:
             ".searchtopics": ("search topics", lambda: self.searchTools("TOPICS", self.showtopics)),
             ".searchthirdpartydictionaries": ("search third-party dictionaries", lambda: self.searchTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
             ".search3dict": ("an alias to the '.searchthirdpartydictionaries' command", lambda: self.searchTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
+            ".searchconcordance": ("search for concordance", self.searchconcordance),
             ".opencrossreference": ("open cross reference", self.openversefeature),
             ".opencomparison": ("open verse comparison", lambda: self.openversefeature("COMPARE")),
             ".opendifference": ("open verse comparison with differences", lambda: self.openversefeature("DIFFERENCE")),
@@ -191,12 +200,14 @@ class LocalCliHandler:
             ".vinew": ("open new file in text editor 'vi'", lambda: self.texteditor("vi")),
             ".vim": ("edit content with text editor 'vim'", lambda: self.texteditor("vim", self.getPlainText())),
             ".vimnew": ("open new file in text editor 'vim'", lambda: self.texteditor("vim")),
-            #".download": ("display download menu", self.download),
             ".searchbible": ("search bible", self.searchbible),
             ".whatis": ("read description about a command", self.whatis),
             ".nanoconfig": ("edit 'config.py' with nano", lambda: self.editConfig("nano --softwrap --atblanks")),
             ".viconfig": ("edit 'config.py' with vi", lambda: self.editConfig("vi")),
             ".vimconfig": ("edit 'config.py' with vim", lambda: self.editConfig("vim")),
+            ".starthttpserver": ("start UBA http-server", self.starthttpserver),
+            ".stophttpserver": ("stop UBA http-server", self.stophttpserver),
+            ".downloadyoutube": ("download youtube file", self.downloadyoutube),
         }
 
     def execPythonFile(self, script):
@@ -461,7 +472,7 @@ class LocalCliHandler:
         content += "<h2>{0} + {1}</h2>".format(config.thisTranslation["menu5_bible"], config.thisTranslation["bibleStrongNumber"])
         bibleList = []
         for index, bible in enumerate(self.crossPlatform.strongBibles):
-            bibleList.append(f"[<ref>TEXT:::{bible}</ref> ] {strongBiblesFullNameList[index]}")
+            bibleList.append(f"[<ref>{bible}</ref> ] {strongBiblesFullNameList[index]}")
         content += "<br>".join(bibleList)
         return TextUtil.htmlToPlainText(content).strip()
 
@@ -710,6 +721,74 @@ class LocalCliHandler:
         print("Install package 'prompt_toolkit' first!")
         return ""
 
+    def simplePrompt(self):
+        if config.isPrompt_toolkitInstalled:
+            from prompt_toolkit import prompt
+            userInput = prompt(self.inputIndicator).strip()
+        else:
+            userInput = input(self.inputIndicator).strip()
+        return userInput
+
+    def isUrlAlive(self, url):
+        #print(urllib.request.urlopen("https://www.stackoverflow.com").getcode())
+        try:
+            request = requests.get(url, timeout=5)
+        except:
+            return False
+        return True if request.status_code == 200 else False
+
+    def starthttpserver(self):
+        url = "http://localhost:8080"
+        if self.isUrlAlive(url):
+            print(f"'{url}' is already alive!")
+        else:
+            subprocess.Popen([sys.executable, config.httpServerUbaFile, "http-server"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print("UBA hptt-server started!")
+        print("To connect, open 'http://{0}:{1}' in a web browser.".format(NetworkUtil.get_ip(), config.httpServerPort))
+        return ""
+
+    def stophttpserver(self):
+        url = "http://localhost:8080/index.html?cmd=.stop"
+        if self.isUrlAlive(url):
+            print("http-server stopped!")
+        else:
+            print("http-server is not running!")
+        return ""
+
+    def downloadyoutube(self):
+        if config.isYoutubeDownloaderInstalled and self.textCommandParser.isFfmpegInstalled():
+            try:
+                print(self.divider)
+                print("Enter a youtube link:")
+                userInput = self.simplePrompt()
+                if not userInput or userInput == ".c":
+                    return self.cancelAction()
+                print("Checking connection ...")
+                if self.isUrlAlive(userInput):
+                    print("Connection is available.")
+                    print(self.divider)
+                    url = userInput
+                    options = {
+                        "0": "mp3:::",
+                        "1": "mp4:::",
+                    }
+                    self.printChooseItem()
+                    print("[0] Download mp3 audio")
+                    print("[1] Download mp4 video")
+                    userInput = self.simplePrompt()
+                    if userInput in options:
+                        command = f"{options[userInput]}{url}"
+                        self.printRunningCommand(command)
+                        return self.getContent(command)
+                    else:
+                        return self.printInvalidOptionEntered()
+                else:
+                    return self.printInvalidOptionEntered()
+            except:
+                return self.printInvalidOptionEntered()
+        self.printToolNotFound("yt-dlp' or 'ffmpeg")
+        return ""
+
     def textract(self):
         if config.isTextractInstalled:
             print(self.divider)
@@ -726,8 +805,11 @@ class LocalCliHandler:
                 return textract.process(userInput).decode()
             else:
                 return self.printInvalidOptionEntered()
-        print("Tool 'textract' is not found on your system!")
+        self.printToolNotFound("textract")
         return ""
+
+    def printToolNotFound(self, tool):
+        print(f"Tool '{tool}' is not found on your system!")
 
     def searchTools2(self, moduleType):
         try:
@@ -839,6 +921,50 @@ class LocalCliHandler:
                     command = f"{moduleType}:::{module}:::{userInput}"
                 self.printRunningCommand(command)
                 return self.getContent(command)
+        except:
+            return self.printInvalidOptionEntered()
+
+    def openreferencebook(self):
+        try:
+            if config.isPrompt_toolkitInstalled:
+                from prompt_toolkit import prompt
+                from prompt_toolkit.completion import WordCompleter
+
+            print(self.divider)
+            print(self.showreferencebooks())
+            print(self.divider)
+            print("Enter a reference book:")
+            if config.isPrompt_toolkitInstalled:
+                completer = WordCompleter(self.crossPlatform.referenceBookList, ignore_case=True)
+                userInput = self.terminal_books_selection_session.prompt(self.inputIndicator, completer=completer, default=config.book).strip()
+            else:
+                userInput = input(self.inputIndicator).strip()
+            if not userInput or userInput == ".c":
+                return self.cancelAction()
+            if userInput in self.crossPlatform.referenceBookList:
+                book = userInput
+                chapterList = Book(book).getTopicList()
+                chapterDisplay = "<h2>Chapters</h2>"
+                chapterDisplay += "<br>".join([f"<ref>{chapter}</ref>" for chapter in chapterList])
+                print(self.divider)
+                print(TextUtil.htmlToPlainText(chapterDisplay).strip())
+                print(self.divider)
+                print("Enter a chapter title:")
+                if config.isPrompt_toolkitInstalled:
+                    completer = WordCompleter(chapterList, ignore_case=True)
+                    userInput = prompt(self.inputIndicator, completer=completer, default=config.bookChapter if config.bookChapter in chapterList else "").strip()
+                else:
+                    userInput = input(self.inputIndicator).strip()
+                if not userInput or userInput == ".c":
+                    return self.cancelAction()
+                if userInput in chapterList:
+                    command = f"BOOK:::{book}:::{userInput}"
+                    self.printRunningCommand(command)
+                    return self.getContent(command)
+                else:
+                    return self.printInvalidOptionEntered()
+            else:
+                return self.printInvalidOptionEntered()
         except:
             return self.printInvalidOptionEntered()
 
@@ -1147,6 +1273,42 @@ class LocalCliHandler:
         else:
             print(self.getContent(f"_whatis:::{command}"))
         return ""
+
+    def searchconcordance(self):
+        print(self.divider)
+        print(self.showstrongbibles())
+        #self.terminal_search_strong_bible_session
+
+        try:
+            if config.isPrompt_toolkitInstalled:
+                from prompt_toolkit import prompt
+                from prompt_toolkit.completion import WordCompleter
+
+            print(self.divider)
+            print(self.showstrongbibles())
+            self.printChooseItem()
+            print("Enter a bible abbreviation to search a single version, e.g. 'KJVx'")
+            print("To search multiple versions, use '_' as a delimiter, e.g. 'KJVx_RWVx_OHGBi'")
+            if config.isPrompt_toolkitInstalled:
+                completer = WordCompleter(self.crossPlatform.strongBibles, ignore_case=True)
+                userInput = self.terminal_search_strong_bible_session.prompt(self.inputIndicator, completer=completer).strip()
+            else:
+                userInput = input(self.inputIndicator).strip()
+            if not userInput or userInput == ".c":
+                return self.cancelAction()
+            if self.isValidBibles(userInput):
+                # bible version(s) defined
+                bible = userInput
+                print(self.divider)
+                print("Enter a Strong's number or lexical entry:")
+                userInput = self.simplePrompt()
+                command = f"CONCORDANCE:::{bible}:::{userInput}"
+                self.printRunningCommand(command)
+                return self.getContent(command)
+            else:
+                return self.printInvalidOptionEntered()
+        except:
+            return self.printInvalidOptionEntered()
 
     def searchbible(self):
         try:
@@ -1565,7 +1727,7 @@ class LocalCliHandler:
                 tool = tool.strip().split(" ")[0]
                 os.system(f"pkill {tool}")
         else:
-            print(f"Tool '{tool}' is not found on your system!")
+            self.printToolNotFound(tool)
         return ""
 
     # text editor
@@ -1576,7 +1738,7 @@ class LocalCliHandler:
                 editor = editor.strip().split(" ")[0]
                 os.system(f"pkill {editor}")
         else:
-            print(f"Text editor '{editor}' is not found on your system!")
+            self.printToolNotFound(editor)
         return ""
 
     def openNoteEditor(self, noteType, b=None, c=None, v=None, year=None, month=None, day=None, editor=None):
@@ -1618,7 +1780,8 @@ class LocalCliHandler:
                 # remove file after saving
                 os.remove(notePath)
         else:
-            print(f"Text editor '{editor}' is not found on your system!  Please install it first of run '.changenoteeditor' to change the default note editor.")
+            self.printToolNotFound(editor)
+            print("Install it first of run '.changenoteeditor' to change the default note editor.")
             return ""
 
     def saveNote(self, noteDB, noteType, b=None, c=None, v=None, year=None, month=None, day=None, note=""):
@@ -1662,12 +1825,12 @@ class LocalCliHandler:
 
     def menu(self):
         heading = "UBA Terminal Mode Menu"
-        features = (".open", ".show", ".note", ".search", ".control", ".edit", ".change", ".maintain", ".help")
+        features = (".show", ".open", ".search", ".note", ".control", ".edit", ".change", ".maintain", ".help")
         return self.displayFeatureMenu(heading, features)
 
     def open(self):
         heading = "Open"
-        features = (".openbible", ".opencommentary", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".textract", ".w3m", ".lynx")
+        features = (".openbible", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".opencommentary", ".openreferencebook", ".textract", ".w3m", ".lynx")
         return self.displayFeatureMenu(heading, features)
 
     def control(self):
@@ -1677,7 +1840,7 @@ class LocalCliHandler:
 
     def search(self):
         heading = "Search"
-        features = (".searchbible", ".searchpromises", ".searchparallels", ".searchnames", ".searchcharacters", ".searchlocations", ".searchtopics", ".searchreferencebooks", ".searchencyclopedia", ".searchdictionaries", ".searchthirdpartydictionaries", ".searchlexicons", ".searchlexiconsreversely")
+        features = (".searchbible", ".searchpromises", ".searchparallels", ".searchnames", ".searchcharacters", ".searchlocations", ".searchtopics", ".searchreferencebooks", ".searchencyclopedia", ".searchdictionaries", ".searchthirdpartydictionaries", ".searchlexicons", ".searchlexiconsreversely", ".searchconcordance")
         return self.displayFeatureMenu(heading, features)
 
     def show(self):

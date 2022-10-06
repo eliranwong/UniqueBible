@@ -160,7 +160,7 @@ def getHistoryRecords():
             item = item.strip()
             if item and item.startswith("+"):
                 item = item[1:]
-                startupException1 = (".quit", ".restart", ".togglepager", ".history", ".update", ".find", ".stopaudio", ".read", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible")
+                startupException1 = (".quit", ".restart", ".togglepager", ".history", ".update", ".find", ".stopaudio", ".read", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".stophttpserver", ".downloadyoutube")
                 startupException2 = "^(_setconfig:::|\.vi|\.nano|\.change|mp3:::|mp4:::|cmd:::)"
                 if not item.lower() in startupException1 and not re.search(startupException2, item.lower()):
                     records.append(item)

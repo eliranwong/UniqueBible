@@ -1563,7 +1563,7 @@ class TextCommandParser:
             try:
                 print(config.mainWindow.divider)
                 print("Downloading ...")
-                subprocess.run(["cd {2}; {0} {1}".format(downloadCommand, command, outputFolder)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+                subprocess.run(["cd {2}; {0} {1}".format(downloadCommand, command, outputFolder)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 if WebtopUtil.isPackageInstalled("pkill"):
                     os.system("pkill yt-dlp")
                 print(f"Downloaded in directory '{outputFolder}'!")
