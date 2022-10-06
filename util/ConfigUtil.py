@@ -1470,6 +1470,7 @@ class ConfigUtil:
             ("usePySide2onWebtop", config.usePySide2onWebtop),
             ("usePySide6onMacOS", config.usePySide6onMacOS),
             ("terminalAutoUpdate", config.terminalAutoUpdate),
+            ("terminalEnableTermuxAPI", config.terminalEnableTermuxAPI),
             ("terminalEnablePager", config.terminalEnablePager),
             ("terminalNoteEditor", config.terminalNoteEditor),
             ("terminalBibleComparison", config.terminalBibleComparison),
