@@ -568,7 +568,7 @@ input.addEventListener('keyup', function(event) {0}
                     formatedText = TextUtil.highlightSearchString(formatedText, eachString)
             # fix highlighting
             formatedText = TextUtil.fixTextHighlighting(formatedText)
-            formatedText += "</p>"\
+            formatedText += "</p>"
             print(formatedText)
         return formatedText
 
