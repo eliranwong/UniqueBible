@@ -585,20 +585,32 @@ class LocalCliHandler:
 
     def copy(self):
         try:
-            import pyperclip
-            plainText = self.getPlainText()
-            pyperclip.copy(plainText)
-            print("Content is copied to clipboard.")
-            return ""
+            if config.terminalEnableTermuxAPI:
+                pydoc.pipepager(plainText, cmd="termux-clipboard-set")
+                return ""
+            else:
+                import pyperclip
+                plainText = self.getPlainText()
+                pyperclip.copy(plainText)
+                print("Content is copied to clipboard.")
+                return ""
         except:
             return self.noClipboardUtility()
 
     def copyHtml(self):
         try:
-            import pyperclip
-            pyperclip.copy(self.html)
-            print("HTML content is copied to clipboard.")
-            return ""
+            if config.terminalEnableTermuxAPI:
+                pydoc.pipepager(self.html, cmd="termux-clipboard-set")
+                return ""
+                #outputFile = os.path.join("terminal_history", "tempText.txt")
+                #with open(outputFile, "w", encoding="utf-8") as fileObject:
+                #    fileObject.write(self.html)
+                #os.system(f"cat {outputFile} | termux-clipboard-set")
+            else:
+                import pyperclip
+                pyperclip.copy(self.html)
+                print("HTML content is copied to clipboard.")
+                return ""
         except:
             return self.noClipboardUtility()
 

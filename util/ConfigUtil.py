@@ -82,7 +82,32 @@ class ConfigUtil:
         # Use PySide6 as Qt Library, even config.qtLibrary is set to a value other than 'pyside6'."""
         if not hasattr(config, "usePySide6onMacOS"):
             config.usePySide6onMacOS = True
-        # Start of erminal mode setting
+
+        # Start of terminal mode setting
+        config.help["terminalEnableTermuxAPI"] = """
+        # Option to enable use of Termux:API tools in UBA.
+        # Make sure you have both Termux:API app and termux-api package installed if you want to enable it.
+        # Read https://github.com/eliranwong/UniqueBible/wiki/Install-Termux-on-Android#install-termuxapi--termux-api-optional"""
+        if not hasattr(config, "terminalEnableTermuxAPI"):
+            config.terminalEnableTermuxAPI = False
+        config.help["terminalEnablePager"] = """
+        # To enable paging of terminal output when UBA runs in terminal mode."""
+        if not hasattr(config, "terminalEnablePager"):
+            config.terminalEnablePager = False
+        config.help["terminalAutoUpdate"] = """
+        # Option to update UBA automatically on startup if newer version is found."""
+        if not hasattr(config, "terminalAutoUpdate"):
+            config.terminalAutoUpdate = False
+        config.help["terminalNoteEditor"] = """
+        # Default note editor used in terminal mode.
+        # Suggested options: 'nano --softwrap --atblanks', 'vi' and 'vim'."""
+        if not hasattr(config, "terminalNoteEditor"):
+            config.terminalNoteEditor = "vi"
+        config.help["terminalBibleComparison"] = """
+        # To display bible chapter in comparison mode when users enter a reference in terminal mode."""
+        if not hasattr(config, "terminalBibleComparison"):
+            config.terminalBibleComparison = False
+        # Colours related configurations in terminal mode
         config.terminalColors = ("RESET", "BLACK", "WHITE", "RED", "GREEN", "YELLOW", "BLUE", "MAGENTA", "CYAN", "LIGHTBLACK_EX", "LIGHTRED_EX", "LIGHTGREEN_EX", "LIGHTYELLOW_EX", "LIGHTBLUE_EX", "LIGHTMAGENTA_EX", "LIGHTCYAN_EX", "LIGHTWHITE_EX")
         config.help["terminalHeadingTextColor"] = """
         # Terminal mode heading text color."""
@@ -120,24 +145,8 @@ class ConfigUtil:
         # Terminal mode find highlight foreground color."""
         if not hasattr(config, "terminalFindHighlightForeground"):
             config.terminalFindHighlightForeground = "RESET"
-        config.help["terminalNoteEditor"] = """
-        # Default note editor used in terminal mode.
-        # Suggested options: 'nano --softwrap --atblanks', 'vi' and 'vim'."""
-        if not hasattr(config, "terminalNoteEditor"):
-            config.terminalNoteEditor = "vi"
-        config.help["terminalAutoUpdate"] = """
-        # Option to update UBA automatically on startup if newer version is found."""
-        if not hasattr(config, "terminalAutoUpdate"):
-            config.terminalAutoUpdate = False
-        config.help["terminalEnablePager"] = """
-        # To enable paging of terminal output when UBA runs in terminal mode."""
-        if not hasattr(config, "terminalEnablePager"):
-            config.terminalEnablePager = False
-        config.help["terminalBibleComparison"] = """
-        # To display bible chapter in comparison mode when users enter a reference in terminal mode."""
-        if not hasattr(config, "terminalBibleComparison"):
-            config.terminalBibleComparison = False
         # End of terminal mode settings
+
         config.help["telnetServerPort"] = """
         # To specify the port used by telnet-server."""
         if not hasattr(config, "telnetServerPort"):
