@@ -583,14 +583,20 @@ class LocalCliHandler:
         except:
             return self.noClipboardUtility()
 
+    def termux_clipboard_get(self, text):
+        outputFile = os.path.join("terminal_history", "tempText.txt")
+        with open(outputFile, "w", encoding="utf-8") as fileObject:
+            fileObject.write(text)
+        os.system(f"cat {outputFile} | termux-clipboard-set")
+        return ""
+
     def copy(self):
         try:
+            plainText = self.getPlainText()
             if config.terminalEnableTermuxAPI:
-                pydoc.pipepager(plainText, cmd="termux-clipboard-set")
-                return ""
+                return self.termux_clipboard_get(plainText)
             else:
                 import pyperclip
-                plainText = self.getPlainText()
                 pyperclip.copy(plainText)
                 print("Content is copied to clipboard.")
                 return ""
@@ -600,12 +606,7 @@ class LocalCliHandler:
     def copyHtml(self):
         try:
             if config.terminalEnableTermuxAPI:
-                pydoc.pipepager(self.html, cmd="termux-clipboard-set")
-                return ""
-                #outputFile = os.path.join("terminal_history", "tempText.txt")
-                #with open(outputFile, "w", encoding="utf-8") as fileObject:
-                #    fileObject.write(self.html)
-                #os.system(f"cat {outputFile} | termux-clipboard-set")
+                return self.termux_clipboard_get(self.html)
             else:
                 import pyperclip
                 pyperclip.copy(self.html)
