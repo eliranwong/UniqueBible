@@ -1414,7 +1414,7 @@ class TextCommandParser:
                 outputFile = os.path.join("terminal_history", "gtts")
                 with open(outputFile, "w", encoding="utf-8") as f:
                     f.write(text)
-                command = f"cat {outputFile} | termux-tts-speak -l {language} -r {config.termuxttsSpeed}"
+                command = f"cat {outputFile} | termux-tts-speak -l {language} -r {config.termuxttsSpeed} -s MUSIC"
                 # Option 2
                 #WebtopUtil.run(command)
                 # Option 3

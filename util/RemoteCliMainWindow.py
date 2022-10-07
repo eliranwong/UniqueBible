@@ -290,12 +290,13 @@ class RemoteCliMainWindow(CrossPlatform):
                 print(config.cliTtsProcess)
 
             # close Android media player
-            #try:
+            try:
                 #if WebtopUtil.isPackageInstalled("termux-media-player"):
-                    #config.mainWindow.getCliOutput("termux-media-player stop")
-                    #os.system("pkill termux-media-player")
-            #except:
-                #pass
+                config.mainWindow.getCliOutput("termux-media-player stop")
+                os.system("pkill termux-media-player")
+                os.system("pkill termux-tts-speak")
+            except:
+                pass
 
             # close vlc on macOS
             if config.macVlc:
