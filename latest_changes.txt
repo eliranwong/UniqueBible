@@ -1,4 +1,7 @@
-Changes in 32.35, 32.36, 32.37, 32.38:
+Changes in 32.39:
+* Removed colour codes from copied plain text.
+
+Changes in 32.35-38:
 * Added Google text-to-speech support on Android.
 
 Changes in 32.34:
