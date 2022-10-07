@@ -33,6 +33,17 @@ class LocalCliHandler:
         self.command = command
         self.dotCommands = self.getDotCommands()
         self.initPromptElements()
+        self.setOsOpenCmd()
+
+    def setOsOpenCmd(self):
+        if config.terminalEnableTermuxAPI:
+            config.open = "termux-open"
+        elif platform.system() == "Linux":
+            config.open = config.openLinux
+        elif platform.system() == "Darwin":
+            config.open = config.openMacos
+        elif platform.system() == "Windows":
+            config.open = config.openWindows
 
     def initPromptElements(self):
         self.divider = "--------------------"
@@ -581,7 +592,11 @@ class LocalCliHandler:
         try:
             weblink = TextUtil.getWeblink(command if command else self.command)
             if config.terminalEnableTermuxAPI:
-                pydoc.pipepager(weblink, cmd="termux-clipboard-set")
+                plainText = self.getPlainText()
+                if not self.command.startswith("."):
+                    plainText += f"\n\n{weblink}"
+                plainText += "\n\n[Unique Bible App]"
+                pydoc.pipepager(plainText, cmd="termux-share -a send")
             else:
                 import pyperclip
                 pyperclip.copy(weblink)
