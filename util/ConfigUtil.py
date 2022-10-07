@@ -107,6 +107,14 @@ class ConfigUtil:
         # To display bible chapter in comparison mode when users enter a reference in terminal mode."""
         if not hasattr(config, "terminalBibleComparison"):
             config.terminalBibleComparison = False
+        config.help["terminalStartHttpServerOnStartup"] = """
+        # To start http-server on UBA terminal mode startup."""
+        if not hasattr(config, "terminalStartHttpServerOnStartup"):
+            config.terminalStartHttpServerOnStartup = False
+        config.help["terminalStopHttpServerOnExit"] = """
+        # To stop http-server, if it is running, when users quit UBA terminal mode."""
+        if not hasattr(config, "terminalStopHttpServerOnExit"):
+            config.terminalStopHttpServerOnExit = True
         # Colours related configurations in terminal mode
         config.terminalColors = ("RESET", "BLACK", "WHITE", "RED", "GREEN", "YELLOW", "BLUE", "MAGENTA", "CYAN", "LIGHTBLACK_EX", "LIGHTRED_EX", "LIGHTGREEN_EX", "LIGHTYELLOW_EX", "LIGHTBLUE_EX", "LIGHTMAGENTA_EX", "LIGHTCYAN_EX", "LIGHTWHITE_EX")
         config.help["terminalHeadingTextColor"] = """
@@ -338,6 +346,10 @@ class ConfigUtil:
         # VLC player playback speed"""
         if not hasattr(config, "vlcSpeed"):
             config.vlcSpeed = 1.0
+        config.help["termuxttsSpeed"] = """
+        # Termux text-to-speech speed"""
+        if not hasattr(config, "termuxttsSpeed"):
+            config.termuxttsSpeed = 1.0
         config.help["macOSttsSpeed"] = """
         # Apple macOS text-to-speech speaking rate"""
         if not hasattr(config, "macOSttsSpeed"):
@@ -1474,6 +1486,7 @@ class ConfigUtil:
             ("terminalEnablePager", config.terminalEnablePager),
             ("terminalNoteEditor", config.terminalNoteEditor),
             ("terminalBibleComparison", config.terminalBibleComparison),
+            ("terminalStopHttpServerOnExit", config.terminalStopHttpServerOnExit),
             ("terminalHeadingTextColor", config.terminalHeadingTextColor),
             ("terminalVerseNumberColor", config.terminalVerseNumberColor),
             ("terminalResourceLinkColor", config.terminalResourceLinkColor),
@@ -1520,6 +1533,7 @@ class ConfigUtil:
             ("qttsSpeed", config.qttsSpeed),
             ("gcttsSpeed", config.gcttsSpeed),
             ("vlcSpeed", config.vlcSpeed),
+            ("termuxttsSpeed", config.termuxttsSpeed),
             ("macOSttsSpeed", config.macOSttsSpeed),
             ("useLangDetectOnTts", config.useLangDetectOnTts),
             ("ttsDefaultLangauge", config.ttsDefaultLangauge),

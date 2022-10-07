@@ -748,6 +748,8 @@ else:
     config.isOfflineTtsInstalled = isOfflineTtsInstalled()
 # Check if official Google Cloud text-to-speech service is in place
 config.isGoogleCloudTTSAvailable = os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json"))
+if config.runMode == "terminal" and config.terminalEnableTermuxAPI:
+    config.isGoogleCloudTTSAvailable = True
 if config.isGoogleCloudTTSAvailable and config.ttsDefaultLangauge == "en":
     config.ttsDefaultLangauge = "en-GB"
 elif not config.isGoogleCloudTTSAvailable and config.ttsDefaultLangauge == "en-GB":

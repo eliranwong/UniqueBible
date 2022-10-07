@@ -1,3 +1,7 @@
+Changes in 32.34:
+* Added two config flags to terminal mode, 'terminalStartHttpServerOnStartup' and 'terminalStopHttpServerOnExit'
+* Initial support of using Android tts engine.
+
 Changes in 32.33:
 * Added ability to backup and restore notes in terminal running on Android via the following commands:
     ".backupnotes", ".backupjournals", ".restorenotes", ".restorejournals", ".restorelastnotes", ".restorelastjournals"

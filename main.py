@@ -190,6 +190,9 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     config.mainWindow = LocalCliHandler(command)
     runStartupPlugins()
 
+    if config.terminalStartHttpServerOnStartup:
+        config.mainWindow.starthttpserver()
+
     promptIndicator = ">>> "
 
     if config.isPrompt_toolkitInstalled:
@@ -238,6 +241,8 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
 
     if config.saveConfigOnExit:
         ConfigUtil.save()
+    if config.terminalStopHttpServerOnExit:
+        config.mainWindow.stophttpserver()
     if command.lower() == ".restart":
         os.system("{0} {1} terminal".format(sys.executable, "uba.py"))
     sys.exit(0)

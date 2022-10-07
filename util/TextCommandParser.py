@@ -1406,14 +1406,19 @@ class TextCommandParser:
         text, language = self.parent.fineTuneGtts(text, language)
 
         try:
-            if config.isGoogleCloudTTSAvailable:
-                self.parent.saveCloudTTSAudio(text, language)
+            if config.runMode == "terminal" and config.terminalEnableTermuxAPI:
+                command = f"termux-tts-speak -l {language} -r {config.termuxttsSpeed} {text}"
+                config.mainWindow.printRunningCommand(command)
+                return self.osCommand(command, source)
             else:
-                self.parent.saveGTTSAudio(text, language)
+                if config.isGoogleCloudTTSAvailable:
+                    self.parent.saveCloudTTSAudio(text, language)
+                else:
+                    self.parent.saveGTTSAudio(text, language)
 
-            audioFile = self.parent.getGttsFilename()
-            if os.path.isfile(audioFile):
-                self.openVlcPlayer(audioFile, "main", gui=False)
+                audioFile = self.parent.getGttsFilename()
+                if os.path.isfile(audioFile):
+                    self.openVlcPlayer(audioFile, "main", gui=False)
         except:
             self.parent.displayMessage(config.thisTranslation["message_fail"])
 

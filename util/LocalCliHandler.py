@@ -32,6 +32,7 @@ class LocalCliHandler:
         self.plainText = "Unique Bible App"
         self.command = command
         self.dotCommands = self.getDotCommands()
+        self.cancelCommand = ".c"
         self.initPromptElements()
         self.setOsOpenCmd()
 
@@ -105,8 +106,8 @@ class LocalCliHandler:
             ".sa": ("an alias to the '.stopaudio' command", self.stopAudio),
             ".read": ("read available audio files", self.read),
             ".readsync": ("read available audio files with synchronised text display", self.readsync),
-            ".paste": ("run clipboard text as command", self.paste),
-            ".p": ("an alias to the '.paste' command", self.paste),
+            ".paste": ("run clipboard text as command", self.runclipboardtext),
+            ".p": ("an alias to the '.paste' command", self.runclipboardtext),
             ".forward": ("open one bible chapter forward", self.forward),
             ".backward": ("open one bible chapter backward", self.backward),
             ".f": ("an alias to the '.forward' command", self.forward),
@@ -586,16 +587,21 @@ class LocalCliHandler:
         except:
             return ""
 
-    def paste(self):
+    def runclipboardtext(self, commandPrefix=""):
         try:
             if config.terminalEnableTermuxAPI:
-                command = self.getCliOutput("termux-clipboard-get")
+                clipboardText = self.getCliOutput("termux-clipboard-get")
             elif config.isPyperclipInstalled:
                 import pyperclip
-                command = pyperclip.paste()
-            print("Running clipboard text:")
-            print(command)
-            return self.getContent(command)
+                clipboardText = pyperclip.paste()
+            if clipboardText:
+                print(f"Clipboard text: {clipboardText}")
+                command = f"{commandPrefix}{clipboardText}"
+                self.printRunningCommand(command)
+                return self.getContent(command)
+            else:
+                print("No clipboard text is found!")
+                return self.cancelAction()
         except:
             return self.noClipboardUtility()
 
@@ -834,7 +840,7 @@ class LocalCliHandler:
                 print(self.divider)
                 print("Enter a youtube link:")
                 userInput = self.simplePrompt()
-                if not userInput or userInput == ".c":
+                if not userInput or userInput == self.cancelCommand:
                     return self.cancelAction()
                 print("Checking connection ...")
                 if self.isUrlAlive(userInput):
@@ -871,7 +877,7 @@ class LocalCliHandler:
                 userInput = prompt(self.inputIndicator).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == ".c":
+            if not userInput or userInput == self.cancelCommand:
                 return self.cancelAction()
             if os.path.isfile(userInput):
                 import textract
@@ -902,7 +908,7 @@ class LocalCliHandler:
                 userInput = prompt(self.inputIndicator).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if userInput == ".c":
+            if userInput == self.cancelCommand:
                 return self.cancelAction()
             elif not userInput:
                 command = showAll
@@ -921,7 +927,7 @@ class LocalCliHandler:
                     userInput = prompt(self.inputIndicator).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == ".c":
+                if not userInput or userInput == self.cancelCommand:
                     return self.cancelAction()
                 print(self.divider)
                 command = f"{openPrefix}{userInput}"
@@ -957,7 +963,7 @@ class LocalCliHandler:
                 userInput = historySession.prompt(self.inputIndicator, completer=completer, default=default).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == ".c":
+            if not userInput or userInput == self.cancelCommand:
                 return self.cancelAction()
             if userInput in abbList:
                 module = userInput
@@ -967,7 +973,7 @@ class LocalCliHandler:
                     userInput = prompt(self.inputIndicator).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == ".c":
+                if not userInput or userInput == self.cancelCommand:
                     return self.cancelAction()
                 command = f"{searchKeyword}:::{module}:::{userInput}"
                 self.printRunningCommand(command)
@@ -982,7 +988,7 @@ class LocalCliHandler:
                     userInput = prompt(self.inputIndicator).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == ".c":
+                if not userInput or userInput == self.cancelCommand:
                     return self.cancelAction()
                 print(self.divider)
 
@@ -1012,7 +1018,7 @@ class LocalCliHandler:
                 userInput = self.terminal_books_selection_session.prompt(self.inputIndicator, completer=completer, default=config.book).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == ".c":
+            if not userInput or userInput == self.cancelCommand:
                 return self.cancelAction()
             if userInput in self.crossPlatform.referenceBookList:
                 book = userInput
@@ -1028,7 +1034,7 @@ class LocalCliHandler:
                     userInput = prompt(self.inputIndicator, completer=completer, default=config.bookChapter if config.bookChapter in chapterList else "").strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == ".c":
+                if not userInput or userInput == self.cancelCommand:
                     return self.cancelAction()
                 if userInput in chapterList:
                     command = f"BOOK:::{book}:::{userInput}"
@@ -1052,7 +1058,7 @@ class LocalCliHandler:
                 userInput = prompt(self.inputIndicator, default=str(today.year)).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == ".c":
+            if not userInput or userInput == self.cancelCommand:
                 return self.cancelAction()
             if int(userInput):
                 year = userInput
@@ -1062,7 +1068,7 @@ class LocalCliHandler:
                     userInput = prompt(self.inputIndicator, default=str(today.month)).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == ".c":
+                if not userInput or userInput == self.cancelCommand:
                     return self.cancelAction()
                 if int(userInput):
                     month = userInput
@@ -1072,7 +1078,7 @@ class LocalCliHandler:
                         userInput = prompt(self.inputIndicator, default=str(today.day)).strip()
                     else:
                         userInput = input(self.inputIndicator).strip()
-                    if not userInput or userInput == ".c":
+                    if not userInput or userInput == self.cancelCommand:
                         return self.cancelAction()
                     if int(userInput):
                         day = userInput
@@ -1103,7 +1109,7 @@ class LocalCliHandler:
                 userInput = prompt(self.inputIndicator, completer=completer, default=self.currentBibleAbb).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == ".c":
+            if not userInput or userInput == self.cancelCommand:
                 return self.cancelAction()
             if userInput in self.currentBibleAbbs:
                 abbIndex = self.currentBibleAbbs.index(userInput)
@@ -1119,7 +1125,7 @@ class LocalCliHandler:
                     userInput = prompt(self.inputIndicator, default=defaultChapter).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == ".c":
+                if not userInput or userInput == self.cancelCommand:
                     return self.cancelAction()
                 if int(userInput) in self.currentBibleChapters:
                     bibleChapter = userInput
@@ -1133,7 +1139,7 @@ class LocalCliHandler:
                         userInput = prompt(self.inputIndicator, default=defaultVerse).strip()
                     else:
                         userInput = input(self.inputIndicator).strip()
-                    if not userInput or userInput == ".c":
+                    if not userInput or userInput == self.cancelCommand:
                         return self.cancelAction()
                     if int(userInput) in self.currentBibleVerses:
                         bibleVerse = userInput
@@ -1164,7 +1170,7 @@ class LocalCliHandler:
                 userInput = prompt(self.inputIndicator, completer=completer, default=self.currentBibleAbb).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == ".c":
+            if not userInput or userInput == self.cancelCommand:
                 return self.cancelAction()
             if userInput in self.currentBibleAbbs:
                 abbIndex = self.currentBibleAbbs.index(userInput)
@@ -1180,7 +1186,7 @@ class LocalCliHandler:
                     userInput = prompt(self.inputIndicator, default=defaultChapter).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == ".c":
+                if not userInput or userInput == self.cancelCommand:
                     return self.cancelAction()
                 if int(userInput) in self.currentBibleChapters:
                     bibleChapter = userInput
@@ -1211,7 +1217,7 @@ class LocalCliHandler:
                 userInput = prompt(self.inputIndicator, completer=completer, default=self.currentBibleBook).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == ".c":
+            if not userInput or userInput == self.cancelCommand:
                 return self.cancelAction()
             if userInput in self.currentBibleBooks:
                 #bookIndex = self.currentBibleBooks.index(userInput)
@@ -1251,7 +1257,7 @@ class LocalCliHandler:
                 userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, completer=completer, default=defaultText).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == ".c":
+            if not userInput or userInput == self.cancelCommand:
                 return self.cancelAction()
             if self.isValidBibles(userInput):
                 bible = userInput
@@ -1267,7 +1273,7 @@ class LocalCliHandler:
                     userInput = prompt(self.inputIndicator, completer=completer, default=self.currentBibleAbb).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == ".c":
+                if not userInput or userInput == self.cancelCommand:
                     return self.cancelAction()
                 if userInput in self.currentBibleAbbs:
                     abbIndex = self.currentBibleAbbs.index(userInput)
@@ -1284,7 +1290,7 @@ class LocalCliHandler:
                         userInput = prompt(self.inputIndicator, default=defaultChapter).strip()
                     else:
                         userInput = input(self.inputIndicator).strip()
-                    if not userInput or userInput == ".c":
+                    if not userInput or userInput == self.cancelCommand:
                         return self.cancelAction()
                     if int(userInput) in self.currentBibleChapters:
                         bibleChapter = userInput
@@ -1299,7 +1305,7 @@ class LocalCliHandler:
                             userInput = prompt(self.inputIndicator, default=defaultVerse).strip()
                         else:
                             userInput = input(self.inputIndicator).strip()
-                        if not userInput or userInput == ".c":
+                        if not userInput or userInput == self.cancelCommand:
                             return self.cancelAction()
                         if int(userInput) in self.currentBibleVerses:
                             bibleVerse = userInput
@@ -1333,7 +1339,7 @@ class LocalCliHandler:
                 userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, completer=completer).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == ".c":
+            if not userInput or userInput == self.cancelCommand:
                 return self.cancelAction()
             if userInput in commands:
                 return self.whatiscontent(userInput)
@@ -1367,7 +1373,7 @@ class LocalCliHandler:
                 userInput = self.terminal_search_strong_bible_session.prompt(self.inputIndicator, completer=completer).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == ".c":
+            if not userInput or userInput == self.cancelCommand:
                 return self.cancelAction()
             if self.isValidBibles(userInput):
                 # bible version(s) defined
@@ -1401,7 +1407,7 @@ class LocalCliHandler:
                 userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, completer=completer, default=defaultText).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == ".c":
+            if not userInput or userInput == self.cancelCommand:
                 return self.cancelAction()
             if self.isValidBibles(userInput):
                 # bible version(s) defined
@@ -1422,7 +1428,7 @@ class LocalCliHandler:
                     userInput = self.terminal_search_bible_book_range_session.prompt(self.inputIndicator, completer=completer, default="ALL").strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == ".c":
+                if not userInput or userInput == self.cancelCommand:
                     return self.cancelAction()
                 if BibleVerseParser(config.parserStandarisation).extractBookListAsString(userInput):
                     # define book range
@@ -1448,7 +1454,7 @@ class LocalCliHandler:
                         userInput = prompt(self.inputIndicator, default=str(config.bibleSearchMode)).strip()
                     else:
                         userInput = input(self.inputIndicator).strip()
-                    if not userInput or userInput == ".c":
+                    if not userInput or userInput == self.cancelCommand:
                         return self.cancelAction()
                     userInput = int(userInput)
                     if -1 < userInput < 6:
@@ -1465,7 +1471,7 @@ class LocalCliHandler:
                             userInput = self.terminal_search_bible_session.prompt(self.inputIndicator).strip()
                         else:
                             userInput = input(self.inputIndicator).strip()
-                        if not userInput or userInput == ".c":
+                        if not userInput or userInput == self.cancelCommand:
                             return self.cancelAction()
                         command = f"{keyword}:::{bible}:::{userInput}:::{bookRange}"
 
@@ -1476,7 +1482,7 @@ class LocalCliHandler:
                             userInput = prompt(self.inputIndicator, default="Y" if config.enableCaseSensitiveSearch else "N").strip()
                         else:
                             userInput = input(self.inputIndicator).strip()
-                        if not userInput or userInput == ".c":
+                        if not userInput or userInput == self.cancelCommand:
                             return self.cancelAction()
                         if userInput.lower() in ("yes", "y", "no", "n"):
                             config.enableCaseSensitiveSearch = (userInput.lower()[0] == "y")
@@ -1510,7 +1516,7 @@ class LocalCliHandler:
                 userInput = self.terminal_commentary_selection_session.prompt(self.inputIndicator, completer=completer, default=defaultText).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == ".c":
+            if not userInput or userInput == self.cancelCommand:
                 return self.cancelAction()
             if userInput in self.crossPlatform.commentaryList:
                 module = userInput
@@ -1525,7 +1531,7 @@ class LocalCliHandler:
                     userInput = prompt(self.inputIndicator, completer=completer, default=self.currentBibleAbb).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == ".c":
+                if not userInput or userInput == self.cancelCommand:
                     return self.cancelAction()
                 if userInput in self.currentBibleAbbs:
                     abbIndex = self.currentBibleAbbs.index(userInput)
@@ -1541,7 +1547,7 @@ class LocalCliHandler:
                         userInput = prompt(self.inputIndicator, default=defaultChapter).strip()
                     else:
                         userInput = input(self.inputIndicator).strip()
-                    if not userInput or userInput == ".c":
+                    if not userInput or userInput == self.cancelCommand:
                         return self.cancelAction()
                     if int(userInput) in self.currentBibleChapters:
                         bibleChapter = userInput
@@ -1555,7 +1561,7 @@ class LocalCliHandler:
                             userInput = prompt(self.inputIndicator, default=defaultVerse).strip()
                         else:
                             userInput = input(self.inputIndicator).strip()
-                        if not userInput or userInput == ".c":
+                        if not userInput or userInput == self.cancelCommand:
                             return self.cancelAction()
                         if int(userInput) in self.currentBibleVerses:
                             bibleVerse = userInput
@@ -1618,7 +1624,7 @@ class LocalCliHandler:
             userInput = prompt(self.inputIndicator, completer=completer)
         else:
             userInput = input(self.inputIndicator)
-        if userInput == ".c":
+        if userInput == self.cancelCommand:
             return self.cancelAction()
         try:
             optionIndex = int(userInput.strip())
@@ -1637,7 +1643,7 @@ class LocalCliHandler:
                 userInput = prompt(self.inputIndicator, completer=completer)
             else:
                 userInput = input(self.inputIndicator)
-            if userInput == ".c":
+            if userInput == self.cancelCommand:
                 return self.cancelAction()
             else:
                 color = config.terminalColors[int(userInput)]
@@ -1705,7 +1711,7 @@ class LocalCliHandler:
                 userInput = prompt(self.inputIndicator).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if userInput == ".c":
+            if userInput == self.cancelCommand:
                 return self.cancelAction()
             command = f"{keyword}:::{userInput}"
             self.printRunningCommand(command)
@@ -1733,7 +1739,7 @@ class LocalCliHandler:
                 userInput = prompt(self.inputIndicator, completer=completer).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == ".c":
+            if not userInput or userInput == self.cancelCommand:
                 return self.cancelAction()
             # define key
             if userInput in configurablesettings:
@@ -1809,7 +1815,7 @@ class LocalCliHandler:
                 userInput = self.terminal_config_selection_session.prompt(self.inputIndicator, completer=completer).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == ".c":
+            if not userInput or userInput == self.cancelCommand:
                 return self.cancelAction()
             # define key
             if userInput in configurablesettings:
@@ -1823,7 +1829,7 @@ class LocalCliHandler:
                     userInput = prompt(self.inputIndicator).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == ".c":
+                if not userInput or userInput == self.cancelCommand:
                     return self.cancelAction()
                 print(self.getContent(f"_setconfig:::{value}:::{userInput}"))
                 return ".restart"
@@ -1952,7 +1958,7 @@ class LocalCliHandler:
             userInput = prompt(self.inputIndicator).strip()
         else:
             userInput = input(self.inputIndicator).strip()
-        if not userInput or userInput == ".c":
+        if not userInput or userInput == self.cancelCommand:
             return self.cancelAction()
         try:
             command = features[int(userInput)]
