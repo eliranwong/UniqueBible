@@ -1761,7 +1761,7 @@ class LocalCliHandler:
         if config.terminalEnableTermuxAPI:
             if not self.fingerprint():
                 return self.cancelAction()
-            self.getCliOutput(f"termux-share -a {filepath}")
+            self.getCliOutput(f"termux-share -a send {filepath}")
             self.actionDone()
         else:
             self.printTermuxApiDisabled()
