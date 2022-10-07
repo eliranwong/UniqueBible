@@ -1407,17 +1407,13 @@ class TextCommandParser:
 
         try:
             if config.runMode == "terminal" and config.terminalEnableTermuxAPI:
-                pydoc.pipepager(text, cmd=f"termux-tts-speak -l {language} -r {config.termuxttsSpeed} {text}")
+                #pydoc.pipepager(text, cmd=f"termux-tts-speak -l {language} -r {config.termuxttsSpeed}")
+                command = f"termux-tts-speak -l {language} -r {config.termuxttsSpeed} {text}"
+                WebtopUtil.run(command)
                 if language in config.mainWindow.ttsLanguages:
                     print(f"Speaking in {config.mainWindow.ttsLanguages[language][-1]} ...")
-                else:
-                    print(f"Language code: {language}")
                 config.ttsDefaultLangauge = language
                 return ("", "", {})
-                # The following is also working for a single-line text
-                #command = f"termux-tts-speak -l {language} -r {config.termuxttsSpeed} {text}"
-                #config.mainWindow.printRunningCommand(f"cmd:::{command}")
-                return self.osCommand(command, source)
             else:
                 if config.isGoogleCloudTTSAvailable:
                     self.parent.saveCloudTTSAudio(text, language)
