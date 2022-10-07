@@ -1,4 +1,4 @@
-Changes in 32.29:
+Changes in 32.29, 32.30:
 Changes in terminal mode, when config.terminalEnableTermuxAPI is set to True:
 * Support Android share text features
 * Support _website::: command

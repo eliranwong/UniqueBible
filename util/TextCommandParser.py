@@ -2727,7 +2727,8 @@ class TextCommandParser:
             if config.enableHttpServer and command.startswith("http"):
                 subprocess.Popen("{0} {1}".format(config.open, command), shell=True)
             elif config.runMode == "terminal" and config.terminalEnableTermuxAPI:
-                os.system(f"{config.open} command")
+                #os.system(f"{config.open} command")
+                return self.osCommand(f"{config.open} command", source)
             else:
                 webbrowser.open(command)
             return ("", "", {})
