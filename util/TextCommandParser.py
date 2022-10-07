@@ -1,6 +1,6 @@
 # coding=utf-8
 import glob, pprint
-#import pydoc
+import pydoc
 import os, re, webbrowser, platform, multiprocessing, zipfile, subprocess, config
 from datetime import date
 from util.exlbl import allLocations
@@ -1409,15 +1409,13 @@ class TextCommandParser:
         try:
             if config.runMode == "terminal" and config.terminalEnableTermuxAPI:
                 # Option 1
-                #pydoc.pipepager(text, cmd=f"termux-tts-speak -l {language} -r {config.termuxttsSpeed}")
+                pydoc.pipepager(text, cmd=f"termux-tts-speak -l {language} -r {config.termuxttsSpeed}")
                 # Option 2
-                outputFile = os.path.join("terminal_history", "gtts")
-                with open(outputFile, "w", encoding="utf-8") as f:
-                    f.write(text)
-                command = f"cat {outputFile} | termux-tts-speak -l {language} -r {config.termuxttsSpeed}"
-                WebtopUtil.run(command)
-                #if language in config.mainWindow.ttsLanguages:
-                #    print(f"Speaking in {config.mainWindow.ttsLanguages[language][-1]} ...")
+                #outputFile = os.path.join("terminal_history", "gtts")
+                #with open(outputFile, "w", encoding="utf-8") as f:
+                #    f.write(text)
+                #command = f"cat {outputFile} | termux-tts-speak -l {language} -r {config.termuxttsSpeed}"
+                #WebtopUtil.run(command)
                 config.ttsDefaultLangauge = language
                 return ("", "", {})
             else:
