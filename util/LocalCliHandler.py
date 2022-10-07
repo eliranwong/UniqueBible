@@ -617,7 +617,7 @@ class LocalCliHandler:
             shortCodes.append(re.sub("\-.*?$", "", code))
             languages.append(self.ttsLanguages[code])
             #display += f"[<ref>{codes}</ref> ] {languages}<br>"
-        display = display[:-4]
+        #display = display[:-4]
 
         try:
             if config.isPrompt_toolkitInstalled:
