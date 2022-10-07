@@ -4497,28 +4497,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
 
     # Set text-to-speech default language
     def getTtsLanguages(self):
-        if config.isGoogleCloudTTSAvailable:
-            languages = {}
-            for language, languageCode in GoogleCloudTTS.getLanguages().items():
-                languages[languageCode] = ("", language)
-        elif (not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled:
-            languages = {}
-            for language, languageCode in Languages.gTTSLanguageCodes.items():
-                languages[languageCode] = ("", language)
-        elif config.macVoices:
-            languages = config.macVoices
-        elif config.espeak:
-            languages = TtsLanguages().isoLang2epeakLang
-        else:
-            languages = TtsLanguages().isoLang2qlocaleLang
-        # Check default TTS language
-        if not config.ttsDefaultLangauge in languages:
-            for key in languages.keys():
-                if key.startswith("en") or key.startswith("[en"):
-                    config.ttsDefaultLangauge = key
-                    break
-        # return languages
-        return languages
+        return self.crossPlatform.getTtsLanguages()
 
     def setDefaultTtsLanguage(self, language):
         config.ttsDefaultLangauge = language

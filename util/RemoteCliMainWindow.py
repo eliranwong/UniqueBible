@@ -278,6 +278,12 @@ class RemoteCliMainWindow(CrossPlatform):
 
     def closeMediaPlayer(self):
         if WebtopUtil.isPackageInstalled("pkill"):
+            # close Android media player
+            try:
+                if WebtopUtil.isPackageInstalled("termux-media-player"):
+                    config.mainWindow.getCliOutput("termux-media-player stop")
+            except:
+                pass
             # close vlc on macOS
             if config.macVlc:
                 os.system("pkill VLC")

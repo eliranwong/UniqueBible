@@ -7,6 +7,10 @@ from util.ThirdParty import ThirdPartyDictionary
 from util.HebrewTransliteration import HebrewTransliteration
 from util.TextUtil import TextUtil
 from install.module import *
+from util.GoogleCloudTTSVoices import GoogleCloudTTS
+from util.Languages import Languages
+from util.TtsLanguages import TtsLanguages
+
 
 class CrossPlatform:
 
@@ -179,6 +183,30 @@ class CrossPlatform:
                 print("Failed to run '{0}'!".format(os.path.basename(script)))
 
     # Google text-to-speech
+
+    def getTtsLanguages(self):
+        if config.isGoogleCloudTTSAvailable:
+            languages = {}
+            for language, languageCode in GoogleCloudTTS.getLanguages().items():
+                languages[languageCode] = ("", language)
+        elif (not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled:
+            languages = {}
+            for language, languageCode in Languages.gTTSLanguageCodes.items():
+                languages[languageCode] = ("", language)
+        elif config.macVoices:
+            languages = config.macVoices
+        elif config.espeak:
+            languages = TtsLanguages().isoLang2epeakLang
+        else:
+            languages = TtsLanguages().isoLang2qlocaleLang
+        # Check default TTS language
+        if not config.ttsDefaultLangauge in languages:
+            for key in languages.keys():
+                if key.startswith("en") or key.startswith("[en"):
+                    config.ttsDefaultLangauge = key
+                    break
+        # return languages
+        return languages
 
     def fineTuneGtts(self, text, language):
         text = re.sub("[\[\]\(\)'\"]", "", text)

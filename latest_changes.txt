@@ -1,3 +1,6 @@
+Changes in 32.35:
+* Improved Google text-to-speech support on Android.
+
 Changes in 32.34:
 * Added two config flags to terminal mode, 'terminalStartHttpServerOnStartup' and 'terminalStopHttpServerOnExit'
 * Initial support of using Android tts engine.
