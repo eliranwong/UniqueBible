@@ -1,5 +1,5 @@
 # coding=utf-8
-import glob, pprint
+import glob, pprint, pydoc
 import os, re, webbrowser, platform, multiprocessing, zipfile, subprocess, config
 from datetime import date
 from util.exlbl import allLocations
@@ -1407,8 +1407,9 @@ class TextCommandParser:
 
         try:
             if config.runMode == "terminal" and config.terminalEnableTermuxAPI:
-                command = f"termux-tts-speak -l {language} -r {config.termuxttsSpeed} {text}"
-                config.mainWindow.printRunningCommand(command)
+                pydoc.pipepager(text, cmd=f"termux-tts-speak -l {language} -r {config.termuxttsSpeed} {text}")
+                #command = f"termux-tts-speak -l {language} -r {config.termuxttsSpeed} {text}"
+                #config.mainWindow.printRunningCommand(f"cmd:::{command}")
                 return self.osCommand(command, source)
             else:
                 if config.isGoogleCloudTTSAvailable:
