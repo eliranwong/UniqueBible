@@ -604,8 +604,9 @@ class LocalCliHandler:
         display = "<h2>Languages</h2>"
         languages = []
         for code in codes:
-            languages.append(self.ttsLanguages[code][-1])
-            display += f"[<ref>{code}</ref> ] {languages}<br>"
+            language = self.ttsLanguages[code][-1]
+            languages.append(language)
+            display += f"[<ref>{code}</ref> ] {language}<br>"
         display = display[:-4]
         print(TextUtil.htmlToPlainText(display).strip())
         return ""
