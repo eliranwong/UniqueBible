@@ -281,10 +281,13 @@ class RemoteCliMainWindow(CrossPlatform):
 
             if config.cliTtsProcess is not None:
                 try:
+                    config.cliTtsProcess.kill()
+                    config.cliTtsProcess.terminate()
                     os.killpg(os.getpgid(config.cliTtsProcess.pid), signal.SIGTERM)
                     config.cliTtsProcess = None
                 except:
                     pass
+                print(config.cliTtsProcess)
 
             # close Android media player
             #try:
