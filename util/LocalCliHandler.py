@@ -36,6 +36,7 @@ class LocalCliHandler:
         self.initPromptElements()
         self.setOsOpenCmd()
         self.ttsLanguages = self.getTtsLanguages()
+        config.cliTtsProcess = None
 
     # Set text-to-speech default language
     def getTtsLanguages(self):

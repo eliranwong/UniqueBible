@@ -1,4 +1,4 @@
-Changes in 32.35, 32.36:
+Changes in 32.35, 32.36, 32.37:
 * Improved Google text-to-speech support on Android.
 
 Changes in 32.34:
