@@ -220,12 +220,12 @@ class LocalCliHandler:
             ".starthttpserver": ("start UBA http-server", self.starthttpserver),
             ".stophttpserver": ("stop UBA http-server", self.stophttpserver),
             ".downloadyoutube": ("download youtube file", self.downloadyoutube),
-            ".backupnotes": ("backup note database file", self.sendFile("marvelData/note.sqlite")),
-            ".backupjournals": ("backup journal database file", self.sendFile("marvelData/journal.sqlite")),
-            ".restorenotes": ("restore note database file", self.restoreFile("marvelData/note.sqlite")),
-            ".restorejournals": ("restore journal database file", self.restoreFile("marvelData/journal.sqlite")),
-            ".restorelastnotes": ("restore note database file", self.restoreLastFile("marvelData/note.sqlite")),
-            ".restorelastjournals": ("restore journal database file", self.restoreLastFile("marvelData/journal.sqlite")),
+            ".backupnotes": ("backup note database file", lambda: self.sendFile("marvelData/note.sqlite")),
+            ".backupjournals": ("backup journal database file", lambda: self.sendFile("marvelData/journal.sqlite")),
+            ".restorenotes": ("restore note database file", lambda: self.restoreFile("marvelData/note.sqlite")),
+            ".restorejournals": ("restore journal database file", lambda: self.restoreFile("marvelData/journal.sqlite")),
+            ".restorelastnotes": ("restore note database file", lambda: self.restoreLastFile("marvelData/note.sqlite")),
+            ".restorelastjournals": ("restore journal database file", lambda: self.restoreLastFile("marvelData/journal.sqlite")),
         }
 
     #marvelData/note.sqlite
