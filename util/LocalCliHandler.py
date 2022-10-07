@@ -601,8 +601,10 @@ class LocalCliHandler:
     def showgttslanguages(self):
         codes = list(self.ttsLanguages.keys())
 
-        display = "<h2>Languages</h2>"        
+        display = "<h2>Languages</h2>"
+        languages = []
         for code in codes:
+            languages.append(self.ttsLanguages[code])
             display += f"[<ref>{codes}</ref> ] {languages}<br>"
         display = display[:-4]
         print(TextUtil.htmlToPlainText(display).strip())
@@ -621,7 +623,6 @@ class LocalCliHandler:
 
         try:
             if config.isPrompt_toolkitInstalled:
-                from prompt_toolkit import prompt
                 from prompt_toolkit.completion import WordCompleter
 
             print(self.divider)
