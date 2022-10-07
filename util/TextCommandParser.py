@@ -1226,12 +1226,16 @@ class TextCommandParser:
             verseList = self.extractAllVerses(command)
         if not verseList:
             # Direct to search if no reference is found.
-            if config.regexSearchBibleIfCommandNotFound:
-                return self.textSearchRegex("{0}:::{1}".format(text, command), "main")
-            elif config.searchBibleIfCommandNotFound:
-                return self.textCountSearch("{0}:::{1}".format(text, command), "main")
-            else:
-                return self.invalidCommand()
+            # Use the latest search mode
+            searchMode = ("SEARCH", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
+            command = f"{searchMode[config.bibleSearchMode]}:::{config.mainText}:::{command}"
+            return self.parser(command, view)
+#            if config.regexSearchBibleIfCommandNotFound:
+#                return self.textSearchRegex("{0}:::{1}".format(text, command), "main")
+#            elif config.searchBibleIfCommandNotFound:
+#                return self.textCountSearch("{0}:::{1}".format(text, command), "main")
+#            else:
+#                return self.invalidCommand()
         else:
             formattedBiblesFolder = os.path.join(config.marvelData, "bibles")
             formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not re.search(r"^[\._]", f)]

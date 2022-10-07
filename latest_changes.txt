@@ -1,3 +1,6 @@
+Changes in 32.40:
+* Run bible search with latest search mode when entry is not a valid command.
+
 Changes in 32.39:
 * Removed colour codes from copied plain text.
 
