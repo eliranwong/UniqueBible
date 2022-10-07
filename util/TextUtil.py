@@ -183,7 +183,7 @@ class TextUtil:
 
     # Generate a web link for sharing
     @staticmethod
-    def getWeblink(command):
+    def getWeblink(command, server=""):
         # https://stackoverflow.com/questions/40557606/how-to-url-encode-in-python-3
         command = urllib.parse.quote(command)
         htmlPages = {
@@ -191,8 +191,8 @@ class TextUtil:
             "TC": "traditional.html",
             "SC": "simplified.html",
         }
-        htmlPage = "" if config.webUBAServer.endswith(".html") else "/{0}".format(htmlPages.get(htmlPages[config.standardAbbreviation], "index.html"))
-        return "{0}{1}?cmd={2}".format(config.webUBAServer, htmlPage, command)
+        htmlPage = "" if config.webUBAServer.endswith(".html") and not server else "/{0}".format(htmlPages.get(htmlPages[config.standardAbbreviation], "index.html"))
+        return "{0}{1}?cmd={2}".format(server if server else config.webUBAServer, htmlPage, command)
 
     # Remove Hebrew vowels or Greek accents
     @staticmethod

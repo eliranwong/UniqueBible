@@ -1,4 +1,4 @@
-import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess
+import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json
 from datetime import date
 #import urllib.request
 from ast import literal_eval
@@ -113,6 +113,7 @@ class LocalCliHandler:
             ".b": ("an alias to the '.backward' command", self.backward),
             ".swap": ("swap to a favourite bible", self.swap),
             ".s": ("an alias to the '.swap' command", self.swap),
+            ".web": ("open web version", self.web),
             ".share": ("copy a web link for sharing", self.share),
             ".copy": ("copy the last opened content", self.copy),
             ".copyhtml": ("copy the last opened content in html format", self.copyHtml),
@@ -249,13 +250,15 @@ class LocalCliHandler:
             except:
                 pass
         # Redirection when certain commands are used.
-        if re.search('^(map:::|bible:::mab:::|bible:::mib:::|bible:::mob:::|bible:::mpb:::|bible:::mtb:::)', command.lower()):
-            return self.share(command)
+        #if re.search('^(map:::|bible:::mab:::|bible:::mib:::|bible:::mob:::|bible:::mpb:::|bible:::mtb:::)', command.lower()):
+        #    return self.share(command)
         # Dot commands
         if command.startswith("."):
             return self.getDotCommandContent(command.lower())
         # Non-dot commands
         view, content, dict = self.textCommandParser.parser(command, "cli")
+        # keep record of last command
+        self.command = command
         if config.bibleWindowContentTransformers:
             for transformer in config.bibleWindowContentTransformers:
                 content = transformer(content)
@@ -559,12 +562,18 @@ class LocalCliHandler:
         content += "<h2>Third-party Resources</h2><p>Read <ref>https://github.com/eliranwong/UniqueBible/wiki/Third-party-resources</ref> about third-party resources.</a></p>"
         return TextUtil.htmlToPlainText(content).strip()
 
+    def getCliOutput(self, cli):
+        try:
+            process = subprocess.Popen(cli, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            stdout, *_ = process.communicate()
+            return stdout.decode("utf-8")
+        except:
+            return ""
+
     def paste(self):
         try:
             if config.terminalEnableTermuxAPI:
-                process = subprocess.Popen("termux-clipboard-get", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                stdout, *_ = process.communicate()
-                command = stdout.decode("utf-8")
+                command = self.getCliOutput("termux-clipboard-get")
             elif config.isPyperclipInstalled:
                 import pyperclip
                 command = pyperclip.paste()
@@ -588,21 +597,40 @@ class LocalCliHandler:
         self.printRunningCommand(command)
         return self.getContent(command)
 
+    def getCommand(self, command=""):
+        if not command:
+            command = self.command
+        if command.startswith("."):
+            command = ".bible"
+        return command
+
+    # open web version
+    # use local http-server if it is running
+    # otherwise, use public
+    def web(self, command=""):
+        print(self.command)
+        print(self.getCommand(command))
+        server = "http://localhost:8080"
+        if not self.isUrlAlive(server):
+            server = ""
+        weblink = TextUtil.getWeblink(self.getCommand(command), server=server)
+        return self.getContent(f"_website:::{weblink}")
+
     def share(self, command=""):
         try:
-            weblink = TextUtil.getWeblink(command if command else self.command)
+            weblink = TextUtil.getWeblink(self.getCommand(command))
             if config.terminalEnableTermuxAPI:
                 plainText = self.getPlainText()
-                if not self.command.startswith("."):
-                    plainText += f"\n\n{weblink}"
+                plainText += f"\n\n{weblink}"
                 plainText += "\n\n[Unique Bible App]"
                 pydoc.pipepager(plainText, cmd="termux-share -a send")
+                return ""
             else:
                 import pyperclip
                 pyperclip.copy(weblink)
             print(f"The following link is copied to clipboard:\n")
             print(weblink)
-            print("\nPaste and open it in a web browser or share with others.")
+            print("\nOpen it in a web browser or share with others.")
             return ""
         except:
             return self.noClipboardUtility()
@@ -1611,18 +1639,26 @@ class LocalCliHandler:
 
     # Shared prompt message
 
+    def toast(self, message):
+        if config.terminalEnableTermuxAPI:
+            self.getContent(f"cmd:::termux-toast -s {message}")
+
     def cancelAction(self):
-        print("Action cancelled!")
+        message = "Action cancelled!"
+        print(message)
+        self.toast(message)
         return ""
 
     def printChooseItem(self):
         print("Choose an item:")
 
     def printCancelOption(self):
-        print("(Or enter '.c' to cancel)")
+        print("(or enter '.c' to cancel)")
 
     def printInvalidOptionEntered(self):
-        print("Invalid option entered!")
+        message = "Invalid option entered!"
+        print(message)
+        self.toast(message)
         return ""
 
     def printRunningCommand(self, command):
@@ -1687,7 +1723,17 @@ class LocalCliHandler:
         except:
             return self.printInvalidOptionEntered()
 
+    def fingerprint(self):
+        try:
+            output = json.loads(self.getCliOutput("termux-fingerprint"))
+            return True if output["auth_result"] == "AUTH_RESULT_SUCCESS" else False
+        except:
+            return False
+
     def changeconfig(self):
+        if config.terminalEnableTermuxAPI:
+            if not self.fingerprint:
+                return self.cancelAction()
         try:
             print(self.divider)
             print("Caution! Editing 'config.py' incorrectly may stop UBA from working.")
@@ -1860,7 +1906,7 @@ class LocalCliHandler:
 
     def open(self):
         heading = "Open"
-        features = (".openbible", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".opencommentary", ".openreferencebook", ".textract", ".w3m", ".lynx")
+        features = (".openbible", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".opencommentary", ".openreferencebook", ".textract", ".w3m", ".lynx", ".web")
         return self.displayFeatureMenu(heading, features)
 
     def control(self):
