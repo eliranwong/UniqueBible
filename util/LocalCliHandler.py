@@ -220,7 +220,17 @@ class LocalCliHandler:
             ".starthttpserver": ("start UBA http-server", self.starthttpserver),
             ".stophttpserver": ("stop UBA http-server", self.stophttpserver),
             ".downloadyoutube": ("download youtube file", self.downloadyoutube),
+            ".backupnotes": ("backup note database file", self.sendFile("marvelData/note.sqlite")),
+            ".backupjournals": ("backup journal database file", self.sendFile("marvelData/journal.sqlite")),
+            ".restorenotes": ("restore note database file", self.restoreFile("marvelData/note.sqlite")),
+            ".restorejournals": ("restore journal database file", self.restoreFile("marvelData/journal.sqlite")),
+            ".restorelastnotes": ("restore note database file", self.restoreLastFile("marvelData/note.sqlite")),
+            ".restorelastjournals": ("restore journal database file", self.restoreLastFile("marvelData/journal.sqlite")),
         }
+
+    #marvelData/note.sqlite
+    #marvelData/journal.sqlite
+    #marvelData/highlights.bible
 
     def execPythonFile(self, script):
         self.crossPlatform.execPythonFile(script)
@@ -282,16 +292,22 @@ class LocalCliHandler:
         divider = self.divider
         if config.terminalEnablePager and not content in ("Command processed!", "INVALID_COMMAND_ENTERED") and not content.endswith("not supported in terminal mode.") and not content.startswith("[MESSAGE]"):
             if platform.system() == "Windows":
-                # When you use remote powershell and want to pipe a command on the remote windows server through a pager, piping through  out-host -paging works as desired. Piping through more when running the remote command is of no use: the entire text is displayed at once.
                 try:
-                    pydoc.pipepager(content, cmd='out-host -paging')
+                    pydoc.pager(content)
                 except:
-                    try:
-                        pydoc.pipepager(content, cmd='more')
-                    except:
-                        config.terminalEnablePager = False
-                        print(divider)
-                        print(content)
+                    config.terminalEnablePager = False
+                    print(divider)
+                    print(content)
+                # When you use remote powershell and want to pipe a command on the remote windows server through a pager, piping through out-host -paging works as desired. Piping through more when running the remote command is of no use: the entire text is displayed at once.
+#                try:
+#                    pydoc.pipepager(content, cmd='out-host -paging')
+#                except:
+#                    try:
+#                        pydoc.pipepager(content, cmd='more')
+#                    except:
+#                        config.terminalEnablePager = False
+#                        print(divider)
+#                        print(content)
             else:
                 try:
                     # paging without colours
@@ -600,7 +616,8 @@ class LocalCliHandler:
     def getCommand(self, command=""):
         if not command:
             command = self.command
-        if command.startswith("."):
+        exception = "^(_setconfig:::|mp3:::|mp4:::|cmd:::)"
+        if command.startswith(".") or re.search(exception, command.lower()):
             command = ".bible"
         return command
 
@@ -1641,6 +1658,12 @@ class LocalCliHandler:
         if config.terminalEnableTermuxAPI:
             self.getContent(f"cmd:::termux-toast -s {message}")
 
+    def actionDone(self):
+        message = "Done!"
+        print(message)
+        self.toast(message)
+        return ""
+
     def cancelAction(self):
         message = "Action cancelled!"
         print(message)
@@ -1727,6 +1750,47 @@ class LocalCliHandler:
             return True if output["auth_result"] == "AUTH_RESULT_SUCCESS" else False
         except:
             return False
+
+    def printTermuxApiDisabled(self):
+        print("Termux API is not yet enabled!")
+        print("This feature is available on Android ONLY!")
+        print("Make sure both Termux:API app and termux-api package are installed first.")
+        print("Then, run '.config' and set 'terminalEnableTermuxAPI' to True.")
+
+    def sendFile(self, filepath):
+        if config.terminalEnableTermuxAPI:
+            if not self.fingerprint():
+                return self.cancelAction()
+            self.getCliOutput(f"termux-share -a {filepath}")
+            self.actionDone()
+        else:
+            self.printTermuxApiDisabled()
+        return ""
+
+    def restoreFile(self, filepath):
+        if config.terminalEnableTermuxAPI:
+            if not self.fingerprint():
+                return self.cancelAction()
+            self.getCliOutput(f"mv {filepath} {filepath}.bak")
+            self.getCliOutput(f"termux-storage-get {filepath}")
+            self.actionDone()
+        else:
+            self.printTermuxApiDisabled()
+        return ""
+
+    def restoreLastFile(self, filepath):
+        if config.terminalEnableTermuxAPI:
+            if os.path.isfile(f"{filepath}.bak"):
+                if not self.fingerprint():
+                    return self.cancelAction()
+                self.getCliOutput(f"cp {filepath}.bak {filepath}")
+                self.actionDone()
+            else:
+                print(f"Backup file '{filepath}.bak' does not exist!")
+                return self.cancelAction()
+        else:
+            self.printTermuxApiDisabled()
+        return ""
 
     def changeconfig(self):
         if config.terminalEnableTermuxAPI:
@@ -1939,7 +2003,9 @@ class LocalCliHandler:
 
     def maintain(self):
         heading = "Maintain"
-        features = (".update", ".showdownloads",)
+        features = [".update", ".showdownloads"]
+        if config.terminalEnableTermuxAPI:
+            features += [".backupnotes", ".backupjournals", ".restorenotes", ".restorejournals", ".restorelastnotes", ".restorelastjournals"]
         return self.displayFeatureMenu(heading, features)
 
     def openbookfeatures(self):

@@ -1,3 +1,7 @@
+Changes in 32.33:
+* Added ability to backup and restore notes in terminal running on Android via the following commands:
+    ".backupnotes", ".backupjournals", ".restorenotes", ".restorejournals", ".restorelastnotes", ".restorelastjournals"
+
 Changes in 32.31, 32.32:
 changes made in terminal mode.
 * Added ".web" command to open UBA web version.
