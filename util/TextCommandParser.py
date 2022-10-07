@@ -1409,16 +1409,16 @@ class TextCommandParser:
         try:
             if config.runMode == "terminal" and config.terminalEnableTermuxAPI:
                 # Option 1
-                #pydoc.pipepager(text, cmd=f"termux-tts-speak -l {language} -r {config.termuxttsSpeed}")
+                pydoc.pipepager(text, cmd=f"termux-tts-speak -l {language} -r {config.termuxttsSpeed}")
                 # Output file shared by option 2 and option 3
-                outputFile = os.path.join("terminal_history", "gtts")
-                with open(outputFile, "w", encoding="utf-8") as f:
-                    f.write(text)
-                command = f"cat {outputFile} | termux-tts-speak -l {language} -r {config.termuxttsSpeed} -s MUSIC"
+                #outputFile = os.path.join("terminal_history", "gtts")
+                #with open(outputFile, "w", encoding="utf-8") as f:
+                #    f.write(text)
+                #command = f"cat {outputFile} | termux-tts-speak -l {language} -r {config.termuxttsSpeed}"
                 # Option 2
                 #WebtopUtil.run(command)
                 # Option 3
-                config.cliTtsProcess = subprocess.Popen([command], shell=True, preexec_fn=os.setpgrp, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                #config.cliTtsProcess = subprocess.Popen([command], shell=True, preexec_fn=os.setpgrp, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 # Define default tts language
                 config.ttsDefaultLangauge = language
                 return ("", "", {})

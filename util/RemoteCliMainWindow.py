@@ -279,22 +279,10 @@ class RemoteCliMainWindow(CrossPlatform):
     def closeMediaPlayer(self):
         if WebtopUtil.isPackageInstalled("pkill"):
 
-            if config.cliTtsProcess is not None:
-                try:
-                    config.cliTtsProcess.kill()
-                    config.cliTtsProcess.terminate()
-                    os.killpg(os.getpgid(config.cliTtsProcess.pid), signal.SIGTERM)
-                    config.cliTtsProcess = None
-                except:
-                    pass
-                print(config.cliTtsProcess)
-
             # close Android media player
             try:
-                #if WebtopUtil.isPackageInstalled("termux-media-player"):
-                config.mainWindow.getCliOutput("termux-media-player stop")
-                os.system("pkill termux-media-player")
-                os.system("pkill termux-tts-speak")
+                if WebtopUtil.isPackageInstalled("termux-media-player"):
+                    config.mainWindow.getCliOutput("termux-media-player stop")
             except:
                 pass
 
