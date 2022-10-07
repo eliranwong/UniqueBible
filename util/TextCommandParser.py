@@ -1409,7 +1409,7 @@ class TextCommandParser:
             if config.runMode == "terminal" and config.terminalEnableTermuxAPI:
                 pydoc.pipepager(text, cmd=f"termux-tts-speak -l {language} -r {config.termuxttsSpeed} {text}")
                 if language in config.mainWindow.ttsLanguages:
-                    print(f"Speaking in {config.mainWindow.ttsLanguages[language]} ...")
+                    print(f"Speaking in {config.mainWindow.ttsLanguages[language][-1]} ...")
                 else:
                     print(f"Language code: {language}")
                 config.ttsDefaultLangauge = language
