@@ -1,4 +1,4 @@
-Changes in 32.31:
+Changes in 32.31, 32.32:
 changes made in terminal mode.
 * Added ".web" command to open UBA web version.
 * Added fingerprint authentication before users use ".changeconfig" command on Termux.

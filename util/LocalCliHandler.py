@@ -608,8 +608,6 @@ class LocalCliHandler:
     # use local http-server if it is running
     # otherwise, use public
     def web(self, command=""):
-        print(self.command)
-        print(self.getCommand(command))
         server = "http://localhost:8080"
         if not self.isUrlAlive(server):
             server = ""
@@ -1732,7 +1730,7 @@ class LocalCliHandler:
 
     def changeconfig(self):
         if config.terminalEnableTermuxAPI:
-            if not self.fingerprint:
+            if not self.fingerprint():
                 return self.cancelAction()
         try:
             print(self.divider)
