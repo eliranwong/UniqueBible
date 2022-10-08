@@ -1852,7 +1852,7 @@ class LocalCliHandler:
     # Shared prompt message
 
     def toast(self, message):
-        if config.terminalEnableTermuxAPI:
+        if config.terminalEnableTermuxAPI and config.terminalEnableTermuxAPIToast:
             self.getContent(f"cmd:::termux-toast -s {message}")
 
     def actionDone(self):

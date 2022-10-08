@@ -90,6 +90,10 @@ class ConfigUtil:
         # Read https://github.com/eliranwong/UniqueBible/wiki/Install-Termux-on-Android#install-termuxapi--termux-api-optional"""
         if not hasattr(config, "terminalEnableTermuxAPI"):
             config.terminalEnableTermuxAPI = False
+        config.help["terminalEnableTermuxAPIToast"] = """
+        # Enable toast message on Android."""
+        if not hasattr(config, "terminalEnableTermuxAPIToast"):
+            config.terminalEnableTermuxAPIToast = False
         config.help["terminalTermuxttsSpeed"] = """
         # Termux text-to-speech speed"""
         if not hasattr(config, "terminalTermuxttsSpeed"):
@@ -1493,6 +1497,7 @@ class ConfigUtil:
             ("usePySide6onMacOS", config.usePySide6onMacOS),
             ("terminalAutoUpdate", config.terminalAutoUpdate),
             ("terminalEnableTermuxAPI", config.terminalEnableTermuxAPI),
+            ("terminalEnableTermuxAPIToast", config.terminalEnableTermuxAPIToast),
             ("terminalTermuxttsSpeed", config.terminalTermuxttsSpeed),
             ("terminalEnablePager", config.terminalEnablePager),
             ("terminalNoteEditor", config.terminalNoteEditor),
