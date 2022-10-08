@@ -1934,14 +1934,16 @@ class LocalCliHandler:
             return self.printInvalidOptionEntered()
 
     def helpInstallMicro(self):
+        print(self.divider)
         print("On macOS, run:\n> 'brew install micro'")
         print("On Windows, run:\n> 'choco install micro'")
         print("On Debian-based Linux distros, run:\n> 'sudo apt install micro'")
         print("On RHEL-based Linux distros, run:\n> 'sudo dnf install micro'")
         print("On Arch Linux, run:\n> 'sudo pacman -S micro'")
         print("On Turmux [Android], run:\n> 'pkg install micro'")
-        print("\nTo enable wordwrap in mico, hit 'Ctrl+E' and enter 'set wordwrap on'.")
+        print("\nTo enable wordwrap in mico, hit 'Ctrl+E' and enter 'set softwrap on' and then 'set wordwrap on'.")
         print("Read options at: https://github.com/zyedidia/micro/blob/master/runtime/help/options.md")
+        print(self.divider)
 
     def changenoteeditor(self):
         try:

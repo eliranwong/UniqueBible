@@ -1,3 +1,6 @@
+Changes in 32.43:
+* Improved help about installing text editor micro.
+
 Changes in 32.42:
 * Improved handling of text editors.
 * Improved display of latest information.
