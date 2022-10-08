@@ -98,6 +98,10 @@ class ConfigUtil:
         # Termux text-to-speech speed"""
         if not hasattr(config, "terminalTermuxttsSpeed"):
             config.terminalTermuxttsSpeed = 1.0
+        config.help["terminalDisplayBeginnerMessage"] = """
+        # Display beginner message in terminal mode."""
+        if not hasattr(config, "terminalDisplayBeginnerMessage"):
+            config.terminalDisplayBeginnerMessage = True
         config.help["terminalEnablePager"] = """
         # To enable paging of terminal output when UBA runs in terminal mode."""
         if not hasattr(config, "terminalEnablePager"):
@@ -1499,6 +1503,7 @@ class ConfigUtil:
             ("terminalEnableTermuxAPI", config.terminalEnableTermuxAPI),
             ("terminalEnableTermuxAPIToast", config.terminalEnableTermuxAPIToast),
             ("terminalTermuxttsSpeed", config.terminalTermuxttsSpeed),
+            ("terminalDisplayBeginnerMessage", config.terminalDisplayBeginnerMessage),
             ("terminalEnablePager", config.terminalEnablePager),
             ("terminalNoteEditor", config.terminalNoteEditor),
             ("terminalBibleComparison", config.terminalBibleComparison),

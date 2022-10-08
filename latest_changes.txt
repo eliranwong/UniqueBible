@@ -1,3 +1,6 @@
+Changes in 32.46:
+* Added config.terminalDisplayBeginnerMessage
+
 Changes in 32.45:
 * Added config.terminalEnableTermuxAPIToast
 

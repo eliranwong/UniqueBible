@@ -439,7 +439,9 @@ class LocalCliHandler:
         bibleReference = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
         #print("BIBLE:::{0}:::{1} [{2}.{3}.{4}]".format(config.mainText, bibleReference, config.mainB, config.mainC, config.mainV))
         print("{0} [{1}.{2}.{3}] - {4}{5}, {6}".format(bibleReference, config.mainB, config.mainC, config.mainV, config.mainText, self.getPlusBible(), config.commentaryText))
-        print("Enter an UBA command [e.g. '.menu', '.help']:")
+        print("Enter an UBA command:")
+        if config.terminalDisplayBeginnerMessage:
+            print("(run '.menu' to begin ...)")
         return ""
 
     def showbibleabbreviations(self, text="", commentary=False):
