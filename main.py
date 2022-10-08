@@ -188,6 +188,8 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         print("Updating UBA ...")
 
     config.mainWindow = LocalCliHandler(command)
+    config.terminalCommandDefault = ""
+    default = ""
     runStartupPlugins()
 
     if config.terminalStartHttpServerOnStartup:
@@ -218,11 +220,13 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         if content:
             config.mainWindow.displayOutputOnTerminal(content)
     while not command.lower() in (".quit", ".restart"):
+        default = config.terminalCommandDefault
+        config.terminalCommandDefault = ""
         #try:
         config.mainWindow.initialDisplay()
         # User command input
         if config.isPrompt_toolkitInstalled:
-            command = session.prompt(promptIndicator, completer=command_completer, auto_suggest=auto_suggestion, bottom_toolbar=toolbar).strip()
+            command = session.prompt(promptIndicator, completer=command_completer, auto_suggest=auto_suggestion, bottom_toolbar=toolbar, default=default).strip()
         elif sys.platform in ("linux", "darwin"):
             import readline
             command = input(promptIndicator).strip()

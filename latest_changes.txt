@@ -1,3 +1,10 @@
+Changes in 32.41:
+Terminal mode:
+* Added 20 quick search options.
+* Added ".changebiblesearchmode", ".tts", ".ttscopiedtext", ".quicksearch", ".quicksearchcopiedtext" commands.
+* Fixed using macOS built-in tts with ".tts", ".ttscopiedtext" commands.
+* Redirect heavy html content to web version.
+
 Changes in 32.40:
 * Run bible search with latest search mode when entry is not a valid command.
 

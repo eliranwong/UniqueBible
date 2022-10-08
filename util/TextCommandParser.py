@@ -1212,30 +1212,22 @@ class TextCommandParser:
                     return self.textCompareSideBySide("{0}{1}".format(compareTexts, command), view)
                 else:
                     self.switchCompareView()
+        # Direct to bible search when there is no valid reference.
+        # Use the latest search mode for bible search.
+        # Qt library users can change bible search mode via master control
+        # Terminal mode users can change default search mode via ".changebiblesearchmode"
+        searchModes = ("SEARCH", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
         if config.useLiteVerseParsing:
             verseList = self.extractAllVersesFast(command)
             if verseList[0][0] == 0:
                 command = re.sub(r" \d+:?\d?$", "", command)
-                if config.regexSearchBibleIfCommandNotFound:
-                    return self.textSearchRegex("{0}:::{1}".format(text, command), "main")
-                elif config.searchBibleIfCommandNotFound:
-                    return self.textCountSearch("{0}:::{1}".format(text, command), "main")
-                else:
-                    return self.invalidCommand()
+                command = f"{searchModes[config.bibleSearchMode]}:::{config.mainText}:::{command}"
+                return self.parser(command, view)
         else:
             verseList = self.extractAllVerses(command)
         if not verseList:
-            # Direct to search if no reference is found.
-            # Use the latest search mode
-            searchMode = ("SEARCH", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
-            command = f"{searchMode[config.bibleSearchMode]}:::{config.mainText}:::{command}"
+            command = f"{searchModes[config.bibleSearchMode]}:::{config.mainText}:::{command}"
             return self.parser(command, view)
-#            if config.regexSearchBibleIfCommandNotFound:
-#                return self.textSearchRegex("{0}:::{1}".format(text, command), "main")
-#            elif config.searchBibleIfCommandNotFound:
-#                return self.textCountSearch("{0}:::{1}".format(text, command), "main")
-#            else:
-#                return self.invalidCommand()
         else:
             formattedBiblesFolder = os.path.join(config.marvelData, "bibles")
             formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not re.search(r"^[\._]", f)]
@@ -1413,12 +1405,12 @@ class TextCommandParser:
         try:
             if config.runMode == "terminal" and config.terminalEnableTermuxAPI:
                 # Option 1
-                pydoc.pipepager(text, cmd=f"termux-tts-speak -l {language} -r {config.termuxttsSpeed}")
+                pydoc.pipepager(text, cmd=f"termux-tts-speak -l {language} -r {config.terminalTermuxttsSpeed}")
                 # Output file shared by option 2 and option 3
                 #outputFile = os.path.join("terminal_history", "gtts")
                 #with open(outputFile, "w", encoding="utf-8") as f:
                 #    f.write(text)
-                #command = f"cat {outputFile} | termux-tts-speak -l {language} -r {config.termuxttsSpeed}"
+                #command = f"cat {outputFile} | termux-tts-speak -l {language} -r {config.terminalTermuxttsSpeed}"
                 # Option 2
                 #WebtopUtil.run(command)
                 # Option 3

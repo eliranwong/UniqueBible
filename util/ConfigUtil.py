@@ -90,6 +90,10 @@ class ConfigUtil:
         # Read https://github.com/eliranwong/UniqueBible/wiki/Install-Termux-on-Android#install-termuxapi--termux-api-optional"""
         if not hasattr(config, "terminalEnableTermuxAPI"):
             config.terminalEnableTermuxAPI = False
+        config.help["terminalTermuxttsSpeed"] = """
+        # Termux text-to-speech speed"""
+        if not hasattr(config, "terminalTermuxttsSpeed"):
+            config.terminalTermuxttsSpeed = 1.0
         config.help["terminalEnablePager"] = """
         # To enable paging of terminal output when UBA runs in terminal mode."""
         if not hasattr(config, "terminalEnablePager"):
@@ -346,10 +350,6 @@ class ConfigUtil:
         # VLC player playback speed"""
         if not hasattr(config, "vlcSpeed"):
             config.vlcSpeed = 1.0
-        config.help["termuxttsSpeed"] = """
-        # Termux text-to-speech speed"""
-        if not hasattr(config, "termuxttsSpeed"):
-            config.termuxttsSpeed = 1.0
         config.help["macOSttsSpeed"] = """
         # Apple macOS text-to-speech speaking rate"""
         if not hasattr(config, "macOSttsSpeed"):
@@ -525,14 +525,6 @@ class ConfigUtil:
         # Parse bookless references in selected text."""
         if not hasattr(config, "parseBooklessReferences"):
             config.parseBooklessReferences = True
-        config.help["searchBibleIfCommandNotFound"] = """
-        # Search bible if command entry does not contain a command keyword or a bible verse reference."""
-        if not hasattr(config, "searchBibleIfCommandNotFound"):
-            config.searchBibleIfCommandNotFound = True
-        config.help["regexSearchBibleIfCommandNotFound"] = """
-        # Search bible with regular expression if command entry does not contain a command keyword or a bible verse reference."""
-        if not hasattr(config, "regexSearchBibleIfCommandNotFound"):
-            config.regexSearchBibleIfCommandNotFound = False
         config.help["parseEnglishBooksOnly"] = """
         # Parse bible verse references with English books only."""
         if not hasattr(config, "parseEnglishBooksOnly"):
@@ -1483,6 +1475,7 @@ class ConfigUtil:
             ("usePySide6onMacOS", config.usePySide6onMacOS),
             ("terminalAutoUpdate", config.terminalAutoUpdate),
             ("terminalEnableTermuxAPI", config.terminalEnableTermuxAPI),
+            ("terminalTermuxttsSpeed", config.terminalTermuxttsSpeed),
             ("terminalEnablePager", config.terminalEnablePager),
             ("terminalNoteEditor", config.terminalNoteEditor),
             ("terminalBibleComparison", config.terminalBibleComparison),
@@ -1533,7 +1526,6 @@ class ConfigUtil:
             ("qttsSpeed", config.qttsSpeed),
             ("gcttsSpeed", config.gcttsSpeed),
             ("vlcSpeed", config.vlcSpeed),
-            ("termuxttsSpeed", config.termuxttsSpeed),
             ("macOSttsSpeed", config.macOSttsSpeed),
             ("useLangDetectOnTts", config.useLangDetectOnTts),
             ("ttsDefaultLangauge", config.ttsDefaultLangauge),
@@ -1658,9 +1650,6 @@ class ConfigUtil:
             ("customBooksRangeSearch", config.customBooksRangeSearch),
             ("bibleSearchMode", config.bibleSearchMode),
             ("enableCaseSensitiveSearch", config.enableCaseSensitiveSearch),
-            #("regexCaseSensitive", config.regexCaseSensitive),
-            ("searchBibleIfCommandNotFound", config.searchBibleIfCommandNotFound),
-            ("regexSearchBibleIfCommandNotFound", config.regexSearchBibleIfCommandNotFound),
             ("workspaceDirectory", config.workspaceDirectory),
             ("workspaceSavingOrder", config.workspaceSavingOrder),
             ("commentaryText", config.commentaryText),
