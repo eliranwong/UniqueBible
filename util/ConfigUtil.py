@@ -104,9 +104,11 @@ class ConfigUtil:
             config.terminalAutoUpdate = False
         config.help["terminalNoteEditor"] = """
         # Default note editor used in terminal mode.
-        # Suggested options: 'nano --softwrap --atblanks', 'vi' and 'vim'."""
+        # Suggested options: 'micro', 'nano --softwrap --atblanks -', 'vi -' and 'vim -'."""
         if not hasattr(config, "terminalNoteEditor"):
-            config.terminalNoteEditor = "vi"
+            config.terminalNoteEditor = "micro"
+        elif config.terminalNoteEditor in ("nano --softwrap --atblanks", "vi", "vim"):
+            config.terminalNoteEditor = f"{config.terminalNoteEditor} -"
         config.help["terminalBibleComparison"] = """
         # To display bible chapter in comparison mode when users enter a reference in terminal mode."""
         if not hasattr(config, "terminalBibleComparison"):

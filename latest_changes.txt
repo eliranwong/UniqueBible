@@ -1,3 +1,7 @@
+Changes in 32.42:
+* Improved handling of text editors.
+* Improved display of latest information.
+
 Changes in 32.41:
 Terminal mode:
 * Added 20 quick search options.

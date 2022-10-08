@@ -133,7 +133,8 @@ class LocalCliHandler:
             ".qc": ("an alias to the '.quicksearchcopiedtext' command", self.quickSearch),
             ".find": ("find a string in the last opened content", self.find),
             ".history": ("display history records", self.history),
-            ".latest": ("display the lastest module selection", self.latest),
+            ".latestchanges": ("display latest changes", self.latestchanges),
+            ".latest": ("display the lastest selection", self.latest),
             ".latestbible": ("display the lastest bible chapter", self.latestBible),
             ".l": ("an alias to the '.lastestbible' command", self.latestBible),
             ".update": ("update Unique Bible App to the latest version", self.update),
@@ -208,30 +209,26 @@ class LocalCliHandler:
             ".standardcommands": ("display standard UBA command help menu", self.standardcommands),
             ".terminalcommands": ("display terminal mode commands", self.terminalcommands),
             ".menu": ("display main menu", self.menu),
-            ".open": ("display open menu", self.open),
-            ".change": ("display change menu", self.change),
-            ".search": ("display search menu", self.search),
             ".show": ("display show menu", self.show),
+            ".open": ("display open menu", self.open),
+            ".search": ("display search menu", self.search),
             ".note": ("display note / journal menu", self.accessNoteFeatures),
             ".edit": ("display edit menu", self.edit),
-            ".maintain": ("display maintain menu", self.maintain),
             ".control": ("display control menu", self.control),
             ".clipboard": ("display clipboard menu", self.clipboard),
+            ".change": ("display change menu", self.change),
+            ".maintain": ("display maintain menu", self.maintain),
             ".help": ("display help menu", self.help),
+            ".wiki": ("open online wiki page", self.wiki),
+            ".helpinstallmicro": ("show how to install text editor micro", self.helpInstallMicro),
             ".w3m": ("open html content in w3m", lambda: self.cliTool("w3m -T text/html", self.html)),
             ".lynx": ("open html content in lynx", lambda: self.cliTool("lynx -stdin", self.html)),
             ".textract": ("open text from document.", self.textract),
-            ".nano": ("edit content with text editor 'nano'", lambda: self.texteditor("nano --softwrap --atblanks", self.getPlainText())),
-            ".nanonew": ("open new file in text editor 'nano'", lambda: self.texteditor("nano --softwrap --atblanks")),
-            ".vi": ("edit content with text editor 'vi'", lambda: self.texteditor("vi", self.getPlainText())),
-            ".vinew": ("open new file in text editor 'vi'", lambda: self.texteditor("vi")),
-            ".vim": ("edit content with text editor 'vim'", lambda: self.texteditor("vim", self.getPlainText())),
-            ".vimnew": ("open new file in text editor 'vim'", lambda: self.texteditor("vim")),
+            ".editnewfile": ("edit new file in text editor", lambda: self.cliTool(config.terminalNoteEditor)),
+            ".editcontent": ("edit latest content in text editor", lambda: self.cliTool(config.terminalNoteEditor, self.getPlainText())),
+            ".editconfig": ("edit 'config.py' in text editor", lambda: self.editConfig(config.terminalNoteEditor)),
             ".searchbible": ("search bible", self.searchbible),
             ".whatis": ("read description about a command", self.whatis),
-            ".nanoconfig": ("edit 'config.py' with nano", lambda: self.editConfig("nano --softwrap --atblanks")),
-            ".viconfig": ("edit 'config.py' with vi", lambda: self.editConfig("vi")),
-            ".vimconfig": ("edit 'config.py' with vim", lambda: self.editConfig("vim")),
             ".starthttpserver": ("start UBA http-server", self.starthttpserver),
             ".stophttpserver": ("stop UBA http-server", self.stophttpserver),
             ".downloadyoutube": ("download youtube file", self.downloadyoutube),
@@ -282,7 +279,7 @@ class LocalCliHandler:
             except:
                 pass
         # Redirect heavy html content to web version.
-        if re.search('^(map:::|bible:::mab:::|bible:::mib:::|bible:::mob:::|bible:::mpb:::|bible:::mtb:::|text:::mab|text:::mib|text:::mob|text:::mpb|text:::mtb|study:::mab:::|study:::mib:::|study:::mob:::|study:::mpb:::|study:::mtb:::|studytext:::mab|studytext:::mib|studytext:::mob|studytext:::mpb|studytext:::mtb)', command.lower()):
+        if re.search('^(map:::|qrcode:::|bible:::mab:::|bible:::mib:::|bible:::mob:::|bible:::mpb:::|bible:::mtb:::|text:::mab|text:::mib|text:::mob|text:::mpb|text:::mtb|study:::mab:::|study:::mib:::|study:::mob:::|study:::mpb:::|study:::mtb:::|studytext:::mab|studytext:::mib|studytext:::mob|studytext:::mpb|studytext:::mtb)', command.lower()):
             return self.web(command)
         # Dot commands
         if command.startswith("."):
@@ -401,6 +398,12 @@ class LocalCliHandler:
         return ""
 
     def latest(self):
+        print(self.divider)
+        server = "http://localhost:8080"
+        serverAlive = "ON" if self.isUrlAlive(server) else "OFF"
+        print(f"{server} [{serverAlive}]")
+        searchModes = ("SEARCH", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
+        print(f"Current search mode: {searchModes[config.bibleSearchMode]}")
         bibleReference = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
         print("BIBLE:::{0}:::{1} [{2}.{3}.{4}]".format(config.mainText, bibleReference, config.mainB, config.mainC, config.mainV))
         commentaryReference = self.textCommandParser.bcvToVerseReference(config.commentaryB, config.commentaryC, config.commentaryV)
@@ -433,7 +436,7 @@ class LocalCliHandler:
         bibleReference = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
         #print("BIBLE:::{0}:::{1} [{2}.{3}.{4}]".format(config.mainText, bibleReference, config.mainB, config.mainC, config.mainV))
         print("{0} [{1}.{2}.{3}] - {4}{5}, {6}".format(bibleReference, config.mainB, config.mainC, config.mainV, config.mainText, self.getPlusBible(), config.commentaryText))
-        print("Enter an UBA command ('.menu' for menu):")
+        print("Enter an UBA command [e.g. '.menu', '.help']:")
         return ""
 
     def showbibleabbreviations(self, text="", commentary=False):
@@ -464,6 +467,12 @@ class LocalCliHandler:
             self.currentBibleBook = self.currentBibleBooks[0]
         self.bookNumbers = bookNumbers
         return ""
+
+    def wiki(self):
+        url = "https://github.com/eliranwong/UniqueBible/wiki/Terminal-Mode"
+        command = f"_website:::{url}"
+        self.printRunningCommand(command)
+        return self.getContent(command)
 
     def showbiblechapters(self, text="", b=None):
         bible = Bible(config.mainText if not text else text)
@@ -632,6 +641,8 @@ class LocalCliHandler:
             return "SPEAK"
 
     def tts(self, runOnCopiedText=True):
+        if runOnCopiedText:
+                self.getclipboardtext()
         codes = list(self.ttsLanguages.keys())
         #display = "<h2>Languages</h2>"
         shortCodes = []
@@ -799,6 +810,9 @@ class LocalCliHandler:
 
     def history(self):
         return self.readPlainTextFile(os.path.join("terminal_history", "commands"))
+
+    def latestchanges(self):
+        return self.readPlainTextFile("latest_changes.txt")
 
     def readPlainTextFile(self, filename):
         if os.path.isfile(filename):
@@ -1901,7 +1915,7 @@ class LocalCliHandler:
             searchModesDisplay = [f"[<ref>{i}</ref> ] {mode}" for i, mode in enumerate(searchModes)]
             searchModesDisplay = "<br>".join(searchModesDisplay)
             searchModesDisplay = f"<h2>Change default bible search mode<h2>{searchModesDisplay}"
-            print(searchModesDisplay)
+            print(TextUtil.htmlToPlainText(searchModesDisplay))
             print(self.divider)
             print("Enter a number:")
             if config.isPrompt_toolkitInstalled:
@@ -1919,14 +1933,25 @@ class LocalCliHandler:
         except:
             return self.printInvalidOptionEntered()
 
+    def helpInstallMicro(self):
+        print("On macOS, run:\n> 'brew install micro'")
+        print("On Windows, run:\n> 'choco install micro'")
+        print("On Debian-based Linux distros, run:\n> 'sudo apt install micro'")
+        print("On RHEL-based Linux distros, run:\n> 'sudo dnf install micro'")
+        print("On Arch Linux, run:\n> 'sudo pacman -S micro'")
+        print("On Turmux [Android], run:\n> 'pkg install micro'")
+        print("\nTo enable wordwrap in mico, hit 'Ctrl+E' and enter 'set wordwrap on'.")
+        print("Read options at: https://github.com/zyedidia/micro/blob/master/runtime/help/options.md")
+
     def changenoteeditor(self):
         try:
             print(self.divider)
             print("Select default note / journal editor:")
             editors = {
-                "nano": "nano --softwrap --atblanks",
-                "vi": "vi",
-                "vim": "vim",
+                "micro": "micro",
+                "nano": "nano --softwrap --atblanks -",
+                "vi": "vi -",
+                "vim": "vim -",
             }
             configurablesettings = list(editors.keys())
             print(configurablesettings)
@@ -2057,13 +2082,13 @@ class LocalCliHandler:
                     content = input_file.read()
                 print("config is ready for editing ...")
                 print("To apply changes, save as 'config.py' and replace the existing 'config.py' when you finish editing.")
-            self.texteditor(editor, content)
+            self.cliTool(editor, content)
             config.saveConfigOnExit = False
             print(self.divider)
             print("Restarting ...")
             return ".restart"
 
-    # text editor
+    # pipe text content into a cli tool
     def cliTool(self, tool, content=""):
         if WebtopUtil.isPackageInstalled(tool):
             pydoc.pipepager(content, cmd=tool)
@@ -2074,20 +2099,9 @@ class LocalCliHandler:
             self.printToolNotFound(tool)
         return ""
 
-    # text editor
-    def texteditor(self, editor, content=""):
-        if WebtopUtil.isPackageInstalled(editor):
-            pydoc.pipepager(content, cmd=f"{editor} -")
-            if WebtopUtil.isPackageInstalled("pkill"):
-                editor = editor.strip().split(" ")[0]
-                os.system(f"pkill {editor}")
-        else:
-            self.printToolNotFound(editor)
-        return ""
-
     def openNoteEditor(self, noteType, b=None, c=None, v=None, year=None, month=None, day=None, editor=None):
         if editor is None:
-            editor = config.terminalNoteEditor # default: vi
+            editor = config.terminalNoteEditor
         if WebtopUtil.isPackageInstalled(editor.split(" ")[0]):
             noteDB = JournalSqlite() if noteType == "journal" else NoteSqlite()
             if noteType == "journal":
@@ -2109,7 +2123,7 @@ class LocalCliHandler:
             # display in editor
             print("Opening text editor ...")
             print("When you finish editing, save content in a file and enter 'note' as its filename.")
-            self.texteditor(editor, note)
+            self.cliTool(editor, note)
             # check if file is saved
             notePath = "note"
             if os.path.isfile(notePath):
@@ -2169,7 +2183,7 @@ class LocalCliHandler:
 
     def menu(self):
         heading = "UBA Terminal Mode Menu"
-        features = (".show", ".open", ".search", ".note", ".control", ".edit", ".change", ".maintain", ".help")
+        features = (".show", ".open", ".search", ".note", ".edit", ".control", ".clipboard", ".change", ".maintain", ".help")
         return self.displayFeatureMenu(heading, features)
 
     def open(self):
@@ -2199,7 +2213,7 @@ class LocalCliHandler:
 
     def edit(self):
         heading = "Edit"
-        features = (".nano", ".nanonew", ".nanoconfig", ".vi", ".vinew", ".viconfig", ".vim", ".vimnew", ".vimconfig")
+        features = (".editnewfile", ".editcontent", ".editconfig", ".changenoteeditor", ".helpinstallmicro")
         return self.displayFeatureMenu(heading, features)
 
     def change(self):
@@ -2209,12 +2223,12 @@ class LocalCliHandler:
 
     def help(self):
         heading = "Help"
-        features = (".terminalcommands", ".standardcommands", ".whatis")
+        features = (".wiki", ".helpInstallMicro", ".terminalcommands", ".standardcommands", ".whatis")
         return self.displayFeatureMenu(heading, features)
 
     def maintain(self):
         heading = "Maintain"
-        features = [".update", ".showdownloads"]
+        features = [".latestchanges", ".update", ".showdownloads"]
         if config.terminalEnableTermuxAPI:
             features += [".backupnotes", ".backupjournals", ".restorenotes", ".restorejournals", ".restorelastnotes", ".restorelastjournals"]
         return self.displayFeatureMenu(heading, features)
