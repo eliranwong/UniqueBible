@@ -905,6 +905,14 @@ class ConfigUtil:
         # Last-opened commentary verse number"""
         if not hasattr(config, "commentaryV"):
             config.commentaryV = 16
+        config.help["concordance"] = """
+        # Last-opened module for concordance"""
+        if not hasattr(config, "concordance"):
+            config.concordance = "OHGBi"
+        config.help["concordanceEntry"] = """
+        # Last-opened entry for concordance"""
+        if not hasattr(config, "concordanceEntry"):
+            config.concordanceEntry = ""
         config.help["topic"] = """
         # Last-opened module for topical studies"""
         if not hasattr(config, "topic"):
@@ -913,6 +921,14 @@ class ConfigUtil:
         # Last-opened entry for topical studies"""
         if not hasattr(config, "topicEntry"):
             config.topicEntry = ""
+        config.help["locationEntry"] = """
+        # Last-opened entry for bible location"""
+        if not hasattr(config, "locationEntry"):
+            config.locationEntry = ""
+        config.help["characterEntry"] = """
+        # Last-opened entry for bible character"""
+        if not hasattr(config, "characterEntry"):
+            config.characterEntry = ""
         config.help["dictionary"] = """
         # Last-opened dictionary module"""
         if not hasattr(config, "dictionary"):
@@ -1658,8 +1674,12 @@ class ConfigUtil:
             ("commentaryB", config.commentaryB),
             ("commentaryC", config.commentaryC),
             ("commentaryV", config.commentaryV),
+            ("concordance", config.concordance),
+            ("concordanceEntry", config.concordanceEntry),
             ("topic", config.topic),
             ("topicEntry", config.topicEntry),
+            ("characterEntry", config.characterEntry),
+            ("locationEntry", config.locationEntry),
             ("dictionary", config.dictionary),
             ("dictionaryEntry", config.dictionaryEntry),
             ("encyclopedia", config.encyclopedia),

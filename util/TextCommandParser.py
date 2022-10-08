@@ -1981,6 +1981,8 @@ class TextCommandParser:
         if not texts or not re.match("^[EGH][0-9]+?$", strongNo):
             return self.invalidCommand()
         else:
+            config.concordance = texts[-1]
+            config.concordanceEntry = strongNo
             html = "<hr>".join([Bible(text).formatStrongConcordance(strongNo) for text in texts])
             return ("study", html, {})
 
@@ -3517,6 +3519,11 @@ class TextCommandParser:
             if module in ["exlbl", "exlbp", "exlbt"]:
                 if module == "exlbt":
                     config.topic = "EXLBT"
+                    config.topicEntry = commandList[1]
+                elif module == "exlbp":
+                    config.characterEntry = commandList[1]
+                elif module == "exlbl":
+                    config.locationEntry = commandList[1]
                 exlbData = ExlbData()
                 content = exlbData.getContent(commandList[0], commandList[1])
                 if config.runMode == "terminal" and module == "exlbl":
@@ -3556,6 +3563,7 @@ class TextCommandParser:
                 config.dictionary = module
             dictionaryData = DictionaryData()
             content = dictionaryData.getContent(command)
+            config.dictionaryEntry = command
             return ("study", content, {})
         else:
             return self.invalidCommand("study")
@@ -3764,6 +3772,7 @@ class TextCommandParser:
 
     # DATA:::
     def textData(self, command, source):
+        config.dataset = command
         filepath = os.path.join("plugins", "menu", "Bible Data", "{0}.txt".format(command))
         if not os.path.isfile(filepath) or not config.isTabulateInstalled:
             return self.invalidCommand("study")
@@ -4030,6 +4039,7 @@ class TextCommandParser:
         else:
             thirdPartyDictionary = ThirdPartyDictionary(module)
             content = thirdPartyDictionary.getData(entry)
+            config.thirdDictionaryEntry = entry
             return ("study", f"[MESSAGE]{content}" if config.runMode == "terminal" else content, {})
 
     # _HIGHLIGHT:::

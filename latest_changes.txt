@@ -1,3 +1,6 @@
+Changes in 32.44:
+* Fixed latest selection records in terminal mode.
+
 Changes in 32.43:
 * Improved help about installing text editor micro.
 

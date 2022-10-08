@@ -113,6 +113,18 @@ class CollectionsSqlite:
     def readData(self, table, toolNumber):
         query = "SELECT Topic, Passages FROM {0} WHERE Tool=? AND Number=?".format(table)
         self.cursor.execute(query, toolNumber)
+        if table == "PARALLEL":
+            try:
+                parallels, parallelsEntry = toolNumber
+                config.parallels, config.parallelsEntry = int(parallels), int(parallelsEntry)
+            except:
+                pass
+        elif table == "PROMISES":
+            try:
+                promises, promisesEntry = toolNumber
+                config.promises, config.promisesEntry = int(promises), int(promisesEntry)
+            except:
+                pass
         information = self.cursor.fetchone()
         if not information:
             return "[not applicable]"
@@ -414,6 +426,7 @@ class EncyclopediaData:
         if not content:
             return "[not found]"
         else:
+            config.encyclopediaEntry = entry
             contentText = content[0]
 
             # deal with images
@@ -863,6 +876,8 @@ class Lexicon:
                 t = topic[0]
                 e = t.replace("'", "\\\'").replace('"', '\\\"')
                 entry = """<div><ref onclick="document.title='LEXICON:::{0}:::{1}'">{2}</ref></div>""".format(self.module, e, t)
+                if config.runMode == "terminal":
+                    config.lexiconEntry = e
                 contentText += entry
             return contentText
         except:
@@ -870,6 +885,8 @@ class Lexicon:
 
     def getContent(self, entry, showMenu=True):
         try:
+            if config.runMode == "terminal":
+                config.lexiconEntry = entry
             lexiconData = LexiconData()
             query = "SELECT Definition FROM Lexicon WHERE Topic = ?"
             self.cursor.execute(query, (entry,))

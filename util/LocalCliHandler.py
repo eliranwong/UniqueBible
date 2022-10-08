@@ -410,11 +410,14 @@ class LocalCliHandler:
         print("COMMENTARY:::{0}:::{1} [{2}.{3}.{4}]".format(config.commentaryText, commentaryReference, config.commentaryB, config.commentaryC, config.commentaryV))
         print(f"BOOK:::{config.book}:::{config.bookChapter}")
         print(f"LEXICON:::{config.lexicon}:::{config.lexiconEntry}")
+        print(f"CONCORDANCE:::{config.concordance}:::{config.concordanceEntry}")
         print(f"DICTIONARY:::{config.dictionaryEntry}")
         print(f"ENCYCLOPEDIA:::{config.encyclopedia}:::{config.encyclopediaEntry}")
         print(f"THIRDDICTIONARY:::{config.thirdDictionary}:::{config.thirdDictionaryEntry}")
         print(f"DATA:::{config.dataset}")
         print(f"EXLB:::exlbt:::{config.topicEntry}")
+        print(f"EXLB:::exlbp:::{config.characterEntry}")
+        print(f"EXLB:::exlbl:::{config.locationEntry}")
         print(f"_harmony:::{config.parallels}.{config.parallelsEntry}")
         print(f"_promise:::{config.promises}.{config.promisesEntry}")
         return ""
@@ -1079,7 +1082,7 @@ class LocalCliHandler:
                 "17": ("Reference Book", "SEARCHBOOK", "BOOK", config.book, ""),
                 "18": ("Bible Lexicon Entries", "SEARCHLEXICON", "LEXICON", config.lexicon, ""),
                 "19": ("Bible Lexicon Content", "REVERSELEXICON", "", config.lexicon, ""),
-                "20": ("Bible Concordance", "CONCORDANCE", "", "OHGBi", ""),
+                "20": ("Bible Concordance", "CONCORDANCE", "", config.concordance, ""),
             }
             display = [f"[<ref>{key}</ref> ] {value[0]} - {value[-2]}" for key, value in options.items()]
             display = "<br>".join(display)
@@ -1558,7 +1561,7 @@ class LocalCliHandler:
             print("To search multiple versions, use '_' as a delimiter, e.g. 'KJVx_RWVx_OHGBi'")
             if config.isPrompt_toolkitInstalled:
                 completer = WordCompleter(self.crossPlatform.strongBibles, ignore_case=True)
-                userInput = self.terminal_search_strong_bible_session.prompt(self.inputIndicator, completer=completer).strip()
+                userInput = self.terminal_search_strong_bible_session.prompt(self.inputIndicator, completer=completer, default=config.concordance).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if not userInput or userInput == self.cancelCommand:
