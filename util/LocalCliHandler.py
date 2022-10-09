@@ -242,6 +242,7 @@ class LocalCliHandler:
             ".changebiblesearchmode": ("change default bible search mode", self.changebiblesearchmode),
             ".changecolors": ("change text highlight colors", self.changecolors),
             ".changeconfig": ("change UBA configurations", self.changeconfig),
+            ".exec": ("execute a python string", self.execPythonString),
         }
 
     #marvelData/note.sqlite
@@ -2029,6 +2030,17 @@ class LocalCliHandler:
         else:
             self.printTermuxApiDisabled()
         return ""
+
+    def execPythonString(self):
+        if config.terminalEnableTermuxAPI:
+            if not self.fingerprint():
+                return self.cancelAction()
+        try:
+            print("Enter a python command:")
+            userInput = self.simplePrompt()
+            exec(userInput)
+        except:
+            pass
 
     def changeconfig(self):
         if config.terminalEnableTermuxAPI:

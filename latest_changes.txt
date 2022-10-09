@@ -1,3 +1,6 @@
+Changes in 32.49:
+* Added a .exec command in terminal mode for developers.
+
 Changes in 32.48:
 * Added 404 to http-server if file not found
 
