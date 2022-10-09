@@ -246,8 +246,6 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
             command = runTerminalModeCommand(command)
         else:
             command = runTerminalModeCommand(config.terminalDefaultCommand)
-            if not command:
-                command = ""
 
     if config.saveConfigOnExit:
         ConfigUtil.save()
