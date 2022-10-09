@@ -1,3 +1,6 @@
+Changes in 32.47:
+* added config.terminalDefaultCommand
+
 Changes in 32.46:
 * Added config.terminalDisplayBeginnerMessage
 

@@ -110,6 +110,11 @@ class ConfigUtil:
         # Option to update UBA automatically on startup if newer version is found."""
         if not hasattr(config, "terminalAutoUpdate"):
             config.terminalAutoUpdate = False
+        config.help["terminalDefaultCommand"] = """
+        # Define a default command for terminal mode to run when users enter an empty string.
+        # It is the quickest way to run a favourite command."""
+        if not hasattr(config, "terminalDefaultCommand"):
+            config.terminalDefaultCommand = ".menu"
         config.help["terminalNoteEditor"] = """
         # Default note editor used in terminal mode.
         # Suggested options: 'micro', 'nano --softwrap --atblanks -', 'vi -' and 'vim -'."""
@@ -1500,6 +1505,7 @@ class ConfigUtil:
             ("usePySide2onWebtop", config.usePySide2onWebtop),
             ("usePySide6onMacOS", config.usePySide6onMacOS),
             ("terminalAutoUpdate", config.terminalAutoUpdate),
+            ("terminalDefaultCommand", config.terminalDefaultCommand),
             ("terminalEnableTermuxAPI", config.terminalEnableTermuxAPI),
             ("terminalEnableTermuxAPIToast", config.terminalEnableTermuxAPIToast),
             ("terminalTermuxttsSpeed", config.terminalTermuxttsSpeed),

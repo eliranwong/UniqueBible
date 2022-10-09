@@ -166,6 +166,16 @@ def getHistoryRecords():
                     records.append(item)
     return records
 
+def runTerminalModeCommand(command):
+    content = config.mainWindow.getContent(command)
+    if content:
+        if content == ".restart":
+            return ".restart"
+        else:
+            # display
+            config.mainWindow.displayOutputOnTerminal(content)
+            return command
+
 # Local CLI - Terminal Mode
 if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     config.runMode = "terminal"
@@ -233,15 +243,11 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         else:
             command = input(promptIndicator).strip()
         if command:
-            content = config.mainWindow.getContent(command)
-            if content:
-                if content == ".restart":
-                    command = ".restart"
-                else:
-                    # display
-                    config.mainWindow.displayOutputOnTerminal(content)
-        #except:
-        #    pass
+            command = runTerminalModeCommand(command)
+        else:
+            command = runTerminalModeCommand(config.terminalDefaultCommand)
+            if not command:
+                command = ""
 
     if config.saveConfigOnExit:
         ConfigUtil.save()
