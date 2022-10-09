@@ -174,7 +174,7 @@ def runTerminalModeCommand(command):
         else:
             # display
             config.mainWindow.displayOutputOnTerminal(content)
-            return command
+    return command
 
 # Local CLI - Terminal Mode
 if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
