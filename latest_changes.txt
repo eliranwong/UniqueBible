@@ -1,3 +1,6 @@
+Changes in 32.48:
+* Added 404 to http-server if file not found
+
 Changes in 32.47:
 * added config.terminalDefaultCommand
 
