@@ -24,7 +24,14 @@ from pathlib import Path
 from util.HtmlGeneratorUtil import HtmlGeneratorUtil
 
 
-class RemoteHttpHandler(SimpleHTTPRequestHandler):
+class UBAHTTPRequestHandler(SimpleHTTPRequestHandler):
+    def list_directory(self, path):
+        self.send_error(
+            HTTPStatus.NOT_FOUND,
+            "Not found")
+        return None
+
+class RemoteHttpHandler(UBAHTTPRequestHandler):
 
     parser = None
     textCommandParser = None
