@@ -356,7 +356,8 @@ class SearchSqlite:
         if not content:
             return "[not found]"
         else:
-            content = re.sub("""(<ref onclick="[^<>]+?\(')([^<>]+?)('\)">)""", r"[<ref>\2</ref> ] " if config.runMode == "terminal" else r"\1\2\3", content[0])
+            #content = re.sub("""(<ref onclick="[^<>]+?\(')([^<>]+?)('\)">)""", r"[<ref>\2</ref> ] " if config.runMode == "terminal" else r"\1\2\3", content[0])
+            content = content[0]
             return content
 
     def getSimilarContent(self, module, entry):
@@ -368,7 +369,7 @@ class SearchSqlite:
             return "[not found]"
         else:
             content = "<br>".join(contentList)
-            content = re.sub("""(<ref onclick="[^<>]+?\(')([^<>]+?)('\)">)""", r"[<ref>\2</ref> ] " if config.runMode == "terminal" else r"\1\2\3", content)
+            #content = re.sub("""(<ref onclick="[^<>]+?\(')([^<>]+?)('\)">)""", r"[<ref>\2</ref> ] " if config.runMode == "terminal" else r"\1\2\3", content)
             return content
 
 

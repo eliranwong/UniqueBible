@@ -1,3 +1,6 @@
+Changes in 32.52:
+* Added 32 quick open options in terminal mode.
+
 Changes in 32.51:
 * Added the following config settings to customise prompt indicator and entry colours:
     config.terminalPromptIndicatorColor1

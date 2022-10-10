@@ -6,9 +6,17 @@ To open a bible passage, you may use open bible menu, by running:
 
 You may also use the following commands for bible navigation
 
-To open a passage, enter a bible reference, e.g.:
+To open a passage, enter a bible reference (common bible book abbreviations are supported), e.g.:
 
 > John 3:16
+
+To open a different book, simply enter a book name or an abbreviation, e.g. change to Genesis, run:
+
+> Genesis
+
+or
+
+> Gen
 
 To open a different chapter within the same book, e.g. change to chapter 5, run:
 

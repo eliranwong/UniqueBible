@@ -151,8 +151,10 @@ class LocalCliHandler:
             ".paste": ("display copied text", self.getclipboardtext),
             ".copy": ("copy the last opened content", self.copy),
             ".copyhtml": ("copy the last opened content in html format", self.copyHtml),
-            ".quicksearchcopiedtext": ("run quick search of copied text", self.quickSearch),
-            ".qc": ("an alias to the '.quicksearchcopiedtext' command", self.quickSearch),
+            ".quicksearchcopiedtext": ("quick search copied text", self.quickSearch),
+            ".qs": ("an alias to the '.quicksearchcopiedtext' command", self.quickSearch),
+            ".quickopencopiedtext": ("quick open copied text", self.quickopen),
+            ".qo": ("an alias to the '.quickopencopiedtext' command", self.quickopen),
             ".find": ("find a string in the lastest content", self.find),
             ".findcopiedtext": ("find a string in the copied text", self.findCopiedText),
             ".history": ("display history records", self.history),
@@ -208,7 +210,7 @@ class LocalCliHandler:
             ".searchthirdpartydictionaries": ("search third-party dictionaries", lambda: self.searchTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
             ".search3dict": ("an alias to the '.searchthirdpartydictionaries' command", lambda: self.searchTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
             ".searchconcordance": ("search for concordance", self.searchconcordance),
-            ".quicksearch": ("quick search in default modules", lambda: self.quickSearch(False)),
+            ".quicksearch": ("quick search currently selected modules", lambda: self.quickSearch(False)),
             ".q": ("an alias to the '.quicksearch' command", lambda: self.quickSearch(False)),
             ".opencrossreference": ("open cross reference", self.openversefeature),
             ".opencomparison": ("open verse comparison", lambda: self.openversefeature("COMPARE")),
@@ -217,7 +219,7 @@ class LocalCliHandler:
             ".opensmartindex": ("open smart index", lambda: self.openversefeature("INDEX")),
             ".opencombo": ("open combination of translation, discourse and words features", lambda: self.openversefeature("COMBO")),
             ".openwords": ("open original words", lambda: self.openversefeature("WORDS")),
-            ".opendiscourse": ("open discourse feature", lambda: self.openversefeature("DISCOURSE")),
+            ".opendiscourse": ("open discourse features", lambda: self.openversefeature("DISCOURSE")),
             ".opentranslation": ("open original word translation", lambda: self.openversefeature("TRANSLATION")),
             ".openoverview": ("open chapter overview", self.openchapterfeature),
             ".opensummary": ("open chapter summary", lambda: self.openchapterfeature("SUMMARY")),
@@ -229,6 +231,7 @@ class LocalCliHandler:
             ".openbookfeatures": ("open bible book features", self.openbookfeatures),
             ".openchapterfeatures": ("open bible chapter features", self.openchapterfeatures),
             ".openversefeatures": ("open bible verse features", self.openversefeatures),
+            ".quickopen": ("quick open currently selected modules", lambda: self.quickopen(False)),
             ".standardcommands": ("display standard UBA command help menu", self.standardcommands),
             ".terminalcommands": ("display terminal mode commands", self.terminalcommands),
             ".menu": ("display main menu", self.menu),
@@ -536,7 +539,6 @@ class LocalCliHandler:
     def initialDisplay(self):
         print("--------------------")
         bibleReference = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
-        #print("BIBLE:::{0}:::{1} [{2}.{3}.{4}]".format(config.mainText, bibleReference, config.mainB, config.mainC, config.mainV))
         print("{0} [{1}.{2}.{3}] - {4}{5}, {6}".format(bibleReference, config.mainB, config.mainC, config.mainV, config.mainText, self.getPlusBible(), config.commentaryText))
         print("Enter an UBA command:")
         if config.terminalDisplayBeginnerMessage:
@@ -1183,6 +1185,75 @@ class LocalCliHandler:
         except:
             return self.printInvalidOptionEntered()
 
+    def quickopen(self, runOnCopiedText=True):
+        try:
+            if runOnCopiedText:
+                self.getclipboardtext()
+            options = {
+                "0": ("Bible Version", "TEXT", ""),
+                "1": ("Commentary Module", "COMMENTARY", ""),
+                "2": ("Reference in Selected Bible", "BIBLE", config.mainText),
+                "3": ("Reference in Favourite Bible", "BIBLE", self.getPlusBible()[2:]),
+                "4": ("Bible Book Notes", "OPENBOOKNOTE", ""),
+                "5": ("Bible Chapter Notes", "OPENCHAPTERNOTE", ""),
+                "6": ("Bible Verse Notes", "OPENVERSENOTE", ""),
+                "7": ("Journals", "OPENJOURNAL", ""),
+                "8": ("Chapter Overview", "OVERVIEW", ""),
+                "9": ("Chapter Summary", "SUMMARY", ""),
+                "10": ("Chapter Index", "CHAPTERINDEX", ""),
+                "11": ("Verse Index", "INDEX", ""),
+                "12": ("Cross-reference", "CROSSREFERENCE", ""),
+                "13": ("Bible Version Comparison", "COMPARE", ""),
+                "14": ("Bible Version Differences", "DIFFERENCE", ""),
+                "15": ("Treasury of Scripture Knowledge (Enhanced)", "TSKE", ""),
+                "16": ("Original Words", "WORDS", ""),
+                "17": ("Original Word Translation", "TRANSLATION", ""),
+                "18": ("Discourse Features", "DISCOURSE", ""),
+                "19": ("Words, Translation & Discourse Combo", "COMBO", ""),
+                "20": ("Bible Topics", "EXLB", "exlbt"),
+                "21": ("Bible Encyclopedia", "ENCYCLOPEDIA", config.encyclopedia),
+                "22": ("Bible Dictionary", "DICTIONARY", ""),
+                "23": ("Third-party dictionary", "THIRDDICTIONARY", config.thirdDictionary),
+                "24": ("Bible Parallels", "BOOK", "Harmonies_and_Parallels"),
+                "25": ("Bible Promises", "BOOK", "Bible_Promises"),
+                "26": ("Bible Characters", "EXLB", "exlbp"),
+                "27": ("Bible Locations", "EXLB", "exlbl"),
+                "28": ("Reference Book", "BOOK", config.book),
+                "29": ("Bible Lexicon Entries", "LEXICON", config.lexicon),
+                "30": ("Bible Lexicon Content", "REVERSELEXICON", config.lexicon),
+                "31": ("Bible Concordance", "CONCORDANCE", config.concordance),
+            }
+            display = [f"[<ref>{key}</ref> ] {value[0]} - {value[-1]}" for key, value in options.items()]
+            display = "<br>".join(display)
+            display = f"<h2>Quick Open Copied Text</h2>{display}" if runOnCopiedText else f"<h2>Quick Open</h2>{display}"
+            print(TextUtil.htmlToPlainText(display))
+            print(self.divider)
+            print("Enter a number:")
+            userInput = self.simplePrompt()
+            if not userInput or userInput == self.cancelCommand:
+                return self.cancelAction()
+            # define key
+            if -1 < int(userInput) < 17:
+                *_, openKeyword, latestSelection = options[userInput]
+                latestSelection = f"{latestSelection}:::" if latestSelection else ""
+                if openKeyword == "COMMENTARY":
+                    latestSelection = ":::"
+                openPrefix = f"{openKeyword}:::{latestSelection}"
+                if runOnCopiedText:
+                    print(self.runclipboardtext(openPrefix))
+                    return ""
+                else:
+                    print(self.divider)
+                    print("Type in an entry:")
+                    userInput = self.simplePrompt()
+                    command = f"{openPrefix}{userInput}"
+                    self.printRunningCommand(command)
+                    return self.getContent(command)
+            else:
+                return self.printInvalidOptionEntered()
+        except:
+            return self.printInvalidOptionEntered()
+
     def quickSearch(self, runOnCopiedText=True):
         try:
             if runOnCopiedText:
@@ -1213,7 +1284,7 @@ class LocalCliHandler:
             }
             display = [f"[<ref>{key}</ref> ] {value[0]} - {value[-2]}" for key, value in options.items()]
             display = "<br>".join(display)
-            display = f"<h2>Run Quick Search of Copied Text</h2>{display}" if runOnCopiedText else f"<h2>Quick Search</h2>{display}"
+            display = f"<h2>Quick Search Copied Text</h2>{display}" if runOnCopiedText else f"<h2>Quick Search</h2>{display}"
             print(TextUtil.htmlToPlainText(display))
             print(self.divider)
             print("Enter a number:")
@@ -1229,7 +1300,7 @@ class LocalCliHandler:
                 feature, searchKeyword, openKeyword, latestSelection, searchSuffix = options[userInput]
                 latestSelection = f"{latestSelection}:::" if latestSelection else ""
                 searchPrefix = f"{searchKeyword}:::{latestSelection}"
-                if feature == "Dictionary":
+                if feature == "Bible Dictionary":
                     latestSelection = ""
                 if openKeyword == "EXLB":
                     latestSelection = latestSelection.lower()
@@ -2347,7 +2418,7 @@ class LocalCliHandler:
 
     def open(self):
         heading = "Open"
-        features = (".openbible", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".opencommentary", ".openreferencebook", ".opentext")
+        features = (".openbible", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".opencommentary", ".openreferencebook", ".opentext", ".quickopen")
         return self.displayFeatureMenu(heading, features)
 
     def tools(self):
@@ -2367,7 +2438,7 @@ class LocalCliHandler:
 
     def clipboard(self):
         heading = "Copy & Copied Text"
-        features = (".copy", ".copyhtml", ".paste", ".run", ".findcopiedtext", ".quicksearchcopiedtext", ".ttscopiedtext", ".extractcopiedtext")
+        features = (".copy", ".copyhtml", ".paste", ".run", ".findcopiedtext", ".quickopencopiedtext", ".quicksearchcopiedtext", ".ttscopiedtext", ".extractcopiedtext")
         return self.displayFeatureMenu(heading, features)
 
     def search(self):
