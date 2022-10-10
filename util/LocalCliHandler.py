@@ -63,6 +63,16 @@ class LocalCliHandler:
         if config.isPrompt_toolkitInstalled:
             from prompt_toolkit import PromptSession
             from prompt_toolkit.history import FileHistory
+            from prompt_toolkit.styles import Style
+            self.promptStyle = Style.from_dict({
+                # User input (default text).
+                "": config.terminalCommandEntryColor2,
+                # Prompt.
+                "indicator": config.terminalPromptIndicatorColor2,
+            })
+            self.inputIndicator = [
+                ("class:indicator", self.inputIndicator),
+            ]
 
             find_history = os.path.join("terminal_history", "find")
             module_history_books = os.path.join("terminal_history", "books")
@@ -263,6 +273,7 @@ class LocalCliHandler:
             ".changebiblesearchmode": ("change default bible search mode", self.changebiblesearchmode),
             ".changenoteeditor": ("change default note editor", self.changenoteeditor),
             ".changecolors": ("change text highlight colors", self.changecolors),
+            ".changecolours": ("an alias to the '.changecolors' command", self.changecolors),
             ".changeconfig": ("change UBA configurations", self.changeconfig),
             ".gitstatus": ("display git status", self.gitstatus),
             ".exec": ("execute a python string", self.execPythonString),
@@ -277,7 +288,7 @@ class LocalCliHandler:
             print(self.divider)
             print("Enter a python command:")
             if config.isPrompt_toolkitInstalled:
-                userInput = self.terminal_python_string_session.prompt(self.inputIndicator).strip()
+                userInput = self.terminal_python_string_session.prompt(self.inputIndicator, style=self.promptStyle).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if not userInput or userInput == self.cancelCommand:
@@ -295,7 +306,7 @@ class LocalCliHandler:
             print(self.divider)
             print("Enter a python file path:")
             if config.isPrompt_toolkitInstalled:
-                userInput = self.terminal_python_file_session.prompt(self.inputIndicator).strip()
+                userInput = self.terminal_python_file_session.prompt(self.inputIndicator, style=self.promptStyle).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if not userInput or userInput == self.cancelCommand:
@@ -785,7 +796,7 @@ class LocalCliHandler:
                 suggestions = list(set(suggestions))
                 completer = WordCompleter(suggestions, ignore_case=True)
                 default = config.ttsDefaultLangauge if config.ttsDefaultLangauge in suggestions else ""
-                userInput = self.terminal_tts_language_session.prompt(self.inputIndicator, completer=completer, default=default).strip()
+                userInput = self.terminal_tts_language_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=default).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if not userInput or userInput == self.cancelCommand:
@@ -917,7 +928,7 @@ class LocalCliHandler:
 
     def find(self):
         print("Enter a search pattern: ")
-        userInput = self.terminal_find_session.prompt(self.inputIndicator).strip() if config.isPrompt_toolkitInstalled else input(self.inputIndicator).strip()
+        userInput = self.terminal_find_session.prompt(self.inputIndicator, style=self.promptStyle).strip() if config.isPrompt_toolkitInstalled else input(self.inputIndicator).strip()
         if config.isColoramaInstalled:
             from colorama import init
             init()
@@ -1036,7 +1047,7 @@ class LocalCliHandler:
     def simplePrompt(self):
         if config.isPrompt_toolkitInstalled:
             from prompt_toolkit import prompt
-            userInput = prompt(self.inputIndicator).strip()
+            userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
         else:
             userInput = input(self.inputIndicator).strip()
         return userInput
@@ -1107,7 +1118,7 @@ class LocalCliHandler:
             print("Enter a file path below:")
             if config.isPrompt_toolkitInstalled:
                 from prompt_toolkit import prompt
-                userInput = prompt(self.inputIndicator).strip()
+                userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if not userInput or userInput == self.cancelCommand:
@@ -1138,7 +1149,7 @@ class LocalCliHandler:
             print(self.divider)
             self.printSearchEntryPrompt()
             if config.isPrompt_toolkitInstalled:
-                userInput = prompt(self.inputIndicator).strip()
+                userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if userInput == self.cancelCommand:
@@ -1157,7 +1168,7 @@ class LocalCliHandler:
                 print(self.divider)
                 print(f"Enter an item to open:")
                 if config.isPrompt_toolkitInstalled:
-                    userInput = prompt(self.inputIndicator).strip()
+                    userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
                 if not userInput or userInput == self.cancelCommand:
@@ -1208,7 +1219,7 @@ class LocalCliHandler:
             print("Enter a number:")
             if config.isPrompt_toolkitInstalled:
                 from prompt_toolkit import prompt
-                userInput = prompt(self.inputIndicator).strip()
+                userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if not userInput or userInput == self.cancelCommand:
@@ -1271,7 +1282,7 @@ class LocalCliHandler:
                 searchKeyword = "SEARCHTOOL"
             if config.isPrompt_toolkitInstalled:
                 completer = WordCompleter(abbList, ignore_case=True)
-                userInput = historySession.prompt(self.inputIndicator, completer=completer, default=default).strip()
+                userInput = historySession.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=default).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if not userInput or userInput == self.cancelCommand:
@@ -1281,7 +1292,7 @@ class LocalCliHandler:
                 print(self.divider)
                 self.printSearchEntryPrompt()
                 if config.isPrompt_toolkitInstalled:
-                    userInput = prompt(self.inputIndicator).strip()
+                    userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
                 if not userInput or userInput == self.cancelCommand:
@@ -1296,7 +1307,7 @@ class LocalCliHandler:
                 print(self.divider)
                 print(f"To open, enter a module entry (e.g. {latestEntry}):")
                 if config.isPrompt_toolkitInstalled:
-                    userInput = prompt(self.inputIndicator).strip()
+                    userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
                 if not userInput or userInput == self.cancelCommand:
@@ -1326,7 +1337,7 @@ class LocalCliHandler:
             print("Enter a reference book:")
             if config.isPrompt_toolkitInstalled:
                 completer = WordCompleter(self.crossPlatform.referenceBookList, ignore_case=True)
-                userInput = self.terminal_books_selection_session.prompt(self.inputIndicator, completer=completer, default=config.book).strip()
+                userInput = self.terminal_books_selection_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=config.book).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if not userInput or userInput == self.cancelCommand:
@@ -1342,7 +1353,7 @@ class LocalCliHandler:
                 print("Enter a chapter title:")
                 if config.isPrompt_toolkitInstalled:
                     completer = WordCompleter(chapterList, ignore_case=True)
-                    userInput = prompt(self.inputIndicator, completer=completer, default=config.bookChapter if config.bookChapter in chapterList else "").strip()
+                    userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=config.bookChapter if config.bookChapter in chapterList else "").strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
                 if not userInput or userInput == self.cancelCommand:
@@ -1366,7 +1377,7 @@ class LocalCliHandler:
             print(self.divider)
             print(f"Enter a year, e.g. {today.year}:")
             if config.isPrompt_toolkitInstalled:
-                userInput = prompt(self.inputIndicator, default=str(today.year)).strip()
+                userInput = prompt(self.inputIndicator, style=self.promptStyle, default=str(today.year)).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if not userInput or userInput == self.cancelCommand:
@@ -1376,7 +1387,7 @@ class LocalCliHandler:
                 print(self.divider)
                 print(f"Enter a month, e.g. {today.month}:")
                 if config.isPrompt_toolkitInstalled:
-                    userInput = prompt(self.inputIndicator, default=str(today.month)).strip()
+                    userInput = prompt(self.inputIndicator, style=self.promptStyle, default=str(today.month)).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
                 if not userInput or userInput == self.cancelCommand:
@@ -1386,7 +1397,7 @@ class LocalCliHandler:
                     print(self.divider)
                     print(f"Enter a day, e.g. {today.day}:")
                     if config.isPrompt_toolkitInstalled:
-                        userInput = prompt(self.inputIndicator, default=str(today.day)).strip()
+                        userInput = prompt(self.inputIndicator, style=self.promptStyle, default=str(today.day)).strip()
                     else:
                         userInput = input(self.inputIndicator).strip()
                     if not userInput or userInput == self.cancelCommand:
@@ -1417,7 +1428,7 @@ class LocalCliHandler:
             print("(enter a book abbreviation)")
             if config.isPrompt_toolkitInstalled:
                 completer = WordCompleter(self.currentBibleAbbs, ignore_case=True)
-                userInput = prompt(self.inputIndicator, completer=completer, default=self.currentBibleAbb).strip()
+                userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=self.currentBibleAbb).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if not userInput or userInput == self.cancelCommand:
@@ -1433,7 +1444,7 @@ class LocalCliHandler:
                 print("(enter a chapter number)")
                 if config.isPrompt_toolkitInstalled:
                     defaultChapter = str(config.mainC) if config.mainC in self.currentBibleChapters else str(self.currentBibleChapters[0])
-                    userInput = prompt(self.inputIndicator, default=defaultChapter).strip()
+                    userInput = prompt(self.inputIndicator, style=self.promptStyle, default=defaultChapter).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
                 if not userInput or userInput == self.cancelCommand:
@@ -1447,7 +1458,7 @@ class LocalCliHandler:
                     print("(enter a verse number)")
                     if config.isPrompt_toolkitInstalled:
                         defaultVerse = str(config.mainV) if config.mainV in self.currentBibleVerses else str(self.currentBibleVerses[0])
-                        userInput = prompt(self.inputIndicator, default=defaultVerse).strip()
+                        userInput = prompt(self.inputIndicator, style=self.promptStyle, default=defaultVerse).strip()
                     else:
                         userInput = input(self.inputIndicator).strip()
                     if not userInput or userInput == self.cancelCommand:
@@ -1478,7 +1489,7 @@ class LocalCliHandler:
             print("(enter a book abbreviation)")
             if config.isPrompt_toolkitInstalled:
                 completer = WordCompleter(self.currentBibleAbbs, ignore_case=True)
-                userInput = prompt(self.inputIndicator, completer=completer, default=self.currentBibleAbb).strip()
+                userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=self.currentBibleAbb).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if not userInput or userInput == self.cancelCommand:
@@ -1494,7 +1505,7 @@ class LocalCliHandler:
                 print("(enter a chapter number)")
                 if config.isPrompt_toolkitInstalled:
                     defaultChapter = str(config.mainC) if config.mainC in self.currentBibleChapters else str(self.currentBibleChapters[0])
-                    userInput = prompt(self.inputIndicator, default=defaultChapter).strip()
+                    userInput = prompt(self.inputIndicator, style=self.promptStyle, default=defaultChapter).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
                 if not userInput or userInput == self.cancelCommand:
@@ -1525,7 +1536,7 @@ class LocalCliHandler:
             print("(enter a book abbreviation)")
             if config.isPrompt_toolkitInstalled:
                 completer = WordCompleter(self.currentBibleBooks, ignore_case=True)
-                userInput = prompt(self.inputIndicator, completer=completer, default=self.currentBibleBook).strip()
+                userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=self.currentBibleBook).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if not userInput or userInput == self.cancelCommand:
@@ -1565,7 +1576,7 @@ class LocalCliHandler:
             if config.isPrompt_toolkitInstalled:
                 completer = WordCompleter(self.crossPlatform.textList, ignore_case=True)
                 defaultText = self.getDefaultText()
-                userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, completer=completer, default=defaultText).strip()
+                userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=defaultText).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if not userInput or userInput == self.cancelCommand:
@@ -1581,7 +1592,7 @@ class LocalCliHandler:
                 # select bible book
                 if config.isPrompt_toolkitInstalled:
                     completer = WordCompleter(self.currentBibleAbbs, ignore_case=True)
-                    userInput = prompt(self.inputIndicator, completer=completer, default=self.currentBibleAbb).strip()
+                    userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=self.currentBibleAbb).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
                 if not userInput or userInput == self.cancelCommand:
@@ -1598,7 +1609,7 @@ class LocalCliHandler:
                     # select bible chapter
                     if config.isPrompt_toolkitInstalled:
                         defaultChapter = str(config.mainC) if config.mainC in self.currentBibleChapters else str(self.currentBibleChapters[0])
-                        userInput = prompt(self.inputIndicator, default=defaultChapter).strip()
+                        userInput = prompt(self.inputIndicator, style=self.promptStyle, default=defaultChapter).strip()
                     else:
                         userInput = input(self.inputIndicator).strip()
                     if not userInput or userInput == self.cancelCommand:
@@ -1613,7 +1624,7 @@ class LocalCliHandler:
                         # select verse number
                         if config.isPrompt_toolkitInstalled:
                             defaultVerse = str(config.mainV) if config.mainV in self.currentBibleVerses else str(self.currentBibleVerses[0])
-                            userInput = prompt(self.inputIndicator, default=defaultVerse).strip()
+                            userInput = prompt(self.inputIndicator, style=self.promptStyle, default=defaultVerse).strip()
                         else:
                             userInput = input(self.inputIndicator).strip()
                         if not userInput or userInput == self.cancelCommand:
@@ -1647,7 +1658,7 @@ class LocalCliHandler:
             commands = self.getTextCommandSuggestion(False)
             if config.isPrompt_toolkitInstalled:
                 completer = WordCompleter(commands, ignore_case=True)
-                userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, completer=completer).strip()
+                userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if not userInput or userInput == self.cancelCommand:
@@ -1677,7 +1688,7 @@ class LocalCliHandler:
             print("To search multiple versions, use '_' as a delimiter, e.g. 'KJVx_RWVx_OHGBi'")
             if config.isPrompt_toolkitInstalled:
                 completer = WordCompleter(self.crossPlatform.strongBibles, ignore_case=True)
-                userInput = self.terminal_search_strong_bible_session.prompt(self.inputIndicator, completer=completer, default=config.concordance).strip()
+                userInput = self.terminal_search_strong_bible_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=config.concordance).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if not userInput or userInput == self.cancelCommand:
@@ -1711,7 +1722,7 @@ class LocalCliHandler:
             if config.isPrompt_toolkitInstalled:
                 completer = WordCompleter(self.crossPlatform.textList, ignore_case=True)
                 defaultText = self.getDefaultText()
-                userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, completer=completer, default=defaultText).strip()
+                userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=defaultText).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if not userInput or userInput == self.cancelCommand:
@@ -1732,7 +1743,7 @@ class LocalCliHandler:
                 # select bible book range
                 if config.isPrompt_toolkitInstalled:
                     completer = WordCompleter(["ALL", "OT", "NT"] + self.currentBibleAbbs, ignore_case=True)
-                    userInput = self.terminal_search_bible_book_range_session.prompt(self.inputIndicator, completer=completer, default="ALL").strip()
+                    userInput = self.terminal_search_bible_book_range_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default="ALL").strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
                 if not userInput or userInput == self.cancelCommand:
@@ -1758,7 +1769,7 @@ class LocalCliHandler:
                     self.printChooseItem()
                     print("(enter a number)")
                     if config.isPrompt_toolkitInstalled:
-                        userInput = prompt(self.inputIndicator, default=str(config.bibleSearchMode)).strip()
+                        userInput = prompt(self.inputIndicator, style=self.promptStyle, default=str(config.bibleSearchMode)).strip()
                     else:
                         userInput = input(self.inputIndicator).strip()
                     if not userInput or userInput == self.cancelCommand:
@@ -1775,7 +1786,7 @@ class LocalCliHandler:
                         print(f"(format: {stringFormat})")
                         print(f"(example: {example})")
                         if config.isPrompt_toolkitInstalled:
-                            userInput = self.terminal_search_bible_session.prompt(self.inputIndicator).strip()
+                            userInput = self.terminal_search_bible_session.prompt(self.inputIndicator, style=self.promptStyle).strip()
                         else:
                             userInput = input(self.inputIndicator).strip()
                         if not userInput or userInput == self.cancelCommand:
@@ -1786,7 +1797,7 @@ class LocalCliHandler:
                         print(self.divider)
                         print("Is it case sensitive? ([Y]es or [N]o)")
                         if config.isPrompt_toolkitInstalled:
-                            userInput = prompt(self.inputIndicator, default="Y" if config.enableCaseSensitiveSearch else "N").strip()
+                            userInput = prompt(self.inputIndicator, style=self.promptStyle, default="Y" if config.enableCaseSensitiveSearch else "N").strip()
                         else:
                             userInput = input(self.inputIndicator).strip()
                         if not userInput or userInput == self.cancelCommand:
@@ -1820,7 +1831,7 @@ class LocalCliHandler:
             if config.isPrompt_toolkitInstalled:
                 completer = WordCompleter(self.crossPlatform.commentaryList, ignore_case=True)
                 defaultText = config.commentaryText
-                userInput = self.terminal_commentary_selection_session.prompt(self.inputIndicator, completer=completer, default=defaultText).strip()
+                userInput = self.terminal_commentary_selection_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=defaultText).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if not userInput or userInput == self.cancelCommand:
@@ -1835,7 +1846,7 @@ class LocalCliHandler:
                 print("(enter a book abbreviation)")
                 if config.isPrompt_toolkitInstalled:
                     completer = WordCompleter(self.currentBibleAbbs, ignore_case=True)
-                    userInput = prompt(self.inputIndicator, completer=completer, default=self.currentBibleAbb).strip()
+                    userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=self.currentBibleAbb).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
                 if not userInput or userInput == self.cancelCommand:
@@ -1851,7 +1862,7 @@ class LocalCliHandler:
                     print("(enter a chapter number)")
                     if config.isPrompt_toolkitInstalled:
                         defaultChapter = str(config.commentaryC) if config.commentaryC in self.currentBibleChapters else str(self.currentBibleChapters[0])
-                        userInput = prompt(self.inputIndicator, default=defaultChapter).strip()
+                        userInput = prompt(self.inputIndicator, style=self.promptStyle, default=defaultChapter).strip()
                     else:
                         userInput = input(self.inputIndicator).strip()
                     if not userInput or userInput == self.cancelCommand:
@@ -1865,7 +1876,7 @@ class LocalCliHandler:
                         print("(enter a verse number)")
                         if config.isPrompt_toolkitInstalled:
                             defaultVerse = str(config.commentaryV) if config.commentaryV in self.currentBibleVerses else str(self.currentBibleVerses[0])
-                            userInput = prompt(self.inputIndicator, default=defaultVerse).strip()
+                            userInput = prompt(self.inputIndicator, style=self.promptStyle, default=defaultVerse).strip()
                         else:
                             userInput = input(self.inputIndicator).strip()
                         if not userInput or userInput == self.cancelCommand:
@@ -1928,7 +1939,7 @@ class LocalCliHandler:
         self.printCancelOption()
         if config.isPrompt_toolkitInstalled:
             completer = WordCompleter([str(i) for i in range(len(options))])
-            userInput = prompt(self.inputIndicator, completer=completer)
+            userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer)
         else:
             userInput = input(self.inputIndicator)
         if userInput == self.cancelCommand:
@@ -1947,7 +1958,7 @@ class LocalCliHandler:
             self.printCancelOption()
             if config.isPrompt_toolkitInstalled:
                 completer = WordCompleter([str(i) for i in range(len(options))])
-                userInput = prompt(self.inputIndicator, completer=completer)
+                userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer)
             else:
                 userInput = input(self.inputIndicator)
             if userInput == self.cancelCommand:
@@ -2016,7 +2027,7 @@ class LocalCliHandler:
             self.printSearchEntryPrompt()
             if config.isPrompt_toolkitInstalled:
                 from prompt_toolkit import prompt
-                userInput = prompt(self.inputIndicator).strip()
+                userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if userInput == self.cancelCommand:
@@ -2074,7 +2085,7 @@ class LocalCliHandler:
             print("Enter a number:")
             if config.isPrompt_toolkitInstalled:
                 from prompt_toolkit import prompt
-                userInput = prompt(self.inputIndicator, default=str(config.bibleSearchMode)).strip()
+                userInput = prompt(self.inputIndicator, style=self.promptStyle, default=str(config.bibleSearchMode)).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if not userInput or userInput == self.cancelCommand:
@@ -2109,7 +2120,7 @@ class LocalCliHandler:
                 from prompt_toolkit.completion import WordCompleter
                 from prompt_toolkit import prompt
                 completer = WordCompleter(configurablesettings)
-                userInput = prompt(self.inputIndicator, completer=completer).strip()
+                userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if not userInput or userInput == self.cancelCommand:
@@ -2185,7 +2196,7 @@ class LocalCliHandler:
             if config.isPrompt_toolkitInstalled:
                 from prompt_toolkit.completion import WordCompleter
                 completer = WordCompleter(configurablesettings, ignore_case=True)
-                userInput = self.terminal_config_selection_session.prompt(self.inputIndicator, completer=completer).strip()
+                userInput = self.terminal_config_selection_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if not userInput or userInput == self.cancelCommand:
@@ -2199,7 +2210,7 @@ class LocalCliHandler:
                 print("Enter a value:")
                 if config.isPrompt_toolkitInstalled:
                     from prompt_toolkit import prompt
-                    userInput = prompt(self.inputIndicator).strip()
+                    userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
                 if not userInput or userInput == self.cancelCommand:
@@ -2217,7 +2228,7 @@ class LocalCliHandler:
         print("Do you want to proceed? [Y]es / [N]o")
         if config.isPrompt_toolkitInstalled:
             from prompt_toolkit import prompt
-            userInput = prompt(self.inputIndicator, default="N").strip()
+            userInput = prompt(self.inputIndicator, style=self.promptStyle, default="N").strip()
         else:
             userInput = input(self.inputIndicator).strip()
         userInput = userInput.lower()
@@ -2317,7 +2328,7 @@ class LocalCliHandler:
         self.printChooseItem()
         if config.isPrompt_toolkitInstalled:
             from prompt_toolkit import prompt
-            userInput = prompt(self.inputIndicator).strip()
+            userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
         else:
             userInput = input(self.inputIndicator).strip()
         if not userInput or userInput == self.cancelCommand:

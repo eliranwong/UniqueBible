@@ -221,6 +221,18 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         command_completer = WordCompleter(config.mainWindow.getTextCommandSuggestion(), ignore_case=True)
         auto_suggestion=AutoSuggestFromHistory()
         toolbar = f" Unique Bible App [{config.version}] "
+
+        from prompt_toolkit.styles import Style
+        style = Style.from_dict({
+            # User input (default text).
+            "": config.terminalCommandEntryColor1,
+            # Prompt.
+            "indicator": config.terminalPromptIndicatorColor1,
+        })
+        promptIndicator = [
+            ("class:indicator", promptIndicator),
+        ]
+
     elif sys.platform in ("linux", "darwin"):
         import readline
 
@@ -236,7 +248,7 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         config.mainWindow.initialDisplay()
         # User command input
         if config.isPrompt_toolkitInstalled:
-            command = session.prompt(promptIndicator, completer=command_completer, auto_suggest=auto_suggestion, bottom_toolbar=toolbar, default=default).strip()
+            command = session.prompt(promptIndicator, style=style, completer=command_completer, auto_suggest=auto_suggestion, bottom_toolbar=toolbar, default=default).strip()
         elif sys.platform in ("linux", "darwin"):
             import readline
             command = input(promptIndicator).strip()

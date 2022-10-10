@@ -1,3 +1,10 @@
+Changes in 32.51:
+* Added the following config settings to customise prompt indicator and entry colours:
+    config.terminalPromptIndicatorColor1
+    config.terminalCommandEntryColor1
+    config.terminalPromptIndicatorColor2
+    config.terminalCommandEntryColor2
+
 Changes in 32.49, 32.50:
 Changes were made in terminal mode:
 * Re-organised user-interactive menu.

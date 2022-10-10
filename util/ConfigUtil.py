@@ -135,6 +135,22 @@ class ConfigUtil:
         if not hasattr(config, "terminalStopHttpServerOnExit"):
             config.terminalStopHttpServerOnExit = True
         # Colours related configurations in terminal mode
+        config.help["terminalPromptIndicatorColor1"] = """
+        # Terminal prompt indicator color I."""
+        if not hasattr(config, "terminalPromptIndicatorColor1"):
+            config.terminalPromptIndicatorColor1 = "#00AA00"
+        config.help["terminalCommandEntryColor1"] = """
+        # Terminal command entry color I."""
+        if not hasattr(config, "terminalCommandEntryColor1"):
+            config.terminalCommandEntryColor1 = "#FF0066"
+        config.help["terminalPromptIndicatorColor2"] = """
+        # Terminal prompt indicator color II."""
+        if not hasattr(config, "terminalPromptIndicatorColor2"):
+            config.terminalPromptIndicatorColor2 = "#FF0066"
+        config.help["terminalCommandEntryColor2"] = """
+        # Terminal command entry color II."""
+        if not hasattr(config, "terminalCommandEntryColor2"):
+            config.terminalCommandEntryColor2 = "#00AA00"
         config.terminalColors = ("RESET", "BLACK", "WHITE", "RED", "GREEN", "YELLOW", "BLUE", "MAGENTA", "CYAN", "LIGHTBLACK_EX", "LIGHTRED_EX", "LIGHTGREEN_EX", "LIGHTYELLOW_EX", "LIGHTBLUE_EX", "LIGHTMAGENTA_EX", "LIGHTCYAN_EX", "LIGHTWHITE_EX")
         config.help["terminalHeadingTextColor"] = """
         # Terminal mode heading text color."""
@@ -1514,6 +1530,8 @@ class ConfigUtil:
             ("terminalNoteEditor", config.terminalNoteEditor),
             ("terminalBibleComparison", config.terminalBibleComparison),
             ("terminalStopHttpServerOnExit", config.terminalStopHttpServerOnExit),
+            ("terminalPromptIndicatorColor", config.terminalPromptIndicatorColor),
+            ("terminalCommandEntryColor", config.terminalCommandEntryColor),
             ("terminalHeadingTextColor", config.terminalHeadingTextColor),
             ("terminalVerseNumberColor", config.terminalVerseNumberColor),
             ("terminalResourceLinkColor", config.terminalResourceLinkColor),
