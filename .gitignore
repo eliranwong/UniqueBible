@@ -87,3 +87,4 @@ disabled_modules.txt
 nano.*
 config.py.save
 terminal_history/*
+terminal_mode/developers/*.py

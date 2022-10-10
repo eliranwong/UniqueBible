@@ -1,5 +1,10 @@
-Changes in 32.49:
-* Added a .exec command in terminal mode for developers.
+Changes in 32.49, 32.50:
+Changes were made in terminal mode:
+* Re-organised user-interactive menu.
+* Added offline how-to guides
+* Added plugins
+* Added developer menu
+* Added .gitstatus, .exec and .execfile commands for developers
 
 Changes in 32.48:
 * Added 404 to http-server if file not found

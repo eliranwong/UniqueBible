@@ -40,6 +40,11 @@ class LocalCliHandler:
 
     # Set text-to-speech default language
     def getTtsLanguages(self):
+        # Support Android Google TTS if available
+        if config.runMode == "terminal" and config.terminalEnableTermuxAPI:
+            config.isGoogleCloudTTSAvailable = True
+        if config.isGoogleCloudTTSAvailable and config.ttsDefaultLangauge == "en":
+            config.ttsDefaultLangauge = "en-GB"
         return self.crossPlatform.getTtsLanguages()
 
     def setOsOpenCmd(self):
@@ -73,6 +78,8 @@ class LocalCliHandler:
             search_bible_book_range_history = os.path.join("terminal_history", "search_bible_book_range")
             config_history = os.path.join("terminal_history", "config")
             tts_language_history = os.path.join("terminal_history", "tts_language")
+            python_string_history = os.path.join("terminal_history", "python_string")
+            python_file_history = os.path.join("terminal_history", "python_file")
 
             self.terminal_books_selection_session = PromptSession(history=FileHistory(module_history_books))
             self.terminal_find_session = PromptSession(history=FileHistory(find_history))
@@ -88,6 +95,8 @@ class LocalCliHandler:
             self.terminal_commentary_selection_session = PromptSession(history=FileHistory(module_history_commentaries))
             self.terminal_config_selection_session = PromptSession(history=FileHistory(config_history))
             self.terminal_tts_language_session = PromptSession(history=FileHistory(tts_language_history))
+            self.terminal_python_string_session = PromptSession(history=FileHistory(python_string_history))
+            self.terminal_python_file_session = PromptSession(history=FileHistory(python_file_history))
 
         else:
 
@@ -105,6 +114,8 @@ class LocalCliHandler:
             self.terminal_thridPartyDictionaries_selection_session = None
             self.terminal_commentary_selection_session = None
             self.terminal_config_selection_session = None
+            self.terminal_python_string_session = None
+            self.terminal_python_file_session = None
 
     def getDotCommands(self):
         return {
@@ -116,7 +127,7 @@ class LocalCliHandler:
             ".read": ("read available audio files", self.read),
             ".readsync": ("read available audio files with synchronised text display", self.readsync),
             ".run": ("run copied text as command", self.runclipboardtext),
-            ".r": ("an alias to the '.paste' command", self.runclipboardtext),
+            ".r": ("an alias to the '.run' command", self.runclipboardtext),
             ".forward": ("open one bible chapter forward", self.forward),
             ".backward": ("open one bible chapter backward", self.backward),
             ".f": ("an alias to the '.forward' command", self.forward),
@@ -127,11 +138,13 @@ class LocalCliHandler:
             ".share": ("copy a web link for sharing", self.share),
             ".tts": ("open text-to-speech feature", lambda: self.tts(False)),
             ".ttscopiedtext": ("run text-to-speech on copied text", self.tts),
+            ".paste": ("display copied text", self.getclipboardtext),
             ".copy": ("copy the last opened content", self.copy),
             ".copyhtml": ("copy the last opened content in html format", self.copyHtml),
             ".quicksearchcopiedtext": ("run quick search of copied text", self.quickSearch),
             ".qc": ("an alias to the '.quicksearchcopiedtext' command", self.quickSearch),
-            ".find": ("find a string in the last opened content", self.find),
+            ".find": ("find a string in the lastest content", self.find),
+            ".findcopiedtext": ("find a string in the copied text", self.findCopiedText),
             ".history": ("display history records", self.history),
             ".latestchanges": ("display latest changes", self.latestchanges),
             ".latest": ("display the lastest selection", self.latest),
@@ -209,21 +222,29 @@ class LocalCliHandler:
             ".standardcommands": ("display standard UBA command help menu", self.standardcommands),
             ".terminalcommands": ("display terminal mode commands", self.terminalcommands),
             ".menu": ("display main menu", self.menu),
-            ".show": ("display show menu", self.show),
+            ".info": ("display information menu", self.info),
             ".open": ("display open menu", self.open),
             ".search": ("display search menu", self.search),
             ".note": ("display note / journal menu", self.accessNoteFeatures),
             ".edit": ("display edit menu", self.edit),
             ".control": ("display control menu", self.control),
+            ".toggle": ("display toggle menu", self.toggle),
             ".clipboard": ("display clipboard menu", self.clipboard),
             ".change": ("display change menu", self.change),
+            ".tools": ("display tool menu", self.tools),
+            ".plugins": ("display plugin menu", self.plugins),
+            ".howto": ("display how-to menu", self.howto),
             ".maintain": ("display maintain menu", self.maintain),
+            ".develop": ("display developer menu", self.develop),
             ".help": ("display help menu", self.help),
             ".wiki": ("open online wiki page", self.wiki),
-            ".helpinstallmicro": ("show how to install text editor micro", self.helpInstallMicro),
-            ".w3m": ("open html content in w3m", lambda: self.cliTool("w3m -T text/html", self.html)),
-            ".lynx": ("open html content in lynx", lambda: self.cliTool("lynx -stdin", self.html)),
-            ".textract": ("open text from document.", self.textract),
+            ".quickstart": ("show how to install text editor micro", lambda: self.readHowTo("quick start")),
+            ".helpinstallmicro": ("show how to install text editor micro", lambda: self.readHowTo("install micro")),
+            #".w3m": ("open html content in w3m", lambda: self.cliTool("w3m -T text/html", self.html)),
+            #".lynx": ("open html content in lynx", lambda: self.cliTool("lynx -stdin", self.html)),
+            ".opentext": ("open text from document.", self.opentext),
+            ".extract": ("extract bible references from the latest content.", self.extract),
+            ".extractcopiedtext": ("extract bible references from the latest content.", self.extractcopiedtext),
             ".editnewfile": ("edit new file in text editor", lambda: self.cliTool(config.terminalNoteEditor)),
             ".editcontent": ("edit latest content in text editor", lambda: self.cliTool(config.terminalNoteEditor, self.getPlainText())),
             ".editconfig": ("edit 'config.py' in text editor", lambda: self.editConfig(config.terminalNoteEditor)),
@@ -238,16 +259,82 @@ class LocalCliHandler:
             ".restorejournals": ("restore journal database file", lambda: self.restoreFile("marvelData/journal.sqlite")),
             ".restorelastnotes": ("restore note database file", lambda: self.restoreLastFile("marvelData/note.sqlite")),
             ".restorelastjournals": ("restore journal database file", lambda: self.restoreLastFile("marvelData/journal.sqlite")),
-            ".changenoteeditor": ("change default note editor", self.changenoteeditor),
+            ".changedefaultcommand": ("change default command", self.changeDefaultCommand),
             ".changebiblesearchmode": ("change default bible search mode", self.changebiblesearchmode),
+            ".changenoteeditor": ("change default note editor", self.changenoteeditor),
             ".changecolors": ("change text highlight colors", self.changecolors),
             ".changeconfig": ("change UBA configurations", self.changeconfig),
+            ".gitstatus": ("display git status", self.gitstatus),
             ".exec": ("execute a python string", self.execPythonString),
+            ".execfile": ("execute a python file", self.execFile),
         }
 
-    #marvelData/note.sqlite
-    #marvelData/journal.sqlite
-    #marvelData/highlights.bible
+    def execPythonString(self):
+        if config.terminalEnableTermuxAPI:
+            if not self.fingerprint():
+                return self.cancelAction()
+        try:
+            print(self.divider)
+            print("Enter a python command:")
+            if config.isPrompt_toolkitInstalled:
+                userInput = self.terminal_python_string_session.prompt(self.inputIndicator).strip()
+            else:
+                userInput = input(self.inputIndicator).strip()
+            if not userInput or userInput == self.cancelCommand:
+                return self.cancelAction()
+            exec(userInput, globals())
+        except:
+            print("Errors!")
+        return ""
+
+    def execFile(self):
+        if config.terminalEnableTermuxAPI:
+            if not self.fingerprint():
+                return self.cancelAction()
+        try:
+            print(self.divider)
+            print("Enter a python file path:")
+            if config.isPrompt_toolkitInstalled:
+                userInput = self.terminal_python_file_session.prompt(self.inputIndicator).strip()
+            else:
+                userInput = input(self.inputIndicator).strip()
+            if not userInput or userInput == self.cancelCommand:
+                return self.cancelAction()
+            self.execPythonFile(userInput)
+        except:
+            print("Errors!")
+        return ""
+
+    def plugins(self):
+        availablePlugins = FileUtil.fileNamesWithoutExtension(os.path.join("terminal_mode", "plugins"), "py")
+        print(self.divider)
+        self.printOptionsDisplay(availablePlugins, "Plugins")
+        print(self.divider)
+        print("Enter a number:")
+        userInput = self.simplePrompt()
+        if not userInput or userInput == self.cancelCommand:
+            return self.cancelAction()
+        try:
+            filepath = os.path.join("terminal_mode", "plugins", f"{availablePlugins[int(userInput)]}.py")
+            self.execPythonFile(filepath)
+            return ""
+        except:
+            return self.printInvalidOptionEntered()
+
+    def howto(self):
+        availableHowto = FileUtil.fileNamesWithoutExtension(os.path.join("terminal_mode", "how_to"), "md")
+        print(self.divider)
+        self.printOptionsDisplay(availableHowto, "Plugins")
+        print(self.divider)
+        print("Enter a number:")
+        userInput = self.simplePrompt()
+        if not userInput or userInput == self.cancelCommand:
+            return self.cancelAction()
+        try:
+            filepath = os.path.join("terminal_mode", "how_to", f"{availableHowto[int(userInput)]}.md")
+            return self.readPlainTextFile(filepath)
+        except:
+            return self.printInvalidOptionEntered()
 
     def execPythonFile(self, script):
         self.crossPlatform.execPythonFile(script)
@@ -621,6 +708,9 @@ class LocalCliHandler:
         except:
             return ""
 
+    def gitstatus(self):
+        return self.getCliOutput("git status")
+
     def showttslanguages(self):
         codes = list(self.ttsLanguages.keys())
 
@@ -646,9 +736,32 @@ class LocalCliHandler:
         else:
             return "SPEAK"
 
+    def extract(self):
+        parser = BibleVerseParser(config.parserStandarisation)
+        verseList = parser.extractAllReferences(self.plainText, False)
+        print(self.divider)
+        if not verseList:
+            print("No bible reference is found!")
+        else:
+            references = "; ".join([parser.bcvToVerseReference(*verse) for verse in verseList])
+            print(references)
+        return ""
+
+    def extractcopiedtext(self):
+        clipboardText = self.getclipboardtext()
+        self.html = clipboardText
+        self.plainText = clipboardText
+        return self.extract()
+
+    def findCopiedText(self):
+        clipboardText = self.getclipboardtext()
+        self.html = clipboardText
+        self.plainText = clipboardText
+        return self.find()
+
     def tts(self, runOnCopiedText=True):
         if runOnCopiedText:
-                self.getclipboardtext()
+            self.getclipboardtext()
         codes = list(self.ttsLanguages.keys())
         #display = "<h2>Languages</h2>"
         shortCodes = []
@@ -988,7 +1101,7 @@ class LocalCliHandler:
         self.printToolNotFound("yt-dlp' or 'ffmpeg")
         return ""
 
-    def textract(self):
+    def opentext(self):
         if config.isTextractInstalled:
             print(self.divider)
             print("Enter a file path below:")
@@ -1914,14 +2027,49 @@ class LocalCliHandler:
         except:
             return self.printInvalidOptionEntered()
 
+    def printOptionsDisplay(self, options, heading=""):
+        print(self.getOptionsDisplay(options, heading))
+
+    def getOptionsDisplay(self, options, heading=""):
+        optionsDisplay = [f"[<ref>{i}</ref> ] {mode}" for i, mode in enumerate(options)]
+        optionsDisplay = "<br>".join(optionsDisplay)
+        if heading:
+            optionsDisplay = f"<h2>{heading}</h2>{optionsDisplay}"
+        return TextUtil.htmlToPlainText(optionsDisplay).strip()
+
+    def changeDefaultCommand(self):
+        try:
+            print(self.divider)
+            print("Current default command:")
+            print(config.terminalDefaultCommand)
+            print(self.divider)
+            options = (".menu", ".run", ".search", ".quicksearch", ".quicksearchcopiedtext", "[CUSTOMISE]")
+            self.printOptionsDisplay(options, "Change Default Command")
+            print(self.divider)
+            print("Enter a number:")
+            userInput = self.simplePrompt()
+            if not userInput or userInput == self.cancelCommand:
+                return self.cancelAction()
+            # define key
+            if userInput in ("0", "1", "2", "3", "4"):
+                return self.getContent(f"_setconfig:::terminalDefaultCommand:::'{options[int(userInput)]}'")
+            elif userInput == "5":
+                print(self.divider)
+                print("Enter an UBA command:")
+                userInput = self.simplePrompt()
+                if not userInput or userInput == self.cancelCommand:
+                    return self.cancelAction()
+                return self.getContent(f"_setconfig:::terminalDefaultCommand:::'{userInput}'")
+            else:
+                return self.printInvalidOptionEntered()
+        except:
+            return self.printInvalidOptionEntered()
+
     def changebiblesearchmode(self):
         try:
             print(self.divider)
             searchModes = ("SEARCH", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
-            searchModesDisplay = [f"[<ref>{i}</ref> ] {mode}" for i, mode in enumerate(searchModes)]
-            searchModesDisplay = "<br>".join(searchModesDisplay)
-            searchModesDisplay = f"<h2>Change default bible search mode<h2>{searchModesDisplay}"
-            print(TextUtil.htmlToPlainText(searchModesDisplay))
+            self.printOptionsDisplay(searchModes, "Change default bible search mode")
             print(self.divider)
             print("Enter a number:")
             if config.isPrompt_toolkitInstalled:
@@ -1939,17 +2087,9 @@ class LocalCliHandler:
         except:
             return self.printInvalidOptionEntered()
 
-    def helpInstallMicro(self):
-        print(self.divider)
-        print("On macOS, run:\n> 'brew install micro'")
-        print("On Windows, run:\n> 'choco install micro'")
-        print("On Debian-based Linux distros, run:\n> 'sudo apt install micro'")
-        print("On RHEL-based Linux distros, run:\n> 'sudo dnf install micro'")
-        print("On Arch Linux, run:\n> 'sudo pacman -S micro'")
-        print("On Turmux [Android], run:\n> 'pkg install micro'")
-        print("\nTo enable wordwrap in mico, hit 'Ctrl+E' and enter 'set softwrap on' and then 'set wordwrap on'.")
-        print("Read options at: https://github.com/zyedidia/micro/blob/master/runtime/help/options.md")
-        print(self.divider)
+    def readHowTo(self, filename):
+        filepath = os.path.join("terminal_mode", "how_to", f"{filename}.md")
+        return self.readPlainTextFile(filepath)
 
     def changenoteeditor(self):
         try:
@@ -2030,17 +2170,6 @@ class LocalCliHandler:
         else:
             self.printTermuxApiDisabled()
         return ""
-
-    def execPythonString(self):
-        if config.terminalEnableTermuxAPI:
-            if not self.fingerprint():
-                return self.cancelAction()
-        try:
-            print("Enter a python command:")
-            userInput = self.simplePrompt()
-            exec(userInput)
-        except:
-            pass
 
     def changeconfig(self):
         if config.terminalEnableTermuxAPI:
@@ -2202,31 +2331,41 @@ class LocalCliHandler:
 
     def menu(self):
         heading = "UBA Terminal Mode Menu"
-        features = (".show", ".open", ".search", ".note", ".edit", ".control", ".clipboard", ".change", ".maintain", ".help")
+        features = (".info", ".open", ".search", ".note", ".edit", ".clipboard", ".control", ".tools", ".plugins", ".change", ".maintain", ".develop", ".help")
         return self.displayFeatureMenu(heading, features)
 
     def open(self):
         heading = "Open"
-        features = (".openbible", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".opencommentary", ".openreferencebook", ".textract", ".w3m", ".lynx", ".web", ".tts")
+        features = (".openbible", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".opencommentary", ".openreferencebook", ".opentext")
+        return self.displayFeatureMenu(heading, features)
+
+    def tools(self):
+        heading = "Tools"
+        features = (".web", ".share", ".extract", ".read", ".readsync", ".tts")
         return self.displayFeatureMenu(heading, features)
 
     def control(self):
         heading = "Control"
-        features = (".find", ".togglebiblecomparison", ".togglepager", ".togglebiblechapterformat", ".stopaudio", ".read", ".readsync", ".paste", ".forward", ".latestbible", ".backward", ".swap", ".share", ".copy", ".copyhtml")
+        features = (".latestbible", ".forward", ".backward", ".swap", ".starthttpserver", ".stophttpserver", ".stopaudio", ".toggle")
+        return self.displayFeatureMenu(heading, features)
+
+    def toggle(self):
+        heading = "Toggle"
+        features = (".togglebiblecomparison", ".togglepager", ".togglebiblechapterformat")
         return self.displayFeatureMenu(heading, features)
 
     def clipboard(self):
         heading = "Copy & Copied Text"
-        features = (".copy", ".copyhtml", ".run", ".ttscopiedtext", ".quicksearchcopiedtext")
+        features = (".copy", ".copyhtml", ".paste", ".run", ".findcopiedtext", ".quicksearchcopiedtext", ".ttscopiedtext", ".extractcopiedtext")
         return self.displayFeatureMenu(heading, features)
 
     def search(self):
         heading = "Search"
-        features = (".searchbible", ".searchpromises", ".searchparallels", ".searchnames", ".searchcharacters", ".searchlocations", ".searchtopics", ".searchreferencebooks", ".searchencyclopedia", ".searchdictionaries", ".searchthirdpartydictionaries", ".searchlexicons", ".searchlexiconsreversely", ".searchconcordance", ".quicksearch")
+        features = (".find", ".searchbible", ".searchpromises", ".searchparallels", ".searchnames", ".searchcharacters", ".searchlocations", ".searchtopics", ".searchreferencebooks", ".searchencyclopedia", ".searchdictionaries", ".searchthirdpartydictionaries", ".searchlexicons", ".searchlexiconsreversely", ".searchconcordance", ".quicksearch")
         return self.displayFeatureMenu(heading, features)
 
-    def show(self):
-        heading = "Show"
+    def info(self):
+        heading = "Information"
         features = (".latest", ".history", ".showbibles", ".showstrongbibles", ".showbiblebooks", ".showbibleabbreviations", ".showbiblechapters", ".showbibleverses", ".showcommentaries", ".showtopics", ".showlexicons", ".showencyclopedia", ".showdictionaries", ".showthirdpartydictionary", ".showreferencebooks", ".showdata", ".showttslanguages", ".commands", ".config")
         return self.displayFeatureMenu(heading, features)
 
@@ -2237,19 +2376,24 @@ class LocalCliHandler:
 
     def change(self):
         heading = "Change"
-        features = (".changebiblesearchmode", ".changenoteeditor", ".changecolors", ".changeconfig")
+        features = (".changedefaultcommand", ".changebiblesearchmode", ".changenoteeditor", ".changecolors", ".changeconfig")
         return self.displayFeatureMenu(heading, features)
 
     def help(self):
         heading = "Help"
-        features = (".wiki", ".helpInstallMicro", ".terminalcommands", ".standardcommands", ".whatis")
+        features = (".wiki", ".quickstart", ".howto", ".terminalcommands", ".standardcommands", ".whatis")
         return self.displayFeatureMenu(heading, features)
 
     def maintain(self):
-        heading = "Maintain"
+        heading = "Maintenance"
         features = [".latestchanges", ".update", ".showdownloads"]
         if config.terminalEnableTermuxAPI:
             features += [".backupnotes", ".backupjournals", ".restorenotes", ".restorejournals", ".restorelastnotes", ".restorelastjournals"]
+        return self.displayFeatureMenu(heading, features)
+
+    def develop(self):
+        heading = "Developers"
+        features = (".gitstatus", ".exec", ".execfile")
         return self.displayFeatureMenu(heading, features)
 
     def openbookfeatures(self):
