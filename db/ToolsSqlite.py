@@ -965,7 +965,7 @@ class BookData:
             topicList = Book(module).getTopicList()
             topics = "<br>".join(["<ref onclick='document.title=\"BOOK:::{0}:::{1}\"'>{2}</ref>".format(module, re.sub("'", "@", topic), topic) for topic in topicList])
             config.book = module
-            return "<p>{0} &ensp;<button class='ubaButton' onclick='document.title=\"_command:::SEARCHBOOK:::{1}:::\"'>search</button></p><p>{2}</p>".format(books, module, topics)
+            return topics if config.runMode == "terminal" else "<p>{0} &ensp;<button class='ubaButton' onclick='document.title=\"_command:::SEARCHBOOK:::{1}:::\"'>search</button></p><p>{2}</p>".format(books, module, topics)
         else:
             return "INVALID_COMMAND_ENTERED"
 

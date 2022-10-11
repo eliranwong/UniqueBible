@@ -75,6 +75,9 @@ class CrossPlatform:
         self.epubList = sorted([os.path.basename(file) for file in glob.glob(r"{0}/epub/*.epub".format(config.marvelData))])
         # docx list
         self.docxList = sorted([os.path.basename(file) for file in glob.glob(r"{0}/docx/*.docx".format(config.marvelData))])
+        # installed bible audio modules
+        audioBibleDirectory = os.path.join("audio", "bibles")
+        self.bibleAudioModules = [name for name in os.listdir(audioBibleDirectory) if os.path.isdir(os.path.join(audioBibleDirectory, name))]
 
     # Check if a third party dictionary exists:
     def isThridPartyDictionary(self, module):

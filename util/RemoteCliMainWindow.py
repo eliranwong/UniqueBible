@@ -314,8 +314,13 @@ class RemoteCliMainWindow(CrossPlatform):
     def enableParagraphButtonAction(self, v):
         pass
 
-    def downloadHelper(self, v):
-        pass
+    #def downloadHelper(self, v):
+    #    pass
+
+    # manage download helper
+    def downloadHelper(self, databaseInfo):
+        if config.runMode == "terminal":
+            config.mainWindow.downloadHelper(databaseInfo)
 
     def updateStudyRefButton(self):
         pass

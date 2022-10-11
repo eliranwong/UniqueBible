@@ -3056,27 +3056,30 @@ class TextCommandParser:
 
     # COMMENTARY:::
     def textCommentary(self, command, source):
-        if command.count(":::") == 0:
-            command = "{0}:::{1}".format(config.commentaryText, command)
-        elif command.count(":::") == 1 and command.endswith(":::"):
-            command = "{0}{1}".format(command, self.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
-        commandList = self.splitCommand(command)
-        if " " in commandList[1]:
-            verseList = self.extractAllVerses(commandList[1])
-        else:
-            verseList = [(BibleBooks.name2number[commandList[1]], 0, 0)]
-        if not len(commandList) == 2 or not verseList:
+        try:
+            if command.count(":::") == 0:
+                command = "{0}:::{1}".format(config.commentaryText, command)
+            elif command.count(":::") == 1 and command.endswith(":::"):
+                command = "{0}{1}".format(command, self.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
+            commandList = self.splitCommand(command)
+            if " " in commandList[1]:
+                verseList = self.extractAllVerses(commandList[1])
+            else:
+                verseList = [(BibleBooks.name2number[commandList[1]], 0, 0)]
+            if not len(commandList) == 2 or not verseList:
+                return self.invalidCommand()
+            else:
+                bcvTuple = verseList[0]
+                if config.enableHttpServer:
+                    config.mainB, config.mainC, config.mainV, *_ = bcvTuple
+                module = commandList[0]
+                commentary = Commentary(module)
+                content = commentary.getContent(bcvTuple)
+                if not content == "INVALID_COMMAND_ENTERED":
+                    self.setCommentaryVerse(module, bcvTuple)
+                return ("study", content, {'tab_title':'Com:' + module})
+        except:
             return self.invalidCommand()
-        else:
-            bcvTuple = verseList[0]
-            if config.enableHttpServer:
-                config.mainB, config.mainC, config.mainV, *_ = bcvTuple
-            module = commandList[0]
-            commentary = Commentary(module)
-            content = commentary.getContent(bcvTuple)
-            if not content == "INVALID_COMMAND_ENTERED":
-                self.setCommentaryVerse(module, bcvTuple)
-            return ("study", content, {'tab_title':'Com:' + module})
 
     # COMMENTARY2:::
     def textCommentary2(self, command, source):
@@ -4016,13 +4019,17 @@ class TextCommandParser:
             showMenu = False
         else:
             modules = [module]
-            showMenu = True
+            showMenu = False if config.runMode == "terminal" else True
         content = ""
         for module in modules:
             module = self.parent.isThridPartyDictionary(module)
-            if entry and module:
+            if module:
                 thirdPartyDictionary = ThirdPartyDictionary(module)
-                content += thirdPartyDictionary.search(entry, showMenu)
+                if entry:
+                    content += thirdPartyDictionary.search(entry, showMenu)
+                elif not entry:
+                    allTopics = [f"<ref>{i[0]}</ref>" if config.runMode == "terminal" else f"""<ref onclick="document.title='THIRDDICTIONARY:::{module[0]}:::{i[0]}'">{i[0]}</ref>""" for i in thirdPartyDictionary.getAllEntries()]
+                    content += "<br>".join(allTopics)
         if len(content) > 0:
             return ("study", content, {})
         else:

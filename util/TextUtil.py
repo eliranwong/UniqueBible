@@ -51,9 +51,9 @@ class TextUtil:
 
             searchReplace = (
                 ("(<u><b>|<h>|<h[0-9]>|<h[0-9] .*?>)", r"\1「Fore.{0}」".format(config.terminalHeadingTextColor)),
-                ("(<ref>|<ref .*?>)", r"\1「Fore.{0}」".format(config.terminalResourceLinkColor)),
+                ("(<ref>|<ref .*?>|<grk>|<grk .*?>|<heb>|<heb .*?>)", r"\1「Fore.{0}」".format(config.terminalResourceLinkColor)),
                 ("(<vid .*?>)", r"\1「Fore.{0}」".format(config.terminalVerseNumberColor)),
-                ("(</ref>|</vid>|</h[0-9]+?>|</h>|</b></u>)", r"\1「Fore.RESET」"),
+                ("(</heb>|</grk>|</ref>|</vid>|</h[0-9]+?>|</h>|</b></u>)", r"\1「Fore.RESET」"),
                 # insert a space before '「Back' below
                 ("<z>", "「Fore.{1}」 「Back.{0}」".format(config.terminalSearchHighlightBackground, config.terminalSearchHighlightForeground)),
                 ("</z>", "「Style.RESET_ALL」"),

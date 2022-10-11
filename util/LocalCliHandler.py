@@ -6,6 +6,7 @@ from db.BiblesSqlite import Bible
 from db.JournalSqlite import JournalSqlite
 from db.ToolsSqlite import Book
 from db.NoteSqlite import NoteSqlite
+from util.readings import allDays
 from util.DateUtil import DateUtil
 from util.TextUtil import TextUtil
 from util.NetworkUtil import NetworkUtil
@@ -36,6 +37,7 @@ class LocalCliHandler:
         self.initPromptElements()
         self.setOsOpenCmd()
         self.ttsLanguages = self.getTtsLanguages()
+        self.ttsLanguageCodes = list(self.ttsLanguages.keys())
         #config.cliTtsProcess = None
 
     # Set text-to-speech default language
@@ -130,8 +132,15 @@ class LocalCliHandler:
     def getDotCommands(self):
         return {
             ".togglepager": ("toggle paging for text output", self.togglePager),
-            ".togglebiblechapterformat": ("toggle between plain and formatted bible chapter", self.toggleBibleChapterFormat),
             ".togglebiblecomparison": ("toggle bible comparison view", self.togglebiblecomparison),
+            ".togglebiblechapterplainlayout": ("toggle bible chapter plain layout", self.toggleBibleChapterFormat),
+            ".toggleplainbiblechaptersubheadings": ("toggle bible chapter subheadings in plain layout", self.toggleaddTitleToPlainChapter),
+            ".togglefavouriteverses": ("toggle favourite bible verses in displaying multiple verses", self.toggleaddFavouriteToMultiRef),
+            ".togglefavoriteverses": ("an alias to the '.togglefavouriteverses' command", self.toggleaddFavouriteToMultiRef),
+            ".toggleversenumberdisplay": ("toggle verse number display", self.toggleshowVerseReference),
+            ".toggleusernoteindicator": ("toggle user note indicator display", self.toggleshowUserNoteIndicator),
+            ".togglebiblenoteindicator": ("toggle bible note indicator display", self.toggleshowBibleNoteIndicator),
+            ".togglebiblelexicalentries": ("toggle lexical entry display", self.togglehideLexicalEntryInBible),
             ".stopaudio": ("stop audio playback", self.stopAudio),
             ".sa": ("an alias to the '.stopaudio' command", self.stopAudio),
             ".read": ("read available audio files", self.read),
@@ -155,6 +164,8 @@ class LocalCliHandler:
             ".qs": ("an alias to the '.quicksearchcopiedtext' command", self.quickSearch),
             ".quickopencopiedtext": ("quick open copied text", self.quickopen),
             ".qo": ("an alias to the '.quickopencopiedtext' command", self.quickopen),
+            ".quickeditcopiedtext": ("quick open copied entry in text editor", self.quickedit),
+            ".qe": ("an alias to the '.quickeditcopiedtext' command", self.quickedit),
             ".find": ("find a string in the lastest content", self.find),
             ".findcopiedtext": ("find a string in the copied text", self.findCopiedText),
             ".history": ("display history records", self.history),
@@ -181,17 +192,42 @@ class LocalCliHandler:
             ".showdata": ("display installed data", self.showdata),
             ".showttslanguages": ("display text-to-speech languages", self.showttslanguages),
             ".showdownloads": ("display available downloads", self.showdownloads),
+            ".downloadyoutube": ("download youtube file", self.downloadyoutube),
             ".openbible": ("open bible", self.openbible),
+            ".original": ("open Hebrew & Greek bibles", self.original),
+            ".mob": ("open hebrew & Greek original bible", lambda: self.web(".mob", False)),
+            ".mib": ("open hebrew & Greek interlinear bible", lambda: self.web(".mib", False)),
+            ".mtb": ("open hebrew & Greek trilingual bible", lambda: self.web(".mtb", False)),
+            ".mpb": ("open hebrew & Greek parallel bible", lambda: self.web(".mpb", False)),
+            ".mab": ("open hebrew & Greek annotated bible", lambda: self.web(".mab", False)),
+            ".lxx1i": ("open Septuagint interlinear I", lambda: self.web("TEXT:::LXX1i", False)),
+            ".lxx2i": ("open Septuagint interlinear II", lambda: self.web("TEXT:::LXX2i", False)),
+            ".open365readingplan": ("open 365-day bible reading plan", self.open365readingplan),
             ".opencommentary": ("open commentary", self.opencommentary),
             ".openreferencebook": ("open reference book", self.openreferencebook),
+            ".openbibleaudio": ("open bible audio", self.openbibleaudio),
             ".openbooknote": ("open bible book note", lambda: self.openbookfeature("OPENBOOKNOTE")),
             ".openchapternote": ("open bible chapter note", lambda: self.openchapterfeature("OPENCHAPTERNOTE")),
             ".openversenote": ("open bible verse note", lambda: self.openversefeature("OPENVERSENOTE")),
             ".openjournal": ("open journal", lambda: self.journalFeature("OPENJOURNAL")),
+            ".openpromises": ("open bible promises", lambda: self.openTools2("promises")),
+            ".openparallels": ("open bible parallels", lambda: self.openTools2("parallels")),
+            ".opennames": ("open bible names", lambda: self.openTools2("names")),
+            ".opencharacters": ("open bible characters", lambda: self.openTools2("characters")),
+            ".openlocations": ("open bible locations", lambda: self.openTools2("locations")),
+            ".openmaps": ("open bible maps", self.openmaps),
+            ".opentimelines": ("open bible timelines", lambda: self.web(".timelineMenu", False)),
+            ".opentopics": ("open bible topics", lambda: self.openTools("TOPICS", self.showtopics)),
+            ".opendictionaries": ("open dictionaries", lambda: self.openTools("DICTIONARY", self.showdictionaries)),
+            ".openencyclopedia": ("open encyclopedia", lambda: self.openTools("ENCYCLOPEDIA", self.showencyclopedia)),
+            ".openlexicons": ("open lexicons", lambda: self.openTools("LEXICON", self.showlexicons)),
+            ".openthirdpartydictionaries": ("open third-party dictionaries", lambda: self.openTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
+            ".open3dict": ("an alias to the '.openthirdpartydictionaries' command", lambda: self.openTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
             ".editbooknote": ("edit bible book note", lambda: self.openbookfeature("EDITBOOKNOTE")),
             ".editchapternote": ("edit bible chapter note", lambda: self.openchapterfeature("EDITCHAPTERNOTE")),
             ".editversenote": ("edit bible verse note", lambda: self.openversefeature("EDITVERSENOTE")),
             ".editjournal": ("edit journal", lambda: self.journalFeature("EDITJOURNAL")),
+            ".quickedit": ("quick edit", lambda: self.quickedit(False)),
             ".searchbooknote": ("search bible book note", lambda: self.searchNote("SEARCHBOOKNOTE")),
             ".searchchapternote": ("search bible chapter note", lambda: self.searchNote("SEARCHCHAPTERNOTE")),
             ".searchversenote": ("search bible verse note", lambda: self.searchNote("SEARCHVERSENOTE")),
@@ -227,7 +263,6 @@ class LocalCliHandler:
             ".openintroduction": ("open book introduction", self.openbookfeature),
             ".opendictionarybookentry": ("open bible book entry in dictionary", lambda: self.openbookfeature("dictionary")),
             ".openencyclopediabookentry": ("open bible book entry in encyclopedia", lambda: self.openbookfeature("encyclopedia")),
-            #".opentimelines": ("open book timelines", lambda: self.openBookFeature("timelines")),
             ".openbookfeatures": ("open bible book features", self.openbookfeatures),
             ".openchapterfeatures": ("open bible chapter features", self.openchapterfeatures),
             ".openversefeatures": ("open bible verse features", self.openversefeatures),
@@ -265,13 +300,27 @@ class LocalCliHandler:
             ".whatis": ("read description about a command", self.whatis),
             ".starthttpserver": ("start UBA http-server", self.starthttpserver),
             ".stophttpserver": ("stop UBA http-server", self.stophttpserver),
-            ".downloadyoutube": ("download youtube file", self.downloadyoutube),
             ".backupnotes": ("backup note database file", lambda: self.sendFile("marvelData/note.sqlite")),
             ".backupjournals": ("backup journal database file", lambda: self.sendFile("marvelData/journal.sqlite")),
             ".restorenotes": ("restore note database file", lambda: self.restoreFile("marvelData/note.sqlite")),
             ".restorejournals": ("restore journal database file", lambda: self.restoreFile("marvelData/journal.sqlite")),
             ".restorelastnotes": ("restore note database file", lambda: self.restoreLastFile("marvelData/note.sqlite")),
             ".restorelastjournals": ("restore journal database file", lambda: self.restoreLastFile("marvelData/journal.sqlite")),
+            ".changecurrentbible": ("change current bible version", lambda: self.changeDefaultModule("mainText", self.crossPlatform.textList, config.mainText, self.showbibles)),
+            ".changefavouritebible1": ("change favourite bible version 1", lambda: self.changeDefaultModule("favouriteBible", self.crossPlatform.textList, config.favouriteBible, self.showbibles)),
+            ".changefavouritebible2": ("change favourite bible version 2", lambda: self.changeDefaultModule("favouriteBible2", self.crossPlatform.textList, config.favouriteBible2, self.showbibles)),
+            ".changefavouritebible3": ("change favourite bible version 3", lambda: self.changeDefaultModule("favouriteBible3", self.crossPlatform.textList, config.favouriteBible3, self.showbibles)),
+            ".changefavouriteoriginalbible": ("change favourite Hebrew & Greek bible", lambda: self.changeDefaultModule("favouriteOriginalBible", self.crossPlatform.textList, config.favouriteOriginalBible, self.showbibles)),
+            ".changedefaultcommentary": ("change default commentary module", lambda: self.changeDefaultModule("commentaryText", self.crossPlatform.commentaryList, config.commentaryText, self.showcommentaries)),
+            ".changedefaultlexicon": ("change default lexicon", lambda: self.changeDefaultModule("lexicon", self.crossPlatform.lexiconList, config.lexicon, self.showlexicons)),
+            ".changedefaultdictionary": ("change default dictionary", lambda: self.changeDefaultModule("dictionary", self.crossPlatform.dictionaryListAbb, config.dictionary, self.showdictionaries)),
+            ".changedefaultthirdpartydictionary": ("change default third-party dictionary", lambda: self.changeDefaultModule("thirdDictionary", self.crossPlatform.thirdPartyDictionaryList, config.thirdDictionary, self.showthirdpartydictionary)),
+            ".changedefaultencyclopedia": ("change default encyclopedia", lambda: self.changeDefaultModule("encyclopedia", self.crossPlatform.encyclopediaListAbb, config.encyclopedia, self.showencyclopedia)),
+            ".changedefaultconcordance": ("change default concordance", lambda: self.changeDefaultModule("concordance", self.crossPlatform.strongBibles, config.concordance, self.showstrongbibles)),
+            ".changedefaultreferencebook": ("change default reference book", lambda: self.changeDefaultModule("book", self.crossPlatform.referenceBookList, config.book, self.showreferencebooks)),
+            ".changedefaultttslanguage1": ("change default text-to-speech language 1", lambda: self.changeDefaultModule("ttsDefaultLangauge", self.ttsLanguageCodes, config.ttsDefaultLangauge, self.showttslanguages)),
+            ".changedefaultttslanguage2": ("change default text-to-speech language 2", lambda: self.changeDefaultModule("ttsDefaultLangauge2", self.ttsLanguageCodes, config.ttsDefaultLangauge2, self.showttslanguages)),
+            ".changedefaultttslanguage3": ("change default text-to-speech language 3", lambda: self.changeDefaultModule("ttsDefaultLangauge3", self.ttsLanguageCodes, config.ttsDefaultLangauge3, self.showttslanguages)),
             ".changedefaultcommand": ("change default command", self.changeDefaultCommand),
             ".changebiblesearchmode": ("change default bible search mode", self.changebiblesearchmode),
             ".changenoteeditor": ("change default note editor", self.changenoteeditor),
@@ -328,12 +377,12 @@ class LocalCliHandler:
         userInput = self.simplePrompt()
         if not userInput or userInput == self.cancelCommand:
             return self.cancelAction()
-        try:
-            filepath = os.path.join("terminal_mode", "plugins", f"{availablePlugins[int(userInput)]}.py")
-            self.execPythonFile(filepath)
-            return ""
-        except:
-            return self.printInvalidOptionEntered()
+        #try:
+        filepath = os.path.join("terminal_mode", "plugins", f"{availablePlugins[int(userInput)]}.py")
+        self.execPythonFile(filepath)
+        return ""
+        #except:
+        #    return self.printInvalidOptionEntered()
 
     def howto(self):
         availableHowto = FileUtil.fileNamesWithoutExtension(os.path.join("terminal_mode", "how_to"), "md")
@@ -352,6 +401,10 @@ class LocalCliHandler:
 
     def execPythonFile(self, script):
         self.crossPlatform.execPythonFile(script)
+
+    # a dummy method to work with config.mainWindow.runTextCommand in some codes
+    def runTextCommand(self, command):
+        return self.getContent(command)
 
     def getContent(self, command):
         command = command.strip()
@@ -474,7 +527,7 @@ class LocalCliHandler:
 
     def standardcommands(self):
         content = "UBA commands:"
-        content += "\n".join([f"{key} - {self.dotCommands[key][0]}" for key in sorted(self.dotCommands.keys())])
+        #content += "\n".join([f"{key} - {self.dotCommands[key][0]}" for key in sorted(self.dotCommands.keys())])
         content += "\n".join([re.sub("            #", "#", value[-1]) for value in self.textCommandParser.interpreters.values()])
         return content
 
@@ -483,6 +536,24 @@ class LocalCliHandler:
         content += "\n".join([f"{key} - {self.dotCommands[key][0]}" for key in sorted(self.dotCommands.keys())])
         print(content)
         return ""
+
+    def open365readingplan(self):
+        days = "<br>".join([f"[<ref>{i}</ref> ] <ref>{text[-1]}</ref>" for i, text in allDays.items()])
+        days = f"<h2>365 Day Reading Plan</h2>{days}"
+        print(self.divider)
+        print(TextUtil.htmlToPlainText(days).strip())
+        print(self.divider)
+        print("Enter a day number")
+        userInput = self.simplePrompt()
+        if not userInput or userInput == self.cancelCommand:
+            return self.cancelAction()
+        try:
+            if int(userInput) and int(userInput) in range(366):
+                command = f"DAY:::{userInput}"
+                self.printRunningCommand(command)
+                return self.getContent(command)
+        except:
+            return self.printInvalidOptionEntered()
 
     def stopAudio(self):
         self.textCommandParser.parent.closeMediaPlayer()
@@ -725,7 +796,7 @@ class LocalCliHandler:
         return self.getCliOutput("git status")
 
     def showttslanguages(self):
-        codes = list(self.ttsLanguages.keys())
+        codes = self.ttsLanguageCodes
 
         display = "<h2>Languages</h2>"
         languages = []
@@ -772,10 +843,34 @@ class LocalCliHandler:
         self.plainText = clipboardText
         return self.find()
 
+    def changeDefaultModule(self, configitem, options, default="", displayMethod=None):
+        print(self.divider)
+        if displayMethod is not None:
+            display = displayMethod()
+            if display:
+                print(display)
+        print(self.divider)
+        print("Enter an abbreviation")
+        if config.isPrompt_toolkitInstalled:
+            from prompt_toolkit import prompt
+            from prompt_toolkit.completion import WordCompleter
+            completer = WordCompleter(options, ignore_case=True)
+            userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=default).strip()
+        else:
+            userInput = input(self.inputIndicator).strip()
+        if not userInput or userInput == self.cancelCommand:
+            return self.cancelAction()
+        if userInput in options:
+            command = f"_setconfig:::{configitem}:::'{userInput}'"
+            self.printRunningCommand(command)
+            return self.getContent(command)
+        else:
+            return self.printInvalidOptionEntered()
+
     def tts(self, runOnCopiedText=True):
         if runOnCopiedText:
             self.getclipboardtext()
-        codes = list(self.ttsLanguages.keys())
+        codes = self.ttsLanguageCodes
         #display = "<h2>Languages</h2>"
         shortCodes = []
         languages = []
@@ -856,12 +951,6 @@ class LocalCliHandler:
         bibleReference = self.textCommandParser.bcvToVerseReference(config.commentaryB, config.commentaryC, config.commentaryV)
         return self.getContent(f"COMMENTARY:::{config.commentaryText}:::{bibleReference}")
 
-    def toggleBibleChapterFormat(self):
-        config.readFormattedBibles = not config.readFormattedBibles
-        command = "BIBLE:::"
-        self.printRunningCommand(command)
-        return self.getContent(command)
-
     def getCommand(self, command=""):
         if not command:
             command = self.command
@@ -873,12 +962,53 @@ class LocalCliHandler:
     # open web version
     # use local http-server if it is running
     # otherwise, use public
-    def web(self, command=""):
+    def web(self, command="", filterCommand=True):
         server = "http://localhost:8080"
         if not self.isUrlAlive(server):
             server = ""
-        weblink = TextUtil.getWeblink(self.getCommand(command), server=server)
+        weblink = TextUtil.getWeblink(self.getCommand(command) if filterCommand else command, server=server)
         return self.getContent(f"_website:::{weblink}")
+
+    def isBibleReference(self, text):
+        references = self.textCommandParser.extractAllVerses(text)
+        return True if references else False
+
+    def openbibleaudio(self):
+        display = self.getOptionsDisplay(self.crossPlatform.bibleAudioModules, "Installed Bible Audio")
+        print(self.divider)
+        print(display)
+        print(self.divider)
+        try:
+            print("Enter a number")
+            userInput = self.simplePrompt()
+            if not userInput or userInput == self.cancelCommand:
+                return self.cancelAction()
+            if -1 < int(userInput) < len(self.crossPlatform.bibleAudioModules):
+                module = self.crossPlatform.bibleAudioModules[int(userInput)]
+                print(f"You selected '{module}'.")
+                print("Enter bible reference(s) below:")
+                userInput = self.simplePrompt()
+                if not userInput or userInput == self.cancelCommand:
+                    return self.cancelAction()
+                if self.isBibleReference(userInput):
+                    command = f"READ:::{module}:::{userInput}"
+                    return self.getContent(command)
+                else:
+                    return self.printInvalidOptionEntered()
+        except:
+            return self.printInvalidOptionEntered()
+
+    def openmaps(self):
+        print(self.divider)
+        print("Enter bible reference(s) below:")
+        print("(e.g. Rev 1:11, Josh 10:1-43, Act 15:36-18:22, etc.)")
+        userInput = self.simplePrompt()
+        if not userInput or userInput == self.cancelCommand:
+            return self.cancelAction()
+        if self.isBibleReference(userInput):
+            return self.web(f"MAP:::{userInput}", False)
+        else:
+            self.printInvalidOptionEntered()
 
     def share(self, command=""):
         try:
@@ -1022,10 +1152,6 @@ class LocalCliHandler:
         self.printRunningCommand(command)
         return self.getContent(command)
 
-    def togglebiblecomparison(self):
-        config.terminalBibleComparison = not config.terminalBibleComparison
-        return self.latestBible()
-
     def backward(self):
         newChapter = config.mainC - 1
         if newChapter < 1:
@@ -1136,13 +1262,52 @@ class LocalCliHandler:
     def printToolNotFound(self, tool):
         print(f"Tool '{tool}' is not found on your system!")
 
+    def openTools2(self, moduleType):
+        try:
+            if config.isPrompt_toolkitInstalled:
+                from prompt_toolkit import prompt
+            elements = {
+                "parallels": ("SEARCHBOOK:::Harmonies_and_Parallels:::", "BOOK:::Harmonies_and_Parallels", "BOOK:::Harmonies_and_Parallels:::"),
+                "promises": ("SEARCHBOOK:::Bible_Promises:::", "BOOK:::Bible_Promises", "BOOK:::Bible_Promises:::"),
+                "names": ("SEARCHTOOL:::HBN:::", "SEARCHTOOL:::HBN:::", ""),
+                "characters": ("SEARCHTOOL:::EXLBP:::", "SEARCHTOOL:::EXLBP:::", "EXLB:::exlbp:::"),
+                "locations": ("SEARCHTOOL:::EXLBL:::", "SEARCHTOOL:::EXLBL:::", "EXLB:::exlbl:::"),
+            }
+            *_, showAll, openPrefix = elements[moduleType]
+            print(self.divider)
+            command = showAll
+            self.printRunningCommand(command)
+            print(self.divider)
+            content = self.getContent(command)
+            if content.startswith("[MESSAGE]"):
+                content = content[10:]
+            if openPrefix:
+                print(content)
+                print(self.divider)
+                print(f"Enter an item to open:")
+                if config.isPrompt_toolkitInstalled:
+                    userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
+                else:
+                    userInput = input(self.inputIndicator).strip()
+                if not userInput or userInput == self.cancelCommand:
+                    return self.cancelAction()
+                print(self.divider)
+                command = f"{openPrefix}{userInput}"
+                self.printRunningCommand(command)
+                print(self.divider)
+                return self.getContent(command)
+            else:
+                return content
+        except:
+            return self.printInvalidOptionEntered()
+
     def searchTools2(self, moduleType):
         try:
             if config.isPrompt_toolkitInstalled:
                 from prompt_toolkit import prompt
             elements = {
-                "parallels": ("SEARCHBOOK:::Harmonies_and_Parallels:::", "SEARCHBOOK:::Harmonies_and_Parallels", "BOOK:::Harmonies_and_Parallels:::"),
-                "promises": ("SEARCHBOOK:::Bible_Promises:::", "SEARCHBOOK:::Bible_Promises", "BOOK:::Bible_Promises:::"),
+                "parallels": ("SEARCHBOOK:::Harmonies_and_Parallels:::", "BOOK:::Harmonies_and_Parallels", "BOOK:::Harmonies_and_Parallels:::"),
+                "promises": ("SEARCHBOOK:::Bible_Promises:::", "BOOK:::Bible_Promises", "BOOK:::Bible_Promises:::"),
                 "names": ("SEARCHTOOL:::HBN:::", "SEARCHTOOL:::HBN:::", ""),
                 "characters": ("SEARCHTOOL:::EXLBP:::", "SEARCHTOOL:::EXLBP:::", "EXLB:::exlbp:::"),
                 "locations": ("SEARCHTOOL:::EXLBL:::", "SEARCHTOOL:::EXLBL:::", "EXLB:::exlbl:::"),
@@ -1185,47 +1350,19 @@ class LocalCliHandler:
         except:
             return self.printInvalidOptionEntered()
 
-    def quickopen(self, runOnCopiedText=True):
+    def quickedit(self, runOnCopiedText=True):
         try:
             if runOnCopiedText:
                 self.getclipboardtext()
             options = {
-                "0": ("Bible Version", "TEXT", ""),
-                "1": ("Commentary Module", "COMMENTARY", ""),
-                "2": ("Reference in Selected Bible", "BIBLE", config.mainText),
-                "3": ("Reference in Favourite Bible", "BIBLE", self.getPlusBible()[2:]),
-                "4": ("Bible Book Notes", "OPENBOOKNOTE", ""),
-                "5": ("Bible Chapter Notes", "OPENCHAPTERNOTE", ""),
-                "6": ("Bible Verse Notes", "OPENVERSENOTE", ""),
-                "7": ("Journals", "OPENJOURNAL", ""),
-                "8": ("Chapter Overview", "OVERVIEW", ""),
-                "9": ("Chapter Summary", "SUMMARY", ""),
-                "10": ("Chapter Index", "CHAPTERINDEX", ""),
-                "11": ("Verse Index", "INDEX", ""),
-                "12": ("Cross-reference", "CROSSREFERENCE", ""),
-                "13": ("Bible Version Comparison", "COMPARE", ""),
-                "14": ("Bible Version Differences", "DIFFERENCE", ""),
-                "15": ("Treasury of Scripture Knowledge (Enhanced)", "TSKE", ""),
-                "16": ("Original Words", "WORDS", ""),
-                "17": ("Original Word Translation", "TRANSLATION", ""),
-                "18": ("Discourse Features", "DISCOURSE", ""),
-                "19": ("Words, Translation & Discourse Combo", "COMBO", ""),
-                "20": ("Bible Topics", "EXLB", "exlbt"),
-                "21": ("Bible Encyclopedia", "ENCYCLOPEDIA", config.encyclopedia),
-                "22": ("Bible Dictionary", "DICTIONARY", ""),
-                "23": ("Third-party dictionary", "THIRDDICTIONARY", config.thirdDictionary),
-                "24": ("Bible Parallels", "BOOK", "Harmonies_and_Parallels"),
-                "25": ("Bible Promises", "BOOK", "Bible_Promises"),
-                "26": ("Bible Characters", "EXLB", "exlbp"),
-                "27": ("Bible Locations", "EXLB", "exlbl"),
-                "28": ("Reference Book", "BOOK", config.book),
-                "29": ("Bible Lexicon Entries", "LEXICON", config.lexicon),
-                "30": ("Bible Lexicon Content", "REVERSELEXICON", config.lexicon),
-                "31": ("Bible Concordance", "CONCORDANCE", config.concordance),
+                "0": ("Bible Book Notes", "EDITBOOKNOTE", ""),
+                "1": ("Bible Chapter Notes", "EDITCHAPTERNOTE", ""),
+                "2": ("Bible Verse Notes", "EDITVERSENOTE", ""),
+                "3": ("Journals", "EDITJOURNAL", ""),
             }
             display = [f"[<ref>{key}</ref> ] {value[0]} - {value[-1]}" for key, value in options.items()]
             display = "<br>".join(display)
-            display = f"<h2>Quick Open Copied Text</h2>{display}" if runOnCopiedText else f"<h2>Quick Open</h2>{display}"
+            display = f"<h2>Quick Open Copied Entry in Editor</h2>{display}" if runOnCopiedText else f"<h2>Quick Edit</h2>{display}"
             print(TextUtil.htmlToPlainText(display))
             print(self.divider)
             print("Enter a number:")
@@ -1234,6 +1371,77 @@ class LocalCliHandler:
                 return self.cancelAction()
             # define key
             if -1 < int(userInput) < 17:
+                *_, openKeyword, latestSelection = options[userInput]
+                latestSelection = f"{latestSelection}:::" if latestSelection else ""
+                openPrefix = f"{openKeyword}:::{latestSelection}"
+                if runOnCopiedText:
+                    print(self.runclipboardtext(openPrefix))
+                    return ""
+                else:
+                    print(self.divider)
+                    print("Type in an entry:")
+                    userInput = self.simplePrompt()
+                    command = f"{openPrefix}{userInput}"
+                    self.printRunningCommand(command)
+                    return self.getContent(command)
+            else:
+                return self.printInvalidOptionEntered()
+        except:
+            return self.printInvalidOptionEntered()
+
+    def quickopen(self, runOnCopiedText=True):
+        try:
+            if runOnCopiedText:
+                self.getclipboardtext()
+            options = {
+                "0": ("Bible Version", "TEXT", ""),
+                "1": ("Reference in Selected Bible", "BIBLE", config.mainText),
+                "2": ("Reference in Favourite Bible", "BIBLE", self.getPlusBible()[2:]),
+                "3": ("Reference in Hebrew & Green Bible", "BIBLE", config.favouriteOriginalBible),
+                "4": ("Commentary Module", "COMMENTARY", ""),
+                "5": ("Reference in Commentary", "COMMENTARY", config.commentaryText),
+                "6": ("Bible Book Notes", "OPENBOOKNOTE", ""),
+                "7": ("Bible Chapter Notes", "OPENCHAPTERNOTE", ""),
+                "8": ("Bible Verse Notes", "OPENVERSENOTE", ""),
+                "9": ("Journals", "OPENJOURNAL", ""),
+                "10": ("Bible Audio", "READ", ""),
+                "11": ("Bible Maps", "MAP", ""),
+                "12": ("Chapter Overview", "OVERVIEW", ""),
+                "13": ("Chapter Summary", "SUMMARY", ""),
+                "14": ("Chapter Index", "CHAPTERINDEX", ""),
+                "15": ("Verse Index", "INDEX", ""),
+                "16": ("Cross-reference", "CROSSREFERENCE", ""),
+                "17": ("Bible Version Comparison", "COMPARE", ""),
+                "18": ("Bible Version Differences", "DIFFERENCE", ""),
+                "19": ("Treasury of Scripture Knowledge (Enhanced)", "TSKE", ""),
+                "20": ("Original Words", "WORDS", ""),
+                "21": ("Original Word Translation", "TRANSLATION", ""),
+                "22": ("Discourse Features", "DISCOURSE", ""),
+                "23": ("Words, Translation & Discourse Combo", "COMBO", ""),
+                "24": ("Bible Topics", "EXLB", "exlbt"),
+                "25": ("Bible Encyclopedia", "ENCYCLOPEDIA", config.encyclopedia),
+                "26": ("Bible Dictionary", "DICTIONARY", ""),
+                "27": ("Third-party dictionary", "THIRDDICTIONARY", config.thirdDictionary),
+                "28": ("Bible Parallels", "BOOK", "Harmonies_and_Parallels"),
+                "29": ("Bible Promises", "BOOK", "Bible_Promises"),
+                "30": ("Bible Characters", "EXLB", "exlbp"),
+                "31": ("Bible Locations", "EXLB", "exlbl"),
+                "32": ("Reference Book", "BOOK", config.book),
+                "33": ("Bible Lexicon Entries", "LEXICON", config.lexicon),
+                "34": ("Bible Lexicon Content", "REVERSELEXICON", config.lexicon),
+                "35": ("Bible Concordance", "CONCORDANCE", config.concordance),
+            }
+            display = [f"[<ref>{key}</ref> ] {value[0]} - {value[-1]}" for key, value in options.items()]
+            display = "<br>".join(display)
+            display = f"<h2>Quick Open Copied Text in ...</h2>{display}" if runOnCopiedText else f"<h2>Quick Open</h2>{display}"
+            print(TextUtil.htmlToPlainText(display))
+            print(self.divider)
+            print("Enter a number:")
+            userInput = self.simplePrompt()
+            if not userInput or userInput == self.cancelCommand:
+                return self.cancelAction()
+            # define key
+            if userInput in options:
                 *_, openKeyword, latestSelection = options[userInput]
                 latestSelection = f"{latestSelection}:::" if latestSelection else ""
                 if openKeyword == "COMMENTARY":
@@ -1284,7 +1492,7 @@ class LocalCliHandler:
             }
             display = [f"[<ref>{key}</ref> ] {value[0]} - {value[-2]}" for key, value in options.items()]
             display = "<br>".join(display)
-            display = f"<h2>Quick Search Copied Text</h2>{display}" if runOnCopiedText else f"<h2>Quick Search</h2>{display}"
+            display = f"<h2>Quick Search Copied Text in ...</h2>{display}" if runOnCopiedText else f"<h2>Quick Search</h2>{display}"
             print(TextUtil.htmlToPlainText(display))
             print(self.divider)
             print("Enter a number:")
@@ -1369,6 +1577,61 @@ class LocalCliHandler:
                 if not userInput or userInput == self.cancelCommand:
                     return self.cancelAction()
                 command = f"{searchKeyword}:::{module}:::{userInput}"
+                self.printRunningCommand(command)
+                print(self.divider)
+                content = self.getContent(command)
+                if moduleType == "REVERSELEXICON":
+                    return content
+                print(content[10:] if content.startswith("[MESSAGE]") else content)
+                print(self.divider)
+                print(f"To open, enter a module entry (e.g. {latestEntry}):")
+                if config.isPrompt_toolkitInstalled:
+                    userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
+                else:
+                    userInput = input(self.inputIndicator).strip()
+                if not userInput or userInput == self.cancelCommand:
+                    return self.cancelAction()
+                print(self.divider)
+
+                if moduleType == "TOPICS":
+                    command = f"EXLB:::exlbt:::{userInput}"
+                elif moduleType == "DICTIONARY":
+                    command = f"{moduleType}:::{userInput}"
+                else:
+                    command = f"{moduleType}:::{module}:::{userInput}"
+                self.printRunningCommand(command)
+                return self.getContent(command)
+        except:
+            return self.printInvalidOptionEntered()
+
+    def openTools(self, moduleType, showModules):
+        try:
+            if config.isPrompt_toolkitInstalled:
+                from prompt_toolkit import prompt
+                from prompt_toolkit.completion import WordCompleter
+            elements = {
+                "TOPICS": (config.topic, self.crossPlatform.topicListAbb, config.topicEntry, self.terminal_topics_selection_session, ""),
+                "ENCYCLOPEDIA": (config.encyclopedia, self.crossPlatform.encyclopediaListAbb, config.encyclopediaEntry, self.terminal_encyclopedia_selection_session, ""),
+                "DICTIONARY": (config.dictionary, self.crossPlatform.dictionaryListAbb, config.dictionaryEntry, self.terminal_dictionary_selection_session, ""),
+                "THIRDDICTIONARY": (config.thirdDictionary, self.crossPlatform.thirdPartyDictionaryList, config.thirdDictionaryEntry, self.terminal_thridPartyDictionaries_selection_session, "SEARCHTHIRDDICTIONARY"),
+                "LEXICON": (config.lexicon, self.crossPlatform.lexiconList, config.lexiconEntry, self.terminal_lexicons_selection_session, "SEARCHLEXICON"),
+            }
+            print(self.divider)
+            print(showModules())
+            default, abbList, latestEntry, historySession, searchKeyword = elements[moduleType]
+            if not searchKeyword:
+                searchKeyword = "SEARCHTOOL"
+            if config.isPrompt_toolkitInstalled:
+                completer = WordCompleter(abbList, ignore_case=True)
+                userInput = historySession.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=default).strip()
+            else:
+                userInput = input(self.inputIndicator).strip()
+            if not userInput or userInput == self.cancelCommand:
+                return self.cancelAction()
+            if userInput in abbList:
+                module = userInput
+                print(self.divider)
+                command = f"{searchKeyword}:::{module}:::"
                 self.printRunningCommand(command)
                 print(self.divider)
                 content = self.getContent(command)
@@ -2387,6 +2650,48 @@ class LocalCliHandler:
             noteDB.saveJournalNote(year, month, day, note)
         print("Note saved!")
 
+    # Toggle bible display
+
+    def toggleBibleChapterFormat(self):
+        config.readFormattedBibles = not config.readFormattedBibles
+        print("Reloading bible chapter ...")
+        return self.getContent(".l")
+
+    def togglebiblecomparison(self):
+        config.terminalBibleComparison = not config.terminalBibleComparison
+        print("Reloading bible chapter ...")
+        return self.getContent(".l")
+
+    def toggleaddTitleToPlainChapter(self):
+        config.addTitleToPlainChapter = not config.addTitleToPlainChapter
+        print("Reloading bible chapter ...")
+        return self.getContent(".l")
+
+    def toggleaddFavouriteToMultiRef(self):
+        config.addFavouriteToMultiRef = not config.addFavouriteToMultiRef
+        print("Reloading bible chapter ...")
+        return self.getContent(".l")
+
+    def toggleshowVerseReference(self):
+        config.showVerseReference = not config.showVerseReference
+        print("Reloading bible chapter ...")
+        return self.getContent(".l")
+
+    def toggleshowUserNoteIndicator(self):
+        config.showUserNoteIndicator = not config.showUserNoteIndicator
+        print("Reloading bible chapter ...")
+        return self.getContent(".l")
+
+    def toggleshowBibleNoteIndicator(self):
+        config.showBibleNoteIndicator = not config.showBibleNoteIndicator
+        print("Reloading bible chapter ...")
+        return self.getContent(".l")
+
+    def togglehideLexicalEntryInBible(self):
+        config.hideLexicalEntryInBible = not config.hideLexicalEntryInBible
+        print("Reloading bible chapter ...")
+        return self.getContent(".l")
+
     # organise user interactive menu
 
     def displayFeatureMenu(self, heading, features):
@@ -2418,12 +2723,17 @@ class LocalCliHandler:
 
     def open(self):
         heading = "Open"
-        features = (".openbible", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".opencommentary", ".openreferencebook", ".opentext", ".quickopen")
+        features = (".openbible", ".original", ".open365readingplan", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".opencommentary", ".openreferencebook", ".openbibleaudio", ".opentopic", ".openpromises", ".openparallels", ".opennames", ".opencharacters", ".openlocations", ".openmaps", ".opentimelines", ".opendictionary", ".openencyclopedia", ".openlexicon", ".openthirdpartydictionary", ".opentext", ".quickopen")
+        return self.displayFeatureMenu(heading, features)
+
+    def original(self):
+        heading = "Hebrew & Greek Bibles"
+        features = (".mob", ".mib", ".mtb", ".mpb", ".mab", ".lxx1i", ".lxx2i")
         return self.displayFeatureMenu(heading, features)
 
     def tools(self):
         heading = "Tools"
-        features = (".web", ".share", ".extract", ".read", ".readsync", ".tts")
+        features = (".web", ".share", ".extract", ".read", ".readsync", ".tts", ".downloadyoutube")
         return self.displayFeatureMenu(heading, features)
 
     def control(self):
@@ -2433,12 +2743,12 @@ class LocalCliHandler:
 
     def toggle(self):
         heading = "Toggle"
-        features = (".togglebiblecomparison", ".togglepager", ".togglebiblechapterformat")
+        features = (".togglepager", ".togglebiblecomparison", ".togglebiblechapterplainlayout", ".toggleplainbiblechaptersubheadings", ".togglefavouriteverses", ".toggleversenumberdisplay", ".toggleusernoteindicator", ".togglebiblenoteindicator", ".togglebiblelexicalentries")
         return self.displayFeatureMenu(heading, features)
 
     def clipboard(self):
         heading = "Copy & Copied Text"
-        features = (".copy", ".copyhtml", ".paste", ".run", ".findcopiedtext", ".quickopencopiedtext", ".quicksearchcopiedtext", ".ttscopiedtext", ".extractcopiedtext")
+        features = (".copy", ".copyhtml", ".paste", ".run", ".findcopiedtext", ".quickopencopiedtext", ".quickeditcopiedtext", ".quicksearchcopiedtext", ".ttscopiedtext", ".extractcopiedtext")
         return self.displayFeatureMenu(heading, features)
 
     def search(self):
@@ -2453,12 +2763,12 @@ class LocalCliHandler:
 
     def edit(self):
         heading = "Edit"
-        features = (".editnewfile", ".editcontent", ".editconfig", ".changenoteeditor", ".helpinstallmicro")
+        features = (".editnewfile", ".editcontent", ".editconfig", ".quickedit", ".changenoteeditor", ".helpinstallmicro")
         return self.displayFeatureMenu(heading, features)
 
     def change(self):
         heading = "Change"
-        features = (".changedefaultcommand", ".changebiblesearchmode", ".changenoteeditor", ".changecolors", ".changeconfig")
+        features = (".changecurrentbible", ".changefavouritebible1", ".changefavouritebible2", ".changefavouritebible3", ".changefavouriteoriginalbible", ".changedefaultcommentary", ".changedefaultlexicon", ".changedefaultdictionary", ".changedefaultthirdpartydictionary", ".changedefaultencyclopedia", ".changedefaultconcordance", ".changedefaultreferencebook", ".changedefaultttslanguage1", ".changedefaultttslanguage2", ".changedefaultttslanguage3", ".changedefaultcommand", ".changebiblesearchmode", ".changenoteeditor", ".changecolors", ".changeconfig")
         return self.displayFeatureMenu(heading, features)
 
     def help(self):
@@ -2497,3 +2807,23 @@ class LocalCliHandler:
         heading = "Note / Journal Features"
         features = (".openbooknote", ".openchapternote", ".openversenote", ".openjournal", ".searchbooknote", ".searchchapternote", ".searchversenote", ".searchjournal", ".editbooknote", ".editchapternote", ".editversenote", ".editjournal", ".changenoteeditor")
         return self.displayFeatureMenu(heading, features)
+
+    # Download Helper
+    def downloadHelper(self, databaseInfo):
+        if config.runMode == "terminal":
+            if config.isDownloading:
+                self.displayMessage(config.thisTranslation["previousDownloadIncomplete"])
+            else:
+                print(self.divider)
+                print(f"Essential data '{databaseInfo[0][-1]}' is missing!")
+                print("Do you want to download it? [Y]es / [N]o")
+                userInput = self.simplePrompt()
+                if not userInput or userInput == self.cancelCommand:
+                    return self.cancelAction()
+                if userInput.lower() in ("y", "yes"):
+                    self.textCommandParser.parent.downloadFile(databaseInfo)
+                    return ""
+                elif userInput.lower() in ("n", "no"):
+                    return self.cancelAction()
+                else:
+                    self.printInvalidOptionEntered()

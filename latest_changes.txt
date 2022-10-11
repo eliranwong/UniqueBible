@@ -1,3 +1,25 @@
+Changes in 32.53:
+Changes in terminal mode:
+* Added 15 features under open menu:
+    ".original", ".open365readingplan", ".openbibleaudio", ".opentopic", 
+    ".openpromises", ".openparallels", ".opennames", ".opencharacters", 
+    ".openlocations", ".openmaps", ".opentimelines", ".opendictionary", 
+    ".openencyclopedia", ".openlexicon", ".openthirdpartydictionary"
+* Added 6 features under toggle menu:
+    ".toggleplainbiblechaptersubheadings", ".togglefavouriteverses", ".toggleversenumberdisplay", 
+    ".toggleusernoteindicator", ".togglebiblenoteindicator", ".togglebiblelexicalentries"
+* Added 15 features under change menu:
+    ".changecurrentbible", ".changefavouritebible1", ".changefavouritebible2", 
+    ".changefavouritebible3", ".changefavouriteoriginalbible", ".changedefaultcommentary", 
+    ".changedefaultlexicon", ".changedefaultdictionary", ".changedefaultthirdpartydictionary", 
+    ".changedefaultencyclopedia", ".changedefaultconcordance", ".changedefaultreferencebook", 
+    ".changedefaultttslanguage1", ".changedefaultttslanguage2", ".changedefaultttslanguage3"
+* Added two terminal mode plugins:
+    generate reference table from copied text
+    generate reference table from latest content
+* Added download helper.
+* Added a few other tools.
+
 Changes in 32.52:
 * Added 32 quick open options in terminal mode.
 
