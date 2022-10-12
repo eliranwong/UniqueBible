@@ -249,7 +249,7 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         config.mainWindow.initialDisplay()
         # User command input
         if config.isPrompt_toolkitInstalled:
-            if config.terminalEnableLighterCompleter:
+            if config.terminalUseLighterCompleter:
                 command = session.prompt(promptIndicator, style=style, completer=command_completer, auto_suggest=auto_suggestion, bottom_toolbar=toolbar, default=default).strip()
             else:
                 command = session.prompt(promptIndicator, style=style, completer=command_completer, complete_in_thread=True, auto_suggest=auto_suggestion, bottom_toolbar=toolbar, default=default).strip()
@@ -266,6 +266,9 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
             # format chapter no. and verse no
             command = re.sub("([0-9]+?)_([0-9]+?)_([0-9])", r"\1.\2.\3", command)
             command = re.sub("_([0-9]+?)_([0-9]+?,)", r" \1:\2", command)
+            command = re.sub("_([0-9]+?)_([0-9]+?)$", r" \1:\2", command)
+            # change full width characters
+            command = re.sub("：：：", r":::", command)
             command = runTerminalModeCommand(command)
         else:
             command = runTerminalModeCommand(config.terminalDefaultCommand)

@@ -1,5 +1,9 @@
+Changes in 32.58:
+* Added config.terminalDisplayCommandOnMenu
+* Fine-tuned terminal mode.
+
 Changes in 32.57:
-* Added config.terminalEnableLighterCompleter, an option to use lighter completer, for use on slow devices.
+* Added config.terminalUseLighterCompleter, an option to use lighter completer, for use on slow devices.
 
 Changes in 32.56:
 * Implemented Asynchronous completion for command completion in terminal mode.

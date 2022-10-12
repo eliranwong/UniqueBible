@@ -106,10 +106,10 @@ class ConfigUtil:
         # To enable paging of terminal output when UBA runs in terminal mode."""
         if not hasattr(config, "terminalEnablePager"):
             config.terminalEnablePager = False
-        config.help["terminalEnableLighterCompleter"] = """
+        config.help["terminalUseLighterCompleter"] = """
         # To enable lighter completer to make command completion quicker on slow devices."""
-        if not hasattr(config, "terminalEnableLighterCompleter"):
-            config.terminalEnableLighterCompleter = False
+        if not hasattr(config, "terminalUseLighterCompleter"):
+            config.terminalUseLighterCompleter = False
         config.help["terminalAutoUpdate"] = """
         # Option to update UBA automatically on startup if newer version is found."""
         if not hasattr(config, "terminalAutoUpdate"):
@@ -119,6 +119,10 @@ class ConfigUtil:
         # It is the quickest way to run a favourite command."""
         if not hasattr(config, "terminalDefaultCommand"):
             config.terminalDefaultCommand = ".menu"
+        config.help["terminalDisplayCommandOnMenu"] = """
+        # Option to display command on user-interactive menu."""
+        if not hasattr(config, "terminalDisplayCommandOnMenu"):
+            config.terminalDisplayCommandOnMenu = False
         config.help["terminalNoteEditor"] = """
         # Default note editor used in terminal mode.
         # Suggested options: 'micro', 'nano --softwrap --atblanks -', 'vi -' and 'vim -'."""
@@ -1535,7 +1539,8 @@ class ConfigUtil:
             ("terminalTermuxttsSpeed", config.terminalTermuxttsSpeed),
             ("terminalDisplayBeginnerMessage", config.terminalDisplayBeginnerMessage),
             ("terminalEnablePager", config.terminalEnablePager),
-            ("terminalEnableLighterCompleter", config.terminalEnableLighterCompleter),
+            ("terminalUseLighterCompleter", config.terminalUseLighterCompleter),
+            ("terminalDisplayCommandOnMenu", config.terminalDisplayCommandOnMenu),
             ("terminalNoteEditor", config.terminalNoteEditor),
             ("terminalBibleComparison", config.terminalBibleComparison),
             ("terminalStopHttpServerOnExit", config.terminalStopHttpServerOnExit),

@@ -3504,13 +3504,13 @@ class TextCommandParser:
     # _setconfig:::
     def textSetConfig(self, command, source):
         try:
-            # empty
+            # when argument is empty
             if not command:
+                # key only without value
                 content = "<h2>Configurable Settings</h2>"
                 content += pprint.pformat(list(config.help.keys()))
                 return ("study", content, {})
             elements = self.splitCommand(command)
-            # key only without value
             if len(elements) == 1:
                 key = elements[0]
                 content = f"<h2>{key}</h2>"

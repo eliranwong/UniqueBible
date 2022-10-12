@@ -281,6 +281,7 @@ class LocalCliHandler:
             ".terminalcommands": ("display terminal mode commands", self.terminalcommands),
             ".menu": ("display main menu", self.menu),
             ".info": ("display information menu", self.info),
+            ".show": ("an alias to the '.info' command", self.info),
             ".open": ("display open menu", self.open),
             ".search": ("display search menu", self.search),
             ".note": ("display note / journal menu", self.accessNoteFeatures),
@@ -288,6 +289,7 @@ class LocalCliHandler:
             ".control": ("display control menu", self.control),
             ".toggle": ("display toggle menu", self.toggle),
             ".clipboard": ("display clipboard menu", self.clipboard),
+            ".clip": ("an alias to the '.clipboard' command", self.clipboard),
             ".change": ("display change menu", self.change),
             ".tools": ("display tool menu", self.tools),
             ".plugins": ("display plugin menu", self.plugins),
@@ -337,9 +339,11 @@ class LocalCliHandler:
             ".changecolors": ("change text highlight colors", self.changecolors),
             ".changecolours": ("an alias to the '.changecolors' command", self.changecolors),
             ".changeconfig": ("change UBA configurations", self.changeconfig),
+            ".changeterminalmodeconfig": ("change UBA terminal mode configurations", lambda: self.changeconfig(True)),
             ".gitstatus": ("display git status", self.gitstatus),
             ".exec": ("execute a python string", self.execPythonString),
             ".execfile": ("execute a python file", self.execFile),
+            ".reload": ("reload the latest content", self.reload),
         }
 
     def execPythonString(self):
@@ -542,9 +546,9 @@ class LocalCliHandler:
                 elif i in ("search:::", "searchall:::", "andsearch:::", "orsearch:::", "advancedsearch:::", "regexsearch:::",):
                     suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ":::")
                 elif i in ("bible:::", "main:::", "study:::", "read:::", "readsync:::", "_verses:::"):
-                    suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ":::", None if config.terminalEnableLighterCompleter else self.allKJVreferences)
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ":::", None if config.terminalUseLighterCompleter else self.allKJVreferences)
                 elif i in ("_biblenote:::",):
-                    suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ":::", None if config.terminalEnableLighterCompleter else self.allKJVreferencesBcv1)
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ":::", None if config.terminalUseLighterCompleter else self.allKJVreferencesBcv1)
                 elif i in ("concordance:::",):
                     suggestions[i] = self.getDummyDict(self.crossPlatform.strongBibles, ":::")
                 elif i in ("lexicon:::", "searchlexicon:::", "reverselexicon",):
@@ -559,9 +563,9 @@ class LocalCliHandler:
                 elif i in ("_commentarychapters:::", "_commentaryinfo:::"):
                     suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList)
                 elif i in ("commentary:::", "_commentaryverses:::"):
-                    suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList, ":::", None if config.terminalEnableLighterCompleter else self.allKJVreferences)
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList, ":::", None if config.terminalUseLighterCompleter else self.allKJVreferences)
                 elif i in ("commentary2:::",):
-                    suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList, ":::", None if config.terminalEnableLighterCompleter else self.allKJVreferencesBcv1)
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList, ":::", None if config.terminalUseLighterCompleter else self.allKJVreferencesBcv1)
                 elif i in ("_commentary:::",):
                     suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList, ".")
                 elif i in ("crossreference:::", "difference:::", "diff:::", "passages:::", "overview:::", "summary:::", "index:::", "chapterindex:::", "map:::", "tske:::", "combo:::", "translation:::", "discourse:::", "words:::", "openbooknote:::", "openchapternote:::", "openversenote:::", "editbooknote:::", "editchapternote:::", "editversenote:::", "_imvr:::"):
@@ -597,7 +601,7 @@ class LocalCliHandler:
             suggestions = {**suggestions, **self.allKJVreferences}
             # Remove unexpected item
             suggestions.pop(":::", None)
-            if config.terminalEnableLighterCompleter:
+            if config.terminalUseLighterCompleter:
                 completer = ThreadedCompleter(NestedCompleter.from_nested_dict(suggestions))
             else:
                 completer = ThreadedCompleter(NestedCompleter.from_nested_dict(suggestions))
@@ -626,12 +630,12 @@ class LocalCliHandler:
         content = "UBA commands:"
         #content += "\n".join([f"{key} - {self.dotCommands[key][0]}" for key in sorted(self.dotCommands.keys())])
         content += "\n".join([re.sub("            #", "#", value[-1]) for value in self.textCommandParser.interpreters.values()])
-        return content
+        return self.keepContent(content)
 
     def terminalcommands(self):
         content = "UBA terminal dot commands:"
         content += "\n".join([f"{key} - {self.dotCommands[key][0]}" for key in sorted(self.dotCommands.keys())])
-        print(content)
+        print(self.keepContent(content))
         return ""
 
     def open365readingplan(self):
@@ -656,8 +660,17 @@ class LocalCliHandler:
         self.textCommandParser.parent.closeMediaPlayer()
         return ""
 
+    def reload(self):
+        return self.plainText
+
+    def keepContent(self, content):
+        self.html = re.sub("\n", "<br>", content)
+        self.plainText = content
+        return content
+
     def commands(self):
-        return pprint.pformat(self.getTextCommandSuggestion(False))
+        content = pprint.pformat(self.getTextCommandSuggestion(False))
+        return self.keepContent(content)
 
     def read(self):
         self.textCommandParser.parent.getPlaylistFromHTML(self.html)
@@ -769,7 +782,9 @@ class LocalCliHandler:
         for index, topic in enumerate(self.crossPlatform.topicListAbb):
             moduleList.append(f"[<ref>{topic}</ref> ] {self.crossPlatform.topicList[index]}")
         content += "<br>".join(moduleList)
-        return TextUtil.htmlToPlainText(content).strip()
+        self.html = content
+        self.plainText = TextUtil.htmlToPlainText(content).strip()
+        return self.plainText
 
     def showdictionaries(self):
         content = ""
@@ -778,7 +793,9 @@ class LocalCliHandler:
         for index, topic in enumerate(self.crossPlatform.dictionaryListAbb):
             moduleList.append(f"[<ref>{topic}</ref> ] {self.crossPlatform.dictionaryList[index]}")
         content += "<br>".join(moduleList)
-        return TextUtil.htmlToPlainText(content).strip()
+        self.html = content
+        self.plainText = TextUtil.htmlToPlainText(content).strip()
+        return self.plainText
 
     def showencyclopedia(self):
         content = ""
@@ -787,7 +804,9 @@ class LocalCliHandler:
         for index, topic in enumerate(self.crossPlatform.encyclopediaListAbb):
             moduleList.append(f"[<ref>{topic}</ref> ] {self.crossPlatform.encyclopediaList[index]}")
         content += "<br>".join(moduleList)
-        return TextUtil.htmlToPlainText(content).strip()
+        self.html = content
+        self.plainText = TextUtil.htmlToPlainText(content).strip()
+        return self.plainText
 
     def showbibles(self):
         #return pprint.pformat(dict(zip(self.crossPlatform.textList, self.crossPlatform.textFullNameList)))
@@ -797,7 +816,9 @@ class LocalCliHandler:
         for index, bible in enumerate(self.crossPlatform.textList):
             bibleList.append(f"[<ref>{bible}</ref> ] {self.crossPlatform.textFullNameList[index]}")
         content += "<br>".join(bibleList)
-        return TextUtil.htmlToPlainText(content).strip()
+        self.html = content
+        self.plainText = TextUtil.htmlToPlainText(content).strip()
+        return self.plainText
 
     def showstrongbibles(self):
         strongBiblesFullNameList = [Bible(text).bibleInfo() for text in self.crossPlatform.strongBibles]
@@ -807,42 +828,54 @@ class LocalCliHandler:
         for index, bible in enumerate(self.crossPlatform.strongBibles):
             bibleList.append(f"[<ref>{bible}</ref> ] {strongBiblesFullNameList[index]}")
         content += "<br>".join(bibleList)
-        return TextUtil.htmlToPlainText(content).strip()
+        self.html = content
+        self.plainText = TextUtil.htmlToPlainText(content).strip()
+        return self.plainText
 
     def showthirdpartydictionary(self):
         modules = []
         for module in self.crossPlatform.thirdPartyDictionaryList:
             modules.append(f"[<ref>{module}</ref> ]")
         content = "<br>".join(modules)
-        return TextUtil.htmlToPlainText(content).strip()
+        self.html = content
+        self.plainText = TextUtil.htmlToPlainText(content).strip()
+        return self.plainText
 
     def showlexicons(self):
         modules = []
         for module in self.crossPlatform.lexiconList:
             modules.append(f"[<ref>{module}</ref> ]")
         content = "<br>".join(modules)
-        return TextUtil.htmlToPlainText(content).strip()
+        self.html = content
+        self.plainText = TextUtil.htmlToPlainText(content).strip()
+        return self.plainText
 
     def showcommentaries(self):
         #self.crossPlatform.setupResourceLists()
         content = ""
         content += """<h2><ref onclick="window.parent.submitCommand('.commentarymenu')">{0}</ref></h2>""".format(config.thisTranslation["menu4_commentary"])
         content += "<br>".join(["""[<ref>{0}</ref> ] {1}""".format(abb, self.crossPlatform.commentaryFullNameList[index]) for index, abb in enumerate(self.crossPlatform.commentaryList)])
-        return TextUtil.htmlToPlainText(content).strip()
+        self.html = content
+        self.plainText = TextUtil.htmlToPlainText(content).strip()
+        return self.plainText
 
     def showreferencebooks(self):
         #self.crossPlatform.setupResourceLists()
         content = ""
         content += "<h2>{0}</h2>".format(config.thisTranslation["menu5_selectBook"])
         content += "<br>".join(["""[<ref>{0}</ref> ] {0}""".format(book) for book in self.crossPlatform.referenceBookList])
-        return TextUtil.htmlToPlainText(content).strip()
+        self.html = content
+        self.plainText = TextUtil.htmlToPlainText(content).strip()
+        return self.plainText
 
     def showdata(self):
         #self.crossPlatform.setupResourceLists()
         content = ""
         content += "<h2>{0}</h2>".format(config.thisTranslation["menu_data"])
         content += "<br>".join(["[<ref>{0}</ref> ]".format(book) for book in self.crossPlatform.dataList])
-        return TextUtil.htmlToPlainText(content).strip()
+        self.html = content
+        self.plainText = TextUtil.htmlToPlainText(content).strip()
+        return self.plainText
 
     def showdownloads(self):
         content = ""
@@ -877,7 +910,9 @@ class LocalCliHandler:
                 else:
                     content += """[<ref>DOWNLOAD:::{1}:::{0}</ref> ]<br>""".format(file.replace(extension, ""), type)
         content += "<h2>Third-party Resources</h2><p>Read <ref>https://github.com/eliranwong/UniqueBible/wiki/Third-party-resources</ref> about third-party resources.</a></p>"
-        return TextUtil.htmlToPlainText(content).strip()
+        self.html = content
+        self.plainText = TextUtil.htmlToPlainText(content).strip()
+        return self.plainText
 
     def getCliOutput(self, cli):
         try:
@@ -900,7 +935,9 @@ class LocalCliHandler:
             languages.append(language)
             display += f"[<ref>{code}</ref> ] {language}<br>"
         display = display[:-4]
-        print(TextUtil.htmlToPlainText(display).strip())
+        self.html = display
+        self.plainText = TextUtil.htmlToPlainText(display).strip()
+        print(self.plainText)
         return ""
 
     def getDefaultTtsKeyword(self):
@@ -1175,7 +1212,7 @@ class LocalCliHandler:
         if os.path.isfile(filename):
             with open(filename, "r", encoding="utf-8") as input_file:
                 text = input_file.read()
-        return text
+        return self.keepContent(text)
 
     def displayMessage(self, message="", title="UniqueBible"):
         print(title)
@@ -1239,8 +1276,9 @@ class LocalCliHandler:
     def config(self):
         intro = "<h2>Unique Bible App Configurations</h2>"
         intro += "<p>Default settings are good for general use.  In case you want to make changes, you may run '<ref>_setconfig:::</ref>' command in terminal mode.  Alternately, you may manually edit the file 'config.py', located in UBA home directory, when UBA is not running.</p>"
-        content = "{0}<p>{1}</p>".format(intro, "</p><p>".join(["[ITEM] <ref>{0}</ref>{1}\nCurrent value: <z>{2}</z>".format(key, re.sub("        # ", "", value), eval("pprint.pformat(config."+key+")")) for key, value in config.help.items()]))
-        return TextUtil.htmlToPlainText(content).strip()
+        self.html = "{0}<p>{1}</p>".format(intro, "</p><p>".join(["[ITEM] <ref>{0}</ref>{1}\nCurrent value: <z>{2}</z>".format(key, re.sub("        # ", "", value), eval("pprint.pformat(config."+key+")")) for key, value in config.help.items()]))
+        self.plainText = TextUtil.htmlToPlainText(self.html).strip()
+        return self.plainText
 
     def latestBible(self):
         command = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
@@ -2708,17 +2746,21 @@ class LocalCliHandler:
             self.printTermuxApiDisabled()
         return ""
 
-    def changeconfig(self):
+    def changeconfig(self, terminalCommandOnly=False):
         if config.terminalEnableTermuxAPI:
             if not self.fingerprint():
                 return self.cancelAction()
         try:
             print(self.divider)
-            print("Caution! Editing 'config.py' incorrectly may stop UBA from working.")
-            print(self.getContent("_setconfig:::"))
+            print("Configurable Settings:")
+            print("(Caution! UBA may stop from working if you make invalid changes.)\n")
+            # display configurable settings
+            configurablesettings = [i for i in config.help.keys() if i.startswith("terminal")] if terminalCommandOnly else list(config.help.keys())
+            displayContent = pprint.pformat(configurablesettings)
+            print(displayContent)
             print(self.divider)
             print("Enter the item you want to change:")
-            configurablesettings = list(config.help.keys())
+            
             if config.isPrompt_toolkitInstalled:
                 from prompt_toolkit.completion import WordCompleter
                 completer = WordCompleter(configurablesettings, ignore_case=True)
@@ -2887,7 +2929,7 @@ class LocalCliHandler:
     # organise user interactive menu
 
     def displayFeatureMenu(self, heading, features):
-        featureItems = [f"[<ref>{index}</ref> ] {self.dotCommands[item][0]}" for index, item in enumerate(features)]
+        featureItems = [f"[<ref>{index}</ref> {item if config.terminalDisplayCommandOnMenu else ''} ] {self.dotCommands[item][0]}" for index, item in enumerate(features)]
         content = f"<h2>{heading}</h2>"
         content += "<br>".join(featureItems)
         print(self.divider)
@@ -2930,7 +2972,7 @@ class LocalCliHandler:
 
     def control(self):
         heading = "Control"
-        features = (".latestbible", ".forward", ".backward", ".swap", ".starthttpserver", ".stophttpserver", ".stopaudio", ".toggle")
+        features = (".reload", ".latestbible", ".forward", ".backward", ".swap", ".starthttpserver", ".stophttpserver", ".stopaudio", ".toggle")
         return self.displayFeatureMenu(heading, features)
 
     def toggle(self):
@@ -2960,7 +3002,7 @@ class LocalCliHandler:
 
     def change(self):
         heading = "Change"
-        features = (".changecurrentbible", ".changefavouritebible1", ".changefavouritebible2", ".changefavouritebible3", ".changefavouriteoriginalbible", ".changecommentary", ".changelexicon", ".changedictionary", ".changethirdpartydictionary", ".changeencyclopedia", ".changeconcordance", ".changereferencebook", ".changettslanguage1", ".changettslanguage2", ".changettslanguage3", ".changedefaultcommand", ".changebiblesearchmode", ".changenoteeditor", ".changecolors", ".changeconfig")
+        features = (".changecurrentbible", ".changefavouritebible1", ".changefavouritebible2", ".changefavouritebible3", ".changefavouriteoriginalbible", ".changecommentary", ".changelexicon", ".changedictionary", ".changethirdpartydictionary", ".changeencyclopedia", ".changeconcordance", ".changereferencebook", ".changettslanguage1", ".changettslanguage2", ".changettslanguage3", ".changedefaultcommand", ".changebiblesearchmode", ".changenoteeditor", ".changecolors", ".changeterminalmodeconfig", ".changeconfig")
         return self.displayFeatureMenu(heading, features)
 
     def help(self):
