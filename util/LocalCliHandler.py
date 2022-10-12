@@ -524,7 +524,7 @@ class LocalCliHandler:
 
     def getCommandCompleter(self):
         if config.isPrompt_toolkitInstalled:
-            from prompt_toolkit.completion import NestedCompleter
+            from prompt_toolkit.completion import NestedCompleter, ThreadedCompleter
 
             #bibleBooks = BibleBooks()
             # = bibleBooks.getStandardBookAbbreviations()
@@ -597,7 +597,7 @@ class LocalCliHandler:
             suggestions = {**suggestions, **self.allKJVreferences}
             # Remove unexpected item
             suggestions.pop(":::", None)
-            completer = NestedCompleter.from_nested_dict(suggestions)
+            completer = ThreadedCompleter(NestedCompleter.from_nested_dict(suggestions))
             return completer
 
     def getTextCommandSuggestion(self, addDotCommandWordOnly=True):

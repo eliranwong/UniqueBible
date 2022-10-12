@@ -3264,18 +3264,21 @@ class TextCommandParser:
 
     # WORD:::
     def textWordData(self, command, source):
-        book, wordId = self.splitCommand(command)
-        bNo = int(book)
-        morphologySqlite = MorphologySqlite()
-        bcvTuple, content = morphologySqlite.wordData(bNo, int(wordId))
+        try:
+            book, wordId = self.splitCommand(command)
+            bNo = int(book)
+            morphologySqlite = MorphologySqlite()
+            bcvTuple, content = morphologySqlite.wordData(bNo, int(wordId))
 
-        # extra data for Greek words
-        if bNo >= 40:
-            wordData = WordData()
-            content += re.sub('^.*?<br><br><b><i>TBESG', '<b><i>TBESG', wordData.getContent("NT", wordId))
+            # extra data for Greek words
+            if bNo >= 40:
+                wordData = WordData()
+                content += re.sub('^.*?<br><br><b><i>TBESG', '<b><i>TBESG', wordData.getContent("NT", wordId))
 
-        self.setStudyVerse(config.studyText, bcvTuple)
-        return ("study", content, {'tab_title': 'Mor:' + wordId})
+            self.setStudyVerse(config.studyText, bcvTuple)
+            return ("study", content, {'tab_title': 'Mor:' + wordId})
+        except:
+            return self.invalidCommand()
 
     # return default lexicons
     def getDefaultLexicons(self):
@@ -3971,32 +3974,35 @@ class TextCommandParser:
 
     # called by TRANSLATION::: & WORDS::: & DISCOURSE::: & COMBO:::
     def textVerseData(self, command, source, filename):
-        verseList = self.extractAllVerses(command)
-        if not verseList:
-            return self.invalidCommand()
-        else:
-            biblesSqlite = BiblesSqlite()
-            verseData = VerseData(filename)
-            feature = "{0}{1}".format(filename[0].upper(), filename[1:])
-            #content = "<hr>".join(["<h2>{0}: <ref onclick='document.title=\"{1}\"'>{1}</ref></h2>{2}".format(feature, biblesSqlite.bcvToVerseReference(b, c, v), verseData.getContent((b, c, v))) for b, c, v in verseList])
-            contentList = []
-            for b, c, v in verseList:
-                subContent = "<h2>{0}: <ref onclick='document.title=\"{1}\"'>{1}</ref></h2>{2}".format(feature, biblesSqlite.bcvToVerseReference(b, c, v), verseData.getContent((b, c, v)))
-                if filename == "discourse":
-                    subContent = re.sub("(<pm>|</pm>|<n>|</n>)", "", subContent)
-                if b < 40:
-                    subContent = re.sub("""(<heb id="wh)([0-9]+?)("[^<>]*?>[^<>]+?</heb>[ ]*)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::BHS5.{0}.{1}.{2}.\2'">{3}</ref>""".format(b, c, v, config.audioBibleIcon), subContent)
-                else:
-                    subContent = re.sub("""(<grk id="w[0]*?)([1-9]+[0-9]*?)("[^<>]*?>[^<>]+?</grk>[ ]*)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::OGNT.{0}.{1}.{2}.\2'">{3}</ref>""".format(b, c, v, config.audioBibleIcon), subContent)
-                if filename == "words":
+        try:
+            verseList = self.extractAllVerses(command)
+            if not verseList:
+                return self.invalidCommand()
+            else:
+                biblesSqlite = BiblesSqlite()
+                verseData = VerseData(filename)
+                feature = "{0}{1}".format(filename[0].upper(), filename[1:])
+                #content = "<hr>".join(["<h2>{0}: <ref onclick='document.title=\"{1}\"'>{1}</ref></h2>{2}".format(feature, biblesSqlite.bcvToVerseReference(b, c, v), verseData.getContent((b, c, v))) for b, c, v in verseList])
+                contentList = []
+                for b, c, v in verseList:
+                    subContent = "<h2>{0}: <ref onclick='document.title=\"{1}\"'>{1}</ref></h2>{2}".format(feature, biblesSqlite.bcvToVerseReference(b, c, v), verseData.getContent((b, c, v)))
+                    if filename == "discourse":
+                        subContent = re.sub("(<pm>|</pm>|<n>|</n>)", "", subContent)
                     if b < 40:
-                        subContent = re.sub("""(<ref onclick="document.title=')READWORD(.*?)(<tlit>[^<>]*?</tlit><br><hlr><heb>[^<>]+?</heb>)""", r"\1READWORD\2\3 \1READLEXEME\2", subContent)
+                        subContent = re.sub("""(<heb id="wh)([0-9]+?)("[^<>]*?>[^<>]+?</heb>[ ]*)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::BHS5.{0}.{1}.{2}.\2'">{3}</ref>""".format(b, c, v, config.audioBibleIcon), subContent)
                     else:
-                        subContent = re.sub("""(<ref onclick="document.title=')READWORD(.*?)(<tlit>[^<>]*?</tlit><br><hlr><grk>[^<>]+?</grk>)""", r"\1READWORD\2\3 \1READLEXEME\2", subContent)
-                contentList.append(subContent)
-            content = "<hr>".join(contentList)
-            self.setStudyVerse(config.studyText, verseList[-1])
-            return content
+                        subContent = re.sub("""(<grk id="w[0]*?)([1-9]+[0-9]*?)("[^<>]*?>[^<>]+?</grk>[ ]*)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::OGNT.{0}.{1}.{2}.\2'">{3}</ref>""".format(b, c, v, config.audioBibleIcon), subContent)
+                    if filename == "words":
+                        if b < 40:
+                            subContent = re.sub("""(<ref onclick="document.title=')READWORD(.*?)(<tlit>[^<>]*?</tlit><br><hlr><heb>[^<>]+?</heb>)""", r"\1READWORD\2\3 \1READLEXEME\2", subContent)
+                        else:
+                            subContent = re.sub("""(<ref onclick="document.title=')READWORD(.*?)(<tlit>[^<>]*?</tlit><br><hlr><grk>[^<>]+?</grk>)""", r"\1READWORD\2\3 \1READLEXEME\2", subContent)
+                    contentList.append(subContent)
+                content = "<hr>".join(contentList)
+                self.setStudyVerse(config.studyText, verseList[-1])
+                return content
+        except:
+            return self.invalidCommand()
 
     # INDEX:::
     def textIndex(self, command, source):

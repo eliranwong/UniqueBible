@@ -1,3 +1,6 @@
+Changes in 32.56:
+* Implemented Asynchronous completion for command completion in terminal mode.
+
 Changes in 32.55:
 * Added further options in nested completer in come bible-related and commentary-related commands.
 * Added .openbiblemodulenote in terminal mode.
