@@ -598,7 +598,7 @@ class LocalCliHandler:
             # Remove unexpected item
             suggestions.pop(":::", None)
             if config.terminalEnableLighterCompleter:
-                completer = NestedCompleter.from_nested_dict(suggestions)
+                completer = ThreadedCompleter(NestedCompleter.from_nested_dict(suggestions))
             else:
                 completer = ThreadedCompleter(NestedCompleter.from_nested_dict(suggestions))
             return completer

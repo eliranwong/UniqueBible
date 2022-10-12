@@ -109,7 +109,7 @@ class ConfigUtil:
         config.help["terminalEnableLighterCompleter"] = """
         # To enable lighter completer to make command completion quicker on slow devices."""
         if not hasattr(config, "terminalEnableLighterCompleter"):
-            config.terminalEnableLighterCompleter = True
+            config.terminalEnableLighterCompleter = False
         config.help["terminalAutoUpdate"] = """
         # Option to update UBA automatically on startup if newer version is found."""
         if not hasattr(config, "terminalAutoUpdate"):
