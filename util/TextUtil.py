@@ -66,6 +66,7 @@ class TextUtil:
     @staticmethod
     def htmlToPlainText(content, colours=True):
         if config.runMode == "terminal":
+            content = re.sub("""(<heb|<grk)( [^<>]*?onclick="luW\([0-9]+?,')([0-9]+?)('[^<>]*?>)""", r"[<ref>\3</ref> ]\1\2\3\4", content)
             content = re.sub("""(<ref onclick="[^<>]+?\(')([^<>]+?)('\)">)""", r"[<ref>\2</ref> ] ", content)
         # Format text colours
         if config.runMode == "terminal" and config.isColoramaInstalled and colours:

@@ -18,7 +18,7 @@ For example, choose profile "Pro", change opacity to 100% and use the following 
     terminalCommandEntryColor1 = '#FFD733'
     terminalPromptIndicatorColor2 = '#33B8FF'
     terminalCommandEntryColor2 = '#00AA00'
-    terminalHeadingTextColor = 'LIGHTBLUE_EX'
+    terminalHeadingTextColor = 'LIGHTMAGENTA_EX'
     terminalVerseNumberColor = 'GREEN'
     terminalResourceLinkColor = 'CYAN'
     terminalVerseSelectionBackground = 'YELLOW'

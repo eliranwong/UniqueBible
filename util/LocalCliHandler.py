@@ -202,6 +202,7 @@ class LocalCliHandler:
             ".showdownloads": ("display available downloads", self.showdownloads),
             ".downloadyoutube": ("download youtube file", self.downloadyoutube),
             ".openbible": ("open bible", self.openbible),
+            ".openbiblemodulenote": ("open bible module note", self.openbiblemodulenote),
             ".original": ("open Hebrew & Greek bibles", self.original),
             ".mob": ("open hebrew & Greek original bible", lambda: self.web(".mob", False)),
             ".mib": ("open hebrew & Greek interlinear bible", lambda: self.web(".mib", False)),
@@ -517,9 +518,9 @@ class LocalCliHandler:
         print(f"Command not found: {command}")
         return ""
 
-    def getDummyDict(self, data, suffix=""):
+    def getDummyDict(self, data, suffix="", furtherOptions=None):
         # set is supported in NestedCompleter but not preferred as set is unordered
-        return {f"{i}{suffix}": None for i in data}
+        return {f"{i}{suffix}": furtherOptions for i in data} if furtherOptions is not None else {f"{i}{suffix}": None for i in data}
 
     def getCommandCompleter(self):
         if config.isPrompt_toolkitInstalled:
@@ -538,8 +539,12 @@ class LocalCliHandler:
                     suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ".")
                 elif i in ("compare:::",):
                     suggestions[i] = self.getDummyDict(self.crossPlatform.textList, "_")
-                elif i in ("bible:::", "main:::", "study:::", "search:::", "searchall:::", "andsearch:::", "orsearch:::", "advancedsearch:::", "regexsearch:::", "read:::", "readsync:::", "_verses:::", "_biblenote:::"):
+                elif i in ("search:::", "searchall:::", "andsearch:::", "orsearch:::", "advancedsearch:::", "regexsearch:::",):
                     suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ":::")
+                elif i in ("bible:::", "main:::", "study:::", "read:::", "readsync:::", "_verses:::"):
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ":::", self.allKJVreferences)
+                elif i in ("_biblenote:::",):
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ":::", self.allKJVreferencesBcv1)
                 elif i in ("concordance:::",):
                     suggestions[i] = self.getDummyDict(self.crossPlatform.strongBibles, ":::")
                 elif i in ("lexicon:::", "searchlexicon:::", "reverselexicon",):
@@ -553,8 +558,10 @@ class LocalCliHandler:
                     suggestions[i] = self.getDummyDict(downloadTypes, ":::")
                 elif i in ("_commentarychapters:::", "_commentaryinfo:::"):
                     suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList)
-                elif i in ("commentary:::", "commentary2:::", "_commentaryverses:::"):
-                    suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList, ":::")
+                elif i in ("commentary:::", "_commentaryverses:::"):
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList, ":::", self.allKJVreferences)
+                elif i in ("commentary2:::",):
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList, ":::", self.allKJVreferencesBcv1)
                 elif i in ("_commentary:::",):
                     suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList, ".")
                 elif i in ("crossreference:::", "difference:::", "diff:::", "passages:::", "overview:::", "summary:::", "index:::", "chapterindex:::", "map:::", "tske:::", "combo:::", "translation:::", "discourse:::", "words:::", "openbooknote:::", "openchapternote:::", "openversenote:::", "editbooknote:::", "editchapternote:::", "editversenote:::", "_imvr:::"):
@@ -1851,6 +1858,85 @@ class LocalCliHandler:
         except:
             return self.printInvalidOptionEntered()
 
+    def openbiblemodulenote(self):
+        try:
+            if config.isPrompt_toolkitInstalled:
+                from prompt_toolkit import prompt
+                from prompt_toolkit.completion import WordCompleter
+
+            print(self.divider)
+            print(self.showbibles())
+            print(self.divider)
+            print("Enter a bible abbreviation:")
+            print("(choose a bible module that contains notes)")
+            # select bible or bibles
+            if config.isPrompt_toolkitInstalled:
+                completer = WordCompleter(self.crossPlatform.textList, ignore_case=True)
+                defaultText = self.getDefaultText()
+                userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=defaultText).strip()
+            else:
+                userInput = input(self.inputIndicator).strip()
+            if not userInput or userInput == self.cancelCommand:
+                return self.cancelAction()
+            if userInput in self.crossPlatform.textList:
+                bible = userInput
+                print(self.divider)
+                print(self.showbibleabbreviations(text=bible))
+                print(self.divider)
+                self.printChooseItem()
+                print("(enter a book number)")
+                # select bible book
+                if config.isPrompt_toolkitInstalled:
+                    completer = WordCompleter([str(i) for i in self.bookNumbers], ignore_case=True)
+                    userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=str(config.mainB)).strip()
+                else:
+                    userInput = input(self.inputIndicator).strip()
+                if not userInput or userInput == self.cancelCommand:
+                    return self.cancelAction()
+                if int(userInput) in self.bookNumbers:
+                    print(userInput, self.bookNumbers)
+                    bibleBookNumber = userInput
+                    print(self.divider)
+                    self.showbiblechapters(text=bible, b=bibleBookNumber)
+                    print(self.divider)
+                    self.printChooseItem()
+                    print("(enter a chapter number)")
+                    # select bible chapter
+                    if config.isPrompt_toolkitInstalled:
+                        defaultChapter = str(config.mainC) if config.mainC in self.currentBibleChapters else str(self.currentBibleChapters[0])
+                        userInput = prompt(self.inputIndicator, style=self.promptStyle, default=defaultChapter).strip()
+                    else:
+                        userInput = input(self.inputIndicator).strip()
+                    if not userInput or userInput == self.cancelCommand:
+                        return self.cancelAction()
+                    if int(userInput) in self.currentBibleChapters:
+                        bibleChapter = userInput
+                        print(self.divider)
+                        self.showbibleverses(text=bible, b=bibleBookNumber, c=int(userInput))
+                        print(self.divider)
+                        self.printChooseItem()
+                        print("(enter a verse number)")
+                        # select verse number
+                        if config.isPrompt_toolkitInstalled:
+                            defaultVerse = str(config.mainV) if config.mainV in self.currentBibleVerses else str(self.currentBibleVerses[0])
+                            userInput = prompt(self.inputIndicator, style=self.promptStyle, default=defaultVerse).strip()
+                        else:
+                            userInput = input(self.inputIndicator).strip()
+                        if not userInput or userInput == self.cancelCommand:
+                            return self.cancelAction()
+                        if int(userInput) in self.currentBibleVerses:
+                            bibleVerse = userInput
+                            command = f"_biblenote:::{bible}:::{bibleBookNumber}.{bibleChapter}.{bibleVerse}"
+                            self.printRunningCommand(command)
+                            return self.getContent(command)
+                        else:
+                            return self.printInvalidOptionEntered()
+                else:
+                    return self.printInvalidOptionEntered()
+        except:
+            return self.printInvalidOptionEntered()
+
+
     def openversefeature(self, feature="CROSSREFERENCE"):
         try:
             if config.isPrompt_toolkitInstalled:
@@ -2826,7 +2912,7 @@ class LocalCliHandler:
 
     def open(self):
         heading = "Open"
-        features = (".openbible", ".original", ".open365readingplan", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".opencommentary", ".openreferencebook", ".openaudio", ".opendata", ".opentopics", ".openpromises", ".openparallels", ".opennames", ".opencharacters", ".openlocations", ".openmaps", ".opentimelines", ".opendictionaries", ".openencyclopedia", ".openlexicons", ".openthirdpartydictionaries", ".opentext", ".quickopen")
+        features = (".openbible", ".openbiblemodulenote", ".original", ".open365readingplan", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".opencommentary", ".openreferencebook", ".openaudio", ".opendata", ".opentopics", ".openpromises", ".openparallels", ".opennames", ".opencharacters", ".openlocations", ".openmaps", ".opentimelines", ".opendictionaries", ".openencyclopedia", ".openlexicons", ".openthirdpartydictionaries", ".opentext", ".quickopen")
         return self.displayFeatureMenu(heading, features)
 
     def original(self):
@@ -2930,3 +3016,72 @@ class LocalCliHandler:
                     return self.cancelAction()
                 else:
                     self.printInvalidOptionEntered()
+
+    def wrapHtml(self, content, view="", book=False):
+        fontFamily = config.font
+        fontSize = "{0}px".format(config.fontSize)
+        if book:
+            if config.overwriteBookFontFamily:
+                fontFamily = config.overwriteBookFontFamily
+            if config.overwriteBookFontSize:
+                if type(config.overwriteBookFontSize) == str:
+                    fontSize = config.overwriteBookFontSize
+                elif type(config.overwriteBookFontSize) == int:
+                    fontSize = "{0}px".format(config.overwriteBookFontSize)
+        bcv = (config.studyText, config.studyB, config.studyC, config.studyV) if view == "study" else (config.mainText, config.mainB, config.mainC, config.mainV)
+        activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
+        html = ("""<!DOCTYPE html><html><head><link rel="icon" href="icons/{9}"><title>UniqueBible.app</title>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+                <meta http-equiv="Pragma" content="no-cache" />
+                <meta http-equiv="Expires" content="0" />"""
+                "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
+                "zh {2} font-family:'{6}'; {3} "
+                ".ubaButton {2} background-color: {10}; color: {11}; border: none; padding: 2px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 17px; margin: 2px 2px; cursor: pointer; {3}"
+                "{8}</style>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.064'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.064'>"
+                "<script src='js/common.js?v=1.064'></script>"
+                "<script src='js/{7}.js?v=1.064'></script>"
+                "<script src='w3.js?v=1.064'></script>"
+                "<script src='js/http_server.js?v=1.064'></script>"
+                """<script>
+                var target = document.querySelector('title');
+                var observer = new MutationObserver(function(mutations) {2}
+                    mutations.forEach(function(mutation) {2}
+                        ubaCommandChanged(document.title);
+                    {3});
+                {3});
+                var config = {2}
+                    childList: true,
+                {3};
+                observer.observe(target, config);
+                </script>"""
+                "{0}"
+                """<script>var versionList = []; var compareList = []; var parallelList = [];
+                var diffList = []; var searchList = [];</script>"""
+                "<script src='js/custom.js?v=1.064'></script>"
+                "</head><body><span id='v0.0.0'></span>{1}"
+                "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible();document.querySelector('body').addEventListener('click', window.parent.closeSideNav);</script></body></html>"
+                ).format(activeBCVsettings,
+                         content,
+                         "{",
+                         "}",
+                         fontSize,
+                         fontFamily,
+                         config.fontChinese,
+                         config.theme,
+                         self.getHighlightCss(),
+                         config.webUBAIcon,
+                         config.widgetBackgroundColor,
+                         config.widgetForegroundColor,
+                         )
+        return html
+
+    def getHighlightCss(self):
+        css = ""
+        for i in range(len(config.highlightCollections)):
+            code = "hl{0}".format(i + 1)
+            css += ".{2} {0} background: {3}; {1} ".format("{", "}", code, config.highlightDarkThemeColours[i] if config.theme == "dark" else config.highlightLightThemeColours[i])
+        return css

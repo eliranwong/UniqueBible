@@ -407,6 +407,7 @@ class TextCommandParser:
             """),
             "word": (self.textWordData, """
             # [KEYWORD] WORD
+            # Usage - WORD:::[BOOK_NO]:::[WORD_NO]
             # e.g. WORD:::1:::2"""),
             "clause": (self.textClause, """
             # [KEYWORD] CLAUSE
@@ -849,6 +850,10 @@ class TextCommandParser:
             # e.g. _uba:::file://note_editor_key_combo.uba"""),
             "_biblenote": (self.textBiblenote, """
             # [KEYWORD] _biblenote
+            # Feature - retrieve bible module note(s) of a single verse.
+            # Usage - _biblenote:::[BIBLE_VERSION].[BOOK_NO].[CHAPTER_NO].[VERSE_NO]
+            # Usage - _biblenote:::[BIBLE_VERSION].[BOOK_NO].[CHAPTER_NO].[VERSE_NO].[NOTE_INDICATOR]
+            # e.g. _biblenote:::KJV:::1.1.1
             # e.g. _biblenote:::KJV:::1.1.1.1"""),
             "_wordnote": (self.textWordNote, """
             # [KEYWORD] _wordnote

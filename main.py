@@ -261,7 +261,7 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
             # remove "_" before ":::"
             command = re.sub("_:::", ":::", command)
             # format chapter no. and verse no
-            command = re.sub("([0-9]+?)_([0-9]+?)_([0-9]+?,)", r"\1.\2.\3", command)
+            command = re.sub("([0-9]+?)_([0-9]+?)_([0-9])", r"\1.\2.\3", command)
             command = re.sub("_([0-9]+?)_([0-9]+?,)", r" \1:\2", command)
             command = runTerminalModeCommand(command)
         else:

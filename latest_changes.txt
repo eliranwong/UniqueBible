@@ -1,3 +1,9 @@
+Changes in 32.55:
+* Added further options in nested completer in come bible-related and commentary-related commands.
+* Added .openbiblemodulenote in terminal mode.
+* Fixed running _biblenote::: command in terminal mode.
+* Fixed terminal plugins 'generate table ...'
+
 Changes in 32.54:
 Terminal mode:
 * Implemented nested completer for command entry.

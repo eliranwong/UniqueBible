@@ -1221,13 +1221,31 @@ class Bible:
         return verseTag
 
     def readBiblenote(self, bcvi):
-        b, c, v, i = bcvi.split(".")
-        query = "Select Note FROM Notes WHERE Book=? AND Chapter=? AND Verse=? AND ID=?"
-        self.cursor.execute(query, (int(b), int(c), int(v), i))
-        note = self.cursor.fetchone()
-        if note:
-            note = note[0]
-        return note
+        notFound = "[not found]"
+        try:
+            bcvi = bcvi.split(".")
+            if len(bcvi) == 3 or config.runMode == "terminal":
+                b, c, v, *_ = bcvi
+                query = "Select * FROM Notes WHERE Book=? AND Chapter=? AND Verse=?"
+                self.cursor.execute(query, (int(b), int(c), int(v)))
+                notes = self.cursor.fetchall()
+                if notes:
+                    notes = [f"<h2>{self.text} - {b}.{c}.{v}.{i}</h2>{note}" for b, c, v, i, note in notes]
+                    return "<hr>".join(notes)
+                else:
+                    return notFound
+            elif len(bcvi) == 4:
+                b, c, v, i = bcvi
+                query = "Select Note FROM Notes WHERE Book=? AND Chapter=? AND Verse=? AND ID=?"
+                self.cursor.execute(query, (int(b), int(c), int(v), i))
+                note = self.cursor.fetchone()
+                if note:
+                    return note[0]
+                else:
+                    return notFound
+            return notFound
+        except:
+            return notFound
 
     # apply to LXX1, LXX1i, LXX2, LXX2i, SBLGNT & its variants only
     def readWordNote(self, entry):
