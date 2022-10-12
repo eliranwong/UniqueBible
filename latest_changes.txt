@@ -1,3 +1,12 @@
+Changes in 32.54:
+Terminal mode:
+* Implemented nested completer for command entry.
+* Fixed opening '.open' menu
+* Added '.opendata' under '.open' menu
+* Added support of more standard UBA commands in terminal mode.
+GUI mode (Qt interface):
+* Added KJV verse references to command auto-completion.
+
 Changes in 32.53:
 Changes in terminal mode:
 * Added 15 features under open menu:

@@ -20,7 +20,7 @@ from util.FileUtil import FileUtil
 from util.UpdateUtil import UpdateUtil
 from util.DateUtil import DateUtil
 from util.WebtopUtil import WebtopUtil
-#from util.NoteService import NoteService
+from util.Translator import Translator
 
 
 class LocalCliHandler:
@@ -38,6 +38,14 @@ class LocalCliHandler:
         self.setOsOpenCmd()
         self.ttsLanguages = self.getTtsLanguages()
         self.ttsLanguageCodes = list(self.ttsLanguages.keys())
+        self.bibleBooks = BibleBooks()
+        abbReferences, bcvReferences = self.bibleBooks.getAllKJVreferences()
+        self.allKJVreferences = self.getDummyDict(abbReferences, ",")
+        self.allKJVreferencesBcv1 = self.getDummyDict(bcvReferences)
+        self.allKJVreferencesBcv2 = self.getDummyDict(bcvReferences, ":::")
+        self.unsupportedCommands = ["_mc", "_mastercontrol", "epub", "anypdf", "searchpdf", "pdffind", "pdf", "docx", "_savepdfcurrentpage", "searchallbookspdf", "readbible", "searchhighlight", "sidebyside", "parallel", "_editfile", "_openfile", "_uba", "opennote", "_history", "_historyrecord", "_highlight"]
+        self.ttsCommandKeyword = self.getDefaultTtsKeyword().lower()
+        self.unsupportedCommands.append("gtts" if self.ttsCommandKeyword == "speak" else "speak")
         #config.cliTtsProcess = None
 
     # Set text-to-speech default language
@@ -205,7 +213,7 @@ class LocalCliHandler:
             ".open365readingplan": ("open 365-day bible reading plan", self.open365readingplan),
             ".opencommentary": ("open commentary", self.opencommentary),
             ".openreferencebook": ("open reference book", self.openreferencebook),
-            ".openbibleaudio": ("open bible audio", self.openbibleaudio),
+            ".openaudio": ("open bible audio", self.openbibleaudio),
             ".openbooknote": ("open bible book note", lambda: self.openbookfeature("OPENBOOKNOTE")),
             ".openchapternote": ("open bible chapter note", lambda: self.openchapterfeature("OPENCHAPTERNOTE")),
             ".openversenote": ("open bible verse note", lambda: self.openversefeature("OPENVERSENOTE")),
@@ -216,6 +224,7 @@ class LocalCliHandler:
             ".opencharacters": ("open bible characters", lambda: self.openTools2("characters")),
             ".openlocations": ("open bible locations", lambda: self.openTools2("locations")),
             ".openmaps": ("open bible maps", self.openmaps),
+            ".opendata": ("open bible data", self.opendata),
             ".opentimelines": ("open bible timelines", lambda: self.web(".timelineMenu", False)),
             ".opentopics": ("open bible topics", lambda: self.openTools("TOPICS", self.showtopics)),
             ".opendictionaries": ("open dictionaries", lambda: self.openTools("DICTIONARY", self.showdictionaries)),
@@ -311,16 +320,16 @@ class LocalCliHandler:
             ".changefavouritebible2": ("change favourite bible version 2", lambda: self.changeDefaultModule("favouriteBible2", self.crossPlatform.textList, config.favouriteBible2, self.showbibles)),
             ".changefavouritebible3": ("change favourite bible version 3", lambda: self.changeDefaultModule("favouriteBible3", self.crossPlatform.textList, config.favouriteBible3, self.showbibles)),
             ".changefavouriteoriginalbible": ("change favourite Hebrew & Greek bible", lambda: self.changeDefaultModule("favouriteOriginalBible", self.crossPlatform.textList, config.favouriteOriginalBible, self.showbibles)),
-            ".changedefaultcommentary": ("change default commentary module", lambda: self.changeDefaultModule("commentaryText", self.crossPlatform.commentaryList, config.commentaryText, self.showcommentaries)),
-            ".changedefaultlexicon": ("change default lexicon", lambda: self.changeDefaultModule("lexicon", self.crossPlatform.lexiconList, config.lexicon, self.showlexicons)),
-            ".changedefaultdictionary": ("change default dictionary", lambda: self.changeDefaultModule("dictionary", self.crossPlatform.dictionaryListAbb, config.dictionary, self.showdictionaries)),
-            ".changedefaultthirdpartydictionary": ("change default third-party dictionary", lambda: self.changeDefaultModule("thirdDictionary", self.crossPlatform.thirdPartyDictionaryList, config.thirdDictionary, self.showthirdpartydictionary)),
-            ".changedefaultencyclopedia": ("change default encyclopedia", lambda: self.changeDefaultModule("encyclopedia", self.crossPlatform.encyclopediaListAbb, config.encyclopedia, self.showencyclopedia)),
-            ".changedefaultconcordance": ("change default concordance", lambda: self.changeDefaultModule("concordance", self.crossPlatform.strongBibles, config.concordance, self.showstrongbibles)),
-            ".changedefaultreferencebook": ("change default reference book", lambda: self.changeDefaultModule("book", self.crossPlatform.referenceBookList, config.book, self.showreferencebooks)),
-            ".changedefaultttslanguage1": ("change default text-to-speech language 1", lambda: self.changeDefaultModule("ttsDefaultLangauge", self.ttsLanguageCodes, config.ttsDefaultLangauge, self.showttslanguages)),
-            ".changedefaultttslanguage2": ("change default text-to-speech language 2", lambda: self.changeDefaultModule("ttsDefaultLangauge2", self.ttsLanguageCodes, config.ttsDefaultLangauge2, self.showttslanguages)),
-            ".changedefaultttslanguage3": ("change default text-to-speech language 3", lambda: self.changeDefaultModule("ttsDefaultLangauge3", self.ttsLanguageCodes, config.ttsDefaultLangauge3, self.showttslanguages)),
+            ".changecommentary": ("change default commentary module", lambda: self.changeDefaultModule("commentaryText", self.crossPlatform.commentaryList, config.commentaryText, self.showcommentaries)),
+            ".changelexicon": ("change default lexicon", lambda: self.changeDefaultModule("lexicon", self.crossPlatform.lexiconList, config.lexicon, self.showlexicons)),
+            ".changedictionary": ("change default dictionary", lambda: self.changeDefaultModule("dictionary", self.crossPlatform.dictionaryListAbb, config.dictionary, self.showdictionaries)),
+            ".changethirdpartydictionary": ("change default third-party dictionary", lambda: self.changeDefaultModule("thirdDictionary", self.crossPlatform.thirdPartyDictionaryList, config.thirdDictionary, self.showthirdpartydictionary)),
+            ".changeencyclopedia": ("change default encyclopedia", lambda: self.changeDefaultModule("encyclopedia", self.crossPlatform.encyclopediaListAbb, config.encyclopedia, self.showencyclopedia)),
+            ".changeconcordance": ("change default concordance", lambda: self.changeDefaultModule("concordance", self.crossPlatform.strongBibles, config.concordance, self.showstrongbibles)),
+            ".changereferencebook": ("change default reference book", lambda: self.changeDefaultModule("book", self.crossPlatform.referenceBookList, config.book, self.showreferencebooks)),
+            ".changettslanguage1": ("change default text-to-speech language 1", lambda: self.changeDefaultModule("ttsDefaultLangauge", self.ttsLanguageCodes, config.ttsDefaultLangauge, self.showttslanguages)),
+            ".changettslanguage2": ("change default text-to-speech language 2", lambda: self.changeDefaultModule("ttsDefaultLangauge2", self.ttsLanguageCodes, config.ttsDefaultLangauge2, self.showttslanguages)),
+            ".changettslanguage3": ("change default text-to-speech language 3", lambda: self.changeDefaultModule("ttsDefaultLangauge3", self.ttsLanguageCodes, config.ttsDefaultLangauge3, self.showttslanguages)),
             ".changedefaultcommand": ("change default command", self.changeDefaultCommand),
             ".changebiblesearchmode": ("change default bible search mode", self.changebiblesearchmode),
             ".changenoteeditor": ("change default note editor", self.changenoteeditor),
@@ -508,14 +517,92 @@ class LocalCliHandler:
         print(f"Command not found: {command}")
         return ""
 
+    def getDummyDict(self, data, suffix=""):
+        # set is supported in NestedCompleter but not preferred as set is unordered
+        return {f"{i}{suffix}": None for i in data}
+
+    def getCommandCompleter(self):
+        if config.isPrompt_toolkitInstalled:
+            from prompt_toolkit.completion import NestedCompleter
+
+            #bibleBooks = BibleBooks()
+            # = bibleBooks.getStandardBookAbbreviations()
+            suggestions = {}
+            days365 = self.getDummyDict([(i + 1) for i in range(365)])
+            for i in self.getTextCommandSuggestion():
+                if re.sub(":::$", "", i) in self.unsupportedCommands:
+                    pass
+                elif i in ("text:::", "studytext:::", "_chapters", "_bibleinfo:::"):
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.textList)
+                elif i in ("_vnsc:::", "_vndc:::", "readchapter:::", "readverse:::", "readword:::", "readlexeme:::",):
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ".")
+                elif i in ("compare:::",):
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.textList, "_")
+                elif i in ("bible:::", "main:::", "study:::", "search:::", "searchall:::", "andsearch:::", "orsearch:::", "advancedsearch:::", "regexsearch:::", "read:::", "readsync:::", "_verses:::", "_biblenote:::"):
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ":::")
+                elif i in ("concordance:::",):
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.strongBibles, ":::")
+                elif i in ("lexicon:::", "searchlexicon:::", "reverselexicon",):
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.lexiconList, ":::")
+                elif i in ("data:::",):
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.dataList)
+                elif i in ("translate:::",):
+                    suggestions[i] = self.getDummyDict(Translator.fromLanguageCodes, "-")
+                elif i in ("download:::",):
+                    downloadTypes = ["MarvelData", "MarvelBible", "MarvelCommentary", "GitHubBible", "GitHubCommentary", "GitHubBook", "GitHubMap", "GitHubPdf", "GitHubEpub"]
+                    suggestions[i] = self.getDummyDict(downloadTypes, ":::")
+                elif i in ("_commentarychapters:::", "_commentaryinfo:::"):
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList)
+                elif i in ("commentary:::", "commentary2:::", "_commentaryverses:::"):
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList, ":::")
+                elif i in ("_commentary:::",):
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList, ".")
+                elif i in ("crossreference:::", "difference:::", "diff:::", "passages:::", "overview:::", "summary:::", "index:::", "chapterindex:::", "map:::", "tske:::", "combo:::", "translation:::", "discourse:::", "words:::", "openbooknote:::", "openchapternote:::", "openversenote:::", "editbooknote:::", "editchapternote:::", "editversenote:::", "_imvr:::"):
+                    suggestions[i] = self.allKJVreferences
+                elif i in ("_imv:::", "_instantverse:::", "_menu:::", "_openbooknote:::", "_openchapternote:::", "_openversenote:::", "_editbooknote:::", "_editchapternote:::", "_editversenote:::"):
+                    suggestions[i] = self.allKJVreferencesBcv1
+                elif i in ("clause:::",):
+                    suggestions[i] = self.allKJVreferencesBcv2
+                elif i in ("dictionary:::",):
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.dictionaryListAbb, ":::")
+                elif i in ("encyclopedia:::",):
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.encyclopediaListAbb, ":::")
+                elif i in ("_book:::",):
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.referenceBookList)
+                elif i in ("book:::", "searchbook:::", "searchbookchapter:::",):
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.referenceBookList, ":::")
+                elif i in ("thirddictionary:::", "searchthirddictionary:::", "s3dict:::", "3dict:::"):
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.thirdPartyDictionaryList, ":::")
+                elif i in ("searchtool:::",):
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.searchToolList, ":::")
+                elif i in (f"{self.ttsCommandKeyword}:::",):
+                    suggestions[i] = self.getDummyDict(self.ttsLanguageCodes, ":::")
+                elif i in ("exlb:::",):
+                    suggestions[i] = self.getDummyDict(["exlbt", "exlbp", "exlbl"], ":::")
+                elif i in ("day:::", "dayaudio:::", "dayaudioplus:::"):
+                    suggestions[i] = days365
+                elif i in ("_whatis:::",):
+                    options = sorted(list(self.dotCommands.keys())) + list(self.textCommandParser.interpreters.keys())
+                    suggestions[i] = self.getDummyDict(options)
+                else:
+                    suggestions[i] = None
+            # Added all KJV verse references
+            suggestions = {**suggestions, **self.allKJVreferences}
+            # Remove unexpected item
+            suggestions.pop(":::", None)
+            completer = NestedCompleter.from_nested_dict(suggestions)
+            return completer
+
     def getTextCommandSuggestion(self, addDotCommandWordOnly=True):
         # Text command autocompletion/autosuggest
         textCommands = [key + ":::" for key in self.textCommandParser.interpreters.keys()]
-        bibleBooks = BibleBooks().getStandardBookAbbreviations()
+        bibleBooks = self.bibleBooks.getStandardBookAbbreviations()
         dotCommands = sorted(list(self.dotCommands.keys()))
         bibleReference = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
         if addDotCommandWordOnly:
-            suggestion = ['.quit', '.restart', 'quit', 'restart', bibleReference] + dotCommands + [cmd[1:] for cmd in dotCommands] + sorted(textCommands) + bibleBooks
+            #suggestion = ['.quit', '.restart', 'quit', 'restart', bibleReference] + dotCommands + [cmd[1:] for cmd in dotCommands] + sorted(textCommands) + bibleBooks
+            #suggestion = ['.quit', '.restart', 'quit', 'restart', bibleReference] + dotCommands + [cmd[1:] for cmd in dotCommands] + sorted(textCommands)
+            suggestion = ['.quit', '.restart', bibleReference] + dotCommands + sorted(textCommands)
         else:
             suggestion = ['.quit', '.restart'] + dotCommands + sorted(textCommands) + bibleBooks
             suggestion.sort()
@@ -618,7 +705,7 @@ class LocalCliHandler:
 
     def showbibleabbreviations(self, text="", commentary=False):
         bible = Bible(config.mainText if not text else text)
-        bibleBooks = BibleBooks()
+        bibleBooks = self.bibleBooks
         bookNumbers = bible.getBookList()
         print([f"[{b}] {bibleBooks.getStandardBookAbbreviation(b)}" for b in bookNumbers])
         self.currentBibleAbbs = [bibleBooks.getStandardBookAbbreviation(b) for b in bookNumbers]
@@ -634,7 +721,7 @@ class LocalCliHandler:
 
     def showbiblebooks(self, text=""):
         bible = Bible(config.mainText if not text else text)
-        bibleBooks = BibleBooks()
+        bibleBooks = self.bibleBooks
         bookNumbers = bible.getBookList()
         print([f"[{b}] {bibleBooks.getStandardBookFullName(b)}" for b in bookNumbers])
         self.currentBibleBooks = [bibleBooks.getStandardBookFullName(b) for b in bookNumbers]
@@ -727,32 +814,31 @@ class LocalCliHandler:
         return TextUtil.htmlToPlainText(content).strip()
 
     def showcommentaries(self):
-        self.textCommandParser.parent.setupResourceLists()
+        #self.crossPlatform.setupResourceLists()
         content = ""
         content += """<h2><ref onclick="window.parent.submitCommand('.commentarymenu')">{0}</ref></h2>""".format(config.thisTranslation["menu4_commentary"])
-        content += "<br>".join(["""[<ref>{0}</ref> ] {1}""".format(abb, self.textCommandParser.parent.commentaryFullNameList[index]) for index, abb in enumerate(self.textCommandParser.parent.commentaryList)])
+        content += "<br>".join(["""[<ref>{0}</ref> ] {1}""".format(abb, self.crossPlatform.commentaryFullNameList[index]) for index, abb in enumerate(self.crossPlatform.commentaryList)])
         return TextUtil.htmlToPlainText(content).strip()
 
     def showreferencebooks(self):
-        self.textCommandParser.parent.setupResourceLists()
+        #self.crossPlatform.setupResourceLists()
         content = ""
         content += "<h2>{0}</h2>".format(config.thisTranslation["menu5_selectBook"])
-        content += "<br>".join(["""[<ref>{0}</ref> ] {0}""".format(book) for book in self.textCommandParser.parent.referenceBookList])
+        content += "<br>".join(["""[<ref>{0}</ref> ] {0}""".format(book) for book in self.crossPlatform.referenceBookList])
         return TextUtil.htmlToPlainText(content).strip()
 
     def showdata(self):
-        self.textCommandParser.parent.setupResourceLists()
+        #self.crossPlatform.setupResourceLists()
         content = ""
         content += "<h2>{0}</h2>".format(config.thisTranslation["menu_data"])
-        dataList = [item for item in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu", "Bible Data"), "txt")]
-        content += "<br>".join(["""[<ref>DATA:::{0}</ref> ] {0}""".format(book)
-            for book in dataList])
+        content += "<br>".join(["[<ref>{0}</ref> ]".format(book) for book in self.crossPlatform.dataList])
         return TextUtil.htmlToPlainText(content).strip()
 
     def showdownloads(self):
         content = ""
         from util.DatafileLocation import DatafileLocation
         from util.GithubUtil import GithubUtil
+        # ["marveldata", "marvelbible", "marvelcommentary", "GitHubBible", "GitHubCommentary", "GitHubBook", "GitHubMap", "GitHubPdf", "GitHubEpub"]
         resources = (
             ("Marvel Datasets", DatafileLocation.marvelData, "marveldata"),
             ("Marvel Bibles", DatafileLocation.marvelBibles, "marvelbible"),
@@ -764,8 +850,7 @@ class LocalCliHandler:
                 if os.path.isfile(os.path.join(*v[0])):
                     content += """[ {1} ] {0}<br>""".format(k, config.thisTranslation["installed"])
                 else:
-                    content += """[<ref>DOWNLOAD:::{0}:::{1}</ref> ]<br>"""\
-                        .format(keyword, k)
+                    content += """[<ref>DOWNLOAD:::{0}:::{1}</ref> ]<br>""".format(keyword, k)
         resources = (
             ("GitHub Bibles", "GitHubBible", GitHubRepoInfo.bibles[0], (config.marvelData, "bibles"), ".bible"),
             ("GitHub Commentaries", "GitHubCommentary", GitHubRepoInfo.commentaries[0], (config.marvelData, "commentaries"), ".commentary"),
@@ -974,9 +1059,8 @@ class LocalCliHandler:
         return True if references else False
 
     def openbibleaudio(self):
-        display = self.getOptionsDisplay(self.crossPlatform.bibleAudioModules, "Installed Bible Audio")
         print(self.divider)
-        print(display)
+        self.printOptionsDisplay(self.crossPlatform.bibleAudioModules, "Installed Bible Audio")
         print(self.divider)
         try:
             print("Enter a number")
@@ -1029,14 +1113,15 @@ class LocalCliHandler:
         except:
             return self.noClipboardUtility()
 
-    def copy(self):
+    def copy(self, content=""):
         try:
-            plainText = self.getPlainText()
+            if not content:
+                content = self.getPlainText()
             if config.terminalEnableTermuxAPI:
-                pydoc.pipepager(plainText, cmd="termux-clipboard-set")
+                pydoc.pipepager(content, cmd="termux-clipboard-set")
             else:
                 import pyperclip
-                pyperclip.copy(plainText)
+                pyperclip.copy(content)
                 print("Content is copied to clipboard.")
             return ""
         except:
@@ -1262,6 +1347,24 @@ class LocalCliHandler:
     def printToolNotFound(self, tool):
         print(f"Tool '{tool}' is not found on your system!")
 
+    def opendata(self):
+        try:
+            print(self.divider)
+            self.printOptionsDisplay(self.crossPlatform.dataList, "Bible Data")
+            print(self.divider)
+            print("Enter a number:")
+            userInput = self.simplePrompt()
+            if not userInput or userInput == self.cancelCommand:
+                return self.cancelAction()
+            if int(userInput) in range(len(self.crossPlatform.dataList)):
+                command = f"DATA:::{self.crossPlatform.dataList[int(userInput)]}"
+                self.printRunningCommand(command)
+                return self.getContent(command)
+            else:
+                return self.printInvalidOptionEntered()
+        except:
+            return self.printInvalidOptionEntered()
+
     def openTools2(self, moduleType):
         try:
             if config.isPrompt_toolkitInstalled:
@@ -1471,7 +1574,7 @@ class LocalCliHandler:
                 "0": ("Whole Bible", searchModes[config.bibleSearchMode], "", config.mainText, ""),
                 "1": ("Old Testament", searchModes[config.bibleSearchMode], "", config.mainText, ":::OT"),
                 "2": ("New Testament", searchModes[config.bibleSearchMode], "", config.mainText, ":::NT"),
-                "3": (BibleBooks().getStandardBookFullName(config.mainB), searchModes[config.bibleSearchMode], "", config.mainText, f":::{BibleBooks().getStandardBookAbbreviation(config.mainB)}"),
+                "3": (self.bibleBooks.getStandardBookFullName(config.mainB), searchModes[config.bibleSearchMode], "", config.mainText, f":::{self.bibleBooks.getStandardBookAbbreviation(config.mainB)}"),
                 "4": ("Bible Book Notes", "SEARCHBOOKNOTE", "OPENBOOKNOTE", "", ""),
                 "5": ("Bible Chapter Notes", "SEARCHCHAPTERNOTE", "OPENCHAPTERNOTE", "", ""),
                 "6": ("Bible Verse Notes", "SEARCHVERSENOTE", "OPENVERSENOTE", "", ""),
@@ -2723,7 +2826,7 @@ class LocalCliHandler:
 
     def open(self):
         heading = "Open"
-        features = (".openbible", ".original", ".open365readingplan", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".opencommentary", ".openreferencebook", ".openbibleaudio", ".opentopic", ".openpromises", ".openparallels", ".opennames", ".opencharacters", ".openlocations", ".openmaps", ".opentimelines", ".opendictionary", ".openencyclopedia", ".openlexicon", ".openthirdpartydictionary", ".opentext", ".quickopen")
+        features = (".openbible", ".original", ".open365readingplan", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".opencommentary", ".openreferencebook", ".openaudio", ".opendata", ".opentopics", ".openpromises", ".openparallels", ".opennames", ".opencharacters", ".openlocations", ".openmaps", ".opentimelines", ".opendictionaries", ".openencyclopedia", ".openlexicons", ".openthirdpartydictionaries", ".opentext", ".quickopen")
         return self.displayFeatureMenu(heading, features)
 
     def original(self):
@@ -2768,7 +2871,7 @@ class LocalCliHandler:
 
     def change(self):
         heading = "Change"
-        features = (".changecurrentbible", ".changefavouritebible1", ".changefavouritebible2", ".changefavouritebible3", ".changefavouriteoriginalbible", ".changedefaultcommentary", ".changedefaultlexicon", ".changedefaultdictionary", ".changedefaultthirdpartydictionary", ".changedefaultencyclopedia", ".changedefaultconcordance", ".changedefaultreferencebook", ".changedefaultttslanguage1", ".changedefaultttslanguage2", ".changedefaultttslanguage3", ".changedefaultcommand", ".changebiblesearchmode", ".changenoteeditor", ".changecolors", ".changeconfig")
+        features = (".changecurrentbible", ".changefavouritebible1", ".changefavouritebible2", ".changefavouritebible3", ".changefavouriteoriginalbible", ".changecommentary", ".changelexicon", ".changedictionary", ".changethirdpartydictionary", ".changeencyclopedia", ".changeconcordance", ".changereferencebook", ".changettslanguage1", ".changettslanguage2", ".changettslanguage3", ".changedefaultcommand", ".changebiblesearchmode", ".changenoteeditor", ".changecolors", ".changeconfig")
         return self.displayFeatureMenu(heading, features)
 
     def help(self):
@@ -2816,7 +2919,7 @@ class LocalCliHandler:
             else:
                 print(self.divider)
                 print(f"Essential data '{databaseInfo[0][-1]}' is missing!")
-                print("Do you want to download it? [Y]es / [N]o")
+                print("Do you want to download it now? [y]es / [n]o")
                 userInput = self.simplePrompt()
                 if not userInput or userInput == self.cancelCommand:
                     return self.cancelAction()

@@ -460,7 +460,8 @@ class TextCommandParser:
             # Remarks: Module creator should avoid comma for naming a book module."""),
             "searchbookchapter": (self.textSearchBookChapter, """
             # [KEYWORD] SEARCHBOOKCHAPTER
-            # similar to searchbook:::, difference is that "searchbookchapter:::" searches chapters only"""),
+            # similar to searchbook:::, difference is that "searchbookchapter:::" searches chapters only
+            # e.g. SEARCHBOOKCHAPTER:::Bible_Promises:::index"""),
             "searchallbookspdf": (self.textSearchAllBooksAndPdf, """
             # [KEYWORD] SEARCHALLBOOKSPDF
             # Search all books and all PDF files"""),
@@ -665,8 +666,8 @@ class TextCommandParser:
             # [KEYWORD] DOWNLOAD
             # Feature - Download marvel data, github files
             # Usage - DOWNLOAD:::[source]:::[file]
-            # Available sources: MarvelData, HymnLyrics, GitHubBible, GitHubBook, GitHubCommentary
-            # e.g. DOWNLOAD:::MarvelBible:::KJV
+            # Available sources: ["MarvelData", "MarvelBible", "MarvelCommentary", "GitHubBible", "GitHubCommentary", "GitHubBook", "GitHubMap", "GitHubPdf", "GitHubEpub"]
+            # e.g. DOWNLOAD:::marvelbible:::KJV
             """),
             "import": (self.importResources, """
             # [KEYWORD] IMPORT
@@ -943,7 +944,7 @@ class TextCommandParser:
             keyword = keyword.lower()
             if keyword in ("bible", "study", "text") and config.runMode == "terminal":
                 config.terminalBibleComparison = False
-            if keyword in ("_mc", "_mastercontrol", "epub", "anypdf", "searchpdf", "pdffind", "pdf", "docx", "_savepdfcurrentpage", "searchallbookspdf", "readbible", "searchhighlight", "sidebyside", "parallel", "_editfile", "_openfile", "_uba", "opennote", "open", "_open") and config.runMode == "terminal":
+            if config.runMode == "terminal" and keyword in config.mainWindow.unsupportedCommands:
                 return ("study", f"{keyword}::: command is currently not supported in terminal mode.", {})
             if keyword in self.interpreters:
                 if self.isDatabaseInstalled(keyword):
@@ -2152,7 +2153,9 @@ class TextCommandParser:
     # _copy:::
     def copyText(self, command, source):
         try:
-            if config.qtLibrary == "pyside6":
+            if config.runMode == "terminal":
+                config.mainWindow.copy(command)
+            elif config.qtLibrary == "pyside6":
                 from PySide6.QtWidgets import QApplication
             else:
                 from qtpy.QtWidgets import QApplication
@@ -2670,7 +2673,9 @@ class TextCommandParser:
     def openMarvelDataFile(self, command, source):
         fileitems = command.split("/")
         filePath = os.path.join(config.marvelData, *fileitems)
-        if config.enableHttpServer and re.search("\.jpg$|\.jpeg$|\.png$|\.bmp$|\.gif$", filePath.lower()):
+        if config.runMode == "terminal":
+            return self.osCommand(f"{config.open} {filePath}", source)
+        elif config.enableHttpServer and re.search("\.jpg$|\.jpeg$|\.png$|\.bmp$|\.gif$", filePath.lower()):
             fullPath = os.path.join(os.getcwd(), filePath)
             if os.path.isfile(fullPath):
                 # config.marvelData is a relative path
@@ -2699,7 +2704,9 @@ class TextCommandParser:
     def openExternalFile(self, command, source):
         fileitems = command.split("/")
         filePath = os.path.join(*fileitems)
-        if config.enableHttpServer:
+        if config.runMode == "terminal":
+            return self.osCommand(f"{config.open} {filePath}", source)
+        elif config.enableHttpServer:
             return ("study", TextUtil.imageToText(filePath), {})
         elif re.search("\.bmp$|\.jpg$|\.jpeg$|\.png$|\.pbm$|\.pgm$|\.ppm$|\.xbm$|\.xpm$", filePath.lower()):
             from gui.ImageViewer import ImageViewer
@@ -3015,7 +3022,9 @@ class TextCommandParser:
 
     # _paste:::
     def pasteFromClipboard(self, command, source):
-        if config.isPyperclipInstalled and config.runMode == "terminal":
+        if config.runMode == "terminal":
+            config.mainWindow.getclipboardtext()
+        elif config.isPyperclipInstalled and config.runMode == "terminal":
             import pyperclip
             content = pyperclip.paste()
             return ("study", content, {})
@@ -3023,11 +3032,13 @@ class TextCommandParser:
             self.parent.pasteFromClipboard()
         return ("", "", {})
 
-    # _whatIs:::
+    # _whatis:::
     def textWhatIs(self, command, source):
         try:
             command = command.lower().strip()
-            if ":::"in command:
+            if config.runMode == "terminal" and command in config.mainWindow.dotCommands:
+                return ("study", config.mainWindow.dotCommands[command][0], {})
+            elif ":::"in command:
                 command, *_ = command.split(":::", 1)
             content = self.interpreters[command][-1]
             content = re.sub("            #", "<br>#", content)
@@ -3106,33 +3117,36 @@ class TextCommandParser:
 
     # SEARCHTOOL:::
     def textSearchTool(self, command, source):
-        origModule, entry = self.splitCommand(command)
-        if origModule == config.thisTranslation['searchAllDictionaries']:
-            modules = self.parent.dictionaryListAbb
-        else:
-            modules = [origModule]
-        TextCommandParser.last_text_search = entry
-        indexes = IndexesSqlite()
-        content = ""
-        toolList = [("", "[search other resources]"), ("EXLBP", "Exhaustive Library of Bible Characters"), ("EXLBL", "Exhaustive Library of Bible Locations")] + indexes.topicList + indexes.dictionaryList + indexes.encyclopediaList
-        for module in modules:
-            if module in dict(toolList[1:]).keys() or module in ("mRMAC", "mETCBC", "mLXX"):
-                action = "searchItem(this.value, \"{0}\")".format(entry)
-                selectList = indexes.formatSelectList(action, toolList)
-                if module in dict(indexes.topicList).keys():
-                    config.topic = module
-                elif module in dict(indexes.dictionaryList).keys() and not module == "HBN":
-                    config.dictionary = module
-                elif module in dict(indexes.encyclopediaList).keys():
-                    config.encyclopedia = module
-                searchSqlite = SearchSqlite()
-                exactMatch = searchSqlite.getContent(module, entry)
-                similarMatch = searchSqlite.getSimilarContent(module, entry)
-                selectList = f"<p>{selectList}</p><p>" if not config.runMode == "terminal" else ""
-                content += "<h2>Search <span style='color: brown;'>{0}</span> for <span style='color: brown;'>{1}</span></h2>{4}<b>Exact match:</b><br><br>{2}</p><p><b>Partial match:</b><br><br>{3}".format(module, entry, exactMatch, similarMatch, selectList)
-        if len(content) > 0:
-            return ("study", f"[MESSAGE]{content}" if config.runMode == "terminal" else content, {'tab_title': 'Search:' + origModule + ':' + entry})
-        else:
+        try:
+            origModule, entry = self.splitCommand(command)
+            if origModule == config.thisTranslation['searchAllDictionaries']:
+                modules = self.parent.dictionaryListAbb
+            else:
+                modules = [origModule]
+            TextCommandParser.last_text_search = entry
+            indexes = IndexesSqlite()
+            content = ""
+            toolList = [("", "[search other resources]"), ("EXLBP", "Exhaustive Library of Bible Characters"), ("EXLBL", "Exhaustive Library of Bible Locations")] + indexes.topicList + indexes.dictionaryList + indexes.encyclopediaList
+            for module in modules:
+                if module in dict(toolList[1:]).keys() or module in ("mRMAC", "mETCBC", "mLXX"):
+                    action = "searchItem(this.value, \"{0}\")".format(entry)
+                    selectList = indexes.formatSelectList(action, toolList)
+                    if module in dict(indexes.topicList).keys():
+                        config.topic = module
+                    elif module in dict(indexes.dictionaryList).keys() and not module == "HBN":
+                        config.dictionary = module
+                    elif module in dict(indexes.encyclopediaList).keys():
+                        config.encyclopedia = module
+                    searchSqlite = SearchSqlite()
+                    exactMatch = searchSqlite.getContent(module, entry)
+                    similarMatch = searchSqlite.getSimilarContent(module, entry)
+                    selectList = f"<p>{selectList}</p><p>" if not config.runMode == "terminal" else ""
+                    content += "<h2>Search <span style='color: brown;'>{0}</span> for <span style='color: brown;'>{1}</span></h2>{4}<b>Exact match:</b><br><br>{2}</p><p><b>Partial match:</b><br><br>{3}".format(module, entry, exactMatch, similarMatch, selectList)
+            if len(content) > 0:
+                return ("study", f"[MESSAGE]{content}" if config.runMode == "terminal" else content, {'tab_title': 'Search:' + origModule + ':' + entry})
+            else:
+                return self.invalidCommand()
+        except:
             return self.invalidCommand()
 
     # SEARCH:::

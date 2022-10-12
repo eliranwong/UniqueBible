@@ -2419,11 +2419,27 @@ class BibleBooks:
         else:
             return 100
 
+    def getAllKJVreferences(self, lang=None):
+        if lang is None:
+            lang = config.standardAbbreviation
+        standardAbbreviation = self.booksMap.get(lang)
+        abbReferences = []
+        bcvReferences = []
+        separator1 = "_" if config.runMode == "terminal" else " "
+        separator2 = "_" if config.runMode == "terminal" else ":"
+        separator3 = "_" if config.runMode == "terminal" else "."
+        for b, value in self.verses.items():
+            for c, v in value.items():
+                for i in range(v):
+                    abbReferences.append(f"{standardAbbreviation[str(b)][0]}{separator1}{c}{separator2}{(i+1)}")
+                    bcvReferences.append(f"{b}{separator3}{c}{separator3}{(i+1)}")
+        return (abbReferences, bcvReferences)
+
     def getStandardBookAbbreviations(self, lang=None):
         if lang is None:
             lang = config.standardAbbreviation
         books = []
-        standardAbbreviation = BibleBooks().booksMap.get(lang)
+        standardAbbreviation = self.booksMap.get(lang)
         if standardAbbreviation:
             for item in standardAbbreviation.keys():
                 books.append(standardAbbreviation[item][0])
@@ -2434,7 +2450,7 @@ class BibleBooks:
     def getStandardBookAbbreviation(self, bookNo, lang=None):
         if lang is None:
             lang = config.standardAbbreviation
-        standardAbbreviation = BibleBooks().booksMap.get(lang)
+        standardAbbreviation = self.booksMap.get(lang)
         if standardAbbreviation:
             return standardAbbreviation.get(str(bookNo), "")[0]
         return ""
@@ -2442,7 +2458,7 @@ class BibleBooks:
     def getStandardBookFullName(self, bookNo, lang=None):
         if lang is None:
             lang = config.standardAbbreviation
-        standardAbbreviation = BibleBooks().booksMap.get(lang)
+        standardAbbreviation = self.booksMap.get(lang)
         if standardAbbreviation:
             return standardAbbreviation.get(str(bookNo), "")[-1]
         return ""

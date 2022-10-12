@@ -161,7 +161,7 @@ def getHistoryRecords():
             if item and item.startswith("+"):
                 item = item[1:]
                 startupException1 = (".quit", ".restart", ".togglepager", ".history", ".update", ".find", ".stopaudio", ".read", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".stophttpserver", ".downloadyoutube", ".web", ".gtts")
-                startupException2 = "^(_setconfig:::|\.edit|\.change|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::)"
+                startupException2 = "^(_setconfig:::|\.edit|\.change|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::|download:::)"
                 if not item.lower() in startupException1 and not re.search(startupException2, item.lower()):
                     records.append(item)
     return records
@@ -208,17 +208,18 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     promptIndicator = ">>> "
 
     if config.isPrompt_toolkitInstalled:
-        from prompt_toolkit.formatted_text import HTML
+        #from prompt_toolkit.formatted_text import HTML
         # print_formatted_text does not support colorama
         #from prompt_toolkit import print_formatted_text as print
         from prompt_toolkit import PromptSession
-        from prompt_toolkit.completion import WordCompleter
+        #from prompt_toolkit.completion import WordCompleter
         from prompt_toolkit.history import FileHistory
         from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 
         command_history = os.path.join("terminal_history", "commands")
         session = PromptSession(history=FileHistory(command_history))
-        command_completer = WordCompleter(config.mainWindow.getTextCommandSuggestion(), ignore_case=True)
+        #command_completer = WordCompleter(config.mainWindow.getTextCommandSuggestion(), ignore_case=True)
+        command_completer = config.mainWindow.getCommandCompleter()
         auto_suggestion=AutoSuggestFromHistory()
         toolbar = f" Unique Bible App [{config.version}] "
 
@@ -255,6 +256,13 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         else:
             command = input(promptIndicator).strip()
         if command:
+            # remove spaces before and after ":::"
+            command = re.sub("[ ]*?:::[ ]+?([^ ])", r":::\1", command)
+            # remove "_" before ":::"
+            command = re.sub("_:::", ":::", command)
+            # format chapter no. and verse no
+            command = re.sub("([0-9]+?)_([0-9]+?)_([0-9]+?,)", r"\1.\2.\3", command)
+            command = re.sub("_([0-9]+?)_([0-9]+?,)", r" \1:\2", command)
             command = runTerminalModeCommand(command)
         else:
             command = runTerminalModeCommand(config.terminalDefaultCommand)

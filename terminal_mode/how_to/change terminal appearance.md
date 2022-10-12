@@ -45,7 +45,7 @@ With Termux:Styling in place, we found the following combination is nice for use
     terminalPromptIndicatorColor2 = '#33B8FF'
     terminalCommandEntryColor2 = '#00AA00'
     terminalHeadingTextColor = 'GREEN'
-    terminalVerseNumberColor = 'YELLOW'
+    terminalVerseNumberColor = 'LIGHTCYAN_EX'
     terminalResourceLinkColor = 'YELLOW'
     terminalVerseSelectionBackground = 'MAGENTA'
     terminalVerseSelectionForeground = 'RESET'

@@ -5660,8 +5660,10 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         # Text command autocompletion/autosuggest
         textCommandParser = TextCommandParser(self)
         textCommands = [key + ":::" for key in textCommandParser.interpreters.keys()]
-        bibleBooks = BibleBooks().getStandardBookAbbreviations()
-        textCommandAutosuggestion = QCompleter(textCommands + bibleBooks)
+        bb = BibleBooks()
+        bibleBooks = bb.getStandardBookAbbreviations()
+        allKJVreferences = bb.getAllKJVreferences()[0]
+        textCommandAutosuggestion = QCompleter(textCommands + bibleBooks + allKJVreferences)
         textCommandAutosuggestion.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         return textCommandAutosuggestion
 

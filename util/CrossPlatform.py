@@ -10,6 +10,7 @@ from install.module import *
 from util.GoogleCloudTTSVoices import GoogleCloudTTS
 from util.Languages import Languages
 from util.TtsLanguages import TtsLanguages
+from util.FileUtil import FileUtil
 
 
 class CrossPlatform:
@@ -78,6 +79,10 @@ class CrossPlatform:
         # installed bible audio modules
         audioBibleDirectory = os.path.join("audio", "bibles")
         self.bibleAudioModules = [name for name in os.listdir(audioBibleDirectory) if os.path.isdir(os.path.join(audioBibleDirectory, name))]
+        # data list
+        self.dataList = [item for item in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu", "Bible Data"), "txt")]
+        # search tool list
+        self.searchToolList = self.dictionaryListAbb + self.encyclopediaListAbb + ["EXLBT", "EXLBP", "EXLBL", "mETCBC"]
 
     # Check if a third party dictionary exists:
     def isThridPartyDictionary(self, module):
