@@ -542,9 +542,9 @@ class LocalCliHandler:
                 elif i in ("search:::", "searchall:::", "andsearch:::", "orsearch:::", "advancedsearch:::", "regexsearch:::",):
                     suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ":::")
                 elif i in ("bible:::", "main:::", "study:::", "read:::", "readsync:::", "_verses:::"):
-                    suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ":::", self.allKJVreferences)
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ":::", None if config.terminalEnableLighterCompleter else self.allKJVreferences)
                 elif i in ("_biblenote:::",):
-                    suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ":::", self.allKJVreferencesBcv1)
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ":::", None if config.terminalEnableLighterCompleter else self.allKJVreferencesBcv1)
                 elif i in ("concordance:::",):
                     suggestions[i] = self.getDummyDict(self.crossPlatform.strongBibles, ":::")
                 elif i in ("lexicon:::", "searchlexicon:::", "reverselexicon",):
@@ -559,9 +559,9 @@ class LocalCliHandler:
                 elif i in ("_commentarychapters:::", "_commentaryinfo:::"):
                     suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList)
                 elif i in ("commentary:::", "_commentaryverses:::"):
-                    suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList, ":::", self.allKJVreferences)
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList, ":::", None if config.terminalEnableLighterCompleter else self.allKJVreferences)
                 elif i in ("commentary2:::",):
-                    suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList, ":::", self.allKJVreferencesBcv1)
+                    suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList, ":::", None if config.terminalEnableLighterCompleter else self.allKJVreferencesBcv1)
                 elif i in ("_commentary:::",):
                     suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList, ".")
                 elif i in ("crossreference:::", "difference:::", "diff:::", "passages:::", "overview:::", "summary:::", "index:::", "chapterindex:::", "map:::", "tske:::", "combo:::", "translation:::", "discourse:::", "words:::", "openbooknote:::", "openchapternote:::", "openversenote:::", "editbooknote:::", "editchapternote:::", "editversenote:::", "_imvr:::"):
@@ -597,7 +597,10 @@ class LocalCliHandler:
             suggestions = {**suggestions, **self.allKJVreferences}
             # Remove unexpected item
             suggestions.pop(":::", None)
-            completer = ThreadedCompleter(NestedCompleter.from_nested_dict(suggestions))
+            if config.terminalEnableLighterCompleter:
+                completer = NestedCompleter.from_nested_dict(suggestions)
+            else:
+                completer = ThreadedCompleter(NestedCompleter.from_nested_dict(suggestions))
             return completer
 
     def getTextCommandSuggestion(self, addDotCommandWordOnly=True):

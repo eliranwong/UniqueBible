@@ -106,6 +106,10 @@ class ConfigUtil:
         # To enable paging of terminal output when UBA runs in terminal mode."""
         if not hasattr(config, "terminalEnablePager"):
             config.terminalEnablePager = False
+        config.help["terminalEnableLighterCompleter"] = """
+        # To enable lighter completer to make command completion quicker on slow devices."""
+        if not hasattr(config, "terminalEnableLighterCompleter"):
+            config.terminalEnableLighterCompleter = True
         config.help["terminalAutoUpdate"] = """
         # Option to update UBA automatically on startup if newer version is found."""
         if not hasattr(config, "terminalAutoUpdate"):
@@ -1531,6 +1535,7 @@ class ConfigUtil:
             ("terminalTermuxttsSpeed", config.terminalTermuxttsSpeed),
             ("terminalDisplayBeginnerMessage", config.terminalDisplayBeginnerMessage),
             ("terminalEnablePager", config.terminalEnablePager),
+            ("terminalEnableLighterCompleter", config.terminalEnableLighterCompleter),
             ("terminalNoteEditor", config.terminalNoteEditor),
             ("terminalBibleComparison", config.terminalBibleComparison),
             ("terminalStopHttpServerOnExit", config.terminalStopHttpServerOnExit),

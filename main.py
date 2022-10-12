@@ -249,7 +249,10 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         config.mainWindow.initialDisplay()
         # User command input
         if config.isPrompt_toolkitInstalled:
-            command = session.prompt(promptIndicator, style=style, completer=command_completer, complete_in_thread=True, auto_suggest=auto_suggestion, bottom_toolbar=toolbar, default=default).strip()
+            if config.terminalEnableLighterCompleter:
+                command = session.prompt(promptIndicator, style=style, completer=command_completer, auto_suggest=auto_suggestion, bottom_toolbar=toolbar, default=default).strip()
+            else:
+                command = session.prompt(promptIndicator, style=style, completer=command_completer, complete_in_thread=True, auto_suggest=auto_suggestion, bottom_toolbar=toolbar, default=default).strip()
         elif sys.platform in ("linux", "darwin"):
             import readline
             command = input(promptIndicator).strip()
