@@ -276,6 +276,8 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
             command = runTerminalModeCommand(config.terminalDefaultCommand)
 
     config.mainWindow.removeAudioPlayingFile()
+    if config.terminalUseMarvelDataPrivate:
+        config.marvelData = config.defaultMarvelData
     if config.saveConfigOnExit:
         ConfigUtil.save()
     if config.terminalStopHttpServerOnExit:

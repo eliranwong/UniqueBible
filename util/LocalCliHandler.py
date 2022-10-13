@@ -27,6 +27,9 @@ from util.Translator import Translator
 class LocalCliHandler:
 
     def __init__(self, command="John 3:16"):
+        if config.terminalUseMarvelDataPrivate:
+            config.defaultMarvelData = config.marvelData
+            config.marvelData = config.marvelDataPrivate
         self.textCommandParser = TextCommandParser(RemoteCliMainWindow())
         self.crossPlatform = CrossPlatform()
         self.crossPlatform.setupResourceLists()

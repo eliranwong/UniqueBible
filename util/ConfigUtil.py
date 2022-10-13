@@ -114,6 +114,10 @@ class ConfigUtil:
         # Option to update UBA automatically on startup if newer version is found."""
         if not hasattr(config, "terminalAutoUpdate"):
             config.terminalAutoUpdate = False
+        config.help["terminalUseMarvelDataPrivate"] = """
+        # Option to use config.marvelDataPrivate in terminal mode."""
+        if not hasattr(config, "terminalUseMarvelDataPrivate"):
+            config.terminalUseMarvelDataPrivate = False
         config.help["terminalDefaultCommand"] = """
         # Define a default command for terminal mode to run when users enter an empty string.
         # It is the quickest way to run a favourite command."""
@@ -1648,6 +1652,7 @@ class ConfigUtil:
             ("usePySide2onWebtop", config.usePySide2onWebtop),
             ("usePySide6onMacOS", config.usePySide6onMacOS),
             ("terminalAutoUpdate", config.terminalAutoUpdate),
+            ("terminalUseMarvelDataPrivate", config.terminalUseMarvelDataPrivate),
             ("terminalDefaultCommand", config.terminalDefaultCommand),
             ("terminalEnableTermuxAPI", config.terminalEnableTermuxAPI),
             ("terminalEnableTermuxAPIToast", config.terminalEnableTermuxAPIToast),

@@ -1,3 +1,6 @@
+Changes in 32.60:
+* Added config.terminalUseMarvelDataPrivate
+
 Changes in 32.59:
 * Added a startup plugin for use in terminal mode.
     This startup plugin can be used as an example for developing terminal mode startup plugins.
