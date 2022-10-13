@@ -258,7 +258,11 @@ class RemoteCliMainWindow(CrossPlatform):
         # do not remove the dummy gui argument for this method
         self.closeMediaPlayer()
         if playlist:
+            if config.runMode == "terminal":
+                config.mainWindow.createAudioPlayingFile()
             for index, audioFile in enumerate(playlist):
+                if not os.path.isfile(config.audio_playing_file):
+                    break
                 try:
                     # display text
                     print(textList[index])
@@ -275,8 +279,13 @@ class RemoteCliMainWindow(CrossPlatform):
                 except:
                     pass
                 self.closeMediaPlayer()
+            if config.runMode == "terminal":
+                config.mainWindow.removeAudioPlayingFile()
 
     def closeMediaPlayer(self):
+        #if removeAudio_playing_file and os.path.isfile(config.audio_playing_file):
+        #    os.remove(config.audio_playing_file)
+
         if WebtopUtil.isPackageInstalled("pkill"):
 
             # close Android media player

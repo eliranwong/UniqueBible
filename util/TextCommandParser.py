@@ -1411,7 +1411,14 @@ class TextCommandParser:
         try:
             if config.runMode == "terminal" and config.terminalEnableTermuxAPI:
                 # Option 1
-                pydoc.pipepager(text, cmd=f"termux-tts-speak -l {language} -r {config.terminalTermuxttsSpeed}")
+                config.mainWindow.createAudioPlayingFile()
+                text = re.sub("(\. |。)", r"\1＊", text)
+                for i in text.split("＊"):
+                    if not os.path.isfile(config.audio_playing_file):
+                        break
+                    print(i)
+                    pydoc.pipepager(i, cmd=f"termux-tts-speak -l {language} -r {config.terminalTermuxttsSpeed}")
+                config.mainWindow.removeAudioPlayingFile()
                 # Output file shared by option 2 and option 3
                 #outputFile = os.path.join("terminal_history", "gtts")
                 #with open(outputFile, "w", encoding="utf-8") as f:
@@ -3524,7 +3531,8 @@ class TextCommandParser:
                 if not item in config.help.keys():
                     return self.invalidCommand("study")
                 else:
-                    newConfig = "{0} = {1}".format(item, value)
+                    # use """ to allow using ' or " for string
+                    newConfig = """{0} = {1}""".format(item, value)
                     exec("config."+newConfig)
                     message = f"The value of config.{item} is now changed to {newConfig}."
                     if config.runMode == "terminal":

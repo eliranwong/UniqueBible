@@ -160,9 +160,9 @@ def getHistoryRecords():
             item = item.strip()
             if item and item.startswith("+"):
                 item = item[1:]
-                startupException1 = (".quit", ".restart", ".togglepager", ".history", ".update", ".find", ".stopaudio", ".read", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".stophttpserver", ".downloadyoutube", ".web", ".gtts")
-                startupException2 = "^(_setconfig:::|\.edit|\.change|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::|download:::)"
-                if not item.lower() in startupException1 and not re.search(startupException2, item.lower()):
+                #startupException1 = (".quit", ".restart", ".togglepager", ".history", ".update", ".find", ".stopaudio", ".read", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".stophttpserver", ".downloadyoutube", ".web", ".gtts")
+                #startupException2 = "^(_setconfig:::|\.edit|\.change|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::|download:::)"
+                if not item.lower() in config.mainWindow.startupException1 and not re.search(config.mainWindow.startupException2, item.lower()):
                     records.append(item)
     return records
 
@@ -184,23 +184,25 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     checkMigration()
     needUpdate = checkApplicationUpdateCli()
 
+    # set up config.mainWindow for terminal mode
     from util.LocalCliHandler import LocalCliHandler
+    config.mainWindow = LocalCliHandler()
 
-    # get initial command
+    config.terminalCommandDefault = ""
+    default = ""
+    runStartupPlugins()
+
+    # Set initial command
     command = " ".join(sys.argv[2:]).strip()
     if not command:
         records = getHistoryRecords()
         if records:
             command = records[0]
+    config.mainWindow.command = command
 
     if needUpdate and config.terminalAutoUpdate:
         command = ".update"
         print("Updating UBA ...")
-
-    config.mainWindow = LocalCliHandler(command)
-    config.terminalCommandDefault = ""
-    default = ""
-    runStartupPlugins()
 
     if config.terminalStartHttpServerOnStartup:
         config.mainWindow.starthttpserver()
@@ -273,6 +275,7 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         else:
             command = runTerminalModeCommand(config.terminalDefaultCommand)
 
+    config.mainWindow.removeAudioPlayingFile()
     if config.saveConfigOnExit:
         ConfigUtil.save()
     if config.terminalStopHttpServerOnExit:

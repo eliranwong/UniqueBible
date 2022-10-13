@@ -202,6 +202,121 @@ class ConfigUtil:
             config.terminalFindHighlightForeground = "RESET"
         # End of terminal mode settings
 
+        # Start of terminal mode customised input settings
+
+        config.help["terminal_cancel_action"] = """
+        # Customise the entry to cancel action in current prompt.
+        # Attention! This value must be in lower cases."""
+        if not hasattr(config, "terminal_cancel_action"):
+            config.terminal_cancel_action = ".cancel"
+
+        config.help["terminal_dot_a"] = """
+        # Customise the command to be run with shortcut entry '.a'."""
+        if not hasattr(config, "terminal_dot_a"):
+            config.terminal_dot_a = ""
+        config.help["terminal_dot_b"] = """
+        # Customise the command to be run with shortcut entry '.b'."""
+        if not hasattr(config, "terminal_dot_b"):
+            config.terminal_dot_b = ".backward"
+        config.help["terminal_dot_c"] = """
+        # Customise the command to be run with shortcut entry '.c'."""
+        if not hasattr(config, "terminal_dot_c"):
+            config.terminal_dot_c = ""
+        config.help["terminal_dot_d"] = """
+        # Customise the command to be run with shortcut entry '.d'."""
+        if not hasattr(config, "terminal_dot_d"):
+            config.terminal_dot_d = ""
+        config.help["terminal_dot_e"] = """
+        # Customise the command to be run with shortcut entry '.e'."""
+        if not hasattr(config, "terminal_dot_e"):
+            config.terminal_dot_e = ""
+        config.help["terminal_dot_f"] = """
+        # Customise the command to be run with shortcut entry '.f'."""
+        if not hasattr(config, "terminal_dot_f"):
+            config.terminal_dot_f = ".forward"
+        config.help["terminal_dot_g"] = """
+        # Customise the command to be run with shortcut entry '.g'."""
+        if not hasattr(config, "terminal_dot_g"):
+            config.terminal_dot_g = ""
+        config.help["terminal_dot_h"] = """
+        # Customise the command to be run with shortcut entry '.h'."""
+        if not hasattr(config, "terminal_dot_h"):
+            config.terminal_dot_h = ""
+        config.help["terminal_dot_i"] = """
+        # Customise the command to be run with shortcut entry '.i'."""
+        if not hasattr(config, "terminal_dot_i"):
+            config.terminal_dot_i = ""
+        config.help["terminal_dot_j"] = """
+        # Customise the command to be run with shortcut entry '.j'."""
+        if not hasattr(config, "terminal_dot_j"):
+            config.terminal_dot_j = ""
+        config.help["terminal_dot_k"] = """
+        # Customise the command to be run with shortcut entry '.k'."""
+        if not hasattr(config, "terminal_dot_k"):
+            config.terminal_dot_k = ""
+        config.help["terminal_dot_l"] = """
+        # Customise the command to be run with shortcut entry '.l'."""
+        if not hasattr(config, "terminal_dot_l"):
+            config.terminal_dot_l = ".latestbible"
+        config.help["terminal_dot_m"] = """
+        # Customise the command to be run with shortcut entry '.m'."""
+        if not hasattr(config, "terminal_dot_m"):
+            config.terminal_dot_m = ".menu"
+        config.help["terminal_dot_n"] = """
+        # Customise the command to be run with shortcut entry '.n'."""
+        if not hasattr(config, "terminal_dot_n"):
+            config.terminal_dot_n = ""
+        config.help["terminal_dot_o"] = """
+        # Customise the command to be run with shortcut entry '.o'."""
+        if not hasattr(config, "terminal_dot_o"):
+            config.terminal_dot_o = ""
+        config.help["terminal_dot_p"] = """
+        # Customise the command to be run with shortcut entry '.p'."""
+        if not hasattr(config, "terminal_dot_p"):
+            config.terminal_dot_p = ".togglepager"
+        config.help["terminal_dot_q"] = """
+        # Customise the command to be run with shortcut entry '.q'."""
+        if not hasattr(config, "terminal_dot_q"):
+            config.terminal_dot_q = ".quicksearch"
+        config.help["terminal_dot_r"] = """
+        # Customise the command to be run with shortcut entry '.r'."""
+        if not hasattr(config, "terminal_dot_r"):
+            config.terminal_dot_r = ".run"
+        config.help["terminal_dot_s"] = """
+        # Customise the command to be run with shortcut entry '.s'."""
+        if not hasattr(config, "terminal_dot_s"):
+            config.terminal_dot_s = ".swap"
+        config.help["terminal_dot_t"] = """
+        # Customise the command to be run with shortcut entry '.t'."""
+        if not hasattr(config, "terminal_dot_t"):
+            config.terminal_dot_t = ""
+        config.help["terminal_dot_u"] = """
+        # Customise the command to be run with shortcut entry '.u'."""
+        if not hasattr(config, "terminal_dot_u"):
+            config.terminal_dot_u = ""
+        config.help["terminal_dot_v"] = """
+        # Customise the command to be run with shortcut entry '.v'."""
+        if not hasattr(config, "terminal_dot_v"):
+            config.terminal_dot_v = ""
+        config.help["terminal_dot_w"] = """
+        # Customise the command to be run with shortcut entry '.w'."""
+        if not hasattr(config, "terminal_dot_w"):
+            config.terminal_dot_w = ""
+        config.help["terminal_dot_x"] = """
+        # Customise the command to be run with shortcut entry '.x'."""
+        if not hasattr(config, "terminal_dot_x"):
+            config.terminal_dot_x = ""
+        config.help["terminal_dot_y"] = """
+        # Customise the command to be run with shortcut entry '.y'."""
+        if not hasattr(config, "terminal_dot_y"):
+            config.terminal_dot_y = ""
+        config.help["terminal_dot_z"] = """
+        # Customise the command to be run with shortcut entry '.z'."""
+        if not hasattr(config, "terminal_dot_z"):
+            config.terminal_dot_z = ""
+
+        # End of terminal mode customised input settings
+
         config.help["telnetServerPort"] = """
         # To specify the port used by telnet-server."""
         if not hasattr(config, "telnetServerPort"):
@@ -1557,6 +1672,33 @@ class ConfigUtil:
             ("terminalSearchHighlightForeground", config.terminalSearchHighlightForeground),
             ("terminalFindHighlightBackground", config.terminalFindHighlightBackground),
             ("terminalFindHighlightForeground", config.terminalFindHighlightForeground),
+            ("terminal_cancel_action", config.terminal_cancel_action),
+            ("terminal_dot_a", config.terminal_dot_a),
+            ("terminal_dot_b", config.terminal_dot_b),
+            ("terminal_dot_c", config.terminal_dot_c),
+            ("terminal_dot_d", config.terminal_dot_d),
+            ("terminal_dot_e", config.terminal_dot_e),
+            ("terminal_dot_f", config.terminal_dot_f),
+            ("terminal_dot_g", config.terminal_dot_g),
+            ("terminal_dot_h", config.terminal_dot_h),
+            ("terminal_dot_i", config.terminal_dot_i),
+            ("terminal_dot_j", config.terminal_dot_j),
+            ("terminal_dot_k", config.terminal_dot_k),
+            ("terminal_dot_l", config.terminal_dot_l),
+            ("terminal_dot_m", config.terminal_dot_m),
+            ("terminal_dot_n", config.terminal_dot_n),
+            ("terminal_dot_o", config.terminal_dot_o),
+            ("terminal_dot_p", config.terminal_dot_p),
+            ("terminal_dot_q", config.terminal_dot_q),
+            ("terminal_dot_r", config.terminal_dot_r),
+            ("terminal_dot_s", config.terminal_dot_s),
+            ("terminal_dot_t", config.terminal_dot_t),
+            ("terminal_dot_u", config.terminal_dot_u),
+            ("terminal_dot_v", config.terminal_dot_v),
+            ("terminal_dot_w", config.terminal_dot_w),
+            ("terminal_dot_x", config.terminal_dot_x),
+            ("terminal_dot_y", config.terminal_dot_y),
+            ("terminal_dot_z", config.terminal_dot_z),
             ("telnetServerPort", config.telnetServerPort),
             ("httpServerUbaFile", config.httpServerUbaFile),
             ("httpServerPort", config.httpServerPort),

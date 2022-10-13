@@ -1,3 +1,19 @@
+Changes in 32.59:
+* Added a startup plugin for use in terminal mode.
+    This startup plugin can be used as an example for developing terminal mode startup plugins.
+* Added config.terminal_cancel_action to customise the entry to cancel action in prompts
+    default value is '.cancel'
+* Added 26 command shortcuts, customisable via:
+    config.terminal_dot_a
+    config.terminal_dot_b
+    config.terminal_dot_c
+    ...
+    config.terminal_dot_z
+    (for example, in order to set up an alias '.l' to command '.latestbible', set config.terminal_dot_l = '.latestbible')
+* Added ability to stop long audio from playing resulted from running .readsync, readsync:::, or termux-tts-speak command.
+* Added a how-to guides "customise command shortcuts" and "stop audio".
+* Added number validator to prompt entries where number entry is expected.
+
 Changes in 32.58:
 * Added config.terminalDisplayCommandOnMenu
 * Fine-tuned terminal mode.

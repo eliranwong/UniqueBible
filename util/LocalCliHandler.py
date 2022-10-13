@@ -1,4 +1,5 @@
 import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json
+from functools import partial
 from datetime import date
 #import urllib.request
 from ast import literal_eval
@@ -33,7 +34,7 @@ class LocalCliHandler:
         self.plainText = "Unique Bible App"
         self.command = command
         self.dotCommands = self.getDotCommands()
-        self.cancelCommand = ".cancel"
+        self.addShortcuts()
         self.initPromptElements()
         self.setOsOpenCmd()
         self.ttsLanguages = self.getTtsLanguages()
@@ -46,7 +47,10 @@ class LocalCliHandler:
         self.unsupportedCommands = ["_mc", "_mastercontrol", "epub", "anypdf", "searchpdf", "pdffind", "pdf", "docx", "_savepdfcurrentpage", "searchallbookspdf", "readbible", "searchhighlight", "sidebyside", "parallel", "_editfile", "_openfile", "_uba", "opennote", "_history", "_historyrecord", "_highlight"]
         self.ttsCommandKeyword = self.getDefaultTtsKeyword().lower()
         self.unsupportedCommands.append("gtts" if self.ttsCommandKeyword == "speak" else "speak")
+        self.startupException1 = [config.terminal_cancel_action, ".quit", ".restart", ".togglepager", ".history", ".update", ".find", ".stopaudio", ".read", ".readsync", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".stophttpserver", ".downloadyoutube", ".web", ".gtts"]
+        self.startupException2 = "^(_setconfig:::|\.edit|\.change|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::|download:::|read:::|readsync:::)"
         #config.cliTtsProcess = None
+        config.audio_playing_file = os.path.join("temp", "000_audio_playing.txt")
 
     # Set text-to-speech default language
     def getTtsLanguages(self):
@@ -137,8 +141,45 @@ class LocalCliHandler:
             self.terminal_python_string_session = None
             self.terminal_python_file_session = None
 
+    def getShortcuts(self):
+        return {
+            ".a": config.terminal_dot_a,
+            ".b": config.terminal_dot_b,
+            ".c": config.terminal_dot_c,
+            ".d": config.terminal_dot_d,
+            ".e": config.terminal_dot_e,
+            ".f": config.terminal_dot_f,
+            ".g": config.terminal_dot_g,
+            ".h": config.terminal_dot_h,
+            ".i": config.terminal_dot_i,
+            ".j": config.terminal_dot_j,
+            ".k": config.terminal_dot_k,
+            ".l": config.terminal_dot_l,
+            ".m": config.terminal_dot_m,
+            ".n": config.terminal_dot_n,
+            ".o": config.terminal_dot_o,
+            ".p": config.terminal_dot_p,
+            ".q": config.terminal_dot_q,
+            ".r": config.terminal_dot_r,
+            ".s": config.terminal_dot_s,
+            ".t": config.terminal_dot_t,
+            ".u": config.terminal_dot_u,
+            ".v": config.terminal_dot_v,
+            ".w": config.terminal_dot_w,
+            ".x": config.terminal_dot_x,
+            ".y": config.terminal_dot_y,
+            ".z": config.terminal_dot_z,
+        }
+
+    def addShortcuts(self):
+        for key, value in self.getShortcuts().items():
+            value = value.strip()
+            if value:
+                self.dotCommands[key] = (f"an alias to command '{value}'", partial(self.getContent, value))
+
     def getDotCommands(self):
         return {
+            config.terminal_cancel_action: ("cancel action in current prompt", self.cancelAction),
             ".togglepager": ("toggle paging for text output", self.togglePager),
             ".togglebiblecomparison": ("toggle bible comparison view", self.togglebiblecomparison),
             ".togglebiblechapterplainlayout": ("toggle bible chapter plain layout", self.toggleBibleChapterFormat),
@@ -154,13 +195,9 @@ class LocalCliHandler:
             ".read": ("read available audio files", self.read),
             ".readsync": ("read available audio files with synchronised text display", self.readsync),
             ".run": ("run copied text as command", self.runclipboardtext),
-            ".r": ("an alias to the '.run' command", self.runclipboardtext),
             ".forward": ("open one bible chapter forward", self.forward),
             ".backward": ("open one bible chapter backward", self.backward),
-            ".f": ("an alias to the '.forward' command", self.forward),
-            ".b": ("an alias to the '.backward' command", self.backward),
             ".swap": ("swap to a favourite bible", self.swap),
-            ".s": ("an alias to the '.swap' command", self.swap),
             ".web": ("open web version", self.web),
             ".share": ("copy a web link for sharing", self.share),
             ".tts": ("open text-to-speech feature", lambda: self.tts(False)),
@@ -180,7 +217,6 @@ class LocalCliHandler:
             ".latestchanges": ("display latest changes", self.latestchanges),
             ".latest": ("display the lastest selection", self.latest),
             ".latestbible": ("display the lastest bible chapter", self.latestBible),
-            ".l": ("an alias to the '.lastestbible' command", self.latestBible),
             ".update": ("update Unique Bible App to the latest version", self.update),
             ".commands": ("display available commands", self.commands),
             ".config": ("display UBA configurations", self.config),
@@ -257,7 +293,6 @@ class LocalCliHandler:
             ".search3dict": ("an alias to the '.searchthirdpartydictionaries' command", lambda: self.searchTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
             ".searchconcordance": ("search for concordance", self.searchconcordance),
             ".quicksearch": ("quick search currently selected modules", lambda: self.quickSearch(False)),
-            ".q": ("an alias to the '.quicksearch' command", lambda: self.quickSearch(False)),
             ".opencrossreference": ("open cross reference", self.openversefeature),
             ".opencomparison": ("open verse comparison", lambda: self.openversefeature("COMPARE")),
             ".opendifference": ("open verse comparison with differences", lambda: self.openversefeature("DIFFERENCE")),
@@ -357,7 +392,7 @@ class LocalCliHandler:
                 userInput = self.terminal_python_string_session.prompt(self.inputIndicator, style=self.promptStyle).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == self.cancelCommand:
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             exec(userInput, globals())
         except:
@@ -375,7 +410,7 @@ class LocalCliHandler:
                 userInput = self.terminal_python_file_session.prompt(self.inputIndicator, style=self.promptStyle).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == self.cancelCommand:
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             self.execPythonFile(userInput)
         except:
@@ -388,8 +423,8 @@ class LocalCliHandler:
         self.printOptionsDisplay(availablePlugins, "Plugins")
         print(self.divider)
         print("Enter a number:")
-        userInput = self.simplePrompt()
-        if not userInput or userInput == self.cancelCommand:
+        userInput = self.simplePrompt(True)
+        if not userInput or userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
         #try:
         filepath = os.path.join("terminal_mode", "plugins", f"{availablePlugins[int(userInput)]}.py")
@@ -404,8 +439,8 @@ class LocalCliHandler:
         self.printOptionsDisplay(availableHowto, "Plugins")
         print(self.divider)
         print("Enter a number:")
-        userInput = self.simplePrompt()
-        if not userInput or userInput == self.cancelCommand:
+        userInput = self.simplePrompt(True)
+        if not userInput or userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
         try:
             filepath = os.path.join("terminal_mode", "how_to", f"{availableHowto[int(userInput)]}.md")
@@ -645,8 +680,8 @@ class LocalCliHandler:
         print(TextUtil.htmlToPlainText(days).strip())
         print(self.divider)
         print("Enter a day number")
-        userInput = self.simplePrompt()
-        if not userInput or userInput == self.cancelCommand:
+        userInput = self.simplePrompt(True)
+        if not userInput or userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
         try:
             if int(userInput) and int(userInput) in range(366):
@@ -990,7 +1025,7 @@ class LocalCliHandler:
             userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=default).strip()
         else:
             userInput = input(self.inputIndicator).strip()
-        if not userInput or userInput == self.cancelCommand:
+        if not userInput or userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
         if userInput in options:
             command = f"_setconfig:::{configitem}:::'{userInput}'"
@@ -1028,7 +1063,7 @@ class LocalCliHandler:
                 userInput = self.terminal_tts_language_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=default).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == self.cancelCommand:
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in suggestions:
                 config.ttsDefaultLangauge = userInput
@@ -1111,15 +1146,15 @@ class LocalCliHandler:
         print(self.divider)
         try:
             print("Enter a number")
-            userInput = self.simplePrompt()
-            if not userInput or userInput == self.cancelCommand:
+            userInput = self.simplePrompt(True)
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if -1 < int(userInput) < len(self.crossPlatform.bibleAudioModules):
                 module = self.crossPlatform.bibleAudioModules[int(userInput)]
                 print(f"You selected '{module}'.")
                 print("Enter bible reference(s) below:")
                 userInput = self.simplePrompt()
-                if not userInput or userInput == self.cancelCommand:
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 if self.isBibleReference(userInput):
                     command = f"READ:::{module}:::{userInput}"
@@ -1134,7 +1169,7 @@ class LocalCliHandler:
         print("Enter bible reference(s) below:")
         print("(e.g. Rev 1:11, Josh 10:1-43, Act 15:36-18:22, etc.)")
         userInput = self.simplePrompt()
-        if not userInput or userInput == self.cancelCommand:
+        if not userInput or userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
         if self.isBibleReference(userInput):
             return self.web(f"MAP:::{userInput}", False)
@@ -1305,10 +1340,14 @@ class LocalCliHandler:
         print("Install package 'prompt_toolkit' first!")
         return ""
 
-    def simplePrompt(self):
+    def simplePrompt(self, numberOnly=False):
         if config.isPrompt_toolkitInstalled:
             from prompt_toolkit import prompt
-            userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
+            from util.PromptValidator import NumberValidator
+            if numberOnly:
+                userInput = prompt(self.inputIndicator, style=self.promptStyle, validator=NumberValidator()).strip()
+            else:
+                userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
         else:
             userInput = input(self.inputIndicator).strip()
         return userInput
@@ -1345,7 +1384,7 @@ class LocalCliHandler:
                 print(self.divider)
                 print("Enter a youtube link:")
                 userInput = self.simplePrompt()
-                if not userInput or userInput == self.cancelCommand:
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 print("Checking connection ...")
                 if self.isUrlAlive(userInput):
@@ -1382,7 +1421,7 @@ class LocalCliHandler:
                 userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == self.cancelCommand:
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if os.path.isfile(userInput):
                 import textract
@@ -1401,8 +1440,8 @@ class LocalCliHandler:
             self.printOptionsDisplay(self.crossPlatform.dataList, "Bible Data")
             print(self.divider)
             print("Enter a number:")
-            userInput = self.simplePrompt()
-            if not userInput or userInput == self.cancelCommand:
+            userInput = self.simplePrompt(True)
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if int(userInput) in range(len(self.crossPlatform.dataList)):
                 command = f"DATA:::{self.crossPlatform.dataList[int(userInput)]}"
@@ -1440,7 +1479,7 @@ class LocalCliHandler:
                     userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == self.cancelCommand:
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 print(self.divider)
                 command = f"{openPrefix}{userInput}"
@@ -1470,7 +1509,7 @@ class LocalCliHandler:
                 userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if userInput == self.cancelCommand:
+            if userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             elif not userInput:
                 command = showAll
@@ -1489,7 +1528,7 @@ class LocalCliHandler:
                     userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == self.cancelCommand:
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 print(self.divider)
                 command = f"{openPrefix}{userInput}"
@@ -1517,11 +1556,11 @@ class LocalCliHandler:
             print(TextUtil.htmlToPlainText(display))
             print(self.divider)
             print("Enter a number:")
-            userInput = self.simplePrompt()
-            if not userInput or userInput == self.cancelCommand:
+            userInput = self.simplePrompt(True)
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             # define key
-            if -1 < int(userInput) < 17:
+            if -1 < int(userInput) < 4:
                 *_, openKeyword, latestSelection = options[userInput]
                 latestSelection = f"{latestSelection}:::" if latestSelection else ""
                 openPrefix = f"{openKeyword}:::{latestSelection}"
@@ -1530,7 +1569,8 @@ class LocalCliHandler:
                     return ""
                 else:
                     print(self.divider)
-                    print("Type in an entry:")
+                    #print("Type in an entry:")
+                    print("Enter a day in yyyy-mm-dd format:" if openKeyword == "EDITJOURNAL" else "Enter a bible reference:")
                     userInput = self.simplePrompt()
                     command = f"{openPrefix}{userInput}"
                     self.printRunningCommand(command)
@@ -1588,8 +1628,8 @@ class LocalCliHandler:
             print(TextUtil.htmlToPlainText(display))
             print(self.divider)
             print("Enter a number:")
-            userInput = self.simplePrompt()
-            if not userInput or userInput == self.cancelCommand:
+            userInput = self.simplePrompt(True)
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             # define key
             if userInput in options:
@@ -1647,12 +1687,8 @@ class LocalCliHandler:
             print(TextUtil.htmlToPlainText(display))
             print(self.divider)
             print("Enter a number:")
-            if config.isPrompt_toolkitInstalled:
-                from prompt_toolkit import prompt
-                userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
-            else:
-                userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == self.cancelCommand:
+            userInput = self.simplePrompt(True)
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             # define key
             if -1 < int(userInput) < 21:
@@ -1715,7 +1751,7 @@ class LocalCliHandler:
                 userInput = historySession.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=default).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == self.cancelCommand:
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in abbList:
                 module = userInput
@@ -1725,7 +1761,7 @@ class LocalCliHandler:
                     userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == self.cancelCommand:
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 command = f"{searchKeyword}:::{module}:::{userInput}"
                 self.printRunningCommand(command)
@@ -1740,7 +1776,7 @@ class LocalCliHandler:
                     userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == self.cancelCommand:
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 print(self.divider)
 
@@ -1777,7 +1813,7 @@ class LocalCliHandler:
                 userInput = historySession.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=default).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == self.cancelCommand:
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in abbList:
                 module = userInput
@@ -1795,7 +1831,7 @@ class LocalCliHandler:
                     userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == self.cancelCommand:
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 print(self.divider)
 
@@ -1825,7 +1861,7 @@ class LocalCliHandler:
                 userInput = self.terminal_books_selection_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=config.book).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == self.cancelCommand:
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in self.crossPlatform.referenceBookList:
                 book = userInput
@@ -1841,7 +1877,7 @@ class LocalCliHandler:
                     userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=config.bookChapter if config.bookChapter in chapterList else "").strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == self.cancelCommand:
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 if userInput in chapterList:
                     command = f"BOOK:::{book}:::{userInput}"
@@ -1865,7 +1901,7 @@ class LocalCliHandler:
                 userInput = prompt(self.inputIndicator, style=self.promptStyle, default=str(today.year)).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == self.cancelCommand:
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if int(userInput):
                 year = userInput
@@ -1875,7 +1911,7 @@ class LocalCliHandler:
                     userInput = prompt(self.inputIndicator, style=self.promptStyle, default=str(today.month)).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == self.cancelCommand:
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 if int(userInput):
                     month = userInput
@@ -1885,7 +1921,7 @@ class LocalCliHandler:
                         userInput = prompt(self.inputIndicator, style=self.promptStyle, default=str(today.day)).strip()
                     else:
                         userInput = input(self.inputIndicator).strip()
-                    if not userInput or userInput == self.cancelCommand:
+                    if not userInput or userInput.lower() == config.terminal_cancel_action:
                         return self.cancelAction()
                     if int(userInput):
                         day = userInput
@@ -1917,7 +1953,7 @@ class LocalCliHandler:
                 userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=defaultText).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == self.cancelCommand:
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in self.crossPlatform.textList:
                 bible = userInput
@@ -1928,11 +1964,12 @@ class LocalCliHandler:
                 print("(enter a book number)")
                 # select bible book
                 if config.isPrompt_toolkitInstalled:
+                    from util.PromptValidator import NumberValidator
                     completer = WordCompleter([str(i) for i in self.bookNumbers], ignore_case=True)
-                    userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=str(config.mainB)).strip()
+                    userInput = prompt(self.inputIndicator, style=self.promptStyle, validator=NumberValidator(), completer=completer, default=str(config.mainB)).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == self.cancelCommand:
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 if int(userInput) in self.bookNumbers:
                     print(userInput, self.bookNumbers)
@@ -1944,11 +1981,12 @@ class LocalCliHandler:
                     print("(enter a chapter number)")
                     # select bible chapter
                     if config.isPrompt_toolkitInstalled:
+                        from util.PromptValidator import NumberValidator
                         defaultChapter = str(config.mainC) if config.mainC in self.currentBibleChapters else str(self.currentBibleChapters[0])
-                        userInput = prompt(self.inputIndicator, style=self.promptStyle, default=defaultChapter).strip()
+                        userInput = prompt(self.inputIndicator, style=self.promptStyle, validator=NumberValidator(), default=defaultChapter).strip()
                     else:
                         userInput = input(self.inputIndicator).strip()
-                    if not userInput or userInput == self.cancelCommand:
+                    if not userInput or userInput.lower() == config.terminal_cancel_action:
                         return self.cancelAction()
                     if int(userInput) in self.currentBibleChapters:
                         bibleChapter = userInput
@@ -1959,11 +1997,12 @@ class LocalCliHandler:
                         print("(enter a verse number)")
                         # select verse number
                         if config.isPrompt_toolkitInstalled:
+                            from util.PromptValidator import NumberValidator
                             defaultVerse = str(config.mainV) if config.mainV in self.currentBibleVerses else str(self.currentBibleVerses[0])
-                            userInput = prompt(self.inputIndicator, style=self.promptStyle, default=defaultVerse).strip()
+                            userInput = prompt(self.inputIndicator, style=self.promptStyle, validator=NumberValidator(), default=defaultVerse).strip()
                         else:
                             userInput = input(self.inputIndicator).strip()
-                        if not userInput or userInput == self.cancelCommand:
+                        if not userInput or userInput.lower() == config.terminal_cancel_action:
                             return self.cancelAction()
                         if int(userInput) in self.currentBibleVerses:
                             bibleVerse = userInput
@@ -1995,7 +2034,7 @@ class LocalCliHandler:
                 userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=self.currentBibleAbb).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == self.cancelCommand:
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in self.currentBibleAbbs:
                 abbIndex = self.currentBibleAbbs.index(userInput)
@@ -2007,11 +2046,12 @@ class LocalCliHandler:
                 self.printChooseItem()
                 print("(enter a chapter number)")
                 if config.isPrompt_toolkitInstalled:
+                    from util.PromptValidator import NumberValidator
                     defaultChapter = str(config.mainC) if config.mainC in self.currentBibleChapters else str(self.currentBibleChapters[0])
-                    userInput = prompt(self.inputIndicator, style=self.promptStyle, default=defaultChapter).strip()
+                    userInput = prompt(self.inputIndicator, style=self.promptStyle, validator=NumberValidator(), default=defaultChapter).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == self.cancelCommand:
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 if int(userInput) in self.currentBibleChapters:
                     bibleChapter = userInput
@@ -2021,11 +2061,12 @@ class LocalCliHandler:
                     self.printChooseItem()
                     print("(enter a verse number)")
                     if config.isPrompt_toolkitInstalled:
+                        from util.PromptValidator import NumberValidator
                         defaultVerse = str(config.mainV) if config.mainV in self.currentBibleVerses else str(self.currentBibleVerses[0])
-                        userInput = prompt(self.inputIndicator, style=self.promptStyle, default=defaultVerse).strip()
+                        userInput = prompt(self.inputIndicator, style=self.promptStyle, validator=NumberValidator(), default=defaultVerse).strip()
                     else:
                         userInput = input(self.inputIndicator).strip()
-                    if not userInput or userInput == self.cancelCommand:
+                    if not userInput or userInput.lower() == config.terminal_cancel_action:
                         return self.cancelAction()
                     if int(userInput) in self.currentBibleVerses:
                         bibleVerse = userInput
@@ -2056,7 +2097,7 @@ class LocalCliHandler:
                 userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=self.currentBibleAbb).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == self.cancelCommand:
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in self.currentBibleAbbs:
                 abbIndex = self.currentBibleAbbs.index(userInput)
@@ -2068,11 +2109,12 @@ class LocalCliHandler:
                 self.printChooseItem()
                 print("(enter a chapter number)")
                 if config.isPrompt_toolkitInstalled:
+                    from util.PromptValidator import NumberValidator
                     defaultChapter = str(config.mainC) if config.mainC in self.currentBibleChapters else str(self.currentBibleChapters[0])
-                    userInput = prompt(self.inputIndicator, style=self.promptStyle, default=defaultChapter).strip()
+                    userInput = prompt(self.inputIndicator, style=self.promptStyle, validator=NumberValidator(), default=defaultChapter).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == self.cancelCommand:
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 if int(userInput) in self.currentBibleChapters:
                     bibleChapter = userInput
@@ -2103,7 +2145,7 @@ class LocalCliHandler:
                 userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=self.currentBibleBook).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == self.cancelCommand:
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in self.currentBibleBooks:
                 #bookIndex = self.currentBibleBooks.index(userInput)
@@ -2143,7 +2185,7 @@ class LocalCliHandler:
                 userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=defaultText).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == self.cancelCommand:
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if self.isValidBibles(userInput):
                 bible = userInput
@@ -2159,7 +2201,7 @@ class LocalCliHandler:
                     userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=self.currentBibleAbb).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == self.cancelCommand:
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 if userInput in self.currentBibleAbbs:
                     abbIndex = self.currentBibleAbbs.index(userInput)
@@ -2172,11 +2214,12 @@ class LocalCliHandler:
                     print("(enter a chapter number)")
                     # select bible chapter
                     if config.isPrompt_toolkitInstalled:
+                        from util.PromptValidator import NumberValidator
                         defaultChapter = str(config.mainC) if config.mainC in self.currentBibleChapters else str(self.currentBibleChapters[0])
-                        userInput = prompt(self.inputIndicator, style=self.promptStyle, default=defaultChapter).strip()
+                        userInput = prompt(self.inputIndicator, style=self.promptStyle, validator=NumberValidator(), default=defaultChapter).strip()
                     else:
                         userInput = input(self.inputIndicator).strip()
-                    if not userInput or userInput == self.cancelCommand:
+                    if not userInput or userInput.lower() == config.terminal_cancel_action:
                         return self.cancelAction()
                     if int(userInput) in self.currentBibleChapters:
                         bibleChapter = userInput
@@ -2187,11 +2230,12 @@ class LocalCliHandler:
                         print("(enter a verse number)")
                         # select verse number
                         if config.isPrompt_toolkitInstalled:
+                            from util.PromptValidator import NumberValidator
                             defaultVerse = str(config.mainV) if config.mainV in self.currentBibleVerses else str(self.currentBibleVerses[0])
-                            userInput = prompt(self.inputIndicator, style=self.promptStyle, default=defaultVerse).strip()
+                            userInput = prompt(self.inputIndicator, style=self.promptStyle, validator=NumberValidator(), default=defaultVerse).strip()
                         else:
                             userInput = input(self.inputIndicator).strip()
-                        if not userInput or userInput == self.cancelCommand:
+                        if not userInput or userInput.lower() == config.terminal_cancel_action:
                             return self.cancelAction()
                         if int(userInput) in self.currentBibleVerses:
                             bibleVerse = userInput
@@ -2225,7 +2269,7 @@ class LocalCliHandler:
                 userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == self.cancelCommand:
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in commands:
                 return self.whatiscontent(userInput)
@@ -2255,7 +2299,7 @@ class LocalCliHandler:
                 userInput = self.terminal_search_strong_bible_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=config.concordance).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == self.cancelCommand:
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if self.isValidBibles(userInput):
                 # bible version(s) defined
@@ -2289,7 +2333,7 @@ class LocalCliHandler:
                 userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=defaultText).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == self.cancelCommand:
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if self.isValidBibles(userInput):
                 # bible version(s) defined
@@ -2310,7 +2354,7 @@ class LocalCliHandler:
                     userInput = self.terminal_search_bible_book_range_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default="ALL").strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == self.cancelCommand:
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 if BibleVerseParser(config.parserStandarisation).extractBookListAsString(userInput):
                     # define book range
@@ -2333,10 +2377,11 @@ class LocalCliHandler:
                     self.printChooseItem()
                     print("(enter a number)")
                     if config.isPrompt_toolkitInstalled:
-                        userInput = prompt(self.inputIndicator, style=self.promptStyle, default=str(config.bibleSearchMode)).strip()
+                        from util.PromptValidator import NumberValidator
+                        userInput = prompt(self.inputIndicator, style=self.promptStyle, validator=NumberValidator(), default=str(config.bibleSearchMode)).strip()
                     else:
                         userInput = input(self.inputIndicator).strip()
-                    if not userInput or userInput == self.cancelCommand:
+                    if not userInput or userInput.lower() == config.terminal_cancel_action:
                         return self.cancelAction()
                     userInput = int(userInput)
                     if -1 < userInput < 6:
@@ -2353,18 +2398,18 @@ class LocalCliHandler:
                             userInput = self.terminal_search_bible_session.prompt(self.inputIndicator, style=self.promptStyle).strip()
                         else:
                             userInput = input(self.inputIndicator).strip()
-                        if not userInput or userInput == self.cancelCommand:
+                        if not userInput or userInput.lower() == config.terminal_cancel_action:
                             return self.cancelAction()
                         command = f"{keyword}:::{bible}:::{userInput}:::{bookRange}"
 
                         # Check if it is a case-sensitive search
                         print(self.divider)
-                        print("Is it case sensitive? ([Y]es or [N]o)")
+                        print("Case sensitive? ([y]es or [n]o)")
                         if config.isPrompt_toolkitInstalled:
                             userInput = prompt(self.inputIndicator, style=self.promptStyle, default="Y" if config.enableCaseSensitiveSearch else "N").strip()
                         else:
                             userInput = input(self.inputIndicator).strip()
-                        if not userInput or userInput == self.cancelCommand:
+                        if not userInput or userInput.lower() == config.terminal_cancel_action:
                             return self.cancelAction()
                         if userInput.lower() in ("yes", "y", "no", "n"):
                             config.enableCaseSensitiveSearch = (userInput.lower()[0] == "y")
@@ -2398,7 +2443,7 @@ class LocalCliHandler:
                 userInput = self.terminal_commentary_selection_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=defaultText).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == self.cancelCommand:
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in self.crossPlatform.commentaryList:
                 module = userInput
@@ -2413,7 +2458,7 @@ class LocalCliHandler:
                     userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=self.currentBibleAbb).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == self.cancelCommand:
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 if userInput in self.currentBibleAbbs:
                     abbIndex = self.currentBibleAbbs.index(userInput)
@@ -2425,11 +2470,12 @@ class LocalCliHandler:
                     self.printChooseItem()
                     print("(enter a chapter number)")
                     if config.isPrompt_toolkitInstalled:
+                        from util.PromptValidator import NumberValidator
                         defaultChapter = str(config.commentaryC) if config.commentaryC in self.currentBibleChapters else str(self.currentBibleChapters[0])
-                        userInput = prompt(self.inputIndicator, style=self.promptStyle, default=defaultChapter).strip()
+                        userInput = prompt(self.inputIndicator, style=self.promptStyle, validator=NumberValidator(), default=defaultChapter).strip()
                     else:
                         userInput = input(self.inputIndicator).strip()
-                    if not userInput or userInput == self.cancelCommand:
+                    if not userInput or userInput.lower() == config.terminal_cancel_action:
                         return self.cancelAction()
                     if int(userInput) in self.currentBibleChapters:
                         bibleChapter = userInput
@@ -2439,11 +2485,12 @@ class LocalCliHandler:
                         self.printChooseItem()
                         print("(enter a verse number)")
                         if config.isPrompt_toolkitInstalled:
+                            from util.PromptValidator import NumberValidator
                             defaultVerse = str(config.commentaryV) if config.commentaryV in self.currentBibleVerses else str(self.currentBibleVerses[0])
-                            userInput = prompt(self.inputIndicator, style=self.promptStyle, default=defaultVerse).strip()
+                            userInput = prompt(self.inputIndicator, style=self.promptStyle, validator=NumberValidator(), default=defaultVerse).strip()
                         else:
                             userInput = input(self.inputIndicator).strip()
-                        if not userInput or userInput == self.cancelCommand:
+                        if not userInput or userInput.lower() == config.terminal_cancel_action:
                             return self.cancelAction()
                         if int(userInput) in self.currentBibleVerses:
                             bibleVerse = userInput
@@ -2506,7 +2553,7 @@ class LocalCliHandler:
             userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer)
         else:
             userInput = input(self.inputIndicator)
-        if userInput == self.cancelCommand:
+        if userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
         try:
             optionIndex = int(userInput.strip())
@@ -2525,7 +2572,7 @@ class LocalCliHandler:
                 userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer)
             else:
                 userInput = input(self.inputIndicator)
-            if userInput == self.cancelCommand:
+            if userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             else:
                 color = config.terminalColors[int(userInput)]
@@ -2563,7 +2610,7 @@ class LocalCliHandler:
         print("Choose an item:")
 
     def printCancelOption(self):
-        print(f"(or enter '{self.cancelCommand}' to cancel)")
+        print(f"(or enter '{config.terminal_cancel_action}' to cancel)")
 
     def printInvalidOptionEntered(self):
         message = "Invalid option entered!"
@@ -2594,7 +2641,7 @@ class LocalCliHandler:
                 userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if userInput == self.cancelCommand:
+            if userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             command = f"{keyword}:::{userInput}"
             self.printRunningCommand(command)
@@ -2622,8 +2669,8 @@ class LocalCliHandler:
             self.printOptionsDisplay(options, "Change Default Command")
             print(self.divider)
             print("Enter a number:")
-            userInput = self.simplePrompt()
-            if not userInput or userInput == self.cancelCommand:
+            userInput = self.simplePrompt(True)
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             # define key
             if userInput in ("0", "1", "2", "3", "4"):
@@ -2632,7 +2679,7 @@ class LocalCliHandler:
                 print(self.divider)
                 print("Enter an UBA command:")
                 userInput = self.simplePrompt()
-                if not userInput or userInput == self.cancelCommand:
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 return self.getContent(f"_setconfig:::terminalDefaultCommand:::'{userInput}'")
             else:
@@ -2649,10 +2696,11 @@ class LocalCliHandler:
             print("Enter a number:")
             if config.isPrompt_toolkitInstalled:
                 from prompt_toolkit import prompt
-                userInput = prompt(self.inputIndicator, style=self.promptStyle, default=str(config.bibleSearchMode)).strip()
+                from util.PromptValidator import NumberValidator
+                userInput = prompt(self.inputIndicator, style=self.promptStyle, validator=NumberValidator(), default=str(config.bibleSearchMode)).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == self.cancelCommand:
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             # define key
             if userInput in ("0", "1", "2", "3", "4", "5"):
@@ -2687,7 +2735,7 @@ class LocalCliHandler:
                 userInput = prompt(self.inputIndicator, style=self.promptStyle, completer=completer).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == self.cancelCommand:
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             # define key
             if userInput in configurablesettings:
@@ -2767,7 +2815,7 @@ class LocalCliHandler:
                 userInput = self.terminal_config_selection_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput == self.cancelCommand:
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             # define key
             if userInput in configurablesettings:
@@ -2781,7 +2829,7 @@ class LocalCliHandler:
                     userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
                 else:
                     userInput = input(self.inputIndicator).strip()
-                if not userInput or userInput == self.cancelCommand:
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 print(self.getContent(f"_setconfig:::{value}:::{userInput}"))
                 return ".restart"
@@ -2793,7 +2841,7 @@ class LocalCliHandler:
     def editConfig(self, editor):
         print(self.divider)
         print("Caution! Editing 'config.py' incorrectly may stop UBA from working.")
-        print("Do you want to proceed? [Y]es / [N]o")
+        print("Do you want to proceed? [y]es / [N]o")
         if config.isPrompt_toolkitInstalled:
             from prompt_toolkit import prompt
             userInput = prompt(self.inputIndicator, style=self.promptStyle, default="N").strip()
@@ -2935,13 +2983,15 @@ class LocalCliHandler:
         print(self.divider)
         print(TextUtil.htmlToPlainText(content).strip())
         print(self.divider)
-        self.printChooseItem()
+        #self.printChooseItem()
+        print("Enter a number:")
         if config.isPrompt_toolkitInstalled:
             from prompt_toolkit import prompt
-            userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
+            from util.PromptValidator import NumberValidator
+            userInput = prompt(self.inputIndicator, style=self.promptStyle, validator=NumberValidator()).strip()
         else:
             userInput = input(self.inputIndicator).strip()
-        if not userInput or userInput == self.cancelCommand:
+        if not userInput or userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
         try:
             command = features[int(userInput)]
@@ -3050,9 +3100,9 @@ class LocalCliHandler:
             else:
                 print(self.divider)
                 print(f"Essential data '{databaseInfo[0][-1]}' is missing!")
-                print("Do you want to download it now? [y]es / [n]o")
+                print("Do you want to download it now? [y]es / [N]o")
                 userInput = self.simplePrompt()
-                if not userInput or userInput == self.cancelCommand:
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 if userInput.lower() in ("y", "yes"):
                     self.textCommandParser.parent.downloadFile(databaseInfo)
@@ -3130,3 +3180,13 @@ class LocalCliHandler:
             code = "hl{0}".format(i + 1)
             css += ".{2} {0} background: {3}; {1} ".format("{", "}", code, config.highlightDarkThemeColours[i] if config.theme == "dark" else config.highlightLightThemeColours[i])
         return css
+
+    # Workaround stoping audio playing in some cases
+    def createAudioPlayingFile(self):
+        # To break the audio playing loop running with readsync or Android tts, manually delete the file "temp/000_audio_playing.txt"
+        if not os.path.isfile(config.audio_playing_file):
+            open(config.audio_playing_file, "a", encoding="utf-8").close()
+
+    def removeAudioPlayingFile(self):
+        if os.path.isfile(config.audio_playing_file):
+            os.remove(config.audio_playing_file)
