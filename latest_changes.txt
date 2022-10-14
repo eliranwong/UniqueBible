@@ -1,3 +1,6 @@
+Changes in 32.61:
+* Fixed audio/bibles directory check for new install
+
 Changes in 32.60:
 * Added config.terminalUseMarvelDataPrivate
 
