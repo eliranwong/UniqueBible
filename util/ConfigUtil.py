@@ -217,7 +217,7 @@ class ConfigUtil:
         config.help["terminal_dot_a"] = """
         # Customise the command to be run with shortcut entry '.a'."""
         if not hasattr(config, "terminal_dot_a"):
-            config.terminal_dot_a = ""
+            config.terminal_dot_a = ".aliases"
         config.help["terminal_dot_b"] = """
         # Customise the command to be run with shortcut entry '.b'."""
         if not hasattr(config, "terminal_dot_b"):
@@ -225,15 +225,15 @@ class ConfigUtil:
         config.help["terminal_dot_c"] = """
         # Customise the command to be run with shortcut entry '.c'."""
         if not hasattr(config, "terminal_dot_c"):
-            config.terminal_dot_c = ""
+            config.terminal_dot_c = ".togglebiblecomparison"
         config.help["terminal_dot_d"] = """
         # Customise the command to be run with shortcut entry '.d'."""
         if not hasattr(config, "terminal_dot_d"):
-            config.terminal_dot_d = ""
+            config.terminal_dot_d = ".opendata"
         config.help["terminal_dot_e"] = """
         # Customise the command to be run with shortcut entry '.e'."""
         if not hasattr(config, "terminal_dot_e"):
-            config.terminal_dot_e = ""
+            config.terminal_dot_e = ".edit"
         config.help["terminal_dot_f"] = """
         # Customise the command to be run with shortcut entry '.f'."""
         if not hasattr(config, "terminal_dot_f"):
@@ -241,23 +241,23 @@ class ConfigUtil:
         config.help["terminal_dot_g"] = """
         # Customise the command to be run with shortcut entry '.g'."""
         if not hasattr(config, "terminal_dot_g"):
-            config.terminal_dot_g = ""
+            config.terminal_dot_g = ".togglepager"
         config.help["terminal_dot_h"] = """
         # Customise the command to be run with shortcut entry '.h'."""
         if not hasattr(config, "terminal_dot_h"):
-            config.terminal_dot_h = ""
+            config.terminal_dot_h = ".help"
         config.help["terminal_dot_i"] = """
         # Customise the command to be run with shortcut entry '.i'."""
         if not hasattr(config, "terminal_dot_i"):
-            config.terminal_dot_i = ""
+            config.terminal_dot_i = "index:::"
         config.help["terminal_dot_j"] = """
         # Customise the command to be run with shortcut entry '.j'."""
         if not hasattr(config, "terminal_dot_j"):
-            config.terminal_dot_j = ""
+            config.terminal_dot_j = ".editjournal"
         config.help["terminal_dot_k"] = """
         # Customise the command to be run with shortcut entry '.k'."""
         if not hasattr(config, "terminal_dot_k"):
-            config.terminal_dot_k = ""
+            config.terminal_dot_k = "tske:::"
         config.help["terminal_dot_l"] = """
         # Customise the command to be run with shortcut entry '.l'."""
         if not hasattr(config, "terminal_dot_l"):
@@ -265,23 +265,23 @@ class ConfigUtil:
         config.help["terminal_dot_m"] = """
         # Customise the command to be run with shortcut entry '.m'."""
         if not hasattr(config, "terminal_dot_m"):
-            config.terminal_dot_m = ".menu"
+            config.terminal_dot_m = ".openmaps"
         config.help["terminal_dot_n"] = """
         # Customise the command to be run with shortcut entry '.n'."""
         if not hasattr(config, "terminal_dot_n"):
-            config.terminal_dot_n = ""
+            config.terminal_dot_n = ".note"
         config.help["terminal_dot_o"] = """
         # Customise the command to be run with shortcut entry '.o'."""
         if not hasattr(config, "terminal_dot_o"):
-            config.terminal_dot_o = ""
+            config.terminal_dot_o = ".open"
         config.help["terminal_dot_p"] = """
         # Customise the command to be run with shortcut entry '.p'."""
         if not hasattr(config, "terminal_dot_p"):
-            config.terminal_dot_p = ".togglepager"
+            config.terminal_dot_p = ".openpromises"
         config.help["terminal_dot_q"] = """
         # Customise the command to be run with shortcut entry '.q'."""
         if not hasattr(config, "terminal_dot_q"):
-            config.terminal_dot_q = ".quicksearch"
+            config.terminal_dot_q = ".search"
         config.help["terminal_dot_r"] = """
         # Customise the command to be run with shortcut entry '.r'."""
         if not hasattr(config, "terminal_dot_r"):
@@ -293,31 +293,31 @@ class ConfigUtil:
         config.help["terminal_dot_t"] = """
         # Customise the command to be run with shortcut entry '.t'."""
         if not hasattr(config, "terminal_dot_t"):
-            config.terminal_dot_t = ""
+            config.terminal_dot_t = ".tts"
         config.help["terminal_dot_u"] = """
         # Customise the command to be run with shortcut entry '.u'."""
         if not hasattr(config, "terminal_dot_u"):
-            config.terminal_dot_u = ""
+            config.terminal_dot_u = ".downloadyoutube"
         config.help["terminal_dot_v"] = """
         # Customise the command to be run with shortcut entry '.v'."""
         if not hasattr(config, "terminal_dot_v"):
-            config.terminal_dot_v = ""
+            config.terminal_dot_v = ".openversefeatures"
         config.help["terminal_dot_w"] = """
         # Customise the command to be run with shortcut entry '.w'."""
         if not hasattr(config, "terminal_dot_w"):
-            config.terminal_dot_w = ""
+            config.terminal_dot_w = ".web"
         config.help["terminal_dot_x"] = """
         # Customise the command to be run with shortcut entry '.x'."""
         if not hasattr(config, "terminal_dot_x"):
-            config.terminal_dot_x = ""
+            config.terminal_dot_x = "crossreference:::"
         config.help["terminal_dot_y"] = """
         # Customise the command to be run with shortcut entry '.y'."""
         if not hasattr(config, "terminal_dot_y"):
-            config.terminal_dot_y = ""
+            config.terminal_dot_y = ".whatis"
         config.help["terminal_dot_z"] = """
         # Customise the command to be run with shortcut entry '.z'."""
         if not hasattr(config, "terminal_dot_z"):
-            config.terminal_dot_z = ""
+            config.terminal_dot_z = "combo:::"
 
         # End of terminal mode customised input settings
 

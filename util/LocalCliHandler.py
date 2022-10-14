@@ -7,6 +7,7 @@ from db.BiblesSqlite import Bible
 from db.JournalSqlite import JournalSqlite
 from db.ToolsSqlite import Book
 from db.NoteSqlite import NoteSqlite
+from util.Languages import Languages
 from util.readings import allDays
 from util.DateUtil import DateUtil
 from util.TextUtil import TextUtil
@@ -105,6 +106,10 @@ class LocalCliHandler:
             search_bible_book_range_history = os.path.join("terminal_history", "search_bible_book_range")
             config_history = os.path.join("terminal_history", "config")
             tts_language_history = os.path.join("terminal_history", "tts_language")
+            watson_translate_from_language_history = os.path.join("terminal_history", "watson_translate_from_language")
+            watson_translate_to_language_history = os.path.join("terminal_history", "watson_translate_to_language")
+            google_translate_from_language_history = os.path.join("terminal_history", "google_translate_from_language")
+            google_translate_to_language_history = os.path.join("terminal_history", "google_translate_to_language")
             python_string_history = os.path.join("terminal_history", "python_string")
             python_file_history = os.path.join("terminal_history", "python_file")
 
@@ -122,11 +127,19 @@ class LocalCliHandler:
             self.terminal_commentary_selection_session = PromptSession(history=FileHistory(module_history_commentaries))
             self.terminal_config_selection_session = PromptSession(history=FileHistory(config_history))
             self.terminal_tts_language_session = PromptSession(history=FileHistory(tts_language_history))
+            self.terminal_google_translate_from_language_session = PromptSession(history=FileHistory(google_translate_from_language_history))
+            self.terminal_google_translate_to_language_session = PromptSession(history=FileHistory(google_translate_to_language_history))
             self.terminal_python_string_session = PromptSession(history=FileHistory(python_string_history))
             self.terminal_python_file_session = PromptSession(history=FileHistory(python_file_history))
+            self.terminal_watson_translate_from_language_session = PromptSession(history=FileHistory(watson_translate_from_language_history))
+            self.terminal_watson_translate_to_language_session = PromptSession(history=FileHistory(watson_translate_to_language_history))
 
         else:
 
+            self.terminal_watson_translate_from_language_session = None
+            self.terminal_watson_translate_to_language_session = None
+            self.terminal_google_translate_from_language_session = None
+            self.terminal_google_translate_to_language_session = None
             self.terminal_tts_language_session = None
             self.terminal_search_strong_bible_session = None
             self.terminal_books_selection_session = None
@@ -193,10 +206,12 @@ class LocalCliHandler:
             ".toggleusernoteindicator": ("toggle user note indicator display", self.toggleshowUserNoteIndicator),
             ".togglebiblenoteindicator": ("toggle bible note indicator display", self.toggleshowBibleNoteIndicator),
             ".togglebiblelexicalentries": ("toggle lexical entry display", self.togglehideLexicalEntryInBible),
-            ".stopaudio": ("stop audio playback", self.stopAudio),
+            ".stopaudio": ("stop audio", self.stopAudio),
             ".sa": ("an alias to the '.stopaudio' command", self.stopAudio),
+            ".stopaudiosync": ("stop audio with text synchronisation", self.removeAudioPlayingFile),
+            ".sas": ("an alias to the '.stopaudiosync' command", self.removeAudioPlayingFile),
             ".read": ("read available audio files", self.read),
-            ".readsync": ("read available audio files with synchronised text display", self.readsync),
+            ".readsync": ("read available audio files with text synchronisation", self.readsync),
             ".run": ("run copied text as command", self.runclipboardtext),
             ".forward": ("open one bible chapter forward", self.forward),
             ".backward": ("open one bible chapter backward", self.backward),
@@ -209,11 +224,11 @@ class LocalCliHandler:
             ".copy": ("copy the last opened content", self.copy),
             ".copyhtml": ("copy the last opened content in html format", self.copyHtml),
             ".quicksearchcopiedtext": ("quick search copied text", self.quickSearch),
-            ".qs": ("an alias to the '.quicksearchcopiedtext' command", self.quickSearch),
+            ".qsc": ("an alias to the '.quicksearchcopiedtext' command", self.quickSearch),
             ".quickopencopiedtext": ("quick open copied text", self.quickopen),
-            ".qo": ("an alias to the '.quickopencopiedtext' command", self.quickopen),
+            ".qoc": ("an alias to the '.quickopencopiedtext' command", self.quickopen),
             ".quickeditcopiedtext": ("quick open copied entry in text editor", self.quickedit),
-            ".qe": ("an alias to the '.quickeditcopiedtext' command", self.quickedit),
+            ".qec": ("an alias to the '.quickeditcopiedtext' command", self.quickedit),
             ".find": ("find a string in the lastest content", self.find),
             ".findcopiedtext": ("find a string in the copied text", self.findCopiedText),
             ".history": ("display history records", self.history),
@@ -277,6 +292,7 @@ class LocalCliHandler:
             ".editversenote": ("edit bible verse note", lambda: self.openversefeature("EDITVERSENOTE")),
             ".editjournal": ("edit journal", lambda: self.journalFeature("EDITJOURNAL")),
             ".quickedit": ("quick edit", lambda: self.quickedit(False)),
+            ".qe": ("an alias to the '.quickedit' command", lambda: self.quickedit(False)),
             ".searchbooknote": ("search bible book note", lambda: self.searchNote("SEARCHBOOKNOTE")),
             ".searchchapternote": ("search bible chapter note", lambda: self.searchNote("SEARCHCHAPTERNOTE")),
             ".searchversenote": ("search bible verse note", lambda: self.searchNote("SEARCHVERSENOTE")),
@@ -296,11 +312,12 @@ class LocalCliHandler:
             ".search3dict": ("an alias to the '.searchthirdpartydictionaries' command", lambda: self.searchTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
             ".searchconcordance": ("search for concordance", self.searchconcordance),
             ".quicksearch": ("quick search currently selected modules", lambda: self.quickSearch(False)),
+            ".qs": ("an alias to the '.quicksearch' command", lambda: self.quickSearch(False)),
             ".opencrossreference": ("open cross reference", self.openversefeature),
             ".opencomparison": ("open verse comparison", lambda: self.openversefeature("COMPARE")),
             ".opendifference": ("open verse comparison with differences", lambda: self.openversefeature("DIFFERENCE")),
             ".opentske": ("open Treasury of Scripture Knowledge (Enhanced)", lambda: self.openversefeature("TSKE")),
-            ".opensmartindex": ("open smart index", lambda: self.openversefeature("INDEX")),
+            ".openverseindex": ("open verse index", lambda: self.openversefeature("INDEX")),
             ".opencombo": ("open combination of translation, discourse and words features", lambda: self.openversefeature("COMBO")),
             ".openwords": ("open original words", lambda: self.openversefeature("WORDS")),
             ".opendiscourse": ("open discourse features", lambda: self.openversefeature("DISCOURSE")),
@@ -315,11 +332,12 @@ class LocalCliHandler:
             ".openchapterfeatures": ("open bible chapter features", self.openchapterfeatures),
             ".openversefeatures": ("open bible verse features", self.openversefeatures),
             ".quickopen": ("quick open currently selected modules", lambda: self.quickopen(False)),
+            ".qo": ("an alias to the '.quickopen' command", lambda: self.quickopen(False)),
             ".standardcommands": ("display standard UBA command help menu", self.standardcommands),
             ".terminalcommands": ("display terminal mode commands", self.terminalcommands),
+            ".aliases": ("display terminal mode command shortcuts", self.commandAliases),
             ".menu": ("display main menu", self.menu),
             ".info": ("display information menu", self.info),
-            ".show": ("an alias to the '.info' command", self.info),
             ".open": ("display open menu", self.open),
             ".search": ("display search menu", self.search),
             ".note": ("display note / journal menu", self.accessNoteFeatures),
@@ -382,6 +400,16 @@ class LocalCliHandler:
             ".exec": ("execute a python string", self.execPythonString),
             ".execfile": ("execute a python file", self.execFile),
             ".reload": ("reload the latest content", self.reload),
+            ".restart": ("restart Unique Bible App", self.restartUBA),
+            ".quit": ("quit Unique Bible App", self.quitUBA),
+            ".googletranslate": ("translate with Google Translate", lambda: self.googleTranslate(False)),
+            ".googletranslatecopiedtext": ("translate copied text with Google Translate", self.googleTranslate),
+            ".gt": ("an alias to the '.googletranslate' command", lambda: self.googleTranslate(False)),
+            ".gtc": ("an alias to the '.googletranslatecopiedtext' command", self.googleTranslate),
+            ".watsontranslate": ("translate with IBM Watson Translator", lambda: self.watsonTranslate(False)),
+            ".watsontranslatecopiedtext": ("translate copied text with IBM Watson Translator", self.watsonTranslate),
+            ".wt": ("an alias to the '.watsontranslate' command", lambda: self.watsonTranslate(False)),
+            ".wtc": ("an alias to the '.watsontranslatecopiedtext' command", self.watsonTranslate),
         }
 
     def execPythonString(self):
@@ -548,15 +576,17 @@ class LocalCliHandler:
             print(divider)
             print(content)
 
+    def quitUBA(self):
+        print("Closing ...")
+        return ""
+
+    def restartUBA(self):
+        print("Restarting ...")
+        return ""
+
     def getDotCommandContent(self, command):
         if command in self.dotCommands:
             return self.dotCommands[command][-1]()
-        elif command == ".quit":
-            print("Closing ...")
-            return ""
-        elif command == ".restart":
-            print("Restarting ...")
-            return ""
         print(f"Command not found: {command}")
         return ""
 
@@ -654,9 +684,9 @@ class LocalCliHandler:
         if addDotCommandWordOnly:
             #suggestion = ['.quit', '.restart', 'quit', 'restart', bibleReference] + dotCommands + [cmd[1:] for cmd in dotCommands] + sorted(textCommands) + bibleBooks
             #suggestion = ['.quit', '.restart', 'quit', 'restart', bibleReference] + dotCommands + [cmd[1:] for cmd in dotCommands] + sorted(textCommands)
-            suggestion = ['.quit', '.restart', bibleReference] + dotCommands + sorted(textCommands)
+            suggestion = [bibleReference] + dotCommands + sorted(textCommands)
         else:
-            suggestion = ['.quit', '.restart'] + dotCommands + sorted(textCommands) + bibleBooks
+            suggestion = dotCommands + sorted(textCommands) + bibleBooks
             suggestion.sort()
         return suggestion
 
@@ -671,8 +701,14 @@ class LocalCliHandler:
         return self.keepContent(content)
 
     def terminalcommands(self):
-        content = "UBA terminal dot commands:"
+        content = "UBA terminal mode commands:"
         content += "\n".join([f"{key} - {self.dotCommands[key][0]}" for key in sorted(self.dotCommands.keys())])
+        print(self.keepContent(content))
+        return ""
+
+    def commandAliases(self):
+        content = "UBA terminal mode command aliases:"
+        content += "\n".join([f"{key} - {value[0]}" for key, value in sorted(self.dotCommands.items()) if value[0].startswith("an alias to ")])
         print(self.keepContent(content))
         return ""
 
@@ -1072,18 +1108,171 @@ class LocalCliHandler:
                 config.ttsDefaultLangauge = userInput
                 commandPrefix = f"{self.getDefaultTtsKeyword()}:::{userInput}:::"
                 if runOnCopiedText:
-                    return self.runclipboardtext(commandPrefix)
+                    userInput = self.getclipboardtext()
                 else:
                     print(self.divider)
                     print("Enter text to be read:")
-                    textToSpeech = self.simplePrompt()
-                    command = f"{commandPrefix}{textToSpeech}"
-                    self.printRunningCommand(command)
-                    return self.getContent(command)
+                    self.printMultineNote()
+                    userInput = self.simplePrompt(multiline=True)
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
+                    return self.cancelAction()
+
+                command = f"{commandPrefix}{userInput}"
+                self.printRunningCommand(command)
+                return self.getContent(command)
             else:
                 return self.printInvalidOptionEntered()
         except:
             return self.printInvalidOptionEntered()
+
+    def watsonTranslate(self, runOnCopiedText=True):
+        if config.isIbmWatsonInstalled:
+            if runOnCopiedText:
+                self.getclipboardtext()
+            try:
+                if config.isPrompt_toolkitInstalled:
+                    from prompt_toolkit.completion import WordCompleter
+
+                codes = []
+                display = []
+                for index, item in enumerate(Translator.fromLanguageCodes):
+                    display.append(f"[<ref>{item}</ref> ] {Translator.fromLanguageNames[index]}")
+                    codes.append(item)
+                display = "<br>".join(display)
+                display = TextUtil.htmlToPlainText(f"<h2>Languages</h2>{display}")
+
+                print(self.divider)
+                print(display)
+                print("Translate from:")
+                print("(enter a language code)")
+                if config.isPrompt_toolkitInstalled:
+                    suggestions = codes
+                    completer = WordCompleter(suggestions, ignore_case=True)
+                    userInput = self.terminal_watson_translate_from_language_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer).strip()
+                else:
+                    userInput = input(self.inputIndicator).strip()
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
+                    return self.cancelAction()
+                if userInput in suggestions:
+                    fromLanguage = userInput
+
+                    codes = []
+                    display = []
+                    for index, item in enumerate(Translator.toLanguageCodes):
+                        display.append(f"[<ref>{item}</ref> ] {Translator.toLanguageNames[index]}")
+                        codes.append(item)
+                    display = "<br>".join(display)
+                    display = TextUtil.htmlToPlainText(f"<h2>Languages</h2>{display}")
+
+                    print(self.divider)
+                    print(display)
+                    print("Translate to:")
+                    print("(enter a language code)")
+                    if config.isPrompt_toolkitInstalled:
+                        suggestions = codes
+                        completer = WordCompleter(suggestions, ignore_case=True)
+                        userInput = self.terminal_watson_translate_to_language_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer).strip()
+                    else:
+                        userInput = input(self.inputIndicator).strip()
+                    if not userInput or userInput.lower() == config.terminal_cancel_action:
+                        return self.cancelAction()
+
+                    if userInput in suggestions:
+                        toLanguage = userInput
+
+                    if runOnCopiedText:
+                        userInput = self.getclipboardtext()
+                    else:
+                        print(self.divider)
+                        print("Enter the text you want to translate:")
+                        self.printMultineNote()
+                        userInput = self.simplePrompt(multiline=True)
+
+                    if not userInput or userInput.lower() == config.terminal_cancel_action:
+                        return self.cancelAction()
+                    # translate if all input are invalid
+                    command = f"TRANSLATE:::{fromLanguage}-{toLanguage}:::{userInput}"
+                    self.printRunningCommand(command)
+                    return self.getContent(command)
+                else:
+                    return self.printInvalidOptionEntered()
+            except:
+                return self.printInvalidOptionEntered()
+        else:
+            print("Package 'ibm-watson' is not found on your system!")
+            return ""
+
+    def googleTranslate(self, runOnCopiedText=True):
+        if config.isTranslateInstalled:
+            if runOnCopiedText:
+                self.getclipboardtext()
+            try:
+                if config.isPrompt_toolkitInstalled:
+                    from prompt_toolkit.completion import WordCompleter
+
+                codes = []
+                display = []
+                for key, value in Languages.googleTranslateCodes.items():
+                    display.append(f"[<ref>{value}</ref> ] {key}")
+                    codes.append(value)
+                display = "<br>".join(display)
+                display = TextUtil.htmlToPlainText(f"<h2>Languages</h2>{display}")
+
+                print(self.divider)
+                print(display)
+                print("Translate from:")
+                print("(enter a language code)")
+                if config.isPrompt_toolkitInstalled:
+                    suggestions = codes
+                    completer = WordCompleter(suggestions, ignore_case=True)
+                    userInput = self.terminal_google_translate_from_language_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer).strip()
+                else:
+                    userInput = input(self.inputIndicator).strip()
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
+                    return self.cancelAction()
+                if userInput in suggestions:
+                    fromLanguage = userInput
+
+                    print(self.divider)
+                    print(display)
+                    print("Translate to:")
+                    print("(enter a language code)")
+                    if config.isPrompt_toolkitInstalled:
+                        suggestions = codes
+                        completer = WordCompleter(suggestions, ignore_case=True)
+                        userInput = self.terminal_google_translate_to_language_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer).strip()
+                    else:
+                        userInput = input(self.inputIndicator).strip()
+                    if not userInput or userInput.lower() == config.terminal_cancel_action:
+                        return self.cancelAction()
+
+                    if userInput in suggestions:
+                        toLanguage = userInput
+
+                    if runOnCopiedText:
+                        userInput = self.getclipboardtext()
+                    else:
+                        print(self.divider)
+                        print("Enter the text you want to translate:")
+                        self.printMultineNote()
+                        userInput = self.simplePrompt(multiline=True)
+
+                    if not userInput or userInput.lower() == config.terminal_cancel_action:
+                        return self.cancelAction()
+                    # translate if all input are invalid
+                    from translate import Translator
+                    translator= Translator(from_lang=fromLanguage, to_lang=toLanguage)
+                    return translator.translate(userInput)
+                else:
+                    return self.printInvalidOptionEntered()
+            except:
+                return self.printInvalidOptionEntered()
+        else:
+            print("Package 'translate' is not found on your system!")
+            return ""
+
+    def printMultineNote(self):
+        print("[Note: Multiline input is enabled!  Press Escape key followed by Enter key when you finish text entry!]")
 
     def getclipboardtext(self):
         try:
@@ -1343,14 +1532,14 @@ class LocalCliHandler:
         print("Install package 'prompt_toolkit' first!")
         return ""
 
-    def simplePrompt(self, numberOnly=False):
+    def simplePrompt(self, numberOnly=False, multiline=False):
         if config.isPrompt_toolkitInstalled:
             from prompt_toolkit import prompt
             from util.PromptValidator import NumberValidator
             if numberOnly:
-                userInput = prompt(self.inputIndicator, style=self.promptStyle, validator=NumberValidator()).strip()
+                userInput = prompt(self.inputIndicator, style=self.promptStyle, validator=NumberValidator(), multiline=multiline).strip()
             else:
-                userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
+                userInput = prompt(self.inputIndicator, style=self.promptStyle, multiline=multiline).strip()
         else:
             userInput = input(self.inputIndicator).strip()
         return userInput
@@ -3005,7 +3194,7 @@ class LocalCliHandler:
 
     def menu(self):
         heading = "UBA Terminal Mode Menu"
-        features = (".info", ".open", ".search", ".note", ".edit", ".clipboard", ".control", ".tools", ".plugins", ".change", ".maintain", ".develop", ".help")
+        features = (".info", ".open", ".search", ".note", ".edit", ".clipboard", ".control", ".tools", ".plugins", ".change", ".maintain", ".develop", ".help", ".restart", ".quit")
         return self.displayFeatureMenu(heading, features)
 
     def open(self):
@@ -3020,12 +3209,12 @@ class LocalCliHandler:
 
     def tools(self):
         heading = "Tools"
-        features = (".web", ".share", ".extract", ".read", ".readsync", ".tts", ".downloadyoutube")
+        features = (".web", ".share", ".extract", ".read", ".readsync", ".tts", ".googletranslate", ".watsontranslate", ".downloadyoutube")
         return self.displayFeatureMenu(heading, features)
 
     def control(self):
         heading = "Control"
-        features = (".reload", ".latestbible", ".forward", ".backward", ".swap", ".starthttpserver", ".stophttpserver", ".stopaudio", ".toggle")
+        features = (".reload", ".latestbible", ".forward", ".backward", ".swap", ".starthttpserver", ".stophttpserver", ".stopaudio", ".stopaudiosync", ".toggle")
         return self.displayFeatureMenu(heading, features)
 
     def toggle(self):
@@ -3035,7 +3224,7 @@ class LocalCliHandler:
 
     def clipboard(self):
         heading = "Copy & Copied Text"
-        features = (".copy", ".copyhtml", ".paste", ".run", ".findcopiedtext", ".quickopencopiedtext", ".quickeditcopiedtext", ".quicksearchcopiedtext", ".ttscopiedtext", ".extractcopiedtext")
+        features = (".copy", ".copyhtml", ".paste", ".run", ".findcopiedtext", ".quickopencopiedtext", ".quickeditcopiedtext", ".quicksearchcopiedtext", ".ttscopiedtext", ".googletranslatecopiedtext", ".watsontranslatecopiedtext", ".extractcopiedtext")
         return self.displayFeatureMenu(heading, features)
 
     def search(self):
@@ -3060,7 +3249,7 @@ class LocalCliHandler:
 
     def help(self):
         heading = "Help"
-        features = (".wiki", ".quickstart", ".howto", ".terminalcommands", ".standardcommands", ".whatis")
+        features = (".wiki", ".quickstart", ".howto", ".terminalcommands", ".standardcommands", ".aliases", ".whatis")
         return self.displayFeatureMenu(heading, features)
 
     def maintain(self):
@@ -3087,7 +3276,7 @@ class LocalCliHandler:
 
     def openversefeatures(self):
         heading = "Bible Verse Featues"
-        features = (".opencrossreference", ".opentske", ".opencomparison", ".opendifference", ".opensmartindex", ".openwords", ".opendiscourse", ".opentranslation", ".opencombo")
+        features = (".opencrossreference", ".opentske", ".opencomparison", ".opendifference", ".openverseindex", ".openwords", ".opendiscourse", ".opentranslation", ".opencombo")
         return self.displayFeatureMenu(heading, features)
 
     def accessNoteFeatures(self):

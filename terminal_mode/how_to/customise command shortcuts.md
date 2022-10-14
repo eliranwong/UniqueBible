@@ -1,9 +1,11 @@
 # Command Customisation
 
-From version 32.59, two types of command entries can be customised:
+From version 32.59, you can customise:
 
-* action cancellation entry
+* cancel action entry
 * command shortcuts
+* add terminal mode command
+* add command keyword alias
 
 # Action Cancellation Entry
 
@@ -26,3 +28,19 @@ for examples,
 * in order to set up an alias '.l' to run command '.latestbible', set config.terminal_dot_l = '.latestbible')
 
 * in order to set up an alias '.m' to run command '.menu', set config.terminal_dot_m = '.menu')
+
+To add additional command shortcuts or aliases, use startup plugins.
+
+For example, check UniqueBible/plugins/startup/add_terminal_mode_commands.py
+
+# Add Terminal Mode Command
+
+You can use startup plugins to add terminal mode command.
+
+For example, check UniqueBible/plugins/startup/add_terminal_mode_commands.py
+
+# Add Command Keyword Aliases
+
+You can use startup plugins to add command keyword aliases.
+
+For example, check UniqueBible/plugins/startup/keywordAlias.py

@@ -224,6 +224,13 @@ def isIbmWatsonInstalled():
     except:
         return False
 
+def isTranslateInstalled():
+    try:
+        from translate import Translator
+        return True
+    except:
+        return False
+
 def isTextractInstalled():
     try:
         import textract
@@ -503,6 +510,8 @@ def setInstallConfig(module, isInstalled):
         config.isTelnetlib3Installed = isInstalled
     elif module in ("ibm-watson", "-U ibm-watson", "--upgrade ibm-watson"):
         config.isIbmWatsonInstalled = isInstalled
+    elif module in ("translate", "-U translate", "--upgrade translate"):
+        config.isTranslateInstalled = isInstalled
     elif module in ("html-text", "-U html-text", "--upgrade html-text"):
         config.isHtmlTextInstalled = isInstalled
     elif module in ("beautifulsoup4", "-U beautifulsoup4", "--upgrade beautifulsoup4"):
@@ -661,6 +670,7 @@ optional = [
     ("pygithub", "Github access", isPygithubInstalled),
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
+    ("translate", "Google Translate", isTranslateInstalled),
     ("qrcode", "QR Code", isQrCodeInstalled),
     ("pillow", "QR Code", isPillowInstalled),
     #("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "Pure Python PNG", isPurePythonPngInstalled),
@@ -698,6 +708,7 @@ optional = [
     ("qt-material", "Qt Material Themes", isQtMaterialInstalled),
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
+    ("translate", "Google Translate", isTranslateInstalled),
     ("qrcode", "QR Code", isQrCodeInstalled),
     ("pillow", "QR Code", isPillowInstalled),
     #("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "Pure Python PNG", isPurePythonPngInstalled),

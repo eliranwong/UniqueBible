@@ -1,3 +1,13 @@
+Changes in 32.62:
+Terminal mode:
+* Added both Google Translate and Watson Translator features
+* Added multiline input to prompt for text-to-speech entry
+* Added command shortcut default values
+* Added ".quit" and ".restart" to main menu
+* Added ".stopaudiosync" and "aliases" commands
+* Added a startup plugin for command customisation
+* Revised how-to files
+
 Changes in 32.61:
 * Fixed audio/bibles directory check for new install
 
@@ -5,8 +15,6 @@ Changes in 32.60:
 * Added config.terminalUseMarvelDataPrivate
 
 Changes in 32.59:
-* Added a startup plugin for use in terminal mode.
-    This startup plugin can be used as an example for developing terminal mode startup plugins.
 * Added config.terminal_cancel_action to customise the entry to cancel action in prompts
     default value is '.cancel'
 * Added 26 command shortcuts, customisable via:
