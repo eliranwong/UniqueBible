@@ -51,7 +51,7 @@ class LocalCliHandler:
         self.unsupportedCommands = ["_mc", "_mastercontrol", "epub", "anypdf", "searchpdf", "pdffind", "pdf", "docx", "_savepdfcurrentpage", "searchallbookspdf", "readbible", "searchhighlight", "sidebyside", "parallel", "_editfile", "_openfile", "_uba", "opennote", "_history", "_historyrecord", "_highlight"]
         self.ttsCommandKeyword = self.getDefaultTtsKeyword().lower()
         self.unsupportedCommands.append("gtts" if self.ttsCommandKeyword == "speak" else "speak")
-        self.startupException1 = [config.terminal_cancel_action, ".quit", ".restart", ".togglepager", ".history", ".update", ".find", ".stopaudio", ".read", ".readsync", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".stophttpserver", ".downloadyoutube", ".web", ".gtts"]
+        self.startupException1 = [config.terminal_cancel_action, ".quit", ".q", ".restart", ".z", ".togglepager", ".history", ".update", ".find", ".stopaudio", ".read", ".readsync", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".stophttpserver", ".downloadyoutube", ".web", ".gtts"]
         self.startupException2 = "^(_setconfig:::|\.edit|\.change|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::|download:::|read:::|readsync:::)"
         #config.cliTtsProcess = None
         config.audio_playing_file = os.path.join("temp", "000_audio_playing.txt")
@@ -175,7 +175,7 @@ class LocalCliHandler:
             ".n": config.terminal_dot_n,
             ".o": config.terminal_dot_o,
             ".p": config.terminal_dot_p,
-            ".q": config.terminal_dot_q,
+            #".q": config.terminal_dot_q,
             ".r": config.terminal_dot_r,
             ".s": config.terminal_dot_s,
             ".t": config.terminal_dot_t,
@@ -184,7 +184,7 @@ class LocalCliHandler:
             ".w": config.terminal_dot_w,
             ".x": config.terminal_dot_x,
             ".y": config.terminal_dot_y,
-            ".z": config.terminal_dot_z,
+            #".z": config.terminal_dot_z,
         }
 
     def addShortcuts(self):
@@ -401,7 +401,9 @@ class LocalCliHandler:
             ".execfile": ("execute a python file", self.execFile),
             ".reload": ("reload the latest content", self.reload),
             ".restart": ("restart Unique Bible App", self.restartUBA),
+            ".z": ("an alias to the '.restart' command", self.restartUBA),
             ".quit": ("quit Unique Bible App", self.quitUBA),
+            ".q": ("an alias to the '.quit' command", self.quitUBA),
             ".googletranslate": ("translate with Google Translate", lambda: self.googleTranslate(False)),
             ".googletranslatecopiedtext": ("translate copied text with Google Translate", self.googleTranslate),
             ".gt": ("an alias to the '.googletranslate' command", lambda: self.googleTranslate(False)),
@@ -3382,3 +3384,7 @@ class LocalCliHandler:
     def removeAudioPlayingFile(self):
         if os.path.isfile(config.audio_playing_file):
             os.remove(config.audio_playing_file)
+
+    # Missing package
+    def printMissingPackage(self, package):
+        print(f"Essentail package '{package}' is not found!")

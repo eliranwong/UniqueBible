@@ -277,11 +277,7 @@ class ConfigUtil:
         config.help["terminal_dot_p"] = """
         # Customise the command to be run with shortcut entry '.p'."""
         if not hasattr(config, "terminal_dot_p"):
-            config.terminal_dot_p = ".openpromises"
-        config.help["terminal_dot_q"] = """
-        # Customise the command to be run with shortcut entry '.q'."""
-        if not hasattr(config, "terminal_dot_q"):
-            config.terminal_dot_q = ".search"
+            config.terminal_dot_p = ".plugins"
         config.help["terminal_dot_r"] = """
         # Customise the command to be run with shortcut entry '.r'."""
         if not hasattr(config, "terminal_dot_r"):
@@ -314,10 +310,6 @@ class ConfigUtil:
         # Customise the command to be run with shortcut entry '.y'."""
         if not hasattr(config, "terminal_dot_y"):
             config.terminal_dot_y = ".whatis"
-        config.help["terminal_dot_z"] = """
-        # Customise the command to be run with shortcut entry '.z'."""
-        if not hasattr(config, "terminal_dot_z"):
-            config.terminal_dot_z = "combo:::"
 
         # End of terminal mode customised input settings
 
@@ -1694,7 +1686,6 @@ class ConfigUtil:
             ("terminal_dot_n", config.terminal_dot_n),
             ("terminal_dot_o", config.terminal_dot_o),
             ("terminal_dot_p", config.terminal_dot_p),
-            ("terminal_dot_q", config.terminal_dot_q),
             ("terminal_dot_r", config.terminal_dot_r),
             ("terminal_dot_s", config.terminal_dot_s),
             ("terminal_dot_t", config.terminal_dot_t),
@@ -1703,7 +1694,6 @@ class ConfigUtil:
             ("terminal_dot_w", config.terminal_dot_w),
             ("terminal_dot_x", config.terminal_dot_x),
             ("terminal_dot_y", config.terminal_dot_y),
-            ("terminal_dot_z", config.terminal_dot_z),
             ("telnetServerPort", config.telnetServerPort),
             ("httpServerUbaFile", config.httpServerUbaFile),
             ("httpServerPort", config.httpServerPort),

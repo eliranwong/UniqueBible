@@ -47,33 +47,12 @@ def generateCharts(text):
                         references.append('<ref onclick="bcv({0},{1},{2},{3},{4})">{5}</ref>'.format(*bcv, reference))
                 data.append("  <tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>".format(chapterNo, "; ".join(references), len(references)))
 
-        # Display a Table
-        # config.mainWindow.studyView.currentWidget().openPopover(html=getTableHtml("\n".join(data), str(len(verses)), firstColumnTitle))
-
         # table html
         table_html = getTableHtml("\n".join(data), str(len(verses)), firstColumnTitle)
         table_html = config.mainWindow.wrapHtml(table_html)
         config.mainWindow.html = table_html
         config.mainWindow.plainText = TextUtil.htmlToPlainText(table_html)
         displayHtml(table_html)
-
-        # Data for HTML charts
-#        if isSortedByChapter:
-#            chartTitle = "{0} x {1}".format(firstColumnTitle, len(verses))
-#            data = ["  ['{0}', {1}]".format(str(chapterNo), len(counts[chapterNo])) for chapterNo in sorted(counts)]
-#        else:
-#            chartTitle = "{0} x {1}".format(config.thisTranslation["bibleReferences"], len(verses))
-#            data = ["  ['{0}', {1}]".format(parser.standardAbbreviation[str(bookNo)], len(counts[bookNo])) for bookNo in sorted(counts)]
-
-        # pie chart html
-        #pie_chart_html = getPieChartHtml(",\n".join(data), chartTitle)
-        #pie_chart_html = config.mainWindow.wrapHtml(pie_chart_html)
-        #openHtml(pie_chart_html)
-
-        # bar chart html
-        #bar_chart_html = getBarChartHtml(",\n".join(data), len(counts.keys()), chartTitle)
-        #bar_chart_html = config.mainWindow.wrapHtml(bar_chart_html)
-        #openHtml(bar_chart_html)
 
     else:
         config.mainWindow.displayMessage(config.thisTranslation["message_noReference"])
@@ -96,70 +75,10 @@ def getTableHtml(data, totalVerseCount, firstColumnTitle=""):
     return """
 <h2>Unique Bible App</h2>
 <h3>{0} x """.format(config.thisTranslation["bibleReferences"])+totalVerseCount+"""</h3>
-<table style="width:100%">
+<table style="width:100%; border: 1px solid black;">
   <tr><th>{0}</th><th>{1}</th><th>{2}&nbsp;</th></tr>
 """.format(firstColumnTitle if firstColumnTitle else config.thisTranslation["menu_book"], config.thisTranslation["bibleReferences"], config.thisTranslation["count"])+data+"""
 </table>
-"""
-
-def getPieChartHtml(data, chartTitle=""):
-    return """
-<h2>UniqueBible.app</h2>
-
-<div id="piechart"></div>
-
-<script type="text/javascript" src="js/charts.js"></script>
-
-<script type="text/javascript">
-// Load google charts
-google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(drawChart);
-
-// Draw the chart and set the chart values
-function drawChart() {
-  var data = google.visualization.arrayToDataTable([
-  ['Book', 'Number of Verse(s)'],
-"""+data+"""
-]);
-
-  // Optional; add a title and set the width and height of the chart
-  var options = {'title':'"""+chartTitle+"""', 'width':700, 'height':500};
-
-  // Display the chart inside the <div> element with id="piechart"
-  var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-  chart.draw(data, options);
-}
-</script>
-"""
-
-def getBarChartHtml(data, noOfBooks, chartTitle=""):
-    return """
-<h2>UniqueBible.app</h2>
-
-<div id="barchart"></div>
-
-<script type="text/javascript" src="js/charts.js"></script>
-
-<script type="text/javascript">
-// Load google charts
-google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(drawChart);
-
-// Draw the chart and set the chart values
-function drawChart() {
-  var data = google.visualization.arrayToDataTable([
-  ['Book', 'Number of Verse(s)'],
-"""+data+"""
-]);
-
-  // Optional; add a title and set the width and height of the chart
-  var options = {'title':'"""+chartTitle+"""', 'width':900, 'height':"""+str(noOfBooks * 50 if noOfBooks > 10 else 500)+"""};
-
-  // Display the chart inside the <div> element with id="barchart"
-  var chart = new google.visualization.BarChart(document.getElementById('barchart'));
-  chart.draw(data, options);
-}
-</script>
 """
 
 def countVersesByBook(verses):

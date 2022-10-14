@@ -1,7 +1,6 @@
 import config, os
 from util.BibleVerseParser import BibleVerseParser
 from util.TextUtil import TextUtil
-from util.WebtopUtil import WebtopUtil
 
 def generateCharts(text):
     # Extract bible verse references
@@ -52,16 +51,49 @@ def generateCharts(text):
         table_html = config.mainWindow.wrapHtml(table_html)
         config.mainWindow.html = table_html
         config.mainWindow.plainText = TextUtil.htmlToPlainText(table_html)
-        displayHtml(table_html)
+
+
+        # chart data
+        import matplotlib.pyplot as plt
+        import numpy as np
+
+        totals = []
+        labels = []
+        if isSortedByChapter:
+            chartTitle = "{0} x {1}".format(firstColumnTitle, len(verses))
+            for chapterNo in sorted(counts):
+                total = len(counts[chapterNo])
+                totals.append(total)
+                labels.append(f"Ch. {chapterNo} x {total}")
+        else:
+            chartTitle = "{0} x {1}".format(config.thisTranslation["bibleReferences"], len(verses))
+            for bookNo in sorted(counts):
+                total = len(counts[bookNo])
+                totals.append(total)
+                labels.append(f"{parser.standardAbbreviation[str(bookNo)]} x {total}")
+        maxTotal = max(totals)
+        explode = [0.1 if total == maxTotal else 0 for total in totals]
+        x = np.array(labels)
+        y = np.array(totals)
+
+        # pie chart
+        plt.pie(y, labels=labels, explode=explode, shadow=True)
+        plt.legend(title=chartTitle)
+        imageFile = os.path.join("htmlResources", "pie_chart.png")
+        plt.savefig(imageFile, dpi=300)
+        plt.close()
+
+        # bar chart
+        plt.barh(x, y)
+        plt.legend(title=chartTitle)
+        imageFile = os.path.join("htmlResources", "bar_chart.png")
+        plt.savefig(imageFile, dpi=300)
+        plt.close()
+
+        openHtmlFile(table_html)
 
     else:
         config.mainWindow.displayMessage(config.thisTranslation["message_noReference"])
-
-def displayHtml(html):
-    if WebtopUtil.isPackageInstalled("w3m"):
-        config.mainWindow.cliTool("w3m -T text/html", config.mainWindow.html)
-    else:
-        openHtmlFile(html)
 
 def openHtmlFile(html):
     filepath = os.path.join("terminal_mode", "Unique_Bible_App.html")
@@ -72,6 +104,8 @@ def openHtmlFile(html):
     config.mainWindow.getContent(command)
 
 def getTableHtml(data, totalVerseCount, firstColumnTitle=""):
+    pieChart = os.path.join(os.getcwd(), "htmlResources", "pie_chart.png")
+    barChart = os.path.join(os.getcwd(), "htmlResources", "bar_chart.png")
     return """
 <h2>Unique Bible App</h2>
 <h3>{0} x """.format(config.thisTranslation["bibleReferences"])+totalVerseCount+"""</h3>
@@ -79,7 +113,9 @@ def getTableHtml(data, totalVerseCount, firstColumnTitle=""):
   <tr><th style="border: 1px solid black;">{0}</th><th style="border: 1px solid black;">{1}</th><th style="border: 1px solid black;">{2}&nbsp;</th></tr>
 """.format(firstColumnTitle if firstColumnTitle else config.thisTranslation["menu_book"], config.thisTranslation["bibleReferences"], config.thisTranslation["count"])+data+"""
 </table>
-"""
+<img style="max-width: 100%; height: auto;" src="{0}"/>
+<img style="max-width: 100%; height: auto;" src="{1}"/>
+""".format(pieChart, barChart)
 
 def countVersesByBook(verses):
     counts = {}
@@ -96,4 +132,11 @@ def countVersesByChapter(verses):
         counts[c] = counts[c] + [verse] if c in counts else [verse]
     return counts
 
-generateCharts(config.mainWindow.plainText)
+if config.isNumpyInstalled:
+    if config.isMatplotlibInstalled:
+        copiedText = config.mainWindow.getclipboardtext()
+        generateCharts(copiedText)
+    else:
+        config.mainWindow.printMissingPackage("matplotlib")
+else:
+    config.mainWindow.printMissingPackage("numpy")

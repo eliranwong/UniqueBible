@@ -169,7 +169,7 @@ def getHistoryRecords():
 def runTerminalModeCommand(command):
     content = config.mainWindow.getContent(command)
     if content:
-        if content == ".restart":
+        if content == ".restart" or content == ".z":
             return ".restart"
         else:
             # display
@@ -244,7 +244,7 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         content = config.mainWindow.getContent(command)
         if content:
             config.mainWindow.displayOutputOnTerminal(content)
-    while not command.lower() in (".quit", ".restart"):
+    while not command.lower() in (".quit", ".restart", ".q", ".z"):
         default = config.terminalCommandDefault
         config.terminalCommandDefault = ""
         #try:
@@ -282,7 +282,7 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         ConfigUtil.save()
     if config.terminalStopHttpServerOnExit:
         config.mainWindow.stophttpserver()
-    if command.lower() == ".restart":
+    if command.lower() in (".restart", ".z"):
         os.system("{0} {1} terminal".format(sys.executable, "uba.py"))
     sys.exit(0)
 

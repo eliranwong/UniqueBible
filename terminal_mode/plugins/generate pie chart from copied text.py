@@ -27,7 +27,7 @@ def generateCharts(text):
                         references.append('<ref onclick="bcv({0},{1},{2})">{3}</ref>'.format(*bcv, reference))
                     else:
                         references.append('<ref onclick="bcv({0},{1},{2},{3},{4})">{5}</ref>'.format(*bcv, reference))
-                data.append("""  <tr><td style="border: 1px solid black;">{0}</td><td style="border: 1px solid black;">{1}</td><td style="border: 1px solid black;">{2}</td></tr>""".format(bookName, "; ".join(references), len(references)))
+                data.append("  <tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>".format(bookName, "; ".join(references), len(references)))
         else:
             isSortedByChapter = True
             # Sort by Chapters
@@ -45,41 +45,41 @@ def generateCharts(text):
                         references.append('<ref onclick="bcv({0},{1},{2})">{3}</ref>'.format(*bcv, reference))
                     else:
                         references.append('<ref onclick="bcv({0},{1},{2},{3},{4})">{5}</ref>'.format(*bcv, reference))
-                data.append("""  <tr><td style="border: 1px solid black;">{0}</td><td style="border: 1px solid black;">{1}</td><td style="border: 1px solid black;">{2}</td></tr>""".format(chapterNo, "; ".join(references), len(references)))
+                data.append("  <tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>".format(chapterNo, "; ".join(references), len(references)))
 
-        # table html
-        table_html = getTableHtml("\n".join(data), str(len(verses)), firstColumnTitle)
-        table_html = config.mainWindow.wrapHtml(table_html)
-        config.mainWindow.html = table_html
-        config.mainWindow.plainText = TextUtil.htmlToPlainText(table_html)
-        displayHtml(table_html)
+        # pie chart
+        import matplotlib.pyplot as plt
+        import numpy as np
 
-    else:
-        config.mainWindow.displayMessage(config.thisTranslation["message_noReference"])
+        totals = []
+        labels = []
+        if isSortedByChapter:
+            chartTitle = "{0} x {1}".format(firstColumnTitle, len(verses))
+            for chapterNo in sorted(counts):
+                total = len(counts[chapterNo])
+                totals.append(total)
+                labels.append(f"Ch. {chapterNo} x {total}")
+        else:
+            chartTitle = "{0} x {1}".format(config.thisTranslation["bibleReferences"], len(verses))
+            for bookNo in sorted(counts):
+                total = len(counts[bookNo])
+                totals.append(total)
+                labels.append(f"{parser.standardAbbreviation[str(bookNo)]} x {total}")
+        maxTotal = max(totals)
+        explode = [0.1 if total == maxTotal else 0 for total in totals]
+        #x = np.array(labels)
+        y = np.array(totals)
 
-def displayHtml(html):
-    if WebtopUtil.isPackageInstalled("w3m"):
-        config.mainWindow.cliTool("w3m -T text/html", config.mainWindow.html)
-    else:
-        openHtmlFile(html)
-
-def openHtmlFile(html):
-    filepath = os.path.join("terminal_mode", "Unique_Bible_App.html")
-    with open(filepath, "w", encoding="utf-8") as fileObj:
-        fileObj.write(html)
-    command = f"cmd:::{config.open} {filepath}"
-    config.mainWindow.printRunningCommand(command)
-    config.mainWindow.getContent(command)
-
-def getTableHtml(data, totalVerseCount, firstColumnTitle=""):
-    return """
-<h2>Unique Bible App</h2>
-<h3>{0} x """.format(config.thisTranslation["bibleReferences"])+totalVerseCount+"""</h3>
-<table style="width:100%; border: 1px solid black;">
-  <tr><th style="border: 1px solid black;">{0}</th><th style="border: 1px solid black;">{1}</th><th style="border: 1px solid black;">{2}&nbsp;</th></tr>
-""".format(firstColumnTitle if firstColumnTitle else config.thisTranslation["menu_book"], config.thisTranslation["bibleReferences"], config.thisTranslation["count"])+data+"""
-</table>
-"""
+        # pie chart
+        plt.pie(y, labels=labels, explode=explode, shadow=True)
+        plt.legend(title=chartTitle)
+        imageFile = os.path.join("htmlResources", "pie_chart.png")
+        plt.savefig(imageFile, dpi=300)
+        if config.terminalEnableTermuxAPI:
+            config.mainWindow.getCliOutput(f"termux-share {imageFile}")
+        else:
+            plt.show()
+        plt.close()
 
 def countVersesByBook(verses):
     counts = {}
@@ -96,4 +96,11 @@ def countVersesByChapter(verses):
         counts[c] = counts[c] + [verse] if c in counts else [verse]
     return counts
 
-generateCharts(config.mainWindow.plainText)
+if config.isNumpyInstalled:
+    if config.isMatplotlibInstalled:
+        copiedText = config.mainWindow.getclipboardtext()
+        generateCharts(copiedText)
+    else:
+        config.mainWindow.printMissingPackage("matplotlib")
+else:
+    config.mainWindow.printMissingPackage("numpy")

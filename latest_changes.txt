@@ -1,3 +1,9 @@
+Changes in 32.63:
+Terminal mode:
+* added plugins to generate pie chart and bar chart.
+* reserved ".q" command to be an alias to ".quit" command.
+* reserved ".z" command to be an alias to ".restart" command.
+
 Changes in 32.62:
 Terminal mode:
 * Added both Google Translate and Watson Translator features

@@ -224,6 +224,20 @@ def isIbmWatsonInstalled():
     except:
         return False
 
+def isNumpyInstalled():
+    try:
+        import numpy
+        return True
+    except:
+        return False
+
+def isMatplotlibInstalled():
+    try:
+        import matplotlib.pyplot
+        return True
+    except:
+        return False
+
 def isTranslateInstalled():
     try:
         from translate import Translator
@@ -510,6 +524,10 @@ def setInstallConfig(module, isInstalled):
         config.isTelnetlib3Installed = isInstalled
     elif module in ("ibm-watson", "-U ibm-watson", "--upgrade ibm-watson"):
         config.isIbmWatsonInstalled = isInstalled
+    elif module in ("numpy", "-U numpy", "--upgrade numpy"):
+        config.isNumpyInstalled = isInstalled
+    elif module in ("matplotlib", "-U matplotlib", "--upgrade matplotlib"):
+        config.isMatplotlibInstalled = isInstalled
     elif module in ("translate", "-U translate", "--upgrade translate"):
         config.isTranslateInstalled = isInstalled
     elif module in ("html-text", "-U html-text", "--upgrade html-text"):
@@ -670,6 +688,8 @@ optional = [
     ("pygithub", "Github access", isPygithubInstalled),
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
+    ("numpy", "Array Computing", isNumpyInstalled),
+    ("matplotlib", "Plotting Package", isMatplotlibInstalled),
     ("translate", "Google Translate", isTranslateInstalled),
     ("qrcode", "QR Code", isQrCodeInstalled),
     ("pillow", "QR Code", isPillowInstalled),
@@ -708,6 +728,8 @@ optional = [
     ("qt-material", "Qt Material Themes", isQtMaterialInstalled),
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
+    ("numpy", "Array Computing", isNumpyInstalled),
+    ("matplotlib", "Plotting Package", isMatplotlibInstalled),
     ("translate", "Google Translate", isTranslateInstalled),
     ("qrcode", "QR Code", isQrCodeInstalled),
     ("pillow", "QR Code", isPillowInstalled),
