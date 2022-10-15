@@ -71,14 +71,22 @@ def generateCharts(text):
         y = np.array(totals)
 
         # pie chart
-        plt.pie(y, labels=labels, explode=explode, shadow=True)
+        #plt.pie(y, labels=labels, explode=explode, shadow=True)
+        plt.pie(y, labels=labels, explode=explode)
         plt.legend(title=chartTitle)
         imageFile = os.path.join("htmlResources", "pie_chart.png")
         plt.savefig(imageFile, dpi=300)
         if config.terminalEnableTermuxAPI:
             config.mainWindow.getCliOutput(f"termux-share {imageFile}")
         else:
-            plt.show()
+            # plt.show freezes the app when users close the charts
+            #plt.show()
+            pieChart = os.path.join(os.getcwd(), "htmlResources", "pie_chart.png")
+            pieChartTag = TextUtil.imageToText(pieChart)
+            pieChartTag = config.mainWindow.resizeHtmlImage(pieChartTag)
+            html = config.mainWindow.wrapHtml(pieChartTag)
+            config.mainWindow.saveAndOpenHtmlFile(html)
+
         plt.close()
 
 def countVersesByBook(verses):
@@ -96,10 +104,11 @@ def countVersesByChapter(verses):
         counts[c] = counts[c] + [verse] if c in counts else [verse]
     return counts
 
-
+# run plugin
 if config.isNumpyInstalled:
     if config.isMatplotlibInstalled:
-        generateCharts(config.mainWindow.plainText)
+        copiedText = config.mainWindow.getclipboardtext()
+        generateCharts(copiedText)
     else:
         config.mainWindow.printMissingPackage("matplotlib")
 else:

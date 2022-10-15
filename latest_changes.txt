@@ -1,3 +1,10 @@
+Changes in 32.64:
+Terminal mode:
+* Fixed open html file with Android Apps
+* Fixed closing pie chart and bar chart on macOS
+    previously closing pie chart or bar chart freezes the app.
+* Added multine input support to ".exec" for developers to run python script when UBA is running.
+
 Changes in 32.63:
 Terminal mode:
 * added plugins to generate pie chart and bar chart.

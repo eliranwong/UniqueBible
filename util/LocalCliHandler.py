@@ -422,7 +422,8 @@ class LocalCliHandler:
             print(self.divider)
             print("Enter a python command:")
             if config.isPrompt_toolkitInstalled:
-                userInput = self.terminal_python_string_session.prompt(self.inputIndicator, style=self.promptStyle).strip()
+                self.printMultineNote()
+                userInput = self.terminal_python_string_session.prompt(self.inputIndicator, style=self.promptStyle, multiline=True).strip()
             else:
                 userInput = input(self.inputIndicator).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
@@ -451,7 +452,7 @@ class LocalCliHandler:
         return ""
 
     def plugins(self):
-        availablePlugins = FileUtil.fileNamesWithoutExtension(os.path.join("terminal_mode", "plugins"), "py")
+        availablePlugins = FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "terminal"), "py")
         print(self.divider)
         self.printOptionsDisplay(availablePlugins, "Plugins")
         print(self.divider)
@@ -460,7 +461,7 @@ class LocalCliHandler:
         if not userInput or userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
         #try:
-        filepath = os.path.join("terminal_mode", "plugins", f"{availablePlugins[int(userInput)]}.py")
+        filepath = os.path.join("plugins", "terminal", f"{availablePlugins[int(userInput)]}.py")
         self.execPythonFile(filepath)
         return ""
         #except:
@@ -1114,7 +1115,6 @@ class LocalCliHandler:
                 else:
                     print(self.divider)
                     print("Enter text to be read:")
-                    self.printMultineNote()
                     userInput = self.simplePrompt(multiline=True)
                 if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
@@ -1187,7 +1187,6 @@ class LocalCliHandler:
                     else:
                         print(self.divider)
                         print("Enter the text you want to translate:")
-                        self.printMultineNote()
                         userInput = self.simplePrompt(multiline=True)
 
                     if not userInput or userInput.lower() == config.terminal_cancel_action:
@@ -1256,7 +1255,6 @@ class LocalCliHandler:
                     else:
                         print(self.divider)
                         print("Enter the text you want to translate:")
-                        self.printMultineNote()
                         userInput = self.simplePrompt(multiline=True)
 
                     if not userInput or userInput.lower() == config.terminal_cancel_action:
@@ -1539,6 +1537,8 @@ class LocalCliHandler:
             from prompt_toolkit import prompt
             from util.PromptValidator import NumberValidator
             if numberOnly:
+                if multiline:
+                    self.printMultineNote()
                 userInput = prompt(self.inputIndicator, style=self.promptStyle, validator=NumberValidator(), multiline=multiline).strip()
             else:
                 userInput = prompt(self.inputIndicator, style=self.promptStyle, multiline=multiline).strip()
@@ -3306,7 +3306,50 @@ class LocalCliHandler:
                 else:
                     self.printInvalidOptionEntered()
 
-    def wrapHtml(self, content, view="", book=False):
+    def resizeHtmlImage(self, imageTag):
+        return re.sub("^<img ", """<img style="max-width: 100%; height: auto;" """, imageTag)
+
+    def saveAndOpenHtmlFile(self, html, filepath=""):
+        if not filepath:
+            filepath = os.path.join(os.getcwd(), "terminal_mode", "Unique_Bible_App.html")
+        # write an html file
+        with open(filepath, "w", encoding="utf-8") as fileObj:
+            fileObj.write(html)
+        # open the html file
+        if config.terminalEnableTermuxAPI:
+            print(f"Opening {filepath} ...")
+            self.openLocalHtmlWithAndroidApps(filepath)
+        else:
+            command = f"cmd:::{config.open} {filepath}"
+            self.printRunningCommand(command)
+            self.getContent(command)
+
+    def openLocalHtmlWithAndroidApps(self, filepath):
+        if config.terminalEnableTermuxAPI:
+            filepath = re.sub("/", r"%2F", filepath)
+            filepath = re.sub(r"%2Fdata%2Fdata%2Fcom.termux%2Ffiles%2Fhome%2F", r"content://com.termux.documents/document/%2Fdata%2Fdata%2Fcom.termux%2Ffiles%2Fhome%2F", filepath)
+            cmd = f"termux-open {filepath}"
+            self.cliTool(cmd)
+
+    def wrapHtml(self, content):
+        return """
+                <!DOCTYPE html><html><head><link rel="icon" href="icons/{2}"><title>UniqueBible.app</title>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+                <meta http-equiv="Pragma" content="no-cache" />
+                <meta http-equiv="Expires" content="0" />
+                <style>
+                table, th, td {0}
+                border: 1px solid black;
+                {1}
+                </style>
+                </head><body>
+                {3}
+                </body></html>
+                """.format("{", "}", config.webUBAIcon, content)
+
+    def wrapHtmlFull(self, content, view="", book=False):
         fontFamily = config.font
         fontSize = "{0}px".format(config.fontSize)
         if book:

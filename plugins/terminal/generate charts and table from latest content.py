@@ -1,7 +1,6 @@
 import config, os
 from util.BibleVerseParser import BibleVerseParser
 from util.TextUtil import TextUtil
-from util.WebtopUtil import WebtopUtil
 
 def generateCharts(text):
     # Extract bible verse references
@@ -27,7 +26,7 @@ def generateCharts(text):
                         references.append('<ref onclick="bcv({0},{1},{2})">{3}</ref>'.format(*bcv, reference))
                     else:
                         references.append('<ref onclick="bcv({0},{1},{2},{3},{4})">{5}</ref>'.format(*bcv, reference))
-                data.append("  <tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>".format(bookName, "; ".join(references), len(references)))
+                data.append("""  <tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>""".format(bookName, "; ".join(references), len(references)))
         else:
             isSortedByChapter = True
             # Sort by Chapters
@@ -45,9 +44,9 @@ def generateCharts(text):
                         references.append('<ref onclick="bcv({0},{1},{2})">{3}</ref>'.format(*bcv, reference))
                     else:
                         references.append('<ref onclick="bcv({0},{1},{2},{3},{4})">{5}</ref>'.format(*bcv, reference))
-                data.append("  <tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>".format(chapterNo, "; ".join(references), len(references)))
+                data.append("""  <tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>""".format(chapterNo, "; ".join(references), len(references)))
 
-        # bar chart
+        # chart data
         import matplotlib.pyplot as plt
         import numpy as np
 
@@ -65,19 +64,53 @@ def generateCharts(text):
                 total = len(counts[bookNo])
                 totals.append(total)
                 labels.append(f"{parser.standardAbbreviation[str(bookNo)]} x {total}")
+        maxTotal = max(totals)
+        explode = [0.1 if total == maxTotal else 0 for total in totals]
         x = np.array(labels)
         y = np.array(totals)
 
+        # pie chart
+        #plt.pie(y, labels=labels, explode=explode, shadow=True)
+        plt.pie(y, labels=labels, explode=explode)
+        plt.legend(title=chartTitle)
+        imageFile = os.path.join("htmlResources", "pie_chart.png")
+        plt.savefig(imageFile, dpi=300)
+        plt.close()
+
         # bar chart
         plt.barh(x, y)
-        plt.legend(title=chartTitle)
+        #plt.legend(title=chartTitle)
         imageFile = os.path.join("htmlResources", "bar_chart.png")
         plt.savefig(imageFile, dpi=300)
-        if config.terminalEnableTermuxAPI:
-            config.mainWindow.getCliOutput(f"termux-share {imageFile}")
-        else:
-            plt.show()
         plt.close()
+
+        # generate html
+        table_html = getTableHtml("\n".join(data), str(len(verses)), firstColumnTitle)
+        table_html = config.mainWindow.wrapHtml(table_html)
+        config.mainWindow.html = table_html
+        config.mainWindow.plainText = TextUtil.htmlToPlainText(table_html)
+
+        config.mainWindow.saveAndOpenHtmlFile(table_html)
+    else:
+        config.mainWindow.displayMessage(config.thisTranslation["message_noReference"])
+
+def getTableHtml(data, totalVerseCount, firstColumnTitle=""):
+    pieChart = os.path.join(os.getcwd(), "htmlResources", "pie_chart.png")
+    pieChartTag = TextUtil.imageToText(pieChart)
+    pieChartTag = config.mainWindow.resizeHtmlImage(pieChartTag)
+    barChart = os.path.join(os.getcwd(), "htmlResources", "bar_chart.png")
+    barChartTag = TextUtil.imageToText(barChart)
+    barChartTag = config.mainWindow.resizeHtmlImage(barChartTag)
+    return """
+<h2>Unique Bible App</h2>
+<h3>{0} x """.format(config.thisTranslation["bibleReferences"])+totalVerseCount+"""</h3>
+<table style="width:100%;">
+  <tr><th>{0}</th><th>{1}</th><th>{2}&nbsp;</th></tr>
+""".format(firstColumnTitle if firstColumnTitle else config.thisTranslation["menu_book"], config.thisTranslation["bibleReferences"], config.thisTranslation["count"])+data+"""
+</table>
+{0}
+{1}
+""".format(pieChartTag, barChartTag)
 
 def countVersesByBook(verses):
     counts = {}
@@ -94,10 +127,10 @@ def countVersesByChapter(verses):
         counts[c] = counts[c] + [verse] if c in counts else [verse]
     return counts
 
+# run plugin
 if config.isNumpyInstalled:
     if config.isMatplotlibInstalled:
-        copiedText = config.mainWindow.getclipboardtext()
-        generateCharts(copiedText)
+        generateCharts(config.mainWindow.plainText)
     else:
         config.mainWindow.printMissingPackage("matplotlib")
 else:

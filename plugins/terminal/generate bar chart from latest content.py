@@ -71,13 +71,19 @@ def generateCharts(text):
 
         # bar chart
         plt.barh(x, y)
-        plt.legend(title=chartTitle)
+        #plt.legend(title=chartTitle)
         imageFile = os.path.join("htmlResources", "bar_chart.png")
         plt.savefig(imageFile, dpi=300)
         if config.terminalEnableTermuxAPI:
             config.mainWindow.getCliOutput(f"termux-share {imageFile}")
         else:
-            plt.show()
+            # plt.show freezes the app when users close the charts
+            #plt.show()
+            barChart = os.path.join(os.getcwd(), "htmlResources", "bar_chart.png")
+            barChartTag = TextUtil.imageToText(barChart)
+            barChartTag = config.mainWindow.resizeHtmlImage(barChartTag)
+            html = config.mainWindow.wrapHtml(barChartTag)
+            config.mainWindow.saveAndOpenHtmlFile(html)
         plt.close()
 
 def countVersesByBook(verses):
@@ -95,7 +101,7 @@ def countVersesByChapter(verses):
         counts[c] = counts[c] + [verse] if c in counts else [verse]
     return counts
 
-
+# run plugin
 if config.isNumpyInstalled:
     if config.isMatplotlibInstalled:
         generateCharts(config.mainWindow.plainText)
