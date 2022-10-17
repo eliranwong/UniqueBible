@@ -234,6 +234,8 @@ class RemoteCliMainWindow(CrossPlatform):
         # do not remove the dummy gui argument for this method
         self.closeMediaPlayer()
         if playlist:
+            print("Playing audio now ...")
+            print("To stop it, run '.stopaudio' or '.sa' in UBA command prompt.")
             # vlc on macOS
             if config.macVlc or config.windowsVlc:
                 audioFiles = '" "'.join(playlist)
@@ -258,6 +260,8 @@ class RemoteCliMainWindow(CrossPlatform):
         # do not remove the dummy gui argument for this method
         self.closeMediaPlayer()
         if playlist:
+            print("Playing audio now with text synchronisation ...")
+            print("To stop it, run '.stopaudiosync' or '.sas' in UBA command prompt in a separate session.")
             if config.runMode == "terminal":
                 config.mainWindow.createAudioPlayingFile()
             for index, audioFile in enumerate(playlist):
@@ -295,6 +299,9 @@ class RemoteCliMainWindow(CrossPlatform):
             except:
                 pass
 
+            # close macOS text-to-speak voice
+            if WebtopUtil.isPackageInstalled("say"):
+                os.system("pkill say")
             # close vlc on macOS
             if config.macVlc:
                 os.system("pkill VLC")

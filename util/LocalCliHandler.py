@@ -1,6 +1,8 @@
-import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json
+from genericpath import isdir
+import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json, shutil
 from functools import partial
 from datetime import date
+from pathlib import Path
 #import urllib.request
 from ast import literal_eval
 from db.BiblesSqlite import Bible
@@ -23,6 +25,7 @@ from util.UpdateUtil import UpdateUtil
 from util.DateUtil import DateUtil
 from util.WebtopUtil import WebtopUtil
 from util.Translator import Translator
+from util.HBN import HBN
 
 
 class LocalCliHandler:
@@ -48,11 +51,13 @@ class LocalCliHandler:
         self.allKJVreferences = self.getDummyDict(abbReferences, ",")
         self.allKJVreferencesBcv1 = self.getDummyDict(bcvReferences)
         self.allKJVreferencesBcv2 = self.getDummyDict(bcvReferences, ":::")
-        self.unsupportedCommands = ["_mc", "_mastercontrol", "epub", "anypdf", "searchpdf", "pdffind", "pdf", "docx", "_savepdfcurrentpage", "searchallbookspdf", "readbible", "searchhighlight", "sidebyside", "parallel", "_editfile", "_openfile", "_uba", "opennote", "_history", "_historyrecord", "_highlight"]
+        self.unsupportedCommands = ["_mc", "_mastercontrol", "epub", "anypdf", "searchpdf", "pdffind", "pdf", "docx", "_savepdfcurrentpage", "searchallbookspdf", "readbible", "searchhighlight", "parallel", "_editfile", "_openfile", "_uba", "opennote", "_history", "_historyrecord", "_highlight"]
+        if not WebtopUtil.isPackageInstalled("w3m"):
+            self.unsupportedCommands.append("sidebyside")
         self.ttsCommandKeyword = self.getDefaultTtsKeyword().lower()
         self.unsupportedCommands.append("gtts" if self.ttsCommandKeyword == "speak" else "speak")
-        self.startupException1 = [config.terminal_cancel_action, ".quit", ".q", ".restart", ".z", ".togglepager", ".history", ".update", ".find", ".stopaudio", ".read", ".readsync", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".stophttpserver", ".downloadyoutube", ".web", ".gtts"]
-        self.startupException2 = "^(_setconfig:::|\.edit|\.change|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::|download:::|read:::|readsync:::)"
+        self.startupException1 = [config.terminal_cancel_action, ".quit", ".q", ".restart", ".z", ".togglepager", ".filters", ".toggleclipboardmonitor", ".history", ".update", ".find", ".sa", ".sas", ".read", ".readsync", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".downloadyoutube", ".web", ".gtts"]
+        self.startupException2 = "^(_setconfig:::|\.edit|\.change|\.toggle|\.stop|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::|download:::|read:::|readsync:::)"
         #config.cliTtsProcess = None
         config.audio_playing_file = os.path.join("temp", "000_audio_playing.txt")
 
@@ -105,6 +110,7 @@ class LocalCliHandler:
             search_strong_bible_history = os.path.join("terminal_history", "search_strong_bible")
             search_bible_book_range_history = os.path.join("terminal_history", "search_bible_book_range")
             config_history = os.path.join("terminal_history", "config")
+            live_filter = os.path.join("terminal_history", "live_filter")
             tts_language_history = os.path.join("terminal_history", "tts_language")
             watson_translate_from_language_history = os.path.join("terminal_history", "watson_translate_from_language")
             watson_translate_to_language_history = os.path.join("terminal_history", "watson_translate_to_language")
@@ -113,6 +119,7 @@ class LocalCliHandler:
             python_string_history = os.path.join("terminal_history", "python_string")
             python_file_history = os.path.join("terminal_history", "python_file")
 
+            self.terminal_live_filter_session = PromptSession(history=FileHistory(live_filter))
             self.terminal_books_selection_session = PromptSession(history=FileHistory(module_history_books))
             self.terminal_find_session = PromptSession(history=FileHistory(find_history))
             self.terminal_search_strong_bible_session = PromptSession(history=FileHistory(search_strong_bible_history))
@@ -136,6 +143,7 @@ class LocalCliHandler:
 
         else:
 
+            self.terminal_live_filter_session = None
             self.terminal_watson_translate_from_language_session = None
             self.terminal_watson_translate_to_language_session = None
             self.terminal_google_translate_from_language_session = None
@@ -197,6 +205,7 @@ class LocalCliHandler:
         return {
             config.terminal_cancel_action: ("cancel action in current prompt", self.cancelAction),
             ".togglepager": ("toggle paging for text output", self.togglePager),
+            ".toggleclipboardmonitor": ("toggle paging for text output", self.toggleClipboardMonitor),
             ".togglebiblecomparison": ("toggle bible comparison view", self.togglebiblecomparison),
             ".togglebiblechapterplainlayout": ("toggle bible chapter plain layout", self.toggleBibleChapterFormat),
             ".toggleplainbiblechaptersubheadings": ("toggle bible chapter subheadings in plain layout", self.toggleaddTitleToPlainChapter),
@@ -212,6 +221,7 @@ class LocalCliHandler:
             ".sas": ("an alias to the '.stopaudiosync' command", self.removeAudioPlayingFile),
             ".read": ("read available audio files", self.read),
             ".readsync": ("read available audio files with text synchronisation", self.readsync),
+            ".filters": ("filter text content", self.filters),
             ".run": ("run copied text as command", self.runclipboardtext),
             ".forward": ("open one bible chapter forward", self.forward),
             ".backward": ("open one bible chapter backward", self.backward),
@@ -220,6 +230,7 @@ class LocalCliHandler:
             ".share": ("copy a web link for sharing", self.share),
             ".tts": ("open text-to-speech feature", lambda: self.tts(False)),
             ".ttscopiedtext": ("run text-to-speech on copied text", self.tts),
+            ".ttsc": ("an alias to the '.ttscopiedtext' command", self.tts),
             ".paste": ("display copied text", self.getclipboardtext),
             ".copy": ("copy the last opened content", self.copy),
             ".copyhtml": ("copy the last opened content in html format", self.copyHtml),
@@ -227,10 +238,11 @@ class LocalCliHandler:
             ".qsc": ("an alias to the '.quicksearchcopiedtext' command", self.quickSearch),
             ".quickopencopiedtext": ("quick open copied text", self.quickopen),
             ".qoc": ("an alias to the '.quickopencopiedtext' command", self.quickopen),
-            ".quickeditcopiedtext": ("quick open copied entry in text editor", self.quickedit),
+            ".quickeditcopiedtext": ("quick edit copied text", self.quickedit),
             ".qec": ("an alias to the '.quickeditcopiedtext' command", self.quickedit),
             ".find": ("find a string in the lastest content", self.find),
             ".findcopiedtext": ("find a string in the copied text", self.findCopiedText),
+            ".findc": ("an alias to the '.findcopiedtext' command", self.findCopiedText),
             ".history": ("display history records", self.history),
             ".latestchanges": ("display latest changes", self.latestchanges),
             ".latest": ("display the lastest selection", self.latest),
@@ -255,8 +267,9 @@ class LocalCliHandler:
             ".showttslanguages": ("display text-to-speech languages", self.showttslanguages),
             ".showdownloads": ("display available downloads", self.showdownloads),
             ".downloadyoutube": ("download youtube file", self.downloadyoutube),
+            ".downloadbibleaudio": ("download bible audio", self.downloadbibleaudio),
             ".openbible": ("open bible", self.openbible),
-            ".openbiblemodulenote": ("open bible module note", self.openbiblemodulenote),
+            ".openbiblenote": ("open bible module note", self.openbiblemodulenote),
             ".original": ("open Hebrew & Greek bibles", self.original),
             ".mob": ("open hebrew & Greek original bible", lambda: self.web(".mob", False)),
             ".mib": ("open hebrew & Greek interlinear bible", lambda: self.web(".mib", False)),
@@ -311,7 +324,7 @@ class LocalCliHandler:
             ".searchthirdpartydictionaries": ("search third-party dictionaries", lambda: self.searchTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
             ".search3dict": ("an alias to the '.searchthirdpartydictionaries' command", lambda: self.searchTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
             ".searchconcordance": ("search for concordance", self.searchconcordance),
-            ".quicksearch": ("quick search currently selected modules", lambda: self.quickSearch(False)),
+            ".quicksearch": ("quick search", lambda: self.quickSearch(False)),
             ".qs": ("an alias to the '.quicksearch' command", lambda: self.quickSearch(False)),
             ".opencrossreference": ("open cross reference", self.openversefeature),
             ".opencomparison": ("open verse comparison", lambda: self.openversefeature("COMPARE")),
@@ -331,17 +344,19 @@ class LocalCliHandler:
             ".openbookfeatures": ("open bible book features", self.openbookfeatures),
             ".openchapterfeatures": ("open bible chapter features", self.openchapterfeatures),
             ".openversefeatures": ("open bible verse features", self.openversefeatures),
-            ".quickopen": ("quick open currently selected modules", lambda: self.quickopen(False)),
+            ".quickopen": ("quick open", lambda: self.quickopen(False)),
             ".qo": ("an alias to the '.quickopen' command", lambda: self.quickopen(False)),
             ".standardcommands": ("display standard UBA command help menu", self.standardcommands),
             ".terminalcommands": ("display terminal mode commands", self.terminalcommands),
             ".aliases": ("display terminal mode command shortcuts", self.commandAliases),
             ".menu": ("display main menu", self.menu),
-            ".info": ("display information menu", self.info),
+            ".my": ("display my menu", self.my),
+            ".show": ("display show menu", self.info),
             ".open": ("display open menu", self.open),
             ".search": ("display search menu", self.search),
             ".note": ("display note / journal menu", self.accessNoteFeatures),
             ".edit": ("display edit menu", self.edit),
+            ".quick": ("display quick menu", self.quick),
             ".control": ("display control menu", self.control),
             ".toggle": ("display toggle menu", self.toggle),
             ".clipboard": ("display clipboard menu", self.clipboard),
@@ -351,6 +366,9 @@ class LocalCliHandler:
             ".plugins": ("display plugin menu", self.plugins),
             ".howto": ("display how-to menu", self.howto),
             ".maintain": ("display maintain menu", self.maintain),
+            ".download": ("display download menu", self.download),
+            ".backup": ("display backup menu", self.backup),
+            ".restore": ("display restore menu", self.restore),
             ".develop": ("display developer menu", self.develop),
             ".help": ("display help menu", self.help),
             ".wiki": ("open online wiki page", self.wiki),
@@ -364,6 +382,7 @@ class LocalCliHandler:
             ".editnewfile": ("edit new file in text editor", lambda: self.cliTool(config.terminalNoteEditor)),
             ".editcontent": ("edit latest content in text editor", lambda: self.cliTool(config.terminalNoteEditor, self.getPlainText())),
             ".editconfig": ("edit 'config.py' in text editor", lambda: self.editConfig(config.terminalNoteEditor)),
+            ".editfilters": ("edit 'filters.txt' in text editor", self.editfilters),
             ".searchbible": ("search bible", self.searchbible),
             ".whatis": ("read description about a command", self.whatis),
             ".starthttpserver": ("start UBA http-server", self.starthttpserver),
@@ -374,6 +393,7 @@ class LocalCliHandler:
             ".restorejournals": ("restore journal database file", lambda: self.restoreFile("marvelData/journal.sqlite")),
             ".restorelastnotes": ("restore note database file", lambda: self.restoreLastFile("marvelData/note.sqlite")),
             ".restorelastjournals": ("restore journal database file", lambda: self.restoreLastFile("marvelData/journal.sqlite")),
+            ".changemymenu": ("change my menu", self.changemymenu),
             ".changecurrentbible": ("change current bible version", lambda: self.changeDefaultModule("mainText", self.crossPlatform.textList, config.mainText, self.showbibles)),
             ".changefavouritebible1": ("change favourite bible version 1", lambda: self.changeDefaultModule("favouriteBible", self.crossPlatform.textList, config.favouriteBible, self.showbibles)),
             ".changefavouritebible2": ("change favourite bible version 2", lambda: self.changeDefaultModule("favouriteBible2", self.crossPlatform.textList, config.favouriteBible2, self.showbibles)),
@@ -414,13 +434,76 @@ class LocalCliHandler:
             ".wtc": ("an alias to the '.watsontranslatecopiedtext' command", self.watsonTranslate),
         }
 
+    def editfilters(self):
+        savedFiltersFile = os.path.join("terminal_mode", "filters.txt")
+        print(f"You are about to edit '{savedFiltersFile}' ...")
+        print("Save as and overwrite the file '{savedFiltersFile}' when you finish.")
+        print("Are you ready to edit? [y]es / [N]o")
+        userInput = self.simplePrompt()
+        if userInput.lower() in ("y", "yes"):
+            text = self.readPlainTextFile(savedFiltersFile)
+            return self.cliTool(config.terminalNoteEditor, text)
+        else:
+            self.cancelAction()
+
+    def filters(self):
+        try:
+            savedFiltersFile = os.path.join("terminal_mode", "filters.txt")
+            if not os.path.isfile(savedFiltersFile):
+                with open(savedFiltersFile, "w", encoding="utf-8") as fileObj:
+                    fileObj.write("jesus|christ\nGen \nJohn ")
+            with open(savedFiltersFile, "r", encoding="utf-8") as input_file:
+                savedFiltersFileContent = input_file.read()
+            savedFilters = [i for i in savedFiltersFileContent.split("\n") if i.strip()]
+            print(self.divider)
+            print(TextUtil.htmlToPlainText("<h2>Saved Filters are:</h2>"))
+            print(pprint.pformat(savedFilters))
+            print(self.divider)
+            print("Enter mulitple filters:")
+            print("(enter each on a single line)")
+            print("(newly added filters will be automatically saved)")
+            if config.isPrompt_toolkitInstalled:
+                self.printMultineNote()
+                userInput = self.terminal_live_filter_session.prompt(self.inputIndicator, style=self.promptStyle, multiline=True).strip()
+            else:
+                userInput = input(self.inputIndicator).strip()
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
+                return self.cancelAction()
+            currentFilters = []
+            for i in userInput.split("\n"):
+                if i.strip():
+                    if not i in savedFilters:
+                        savedFilters.append(i)
+                    currentFilters.append(i)
+            if not currentFilters:
+                return self.reload()
+            filteredText = []
+            for line in self.plainText.split("\n"):
+                match = True
+                for f in currentFilters:
+                    # check if any one of the filters is not matched
+                    if not TextUtil.regexp(f, line):
+                        match = False
+                        break
+                # display when a line matches all filters
+                if match:
+                    filteredText.append(line)
+            # update saved filters
+            with open(savedFiltersFile, "w", encoding="utf-8") as fileObj:
+                fileObj.write("\n".join(sorted(savedFilters)))
+            # display filtered text
+            return self.displayOutputOnTerminal("\n".join(filteredText))
+        except:
+            print("Errors!")
+        return ""
+
     def execPythonString(self):
         if config.terminalEnableTermuxAPI:
             if not self.fingerprint():
                 return self.cancelAction()
         try:
             print(self.divider)
-            print("Enter a python command:")
+            print("Enter a python script:")
             if config.isPrompt_toolkitInstalled:
                 self.printMultineNote()
                 userInput = self.terminal_python_string_session.prompt(self.inputIndicator, style=self.promptStyle, multiline=True).strip()
@@ -489,8 +572,11 @@ class LocalCliHandler:
     def runTextCommand(self, command):
         return self.getContent(command)
 
-    def getContent(self, command):
+    def getContent(self, command, checkDotCommand=True):
         command = command.strip()
+        # allow use of tts::: no matter which tts engine is in place
+        if command.lower().startswith("tts:::"):
+            command = f"{self.ttsCommandKeyword}{command[3:]}"
         # study window applies to Qt library users only
         if command.lower().startswith("study:::") or command.lower().startswith("studytext:::"):
             config.studyText, config.studyB, config.studyC, config.studyV = config.mainText, config.mainB, config.mainC, config.mainV
@@ -517,10 +603,10 @@ class LocalCliHandler:
             except:
                 pass
         # Redirect heavy html content to web version.
-        if re.search('^(map:::|qrcode:::|bible:::mab:::|bible:::mib:::|bible:::mob:::|bible:::mpb:::|bible:::mtb:::|text:::mab|text:::mib|text:::mob|text:::mpb|text:::mtb|study:::mab:::|study:::mib:::|study:::mob:::|study:::mpb:::|study:::mtb:::|studytext:::mab|studytext:::mib|studytext:::mob|studytext:::mpb|studytext:::mtb)', command.lower()):
+        if not command.lower().startswith(".") and re.search('^(map:::|qrcode:::|bible:::mab:::|bible:::mib:::|bible:::mob:::|bible:::mpb:::|bible:::mtb:::|text:::mab|text:::mib|text:::mob|text:::mpb|text:::mtb|study:::mab:::|study:::mib:::|study:::mob:::|study:::mpb:::|study:::mtb:::|studytext:::mab|studytext:::mib|studytext:::mob|studytext:::mpb|studytext:::mtb)', command.lower()):
             return self.web(command)
         # Dot commands
-        if command.startswith("."):
+        if checkDotCommand and command.startswith("."):
             return self.getDotCommandContent(command.lower())
         # Non-dot commands
         view, content, dict = self.textCommandParser.parser(command, "cli")
@@ -543,41 +629,55 @@ class LocalCliHandler:
             config.mainB, config.mainC, config.mainV, *_ = references[-1]
         return plainText
 
+    def fineTuneTextForWebBrowserDisplay(self, text=""):
+        if not text:
+            text = self.html
+        if text.startswith("[BROWSER]"):
+            text = text[9:]
+        text = re.sub("audiotrack", "", text)
+        text = re.sub("「(Back|Fore|Style)\.[^「」]+?」", "", text)
+        return text
+
     def displayOutputOnTerminal(self, content):
-        divider = self.divider
-        if config.terminalEnablePager and not content in ("Command processed!", "INVALID_COMMAND_ENTERED") and not content.endswith("not supported in terminal mode.") and not content.startswith("[MESSAGE]"):
-            if platform.system() == "Windows":
-                try:
-                    pydoc.pager(content)
-                except:
-                    config.terminalEnablePager = False
-                    print(divider)
-                    print(content)
-                # When you use remote powershell and want to pipe a command on the remote windows server through a pager, piping through out-host -paging works as desired. Piping through more when running the remote command is of no use: the entire text is displayed at once.
-#                try:
-#                    pydoc.pipepager(content, cmd='out-host -paging')
-#                except:
-#                    try:
-#                        pydoc.pipepager(content, cmd='more')
-#                    except:
-#                        config.terminalEnablePager = False
-#                        print(divider)
-#                        print(content)
-            else:
-                try:
-                    # paging without colours
-                    #pydoc.pager(content)
-                    # paging with colours
-                    pydoc.pipepager(content, cmd='less -R')
-                except:
-                    config.terminalEnablePager = False
-                    print(divider)
-                    print(content)
+        if content.startswith("[BROWSER]"):
+            html = self.fineTuneTextForWebBrowserDisplay()
+            self.cliTool("w3m -T text/html", html)
         else:
-            if content.startswith("[MESSAGE]"):
-                content = content[9:]
-            print(divider)
-            print(content)
+            divider = self.divider
+            if config.terminalEnablePager and not content in ("Command processed!", "INVALID_COMMAND_ENTERED") and not content.endswith("not supported in terminal mode.") and not content.startswith("[MESSAGE]"):
+                if platform.system() == "Windows":
+                    try:
+                        pydoc.pager(content)
+                    except:
+                        config.terminalEnablePager = False
+                        print(divider)
+                        print(content)
+                    # When you use remote powershell and want to pipe a command on the remote windows server through a pager, piping through out-host -paging works as desired. Piping through more when running the remote command is of no use: the entire text is displayed at once.
+    #                try:
+    #                    pydoc.pipepager(content, cmd='out-host -paging')
+    #                except:
+    #                    try:
+    #                        pydoc.pipepager(content, cmd='more')
+    #                    except:
+    #                        config.terminalEnablePager = False
+    #                        print(divider)
+    #                        print(content)
+                else:
+                    try:
+                        # paging without colours
+                        #pydoc.pager(content)
+                        # paging with colours
+                        pydoc.pipepager(content, cmd='less -R')
+                    except:
+                        config.terminalEnablePager = False
+                        print(divider)
+                        print(content)
+            else:
+                if content.startswith("[MESSAGE]"):
+                    content = content[9:]
+                print(divider)
+                print(content)
+        self.checkAudioContent()
 
     def quitUBA(self):
         print("Closing ...")
@@ -588,10 +688,13 @@ class LocalCliHandler:
         return ""
 
     def getDotCommandContent(self, command):
+        enteredCommand = command
+        command = command.replace(" ", "")
         if command in self.dotCommands:
             return self.dotCommands[command][-1]()
-        print(f"Command not found: {command}")
-        return ""
+        return self.getContent(enteredCommand, False)
+        #print(f"Command not found: {command}")
+        #return ""
 
     def getDummyDict(self, data, suffix="", furtherOptions=None):
         # set is supported in NestedCompleter but not preferred as set is unordered
@@ -601,13 +704,47 @@ class LocalCliHandler:
         if config.isPrompt_toolkitInstalled:
             from prompt_toolkit.completion import NestedCompleter, ThreadedCompleter
 
-            #bibleBooks = BibleBooks()
-            # = bibleBooks.getStandardBookAbbreviations()
             suggestions = {}
             days365 = self.getDummyDict([(i + 1) for i in range(365)])
             for i in self.getTextCommandSuggestion():
                 if re.sub(":::$", "", i) in self.unsupportedCommands:
                     pass
+                elif i == ".backup":
+                    suggestions[i] = self.getDummyDict(["journals", "notes",])
+                elif i == ".copy":
+                    suggestions[i] = self.getDummyDict(["html",])
+                elif i == ".download":
+                    suggestions[i] = self.getDummyDict(["bibleaudio", "youtube",])
+                elif i == ".extract":
+                    suggestions[i] = self.getDummyDict(["copiedtext",])
+                elif i == ".find":
+                    suggestions[i] = self.getDummyDict(["copiedtext",])
+                elif i == ".help":
+                    suggestions[i] = self.getDummyDict(["installmicro",])
+                elif i == ".latest":
+                    suggestions[i] = self.getDummyDict(["bible", "changes",])
+                elif i == ".read":
+                    suggestions[i] = self.getDummyDict(["sync",])
+                elif i == ".restore":
+                    suggestions[i] = self.getDummyDict(["journals", "lastjournals", "lastnotes", "notes",])
+                elif i == ".tts":
+                    suggestions[i] = self.getDummyDict(["copiedtext",])
+                elif i == ".change":
+                    suggestions[i] = self.getDummyDict(["biblesearchmode", "colors", "colours", "commentary", "concordance", "config", "currentbible", "defaultcommand", "dictionary", "encyclopedia", "favouritebible1", "favouritebible2", "favouritebible3", "favouriteoriginalbible", "lexicon", "mymenu", "noteeditor", "referencebook", "terminalmodeconfig", "thirdpartydictionary", "ttslanguage1", "ttslanguage2", "ttslanguage3"])
+                elif i == ".exec":
+                    suggestions[i] = self.getDummyDict(["file",])
+                elif i == ".edit":
+                    suggestions[i] = self.getDummyDict(["booknote", "chapternote", "config", "content", "filters", "journal", "newfile", "versenote"])
+                elif i == ".open":
+                    suggestions[i] = self.getDummyDict(["365readingplan", "3dict", "audio", "bible", "biblenote", "bookfeatures", "booknote", "chapterfeatures", "chapterindex", "chapternote", "characters", "combo", "commentary", "comparison", "crossreference", "data", "dictionaries", "dictionarybookentry", "difference", "discourse", "encyclopedia", "encyclopediabookentry", "introduction", "journal", "lexicons", "locations", "maps", "names", "overview", "parallels", "promises", "referencebook", "summary", "text", "thirdpartydictionaries", "timelines", "topics", "translation", "tske", "versefeatures", "verseindex", "versenote", "words"])
+                elif i == ".quick":
+                    suggestions[i] = self.getDummyDict(["edit", "editcopiedtext", "open", "opencopiedtext", "search", "searchcopiedtext", "start"])
+                elif i == ".search":
+                    suggestions[i] = self.getDummyDict(["3dict", "bible", "booknote", "chapternote", "characters", "concordance", "dictionaries", "encyclopedia", "journal", "lexicons", "lexiconsreversely", "locations", "names", "parallels", "promises", "referencebooks", "thirdpartydictionaries", "topics", "versenote"])
+                elif i == ".show":
+                    suggestions[i] = self.getDummyDict(["bibleabbreviations", "biblebooks", "biblechapters", "bibles", "bibleverses", "commentaries", "data", "dictionaries", "downloads", "encyclopedia", "lexicons", "referencebooks", "strongbibles", "thirdpartydictionary", "topics", "ttslanguages"])
+                elif i == ".toggle":
+                    suggestions[i] = self.getDummyDict(["biblechapterplainlayout", "biblecomparison", "biblelexicalentries", "biblenoteindicator", "clipboardmonitor", "favoriteverses", "favouriteverses", "pager", "plainbiblechaptersubheadings", "usernoteindicator", "versenumberdisplay"])
                 elif i in ("text:::", "studytext:::", "_chapters", "_bibleinfo:::"):
                     suggestions[i] = self.getDummyDict(self.crossPlatform.textList)
                 elif i in ("_vnsc:::", "_vndc:::", "readchapter:::", "readverse:::", "readword:::", "readlexeme:::",):
@@ -696,6 +833,15 @@ class LocalCliHandler:
     def togglePager(self):
         config.terminalEnablePager = not config.terminalEnablePager
         return self.plainText
+
+    def showClipboardMonitorStatus(self):
+        print(self.divider)
+        print("Clipboard Monitor:", "ON" if config.terminalEnableClipboardMonitor else "OFF")
+
+    def toggleClipboardMonitor(self):
+        config.terminalEnableClipboardMonitor = not config.terminalEnableClipboardMonitor
+        self.showClipboardMonitorStatus()
+        return ""
 
     def standardcommands(self):
         content = "UBA commands:"
@@ -794,8 +940,14 @@ class LocalCliHandler:
             return f", {plusBible}"
         return plusBible
 
+    def checkAudioContent(self):
+        if config.audioBibleIcon in self.html or config.audioBibleIcon2 in self.html:
+            print(self.divider)
+            print("Audio content is available!")
+            print("To listen, run '.read' or '.readsync'")
+
     def initialDisplay(self):
-        print("--------------------")
+        print(self.divider)
         bibleReference = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
         print("{0} [{1}.{2}.{3}] - {4}{5}, {6}".format(bibleReference, config.mainB, config.mainC, config.mainV, config.mainText, self.getPlusBible(), config.commentaryText))
         print("Enter an UBA command:")
@@ -1029,13 +1181,16 @@ class LocalCliHandler:
         else:
             return "SPEAK"
 
-    def extract(self):
+    def extract(self, text=""):
+        if not text:
+            text = self.plainText
         parser = BibleVerseParser(config.parserStandarisation)
-        verseList = parser.extractAllReferences(self.plainText, False)
-        print(self.divider)
+        verseList = parser.extractAllReferences(text, False)
+        #print(self.divider)
         if not verseList:
             print("No bible reference is found!")
         else:
+            print("Bible reference(s):")
             references = "; ".join([parser.bcvToVerseReference(*verse) for verse in verseList])
             print(references)
         return ""
@@ -1078,7 +1233,7 @@ class LocalCliHandler:
 
     def tts(self, runOnCopiedText=True):
         if runOnCopiedText:
-            self.getclipboardtext()
+            clipboardText = self.getclipboardtext()
         codes = self.ttsLanguageCodes
         #display = "<h2>Languages</h2>"
         shortCodes = []
@@ -1111,7 +1266,7 @@ class LocalCliHandler:
                 config.ttsDefaultLangauge = userInput
                 commandPrefix = f"{self.getDefaultTtsKeyword()}:::{userInput}:::"
                 if runOnCopiedText:
-                    userInput = self.getclipboardtext()
+                    userInput = clipboardText
                 else:
                     print(self.divider)
                     print("Enter text to be read:")
@@ -1130,7 +1285,7 @@ class LocalCliHandler:
     def watsonTranslate(self, runOnCopiedText=True):
         if config.isIbmWatsonInstalled:
             if runOnCopiedText:
-                self.getclipboardtext()
+                clipboardText = self.getclipboardtext()
             try:
                 if config.isPrompt_toolkitInstalled:
                     from prompt_toolkit.completion import WordCompleter
@@ -1183,7 +1338,7 @@ class LocalCliHandler:
                         toLanguage = userInput
 
                     if runOnCopiedText:
-                        userInput = self.getclipboardtext()
+                        userInput = clipboardText
                     else:
                         print(self.divider)
                         print("Enter the text you want to translate:")
@@ -1206,7 +1361,7 @@ class LocalCliHandler:
     def googleTranslate(self, runOnCopiedText=True):
         if config.isTranslateInstalled:
             if runOnCopiedText:
-                self.getclipboardtext()
+                clipboardText = self.getclipboardtext()
             try:
                 if config.isPrompt_toolkitInstalled:
                     from prompt_toolkit.completion import WordCompleter
@@ -1251,7 +1406,7 @@ class LocalCliHandler:
                         toLanguage = userInput
 
                     if runOnCopiedText:
-                        userInput = self.getclipboardtext()
+                        userInput = clipboardText
                     else:
                         print(self.divider)
                         print("Enter the text you want to translate:")
@@ -1272,7 +1427,7 @@ class LocalCliHandler:
             return ""
 
     def printMultineNote(self):
-        print("[Note: Multiline input is enabled!  Press Escape key followed by Enter key when you finish text entry!]")
+        print("[Attention! Multiline input is enabled. Press Escape+Enter when you finish text entry.]")
 
     def getclipboardtext(self):
         try:
@@ -1313,7 +1468,7 @@ class LocalCliHandler:
     def getCommand(self, command=""):
         if not command:
             command = self.command
-        exception = "^(_setconfig:::|mp3:::|mp4:::|cmd:::)"
+        exception = "^(_setconfig:::|mp3:::|mp4:::|cmd:::|read:::|readsync:::)"
         if command.startswith(".") or re.search(exception, command.lower()):
             command = ".bible"
         return command
@@ -2793,11 +2948,56 @@ class LocalCliHandler:
         self.toast(message)
         return ""
 
+    def downloadbibleaudio(self):
+        options = list(self.crossPlatform.verseByVerseAudio.keys())
+        print(self.divider)
+        print(self.getOptionsDisplay(options, "Download Bible Audio"))
+        print(self.divider)
+        userInput = self.simplePrompt(True)
+        if not userInput or userInput.lower() == config.terminal_cancel_action:
+            return self.cancelAction()
+        index = int(userInput)
+        if index in range(len(options)):
+            choice = options[index]
+            print(f"You selected '{choice}'.")
+            module, repo, *_ = self.crossPlatform.verseByVerseAudio[choice]
+            self.downloadbibleaudioaction(module, repo)
+        else:
+            self.printInvalidOptionEntered()
+
+    def downloadbibleaudioaction(self, module, repo):
+        try:
+            print(self.divider)
+            audioDir = os.path.join(config.audioFolder, "bibles", module, "default")
+            Path(audioDir).mkdir(parents=True, exist_ok=True)
+            # remove old files
+            if os.path.isdir(audioDir):
+                # os.rmdir does not work with sub directories
+                # os.rmdir(audioDir)
+                # use shutil.rmtree instead
+                shutil.rmtree(audioDir)
+            os.system(f"git clone https://github.com/{repo} {audioDir}")
+            print("Downloaded!")
+            print("unpacking files ...")
+            for item in os.listdir(audioDir):
+                zipFile = os.path.join(audioDir, item)
+                if os.path.isfile(zipFile) and item.endswith(".zip"):
+                    #os.system(f"unzip {zipFile}")
+                    # Unzip file
+                    shutil.unpack_archive(zipFile, audioDir)
+                    # Delete zip file
+                    os.remove(zipFile)
+            print("Installed!")
+        except:
+            print("Errors!")
+
     def cancelAction(self):
         config.terminalCommandDefault = ""
         message = "Action cancelled!"
+        print(self.divider)
         print(message)
         self.toast(message)
+        self.clipboardMonitorFeature()
         return ""
 
     def printChooseItem(self):
@@ -2843,6 +3043,38 @@ class LocalCliHandler:
         except:
             return self.printInvalidOptionEntered()
 
+    def clipboardMonitorFeature(self):
+        self.showClipboardMonitorStatus()
+        if config.terminalEnableClipboardMonitor:
+            # check English definition of selected word
+            selectedText = self.getclipboardtext()
+            if selectedText in HBN.entries:
+                definition = HBN.entries[selectedText]
+            else:
+                definition = self.getDefinition(selectedText)
+                if not definition:
+                    lemma = config.lemmatizer.lemmatize(selectedText)
+                    if lemma == selectedText:
+                        lemma = ""
+                    else:
+                        lemma = f"{lemma} -"
+                    definition = self.getDefinition(lemma)
+                    if definition:
+                        definition = "{0}{1}".format(lemma, definition)
+                    elif config.isChineseEnglishLookupInstalled:
+                        definition = "{0}{1}".format(lemma, config.cedict.lookup(lemma))
+            print("Definition:")
+            print(definition)
+            print(self.divider)
+            self.extract(selectedText)
+
+    def getDefinition(self, entry):
+        definition = ""
+        synsets = config.wordnet.synsets(entry)
+        if synsets:
+            definition = synsets[0].definition()
+        return definition
+
     def printOptionsDisplay(self, options, heading=""):
         print(self.getOptionsDisplay(options, heading))
 
@@ -2856,7 +3088,9 @@ class LocalCliHandler:
     def changeDefaultCommand(self):
         try:
             print(self.divider)
-            print("Current default command:")
+            print("Change default command")
+            print("(What is 'default command'?  \nUBA runs default command when users simply press Enter key in command prompt without text entry)\n")
+            print("Current default command is:")
             print(config.terminalDefaultCommand)
             print(self.divider)
             options = (".menu", ".run", ".search", ".quicksearch", ".quicksearchcopiedtext", "[CUSTOMISE]")
@@ -2880,6 +3114,23 @@ class LocalCliHandler:
                 return self.printInvalidOptionEntered()
         except:
             return self.printInvalidOptionEntered()
+
+    def changemymenu(self):
+        if config.isPrompt_toolkitInstalled:
+            from prompt_toolkit import prompt
+            print("Change My Menu")
+            print("Enter a terminal command on each line:")
+            print(self.divider)
+            self.printMultineNote()
+            default = "\n".join(config.terminalMyMenu)
+            userInput = prompt(self.inputIndicator, style=self.promptStyle, multiline=True, default=default).strip()
+            config.terminalMyMenu = [i.lower().strip() for i in userInput.split("\n") if i.lower().strip() in config.mainWindow.dotCommands]
+            print("config.terminalMyMenu is changed to:")
+            print(config.terminalMyMenu)
+        else:
+            return self.printMissingPackage("prompt_toolkit")
+        if not userInput or userInput.lower() == config.terminal_cancel_action:
+            return self.cancelAction()
 
     def changebiblesearchmode(self):
         try:
@@ -3196,12 +3447,26 @@ class LocalCliHandler:
 
     def menu(self):
         heading = "UBA Terminal Mode Menu"
-        features = (".info", ".open", ".search", ".note", ".edit", ".clipboard", ".control", ".tools", ".plugins", ".change", ".maintain", ".develop", ".help", ".restart", ".quit")
+        features = [".show", ".open", ".search", ".note", ".edit", ".clipboard", ".quick", ".control", ".tools", ".plugins", ".change", ".download", ".maintain", ".develop", ".help", ".restart", ".quit"]
+        if config.terminalMyMenu:
+            features.insert(0, ".my")
         return self.displayFeatureMenu(heading, features)
+
+    def my(self):
+        if config.terminalMyMenu:
+            heading = "My Menu"
+            return self.displayFeatureMenu(heading, config.terminalMyMenu)
+        else:
+            return "Configure config.terminalMyMenu first!"
 
     def open(self):
         heading = "Open"
-        features = (".openbible", ".openbiblemodulenote", ".original", ".open365readingplan", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".opencommentary", ".openreferencebook", ".openaudio", ".opendata", ".opentopics", ".openpromises", ".openparallels", ".opennames", ".opencharacters", ".openlocations", ".openmaps", ".opentimelines", ".opendictionaries", ".openencyclopedia", ".openlexicons", ".openthirdpartydictionaries", ".opentext", ".quickopen")
+        features = (".openbible", ".openbiblenote", ".original", ".open365readingplan", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".opencommentary", ".openreferencebook", ".openaudio", ".opendata", ".opentopics", ".openpromises", ".openparallels", ".opennames", ".opencharacters", ".openlocations", ".openmaps", ".opentimelines", ".opendictionaries", ".openencyclopedia", ".openlexicons", ".openthirdpartydictionaries", ".opentext")
+        return self.displayFeatureMenu(heading, features)
+
+    def quick(self):
+        heading = "Quick"
+        features = (".quickopen", ".quickopencopiedtext", ".quickedit", ".quickeditcopiedtext", ".quicksearch", ".quicksearchcopiedtext")
         return self.displayFeatureMenu(heading, features)
 
     def original(self):
@@ -3211,7 +3476,7 @@ class LocalCliHandler:
 
     def tools(self):
         heading = "Tools"
-        features = (".web", ".share", ".extract", ".read", ".readsync", ".tts", ".googletranslate", ".watsontranslate", ".downloadyoutube")
+        features = (".web", ".share", ".extract", ".filters", ".read", ".readsync", ".tts", ".googletranslate", ".watsontranslate")
         return self.displayFeatureMenu(heading, features)
 
     def control(self):
@@ -3221,17 +3486,17 @@ class LocalCliHandler:
 
     def toggle(self):
         heading = "Toggle"
-        features = (".togglepager", ".togglebiblecomparison", ".togglebiblechapterplainlayout", ".toggleplainbiblechaptersubheadings", ".togglefavouriteverses", ".toggleversenumberdisplay", ".toggleusernoteindicator", ".togglebiblenoteindicator", ".togglebiblelexicalentries")
+        features = (".togglepager", "toggleclipboardmonitor", ".togglebiblecomparison", ".togglebiblechapterplainlayout", ".toggleplainbiblechaptersubheadings", ".togglefavouriteverses", ".toggleversenumberdisplay", ".toggleusernoteindicator", ".togglebiblenoteindicator", ".togglebiblelexicalentries")
         return self.displayFeatureMenu(heading, features)
 
     def clipboard(self):
         heading = "Copy & Copied Text"
-        features = (".copy", ".copyhtml", ".paste", ".run", ".findcopiedtext", ".quickopencopiedtext", ".quickeditcopiedtext", ".quicksearchcopiedtext", ".ttscopiedtext", ".googletranslatecopiedtext", ".watsontranslatecopiedtext", ".extractcopiedtext")
+        features = (".copy", ".copyhtml", ".paste", ".run", ".findcopiedtext", ".ttscopiedtext", ".googletranslatecopiedtext", ".watsontranslatecopiedtext", ".extractcopiedtext")
         return self.displayFeatureMenu(heading, features)
 
     def search(self):
         heading = "Search"
-        features = (".find", ".searchbible", ".searchpromises", ".searchparallels", ".searchnames", ".searchcharacters", ".searchlocations", ".searchtopics", ".searchreferencebooks", ".searchencyclopedia", ".searchdictionaries", ".searchthirdpartydictionaries", ".searchlexicons", ".searchlexiconsreversely", ".searchconcordance", ".quicksearch")
+        features = (".find", ".searchbible", ".searchpromises", ".searchparallels", ".searchnames", ".searchcharacters", ".searchlocations", ".searchtopics", ".searchreferencebooks", ".searchencyclopedia", ".searchdictionaries", ".searchthirdpartydictionaries", ".searchlexicons", ".searchlexiconsreversely", ".searchconcordance")
         return self.displayFeatureMenu(heading, features)
 
     def info(self):
@@ -3241,7 +3506,7 @@ class LocalCliHandler:
 
     def edit(self):
         heading = "Edit"
-        features = (".editnewfile", ".editcontent", ".editconfig", ".quickedit", ".changenoteeditor", ".helpinstallmicro")
+        features = (".editnewfile", ".editcontent", ".editconfig", ".editfilters", ".changenoteeditor", ".helpinstallmicro")
         return self.displayFeatureMenu(heading, features)
 
     def change(self):
@@ -3256,9 +3521,24 @@ class LocalCliHandler:
 
     def maintain(self):
         heading = "Maintenance"
-        features = [".latestchanges", ".update", ".showdownloads"]
+        features = [".latestchanges", ".update"]
         if config.terminalEnableTermuxAPI:
-            features += [".backupnotes", ".backupjournals", ".restorenotes", ".restorejournals", ".restorelastnotes", ".restorelastjournals"]
+            features += [".backup", ".restore"]
+        return self.displayFeatureMenu(heading, features)
+
+    def backup(self):
+        heading = "Backup"
+        features = (".backupnotes", ".backupjournals")
+        return self.displayFeatureMenu(heading, features)
+
+    def restore(self):
+        heading = "Restore"
+        features = (".restorenotes", ".restorelastnotes", ".restorejournals", ".restorelastjournals")
+        return self.displayFeatureMenu(heading, features)
+
+    def download(self):
+        heading = "Download"
+        features = (".showdownloads", ".downloadbibleaudio", ".downloadyoutube")
         return self.displayFeatureMenu(heading, features)
 
     def develop(self):

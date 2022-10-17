@@ -191,6 +191,9 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     config.terminalCommandDefault = ""
     default = ""
     runStartupPlugins()
+    # make sure user-customised menu contains valid item only.
+    # validation can only be running after, not before, running startup plugin, as some startup plugin works on command shortcuts.
+    config.terminalMyMenu = [i for i in config.terminalMyMenu if i in config.mainWindow.dotCommands]
 
     # Set initial command
     command = " ".join(sys.argv[2:]).strip()
@@ -273,6 +276,7 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
             command = re.sub("：：：", r":::", command)
             command = runTerminalModeCommand(command)
         else:
+            config.mainWindow.clipboardMonitorFeature()
             command = runTerminalModeCommand(config.terminalDefaultCommand)
 
     config.mainWindow.removeAudioPlayingFile()

@@ -4,6 +4,7 @@ from util.WebtopUtil import WebtopUtil
 
 
 if WebtopUtil.isPackageInstalled("lynx"):
-    config.mainWindow.cliTool("lynx -stdin", config.mainWindow.html)
+    html = config.mainWindow.fineTuneTextForWebBrowserDisplay()
+    config.mainWindow.cliTool("lynx -stdin", html)
 else:
     config.mainWindow.printToolNotFound("lynx")

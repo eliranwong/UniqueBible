@@ -1,5 +1,34 @@
+Changes in 32.65:
+Changes made in terminal mode:
+* Users can now customise "my menu":
+    run '.changemymenu' to edit your favourite actions
+    run '.my' to display 'my menu'
+    remarks:
+        'my menu' is displayed only when it is not empty.
+        it is also displayed on the top of the main menu when users run '.menu'
+        it is recommended that users change the default command to '.my' by running '.changedefaultcommand'
+* Support use of "SIDEBYSIDE" command keyword if w3m is installed.
+* Added two plugins:
+    look up in wordnet
+    display word forms
+* Improved autocompletion of terminal commands
+* Allow space entry in terminal commands, e.g. ".open bible" and ".openbible" are the same.
+* Added clipbord monitoring feature.
+    use '.toggleclipboardmonitor' command to toggle this feature.
+* Added '.download' menu.
+* Added '.downloadbibleaudio' to download bible audio.
+* Youtube downloads now display status while downloading
+* Highlight verse number in commentary content to indicator the verse users want to open.
+* Added audio content notification
+* Added live filter feature with '.filters' and '.editfilters' commands.
+* Added three how-to files:
+    download bible audio.md
+    filter text content.md
+    customise my menu.md
+
 Changes in 32.64:
 Terminal mode:
+* Moved terminal plugins from "terminal_mode/plugins/" to "plugins/terminal/"
 * Fixed open html file with Android Apps
 * Fixed closing pie chart and bar chart on macOS
     previously closing pie chart or bar chart freezes the app.

@@ -1588,13 +1588,18 @@ class TextCommandParser:
         if self.isFfmpegInstalled():
             try:
                 print(config.mainWindow.divider)
-                print("Downloading ...")
-                subprocess.run(["cd {2}; {0} {1}".format(downloadCommand, command, outputFolder)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                #print("Downloading ...")
+                #subprocess.run(["cd {2}; {0} {1}".format(downloadCommand, command, outputFolder)], shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+                # use os.system instead, as it displays download status ...
+                os.system("cd {2}; {0} {1}".format(downloadCommand, command, outputFolder))
                 if WebtopUtil.isPackageInstalled("pkill"):
                     os.system("pkill yt-dlp")
                 print(f"Downloaded in directory '{outputFolder}'!")
-            except subprocess.CalledProcessError as err:
-                config.mainWindow.displayMessage(err, title="ERROR:")
+            except:
+                print("Errors!")
+            #except subprocess.CalledProcessError as err:
+                #config.mainWindow.displayMessage(err, title="ERROR:")
+                
         else:
             print("Tool 'ffmpeg' is not found on your system!")
         return ("", "", {})
@@ -2338,6 +2343,8 @@ class TextCommandParser:
                 updateViewConfig(viewText, verseList[-1])
             else:
                 updateViewConfig(confirmedTexts[0], verseList[-1])
+            if config.runMode == "terminal":
+                verses = f"[BROWSER]{verses}"
             return ("main", verses, {})
 
     # DIFF:::

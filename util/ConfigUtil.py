@@ -106,6 +106,10 @@ class ConfigUtil:
         # To enable paging of terminal output when UBA runs in terminal mode."""
         if not hasattr(config, "terminalEnablePager"):
             config.terminalEnablePager = False
+        config.help["terminalEnableClipboardMonitor"] = """
+        # To enable clipboard monitor when users press Enter key in command prompt without text entry."""
+        if not hasattr(config, "terminalEnableClipboardMonitor"):
+            config.terminalEnableClipboardMonitor = False
         config.help["terminalUseLighterCompleter"] = """
         # To enable lighter completer to make command completion quicker on slow devices."""
         if not hasattr(config, "terminalUseLighterCompleter"):
@@ -114,12 +118,17 @@ class ConfigUtil:
         # Option to update UBA automatically on startup if newer version is found."""
         if not hasattr(config, "terminalAutoUpdate"):
             config.terminalAutoUpdate = False
+        config.help["terminalMyMenu"] = """
+        # Customise 'my menu' in terminal mode.
+        # UBA does not show 'my menu' if this value is empty"""
+        if not hasattr(config, "terminalMyMenu"):
+            config.terminalMyMenu = []
         config.help["terminalUseMarvelDataPrivate"] = """
         # Option to use config.marvelDataPrivate in terminal mode."""
         if not hasattr(config, "terminalUseMarvelDataPrivate"):
             config.terminalUseMarvelDataPrivate = False
         config.help["terminalDefaultCommand"] = """
-        # Define a default command for terminal mode to run when users enter an empty string.
+        # Define a default command for terminal mode to run when users press Enter key in command prompt without text entry.
         # It is the quickest way to run a favourite command."""
         if not hasattr(config, "terminalDefaultCommand"):
             config.terminalDefaultCommand = ".menu"
@@ -1644,6 +1653,7 @@ class ConfigUtil:
             ("usePySide2onWebtop", config.usePySide2onWebtop),
             ("usePySide6onMacOS", config.usePySide6onMacOS),
             ("terminalAutoUpdate", config.terminalAutoUpdate),
+            ("terminalMyMenu", config.terminalMyMenu),
             ("terminalUseMarvelDataPrivate", config.terminalUseMarvelDataPrivate),
             ("terminalDefaultCommand", config.terminalDefaultCommand),
             ("terminalEnableTermuxAPI", config.terminalEnableTermuxAPI),
@@ -1651,6 +1661,7 @@ class ConfigUtil:
             ("terminalTermuxttsSpeed", config.terminalTermuxttsSpeed),
             ("terminalDisplayBeginnerMessage", config.terminalDisplayBeginnerMessage),
             ("terminalEnablePager", config.terminalEnablePager),
+            ("terminalEnableClipboardMonitor", config.terminalEnableClipboardMonitor),
             ("terminalUseLighterCompleter", config.terminalUseLighterCompleter),
             ("terminalDisplayCommandOnMenu", config.terminalDisplayCommandOnMenu),
             ("terminalNoteEditor", config.terminalNoteEditor),

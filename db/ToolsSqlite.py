@@ -747,6 +747,8 @@ class Commentary:
                 if config.theme in ("dark", "night"):
                     data = data.replace('color:#000080;', 'color:gray;')
                 chapter += re.sub(r'onclick="luV\(([0-9]+?)\)"', r'onclick="luV(\1)" onmouseover="qV(\1)" ondblclick="mV(\1)"', data)
+                if config.runMode == "terminal":
+                    chapter = re.sub("""(<vid id="v{0}.{1}.{2}" onclick="bcv\({0},{1},{2}\)">)""".format(b, c, v), r"<z>******* {0}:{1} *******</z><br>\1".format(c, v), chapter)
                 return "<div>{0}</div>".format(chapter)
             else:
                 return "<span style='color:gray;'>['{0}' does not contain this chapter.]</span>".format(self.text)
