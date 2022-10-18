@@ -1,3 +1,6 @@
+Changes in 32.67:
+* Added '.buildportablepython' to startup exception in terminal mode.
+
 Changes in 32.66:
 * support building copies of portable-python in terminal mode, by running:
     '.build portable python'

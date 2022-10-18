@@ -71,6 +71,7 @@ class TextUtil:
         # Format text colours
         if config.runMode == "terminal" and config.isColoramaInstalled and colours:
             content = TextUtil.colourTerminalText(content)
+        # cconvert text
         if isHtmlTextInstalled:
             content = html_text.extract_text(content)
         elif isBeautifulsoup4Installed:
