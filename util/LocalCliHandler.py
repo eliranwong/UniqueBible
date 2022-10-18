@@ -1,4 +1,4 @@
-from genericpath import isdir
+from genericpath import isfile
 import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json, shutil
 from functools import partial
 from datetime import date
@@ -432,6 +432,7 @@ class LocalCliHandler:
             ".watsontranslatecopiedtext": ("translate copied text with IBM Watson Translator", self.watsonTranslate),
             ".wt": ("an alias to the '.watsontranslate' command", lambda: self.watsonTranslate(False)),
             ".wtc": ("an alias to the '.watsontranslatecopiedtext' command", self.watsonTranslate),
+            ".buildportablepython": ("build portable python", self.buildPortablePython),
         }
 
     def editfilters(self):
@@ -1599,6 +1600,38 @@ class LocalCliHandler:
     def displayMessage(self, message="", title="UniqueBible"):
         print(title)
         print(message)
+
+    def printNoSupportMessage(self):
+        print("This feature is not supported on your system!")
+        return ""
+
+    def buildPortablePython(self):
+        if config.isPickleyInstalled:
+            if not WebtopUtil.isPackageInstalled("portable-python"):
+                os.system("pickley install portable-python")
+            try:
+                if WebtopUtil.isPackageInstalled("portable-python") and WebtopUtil.isPackageInstalled("tar"):
+                    major, minor, micro, *_ = sys.version_info
+                    thisdir = os.path.join("portable_python", "{0}_{1}.{2}.{3}".format(platform.system(), major, minor, micro))
+                    if not os.path.isdir(thisdir):
+                        os.makedirs(thisdir, exist_ok=True)
+                    # build
+                    os.system(f"cd {thisdir}; portable-python build {major}.{minor}.{micro}")
+                    # unpack
+                    print("Unpacking ...")
+                    os.system(f"cd {thisdir}; tar -xf dist/*.tar.gz")
+                    print("Done!")
+                    portablePythonPath = os.path.join(thisdir, f"{major}.{minor}.{micro}", "bin", f"python{major}.{minor}")
+                    if os.path.isfile(portablePythonPath):
+                        print(f"The path of the newly built portable-python path is:")
+                        print(portablePythonPath)
+                else:
+                    print("Install both 'portable-python' and 'tar' first!")
+            except:
+                self.printNoSupportMessage()
+        else:
+            print("Install 'pickley' first!")
+        return ""
 
     def update(self, debug=False):
         try:
@@ -3543,7 +3576,7 @@ class LocalCliHandler:
 
     def develop(self):
         heading = "Developers"
-        features = (".gitstatus", ".exec", ".execfile")
+        features = (".gitstatus", ".exec", ".execfile", ".buildportablepython")
         return self.displayFeatureMenu(heading, features)
 
     def openbookfeatures(self):

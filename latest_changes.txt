@@ -1,3 +1,9 @@
+Changes in 32.66:
+* support building copies of portable-python in terminal mode, by running:
+    '.build portable python'
+With this feature in place, users can run UBA on macOS and Linux without installing python.
+It may be a good idea to place UniqueBibleApp in a portable storage device, e.g. USB stick, and run USB anywhere.
+
 Changes in 32.65:
 Changes made in terminal mode:
 * Users can now customise "my menu":

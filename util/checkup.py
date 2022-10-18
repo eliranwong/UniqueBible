@@ -39,10 +39,15 @@ def downloadFileIfNotFound(databaseInfo):
             print("Failed to download '{0}'!".format(fileItems[-1]))
 
 def pip3InstallModule(module):
+    #executablePath = os.path.dirname(sys.executable)
+    #pippath = os.path.join(executablePath, "pip")
+    #pip = pippath if os.path.isfile(pippath) else "pip"
+    #pip3path = os.path.join(executablePath, "pip3")
+    #pip3 = pip3path if os.path.isfile(pip3path) else "pip3"
     if not config.pipIsUpdated:
         try:
             # Automatic setup does not start on some device because pip tool is too old
-            updatePip = subprocess.Popen("pip install --upgrade pip", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            updatePip = subprocess.Popen("pip3 install --upgrade pip", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             *_, stderr = updatePip.communicate()
             if not stderr:
                 print("pip tool updated!")
@@ -52,7 +57,7 @@ def pip3InstallModule(module):
     print("Installing missing module '{0}' ...".format(module))
     # implement pip3 as a subprocess:
     #install = subprocess.Popen(['pip3', 'install', module], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    install = subprocess.Popen('pip3 install {0}'.format(module), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    install = subprocess.Popen(f"pip3 install {module}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     *_, stderr = install.communicate()
     return stderr
 
@@ -479,6 +484,9 @@ def isPyperclipInstalled():
     except:
         return False
 
+def isPickleyInstalled():
+    return True if WebtopUtil.isPackageInstalled("pickley") else False
+
 def isGmplotInstalled():
     try:
         import gmplot
@@ -584,6 +592,8 @@ def setInstallConfig(module, isInstalled):
         config.isColoramaInstalled = isInstalled
     elif module in ("pyperclip", "-U pyperclip", "--upgrade pyperclip"):
         config.isPyperclipInstalled = isInstalled
+    elif module in ("pickley", "-U pickley", "--upgrade pickley"):
+        config.isPickleyInstalled = isInstalled
 
 # Specify qtLibrary for particular os
 if config.docker and config.usePySide2onWebtop:
@@ -599,6 +609,7 @@ required = [
     ("gdown", "Download UBA modules from Google drive", isGdownInstalled),
     ("babel", "Internationalization and localization library", isBabelInstalled),
     ("requests", "Download / Update files", isRequestsInstalled),
+    ("apsw", "Another Python SQLite Wrapper", isApswInstalled),
 ] if config.noQt else [
     ("config", "Configurations", isConfigInstalled),
     #("PySide2", "Qt Graphical Interface Library", isPySide2Installed) if config.qtLibrary.startswith("pyside") else ("PyQt5", "Qt Graphical Interface Library", isPyQt5Installed),
@@ -606,6 +617,7 @@ required = [
     ("gdown", "Download UBA modules from Google drive", isGdownInstalled),
     ("babel", "Internationalization and localization library", isBabelInstalled),
     ("requests", "Download / Update files", isRequestsInstalled),
+    ("apsw", "Another Python SQLite Wrapper", isApswInstalled),
 ]
 # Add Qt Library module
 if not config.noQt:
@@ -688,8 +700,6 @@ optional = [
     ("pygithub", "Github access", isPygithubInstalled),
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
-    ("numpy", "Array Computing", isNumpyInstalled),
-    ("matplotlib", "Plotting Package", isMatplotlibInstalled),
     ("translate", "Google Translate", isTranslateInstalled),
     ("qrcode", "QR Code", isQrCodeInstalled),
     ("pillow", "QR Code", isPillowInstalled),
@@ -706,7 +716,7 @@ optional = [
     ("chinese-english-lookup", "Chinese-to-English word definition", isChineseEnglishLookupInstalled),
     ("textract", "Extract text from document", isTextractInstalled),
     ("tabulate", "Pretty-print tabular data", isTabulateInstalled),
-    ("apsw", "Another Python SQLite Wrapper", isApswInstalled),
+    #("apsw", "Another Python SQLite Wrapper", isApswInstalled),
     ("pyluach", "Hebrew (Jewish) calendar dates", isPyluachInstalled),
     ("pydnsbl", "Checks if ip is listed in anti-spam dns blacklists.", isPydnsblInstalled),
     ("gmplot", "Mark locations on Google Maps", isGmplotInstalled),
@@ -714,6 +724,9 @@ optional = [
     ("prompt_toolkit", "Command Line Interaction", isPrompt_toolkitInstalled),
     ("colorama", "Producing colored terminal text", isColoramaInstalled),
     ("pyperclip", "Cross-platform clipboard utilities", isPyperclipInstalled),
+    ("numpy", "Array Computing", isNumpyInstalled),
+    ("matplotlib", "Plotting Package", isMatplotlibInstalled),
+    ("pickley", "Automate installation of standalone python CLIs", isPickleyInstalled),
 ] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -728,8 +741,6 @@ optional = [
     ("qt-material", "Qt Material Themes", isQtMaterialInstalled),
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
-    ("numpy", "Array Computing", isNumpyInstalled),
-    ("matplotlib", "Plotting Package", isMatplotlibInstalled),
     ("translate", "Google Translate", isTranslateInstalled),
     ("qrcode", "QR Code", isQrCodeInstalled),
     ("pillow", "QR Code", isPillowInstalled),
@@ -746,13 +757,16 @@ optional = [
     ("chinese-english-lookup", "Chinese-to-English word definition", isChineseEnglishLookupInstalled),
     ("textract", "Extract text from document", isTextractInstalled),
     ("tabulate", "Pretty-print tabular data", isTabulateInstalled),
-    ("apsw", "Another Python SQLite Wrapper", isApswInstalled),
+    #("apsw", "Another Python SQLite Wrapper", isApswInstalled),
     ("pyluach", "Hebrew (Jewish) calendar dates", isPyluachInstalled),
     ("gmplot", "Mark locations on Google Maps", isGmplotInstalled),
     ("haversine", "Calculate the distance between two points", isHaversineInstalled),
     ("prompt_toolkit", "Command Line Interaction", isPrompt_toolkitInstalled),
     ("colorama", "Producing colored terminal text", isColoramaInstalled),
     ("pyperclip", "Cross-platform clipboard utilities", isPyperclipInstalled),
+    ("numpy", "Array Computing", isNumpyInstalled),
+    ("matplotlib", "Plotting Package", isMatplotlibInstalled),
+    ("pickley", "Automate installation of standalone python CLIs", isPickleyInstalled),
 ]
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))
