@@ -1,3 +1,6 @@
+Changes in 32.68:
+* automatically created two bash scripts for run UBA with portable-python
+
 Changes in 32.67:
 * Added '.buildportablepython' to startup exception in terminal mode.
 

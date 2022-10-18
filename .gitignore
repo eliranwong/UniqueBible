@@ -92,3 +92,5 @@ terminal_mode/Unique_Bible_App.html
 htmlResources/bar_chart.png
 htmlResources/pie_chart.png
 portable_python
+uba_gui_*.sh
+uba_terminal_*.sh

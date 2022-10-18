@@ -1625,6 +1625,10 @@ class LocalCliHandler:
                     if os.path.isfile(portablePythonPath):
                         print(f"The path of the newly built portable-python path is:")
                         print(portablePythonPath)
+                        print(self.divider)
+                        self.saveBashScript("gui")
+                        print(self.divider)
+                        self.saveBashScript("terminal")
                 else:
                     print("Install both 'portable-python' and 'tar' first!")
             except:
@@ -1632,6 +1636,23 @@ class LocalCliHandler:
         else:
             print("Install 'pickley' first!")
         return ""
+
+    def saveBashScript(self, mode):
+        major, minor, micro, *_ = sys.version_info
+        script = """#!/usr/bin/env bash
+SCRIPT_DIR=$( cd -- "$( dirname -- "${0}BASH_SOURCE[0]{1}" )" &> /dev/null && pwd )
+cd $SCRIPT_DIR
+$SCRIPT_DIR/portable_python/{2}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba.py {6}
+""".format("{", "}", platform.system(), major, minor, micro, mode)
+        filepath = f"uba_{mode}_{platform.system()}_{major}.{minor}.{micro}.sh"
+        with open(filepath, "w", encoding="utf-8") as fileObj:
+            fileObj.write(script)
+        # add executable permissions
+        try:
+            os.chmod(filepath, 0o755)
+        except:
+            pass
+        print(f"Created '{filepath}' for running UBA in {mode} mode.")
 
     def update(self, debug=False):
         try:
