@@ -35,6 +35,7 @@ class ConfigUtil:
         config.studyWindowContentTransformers = []
         config.shortcutList = []
         config.enableHttpServer = False
+        config.enableApiServer = False
         config.runMode = "gui"
         #config.customBooksRangeSearch = ""
         config.mainCssBibleFontStyle = ""
