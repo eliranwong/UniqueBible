@@ -1,4 +1,4 @@
-import os, platform, subprocess, requests, config
+import os, platform, subprocess, requests, config, shutil
 import sys
 from ast import literal_eval
 from util.DateUtil import DateUtil
@@ -57,6 +57,7 @@ class UpdateUtil:
         if config.updateWithGitPull and os.path.isdir(".git"):
             subprocess.Popen("git pull", shell=True)
         else:
+            # raw file download full link e.g. https://raw.githubusercontent.com/eliranwong/UniqueBible/main/README.md
             requestObject = requests.get("{0}patches.txt".format(UpdateUtil.repository))
             for line in requestObject.text.split("\n"):
                 if line:
@@ -76,8 +77,10 @@ class UpdateUtil:
                                         fileObject.write(requestObject2.content)
                                 elif contentType == "delete":
                                     try:
-                                        if os.path.exists(localPath):
+                                        if os.path.isfile(localPath):
                                             os.remove(localPath)
+                                        elif os.path.isdir(localPath):
+                                            shutil.rmtree(localPath)
                                     except:
                                         print("Could not delete {0}".format(localPath))
                     except Exception as e:

@@ -10,6 +10,26 @@ Each filter should be entered on a single line when filter entry is prompted.
 
 Press Escape+Enter when finished typing in filters in multiline input.
 
+# Examples
+
+Example 1 - filter cross-references to read verses that contains "Jesus" in the Gospel of John:
+
+> crossreference:::Jn 3:16
+
+> .filters
+
+Enter the following string as filters:
+	'Jesus'
+	'John '
+
+Example 2 - filter config labels that contain "speed":
+
+> .config
+
+> .filters
+
+Enter "speed" as filters
+
 # Edit Saved Filters
 
 Saved filters keep records of all filters previously used.

@@ -1,3 +1,6 @@
+Changes in 32.70:
+* Support running a single copy of UBA with portable-python on both intel-cpu or M1-cpu devices.
+
 Changes in 32.69:
 * Add api-server
  - Wiki page: https://github.com/eliranwong/UniqueBible/wiki/Running-in-API-server-mode

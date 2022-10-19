@@ -1,4 +1,3 @@
-from genericpath import isfile
 import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json, shutil
 from functools import partial
 from datetime import date
@@ -221,7 +220,7 @@ class LocalCliHandler:
             ".sas": ("an alias to the '.stopaudiosync' command", self.removeAudioPlayingFile),
             ".read": ("read available audio files", self.read),
             ".readsync": ("read available audio files with text synchronisation", self.readsync),
-            ".filters": ("filter text content", self.filters),
+            ".filters": ("filter latest content line-by-line", self.filters),
             ".run": ("run copied text as command", self.runclipboardtext),
             ".forward": ("open one bible chapter forward", self.forward),
             ".backward": ("open one bible chapter backward", self.backward),
@@ -1612,7 +1611,13 @@ class LocalCliHandler:
             try:
                 if WebtopUtil.isPackageInstalled("portable-python") and WebtopUtil.isPackageInstalled("tar"):
                     major, minor, micro, *_ = sys.version_info
-                    thisdir = os.path.join("portable_python", "{0}_{1}.{2}.{3}".format(platform.system(), major, minor, micro))
+                    thisOS = platform.system()
+                    cpu = ""
+                    if thisOS == "Darwin":
+                        thisOS = "macOS"
+                        *_, cpu = platform.mac_ver()
+                        cpu = f"_{cpu}"
+                    thisdir = os.path.join("portable_python", "{0}{4}_{1}.{2}.{3}".format(thisOS, major, minor, micro, cpu))
                     if not os.path.isdir(thisdir):
                         os.makedirs(thisdir, exist_ok=True)
                     # build
@@ -1639,12 +1644,18 @@ class LocalCliHandler:
 
     def saveBashScript(self, mode):
         major, minor, micro, *_ = sys.version_info
+        thisOS = platform.system()
+        cpu = ""
+        if thisOS == "Darwin":
+            thisOS = "macOS"
+            *_, cpu = platform.mac_ver()
+            cpu = f"_{cpu}"
         script = """#!/usr/bin/env bash
 SCRIPT_DIR=$( cd -- "$( dirname -- "${0}BASH_SOURCE[0]{1}" )" &> /dev/null && pwd )
 cd $SCRIPT_DIR
-$SCRIPT_DIR/portable_python/{2}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba.py {6}
-""".format("{", "}", platform.system(), major, minor, micro, mode)
-        filepath = f"uba_{mode}_{platform.system()}_{major}.{minor}.{micro}.sh"
+$SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba.py {6}
+""".format("{", "}", thisOS, major, minor, micro, mode, cpu)
+        filepath = f"uba_{mode}_{thisOS}{cpu}_{major}.{minor}.{micro}.sh"
         with open(filepath, "w", encoding="utf-8") as fileObj:
             fileObj.write(script)
         # add executable permissions

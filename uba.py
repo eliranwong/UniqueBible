@@ -54,7 +54,13 @@ if os.path.isfile("use_vnc"):
 python = os.path.basename(sys.executable)
 mainFile = os.path.join(os.getcwd(), "main.py")
 major, minor, micro, *_ = sys.version_info
-venvDir = "venv_{0}_{1}.{2}.{3}".format(platform.system(), major, minor, micro)
+thisOS = platform.system()
+cpu = ""
+if thisOS == "Darwin":
+    thisOS = "macOS"
+    *_, cpu = platform.mac_ver()
+    cpu = f"_{cpu}"
+venvDir = "venv_{0}{4}_{1}.{2}.{3}".format(thisOS, major, minor, micro, cpu)
 binDir = "Scripts" if platform.system() == "Windows" else "bin"
 
 def desktopFileContent():
