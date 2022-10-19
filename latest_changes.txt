@@ -1,3 +1,7 @@
+Changes in 32.69:
+* Add api-server
+ - Wiki page: https://github.com/eliranwong/UniqueBible/wiki/Running-in-API-server-mode
+
 Changes in 32.68:
 * automatically created two bash scripts for run UBA with portable-python
 

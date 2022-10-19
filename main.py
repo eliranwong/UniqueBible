@@ -356,6 +356,36 @@ if (len(sys.argv) > 1) and sys.argv[1] == "http-server":
         subprocess.Popen("{0} {1} http-server".format(sys.executable, config.httpServerUbaFile), shell=True)
     exit(0)
 
+def startApiServer():
+    import socketserver
+    from util.RemoteApiHandler import RemoteApiHandler
+
+    config.restartApiServer = False
+    port = config.httpServerPort
+    if (len(sys.argv) > 2):
+        port = int(sys.argv[2])
+    config.thisHttpServerPort = port
+    print("Running in API Server Mode")
+    print("API URL: 'http://{0}:{1}'".format(NetworkUtil.get_ip(), port))
+    socketserver.TCPServer.allow_reuse_address = True
+    config.enableApiServer = True
+    with socketserver.TCPServer(("", port), RemoteApiHandler) as httpd:
+        while config.enableApiServer:
+            httpd.handle_request()
+        httpd.server_close()
+        cleanupTempFiles()
+        print("Server is stopped!")
+
+config.enableApiServer = False
+if (len(sys.argv) > 1) and sys.argv[1] == "api-server":
+    config.runMode = "api-server"
+    checkMigration()
+    startApiServer()
+    ConfigUtil.save()
+    if config.restartApiServer:
+        subprocess.Popen("{0} {1} api-server".format(sys.executable, config.httpServerUbaFile), shell=True)
+    exit(0)
+
 def printContentOnConsole(text):
     if not "html-text" in sys.modules:
         import html_text
