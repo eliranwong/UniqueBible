@@ -1,3 +1,6 @@
+Changes in 32.71:
+* Separate disabled modules on different os.
+
 Changes in 32.70:
 * Support running a single copy of UBA with portable-python on both intel-cpu or M1-cpu devices.
 

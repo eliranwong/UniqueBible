@@ -1665,40 +1665,46 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             pass
         print(f"Created '{filepath}' for running UBA in {mode} mode.")
 
+    def oldWayUpdate(self, debug=False):
+        # Old way to update
+        requestObject = requests.get("{0}patches.txt".format(UpdateUtil.repository))
+        for line in requestObject.text.split("\n"):
+            if line:
+                try:
+                    version, contentType, filePath = literal_eval(line)
+                    if version > config.version:
+                        localPath = os.path.join(*filePath.split("/"))
+                        if debug:
+                            print("{0}:{1}".format(version, localPath))
+                        else:
+                            if contentType == "folder":
+                                if not os.path.isdir(localPath):
+                                    os.makedirs(localPath, exist_ok=True)
+                            elif contentType == "file":
+                                requestObject2 = requests.get("{0}{1}".format(UpdateUtil.repository, filePath))
+                                with open(localPath, "wb") as fileObject:
+                                    fileObject.write(requestObject2.content)
+                            elif contentType == "delete":
+                                try:
+                                    if os.path.exists(localPath):
+                                        os.remove(localPath)
+                                except:
+                                    print("Could not delete {0}".format(localPath))
+                except Exception as e:
+                    return self.updateFailed()
+
+        return self.finishUpdate()
+
     def update(self, debug=False):
         try:
             try:
-                os.system("git pull")
-                return self.finishUpdate()
+                if WebtopUtil.isPackageInstalled("git") and not config.terminalUpdateInOldWay:
+                    os.system("git pull")
+                    return self.finishUpdate()
+                else:
+                    return self.oldWayUpdate(debug)
             except:
-                # Old way to update
-                requestObject = requests.get("{0}patches.txt".format(UpdateUtil.repository))
-                for line in requestObject.text.split("\n"):
-                    if line:
-                        try:
-                            version, contentType, filePath = literal_eval(line)
-                            if version > config.version:
-                                localPath = os.path.join(*filePath.split("/"))
-                                if debug:
-                                    print("{0}:{1}".format(version, localPath))
-                                else:
-                                    if contentType == "folder":
-                                        if not os.path.isdir(localPath):
-                                            os.makedirs(localPath, exist_ok=True)
-                                    elif contentType == "file":
-                                        requestObject2 = requests.get("{0}{1}".format(UpdateUtil.repository, filePath))
-                                        with open(localPath, "wb") as fileObject:
-                                            fileObject.write(requestObject2.content)
-                                    elif contentType == "delete":
-                                        try:
-                                            if os.path.exists(localPath):
-                                                os.remove(localPath)
-                                        except:
-                                            print("Could not delete {0}".format(localPath))
-                        except Exception as e:
-                            return self.updateFailed()
-
-                return self.finishUpdate()
+                return self.oldWayUpdate(debug)
         except:
             return self.updateFailed()
 

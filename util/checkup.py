@@ -685,9 +685,19 @@ for module, feature, isInstalled in required or config.updateDependenciesOnStart
                 print("Required feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first!".format(feature, module))
                 exit(1)
 
+major, minor, micro, *_ = sys.version_info
+thisOS = platform.system()
+cpu = ""
+if thisOS == "Darwin":
+    thisOS = "macOS"
+    *_, cpu = platform.mac_ver()
+    cpu = f"_{cpu}"
+venvDir = "venv_{0}{4}_{1}.{2}.{3}".format(thisOS, major, minor, micro, cpu)
+
 disabledModules = []
-if os.path.exists("disabled_modules.txt"):
-    with open('disabled_modules.txt') as disabledModulesFile:
+disabledModulesFilePath = os.path.join(venvDir, "disabled_modules.txt")
+if os.path.exists(disabledModulesFilePath):
+    with open(disabledModulesFilePath) as disabledModulesFile:
         disabledModules = [line.strip() for line in disabledModulesFile.readlines()]
 # Check if optional modules are installed
 optional = [

@@ -119,6 +119,10 @@ class ConfigUtil:
         # Option to update UBA automatically on startup if newer version is found."""
         if not hasattr(config, "terminalAutoUpdate"):
             config.terminalAutoUpdate = False
+        config.help["terminalUpdateInOldWay"] = """
+        # Option to update in traditional way of downloading files."""
+        if not hasattr(config, "terminalUpdateInOldWay"):
+            config.terminalUpdateInOldWay = False
         config.help["terminalMyMenu"] = """
         # Customise 'my menu' in terminal mode.
         # UBA does not show 'my menu' if this value is empty"""
@@ -1654,6 +1658,7 @@ class ConfigUtil:
             ("usePySide2onWebtop", config.usePySide2onWebtop),
             ("usePySide6onMacOS", config.usePySide6onMacOS),
             ("terminalAutoUpdate", config.terminalAutoUpdate),
+            ("terminalUpdateInOldWay", config.terminalUpdateInOldWay),
             ("terminalMyMenu", config.terminalMyMenu),
             ("terminalUseMarvelDataPrivate", config.terminalUseMarvelDataPrivate),
             ("terminalDefaultCommand", config.terminalDefaultCommand),
