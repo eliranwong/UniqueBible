@@ -681,11 +681,14 @@ class LocalCliHandler:
 
     def quitUBA(self):
         print("Closing ...")
-        return ""
+        config.closingTerminalMode()
+        sys.exit(0)
 
     def restartUBA(self):
         print("Restarting ...")
-        return ""
+        config.closingTerminalMode()
+        os.system("{0} {1} terminal".format(sys.executable, "uba.py"))
+        sys.exit(0)
 
     def getDotCommandContent(self, command):
         enteredCommand = command

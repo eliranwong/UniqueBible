@@ -175,9 +175,30 @@ def runTerminalModeCommand(command):
             # display
             config.mainWindow.displayOutputOnTerminal(content)
     return command
+config.runTerminalModeCommand = runTerminalModeCommand
+
+def closingTerminalMode():
+    config.mainWindow.removeAudioPlayingFile()
+    if config.terminalUseMarvelDataPrivate:
+        config.marvelData = config.defaultMarvelData
+    if config.saveConfigOnExit:
+        ConfigUtil.save()
+    if config.terminalStopHttpServerOnExit:
+        config.mainWindow.stophttpserver()
+config.closingTerminalMode = closingTerminalMode
+
+def initiateMainPrompt():
+    from prompt_toolkit import PromptSession
+    from prompt_toolkit.history import FileHistory
+    command_history = os.path.join("terminal_history", "commands")
+    config.main_prompt_session = PromptSession(history=FileHistory(command_history))
+config.initiateMainPrompt = initiateMainPrompt
 
 # Local CLI - Terminal Mode
 if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
+    #if config.isPrompt_toolkitInstalled:
+    #    from prompt_toolkit.shortcuts import set_title
+    #    set_title("Unique Bible App")
     config.runMode = "terminal"
     config.saveConfigOnExit = True
     print(f"Running Unique Bible App {config.version} in terminal mode ...")
@@ -213,17 +234,13 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     promptIndicator = ">>> "
 
     if config.isPrompt_toolkitInstalled:
-        #from prompt_toolkit.formatted_text import HTML
-        # print_formatted_text does not support colorama
-        #from prompt_toolkit import print_formatted_text as print
-        from prompt_toolkit import PromptSession
-        #from prompt_toolkit.completion import WordCompleter
-        from prompt_toolkit.history import FileHistory
         from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+        from util.terminal_key_bindings import *
 
-        command_history = os.path.join("terminal_history", "commands")
-        session = PromptSession(history=FileHistory(command_history))
-        #command_completer = WordCompleter(config.mainWindow.getTextCommandSuggestion(), ignore_case=True)
+        # make key bindings available in config to allow futher customisation via plugins
+        config.key_bindings = key_bindings
+        # initiate main prompt session
+        initiateMainPrompt()
         command_completer = config.mainWindow.getCommandCompleter()
         auto_suggestion=AutoSuggestFromHistory()
         toolbar = f" Unique Bible App [{config.version}] "
@@ -255,9 +272,9 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         # User command input
         if config.isPrompt_toolkitInstalled:
             if config.terminalUseLighterCompleter:
-                command = session.prompt(promptIndicator, style=style, completer=command_completer, auto_suggest=auto_suggestion, bottom_toolbar=toolbar, default=default).strip()
+                command = config.main_prompt_session.prompt(promptIndicator, style=style, completer=command_completer, auto_suggest=auto_suggestion, bottom_toolbar=toolbar, default=default, key_bindings=config.key_bindings).strip()
             else:
-                command = session.prompt(promptIndicator, style=style, completer=command_completer, complete_in_thread=True, auto_suggest=auto_suggestion, bottom_toolbar=toolbar, default=default).strip()
+                command = config.main_prompt_session.prompt(promptIndicator, style=style, completer=command_completer, complete_in_thread=True, auto_suggest=auto_suggestion, bottom_toolbar=toolbar, default=default, key_bindings=config.key_bindings).strip()
         elif sys.platform in ("linux", "darwin"):
             import readline
             command = input(promptIndicator).strip()
@@ -279,13 +296,7 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
             config.mainWindow.clipboardMonitorFeature()
             command = runTerminalModeCommand(config.terminalDefaultCommand)
 
-    config.mainWindow.removeAudioPlayingFile()
-    if config.terminalUseMarvelDataPrivate:
-        config.marvelData = config.defaultMarvelData
-    if config.saveConfigOnExit:
-        ConfigUtil.save()
-    if config.terminalStopHttpServerOnExit:
-        config.mainWindow.stophttpserver()
+    closingTerminalMode()
     if command.lower() in (".restart", ".z"):
         os.system("{0} {1} terminal".format(sys.executable, "uba.py"))
     sys.exit(0)

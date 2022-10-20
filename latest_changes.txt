@@ -1,3 +1,8 @@
+Changes in 32.73:
+* Added customisation of keyboard shortcuts / key bindings to terminal mode main command session.
+    Users may edit config.py
+        terminal_ctrl_a ... terminal_ctrl_y
+
 Changes in 32.72:
 * unpack nltk data inside virtual environment directory.
     placing nltk data outside UBA folder causes errors in running UBA with USB stick.

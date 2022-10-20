@@ -325,6 +325,103 @@ class ConfigUtil:
         if not hasattr(config, "terminal_dot_y"):
             config.terminal_dot_y = ".whatis"
 
+        config.help["terminal_ctrl_a"] = """
+        # Customise the command to be run with key combination 'ctrl + a'."""
+        if not hasattr(config, "terminal_ctrl_a"):
+            config.terminal_ctrl_a = ".aliases"
+        config.help["terminal_ctrl_b"] = """
+        # Customise the command to be run with key combination 'ctrl + b'."""
+        if not hasattr(config, "terminal_ctrl_b"):
+            config.terminal_ctrl_b = ".backward"
+        config.help["terminal_ctrl_c"] = """
+        # Customise the command to be run with key combination 'ctrl + c'."""
+        if not hasattr(config, "terminal_ctrl_c"):
+            config.terminal_ctrl_c = ".togglebiblecomparison"
+        config.help["terminal_ctrl_d"] = """
+        # Customise the command to be run with key combination 'ctrl + d'."""
+        if not hasattr(config, "terminal_ctrl_d"):
+            config.terminal_ctrl_d = ".opendata"
+        config.help["terminal_ctrl_e"] = """
+        # Customise the command to be run with key combination 'ctrl + e'."""
+        if not hasattr(config, "terminal_ctrl_e"):
+            config.terminal_ctrl_e = ".edit"
+        config.help["terminal_ctrl_f"] = """
+        # Customise the command to be run with key combination 'ctrl + f'."""
+        if not hasattr(config, "terminal_ctrl_f"):
+            config.terminal_ctrl_f = ".forward"
+        config.help["terminal_ctrl_g"] = """
+        # Customise the command to be run with key combination 'ctrl + g'."""
+        if not hasattr(config, "terminal_ctrl_g"):
+            config.terminal_ctrl_g = ".togglepager"
+        config.help["terminal_ctrl_h"] = """
+        # Customise the command to be run with key combination 'ctrl + h'."""
+        if not hasattr(config, "terminal_ctrl_h"):
+            config.terminal_ctrl_h = ".help"
+        config.help["terminal_ctrl_i"] = """
+        # Customise the command to be run with key combination 'ctrl + i'."""
+        if not hasattr(config, "terminal_ctrl_i"):
+            config.terminal_ctrl_i = "index:::"
+        config.help["terminal_ctrl_j"] = """
+        # Customise the command to be run with key combination 'ctrl + j'."""
+        if not hasattr(config, "terminal_ctrl_j"):
+            config.terminal_ctrl_j = ".editjournal"
+        config.help["terminal_ctrl_k"] = """
+        # Customise the command to be run with key combination 'ctrl + k'."""
+        if not hasattr(config, "terminal_ctrl_k"):
+            config.terminal_ctrl_k = "tske:::"
+        config.help["terminal_ctrl_l"] = """
+        # Customise the command to be run with key combination 'ctrl + l'."""
+        if not hasattr(config, "terminal_ctrl_l"):
+            config.terminal_ctrl_l = ".latestbible"
+        config.help["terminal_ctrl_m"] = """
+        # Customise the command to be run with key combination 'ctrl + m'."""
+        if not hasattr(config, "terminal_ctrl_m"):
+            config.terminal_ctrl_m = ".openmaps"
+        config.help["terminal_ctrl_n"] = """
+        # Customise the command to be run with key combination 'ctrl + n'."""
+        if not hasattr(config, "terminal_ctrl_n"):
+            config.terminal_ctrl_n = ".note"
+        config.help["terminal_ctrl_o"] = """
+        # Customise the command to be run with key combination 'ctrl + o'."""
+        if not hasattr(config, "terminal_ctrl_o"):
+            config.terminal_ctrl_o = ".open"
+        config.help["terminal_ctrl_p"] = """
+        # Customise the command to be run with key combination 'ctrl + p'."""
+        if not hasattr(config, "terminal_ctrl_p"):
+            config.terminal_ctrl_p = ".plugins"
+        config.help["terminal_ctrl_r"] = """
+        # Customise the command to be run with key combination 'ctrl + r'."""
+        if not hasattr(config, "terminal_ctrl_r"):
+            config.terminal_ctrl_r = ".run"
+        config.help["terminal_ctrl_s"] = """
+        # Customise the command to be run with key combination 'ctrl + s'."""
+        if not hasattr(config, "terminal_ctrl_s"):
+            config.terminal_ctrl_s = ".swap"
+        config.help["terminal_ctrl_t"] = """
+        # Customise the command to be run with key combination 'ctrl + t'."""
+        if not hasattr(config, "terminal_ctrl_t"):
+            config.terminal_ctrl_t = ".tts"
+        config.help["terminal_ctrl_u"] = """
+        # Customise the command to be run with key combination 'ctrl + u'."""
+        if not hasattr(config, "terminal_ctrl_u"):
+            config.terminal_ctrl_u = ".downloadyoutube"
+        config.help["terminal_ctrl_v"] = """
+        # Customise the command to be run with key combination 'ctrl + v'."""
+        if not hasattr(config, "terminal_ctrl_v"):
+            config.terminal_ctrl_v = ".openversefeatures"
+        config.help["terminal_ctrl_w"] = """
+        # Customise the command to be run with key combination 'ctrl + w'."""
+        if not hasattr(config, "terminal_ctrl_w"):
+            config.terminal_ctrl_w = ".web"
+        config.help["terminal_ctrl_x"] = """
+        # Customise the command to be run with key combination 'ctrl + x'."""
+        if not hasattr(config, "terminal_ctrl_x"):
+            config.terminal_ctrl_x = "crossreference:::"
+        config.help["terminal_ctrl_y"] = """
+        # Customise the command to be run with key combination 'ctrl + y'."""
+        if not hasattr(config, "terminal_ctrl_y"):
+            config.terminal_ctrl_y = ".whatis"
+
         # End of terminal mode customised input settings
 
         config.help["telnetServerPort"] = """
@@ -1711,6 +1808,30 @@ class ConfigUtil:
             ("terminal_dot_w", config.terminal_dot_w),
             ("terminal_dot_x", config.terminal_dot_x),
             ("terminal_dot_y", config.terminal_dot_y),
+            ("terminal_ctrl_a", config.terminal_ctrl_a),
+            ("terminal_ctrl_b", config.terminal_ctrl_b),
+            ("terminal_ctrl_c", config.terminal_ctrl_c),
+            ("terminal_ctrl_d", config.terminal_ctrl_d),
+            ("terminal_ctrl_e", config.terminal_ctrl_e),
+            ("terminal_ctrl_f", config.terminal_ctrl_f),
+            ("terminal_ctrl_g", config.terminal_ctrl_g),
+            ("terminal_ctrl_h", config.terminal_ctrl_h),
+            ("terminal_ctrl_i", config.terminal_ctrl_i),
+            ("terminal_ctrl_j", config.terminal_ctrl_j),
+            ("terminal_ctrl_k", config.terminal_ctrl_k),
+            ("terminal_ctrl_l", config.terminal_ctrl_l),
+            ("terminal_ctrl_m", config.terminal_ctrl_m),
+            ("terminal_ctrl_n", config.terminal_ctrl_n),
+            ("terminal_ctrl_o", config.terminal_ctrl_o),
+            ("terminal_ctrl_p", config.terminal_ctrl_p),
+            ("terminal_ctrl_r", config.terminal_ctrl_r),
+            ("terminal_ctrl_s", config.terminal_ctrl_s),
+            ("terminal_ctrl_t", config.terminal_ctrl_t),
+            ("terminal_ctrl_u", config.terminal_ctrl_u),
+            ("terminal_ctrl_v", config.terminal_ctrl_v),
+            ("terminal_ctrl_w", config.terminal_ctrl_w),
+            ("terminal_ctrl_x", config.terminal_ctrl_x),
+            ("terminal_ctrl_y", config.terminal_ctrl_y),
             ("telnetServerPort", config.telnetServerPort),
             ("httpServerUbaFile", config.httpServerUbaFile),
             ("httpServerPort", config.httpServerPort),
