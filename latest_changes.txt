@@ -1,3 +1,7 @@
+Changes in 32.72:
+* unpack nltk data inside virtual environment directory.
+    placing nltk data outside UBA folder causes errors in running UBA with USB stick.
+
 Changes in 32.71:
 * Separate disabled modules on different os.
 

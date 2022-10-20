@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os, sys, subprocess, platform
+import os, sys, subprocess, platform, shutil
 from shutil import copyfile
 
 os.environ["PYTHONUNBUFFERED"] = "1"
@@ -120,6 +120,17 @@ if sys.prefix == sys.base_prefix:
             venv.create(env_dir=venvDir, with_pip=True, system_site_packages=True) if initialCommand == "docker" or os.path.isfile("use_system_site_packages") else venv.create(env_dir=venvDir, with_pip=True)
         except:
             pass
+
+nltk_data1 = os.path.join("nltk_data", "corpora", "omw-1.4.zip")
+nltk_data1_destination_folder = os.path.join(venvDir, nltk_data1[:-4])
+nltk_data2 = os.path.join("nltk_data", "corpora", "wordnet.zip")
+nltk_data2_destination_folder = os.path.join(venvDir, nltk_data2[:-4])
+corpora_folder = os.path.join(venvDir, "nltk_data", "corpora")
+os.makedirs(corpora_folder, exist_ok=True)
+if os.path.isfile(nltk_data1) and not os.path.isdir(nltk_data1_destination_folder):
+    shutil.unpack_archive(nltk_data1, corpora_folder)
+if os.path.isfile(nltk_data2) and not os.path.isdir(nltk_data2_destination_folder):
+    shutil.unpack_archive(nltk_data2, corpora_folder)
 
 # Run main.py
 if platform.system() == "Windows":
