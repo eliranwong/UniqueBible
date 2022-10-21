@@ -1,3 +1,6 @@
+Changes in 32.75:
+* Added .keys in terminal mode to display keyboard shortcuts.
+
 Changes in 32.74:
 * Support startup plugins to customise keyboard shortcuts in terminal mode.
 * Added a how-to guide about it.

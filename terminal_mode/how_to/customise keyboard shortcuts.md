@@ -19,6 +19,10 @@ To make changes, run:
 
 > .change terminal mode config
 
+To display current customised keyboard shortcuts, run:
+
+> .keys
+
 # Startup Plugins
 
 You may customise more key bindings via startup plugins.

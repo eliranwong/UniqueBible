@@ -348,6 +348,7 @@ class LocalCliHandler:
             ".standardcommands": ("display standard UBA command help menu", self.standardcommands),
             ".terminalcommands": ("display terminal mode commands", self.terminalcommands),
             ".aliases": ("display terminal mode command shortcuts", self.commandAliases),
+            ".keys": ("display customised keyboard shortcuts", self.keys),
             ".menu": ("display main menu", self.menu),
             ".my": ("display my menu", self.my),
             ".show": ("display show menu", self.info),
@@ -861,6 +862,14 @@ class LocalCliHandler:
     def commandAliases(self):
         content = "UBA terminal mode command aliases:"
         content += "\n".join([f"{key} - {value[0]}" for key, value in sorted(self.dotCommands.items()) if value[0].startswith("an alias to ")])
+        print(self.keepContent(content))
+        return ""
+
+    def keys(self):
+        content = "Customised keyboard shortcuts:\n"
+        keyCombo = ["ctrl+a", "ctrl+b", "ctrl+c", "ctrl+f", "ctrl+g", "ctrl+i", "ctrl+k", "ctrl+l", "ctrl+r", "ctrl+s", "ctrl+u", "ctrl+w", "ctrl+x", "ctrl+y"]
+        configEntry = [config.terminal_ctrl_a, config.terminal_ctrl_b, config.terminal_ctrl_c, config.terminal_ctrl_f, config.terminal_ctrl_g, config.terminal_ctrl_i, config.terminal_ctrl_k, config.terminal_ctrl_l, config.terminal_ctrl_r, config.terminal_ctrl_s, config.terminal_ctrl_u, config.terminal_ctrl_w, config.terminal_ctrl_x, config.terminal_ctrl_y]
+        content += pprint.pformat(dict(zip(keyCombo, configEntry)))
         print(self.keepContent(content))
         return ""
 
@@ -3590,7 +3599,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def help(self):
         heading = "Help"
-        features = (".wiki", ".quickstart", ".howto", ".terminalcommands", ".standardcommands", ".aliases", ".whatis")
+        features = (".wiki", ".quickstart", ".howto", ".terminalcommands", ".standardcommands", ".aliases", ".keys", ".whatis")
         return self.displayFeatureMenu(heading, features)
 
     def maintain(self):

@@ -368,7 +368,7 @@ class ConfigUtil:
         config.help["terminal_ctrl_u"] = """
         # Customise the command to be run with key combination 'ctrl + u'."""
         if not hasattr(config, "terminal_ctrl_u"):
-            config.terminal_ctrl_u = ".downloadyoutube"
+            config.terminal_ctrl_u = ""
         config.help["terminal_ctrl_w"] = """
         # Customise the command to be run with key combination 'ctrl + w'."""
         if not hasattr(config, "terminal_ctrl_w"):

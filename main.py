@@ -175,7 +175,12 @@ def runTerminalModeCommand(command):
             # display
             config.mainWindow.displayOutputOnTerminal(content)
     return command
-config.runTerminalModeCommand = runTerminalModeCommand
+def runTerminalModeCommandWrapper(command):
+    runTerminalModeCommand(command)
+    default = config.terminalCommandDefault
+    config.terminalCommandDefault = ""
+    config.mainWindow.initialDisplay()
+config.runTerminalModeCommand = runTerminalModeCommandWrapper
 
 def closingTerminalMode():
     config.mainWindow.removeAudioPlayingFile()
@@ -268,7 +273,6 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     while not command.lower() in (".quit", ".restart", ".q", ".z"):
         default = config.terminalCommandDefault
         config.terminalCommandDefault = ""
-        #try:
         config.mainWindow.initialDisplay()
         # User command input
         if config.isPrompt_toolkitInstalled:
