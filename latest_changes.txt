@@ -1,3 +1,7 @@
+Changes in 32.74:
+* Support startup plugins to customise keyboard shortcuts in terminal mode.
+* Added a how-to guide about it.
+
 Changes in 32.73:
 * Added customisation of keyboard shortcuts / key bindings to terminal mode main command session.
     Users may edit config.py

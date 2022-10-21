@@ -211,6 +211,10 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
 
     config.terminalCommandDefault = ""
     default = ""
+    if config.isPrompt_toolkitInstalled:
+        from util.terminal_key_bindings import *
+        # make key bindings available in config to allow futher customisation via plugins
+        config.key_bindings = key_bindings
     runStartupPlugins()
     # make sure user-customised menu contains valid item only.
     # validation can only be running after, not before, running startup plugin, as some startup plugin works on command shortcuts.
@@ -235,10 +239,7 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
 
     if config.isPrompt_toolkitInstalled:
         from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
-        from util.terminal_key_bindings import *
 
-        # make key bindings available in config to allow futher customisation via plugins
-        config.key_bindings = key_bindings
         # initiate main prompt session
         initiateMainPrompt()
         command_completer = config.mainWindow.getCommandCompleter()
