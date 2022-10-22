@@ -451,7 +451,7 @@ class LocalCliHandler:
             options = [option for option in options if option and not option in ("{", "}")]
             return WordCompleter(options)
         except:
-            return []
+            return None
 
     def system(self):
         self.runSystemCommandPrompt = True
