@@ -56,7 +56,7 @@ class LocalCliHandler:
             self.unsupportedCommands.append("sidebyside")
         self.ttsCommandKeyword = self.getDefaultTtsKeyword().lower()
         self.unsupportedCommands.append("gtts" if self.ttsCommandKeyword == "speak" else "speak")
-        self.startupException1 = [config.terminal_cancel_action, ".", ".system", ".quit", ".q", ".restart", ".z", ".togglepager", ".filters", ".toggleclipboardmonitor", ".history", ".update", ".find", ".sa", ".sas", ".read", ".readsync", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".downloadyoutube", ".web", ".gtts", ".buildportablepython"]
+        self.startupException1 = [config.terminal_cancel_action, ".", ".sys", ".system", ".quit", ".q", ".restart", ".z", ".togglepager", ".filters", ".toggleclipboardmonitor", ".history", ".update", ".find", ".sa", ".sas", ".read", ".readsync", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".downloadyoutube", ".web", ".gtts", ".buildportablepython"]
         self.startupException2 = "^(_setconfig:::|\.edit|\.change|\.toggle|\.stop|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::|download:::|read:::|readsync:::)"
         #config.cliTtsProcess = None
         config.audio_playing_file = os.path.join("temp", "000_audio_playing.txt")
@@ -441,6 +441,15 @@ class LocalCliHandler:
             ".sys": ("an alias to the '.system' command", self.system),
         }
 
+    def getSystemCommandCompleter(self):
+        from prompt_toolkit.completion import WordCompleter
+
+        options = subprocess.Popen("bash -c 'compgen -ac | sort'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, *_ = options.communicate()
+        options = stdout.decode("utf-8").split("\n")
+        options = [option for option in options if option and not option in ("{", "}")]
+        return WordCompleter(options)
+
     def system(self):
         self.runSystemCommandPrompt = True
         # initial message
@@ -458,6 +467,8 @@ class LocalCliHandler:
                 self.runSystemCommandPrompt = False
 
         userInput = ""
+        if config.isPrompt_toolkitInstalled:
+            completer = self.getSystemCommandCompleter()
         while self.runSystemCommandPrompt and not userInput == config.terminal_cancel_action:
             try:
                 indicator = "{0} {1} ".format(os.path.basename(os.getcwd()), "%")
@@ -465,7 +476,7 @@ class LocalCliHandler:
                 if config.isPrompt_toolkitInstalled:
                     from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
                     auto_suggestion=AutoSuggestFromHistory()
-                    userInput = self.terminal_system_command_session.prompt(inputIndicator, style=self.promptStyle, key_bindings=this_key_bindings, auto_suggest=auto_suggestion).strip()
+                    userInput = self.terminal_system_command_session.prompt(inputIndicator, style=self.promptStyle, key_bindings=this_key_bindings, auto_suggest=auto_suggestion, completer=completer).strip()
                 else:
                     userInput = input(indicator).strip()
                 #userInput = self.simplePrompt(inputIndicator=inputIndicator).strip()
