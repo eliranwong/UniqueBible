@@ -441,15 +441,13 @@ class LocalCliHandler:
             ".sys": ("an alias to the '.system' command", self.system),
         }
 
-    def getSystemCommandCompleter(self):
+    def getSystemCommands(self):
         try:
-            from prompt_toolkit.completion import WordCompleter
-
             options = subprocess.Popen("bash -c 'compgen -ac | sort'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             stdout, *_ = options.communicate()
             options = stdout.decode("utf-8").split("\n")
             options = [option for option in options if option and not option in ("{", "}")]
-            return WordCompleter(options)
+            return options
         except:
             return None
 
@@ -471,13 +469,15 @@ class LocalCliHandler:
 
         userInput = ""
         if config.isPrompt_toolkitInstalled:
-            completer = self.getSystemCommandCompleter()
+            systemCommands = self.getSystemCommands()
         while self.runSystemCommandPrompt and not userInput == config.terminal_cancel_action:
             try:
                 indicator = "{0} {1} ".format(os.path.basename(os.getcwd()), "%")
                 inputIndicator = [("class:indicator", indicator)]
                 if config.isPrompt_toolkitInstalled:
                     from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+                    from prompt_toolkit.completion import WordCompleter
+                    completer = WordCompleter(systemCommands + os.listdir())
                     auto_suggestion=AutoSuggestFromHistory()
                     userInput = self.terminal_system_command_session.prompt(inputIndicator, style=self.promptStyle, key_bindings=this_key_bindings, auto_suggest=auto_suggestion, completer=completer).strip()
                 else:
@@ -3696,7 +3696,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def develop(self):
         heading = "Developer Tools"
-        features = ("system", ".gitstatus", ".exec", ".execfile", ".buildportablepython",)
+        features = (".system", ".gitstatus", ".exec", ".execfile", ".buildportablepython",)
         return self.displayFeatureMenu(heading, features)
 
     def openbookfeatures(self):

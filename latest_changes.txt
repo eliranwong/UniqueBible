@@ -1,3 +1,6 @@
+Changes in 32.79:
+* Added files and directories to system command completer.
+
 Changes in 32.78:
 * Added system command completer to system command prompt.
 
