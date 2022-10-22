@@ -1,3 +1,4 @@
+from genericpath import isdir
 import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json, shutil
 from functools import partial
 from datetime import date
@@ -55,7 +56,7 @@ class LocalCliHandler:
             self.unsupportedCommands.append("sidebyside")
         self.ttsCommandKeyword = self.getDefaultTtsKeyword().lower()
         self.unsupportedCommands.append("gtts" if self.ttsCommandKeyword == "speak" else "speak")
-        self.startupException1 = [config.terminal_cancel_action, ".quit", ".q", ".restart", ".z", ".togglepager", ".filters", ".toggleclipboardmonitor", ".history", ".update", ".find", ".sa", ".sas", ".read", ".readsync", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".downloadyoutube", ".web", ".gtts", ".buildportablepython"]
+        self.startupException1 = [config.terminal_cancel_action, ".system", ".quit", ".q", ".restart", ".z", ".togglepager", ".filters", ".toggleclipboardmonitor", ".history", ".update", ".find", ".sa", ".sas", ".read", ".readsync", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".downloadyoutube", ".web", ".gtts", ".buildportablepython"]
         self.startupException2 = "^(_setconfig:::|\.edit|\.change|\.toggle|\.stop|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::|download:::|read:::|readsync:::)"
         #config.cliTtsProcess = None
         config.audio_playing_file = os.path.join("temp", "000_audio_playing.txt")
@@ -96,27 +97,28 @@ class LocalCliHandler:
                 ("class:indicator", self.inputIndicator),
             ]
 
-            find_history = os.path.join("terminal_history", "find")
-            module_history_books = os.path.join("terminal_history", "books")
-            module_history_bibles = os.path.join("terminal_history", "bibles")
-            module_history_topics = os.path.join("terminal_history", "topics")
-            module_history_dictionaries = os.path.join("terminal_history", "dictionaries")
-            module_history_encyclopedia = os.path.join("terminal_history", "encyclopedia")
-            module_history_lexicons = os.path.join("terminal_history", "lexicons")
-            module_history_thirdDict = os.path.join("terminal_history", "thirdPartyDictionaries")
-            module_history_commentaries = os.path.join("terminal_history", "commentaries")
-            search_bible_history = os.path.join("terminal_history", "search_bible")
-            search_strong_bible_history = os.path.join("terminal_history", "search_strong_bible")
-            search_bible_book_range_history = os.path.join("terminal_history", "search_bible_book_range")
-            config_history = os.path.join("terminal_history", "config")
-            live_filter = os.path.join("terminal_history", "live_filter")
-            tts_language_history = os.path.join("terminal_history", "tts_language")
-            watson_translate_from_language_history = os.path.join("terminal_history", "watson_translate_from_language")
-            watson_translate_to_language_history = os.path.join("terminal_history", "watson_translate_to_language")
-            google_translate_from_language_history = os.path.join("terminal_history", "google_translate_from_language")
-            google_translate_to_language_history = os.path.join("terminal_history", "google_translate_to_language")
-            python_string_history = os.path.join("terminal_history", "python_string")
-            python_file_history = os.path.join("terminal_history", "python_file")
+            find_history = os.path.join(os.getcwd(), "terminal_history", "find")
+            module_history_books = os.path.join(os.getcwd(), "terminal_history", "books")
+            module_history_bibles = os.path.join(os.getcwd(), "terminal_history", "bibles")
+            module_history_topics = os.path.join(os.getcwd(), "terminal_history", "topics")
+            module_history_dictionaries = os.path.join(os.getcwd(), "terminal_history", "dictionaries")
+            module_history_encyclopedia = os.path.join(os.getcwd(), "terminal_history", "encyclopedia")
+            module_history_lexicons = os.path.join(os.getcwd(), "terminal_history", "lexicons")
+            module_history_thirdDict = os.path.join(os.getcwd(), "terminal_history", "thirdPartyDictionaries")
+            module_history_commentaries = os.path.join(os.getcwd(), "terminal_history", "commentaries")
+            search_bible_history = os.path.join(os.getcwd(), "terminal_history", "search_bible")
+            search_strong_bible_history = os.path.join(os.getcwd(), "terminal_history", "search_strong_bible")
+            search_bible_book_range_history = os.path.join(os.getcwd(), "terminal_history", "search_bible_book_range")
+            config_history = os.path.join(os.getcwd(), "terminal_history", "config")
+            live_filter = os.path.join(os.getcwd(), "terminal_history", "live_filter")
+            tts_language_history = os.path.join(os.getcwd(), "terminal_history", "tts_language")
+            watson_translate_from_language_history = os.path.join(os.getcwd(), "terminal_history", "watson_translate_from_language")
+            watson_translate_to_language_history = os.path.join(os.getcwd(), "terminal_history", "watson_translate_to_language")
+            google_translate_from_language_history = os.path.join(os.getcwd(), "terminal_history", "google_translate_from_language")
+            google_translate_to_language_history = os.path.join(os.getcwd(), "terminal_history", "google_translate_to_language")
+            python_string_history = os.path.join(os.getcwd(), "terminal_history", "python_string")
+            python_file_history = os.path.join(os.getcwd(), "terminal_history", "python_file")
+            system_command_history = os.path.join(os.getcwd(), "terminal_history", "system_command")
 
             self.terminal_live_filter_session = PromptSession(history=FileHistory(live_filter))
             self.terminal_books_selection_session = PromptSession(history=FileHistory(module_history_books))
@@ -139,6 +141,7 @@ class LocalCliHandler:
             self.terminal_python_file_session = PromptSession(history=FileHistory(python_file_history))
             self.terminal_watson_translate_from_language_session = PromptSession(history=FileHistory(watson_translate_from_language_history))
             self.terminal_watson_translate_to_language_session = PromptSession(history=FileHistory(watson_translate_to_language_history))
+            self.terminal_system_command_session = PromptSession(history=FileHistory(system_command_history))
 
         else:
 
@@ -163,6 +166,7 @@ class LocalCliHandler:
             self.terminal_config_selection_session = None
             self.terminal_python_string_session = None
             self.terminal_python_file_session = None
+            self.terminal_system_command_session = None
 
     def getShortcuts(self):
         return {
@@ -433,7 +437,52 @@ class LocalCliHandler:
             ".wt": ("an alias to the '.watsontranslate' command", lambda: self.watsonTranslate(False)),
             ".wtc": ("an alias to the '.watsontranslatecopiedtext' command", self.watsonTranslate),
             ".buildportablepython": ("build portable python", self.buildPortablePython),
+            ".system": ("run system command prompt", self.system),
         }
+
+    def system(self):
+        self.runSystemCommandPrompt = True
+        # initial message
+        print("You are now using system command prompt!")
+        print(f"To go back to Unique Bible App command prompt, either press 'ctrl + q' or run '{config.terminal_cancel_action}'")
+        # keep current path in case users change directory
+        ubaPath = os.getcwd()
+
+        if config.isPrompt_toolkitInstalled:
+            from prompt_toolkit.key_binding import KeyBindings
+            this_key_bindings = KeyBindings()
+            @this_key_bindings.add("c-q")
+            def _(event):
+                self.terminal_system_command_session.app.exit()
+                self.runSystemCommandPrompt = False
+
+        userInput = ""
+        while self.runSystemCommandPrompt and not userInput == config.terminal_cancel_action:
+            try:
+                indicator = "{0} {1} ".format(os.path.basename(os.getcwd()), "%")
+                inputIndicator = [("class:indicator", indicator)]
+                if config.isPrompt_toolkitInstalled:
+                    userInput = self.terminal_system_command_session.prompt(inputIndicator, style=self.promptStyle, key_bindings=this_key_bindings).strip()
+                else:
+                    userInput = input(indicator).strip()
+                #userInput = self.simplePrompt(inputIndicator=inputIndicator).strip()
+                if userInput and not userInput == config.terminal_cancel_action:
+                    os.system(userInput)
+                    # check if directory is changed
+                    #userInput = re.sub("^.*?[ ;&]*(cd .+?)[;&]*$", r"\1", userInput)
+                    cmdList = []
+                    userInput = userInput.split(";")
+                    for i in userInput:
+                        subList = i.split("&")
+                        cmdList += subList
+                    cmdList = [i.strip() for i in cmdList if i and i.strip().startswith("cd ")]
+                    if cmdList:
+                        lastDir = cmdList[-1][3:]
+                        if os.path.isdir(lastDir):
+                            os.chdir(lastDir)
+            except:
+                pass
+        os.chdir(ubaPath)
 
     def editfilters(self):
         savedFiltersFile = os.path.join("terminal_mode", "filters.txt")
@@ -1770,18 +1819,20 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         print("Install package 'prompt_toolkit' first!")
         return ""
 
-    def simplePrompt(self, numberOnly=False, multiline=False):
+    def simplePrompt(self, numberOnly=False, multiline=False, inputIndicator=""):
+        if not inputIndicator:
+            inputIndicator = self.inputIndicator
         if config.isPrompt_toolkitInstalled:
             from prompt_toolkit import prompt
             from util.PromptValidator import NumberValidator
             if numberOnly:
                 if multiline:
                     self.printMultineNote()
-                userInput = prompt(self.inputIndicator, style=self.promptStyle, validator=NumberValidator(), multiline=multiline).strip()
+                userInput = prompt(inputIndicator, style=self.promptStyle, validator=NumberValidator(), multiline=multiline).strip()
             else:
-                userInput = prompt(self.inputIndicator, style=self.promptStyle, multiline=multiline).strip()
+                userInput = prompt(inputIndicator, style=self.promptStyle, multiline=multiline).strip()
         else:
-            userInput = input(self.inputIndicator).strip()
+            userInput = input(inputIndicator).strip()
         return userInput
 
     def isUrlAlive(self, url):
