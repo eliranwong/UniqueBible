@@ -442,13 +442,16 @@ class LocalCliHandler:
         }
 
     def getSystemCommandCompleter(self):
-        from prompt_toolkit.completion import WordCompleter
+        try:
+            from prompt_toolkit.completion import WordCompleter
 
-        options = subprocess.Popen("bash -c 'compgen -ac | sort'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, *_ = options.communicate()
-        options = stdout.decode("utf-8").split("\n")
-        options = [option for option in options if option and not option in ("{", "}")]
-        return WordCompleter(options)
+            options = subprocess.Popen("bash -c 'compgen -ac | sort'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            stdout, *_ = options.communicate()
+            options = stdout.decode("utf-8").split("\n")
+            options = [option for option in options if option and not option in ("{", "}")]
+            return WordCompleter(options)
+        except:
+            return []
 
     def system(self):
         self.runSystemCommandPrompt = True
