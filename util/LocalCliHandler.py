@@ -439,6 +439,7 @@ class LocalCliHandler:
             ".buildportablepython": ("build portable python", self.buildPortablePython),
             ".system": ("run system command prompt", self.system),
             ".sys": ("an alias to the '.system' command", self.system),
+            ".clear": ("clear the current screen", self.clear),
         }
 
     def getSystemCommands(self):
@@ -466,6 +467,22 @@ class LocalCliHandler:
             def _(event):
                 self.terminal_system_command_session.app.exit()
                 self.runSystemCommandPrompt = False
+            @this_key_bindings.add("c-l")
+            def _(event):
+                print("")
+                #os.system("ls")
+                dirs = []
+                files = []
+                for i in os.listdir():
+                    if os.path.isdir(i):
+                        dirs.append(i)
+                    elif os.path.isfile(i):
+                        files.append(i)
+                print("Directories:")
+                print(sorted(dirs))
+                print("Files:")
+                print(sorted(files))
+                self.terminal_system_command_session.app.reset()
 
         userInput = ""
         if config.isPrompt_toolkitInstalled:
@@ -634,6 +651,11 @@ class LocalCliHandler:
 
     def execPythonFile(self, script):
         self.crossPlatform.execPythonFile(script)
+
+    def clear(self):
+        if config.isPrompt_toolkitInstalled:
+            from prompt_toolkit.shortcuts import clear
+            clear()
 
     # a dummy method to work with config.mainWindow.runTextCommand in some codes
     def runTextCommand(self, command):
@@ -3634,7 +3656,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def control(self):
         heading = "Control"
-        features = (".reload", ".latestbible", ".forward", ".backward", ".swap", ".starthttpserver", ".stophttpserver", ".stopaudio", ".stopaudiosync", ".toggle")
+        features = (".clear", ".reload", ".latestbible", ".forward", ".backward", ".swap", ".starthttpserver", ".stophttpserver", ".stopaudio", ".stopaudiosync", ".toggle")
         return self.displayFeatureMenu(heading, features)
 
     def toggle(self):

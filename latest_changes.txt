@@ -1,3 +1,7 @@
+Changes in 32.80:
+* Improved running key-bindings in terminal mode.
+* Added ".clear" command in terminal mode.
+
 Changes in 32.79:
 * Added files and directories to system command completer.
 
