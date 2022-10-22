@@ -1,3 +1,7 @@
+Changes in 32.77:
+* Fixed UBA startup in non-terminal mode.
+* Added ".system" command under developer tool menu in terminal mode.
+
 Changes in 32.76:
 * Added system command prompt, so that users can use system commands without quiting UBA.
     run ".system" in terminal mode.

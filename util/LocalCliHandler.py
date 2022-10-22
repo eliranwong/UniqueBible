@@ -56,7 +56,7 @@ class LocalCliHandler:
             self.unsupportedCommands.append("sidebyside")
         self.ttsCommandKeyword = self.getDefaultTtsKeyword().lower()
         self.unsupportedCommands.append("gtts" if self.ttsCommandKeyword == "speak" else "speak")
-        self.startupException1 = [config.terminal_cancel_action, ".system", ".quit", ".q", ".restart", ".z", ".togglepager", ".filters", ".toggleclipboardmonitor", ".history", ".update", ".find", ".sa", ".sas", ".read", ".readsync", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".downloadyoutube", ".web", ".gtts", ".buildportablepython"]
+        self.startupException1 = [config.terminal_cancel_action, ".", ".system", ".quit", ".q", ".restart", ".z", ".togglepager", ".filters", ".toggleclipboardmonitor", ".history", ".update", ".find", ".sa", ".sas", ".read", ".readsync", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".downloadyoutube", ".web", ".gtts", ".buildportablepython"]
         self.startupException2 = "^(_setconfig:::|\.edit|\.change|\.toggle|\.stop|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::|download:::|read:::|readsync:::)"
         #config.cliTtsProcess = None
         config.audio_playing_file = os.path.join("temp", "000_audio_playing.txt")
@@ -438,6 +438,7 @@ class LocalCliHandler:
             ".wtc": ("an alias to the '.watsontranslatecopiedtext' command", self.watsonTranslate),
             ".buildportablepython": ("build portable python", self.buildPortablePython),
             ".system": ("run system command prompt", self.system),
+            ".sys": ("an alias to the '.system' command", self.system),
         }
 
     def system(self):
@@ -462,7 +463,9 @@ class LocalCliHandler:
                 indicator = "{0} {1} ".format(os.path.basename(os.getcwd()), "%")
                 inputIndicator = [("class:indicator", indicator)]
                 if config.isPrompt_toolkitInstalled:
-                    userInput = self.terminal_system_command_session.prompt(inputIndicator, style=self.promptStyle, key_bindings=this_key_bindings).strip()
+                    from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+                    auto_suggestion=AutoSuggestFromHistory()
+                    userInput = self.terminal_system_command_session.prompt(inputIndicator, style=self.promptStyle, key_bindings=this_key_bindings, auto_suggest=auto_suggestion).strip()
                 else:
                     userInput = input(indicator).strip()
                 #userInput = self.simplePrompt(inputIndicator=inputIndicator).strip()
@@ -656,7 +659,9 @@ class LocalCliHandler:
         if not command.lower().startswith(".") and re.search('^(map:::|qrcode:::|bible:::mab:::|bible:::mib:::|bible:::mob:::|bible:::mpb:::|bible:::mtb:::|text:::mab|text:::mib|text:::mob|text:::mpb|text:::mtb|study:::mab:::|study:::mib:::|study:::mob:::|study:::mpb:::|study:::mtb:::|studytext:::mab|studytext:::mib|studytext:::mob|studytext:::mpb|studytext:::mtb)', command.lower()):
             return self.web(command)
         # Dot commands
-        if checkDotCommand and command.startswith("."):
+        if command == ".":
+            return ""
+        elif checkDotCommand and command.startswith("."):
             return self.getDotCommandContent(command.lower())
         # Non-dot commands
         view, content, dict = self.textCommandParser.parser(command, "cli")
@@ -3676,8 +3681,8 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         return self.displayFeatureMenu(heading, features)
 
     def develop(self):
-        heading = "Developers"
-        features = (".gitstatus", ".exec", ".execfile", ".buildportablepython")
+        heading = "Developer Tools"
+        features = ("system", ".gitstatus", ".exec", ".execfile", ".buildportablepython",)
         return self.displayFeatureMenu(heading, features)
 
     def openbookfeatures(self):
