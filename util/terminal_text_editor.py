@@ -654,7 +654,7 @@ class TextEditor:
 <{1}>ctrl+w</{1}> <u>w</u>rite file [save]
 <{1}>escape+w</{1}> <u>w</u>rite file as [save as]
 
-<b># Scripts & Commands</b>
+<b># Scripts and Commands</b>
 <{1}>ctrl+p</{1}> run as <u>p</u>ython script
 <{1}>escape+p</{1}> run text editor <u>p</u>lugins
 <{1}>escape+m</{1}> open UBA <u>m</u>ain menu
