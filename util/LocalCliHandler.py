@@ -1,4 +1,3 @@
-from genericpath import isdir
 import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json, shutil
 from functools import partial
 from datetime import date
@@ -26,7 +25,7 @@ from util.DateUtil import DateUtil
 from util.WebtopUtil import WebtopUtil
 from util.Translator import Translator
 from util.HBN import HBN
-
+from util.terminal_text_editor import TextEditor
 
 class LocalCliHandler:
 
@@ -56,7 +55,7 @@ class LocalCliHandler:
             self.unsupportedCommands.append("sidebyside")
         self.ttsCommandKeyword = self.getDefaultTtsKeyword().lower()
         self.unsupportedCommands.append("gtts" if self.ttsCommandKeyword == "speak" else "speak")
-        self.startupException1 = [config.terminal_cancel_action, ".", ".sys", ".system", ".quit", ".q", ".restart", ".z", ".togglepager", ".filters", ".toggleclipboardmonitor", ".history", ".update", ".find", ".sa", ".sas", ".read", ".readsync", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".downloadyoutube", ".web", ".gtts", ".buildportablepython"]
+        self.startupException1 = [config.terminal_cancel_action, ".", ".sys", ".system", ".quit", ".q", ".restart", ".z", ".togglepager", ".filters", ".toggleclipboardmonitor", ".history", ".update", ".find", ".sa", ".sas", ".read", ".readsync", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".downloadyoutube", ".web", ".gtts", ".buildportablepython", ".opentextfile"]
         self.startupException2 = "^(_setconfig:::|\.edit|\.change|\.toggle|\.stop|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::|download:::|read:::|readsync:::)"
         #config.cliTtsProcess = None
         config.audio_playing_file = os.path.join("temp", "000_audio_playing.txt")
@@ -380,8 +379,9 @@ class LocalCliHandler:
             ".helpinstallmicro": ("show how to install text editor micro", lambda: self.readHowTo("install micro")),
             #".w3m": ("open html content in w3m", lambda: self.cliTool("w3m -T text/html", self.html)),
             #".lynx": ("open html content in lynx", lambda: self.cliTool("lynx -stdin", self.html)),
-            ".opentext": ("open text from document.", self.opentext),
-            ".extract": ("extract bible references from the latest content.", self.extract),
+            ".opentextfile": ("open text file", self.opentext),
+            ".edittextfile": ("edit text file", lambda: self.opentext(True)),
+            ".extract": ("extract bible references from the latest content", self.extract),
             ".extractcopiedtext": ("extract bible references from the latest content.", self.extractcopiedtext),
             ".editnewfile": ("edit new file in text editor", lambda: self.cliTool(config.terminalNoteEditor)),
             ".editcontent": ("edit latest content in text editor", lambda: self.cliTool(config.terminalNoteEditor, self.getPlainText())),
@@ -447,16 +447,16 @@ class LocalCliHandler:
             options = subprocess.Popen("bash -c 'compgen -ac | sort'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             stdout, *_ = options.communicate()
             options = stdout.decode("utf-8").split("\n")
-            options = [option for option in options if option and not option in ("{", "}")]
+            options = [option for option in options if option and not option in ("{", "}", ".", "!", ":")]
             return options
         except:
-            return None
+            return []
 
     def system(self):
         self.runSystemCommandPrompt = True
         # initial message
         print("You are now using system command prompt!")
-        print(f"To go back to Unique Bible App command prompt, either press 'ctrl + q' or run '{config.terminal_cancel_action}'")
+        print(f"To go back to Unique Bible App command prompt, either press 'ctrl+q' or run '{config.terminal_cancel_action}'")
         # keep current path in case users change directory
         ubaPath = os.getcwd()
 
@@ -465,8 +465,8 @@ class LocalCliHandler:
             this_key_bindings = KeyBindings()
             @this_key_bindings.add("c-q")
             def _(event):
-                self.terminal_system_command_session.app.exit()
-                self.runSystemCommandPrompt = False
+                event.app.current_buffer.text = config.terminal_cancel_action
+                event.app.current_buffer.validate_and_handle()
             @this_key_bindings.add("c-l")
             def _(event):
                 print("")
@@ -494,7 +494,8 @@ class LocalCliHandler:
                 if config.isPrompt_toolkitInstalled:
                     from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
                     from prompt_toolkit.completion import WordCompleter
-                    completer = WordCompleter(systemCommands + os.listdir())
+                    dirIndicator = "\\" if platform.system() == "Windows" else "/"
+                    completer = WordCompleter(sorted(set(systemCommands + [f"{i}{dirIndicator}" if os.path.isdir(i) else i for i in os.listdir()])))
                     auto_suggestion=AutoSuggestFromHistory()
                     userInput = self.terminal_system_command_session.prompt(inputIndicator, style=self.promptStyle, key_bindings=this_key_bindings, auto_suggest=auto_suggestion, completer=completer).strip()
                 else:
@@ -520,15 +521,20 @@ class LocalCliHandler:
 
     def editfilters(self):
         savedFiltersFile = os.path.join("terminal_mode", "filters.txt")
-        print(f"You are about to edit '{savedFiltersFile}' ...")
-        print("Save as and overwrite the file '{savedFiltersFile}' when you finish.")
-        print("Are you ready to edit? [y]es / [N]o")
-        userInput = self.simplePrompt()
-        if userInput.lower() in ("y", "yes"):
-            text = self.readPlainTextFile(savedFiltersFile)
-            return self.cliTool(config.terminalNoteEditor, text)
+        if config.isPrompt_toolkitInstalled:
+            changesMade = self.multilineEditor(filepath=savedFiltersFile)
+            if changesMade:
+                print("Filters updated!")
         else:
-            self.cancelAction()
+            print(f"You are about to edit '{savedFiltersFile}' ...")
+            print("Save as and overwrite the file '{savedFiltersFile}' when you finish.")
+            print("Are you ready to edit? [y]es / [N]o")
+            userInput = self.simplePrompt()
+            if userInput.lower() in ("y", "yes"):
+                text = self.readPlainTextFile(savedFiltersFile)
+                return self.cliTool(config.terminalNoteEditor, text)
+            else:
+                self.cancelAction()
 
     def filters(self):
         try:
@@ -828,9 +834,9 @@ class LocalCliHandler:
                 elif i == ".exec":
                     suggestions[i] = self.getDummyDict(["file",])
                 elif i == ".edit":
-                    suggestions[i] = self.getDummyDict(["booknote", "chapternote", "config", "content", "filters", "journal", "newfile", "versenote"])
+                    suggestions[i] = self.getDummyDict(["booknote", "chapternote", "config", "content", "filters", "journal", "newfile", "textfile", "versenote"])
                 elif i == ".open":
-                    suggestions[i] = self.getDummyDict(["365readingplan", "3dict", "audio", "bible", "biblenote", "bookfeatures", "booknote", "chapterfeatures", "chapterindex", "chapternote", "characters", "combo", "commentary", "comparison", "crossreference", "data", "dictionaries", "dictionarybookentry", "difference", "discourse", "encyclopedia", "encyclopediabookentry", "introduction", "journal", "lexicons", "locations", "maps", "names", "overview", "parallels", "promises", "referencebook", "summary", "text", "thirdpartydictionaries", "timelines", "topics", "translation", "tske", "versefeatures", "verseindex", "versenote", "words"])
+                    suggestions[i] = self.getDummyDict(["365readingplan", "3dict", "audio", "bible", "biblenote", "bookfeatures", "booknote", "chapterfeatures", "chapterindex", "chapternote", "characters", "combo", "commentary", "comparison", "crossreference", "data", "dictionaries", "dictionarybookentry", "difference", "discourse", "encyclopedia", "encyclopediabookentry", "introduction", "journal", "lexicons", "locations", "maps", "names", "overview", "parallels", "promises", "referencebook", "summary", "textfile", "thirdpartydictionaries", "timelines", "topics", "translation", "tske", "versefeatures", "verseindex", "versenote", "words"])
                 elif i == ".quick":
                     suggestions[i] = self.getDummyDict(["edit", "editcopiedtext", "open", "opencopiedtext", "search", "searchcopiedtext", "start"])
                 elif i == ".search":
@@ -1333,9 +1339,9 @@ class LocalCliHandler:
         else:
             return self.printInvalidOptionEntered()
 
-    def tts(self, runOnCopiedText=True):
-        if runOnCopiedText:
-            clipboardText = self.getclipboardtext()
+    def tts(self, runOnSelectedText=True, defaultText=""):
+        if runOnSelectedText:
+            clipboardText = defaultText if defaultText else self.getclipboardtext()
         codes = self.ttsLanguageCodes
         #display = "<h2>Languages</h2>"
         shortCodes = []
@@ -1367,7 +1373,7 @@ class LocalCliHandler:
             if userInput in suggestions:
                 config.ttsDefaultLangauge = userInput
                 commandPrefix = f"{self.getDefaultTtsKeyword()}:::{userInput}:::"
-                if runOnCopiedText:
+                if runOnSelectedText:
                     userInput = clipboardText
                 else:
                     print(self.divider)
@@ -1384,10 +1390,10 @@ class LocalCliHandler:
         except:
             return self.printInvalidOptionEntered()
 
-    def watsonTranslate(self, runOnCopiedText=True):
+    def watsonTranslate(self, runOnSelectedText=True, defaultText=""):
         if config.isIbmWatsonInstalled:
-            if runOnCopiedText:
-                clipboardText = self.getclipboardtext()
+            if runOnSelectedText:
+                clipboardText = defaultText if defaultText else self.getclipboardtext()
             try:
                 if config.isPrompt_toolkitInstalled:
                     from prompt_toolkit.completion import WordCompleter
@@ -1439,7 +1445,7 @@ class LocalCliHandler:
                     if userInput in suggestions:
                         toLanguage = userInput
 
-                    if runOnCopiedText:
+                    if runOnSelectedText:
                         userInput = clipboardText
                     else:
                         print(self.divider)
@@ -1460,10 +1466,10 @@ class LocalCliHandler:
             print("Package 'ibm-watson' is not found on your system!")
             return ""
 
-    def googleTranslate(self, runOnCopiedText=True):
+    def googleTranslate(self, runOnSelectedText=True, defaultText=""):
         if config.isTranslateInstalled:
-            if runOnCopiedText:
-                clipboardText = self.getclipboardtext()
+            if runOnSelectedText:
+                clipboardText = defaultText if defaultText else self.getclipboardtext()
             try:
                 if config.isPrompt_toolkitInstalled:
                     from prompt_toolkit.completion import WordCompleter
@@ -1507,7 +1513,7 @@ class LocalCliHandler:
                     if userInput in suggestions:
                         toLanguage = userInput
 
-                    if runOnCopiedText:
+                    if runOnSelectedText:
                         userInput = clipboardText
                     else:
                         print(self.divider)
@@ -1531,7 +1537,7 @@ class LocalCliHandler:
     def printMultineNote(self):
         print("[Attention! Multiline input is enabled. Press Escape+Enter when you finish text entry.]")
 
-    def getclipboardtext(self):
+    def getclipboardtext(self, confirmMessage=True):
         try:
             if config.terminalEnableTermuxAPI:
                 clipboardText = self.getCliOutput("termux-clipboard-get")
@@ -1539,19 +1545,22 @@ class LocalCliHandler:
                 import pyperclip
                 clipboardText = pyperclip.paste()
             if clipboardText:
-                print(self.divider)
-                print("Clipboard text:")
-                print(clipboardText)
-                print(self.divider)
+                if confirmMessage:
+                    print(self.divider)
+                    print("Clipboard text:")
+                    print(clipboardText)
+                    print(self.divider)
                 return clipboardText
-            else:
+            elif confirmMessage:
                 print("No copied text is found!")
                 return self.cancelAction()
+            else:
+                return ""
         except:
             return self.noClipboardUtility()
 
-    def runclipboardtext(self, commandPrefix="", commandSuffix=""):
-        clipboardText = self.getclipboardtext()
+    def runclipboardtext(self, commandPrefix="", commandSuffix="", defaultText=""):
+        clipboardText = defaultText if defaultText else self.getclipboardtext()
         if clipboardText:
             command = f"{commandPrefix}{clipboardText}{commandSuffix}"
             self.printRunningCommand(command)
@@ -1644,7 +1653,7 @@ class LocalCliHandler:
         except:
             return self.noClipboardUtility()
 
-    def copy(self, content=""):
+    def copy(self, content="", confirmMessage=True):
         try:
             if not content:
                 content = self.getPlainText()
@@ -1653,18 +1662,22 @@ class LocalCliHandler:
             else:
                 import pyperclip
                 pyperclip.copy(content)
+            if confirmMessage:
                 print("Content is copied to clipboard.")
             return ""
         except:
             return self.noClipboardUtility()
 
-    def copyHtml(self):
+    def copyHtml(self, content="", confirmMessage=True):
         try:
+            if not content:
+                content = self.html
             if config.terminalEnableTermuxAPI:
-                pydoc.pipepager(self.html, cmd="termux-clipboard-set")
+                pydoc.pipepager(content, cmd="termux-clipboard-set")
             else:
                 import pyperclip
-                pyperclip.copy(self.html)
+                pyperclip.copy(content)
+            if confirmMessage:
                 print("HTML content is copied to clipboard.")
             return ""
         except:
@@ -1860,6 +1873,14 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         print("Install package 'prompt_toolkit' first!")
         return ""
 
+    def multilineEditor(self, text="", placeholder="", custom_save_file_method=None, filepath="", newFile=False):
+        editor = TextEditor(self, custom_save_file_method=custom_save_file_method)
+        if newFile:
+            return editor.newFile()
+        elif filepath:
+            return editor.openFile(filepath)
+        return editor.multilineEditor(text, placeholder)
+
     def simplePrompt(self, numberOnly=False, multiline=False, inputIndicator=""):
         if not inputIndicator:
             inputIndicator = self.inputIndicator
@@ -1936,7 +1957,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         self.printToolNotFound("yt-dlp' or 'ffmpeg")
         return ""
 
-    def opentext(self):
+    def opentext(self, editMode=False):
         if config.isTextractInstalled:
             print(self.divider)
             print("Enter a file path below:")
@@ -1949,7 +1970,12 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 return self.cancelAction()
             if os.path.isfile(userInput):
                 import textract
-                return textract.process(userInput).decode()
+                content = textract.process(userInput).decode()
+                if editMode:
+                    self.multilineEditor(content)
+                    return ""
+                else:
+                    return content
             else:
                 return self.printInvalidOptionEntered()
         self.printToolNotFound("textract")
@@ -2064,10 +2090,15 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         except:
             return self.printInvalidOptionEntered()
 
-    def quickedit(self, runOnCopiedText=True):
+    def quickedit(self, runOnSelectedText=True, defaultText=""):
         try:
-            if runOnCopiedText:
-                self.getclipboardtext()
+            if runOnSelectedText:
+                if defaultText:
+                    print(self.divider)
+                    print(defaultText)
+                    print(self.divider)
+                else:
+                    self.getclipboardtext()
             options = {
                 "0": ("Bible Book Notes", "EDITBOOKNOTE", ""),
                 "1": ("Bible Chapter Notes", "EDITCHAPTERNOTE", ""),
@@ -2076,7 +2107,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             }
             display = [f"[<ref>{key}</ref> ] {value[0]} - {value[-1]}" for key, value in options.items()]
             display = "<br>".join(display)
-            display = f"<h2>Quick Open Copied Entry in Editor</h2>{display}" if runOnCopiedText else f"<h2>Quick Edit</h2>{display}"
+            display = f"<h2>Quick Open Selected Entry in Editor</h2>{display}" if runOnSelectedText else f"<h2>Quick Edit</h2>{display}"
             print(TextUtil.htmlToPlainText(display))
             print(self.divider)
             print("Enter a number:")
@@ -2088,8 +2119,8 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 *_, openKeyword, latestSelection = options[userInput]
                 latestSelection = f"{latestSelection}:::" if latestSelection else ""
                 openPrefix = f"{openKeyword}:::{latestSelection}"
-                if runOnCopiedText:
-                    print(self.runclipboardtext(openPrefix))
+                if runOnSelectedText:
+                    print(self.runclipboardtext(openPrefix, defaultText=defaultText))
                     return ""
                 else:
                     print(self.divider)
@@ -2104,10 +2135,15 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         except:
             return self.printInvalidOptionEntered()
 
-    def quickopen(self, runOnCopiedText=True):
+    def quickopen(self, runOnSelectedText=True, defaultText=""):
         try:
-            if runOnCopiedText:
-                self.getclipboardtext()
+            if runOnSelectedText:
+                if defaultText:
+                    print(self.divider)
+                    print(defaultText)
+                    print(self.divider)
+                else:
+                    self.getclipboardtext()
             options = {
                 "0": ("Bible Version", "TEXT", ""),
                 "1": ("Reference in Selected Bible", "BIBLE", config.mainText),
@@ -2148,7 +2184,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             }
             display = [f"[<ref>{key}</ref> ] {value[0]} - {value[-1]}" for key, value in options.items()]
             display = "<br>".join(display)
-            display = f"<h2>Quick Open Copied Text in ...</h2>{display}" if runOnCopiedText else f"<h2>Quick Open</h2>{display}"
+            display = f"<h2>Quick Open Selected Text in ...</h2>{display}" if runOnSelectedText else f"<h2>Quick Open</h2>{display}"
             print(TextUtil.htmlToPlainText(display))
             print(self.divider)
             print("Enter a number:")
@@ -2162,8 +2198,8 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 if openKeyword == "COMMENTARY":
                     latestSelection = ":::"
                 openPrefix = f"{openKeyword}:::{latestSelection}"
-                if runOnCopiedText:
-                    print(self.runclipboardtext(openPrefix))
+                if runOnSelectedText:
+                    print(self.runclipboardtext(openPrefix, defaultText=defaultText))
                     return ""
                 else:
                     print(self.divider)
@@ -2177,10 +2213,15 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         except:
             return self.printInvalidOptionEntered()
 
-    def quickSearch(self, runOnCopiedText=True):
+    def quickSearch(self, runOnSelectedText=True, defaultText=""):
         try:
-            if runOnCopiedText:
-                self.getclipboardtext()
+            if runOnSelectedText:
+                if defaultText:
+                    print(self.divider)
+                    print(defaultText)
+                    print(self.divider)
+                else:
+                    self.getclipboardtext()
             searchModes = ("SEARCH", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
             options = {
                 "0": ("Whole Bible", searchModes[config.bibleSearchMode], "", config.mainText, ""),
@@ -2207,7 +2248,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             }
             display = [f"[<ref>{key}</ref> ] {value[0]} - {value[-2]}" for key, value in options.items()]
             display = "<br>".join(display)
-            display = f"<h2>Quick Search Copied Text in ...</h2>{display}" if runOnCopiedText else f"<h2>Quick Search</h2>{display}"
+            display = f"<h2>Quick Search Selected Text in ...</h2>{display}" if runOnSelectedText else f"<h2>Quick Search</h2>{display}"
             print(TextUtil.htmlToPlainText(display))
             print(self.divider)
             print("Enter a number:")
@@ -2225,8 +2266,8 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     latestSelection = latestSelection.lower()
                 config.terminalCommandDefault = f"{openKeyword}:::{latestSelection}" if openKeyword else ""
                 if openKeyword:
-                    if runOnCopiedText:
-                        print(self.runclipboardtext(searchPrefix, searchSuffix))
+                    if runOnSelectedText:
+                        print(self.runclipboardtext(searchPrefix, searchSuffix, defaultText=defaultText))
                         return ""
                     else:
                         print(self.divider)
@@ -2237,8 +2278,8 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         print(self.getContent(command))
                         return ""
                 else:
-                    if runOnCopiedText:
-                        return self.runclipboardtext(searchPrefix, searchSuffix)
+                    if runOnSelectedText:
+                        return self.runclipboardtext(searchPrefix, searchSuffix, defaultText=defaultText)
                     else:
                         print(self.divider)
                         print("Enter a search item:")
@@ -3219,29 +3260,32 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             return self.printInvalidOptionEntered()
 
     def clipboardMonitorFeature(self):
-        self.showClipboardMonitorStatus()
-        if config.terminalEnableClipboardMonitor:
-            # check English definition of selected word
-            selectedText = self.getclipboardtext()
-            if selectedText in HBN.entries:
-                definition = HBN.entries[selectedText]
-            else:
-                definition = self.getDefinition(selectedText)
-                if not definition:
-                    lemma = config.lemmatizer.lemmatize(selectedText)
-                    if lemma == selectedText:
-                        lemma = ""
-                    else:
-                        lemma = f"{lemma} -"
-                    definition = self.getDefinition(lemma)
-                    if definition:
-                        definition = "{0}{1}".format(lemma, definition)
-                    elif config.isChineseEnglishLookupInstalled:
-                        definition = "{0}{1}".format(lemma, config.cedict.lookup(lemma))
-            print("Definition:")
-            print(definition)
-            print(self.divider)
-            self.extract(selectedText)
+        try:
+            self.showClipboardMonitorStatus()
+            if config.terminalEnableClipboardMonitor:
+                # check English definition of selected word
+                selectedText = self.getclipboardtext()
+                if selectedText in HBN.entries:
+                    definition = HBN.entries[selectedText]
+                else:
+                    definition = self.getDefinition(selectedText)
+                    if not definition:
+                        lemma = config.lemmatizer.lemmatize(selectedText)
+                        if lemma == selectedText:
+                            lemma = ""
+                        else:
+                            lemma = f"{lemma} -"
+                        definition = self.getDefinition(lemma)
+                        if definition:
+                            definition = "{0}{1}".format(lemma, definition)
+                        elif config.isChineseEnglishLookupInstalled:
+                            definition = "{0}{1}".format(lemma, config.cedict.lookup(lemma))
+                print("Definition:")
+                print(definition)
+                print(self.divider)
+                self.extract(selectedText)
+        except:
+            pass
 
     def getDefinition(self, entry):
         definition = ""
@@ -3339,6 +3383,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             print(self.divider)
             print("Select default note / journal editor:")
             editors = {
+                "built-in": "",
                 "micro": "micro",
                 "nano": "nano --softwrap --atblanks -",
                 "vi": "vi -",
@@ -3459,65 +3504,98 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             return self.printInvalidOptionEntered()
 
     def editConfig(self, editor):
+        if not os.path.isfile("config.py") or (not editor and not config.isPrompt_toolkitInstalled):
+            return ""
         print(self.divider)
         print("Caution! Editing 'config.py' incorrectly may stop UBA from working.")
-        print("Do you want to proceed? [y]es / [N]o")
-        if config.isPrompt_toolkitInstalled:
-            from prompt_toolkit import prompt
-            userInput = prompt(self.inputIndicator, style=self.promptStyle, default="N").strip()
+        if not editor and config.isPrompt_toolkitInstalled:
+            changesMade = self.multilineEditor(filepath="config.py")
+            if changesMade:
+                config.saveConfigOnExit = False
+                print(self.divider)
+                print("Restarting ...")
+                return ".restart"
         else:
-            userInput = input(self.inputIndicator).strip()
-        userInput = userInput.lower()
-        if userInput in ("n", "no"):
-            return self.cancelAction()
-        elif userInput in ("y", "yes"):
-            print("reading config content ...")
-            if os.path.isfile("config.py"):
-                with open("config.py", "r", encoding="utf-8") as input_file:
-                    content = input_file.read()
-                print("config is ready for editing ...")
-                print("To apply changes, save as 'config.py' and replace the existing 'config.py' when you finish editing.")
-            self.cliTool(editor, content)
-            config.saveConfigOnExit = False
-            print(self.divider)
-            print("Restarting ...")
-            return ".restart"
+            print("Do you want to proceed? [y]es / [N]o")
+            if config.isPrompt_toolkitInstalled:
+                from prompt_toolkit import prompt
+                userInput = prompt(self.inputIndicator, style=self.promptStyle, default="N").strip()
+            else:
+                userInput = input(self.inputIndicator).strip()
+            userInput = userInput.lower()
+            if userInput in ("n", "no"):
+                return self.cancelAction()
+            elif userInput in ("y", "yes"):
+                print("reading config content ...")
+                if os.path.isfile("config.py"):
+                    with open("config.py", "r", encoding="utf-8") as input_file:
+                        content = input_file.read()
+                    print("config is ready for editing ...")
+                    print("To apply changes, save as 'config.py' and replace the existing 'config.py' when you finish editing.")
+                self.cliTool(editor, content)
+                config.saveConfigOnExit = False
+                print(self.divider)
+                print("Restarting ...")
+                return ".restart"
+
+    def confirmSaveTextFile(self, text):
+        from prompt_toolkit.shortcuts import confirm
+        answer = confirm("Save changes?")
+        if answer:
+            promptFilenameEntry = True
+            while promptFilenameEntry:
+                print("Enter a file name:")
+                filepath = self.simplePrompt().strip()
+                if filepath.lower() == config.terminal_cancel_action:
+                    promptFilenameEntry = False
+                elif filepath:
+                    try:
+                        with open(filepath, "w", encoding="utf-8") as fileObj:
+                            fileObj.write(text)
+                        promptFilenameEntry = False
+                    except:
+                        print(f"Failed to save text in '{filepath}'!")
 
     # pipe text content into a cli tool
     def cliTool(self, tool, content=""):
-        if WebtopUtil.isPackageInstalled(tool):
+        if not tool and not config.isPrompt_toolkitInstalled:
+            self.printToolNotFound("prompt-toolkit")
+        elif not tool:
+            self.multilineEditor(content)
+        elif tool and WebtopUtil.isPackageInstalled(tool):
             pydoc.pipepager(content, cmd=tool)
             if WebtopUtil.isPackageInstalled("pkill"):
                 tool = tool.strip().split(" ")[0]
                 os.system(f"pkill {tool}")
-        else:
-            self.printToolNotFound(tool)
         return ""
 
-    def openNoteEditor(self, noteType, b=None, c=None, v=None, year=None, month=None, day=None, editor=None):
-        if editor is None:
+    def openNoteEditor(self, noteType, b=None, c=None, v=None, year=None, month=None, day=None, editor=""):
+        if not editor:
             editor = config.terminalNoteEditor
-        if WebtopUtil.isPackageInstalled(editor.split(" ")[0]):
-            noteDB = JournalSqlite() if noteType == "journal" else NoteSqlite()
-            if noteType == "journal":
-                note = noteDB.getJournalNote(year, month, day)
-            elif noteType == "book":
-                note = noteDB.getBookNote(b)[0]
-            elif noteType == "chapter":
-                note = noteDB.getChapterNote(b, c)[0]
-            elif noteType == "verse":
-                note = noteDB.getVerseNote(b, c, v)[0]
-            if config.isMarkdownifyInstalled:
-                # convert html into markdown
-                from markdownify import markdownify
-                note = markdownify(note, heading_style=config.markdownifyHeadingStyle)
-                note = note.replace("\n\np, li { white-space: pre-wrap; }\n", "")
-                note = note.replace("hr { height: 1px; border-width: 0; }\n", "")
-            else:
-                note = self.getPlainText(note)
-            # display in editor
-            print("Opening text editor ...")
-            print("When you finish editing, save content in a file and enter 'note' as its filename.")
+        if not editor or not WebtopUtil.isPackageInstalled(editor.split(" ")[0]):
+            editor = ""
+        noteDB = JournalSqlite() if noteType == "journal" else NoteSqlite()
+        if noteType == "journal":
+            note = noteDB.getJournalNote(year, month, day)
+        elif noteType == "book":
+            note = noteDB.getBookNote(b)[0]
+        elif noteType == "chapter":
+            note = noteDB.getChapterNote(b, c)[0]
+        elif noteType == "verse":
+            note = noteDB.getVerseNote(b, c, v)[0]
+        if config.isMarkdownifyInstalled:
+            # convert html into markdown
+            from markdownify import markdownify
+            note = markdownify(note, heading_style=config.markdownifyHeadingStyle)
+            note = note.replace("\n\np, li { white-space: pre-wrap; }\n", "")
+            note = note.replace("hr { height: 1px; border-width: 0; }\n", "")
+        else:
+            note = self.getPlainText(note)
+        # display in editor
+        print("Opening text editor ...")
+        print("When you finish editing, save content in a file and enter 'note' as its filename.")
+
+        if editor:
             self.cliTool(editor, note)
             # check if file is saved
             notePath = "note"
@@ -3532,10 +3610,23 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 self.saveNote(noteDB, noteType, b, c, v, year, month, day, text)
                 # remove file after saving
                 os.remove(notePath)
+        elif not config.isPrompt_toolkitInstalled:
+            self.printToolNotFound("prompt-toolkit")
         else:
-            self.printToolNotFound(editor)
-            print("Install it first of run '.changenoteeditor' to change the default note editor.")
-            return ""
+            from prompt_toolkit.shortcuts import confirm
+
+            placeholder = ""
+            if note == "[empty]":
+                note = ""
+                placeholder = "[empty]"
+            custom_save_file_method = partial(self.custom_save_note, noteDB, noteType, b, c, v, year, month, day)
+            self.multilineEditor(note, placeholder, custom_save_file_method=custom_save_file_method)
+        return ""
+
+    def custom_save_note(self, noteDB, noteType, b=None, c=None, v=None, year=None, month=None, day=None, text=""):
+        text = markdown.markdown(text)
+        text = TextUtil.fixNoteFontDisplay(text)
+        self.saveNote(noteDB, noteType, b, c, v, year, month, day, text)
 
     def saveNote(self, noteDB, noteType, b=None, c=None, v=None, year=None, month=None, day=None, note=""):
         note = TextUtil.fixNoteFont(note)
@@ -3636,7 +3727,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def open(self):
         heading = "Open"
-        features = (".openbible", ".openbiblenote", ".original", ".open365readingplan", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".opencommentary", ".openreferencebook", ".openaudio", ".opendata", ".opentopics", ".openpromises", ".openparallels", ".opennames", ".opencharacters", ".openlocations", ".openmaps", ".opentimelines", ".opendictionaries", ".openencyclopedia", ".openlexicons", ".openthirdpartydictionaries", ".opentext")
+        features = (".openbible", ".openbiblenote", ".original", ".open365readingplan", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".opencommentary", ".openreferencebook", ".openaudio", ".opendata", ".opentopics", ".openpromises", ".openparallels", ".opennames", ".opencharacters", ".openlocations", ".openmaps", ".opentimelines", ".opendictionaries", ".openencyclopedia", ".openlexicons", ".openthirdpartydictionaries", ".opentextfile")
         return self.displayFeatureMenu(heading, features)
 
     def quick(self):
@@ -3681,7 +3772,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def edit(self):
         heading = "Edit"
-        features = (".editnewfile", ".editcontent", ".editconfig", ".editfilters", ".changenoteeditor", ".helpinstallmicro")
+        features = (".editnewfile", ".edittextfile", ".editcontent", ".editconfig", ".editfilters", ".changenoteeditor", ".helpinstallmicro")
         return self.displayFeatureMenu(heading, features)
 
     def change(self):

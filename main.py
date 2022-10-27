@@ -160,9 +160,7 @@ def getHistoryRecords():
             item = item.strip()
             if item and item.startswith("+"):
                 item = item[1:]
-                #startupException1 = (".quit", ".restart", ".togglepager", ".history", ".update", ".find", ".stopaudio", ".read", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".stophttpserver", ".downloadyoutube", ".web", ".gtts")
-                #startupException2 = "^(_setconfig:::|\.edit|\.change|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::|download:::)"
-                if not item.lower() in config.mainWindow.startupException1 and not re.search(config.mainWindow.startupException2, item.lower()):
+                if not item.replace(" ", "").lower() in config.mainWindow.startupException1 and not re.search(config.mainWindow.startupException2, item.replace(" ", "").lower()):
                     records.append(item)
     return records
 
@@ -217,9 +215,9 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     config.terminalCommandDefault = ""
     default = ""
     if config.isPrompt_toolkitInstalled:
-        from util.terminal_key_bindings import *
+        from util.uba_command_prompt_key_bindings import *
         # make key bindings available in config to allow futher customisation via plugins
-        config.key_bindings = key_bindings
+        config.key_bindings = uba_command_prompt_key_bindings
     runStartupPlugins()
     # make sure user-customised menu contains valid item only.
     # validation can only be running after, not before, running startup plugin, as some startup plugin works on command shortcuts.
@@ -267,6 +265,8 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
 
     if command:
         # display
+        print(config.mainWindow.divider)
+        config.mainWindow.printRunningCommand(command)
         content = config.mainWindow.getContent(command)
         if content:
             config.mainWindow.displayOutputOnTerminal(content)

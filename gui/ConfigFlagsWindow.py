@@ -86,8 +86,8 @@ class ConfigFlagsWindow(QDialog):
             ("parseBookChapterWithoutSpace", config.parseBookChapterWithoutSpace, self.parseBookChapterWithoutSpaceChanged, True, config.thisTranslation["parseBookChapterWithoutSpace"]),
             ("parseBooklessReferences", config.parseBooklessReferences, self.parseBooklessReferencesChanged, True, config.thisTranslation["parseBooklessReferences"]),
             ("enableCaseSensitiveSearch", config.enableCaseSensitiveSearch, self.enableCaseSensitiveSearchChanged, False, config.thisTranslation["enableCaseSensitiveSearch"]),
-            ("searchBibleIfCommandNotFound", config.searchBibleIfCommandNotFound, self.searchBibleIfCommandNotFoundChanged, True, config.thisTranslation["searchBibleIfCommandNotFound"]),
-            ("regexSearchBibleIfCommandNotFound", config.regexSearchBibleIfCommandNotFound, self.regexSearchBibleIfCommandNotFoundChanged, False, config.thisTranslation["regexSearchBibleIfCommandNotFound"]),
+            #("searchBibleIfCommandNotFound", config.searchBibleIfCommandNotFound, self.searchBibleIfCommandNotFoundChanged, True, config.thisTranslation["searchBibleIfCommandNotFound"]),
+            #("regexSearchBibleIfCommandNotFound", config.regexSearchBibleIfCommandNotFound, self.regexSearchBibleIfCommandNotFoundChanged, False, config.thisTranslation["regexSearchBibleIfCommandNotFound"]),
             ("preferHtmlMenu", config.preferHtmlMenu, self.preferHtmlMenuChanged, False, config.thisTranslation["preferHtmlMenu"]),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged, True, config.thisTranslation["showVerseNumbersInRange"]),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged, True, config.thisTranslation["addFavouriteToMultiRef"]),
@@ -384,13 +384,13 @@ class ConfigFlagsWindow(QDialog):
     def openPdfViewerInNewWindowChanged(self):
         config.openPdfViewerInNewWindow = not config.openPdfViewerInNewWindow
 
-    def searchBibleIfCommandNotFoundChanged(self):
-        config.searchBibleIfCommandNotFound = not config.searchBibleIfCommandNotFound
-
-    def regexSearchBibleIfCommandNotFoundChanged(self):
-        config.regexSearchBibleIfCommandNotFound = not config.regexSearchBibleIfCommandNotFound
-        if config.regexSearchBibleIfCommandNotFound and not config.searchBibleIfCommandNotFound:
-            config.searchBibleIfCommandNotFound = True
+#    def searchBibleIfCommandNotFoundChanged(self):
+#        config.searchBibleIfCommandNotFound = not config.searchBibleIfCommandNotFound
+#
+#    def regexSearchBibleIfCommandNotFoundChanged(self):
+#        config.regexSearchBibleIfCommandNotFound = not config.regexSearchBibleIfCommandNotFound
+#        if config.regexSearchBibleIfCommandNotFound and not config.searchBibleIfCommandNotFound:
+#            config.searchBibleIfCommandNotFound = True
 
     def overwriteNoteFontChanged(self):
         config.overwriteNoteFont = not config.overwriteNoteFont

@@ -143,11 +143,28 @@ class ConfigUtil:
             config.terminalDisplayCommandOnMenu = False
         config.help["terminalNoteEditor"] = """
         # Default note editor used in terminal mode.
-        # Suggested options: 'micro', 'nano --softwrap --atblanks -', 'vi -' and 'vim -'."""
+        # Suggested options: '', 'micro', 'nano --softwrap --atblanks -', 'vi -' and 'vim -'.
+        # If empty string is given, UBA uses built-in text editor."""
         if not hasattr(config, "terminalNoteEditor"):
-            config.terminalNoteEditor = "micro"
+            config.terminalNoteEditor = ""
         elif config.terminalNoteEditor in ("nano --softwrap --atblanks", "vi", "vim"):
             config.terminalNoteEditor = f"{config.terminalNoteEditor} -"
+        config.help["terminalEditorScrollLineCount"] = """
+        # The number of lines terminal text editor scroll with pageup or pagedown keys."""
+        if not hasattr(config, "terminalEditorScrollLineCount"):
+            config.terminalEditorScrollLineCount = 10
+        config.help["terminalEditorTabText"] = """
+        # The text users insert in text editor when users press the TAB key or 'Ctrl+I'."""
+        if not hasattr(config, "terminalEditorTabText"):
+            config.terminalEditorTabText = "    "
+        config.help["terminalEditorMaxTextChangeRecords"] = """
+        # Terminal built-in text editor offers 'undo' or 'redo' of text changes.
+        # This config value define the maximum number of text change records, which UBA keeps to allow for possible changes via 'undo' or 'redo' features."""
+        if not hasattr(config, "terminalEditorMaxTextChangeRecords"):
+            config.terminalEditorMaxTextChangeRecords = 10
+        # minimum of 2 records is required
+        if config.terminalEditorMaxTextChangeRecords < 2:
+            config.terminalEditorMaxTextChangeRecords = 2
         config.help["terminalBibleComparison"] = """
         # To display bible chapter in comparison mode when users enter a reference in terminal mode."""
         if not hasattr(config, "terminalBibleComparison"):
@@ -324,19 +341,10 @@ class ConfigUtil:
         # Customise the command to be run with shortcut entry '.y'."""
         if not hasattr(config, "terminal_dot_y"):
             config.terminal_dot_y = ".whatis"
-
-        config.help["terminal_ctrl_a"] = """
-        # Customise the command to be run with key combination 'ctrl + a'."""
-        if not hasattr(config, "terminal_ctrl_a"):
-            config.terminal_ctrl_a = ".aliases"
         config.help["terminal_ctrl_b"] = """
         # Customise the command to be run with key combination 'ctrl + b'."""
         if not hasattr(config, "terminal_ctrl_b"):
             config.terminal_ctrl_b = ".backward"
-        config.help["terminal_ctrl_c"] = """
-        # Customise the command to be run with key combination 'ctrl + c'."""
-        if not hasattr(config, "terminal_ctrl_c"):
-            config.terminal_ctrl_c = ".togglebiblecomparison"
         config.help["terminal_ctrl_f"] = """
         # Customise the command to be run with key combination 'ctrl + f'."""
         if not hasattr(config, "terminal_ctrl_f"):
@@ -345,10 +353,6 @@ class ConfigUtil:
         # Customise the command to be run with key combination 'ctrl + g'."""
         if not hasattr(config, "terminal_ctrl_g"):
             config.terminal_ctrl_g = ".togglepager"
-        config.help["terminal_ctrl_i"] = """
-        # Customise the command to be run with key combination 'ctrl + i'."""
-        if not hasattr(config, "terminal_ctrl_i"):
-            config.terminal_ctrl_i = "index:::"
         config.help["terminal_ctrl_k"] = """
         # Customise the command to be run with key combination 'ctrl + k'."""
         if not hasattr(config, "terminal_ctrl_k"):
@@ -373,10 +377,6 @@ class ConfigUtil:
         # Customise the command to be run with key combination 'ctrl + w'."""
         if not hasattr(config, "terminal_ctrl_w"):
             config.terminal_ctrl_w = ".web"
-        config.help["terminal_ctrl_x"] = """
-        # Customise the command to be run with key combination 'ctrl + x'."""
-        if not hasattr(config, "terminal_ctrl_x"):
-            config.terminal_ctrl_x = "crossreference:::"
         config.help["terminal_ctrl_y"] = """
         # Customise the command to be run with key combination 'ctrl + y'."""
         if not hasattr(config, "terminal_ctrl_y"):
@@ -1728,6 +1728,9 @@ class ConfigUtil:
             ("terminalUseLighterCompleter", config.terminalUseLighterCompleter),
             ("terminalDisplayCommandOnMenu", config.terminalDisplayCommandOnMenu),
             ("terminalNoteEditor", config.terminalNoteEditor),
+            ("terminalEditorScrollLineCount", config.terminalEditorScrollLineCount),
+            ("terminalEditorTabText", config.terminalEditorTabText),
+            ("terminalEditorMaxTextChangeRecords", config.terminalEditorMaxTextChangeRecords),
             ("terminalBibleComparison", config.terminalBibleComparison),
             ("terminalStopHttpServerOnExit", config.terminalStopHttpServerOnExit),
             ("terminalPromptIndicatorColor1", config.terminalPromptIndicatorColor1),
@@ -1768,19 +1771,15 @@ class ConfigUtil:
             ("terminal_dot_w", config.terminal_dot_w),
             ("terminal_dot_x", config.terminal_dot_x),
             ("terminal_dot_y", config.terminal_dot_y),
-            ("terminal_ctrl_a", config.terminal_ctrl_a),
             ("terminal_ctrl_b", config.terminal_ctrl_b),
-            ("terminal_ctrl_c", config.terminal_ctrl_c),
             ("terminal_ctrl_f", config.terminal_ctrl_f),
             ("terminal_ctrl_g", config.terminal_ctrl_g),
-            ("terminal_ctrl_i", config.terminal_ctrl_i),
             ("terminal_ctrl_k", config.terminal_ctrl_k),
             ("terminal_ctrl_l", config.terminal_ctrl_l),
             ("terminal_ctrl_r", config.terminal_ctrl_r),
             ("terminal_ctrl_s", config.terminal_ctrl_s),
             ("terminal_ctrl_u", config.terminal_ctrl_u),
             ("terminal_ctrl_w", config.terminal_ctrl_w),
-            ("terminal_ctrl_x", config.terminal_ctrl_x),
             ("terminal_ctrl_y", config.terminal_ctrl_y),
             ("telnetServerPort", config.telnetServerPort),
             ("httpServerUbaFile", config.httpServerUbaFile),

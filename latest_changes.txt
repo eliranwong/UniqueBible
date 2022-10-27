@@ -1,3 +1,90 @@
+Changes in 32.81:
+GUI mode:
+* Fixed opening set config flag window
+Terminal mode:
+* Added built-in text editor, with key bindings:
+    --------------------
+    # Key bindings:
+
+    # Essential
+    ctrl+q quit
+    ctrl+t show tips
+
+    # Editing
+    ctrl+c copy selected text
+    ctrl+x copy selected text
+    ctrl+v paste clipboard text
+
+    ctrl+z undo
+    escape+z redo
+
+    ctrl+i insert TAB text, defined by config.terminalEditorTabText
+    ctrl+u delete characters before cursor in the current line
+    ctrl+k delete characters after cursor in the current line
+    ctrl+h delete one character before cursor or selected text 
+    ctrl+d delete one character after cursor
+
+    # Searching
+    ctrl+s I-search
+    ctrl+r reverse I-search
+    ctrl+f find and replace with regular expression
+
+    # Text Selection
+    ctrl+a select all
+    escape+t translate selected text
+    escape+s say selected text
+    escape+f quick search UBA resources for selected text
+    escape+o quick open UBA resources with selected text
+
+    # File I/O
+    ctrl+n new file
+    ctrl+o open file
+    ctrl+w write file [save]
+    escape+w write file as [save as]
+
+    # Commands
+    ctrl+p run as python script
+    escape+m open UBA main menu
+    escape+d run UBA default command
+    escape+r run UBA commands
+    escape+c run system concole commands
+
+    # Navigation
+    home go to current line starting position
+    end go to current line ending position
+    ctrl+j go to current line starting position
+    ctrl+e go to current line ending position
+    escape+j go to document starting position
+    escape+e go to document line ending position
+    ctrl+g go to a spcific line
+    pageup go up number of lines, defined by config.terminalEditorScrollLineCount
+    pagedown go down number of lines, defined by config.terminalEditorScrollLineCount
+    ctrl+y same as pageup
+    ctrl+b same as pagedown
+
+    escape+1 go up line 10 lines
+    escape+2 go up line 20 lines
+    escape+3 go up line 30 lines
+    escape+4 go up line 40 lines
+    escape+5 go up line 50 lines
+    escape+6 go up line 60 lines
+    escape+7 go up line 70 lines
+    escape+8 go up line 80 lines
+    escape+9 go up line 90 lines
+    escape+0 go up line 100 lines
+
+    f1 go down line 10 lines
+    f2 go down line 20 lines
+    f3 go down line 30 lines
+    f4 go down line 40 lines
+    f5 go down line 50 lines
+    f6 go down line 60 lines
+    f7 go down line 70 lines
+    f8 go down line 80 lines
+    f9 go down line 90 lines
+    f10 go down line 100 lines
+    --------------------
+
 Changes in 32.80:
 * Improved running key-bindings in terminal mode.
 * Added ".clear" command in terminal mode.
