@@ -172,12 +172,12 @@ def _(event):
     buffer = event.app.current_buffer
     buffer.cursor_down(config.terminalEditorScrollLineCount)
 # go up number of lines which users define in config
-@prompt_shared_key_bindings.add("c-y")
+@prompt_shared_key_bindings.add("c-b")
 def _(event):
     buffer = event.app.current_buffer
     buffer.cursor_up(config.terminalEditorScrollLineCount)
 # go down number of lines which users define in config
-@prompt_shared_key_bindings.add("c-b")
+@prompt_shared_key_bindings.add("c-y")
 def _(event):
     buffer = event.app.current_buffer
     buffer.cursor_down(config.terminalEditorScrollLineCount)

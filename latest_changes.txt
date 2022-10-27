@@ -1,3 +1,10 @@
+Changes in 32.82:
+Terminal mode:
+* Added support of running "ls" command in get file path prompt.
+* Added syntax highlighting to terminal mode built-in text editor.
+* Added ".editor" command to launch built-in text editor.
+* Fixed text-editor to open file after users changed directories.
+
 Changes in 32.81:
 GUI mode:
 * Fixed opening set config flag window
@@ -10,11 +17,12 @@ Terminal mode:
     ctrl+q quit
     ctrl+t show tips
 
-    # Editing
+    # Clipboard
     ctrl+c copy selected text
-    ctrl+x copy selected text
+    ctrl+x cut selected text
     ctrl+v paste clipboard text
 
+    # Editing
     ctrl+z undo
     escape+z redo
 
@@ -62,27 +70,27 @@ Terminal mode:
     ctrl+y same as pageup
     ctrl+b same as pagedown
 
-    escape+1 go up line 10 lines
-    escape+2 go up line 20 lines
-    escape+3 go up line 30 lines
-    escape+4 go up line 40 lines
-    escape+5 go up line 50 lines
-    escape+6 go up line 60 lines
-    escape+7 go up line 70 lines
-    escape+8 go up line 80 lines
-    escape+9 go up line 90 lines
-    escape+0 go up line 100 lines
+    escape+1 go up 10 lines
+    escape+2 go up 20 lines
+    escape+3 go up 30 lines
+    escape+4 go up 40 lines
+    escape+5 go up 50 lines
+    escape+6 go up 60 lines
+    escape+7 go up 70 lines
+    escape+8 go up 80 lines
+    escape+9 go up 90 lines
+    escape+0 go up 100 lines
 
-    f1 go down line 10 lines
-    f2 go down line 20 lines
-    f3 go down line 30 lines
-    f4 go down line 40 lines
-    f5 go down line 50 lines
-    f6 go down line 60 lines
-    f7 go down line 70 lines
-    f8 go down line 80 lines
-    f9 go down line 90 lines
-    f10 go down line 100 lines
+    f1 go down 10 lines
+    f2 go down 20 lines
+    f3 go down 30 lines
+    f4 go down 40 lines
+    f5 go down 50 lines
+    f6 go down 60 lines
+    f7 go down 70 lines
+    f8 go down 80 lines
+    f9 go down 90 lines
+    f10 go down 100 lines
     --------------------
 
 Changes in 32.80:

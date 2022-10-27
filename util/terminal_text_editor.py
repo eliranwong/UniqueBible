@@ -391,7 +391,20 @@ class TextEditor:
         return this_key_bindings
 
     def startMultilineEditor(self, initialText="", placeholder="", editorStartupLine=1):
-        
+        # syntax highlighting
+        lexer = None
+        if self.filepath and config.isPygmentsInstalled:
+            #from prompt_toolkit.lexers import PygmentsLexer
+            #from pygments.lexers.python import PythonLexer
+            #from pygments.lexers.html import HtmlLexer
+            #filename = self.filepath.lower()
+            #if filename.endswith(".py"):
+            #    lexer = PygmentsLexer(PythonLexer)
+            #elif filename.endswith(".htm") or filename.endswith(".html"):
+            #    lexer = PygmentsLexer(HtmlLexer)
+            from prompt_toolkit.lexers import DynamicLexer, PygmentsLexer
+            lexer = DynamicLexer(lambda: PygmentsLexer.from_filename(self.filepath))
+
         # define self.editor
         self.editor = PromptSession()
         # keep changed text for undo or redo features
@@ -432,21 +445,21 @@ class TextEditor:
             self.getKeyBindings(),
         ])
         # set title
-        set_title("Editor")
+        set_title("Text Editor")
         # clear current screen first to allow more space
         clear()
         #print("Press 'Escape+Enter' when you finish editing!")
         # define style
         promptStyle = Style.from_dict({
             # User input (default text).
-            "": config.terminalCommandEntryColor2,
+            #"": config.terminalCommandEntryColor2,
             # Prompt.
             "indicator": config.terminalPromptIndicatorColor2,
         })
         inputIndicator = [
             ("class:indicator", "   1 "),
         ]
-        bottom_toolbar = "[ctrl+q] quit [ctrl+t] tips"
+        bottom_toolbar = "[ctrl+q] quit [ctrl+t] tips [ctrl+b] go up [ctrl+y] go down"
         # multiline prompt
         userInput = self.editor.prompt(
             inputIndicator,
@@ -459,6 +472,7 @@ class TextEditor:
             pre_run=lambda: pre_run(editorStartupLine),
             mouse_support=True,
             bottom_toolbar=bottom_toolbar,
+            lexer=lexer,
         )
         set_title("")
         return userInput
@@ -567,81 +581,83 @@ class TextEditor:
 <b># Key bindings:</b>
 
 <b># Essential</b>
-<{1}>ctrl+q</{1}> quit
-<{1}>ctrl+t</{1}> show tips
+<{1}>ctrl+q</{1}> <u>q</u>uit
+<{1}>ctrl+t</{1}> show <u>t</u>ips
 
-<b># Editing</b>
-<{1}>ctrl+c</{1}> copy selected text
-<{1}>ctrl+x</{1}> copy selected text
+<b># Clipboard</b>
+<{1}>ctrl+c</{1}> <u>c</u>opy selected text
+<{1}>ctrl+x</{1}> cut selected text
 <{1}>ctrl+v</{1}> paste clipboard text
 
+<b># Editing</b>
 <{1}>ctrl+z</{1}> undo
 <{1}>escape+z</{1}> redo
 
-<{1}>ctrl+i</{1}> insert TAB text, defined by config.terminalEditorTabText
+<{1}>ctrl+i</{1}> <u>i</u>nsert TAB text, defined by config.terminalEditorTabText
 <{1}>ctrl+u</{1}> delete characters before cursor in the current line
 <{1}>ctrl+k</{1}> delete characters after cursor in the current line
 <{1}>ctrl+h</{1}> delete one character before cursor or selected text 
-<{1}>ctrl+d</{1}> delete one character after cursor
+<{1}>ctrl+d</{1}> <u>d</u>elete one character after cursor
 
 <b># Searching</b>
-<{1}>ctrl+s</{1}> I-search
-<{1}>ctrl+r</{1}> reverse I-search
-<{1}>ctrl+f</{1}> find and replace with regular expression
+<{1}>ctrl+s</{1}> I-<u>s</u>earch
+<{1}>ctrl+r</{1}> <u>r</u>everse I-search
+<{1}>ctrl+f</{1}> <u>f</u>ind and replace with regular expression
 
 <b># Text Selection</b>
-<{1}>ctrl+a</{1}> select all
-<{1}>escape+t</{1}> translate selected text
-<{1}>escape+s</{1}> say selected text
-<{1}>escape+f</{1}> quick search UBA resources for selected text
-<{1}>escape+o</{1}> quick open UBA resources with selected text
+<{1}>ctrl+a</{1}> select <u>a</u>ll
+<{1}>escape+t</{1}> <u>t</u>ranslate selected text
+<{1}>escape+s</{1}> <u>s</u>ay selected text
+<{1}>escape+f</{1}> quick <u>f</u>ind UBA resources for selected text
+<{1}>escape+o</{1}> quick <u>o</u>pen UBA resources with selected text
 
 <b># File I/O</b>
-<{1}>ctrl+n</{1}> new file
-<{1}>ctrl+o</{1}> open file
-<{1}>ctrl+w</{1}> write file [save]
-<{1}>escape+w</{1}> write file as [save as]
+<{1}>ctrl+n</{1}> <u>n</u>ew file
+<{1}>ctrl+o</{1}> <u>o</u>pen file
+<{1}>ctrl+w</{1}> <u>w</u>rite file [save]
+<{1}>escape+w</{1}> <u>w</u>rite file as [save as]
 
 <b># Commands</b>
-<{1}>ctrl+p</{1}> run as python script
-<{1}>escape+m</{1}> open UBA main menu
-<{1}>escape+d</{1}> run UBA default command
-<{1}>escape+r</{1}> run UBA commands
-<{1}>escape+c</{1}> run system concole commands
+<{1}>ctrl+p</{1}> run as <u>p</u>ython script
+<{1}>escape+m</{1}> open UBA <u>m</u>ain menu
+<{1}>escape+d</{1}> run UBA <u>d</u>efault command
+<{1}>escape+r</{1}> <u>r</u>un UBA commands
+<{1}>escape+c</{1}> run system <u>c</u>oncole commands
 
 <b># Navigation</b>
-<{1}>home</{1}> go to current line starting position
-<{1}>end</{1}> go to current line ending position
-<{1}>ctrl+j</{1}> go to current line starting position
-<{1}>ctrl+e</{1}> go to current line ending position
-<{1}>escape+j</{1}> go to document starting position
-<{1}>escape+e</{1}> go to document line ending position
-<{1}>ctrl+g</{1}> go to a spcific line
+<{1}>home</{1}> jump to current line starting position
+<{1}>end</{1}> jump to current line <u>e</u>nding position
+<{1}>ctrl+j</{1}> <u>j</u>ump to current line starting position
+<{1}>ctrl+e</{1}> jump to current line <u>e</u>nding position
+<{1}>escape+j</{1}> <u>j</u>ump to document starting position
+<{1}>escape+e</{1}> jump to document line <u>e</u>nding position
+
+<{1}>ctrl+g</{1}> <u>g</u>o to a spcific line
 <{1}>pageup</{1}> go up number of lines, defined by config.terminalEditorScrollLineCount
 <{1}>pagedown</{1}> go down number of lines, defined by config.terminalEditorScrollLineCount
-<{1}>ctrl+y</{1}> same as pageup
-<{1}>ctrl+b</{1}> same as pagedown
+<{1}>ctrl+b</{1}> same as pageup
+<{1}>ctrl+y</{1}> same as pagedown
 
-<{1}>escape+1</{1}> go up line 10 lines
-<{1}>escape+2</{1}> go up line 20 lines
-<{1}>escape+3</{1}> go up line 30 lines
-<{1}>escape+4</{1}> go up line 40 lines
-<{1}>escape+5</{1}> go up line 50 lines
-<{1}>escape+6</{1}> go up line 60 lines
-<{1}>escape+7</{1}> go up line 70 lines
-<{1}>escape+8</{1}> go up line 80 lines
-<{1}>escape+9</{1}> go up line 90 lines
-<{1}>escape+0</{1}> go up line 100 lines
+<{1}>escape+1</{1}> go up 10 lines
+<{1}>escape+2</{1}> go up 20 lines
+<{1}>escape+3</{1}> go up 30 lines
+<{1}>escape+4</{1}> go up 40 lines
+<{1}>escape+5</{1}> go up 50 lines
+<{1}>escape+6</{1}> go up 60 lines
+<{1}>escape+7</{1}> go up 70 lines
+<{1}>escape+8</{1}> go up 80 lines
+<{1}>escape+9</{1}> go up 90 lines
+<{1}>escape+0</{1}> go up 100 lines
 
-<{1}>f1</{1}> go down line 10 lines
-<{1}>f2</{1}> go down line 20 lines
-<{1}>f3</{1}> go down line 30 lines
-<{1}>f4</{1}> go down line 40 lines
-<{1}>f5</{1}> go down line 50 lines
-<{1}>f6</{1}> go down line 60 lines
-<{1}>f7</{1}> go down line 70 lines
-<{1}>f8</{1}> go down line 80 lines
-<{1}>f9</{1}> go down line 90 lines
-<{1}>f10</{1}> go down line 100 lines
+<{1}>f1</{1}> go down 10 lines
+<{1}>f2</{1}> go down 20 lines
+<{1}>f3</{1}> go down 30 lines
+<{1}>f4</{1}> go down 40 lines
+<{1}>f5</{1}> go down 50 lines
+<{1}>f6</{1}> go down 60 lines
+<{1}>f7</{1}> go down 70 lines
+<{1}>f8</{1}> go down 80 lines
+<{1}>f9</{1}> go down 90 lines
+<{1}>f10</{1}> go down 100 lines
 
 {0}""".format(self.divider, config.terminalResourceLinkColor)

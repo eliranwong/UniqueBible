@@ -484,6 +484,13 @@ def isPyperclipInstalled():
     except:
         return False
 
+def isPygmentsInstalled():
+    try:
+        from pygments.lexers.python import PythonLexer
+        return True
+    except:
+        return False
+
 def isPickleyInstalled():
     return True if WebtopUtil.isPackageInstalled("pickley") else False
 
@@ -594,6 +601,8 @@ def setInstallConfig(module, isInstalled):
         config.isPyperclipInstalled = isInstalled
     elif module in ("pickley", "-U pickley", "--upgrade pickley"):
         config.isPickleyInstalled = isInstalled
+    elif module in ("Pygments", "-U Pygments", "--upgrade Pygments"):
+        config.isPygmentsInstalled = isInstalled
 
 # Specify qtLibrary for particular os
 if config.docker and config.usePySide2onWebtop:
@@ -737,6 +746,7 @@ optional = [
     ("numpy", "Array Computing", isNumpyInstalled),
     ("matplotlib", "Plotting Package", isMatplotlibInstalled),
     ("pickley", "Automate installation of standalone python CLIs", isPickleyInstalled),
+    ("Pygments", "Syntax highlighting package", isPygmentsInstalled),
 ] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -777,6 +787,7 @@ optional = [
     ("numpy", "Array Computing", isNumpyInstalled),
     ("matplotlib", "Plotting Package", isMatplotlibInstalled),
     ("pickley", "Automate installation of standalone python CLIs", isPickleyInstalled),
+    ("Pygments", "Syntax highlighting package", isPygmentsInstalled),
 ]
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))

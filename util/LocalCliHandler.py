@@ -383,6 +383,7 @@ class LocalCliHandler:
             ".edittextfile": ("edit text file", lambda: self.opentext(True)),
             ".extract": ("extract bible references from the latest content", self.extract),
             ".extractcopiedtext": ("extract bible references from the latest content.", self.extractcopiedtext),
+            ".editor": ("launch built-in text editor", self.cliTool),
             ".editnewfile": ("edit new file in text editor", lambda: self.cliTool(config.terminalNoteEditor)),
             ".editcontent": ("edit latest content in text editor", lambda: self.cliTool(config.terminalNoteEditor, self.getPlainText())),
             ".editconfig": ("edit 'config.py' in text editor", lambda: self.editConfig(config.terminalNoteEditor)),
@@ -3557,7 +3558,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         print(f"Failed to save text in '{filepath}'!")
 
     # pipe text content into a cli tool
-    def cliTool(self, tool, content=""):
+    def cliTool(self, tool="", content=""):
         if not tool and not config.isPrompt_toolkitInstalled:
             self.printToolNotFound("prompt-toolkit")
         elif not tool:
@@ -3772,7 +3773,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def edit(self):
         heading = "Edit"
-        features = (".editnewfile", ".edittextfile", ".editcontent", ".editconfig", ".editfilters", ".changenoteeditor", ".helpinstallmicro")
+        features = (".editor", ".editnewfile", ".edittextfile", ".editcontent", ".editconfig", ".editfilters", ".changenoteeditor", ".helpinstallmicro")
         return self.displayFeatureMenu(heading, features)
 
     def change(self):

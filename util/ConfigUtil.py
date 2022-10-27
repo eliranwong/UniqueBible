@@ -264,7 +264,7 @@ class ConfigUtil:
         config.help["terminal_dot_e"] = """
         # Customise the command to be run with shortcut entry '.e'."""
         if not hasattr(config, "terminal_dot_e"):
-            config.terminal_dot_e = ".edit"
+            config.terminal_dot_e = ".editor"
         config.help["terminal_dot_f"] = """
         # Customise the command to be run with shortcut entry '.f'."""
         if not hasattr(config, "terminal_dot_f"):

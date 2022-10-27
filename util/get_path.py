@@ -1,3 +1,35 @@
+#!/usr/bin/env python
+"""
+source: https://github.com/eliranwong/getpath
+
+'get-path-prompt' prompts terminal users for entry of a file or directory path.
+
+Recommended:
+You can run 'get-path-prompt' with or without prompt_toolkit.
+With prompt_toolkit installed, however, you can use all features we will mention below.
+To install prompt_toolkit, run:
+> pip install prompt_toolkit
+
+Recommended:
+
+* prompts for a file or folder path entry
+* option to define prompt indicator and text colors
+* option to check existence of the entered path
+* option to create directories if they do not exist
+* auto-history-saving - use up or down keys to get previous entered records
+* auto-suggestion from history - use right arrow key to complete a suggestion
+* auto-completion of file or directory path
+* support command 'cd' to change directories
+* support command 'ls' to list directory content
+* customise cancel entry or allow empty entry to close the prompt
+* built-in key bindings - ctrl+q to quit prompt, ctrl+l to list directory content
+* confirm if users want to continue if invalid option is entered
+* easily integrated into python project,
+
+For example, we integrate this utility into a text editor we developed:
+https://github.com/eliranwong/UniqueBible/blob/main/util/terminal_text_editor.py
+"""
+
 import platform, os, subprocess
 
 class GetPath:
@@ -74,6 +106,10 @@ class GetPath:
         thisPath = os.getcwd()
 
         def returnPath(path=""):
+            if path:
+                fullpath = os.path.join(os.getcwd(), path)
+                if os.path.exists(fullpath):
+                    path = fullpath
             os.chdir(thisPath)
             return path
 
@@ -92,7 +128,10 @@ class GetPath:
                 from prompt_toolkit.styles import Style
                 from prompt_toolkit.application import run_in_terminal
 
-                filePathHistory = os.path.join(thisPath, "terminal_history", "file_path")
+                if os.path.isdir(os.path.join(thisPath, "terminal_history")):
+                    filePathHistory = os.path.join(thisPath, "terminal_history", "get-path-prompt")
+                else:
+                    filePathHistory = os.path.join(thisPath, "get-path-prompt")
                 filePathSession = PromptSession(history=FileHistory(filePathHistory))
 
                 # key bindings
@@ -115,7 +154,7 @@ class GetPath:
                     # Prompt.
                     "indicator": self.promptIndicatorColor,
                 })
-                bottom_toolbar = "cd [folder]: change dir; ctrl+l: list content; ctrl+q: quit"
+                bottom_toolbar = "[cd [folder]] change dir; [ls]/[ctrl+l] list content; [ctrl+q] quit"
                 userInput = filePathSession.prompt(
                     inputIndicator,
                     style=promptStyle,
@@ -143,6 +182,13 @@ class GetPath:
                 os.chdir(userInput[3:])
                 userInput = ""
                 promptEntry = True
+            elif (userInput == "ls" or userInput.startswith("ls ")) and not os.path.exists(userInput):
+                try:
+                    os.system(userInput)
+                except:
+                    pass
+                userInput = ""
+                promptEntry = True
             elif (not userInput and empty_to_cancel) or (userInput == self.cancel_entry and not os.path.isfile(userInput)):
                 return returnPath()
             elif not userInput and self.confirm_prompt("Try again?"):
@@ -158,3 +204,25 @@ class GetPath:
                 else:
                     return returnPath()
         return returnPath(userInput)
+
+if __name__ == '__main__':
+    try:
+        from prompt_toolkit import prompt
+    except:
+        try:
+            print("Installing prompt_toolkit ...")
+            os.system("pip install prompt_toolkit")
+        except:
+            pass
+    try:
+        from prompt_toolkit import prompt
+    except:
+        print("Package 'prompt_toolkit' is not found! Install it to include better display and auto-completion feature.")
+
+    getPath = GetPath()
+
+    filePath = getPath.getFilePath()
+    print(f"File path entered: {filePath}")
+    print("")
+    folderPath = getPath.getFolderPath()
+    print(f"Folder path entered: {folderPath}")
