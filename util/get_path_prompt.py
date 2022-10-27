@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-source: https://github.com/eliranwong/getpath
+source: https://github.com/eliranwong/get-path-prompt
 
 'get-path-prompt' prompts terminal users for entry of a file or directory path.
 
@@ -10,8 +10,7 @@ With prompt_toolkit installed, however, you can use all features we will mention
 To install prompt_toolkit, run:
 > pip install prompt_toolkit
 
-Recommended:
-
+Features:
 * prompts for a file or folder path entry
 * option to define prompt indicator and text colors
 * option to check existence of the entered path
@@ -75,7 +74,7 @@ class GetPath:
                 files = "<{0}>{1}</{0}>".format(self.itemColor, separator.join(files))
                 print_formatted_text(HTML("<b><{0}>Files</{0}></b>".format(self.subHeadingColor)))
                 print_formatted_text(HTML(files))
-        
+
         try:
             # when prompt-toolkit is installed
             printFormattedDirsFiles(display_dir_only=display_dir_only)

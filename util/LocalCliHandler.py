@@ -26,6 +26,7 @@ from util.WebtopUtil import WebtopUtil
 from util.Translator import Translator
 from util.HBN import HBN
 from util.terminal_text_editor import TextEditor
+from util.get_path_prompt import GetPath
 
 class LocalCliHandler:
 
@@ -59,6 +60,13 @@ class LocalCliHandler:
         self.startupException2 = "^(_setconfig:::|\.edit|\.change|\.toggle|\.stop|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::|download:::|read:::|readsync:::)"
         #config.cliTtsProcess = None
         config.audio_playing_file = os.path.join("temp", "000_audio_playing.txt")
+        self.getPath = GetPath(
+            cancel_entry=config.terminal_cancel_action,
+            promptIndicatorColor=config.terminalPromptIndicatorColor2,
+            promptEntryColor=config.terminalCommandEntryColor2,
+            subHeadingColor=config.terminalHeadingTextColor,
+            itemColor=config.terminalResourceLinkColor,
+        )
 
     # Set text-to-speech default language
     def getTtsLanguages(self):
@@ -457,11 +465,12 @@ class LocalCliHandler:
         self.runSystemCommandPrompt = True
         # initial message
         print("You are now using system command prompt!")
-        print(f"To go back to Unique Bible App command prompt, either press 'ctrl+q' or run '{config.terminal_cancel_action}'")
+        print(f"To go back, either press 'ctrl+q' or run '{config.terminal_cancel_action}'.")
         # keep current path in case users change directory
         ubaPath = os.getcwd()
 
         if config.isPrompt_toolkitInstalled:
+            from prompt_toolkit.application import run_in_terminal
             from prompt_toolkit.key_binding import KeyBindings
             this_key_bindings = KeyBindings()
             @this_key_bindings.add("c-q")
@@ -469,21 +478,10 @@ class LocalCliHandler:
                 event.app.current_buffer.text = config.terminal_cancel_action
                 event.app.current_buffer.validate_and_handle()
             @this_key_bindings.add("c-l")
-            def _(event):
+            def _(_):
                 print("")
-                #os.system("ls")
-                dirs = []
-                files = []
-                for i in os.listdir():
-                    if os.path.isdir(i):
-                        dirs.append(i)
-                    elif os.path.isfile(i):
-                        files.append(i)
-                print("Directories:")
-                print(sorted(dirs))
-                print("Files:")
-                print(sorted(files))
-                self.terminal_system_command_session.app.reset()
+                print(self.divider)
+                run_in_terminal(lambda: self.getPath.displayDirectoryContent())
 
         userInput = ""
         if config.isPrompt_toolkitInstalled:
@@ -613,14 +611,11 @@ class LocalCliHandler:
                 return self.cancelAction()
         try:
             print(self.divider)
-            print("Enter a python file path:")
-            if config.isPrompt_toolkitInstalled:
-                userInput = self.terminal_python_file_session.prompt(self.inputIndicator, style=self.promptStyle).strip()
+            userInput = self.getPath.getFilePath(check_isfile=True, empty_to_cancel=True)
+            if userInput:
+                self.execPythonFile(userInput)
             else:
-                userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
-            self.execPythonFile(userInput)
         except:
             print("Errors!")
         return ""
@@ -634,12 +629,12 @@ class LocalCliHandler:
         userInput = self.simplePrompt(True)
         if not userInput or userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
-        #try:
-        filepath = os.path.join("plugins", "terminal", f"{availablePlugins[int(userInput)]}.py")
-        self.execPythonFile(filepath)
-        return ""
-        #except:
-        #    return self.printInvalidOptionEntered()
+        try:
+            filepath = os.path.join("plugins", "terminal", f"{availablePlugins[int(userInput)]}.py")
+            self.execPythonFile(filepath)
+            return ""
+        except:
+            return self.printInvalidOptionEntered()
 
     def howto(self):
         availableHowto = FileUtil.fileNamesWithoutExtension(os.path.join("terminal_mode", "how_to"), "md")
@@ -1875,12 +1870,12 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         return ""
 
     def multilineEditor(self, text="", placeholder="", custom_save_file_method=None, filepath="", newFile=False):
-        editor = TextEditor(self, custom_save_file_method=custom_save_file_method)
+        config.textEditor = TextEditor(self, custom_save_file_method=custom_save_file_method)
         if newFile:
-            return editor.newFile()
+            return config.textEditor.newFile()
         elif filepath:
-            return editor.openFile(filepath)
-        return editor.multilineEditor(text, placeholder)
+            return config.textEditor.openFile(filepath)
+        return config.textEditor.multilineEditor(text, placeholder)
 
     def simplePrompt(self, numberOnly=False, multiline=False, inputIndicator=""):
         if not inputIndicator:
@@ -1961,15 +1956,8 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
     def opentext(self, editMode=False):
         if config.isTextractInstalled:
             print(self.divider)
-            print("Enter a file path below:")
-            if config.isPrompt_toolkitInstalled:
-                from prompt_toolkit import prompt
-                userInput = prompt(self.inputIndicator, style=self.promptStyle).strip()
-            else:
-                userInput = input(self.inputIndicator).strip()
-            if not userInput or userInput.lower() == config.terminal_cancel_action:
-                return self.cancelAction()
-            if os.path.isfile(userInput):
+            userInput = self.getPath.getFilePath(check_isfile=True, empty_to_cancel=True)
+            if userInput:
                 import textract
                 content = textract.process(userInput).decode()
                 if editMode:
@@ -1978,7 +1966,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 else:
                     return content
             else:
-                return self.printInvalidOptionEntered()
+                return self.cancelAction()
         self.printToolNotFound("textract")
         return ""
 

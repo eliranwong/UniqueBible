@@ -10,7 +10,8 @@ from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.key_binding import merge_key_bindings
 from util.prompt_shared_key_bindings import *
 from util.PromptValidator import NumberValidator
-from util.get_path import GetPath
+from util.get_path_prompt import GetPath
+from util.FileUtil import FileUtil
 from prompt_toolkit import print_formatted_text, HTML
 #from prompt_toolkit.application.current import get_app
 #get_app().current_buffer.text = ""
@@ -123,6 +124,16 @@ class TextEditor:
                 print(self.parent.tts(True, self.textSelection))
                 print(self.divider)
                 self.textSelection = ""
+            elif self.editorReload == "e-p":
+                config.textEditorPluginPause = False
+                config.textEditorPluginOutput = ""
+                self.plugins()
+                self.textSelection = ""
+                if config.textEditorPluginOutput:
+                    text = config.textEditorPluginOutput
+                    config.textEditorPluginOutput = ""
+                if config.textEditorPluginPause:
+                    goBackEditor()
             elif self.editorReload == "c-n":
                 if self.textModified and confirm("Save changes first?"):
                     self.saveFile()
@@ -386,6 +397,16 @@ class TextEditor:
             self.oldChanges = self.editorTextChanges
             self.editorReload = "e-s"
             buffer.validate_and_handle()
+        # run text editor plugins
+        @this_key_bindings.add("escape", "p")
+        def _(event):
+            buffer = event.app.current_buffer
+            data = buffer.copy_selection()
+            self.textSelection = data.text
+            self.editorCursorPosition = buffer.cursor_position
+            self.oldChanges = self.editorTextChanges
+            self.editorReload = "e-p"
+            buffer.validate_and_handle()
 
         # return key_bindings
         return this_key_bindings
@@ -476,6 +497,22 @@ class TextEditor:
         )
         set_title("")
         return userInput
+
+    def plugins(self):
+        availablePlugins = FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "text_editor"), "py")
+        print(self.parent.divider)
+        self.parent.printOptionsDisplay(availablePlugins, "Plugins")
+        print(self.parent.divider)
+        print("Enter a number:")
+        userInput = self.simplePrompt(True)
+        if not userInput or userInput.lower() == config.terminal_cancel_action:
+            return self.parent.cancelAction()
+        try:
+            filepath = os.path.join("plugins", "text_editor", f"{availablePlugins[int(userInput)]}.py")
+            self.parent.execPythonFile(filepath)
+            return ""
+        except:
+            return self.parent.printInvalidOptionEntered()
 
     def simplePrompt(self, numberOnly=False, multiline=False, inputIndicator=""):
         if not inputIndicator:
@@ -617,8 +654,9 @@ class TextEditor:
 <{1}>ctrl+w</{1}> <u>w</u>rite file [save]
 <{1}>escape+w</{1}> <u>w</u>rite file as [save as]
 
-<b># Commands</b>
+<b># Scripts & Commands</b>
 <{1}>ctrl+p</{1}> run as <u>p</u>ython script
+<{1}>escape+p</{1}> run text editor <u>p</u>lugins
 <{1}>escape+m</{1}> open UBA <u>m</u>ain menu
 <{1}>escape+d</{1}> run UBA <u>d</u>efault command
 <{1}>escape+r</{1}> <u>r</u>un UBA commands

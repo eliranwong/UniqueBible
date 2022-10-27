@@ -1,3 +1,13 @@
+Changes in 32.83:
+* Terminal text editor now supports running plugins:
+    - written in python
+    - stored plugins/text_editor/
+* Four simple text editor plugins are created for examples:
+    extract bible references from text selection.py
+    sort lines.py
+    change text selection to upper cases.py
+    change text selection to lower cases.py
+
 Changes in 32.82:
 Terminal mode:
 * Added support of running "ls" command in get file path prompt.
@@ -50,8 +60,9 @@ Terminal mode:
     ctrl+w write file [save]
     escape+w write file as [save as]
 
-    # Commands
+    # Scripts & Commands
     ctrl+p run as python script
+    escape+p run text editor <u>p</u>lugins
     escape+m open UBA main menu
     escape+d run UBA default command
     escape+r run UBA commands
