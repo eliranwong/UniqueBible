@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-source: https://github.com/eliranwong/getpath
+source: https://github.com/eliranwong/get-path-prompt
 
 'get-path-prompt' prompts terminal users for entry of a file or directory path.
 
