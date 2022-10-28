@@ -1,3 +1,6 @@
+Changes in 32.85:
+* Fixed terminal text editor saving changes.
+
 Changes in 32.84:
 * Fixed opening terminal text editor help menu, by using "ctrl+t"
 

@@ -140,8 +140,6 @@ class TextEditor:
                 self.resetEditor()
                 editorStartupLine = 1
                 text = ""
-            elif self.editorReload == "c-w":
-                pass
             elif self.editorReload == "c-p":
                 try:
                     exec(self.editor.app.current_buffer.text, globals())
@@ -579,6 +577,7 @@ class TextEditor:
                 except:
                     return failSavingFile()
         self.savedText = text
+        self.textModified = False
         return True
 
     def getEditorHelp(self):
