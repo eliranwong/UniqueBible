@@ -1870,6 +1870,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         return ""
 
     def multilineEditor(self, text="", placeholder="", custom_save_file_method=None, filepath="", newFile=False):
+        config.ubaIsRunning = True
         config.textEditor = TextEditor(self, custom_save_file_method=custom_save_file_method)
         if newFile:
             return config.textEditor.newFile()

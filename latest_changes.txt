@@ -1,3 +1,12 @@
+Changes in 32.86:
+Terminal mode text-editor
+* Added code to run text-editor on its own as a standalone app, run:
+    > python3 text_editor.py
+  to check options, run:
+    > python3 text_editor.py -h
+* Added extract text from documents of various format with key binding "escape+x"
+* Now notify about unsaved changes.
+
 Changes in 32.85:
 * Fixed terminal text editor saving changes.
 

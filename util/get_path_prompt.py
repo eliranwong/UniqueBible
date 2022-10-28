@@ -33,12 +33,13 @@ import platform, os, subprocess
 
 class GetPath:
 
-    def __init__(self, cancel_entry=".cancel", promptIndicatorColor="yellow", promptEntryColor="skyblue", subHeadingColor="cyan", itemColor="skyblue"):
+    def __init__(self, cancel_entry=".cancel", promptIndicatorColor="yellow", promptEntryColor="skyblue", subHeadingColor="cyan", itemColor="skyblue", workingDirectory=""):
         self.cancel_entry = cancel_entry
         self.promptIndicatorColor = promptIndicatorColor
         self.promptEntryColor = promptEntryColor
         self.subHeadingColor = subHeadingColor
         self.itemColor = itemColor
+        self.workingDirectory = workingDirectory
 
     def listDirectoryContent(self):
         dirs = []
@@ -89,17 +90,17 @@ class GetPath:
             userInput = input(f"{message} (y/n)").strip()
             return True if userInput.lower() in ("y", "yes") else False
 
-    def getFilePath(self, check_isfile=False, empty_to_cancel=False, message=""):
+    def getFilePath(self, check_isfile=False, empty_to_cancel=False, list_content_on_directory_change=False, message=""):
         if not message:
             message = "Enter a file path:"
-        return self.getPath(check_isfile=check_isfile, empty_to_cancel=empty_to_cancel, message=message)
+        return self.getPath(check_isfile=check_isfile, empty_to_cancel=empty_to_cancel, list_content_on_directory_change=list_content_on_directory_change, message=message)
 
-    def getFolderPath(self, check_isdir=False, display_dir_only=False, create_dirs_if_not_exist=False, empty_to_cancel=False, message=""):
+    def getFolderPath(self, check_isdir=False, display_dir_only=False, create_dirs_if_not_exist=False, empty_to_cancel=False, list_content_on_directory_change=False, message=""):
         if not message:
             message = "Enter a directory path:"
-        return self.getPath(check_isdir=check_isdir, display_dir_only=display_dir_only, create_dirs_if_not_exist=create_dirs_if_not_exist, empty_to_cancel=empty_to_cancel, message=message)
+        return self.getPath(check_isdir=check_isdir, display_dir_only=display_dir_only, create_dirs_if_not_exist=create_dirs_if_not_exist, empty_to_cancel=empty_to_cancel, list_content_on_directory_change=list_content_on_directory_change, message=message)
 
-    def getPath(self, check_isfile=False, check_isdir=False, display_dir_only=False, create_dirs_if_not_exist=False, empty_to_cancel=False, message=""):
+    def getPath(self, check_isfile=False, check_isdir=False, display_dir_only=False, create_dirs_if_not_exist=False, empty_to_cancel=False, list_content_on_directory_change=False, message=""):
         if not message:
             message = "Enter a path:"
         thisPath = os.getcwd()
@@ -127,10 +128,11 @@ class GetPath:
                 from prompt_toolkit.styles import Style
                 from prompt_toolkit.application import run_in_terminal
 
-                if os.path.isdir(os.path.join(thisPath, "terminal_history")):
-                    filePathHistory = os.path.join(thisPath, "terminal_history", "get-path-prompt")
+                wd = self.workingDirectory if self.workingDirectory else thisPath
+                if os.path.isdir(os.path.join(wd, "terminal_history")):
+                    filePathHistory = os.path.join(wd, "terminal_history", "get-path-prompt")
                 else:
-                    filePathHistory = os.path.join(thisPath, "get-path-prompt")
+                    filePathHistory = os.path.join(wd, "get-path-prompt")
                 filePathSession = PromptSession(history=FileHistory(filePathHistory))
 
                 # key bindings
@@ -180,6 +182,8 @@ class GetPath:
             if userInput.startswith("cd ") and os.path.isdir(userInput[3:]):
                 os.chdir(userInput[3:])
                 userInput = ""
+                if list_content_on_directory_change:
+                    self.displayDirectoryContent()
                 promptEntry = True
             elif (userInput == "ls" or userInput.startswith("ls ")) and not os.path.exists(userInput):
                 try:
