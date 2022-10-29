@@ -1,3 +1,8 @@
+Changes in 32.89:
+Terminal mode:
+* fixed UBA startup when previous command was invalid.
+* supports use of _htmlimage::: command to open image file.
+
 Changes in 32.88:
 * Added a simple cli file manager.
 

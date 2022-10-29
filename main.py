@@ -266,8 +266,15 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     if command:
         # display
         print(config.mainWindow.divider)
-        config.mainWindow.printRunningCommand(command)
-        content = config.mainWindow.getContent(command)
+        try:
+            config.mainWindow.printRunningCommand(command)
+            content = config.mainWindow.getContent(command)
+        except:
+            # make sure UBA can start up
+            print(f"Failed to run '{command}'!")
+            command = ".menu"
+            config.mainWindow.printRunningCommand(command)
+            content = config.mainWindow.getContent(command)
         if content:
             config.mainWindow.displayOutputOnTerminal(content)
     while not command.lower() in (".quit", ".restart", ".q", ".z"):

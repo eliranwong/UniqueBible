@@ -795,7 +795,9 @@ class TextCommandParser:
             # e.g. _image:::EXLBL:::1.jpg"""),
             "_htmlimage": (self.textHtmlImage, """
             # [KEYWORD] _htmlimage
-            # e.g. _htmlimage:::filename"""),
+            # Feature - open image file located in 'htmlResources/images/'
+            # Usage - _htmlimage:::[filepath_relative_to_images_directory]
+            # e.g. _htmlimage:::exlbl_largeHD/BL1263.png"""),
             "_openbooknote": (self.openBookNote, """
             # [KEYWORD] _openbooknote
             # Feature - open bible book note
@@ -3067,8 +3069,13 @@ class TextCommandParser:
 
     # _htmlimage:::
     def textHtmlImage(self, command, source):
-        content = "<p align='center'><img src='images/{0}'><br><br><ref onclick='openHtmlFile({1}images/{0}{1})'>{0}</ref></p>".format(command, '"')
-        return ("popover.{0}".format(source), content, {})
+        if config.runMode == "terminal":
+            filepath = os.path.join("htmlResources", "images", command)
+            os.system(f"{config.open} {filepath}")
+            return ("", "", {})
+        else:
+            content = "<p align='center'><img src='images/{0}'><br><br><ref onclick='openHtmlFile({1}images/{0}{1})'>{0}</ref></p>".format(command, '"')
+            return ("popover.{0}".format(source), content, {})
 
     # _image:::
     def textImage(self, command, source):
