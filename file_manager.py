@@ -27,6 +27,7 @@ class FileManager:
             self.openCommand = config.openWindows
 
     def startup(self):
+        print("Mini File Manager")
         while True:
             userInput = self.getPath.getPath(
                 check_isfile=True,
@@ -36,7 +37,7 @@ class FileManager:
                 empty_to_cancel=True,
                 list_content_on_directory_change=True,
                 keep_startup_directory=False,
-                message="File Manager:",
+                message="Enter a directory or file:",
                 toolbar="[ctrl+q] quit [ctrl+s] system commands",
             )
             if userInput == ".system":
