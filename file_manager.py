@@ -38,7 +38,7 @@ class FileManager:
                 list_content_on_directory_change=True,
                 keep_startup_directory=False,
                 message="Enter a directory or file:",
-                toolbar="[ctrl+q] quit [ctrl+s] system commands",
+                bottom_toolbar="[ctrl+q] quit [ctrl+s] system commands",
             )
             if userInput == ".system":
                 self.system()
