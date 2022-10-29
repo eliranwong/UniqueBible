@@ -1,9 +1,3 @@
-# NEW! Unique Bible App Webtop Version
-
-Simple to install! Great for Bible Study!
-
-<a href="https://github.com/eliranwong/UniqueBible/wiki/Webtop-Version---RECOMMENDED">https://github.com/eliranwong/UniqueBible/wiki/Webtop-Version---RECOMMENDED</a>
-
 # UniqueBible
 A cross-platform & offline bible application, integrated with high-quality resources and unique features.
 
@@ -11,15 +5,17 @@ This single project has two major interfaces:
 
 Qt-based Multi-Window Desktop Application:
 
-<b>Tested in:</b> <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Windows">Windows 10</a>, <a href="https://github.com/eliranwong/wsl2/blob/master/bible_apps/desktop.md">Windows WSL2</a>, <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-macOS">macOS [Sierra+]</a> and <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Linux">Linux</a> (Arch, Debian, Ubuntu & Mint), <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Chrome-OS">Chrome OS</a> (Debian 10), <a href="https://github.com/eliranwong/UniqueBible/wiki/Webtop-Version---RECOMMENDED!">Webtops</a>
+<b>Tested in:</b> <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Windows">Windows 10</a>, <a href="https://github.com/eliranwong/wsl2/blob/master/bible_apps/desktop.md">Windows WSL2</a>, <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-macOS">macOS [Sierra+]</a> and <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Linux">Linux</a> (Arch, Debian, Ubuntu & Mint), <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Chrome-OS">Chrome OS</a> (Debian 10), <a href="https://github.com/eliranwong/UniqueBible/wiki/Webtop-Version---RECOMMENDED!">Webtops</a>, <a href="https://github.com/eliranwong/UniqueBible/wiki/Android-iOS-Version">Android / iOS</a>
 
-Web Application (available OFFLINE):
+Unique Bible App can <a href="https://github.com/eliranwong/UniqueBible/wiki/UBA-Run-Modes">runs in different modes</a>, both online and offline, for examples:
 
-Web version runs on all platforms with a web browser.  It is able to run OFFLINE too.
+> <a href="https://github.com/eliranwong/UniqueBible/wiki/Command-Line-Interface">GUI mode</a> - we use popular Qt library to run UBA on Windows, macOS, Linux, ChromeOS
 
-https://github.com/eliranwong/UniqueBible/wiki/Web-Version-%5Bavailable-OFFLINE%5D
+> <a href="https://github.com/eliranwong/UniqueBible/wiki/Web-Version-%5Bavailable-OFFLINE%5D">Http-server</a> - e.g. <a href="https://bible.gospelchurch.uk">https://bible.gospelchurch.uk</a>
 
-Visit <a href="https://BibleTools.app" target="_blank">https://BibleTools.app</a> for further other bible tools we develop.
+> <a href="https://github.com/eliranwong/UniqueBible/wiki/Terminal-Mode">Terminal mode</a> - the quickest way to run UBA, the most comprehensive in terms of feature coverage
+
+> <a href="https://github.com/eliranwong/UniqueBible/wiki/UBA-Run-Modes">other modes ...</a>
 
 # Development Team
 
