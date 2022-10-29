@@ -548,55 +548,11 @@ for module, feature, isInstalled in required or config.updateDependenciesOnStart
             module = "--upgrade {0}".format(module)
     if not isInstalled():
         pip3InstallModule(module)
-        if module == "PySide2" and not isInstalled():
-            module = "PyQt5"
-            isInstalled = isPyQt5Installed
-            if not isInstalled():
-                print("PySide2 is not found!  Trying to install 'PyQt5' instead ...")
-                if config.docker:
-                    WebtopUtil.installPackage("python-pyqt5 python-pyqt5-sip python-pyqt5-webengine")
-                else:
-                    pip3InstallModule(module)
-                    pip3InstallModule("PyQtWebEngine")
-                if isInstalled():
-                    config.qtLibrary == "pyqt5"
-                    os.environ["QT_API"] = config.qtLibrary
-                    print("Installed!")
-                else:
-                    #print("Required feature '{0}' is not enabled.\nInstall either 'PySide2' or 'PyQt5' first!".format(feature, module))
-                    #exit(1)
-                    runTerminalMode()
-            else:
-                config.qtLibrary == "pyqt5"
-                os.environ["QT_API"] = config.qtLibrary
-        elif module == "PyQt5" and not isInstalled():
-            module = "PySide2"
-            isInstalled = isPySide2Installed
-            if not isInstalled():
-                print("PyQt5 is not found!  Trying to install 'PySide2' instead ...")
-                if config.docker:
-                    WebtopUtil.installPackage("pyside2 pyside2-tools qt5-webengine")
-                else:
-                    pip3InstallModule(module)
-                if isInstalled():
-                    config.qtLibrary == "pyside2"
-                    os.environ["QT_API"] = config.qtLibrary
-                    print("Installed!")
-                else:
-                    #print("Required feature '{0}' is not enabled.\nInstall either 'PySide2' or 'PyQt5' first!".format(feature, module))
-                    #exit(1)
-                    runTerminalMode()
-            else:
-                config.qtLibrary == "pyside2"
-                os.environ["QT_API"] = config.qtLibrary
         if isInstalled():
             print("Installed!")
         else:
-            if module == "PySide6":
-                runTerminalMode()
-            else:
-                print("Required feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first!".format(feature, module))
-                exit(1)
+            print("Required feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first!".format(feature, module))
+            exit(1)
 
 major, minor, micro, *_ = sys.version_info
 thisOS = platform.system()
