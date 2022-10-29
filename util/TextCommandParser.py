@@ -3,7 +3,7 @@ import glob, pprint
 import pydoc
 import os, re, webbrowser, platform, multiprocessing, zipfile, subprocess, config
 from datetime import date
-from util.exlbl import allLocations
+from util.exlbl import allLocations, tc_location_names, sc_location_names
 from util.PluginEventHandler import PluginEventHandler
 from util.WebtopUtil import WebtopUtil
 from util.CatalogUtil import CatalogUtil
@@ -3902,6 +3902,10 @@ class TextCommandParser:
                     num = int(re.sub("\..*?$", "", item))
                     exlbl_entry = "BL{0}".format(num)
                     label, name, latitude, longitude = self.locationMap[exlbl_entry]
+                    if config.standardAbbreviation == "TC" and exlbl_entry in tc_location_names and tc_location_names[exlbl_entry]:
+                        name = tc_location_names[exlbl_entry]
+                    elif config.standardAbbreviation == "SC" and exlbl_entry in sc_location_names and sc_location_names[exlbl_entry]:
+                        name = sc_location_names[exlbl_entry]
                     googleEarthLink = "https://earth.google.com/web/search/{0},+{1}".format(str(latitude).replace(".", "%2e"), str(longitude).replace(".", "%2e"))
                     if config.enableHttpServer:
                         info = """<a href="#" onclick="document.title = 'EXLB:::exlbl:::{0}';">{1}</a> [<a href='{2}' target='_blank';">3D</a>]""".format(exlbl_entry, name, googleEarthLink)

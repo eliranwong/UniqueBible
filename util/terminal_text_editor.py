@@ -450,6 +450,10 @@ class TextEditor:
             #    lexer = PygmentsLexer(HtmlLexer)
             from prompt_toolkit.lexers import DynamicLexer, PygmentsLexer
             lexer = DynamicLexer(lambda: PygmentsLexer.from_filename(self.filepath))
+        else:
+            from prompt_toolkit.lexers import PygmentsLexer
+            from pygments.lexers.markup import MarkdownLexer
+            lexer = PygmentsLexer(MarkdownLexer)
 
         # define self.editor
         self.editor = PromptSession()
@@ -560,6 +564,7 @@ class TextEditor:
 
     def openFile(self, filepath="", getTextOnly=False):
         if not filepath:
+            print("Opening file ...")
             filepath = self.getPath.getFilePath(True)
         if os.path.isfile(filepath):
             text = self.getFileText(filepath)
@@ -583,6 +588,7 @@ class TextEditor:
     def extractFile(self, filepath="", getTextOnly=False):
         if config.isTextractInstalled:
             if not filepath:
+                print("Extracting text from file ...")
                 filepath = self.getPath.getFilePath(True)
             if os.path.isfile(filepath):
                 text = self.extractFileText(filepath)
@@ -614,6 +620,7 @@ class TextEditor:
             self.custom_save_file_method(text)
         else:
             if not self.filepath or saveAs:
+                print("Saving file ...")
                 filepath = self.getPath.getFilePath()
                 if not filepath:
                     return False

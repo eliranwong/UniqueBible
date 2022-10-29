@@ -1,3 +1,8 @@
+Changes in 32.87:
+* Added traditional and simplified Chinese names to bible maps:
+    When abbreviations is set to "TC" or "SC", running map::: command, e.g. map:::Act 15:1-18:1, displays Chinese location names on Google maps.
+* Terminal mode text editor now have Markdown as default syntax highlighting when a filename is not specified or saved.
+
 Changes in 32.86:
 Terminal mode text-editor
 * Added code to run text-editor on its own as a standalone app, run:
