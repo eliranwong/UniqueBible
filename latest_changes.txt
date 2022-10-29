@@ -1,3 +1,6 @@
+Changes in 32.88:
+* Added a simple cli file manager.
+
 Changes in 32.87:
 * Added traditional and simplified Chinese names to bible maps:
     When abbreviations is set to "TC" or "SC", running map::: command, e.g. map:::Act 15:1-18:1, displays Chinese location names on Google maps.
