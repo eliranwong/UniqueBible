@@ -3071,7 +3071,10 @@ class TextCommandParser:
     def textHtmlImage(self, command, source):
         if config.runMode == "terminal":
             filepath = os.path.join("htmlResources", "images", command)
-            os.system(f"{config.open} {filepath}")
+            if config.terminalEnableTermuxAPI:
+                os.system(f"termux-share {filepath}")
+            else:
+                os.system(f"{config.open} {filepath}")
             return ("", "", {})
         else:
             content = "<p align='center'><img src='images/{0}'><br><br><ref onclick='openHtmlFile({1}images/{0}{1})'>{0}</ref></p>".format(command, '"')

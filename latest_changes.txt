@@ -1,3 +1,6 @@
+Changes in 32.90:
+* Fixed opening image on Android.
+
 Changes in 32.89:
 Terminal mode:
 * fixed UBA startup when previous command was invalid.
