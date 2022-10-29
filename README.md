@@ -13,7 +13,7 @@ Unique Bible App can <a href="https://github.com/eliranwong/UniqueBible/wiki/UBA
 
 > <a href="https://github.com/eliranwong/UniqueBible/wiki/Web-Version-%5Bavailable-OFFLINE%5D">Http-server</a> - e.g. <a href="https://bible.gospelchurch.uk">https://bible.gospelchurch.uk</a>
 
-> <a href="https://github.com/eliranwong/UniqueBible/wiki/Terminal-Mode">Terminal mode</a> - the quickest way to run UBA, the most comprehensive in terms of feature coverage
+> <a href="https://github.com/eliranwong/UniqueBible/wiki/Terminal-Mode">Terminal mode</a> - the quickest way to run UBA; the most comprehensive in terms of feature coverage; all platforms supported; local or via ssh
 
 > <a href="https://github.com/eliranwong/UniqueBible/wiki/UBA-Run-Modes">other modes ...</a>
 
