@@ -494,7 +494,7 @@ def isBcryptInstalled():
 
 def isAsyncsshInstalled():
     try:
-        import syncssh
+        import asyncssh
         return True
     except:
         return False

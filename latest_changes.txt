@@ -1,3 +1,6 @@
+Changes in 32.95:
+* Implemented a simple ssh server to run UBA command prompt.
+
 Changes in 32.94:
 * Added ssh-server code for testing
 

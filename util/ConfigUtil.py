@@ -449,10 +449,29 @@ class ConfigUtil:
 
         # End of terminal mode customised input settings
 
+        # ssh server
+        config.help["sshServerHost"] = """
+        # To specify ssh server host."""
+        if not hasattr(config, "sshServerHost"):
+            config.sshServerHost = ""
+        config.help["sshServerPort"] = """
+        # To specify ssh server port."""
+        if not hasattr(config, "sshServerPort"):
+            config.sshServerPort = 2222
+        config.help["sshServerHostKeys"] = """
+        # To specify ssh server host keys, either a string or a list of strings."""
+        if not hasattr(config, "sshServerHostKeys"):
+            config.sshServerHostKeys = ""
+        config.help["sshServerPassphrase"] = """
+        # To specify ssh server passphrase."""
+        if not hasattr(config, "sshServerPassphrase"):
+            config.sshServerPassphrase = "the_best_bible_app"
+        # telnet-server
         config.help["telnetServerPort"] = """
         # To specify the port used by telnet-server."""
         if not hasattr(config, "telnetServerPort"):
             config.telnetServerPort = 8888
+        # http-server
         config.help["httpServerPort"] = """
         # To specify the port used by http-server."""
         if not hasattr(config, "httpServerPort"):
@@ -1849,6 +1868,10 @@ class ConfigUtil:
             ("terminal_ctrl_w", config.terminal_ctrl_w),
             ("terminal_ctrl_y", config.terminal_ctrl_y),
             ("telnetServerPort", config.telnetServerPort),
+            ("sshServerHost", config.sshServerHost),
+            ("sshServerPort", config.sshServerPort),
+            ("sshServerHostKeys", config.sshServerHostKeys),
+            ("sshServerPassphrase", config.sshServerPassphrase),
             ("httpServerUbaFile", config.httpServerUbaFile),
             ("httpServerPort", config.httpServerPort),
             ("httpServerViewerGlobalMode", config.httpServerViewerGlobalMode),

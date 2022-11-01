@@ -203,7 +203,6 @@ def run_terminal_mode():
     #if config.isPrompt_toolkitInstalled:
     from prompt_toolkit.shortcuts import set_title, clear_title
     set_title(f"Unique Bible App [{config.version}]")
-    config.runMode = "terminal"
     config.saveConfigOnExit = True
     print(f"Running Unique Bible App {config.version} in terminal mode ...")
     checkMigration()
@@ -352,32 +351,48 @@ def run_terminal_mode():
     sys.exit(0)
 
 if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
+    config.runMode = "terminal"
     run_terminal_mode()
 
 # ssh-server
+# read setup guide at https://github.com/eliranwong/UniqueBible/wiki/Run-SSH-Server
 
-def run_ssh_server(host="", port=None, server_host_keys="", passphrase=""):
+def run_ssh_server(host="", port=2222, server_host_keys="", passphrase="the_best_bible_app"):
     import os, logging, asyncssh
     from prompt_toolkit.eventloop import get_event_loop
     from prompt_toolkit.contrib.ssh import PromptToolkitSSHServer, PromptToolkitSSHSession
     from prompt_toolkit.shortcuts.prompt import PromptSession
+    from util.LocalCliHandler import LocalCliHandler
+    from prompt_toolkit.shortcuts import print_formatted_text
+    from prompt_toolkit.key_binding import KeyBindings
 
-    async def testing(ssh_session: PromptToolkitSSHSession) -> None:
+    # set up config.mainWindow for terminal mode
+    config.mainWindow = LocalCliHandler()
+
+    async def ubaCommandPrompt(ssh_session: PromptToolkitSSHSession) -> None:
 
         prompt_session = PromptSession()
+        print = print_formatted_text
 
-        # for testing purpose
-        print("Testing to run ssh-server")
-        text = await prompt_session.prompt_async("Type something: ")
-        print("You typed", text)
+        print(f"Running Unique Bible App [{config.version}] in ssh-server mode ...")
 
-    if port is None:
-        port = 2022
+        while True:
+            try:
+                command = await prompt_session.prompt_async("Enter an UBA command: ", bottom_toolbar=" run '.quit' to quit ")
+                if command == ".quit":
+                    break
+                print(config.mainWindow.divider)
+                config.mainWindow.printRunningCommand(command)
+                print(config.mainWindow.divider)
+                print(config.mainWindow.getContent(command))
+                print(config.mainWindow.divider)
+            except:
+                print("Errors!")
+
     if not server_host_keys:
         home = os.environ["HOME"]
         server_host_keys = f"{home}/.ssh/uba_ssh_server"
-    if not passphrase:
-        passphrase = "the_best_bible_app"
+
     # Set up logging.
     logging.basicConfig()
     logging.getLogger().setLevel(logging.DEBUG)
@@ -385,7 +400,7 @@ def run_ssh_server(host="", port=None, server_host_keys="", passphrase=""):
     loop = get_event_loop()
     loop.run_until_complete(
         asyncssh.create_server(
-            lambda: PromptToolkitSSHServer(testing),
+            lambda: PromptToolkitSSHServer(ubaCommandPrompt),
             host=host,
             port=port,
             server_host_keys=server_host_keys,
@@ -395,7 +410,8 @@ def run_ssh_server(host="", port=None, server_host_keys="", passphrase=""):
     loop.run_forever()
 
 if (len(sys.argv) > 1) and sys.argv[1].lower() == "ssh-server":
-    run_ssh_server()
+    config.runMode = "ssh-server"
+    run_ssh_server(host=config.sshServerHost, port=config.sshServerPort, server_host_keys=config.sshServerHostKeys, passphrase=config.sshServerPassphrase)
 
 # telnet-server
 
