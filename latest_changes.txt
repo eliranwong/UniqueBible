@@ -1,3 +1,6 @@
+Changes in 32.94:
+* Added ssh-server code for testing
+
 Changes in 32.93:
 * Align terminal mode prompt and text display color themes.
 

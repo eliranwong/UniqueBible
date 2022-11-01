@@ -485,6 +485,20 @@ def isPyperclipInstalled():
     except:
         return False
 
+def isBcryptInstalled():
+    try:
+        import bcrypt
+        return True
+    except:
+        return False
+
+def isAsyncsshInstalled():
+    try:
+        import syncssh
+        return True
+    except:
+        return False
+
 def isPygmentsInstalled():
     try:
         from pygments.lexers.python import PythonLexer
@@ -604,6 +618,10 @@ def setInstallConfig(module, isInstalled):
         config.isPickleyInstalled = isInstalled
     elif module in ("Pygments", "-U Pygments", "--upgrade Pygments"):
         config.isPygmentsInstalled = isInstalled
+    elif module in ("asyncssh", "-U asyncssh", "--upgrade asyncssh"):
+        config.isAsyncsshInstalled = isInstalled
+    elif module in ("bcrypt", "-U bcrypt", "--upgrade bcrypt"):
+        config.isBcryptInstalled = isInstalled
 
 # Specify qtLibrary for particular os
 if config.docker and config.usePySide2onWebtop:
@@ -749,6 +767,8 @@ optional = [
     ("matplotlib", "Plotting Package", isMatplotlibInstalled),
     ("pickley", "Automate installation of standalone python CLIs", isPickleyInstalled),
     ("Pygments", "Syntax highlighting package", isPygmentsInstalled),
+    ("asyncssh", "Asynchronous SSHv2 client and server library", isAsyncsshInstalled),
+    ("bcrypt", "Modern password hashing for your software and your servers", isBcryptInstalled),
 ] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -790,6 +810,8 @@ optional = [
     ("matplotlib", "Plotting Package", isMatplotlibInstalled),
     ("pickley", "Automate installation of standalone python CLIs", isPickleyInstalled),
     ("Pygments", "Syntax highlighting package", isPygmentsInstalled),
+    ("asyncssh", "Asynchronous SSHv2 client and server library", isAsyncsshInstalled),
+    ("bcrypt", "Modern password hashing for your software and your servers", isBcryptInstalled),
 ]
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))

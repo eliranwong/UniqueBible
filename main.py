@@ -149,6 +149,8 @@ def checkApplicationUpdateCli():
         print("Failed to read '{0}'.".format(checkFile))
     return False
 
+# Local CLI - Terminal Mode
+
 # Get terminal mode history records
 def getHistoryRecords():
     records = []
@@ -197,8 +199,7 @@ def initiateMainPrompt():
     config.main_prompt_session = PromptSession(history=FileHistory(command_history))
 config.initiateMainPrompt = initiateMainPrompt
 
-# Local CLI - Terminal Mode
-if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
+def run_terminal_mode():
     #if config.isPrompt_toolkitInstalled:
     from prompt_toolkit.shortcuts import set_title, clear_title
     set_title(f"Unique Bible App [{config.version}]")
@@ -216,8 +217,8 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     default = ""
     if config.isPrompt_toolkitInstalled:
         from prompt_toolkit.key_binding import merge_key_bindings
-        from util.prompt_shared_key_bindings import *
-        from util.uba_command_prompt_key_bindings import *
+        from util.prompt_shared_key_bindings import prompt_shared_key_bindings
+        from util.uba_command_prompt_key_bindings import uba_command_prompt_key_bindings
         # make key bindings available in config to allow futher customisation via plugins
         config.key_bindings = uba_command_prompt_key_bindings
     # run plugin where users may add customised key bindings
@@ -350,7 +351,54 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     clear_title()
     sys.exit(0)
 
-# Remote CLI
+if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
+    run_terminal_mode()
+
+# ssh-server
+
+def run_ssh_server(host="", port=None, server_host_keys="", passphrase=""):
+    import os, logging, asyncssh
+    from prompt_toolkit.eventloop import get_event_loop
+    from prompt_toolkit.contrib.ssh import PromptToolkitSSHServer, PromptToolkitSSHSession
+    from prompt_toolkit.shortcuts.prompt import PromptSession
+
+    async def testing(ssh_session: PromptToolkitSSHSession) -> None:
+
+        prompt_session = PromptSession()
+
+        # for testing purpose
+        print("Testing to run ssh-server")
+        text = await prompt_session.prompt_async("Type something: ")
+        print("You typed", text)
+
+    if port is None:
+        port = 2022
+    if not server_host_keys:
+        home = os.environ["HOME"]
+        server_host_keys = f"{home}/.ssh/uba_ssh_server"
+    if not passphrase:
+        passphrase = "the_best_bible_app"
+    # Set up logging.
+    logging.basicConfig()
+    logging.getLogger().setLevel(logging.DEBUG)
+
+    loop = get_event_loop()
+    loop.run_until_complete(
+        asyncssh.create_server(
+            lambda: PromptToolkitSSHServer(testing),
+            host=host,
+            port=port,
+            server_host_keys=server_host_keys,
+            options=asyncssh.SSHServerConnectionOptions(passphrase=passphrase),
+        )
+    )
+    loop.run_forever()
+
+if (len(sys.argv) > 1) and sys.argv[1].lower() == "ssh-server":
+    run_ssh_server()
+
+# telnet-server
+
 if (len(sys.argv) > 1) and sys.argv[1] == "telnet-server":
     config.runMode = "telnet-server"
     try:
