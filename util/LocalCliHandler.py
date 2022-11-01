@@ -718,7 +718,7 @@ class LocalCliHandler:
         else:
             if config.terminalEnablePager:
                 content = TextUtil.convertHtmlTagToColorama(content)
-                print(content)
+                #print(content)
             divider = self.divider
             if config.terminalEnablePager and not content in ("Command processed!", "INVALID_COMMAND_ENTERED") and not content.endswith("not supported in terminal mode.") and not content.startswith("[MESSAGE]"):
                 if platform.system() == "Windows":
