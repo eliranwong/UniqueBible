@@ -294,6 +294,12 @@ class ConfigUtil:
         # Terminal mode find highlight foreground color."""
         if not hasattr(config, "terminalFindHighlightForeground") or not config.terminalFindHighlightForeground in config.terminalColors:
             config.terminalFindHighlightForeground = "ansidefault"
+        
+        # aligh text display and prompt color themes
+        if config.terminalPromptIndicatorColor1.startswith("ansibright") and config.terminalResourceLinkColor.startswith("ansibright"):
+            config.terminalSwapColors = False
+        elif not config.terminalPromptIndicatorColor1.startswith("ansibright") and not config.terminalResourceLinkColor.startswith("ansibright"):
+            config.terminalSwapColors = True
         # End of terminal mode settings
 
         # Start of terminal mode customised input settings

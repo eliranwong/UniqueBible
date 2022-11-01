@@ -129,12 +129,13 @@ class GetPath:
             try:
                 # prompt toolkit is installed
                 from prompt_toolkit.completion import PathCompleter
-                from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
-                from prompt_toolkit.key_binding import KeyBindings
                 from prompt_toolkit import PromptSession
                 from prompt_toolkit.history import FileHistory
                 from prompt_toolkit.styles import Style
                 from prompt_toolkit.application import run_in_terminal
+                from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+                from prompt_toolkit.key_binding import KeyBindings, merge_key_bindings
+                from util.prompt_shared_key_bindings import prompt_shared_key_bindings
 
                 wd = self.workingDirectory if self.workingDirectory else thisPath
                 if os.path.isdir(os.path.join(wd, "terminal_history")):
@@ -171,6 +172,10 @@ class GetPath:
                     # Prompt.
                     "indicator": self.promptIndicatorColor,
                 })
+                this_key_bindings = merge_key_bindings([
+                    this_key_bindings,
+                    prompt_shared_key_bindings,
+                ])
                 if not bottom_toolbar:
                     bottom_toolbar = "[cd [folder]] change dir; [ls]/[ctrl+l] list content; [ctrl+q] quit"
                 userInput = filePathSession.prompt(

@@ -1,3 +1,6 @@
+Changes in 32.93:
+* Align terminal mode prompt and text display color themes.
+
 Changes in 32.92:
 * Add more logging to Google drive backup
 * Add Portable Python

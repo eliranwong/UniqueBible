@@ -305,7 +305,7 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
                     # enable system prompt without auto-completion
                     # use escape+!
                     enable_system_prompt=True,
-                    swap_light_and_dark_colors=Condition(lambda: not config.terminalSwapColors),
+                    swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors),
                     #rprompt="Enter an UBA command",
                 ).strip()
             else:
@@ -320,7 +320,7 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
                     # enable system prompt without auto-completion
                     # use escape+!
                     enable_system_prompt=True,
-                    swap_light_and_dark_colors=Condition(lambda: not config.terminalSwapColors),
+                    swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors),
                     #rprompt="Enter an UBA command",
                 ).strip()
         elif sys.platform in ("linux", "darwin"):
