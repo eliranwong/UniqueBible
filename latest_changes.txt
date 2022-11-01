@@ -1,3 +1,9 @@
+Changes in 32.91:
+Terminal mode:
+* Now support swapping color brightness, by pressing "escape+s"
+* Two common set of key bindings are now shared across different prompts.
+* prompt-toolkit is now a required denpency to run terminal mode.
+
 Changes in 32.90:
 * Fixed opening image on Android.
 

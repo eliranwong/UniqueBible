@@ -1,7 +1,7 @@
 import config, re
 
-terminalTextStart = "「Back.{0}」「Fore.{1}」".format(config.terminalVerseSelectionBackground, config.terminalVerseSelectionForeground) if config.runMode == "terminal" else ""
-terminalTextEnd = "「Style.RESET_ALL」" if config.runMode == "terminal" else ""
+terminalTextStart = """「tmvs fg="{1}" bg="{0}"」{2}「/tmvs」""".format(config.terminalVerseSelectionBackground, config.terminalVerseSelectionForeground, config.terminalVerseSelectionStart) if config.runMode == "terminal" else ""
+terminalTextEnd = """ 「tmvs fg="{1}" bg="{0}"」{2}「/tmvs」""".format(config.terminalVerseSelectionBackground, config.terminalVerseSelectionForeground, config.terminalVerseSelectionEnd) if config.runMode == "terminal" else ""
 
 def highlightActiveVerseMain(text):
     colour = config.darkThemeActiveVerseColor if config.theme in ("dark", "night") else config.lightThemeActiveVerseColor

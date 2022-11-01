@@ -34,7 +34,7 @@ class TextEditorUtility:
             from util.PromptValidator import NumberValidator
             if numberOnly:
                 if multiline:
-                    self.printMultineNote()
+                    self.printMultilineNote()
                 userInput = prompt(inputIndicator, style=self.promptStyle, validator=NumberValidator(), multiline=multiline).strip()
             else:
                 userInput = prompt(inputIndicator, style=self.promptStyle, multiline=multiline).strip()
@@ -47,7 +47,7 @@ class TextEditorUtility:
         print(message)
         return ""
 
-    def printMultineNote(self):
+    def printMultilineNote(self):
         print("[Attention! Multiline input is enabled. Press Escape+Enter when you finish text entry.]")
 
     def setOsOpenCmd(self):

@@ -286,7 +286,8 @@ def isOfflineTtsInstalled():
                 label = "[{0}] {1}".format(language, voice)
                 macVoices[label] = ("", label)
         for key in sorted(macVoices):
-            config.macVoices[key] = macVoices[key]
+            if not key.endswith("(Enhanced)") and not key.endswith("(Premium)"):
+                config.macVoices[key] = macVoices[key]
         return True if config.macVoices else False
     elif platform.system() == "Linux" and config.espeak:
         espeakInstalled, _ = subprocess.Popen("which espeak", shell=True, stdout=subprocess.PIPE).communicate()
@@ -619,6 +620,7 @@ required = [
     ("babel", "Internationalization and localization library", isBabelInstalled),
     ("requests", "Download / Update files", isRequestsInstalled),
     ("apsw", "Another Python SQLite Wrapper", isApswInstalled),
+    ("prompt_toolkit", "Command Line Interaction", isPrompt_toolkitInstalled),
 ] if config.noQt else [
     ("config", "Configurations", isConfigInstalled),
     #("PySide2", "Qt Graphical Interface Library", isPySide2Installed) if config.qtLibrary.startswith("pyside") else ("PyQt5", "Qt Graphical Interface Library", isPyQt5Installed),

@@ -6,21 +6,11 @@ uba_command_prompt_key_bindings = KeyBindings()
 
 # add key bindings from Ctrl+B to Ctrl+Y, skipping Ctrl+A, C, D, E, H, J, M, N, O, P, T, V, X
 
-#if config.terminal_ctrl_a.strip():
-#    @uba_command_prompt_key_bindings.add("c-a")
-#    def _(event):
-#        event.app.current_buffer.text = config.terminal_ctrl_a
-#        event.app.current_buffer.validate_and_handle()
 if config.terminal_ctrl_b.strip():
     @uba_command_prompt_key_bindings.add("c-b")
     def _(event):
         event.app.current_buffer.text = config.terminal_ctrl_b
         event.app.current_buffer.validate_and_handle()
-#if config.terminal_ctrl_c.strip():
-#    @uba_command_prompt_key_bindings.add("c-c")
-#    def _(event):
-#        event.app.current_buffer.text = config.terminal_ctrl_c
-#        event.app.current_buffer.validate_and_handle()
 if config.terminal_ctrl_f.strip():
     @uba_command_prompt_key_bindings.add("c-f")
     def _(event):
@@ -61,16 +51,29 @@ if config.terminal_ctrl_w.strip():
     def _(event):
         event.app.current_buffer.text = config.terminal_ctrl_w
         event.app.current_buffer.validate_and_handle()
-#if config.terminal_ctrl_x.strip():
-#    @uba_command_prompt_key_bindings.add("c-x")
-#    def _(event):
-#        event.app.current_buffer.text = config.terminal_ctrl_x
-#        event.app.current_buffer.validate_and_handle()
 if config.terminal_ctrl_y.strip():
     @uba_command_prompt_key_bindings.add("c-y")
     def _(event):
         event.app.current_buffer.text = config.terminal_ctrl_y
         event.app.current_buffer.validate_and_handle()
+
+# Escape+M open main menu
+@uba_command_prompt_key_bindings.add("escape", "m")
+def _(event):
+    event.app.current_buffer.text = ".menu"
+    event.app.current_buffer.validate_and_handle()
+
+# Escape+H open menu
+@uba_command_prompt_key_bindings.add("escape", "h")
+def _(event):
+    event.app.current_buffer.text = ".help"
+    event.app.current_buffer.validate_and_handle()
+
+# Escape+S open system command prompt
+@uba_command_prompt_key_bindings.add("escape", "c")
+def _(event):
+    event.app.current_buffer.text = ".system"
+    event.app.current_buffer.validate_and_handle()
 
 # Ctrl+Q reserves for quiting UBA
 @uba_command_prompt_key_bindings.add("c-q")

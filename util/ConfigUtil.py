@@ -9,6 +9,36 @@ from lang import language_en_GB
 class ConfigUtil:
 
     @staticmethod
+    def swapTerminalColors():
+        config.terminalSwapColors = not config.terminalSwapColors
+        if config.terminalPromptIndicatorColor1 in config.terminalColors:
+            config.terminalPromptIndicatorColor1 = config.terminalColors[config.terminalPromptIndicatorColor1]
+        if config.terminalCommandEntryColor1 in config.terminalColors:
+            config.terminalCommandEntryColor1 = config.terminalColors[config.terminalCommandEntryColor1]
+        if config.terminalPromptIndicatorColor2 in config.terminalColors:
+            config.terminalPromptIndicatorColor2 = config.terminalColors[config.terminalPromptIndicatorColor2]
+        if config.terminalCommandEntryColor2 in config.terminalColors:
+            config.terminalCommandEntryColor2 = config.terminalColors[config.terminalCommandEntryColor2]
+        if config.terminalHeadingTextColor in config.terminalColors:
+            config.terminalHeadingTextColor = config.terminalColors[config.terminalHeadingTextColor]
+        if config.terminalVerseNumberColor in config.terminalColors:
+            config.terminalVerseNumberColor = config.terminalColors[config.terminalVerseNumberColor]
+        if config.terminalResourceLinkColor in config.terminalColors:
+            config.terminalResourceLinkColor = config.terminalColors[config.terminalResourceLinkColor]
+        if config.terminalVerseSelectionBackground in config.terminalColors:
+            config.terminalVerseSelectionBackground = config.terminalColors[config.terminalVerseSelectionBackground]
+        if config.terminalVerseSelectionForeground in config.terminalColors:
+            config.terminalVerseSelectionForeground = config.terminalColors[config.terminalVerseSelectionForeground]
+        if config.terminalSearchHighlightBackground in config.terminalColors:
+            config.terminalSearchHighlightBackground = config.terminalColors[config.terminalSearchHighlightBackground]
+        if config.terminalSearchHighlightForeground in config.terminalColors:
+            config.terminalSearchHighlightForeground = config.terminalColors[config.terminalSearchHighlightForeground]
+        if config.terminalFindHighlightBackground in config.terminalColors:
+            config.terminalFindHighlightBackground = config.terminalColors[config.terminalFindHighlightBackground]
+        if config.terminalFindHighlightForeground in config.terminalColors:
+            config.terminalFindHighlightForeground = config.terminalColors[config.terminalFindHighlightForeground]
+
+    @staticmethod
     def setup():
 
         # Check current version
@@ -99,10 +129,6 @@ class ConfigUtil:
         # Termux text-to-speech speed"""
         if not hasattr(config, "terminalTermuxttsSpeed"):
             config.terminalTermuxttsSpeed = 1.0
-        config.help["terminalDisplayBeginnerMessage"] = """
-        # Display beginner message in terminal mode."""
-        if not hasattr(config, "terminalDisplayBeginnerMessage"):
-            config.terminalDisplayBeginnerMessage = True
         config.help["terminalEnablePager"] = """
         # To enable paging of terminal output when UBA runs in terminal mode."""
         if not hasattr(config, "terminalEnablePager"):
@@ -177,64 +203,97 @@ class ConfigUtil:
         # To stop http-server, if it is running, when users quit UBA terminal mode."""
         if not hasattr(config, "terminalStopHttpServerOnExit"):
             config.terminalStopHttpServerOnExit = True
+        config.help["terminalVerseSelectionStart"] = """
+        # Characters displayed at the start of verse selection."""
+        if not hasattr(config, "terminalVerseSelectionStart"):
+            config.terminalVerseSelectionStart = "^⋯"
+        config.help["terminalVerseSelectionEnd"] = """
+        # Characters displayed at the end of verse selection."""
+        if not hasattr(config, "terminalVerseSelectionEnd"):
+            config.terminalVerseSelectionEnd = "⋯^"
+        # support swap between light and dark themes
+        config.help["terminalSwapColors"] = """
+        # Swap between light and dark colors in terminal mode."""
+        if not hasattr(config, "terminalSwapColors"):
+            config.terminalSwapColors = True
+        config.terminalColors = {
+            "ansidefault": "ansidefault",
+            "ansiblack": "ansiwhite",
+            "ansired": "ansibrightred",
+            "ansigreen": "ansibrightgreen",
+            "ansiyellow": "ansibrightyellow",
+            "ansiblue": "ansibrightblue",
+            "ansimagenta": "ansibrightmagenta",
+            "ansicyan": "ansibrightcyan",
+            "ansigray": "ansibrightblack",
+            "ansiwhite": "ansiblack",
+            "ansibrightred": "ansired",
+            "ansibrightgreen": "ansigreen",
+            "ansibrightyellow": "ansiyellow",
+            "ansibrightblue": "ansiblue",
+            "ansibrightmagenta": "ansimagenta",
+            "ansibrightcyan": "ansicyan",
+            "ansibrightblack": "ansigray",
+        }
+        # old options
+        #config.terminalColors = ("RESET", "BLACK", "WHITE", "RED", "GREEN", "YELLOW", "BLUE", "MAGENTA", "CYAN", "LIGHTBLACK_EX", "LIGHTRED_EX", "LIGHTGREEN_EX", "LIGHTYELLOW_EX", "LIGHTBLUE_EX", "LIGHTMAGENTA_EX", "LIGHTCYAN_EX", "LIGHTWHITE_EX")
         # Colours related configurations in terminal mode
         config.help["terminalPromptIndicatorColor1"] = """
         # Terminal prompt indicator color I.
         # Format: html color code string."""
-        if not hasattr(config, "terminalPromptIndicatorColor1"):
-            config.terminalPromptIndicatorColor1 = "#00AA00"
+        if not hasattr(config, "terminalPromptIndicatorColor1") or not config.terminalPromptIndicatorColor1 in config.terminalColors:
+            config.terminalPromptIndicatorColor1 = "ansimagenta"
         config.help["terminalCommandEntryColor1"] = """
         # Terminal command entry color I.
         # Format: html color code string."""
-        if not hasattr(config, "terminalCommandEntryColor1"):
-            config.terminalCommandEntryColor1 = "#FF0066"
+        if not hasattr(config, "terminalCommandEntryColor1") or not config.terminalCommandEntryColor1 in config.terminalColors:
+            config.terminalCommandEntryColor1 = "ansiyellow"
         config.help["terminalPromptIndicatorColor2"] = """
         # Terminal prompt indicator color II.
         # Format: html color code string."""
-        if not hasattr(config, "terminalPromptIndicatorColor2"):
-            config.terminalPromptIndicatorColor2 = "#FF0066"
+        if not hasattr(config, "terminalPromptIndicatorColor2") or not config.terminalPromptIndicatorColor2 in config.terminalColors:
+            config.terminalPromptIndicatorColor2 = "ansicyan"
         config.help["terminalCommandEntryColor2"] = """
         # Terminal command entry color II.
         # Format: html color code string."""
-        if not hasattr(config, "terminalCommandEntryColor2"):
-            config.terminalCommandEntryColor2 = "#00AA00"
-        config.terminalColors = ("RESET", "BLACK", "WHITE", "RED", "GREEN", "YELLOW", "BLUE", "MAGENTA", "CYAN", "LIGHTBLACK_EX", "LIGHTRED_EX", "LIGHTGREEN_EX", "LIGHTYELLOW_EX", "LIGHTBLUE_EX", "LIGHTMAGENTA_EX", "LIGHTCYAN_EX", "LIGHTWHITE_EX")
+        if not hasattr(config, "terminalCommandEntryColor2") or not config.terminalCommandEntryColor2 in config.terminalColors:
+            config.terminalCommandEntryColor2 = "ansigreen"
         config.help["terminalHeadingTextColor"] = """
         # Terminal mode heading text color."""
-        if not hasattr(config, "terminalHeadingTextColor"):
-            config.terminalHeadingTextColor = "BLUE"
+        if not hasattr(config, "terminalHeadingTextColor") or not config.terminalHeadingTextColor in config.terminalColors:
+            config.terminalHeadingTextColor = "ansigreen"
         config.help["terminalVerseNumberColor"] = """
         # Terminal mode verse number color."""
-        if not hasattr(config, "terminalVerseNumberColor"):
-            config.terminalVerseNumberColor = "CYAN"
+        if not hasattr(config, "terminalVerseNumberColor") or not config.terminalVerseNumberColor in config.terminalColors:
+            config.terminalVerseNumberColor = "ansicyan"
         config.help["terminalResourceLinkColor"] = """
         # Terminal mode resource link color."""
-        if not hasattr(config, "terminalResourceLinkColor"):
-            config.terminalResourceLinkColor = "CYAN"
+        if not hasattr(config, "terminalResourceLinkColor") or not config.terminalResourceLinkColor in config.terminalColors:
+            config.terminalResourceLinkColor = "ansiyellow"
         config.help["terminalVerseSelectionBackground"] = """
         # Terminal mode verse selection background color."""
-        if not hasattr(config, "terminalVerseSelectionBackground"):
-            config.terminalVerseSelectionBackground = "GREEN"
+        if not hasattr(config, "terminalVerseSelectionBackground") or not config.terminalVerseSelectionBackground in config.terminalColors:
+            config.terminalVerseSelectionBackground = "ansimagenta"
         config.help["terminalVerseSelectionForeground"] = """
         # Terminal mode verse selection foreground color."""
-        if not hasattr(config, "terminalVerseSelectionForeground"):
-            config.terminalVerseSelectionForeground = "RESET"
+        if not hasattr(config, "terminalVerseSelectionForeground") or not config.terminalVerseSelectionForeground in config.terminalColors:
+            config.terminalVerseSelectionForeground = "ansidefault"
         config.help["terminalSearchHighlightBackground"] = """
         # Terminal mode search highlight background color."""
-        if not hasattr(config, "terminalSearchHighlightBackground"):
-            config.terminalSearchHighlightBackground = "BLUE"
+        if not hasattr(config, "terminalSearchHighlightBackground") or not config.terminalSearchHighlightBackground in config.terminalColors:
+            config.terminalSearchHighlightBackground = "ansiblue"
         config.help["terminalSearchHighlightForeground"] = """
         # Terminal mode search highlight foreground color."""
-        if not hasattr(config, "terminalSearchHighlightForeground"):
-            config.terminalSearchHighlightForeground = "RESET"
+        if not hasattr(config, "terminalSearchHighlightForeground") or not config.terminalSearchHighlightForeground in config.terminalColors:
+            config.terminalSearchHighlightForeground = "ansidefault"
         config.help["terminalFindHighlightBackground"] = """
         # Terminal mode find highlight background color."""
-        if not hasattr(config, "terminalFindHighlightBackground"):
-            config.terminalFindHighlightBackground = "RED"
+        if not hasattr(config, "terminalFindHighlightBackground") or not config.terminalFindHighlightBackground in config.terminalColors:
+            config.terminalFindHighlightBackground = "ansired"
         config.help["terminalFindHighlightForeground"] = """
         # Terminal mode find highlight foreground color."""
-        if not hasattr(config, "terminalFindHighlightForeground"):
-            config.terminalFindHighlightForeground = "RESET"
+        if not hasattr(config, "terminalFindHighlightForeground") or not config.terminalFindHighlightForeground in config.terminalColors:
+            config.terminalFindHighlightForeground = "ansidefault"
         # End of terminal mode settings
 
         # Start of terminal mode customised input settings
@@ -1722,7 +1781,6 @@ class ConfigUtil:
             ("terminalEnableTermuxAPI", config.terminalEnableTermuxAPI),
             ("terminalEnableTermuxAPIToast", config.terminalEnableTermuxAPIToast),
             ("terminalTermuxttsSpeed", config.terminalTermuxttsSpeed),
-            ("terminalDisplayBeginnerMessage", config.terminalDisplayBeginnerMessage),
             ("terminalEnablePager", config.terminalEnablePager),
             ("terminalEnableClipboardMonitor", config.terminalEnableClipboardMonitor),
             ("terminalUseLighterCompleter", config.terminalUseLighterCompleter),
@@ -1733,6 +1791,9 @@ class ConfigUtil:
             ("terminalEditorMaxTextChangeRecords", config.terminalEditorMaxTextChangeRecords),
             ("terminalBibleComparison", config.terminalBibleComparison),
             ("terminalStopHttpServerOnExit", config.terminalStopHttpServerOnExit),
+            ("terminalVerseSelectionStart", config.terminalVerseSelectionStart),
+            ("terminalVerseSelectionEnd", config.terminalVerseSelectionEnd),
+            ("terminalSwapColors", config.terminalSwapColors),
             ("terminalPromptIndicatorColor1", config.terminalPromptIndicatorColor1),
             ("terminalCommandEntryColor1", config.terminalCommandEntryColor1),
             ("terminalPromptIndicatorColor2", config.terminalPromptIndicatorColor2),

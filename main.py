@@ -200,8 +200,8 @@ config.initiateMainPrompt = initiateMainPrompt
 # Local CLI - Terminal Mode
 if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     #if config.isPrompt_toolkitInstalled:
-    #    from prompt_toolkit.shortcuts import set_title
-    #    set_title("Unique Bible App")
+    from prompt_toolkit.shortcuts import set_title, clear_title
+    set_title(f"Unique Bible App [{config.version}]")
     config.runMode = "terminal"
     config.saveConfigOnExit = True
     print(f"Running Unique Bible App {config.version} in terminal mode ...")
@@ -215,10 +215,18 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     config.terminalCommandDefault = ""
     default = ""
     if config.isPrompt_toolkitInstalled:
+        from prompt_toolkit.key_binding import merge_key_bindings
+        from util.prompt_shared_key_bindings import *
         from util.uba_command_prompt_key_bindings import *
         # make key bindings available in config to allow futher customisation via plugins
         config.key_bindings = uba_command_prompt_key_bindings
+    # run plugin where users may add customised key bindings
     runStartupPlugins()
+    if config.isPrompt_toolkitInstalled:
+        config.key_bindings = merge_key_bindings([
+            prompt_shared_key_bindings,
+            config.key_bindings,
+        ])
     # make sure user-customised menu contains valid item only.
     # validation can only be running after, not before, running startup plugin, as some startup plugin works on command shortcuts.
     config.terminalMyMenu = [i for i in config.terminalMyMenu if i in config.mainWindow.dotCommands]
@@ -247,7 +255,7 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         initiateMainPrompt()
         command_completer = config.mainWindow.getCommandCompleter()
         auto_suggestion=AutoSuggestFromHistory()
-        toolbar = f" Unique Bible App [{config.version}] "
+        toolbar = " [ctrl+q] .quit [escape+m] .menu [escape+h] .help "
 
         from prompt_toolkit.styles import Style
         style = Style.from_dict({
@@ -283,10 +291,38 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
         config.mainWindow.initialDisplay()
         # User command input
         if config.isPrompt_toolkitInstalled:
+            from prompt_toolkit.filters import Condition
+
             if config.terminalUseLighterCompleter:
-                command = config.main_prompt_session.prompt(promptIndicator, style=style, completer=command_completer, auto_suggest=auto_suggestion, bottom_toolbar=toolbar, default=default, key_bindings=config.key_bindings).strip()
+                command = config.main_prompt_session.prompt(
+                    promptIndicator,
+                    style=style,
+                    completer=command_completer,
+                    auto_suggest=auto_suggestion,
+                    bottom_toolbar=toolbar,
+                    default=default,
+                    key_bindings=config.key_bindings,
+                    # enable system prompt without auto-completion
+                    # use escape+!
+                    enable_system_prompt=True,
+                    swap_light_and_dark_colors=Condition(lambda: not config.terminalSwapColors),
+                    #rprompt="Enter an UBA command",
+                ).strip()
             else:
-                command = config.main_prompt_session.prompt(promptIndicator, style=style, completer=command_completer, complete_in_thread=True, auto_suggest=auto_suggestion, bottom_toolbar=toolbar, default=default, key_bindings=config.key_bindings).strip()
+                command = config.main_prompt_session.prompt(promptIndicator,
+                    style=style,
+                    completer=command_completer,
+                    complete_in_thread=True,
+                    auto_suggest=auto_suggestion,
+                    bottom_toolbar=toolbar,
+                    default=default,
+                    key_bindings=config.key_bindings,
+                    # enable system prompt without auto-completion
+                    # use escape+!
+                    enable_system_prompt=True,
+                    swap_light_and_dark_colors=Condition(lambda: not config.terminalSwapColors),
+                    #rprompt="Enter an UBA command",
+                ).strip()
         elif sys.platform in ("linux", "darwin"):
             import readline
             command = input(promptIndicator).strip()
@@ -311,6 +347,7 @@ if (len(sys.argv) > 1) and sys.argv[1].lower() == "terminal":
     closingTerminalMode()
     if command.lower() in (".restart", ".z"):
         os.system("{0} {1} terminal".format(sys.executable, "uba.py"))
+    clear_title()
     sys.exit(0)
 
 # Remote CLI

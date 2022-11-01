@@ -40,6 +40,8 @@ if __name__ == "__main__":
     elif args.text:
         startup.multilineEditor(text=args.text, wd=wd)
     elif not sys.stdin.isatty():
+        #text = sys.stdin.read()
+        #startup.multilineEditor(text=text, wd=wd)
         parser.print_help()
     else:
         startup.multilineEditor(newFile=True, wd=wd)

@@ -43,23 +43,109 @@ class TextUtil:
             return re.sub("({0})".format(searchString), r"<z>\1</z>", text, flags=re.IGNORECASE)
 
     @staticmethod
-    def colourTerminalText(text):
+    # a fallback method when Prompt_toolkit formatted text does not work
+    def convertHtmlTagToColorama(text):
+        """"
+        # prompt-toolkit ansi color names
+        config.terminalColors = {
+            "ansidefault": "ansidefault",
+            "ansiblack": "ansiwhite",
+            "ansired": "ansibrightred",
+            "ansigreen": "ansibrightgreen",
+            "ansiyellow": "ansibrightyellow",
+            "ansiblue": "ansibrightblue",
+            "ansimagenta": "ansibrightmagenta",
+            "ansicyan": "ansibrightcyan",
+            "ansigray": "ansibrightblack",
+            "ansiwhite": "ansiblack",
+            "ansibrightred": "ansired",
+            "ansibrightgreen": "ansigreen",
+            "ansibrightyellow": "ansiyellow",
+            "ansibrightblue": "ansiblue",
+            "ansibrightmagenta": "ansimagenta",
+            "ansibrightcyan": "ansicyan",
+            "ansibrightblack": "ansigray",
+        }
+        """
+        # Reference: https://github.com/tartley/colorama/blob/master/colorama/ansi.py
+        # standard colours: "RESET", "BLACK", "WHITE", "RED", "GREEN", "YELLOW", "BLUE", "MAGENTA", "CYAN"
+        # extended colours: "LIGHTBLACK_EX", "LIGHTRED_EX", "LIGHTGREEN_EX", "LIGHTYELLOW_EX", "LIGHTBLUE_EX", "LIGHTMAGENTA_EX", "LIGHTCYAN_EX", "LIGHTWHITE_EX"
         if config.isColoramaInstalled:
-            # Reference: https://github.com/tartley/colorama/blob/master/colorama/ansi.py
-            # standard colours: "RESET", "BLACK", "WHITE", "RED", "GREEN", "YELLOW", "BLUE", "MAGENTA", "CYAN"
-            # extended colours: "LIGHTBLACK_EX", "LIGHTRED_EX", "LIGHTGREEN_EX", "LIGHTYELLOW_EX", "LIGHTBLUE_EX", "LIGHTMAGENTA_EX", "LIGHTCYAN_EX", "LIGHTWHITE_EX"
-
+            from colorama import Fore, Back, Style
             searchReplace = (
-                ("(<u><b>|<h>|<h[0-9]>|<h[0-9] .*?>)", r"\1「Fore.{0}」".format(config.terminalHeadingTextColor)),
-                ("(<ref>|<ref .*?>|<grk>|<grk .*?>|<heb>|<heb .*?>)", r"\1「Fore.{0}」".format(config.terminalResourceLinkColor)),
-                ("(<vid .*?>)", r"\1「Fore.{0}」".format(config.terminalVerseNumberColor)),
-                ("(</heb>|</grk>|</ref>|</vid>|</h[0-9]+?>|</h>|</b></u>)", r"\1「Fore.RESET」"),
-                # insert a space before '「Back' below
-                ("<z>", "「Fore.{1}」 「Back.{0}」".format(config.terminalSearchHighlightBackground, config.terminalSearchHighlightForeground)),
-                ("</z>", "「Style.RESET_ALL」"),
+                ("</ansi[^<>]+?>", Fore.RESET),
+                ("</tmvs>|</tmsh>", Style.RESET_ALL),
+                ("""<tm[a-z][a-z] fg="([^<>]*?)" bg="([^<>]*?)">""", r"<\1> <BG.\2>"),
+
+                ("<ansidefault>", Fore.RESET),
+
+                ("<ansiblack>", Fore.BLACK),
+                ("<ansired>", Fore.RED),
+                ("<ansigreen>", Fore.GREEN),
+                ("<ansiyellow>", Fore.YELLOW),
+                ("<ansiblue>", Fore.BLUE),
+                ("<ansimagenta>", Fore.MAGENTA),
+                ("<ansicyan>", Fore.CYAN),
+                ("<ansigray>", Fore.WHITE),
+                ("<ansiwhite>", Fore.WHITE),
+
+                ("<ansibrightblack>", Fore.LIGHTBLACK_EX),
+                ("<ansibrightred>", Fore.LIGHTRED_EX),
+                ("<ansibrightgreen>", Fore.LIGHTGREEN_EX),
+                ("<ansibrightyellow>", Fore.LIGHTYELLOW_EX),
+                ("<ansibrightblue>", Fore.LIGHTBLUE_EX),
+                ("<ansibrightmagenta>", Fore.LIGHTMAGENTA_EX),
+                ("<ansibrightcyan>", Fore.LIGHTCYAN_EX),
+
+                ("<BG\.ansidefault>", Back.RESET),
+
+                ("<BG\.ansiblack>", Back.BLACK),
+                ("<BG\.ansired>", Back.RED),
+                ("<BG\.ansigreen>", Back.GREEN),
+                ("<BG\.ansiyellow>", Back.YELLOW),
+                ("<BG\.ansiblue>", Back.BLUE),
+                ("<BG\.ansimagenta>", Back.MAGENTA),
+                ("<BG\.ansicyan>", Back.CYAN),
+                ("<BG\.ansigray>", Back.WHITE),
+                ("<BG\.ansiwhite>", Back.WHITE),
+
+                ("<BG\.ansibrightblack>", Back.LIGHTBLACK_EX),
+                ("<BG\.ansibrightred>", Back.LIGHTRED_EX),
+                ("<BG\.ansibrightgreen>", Back.LIGHTGREEN_EX),
+                ("<BG\.ansibrightyellow>", Back.LIGHTYELLOW_EX),
+                ("<BG\.ansibrightblue>", Back.LIGHTBLUE_EX),
+                ("<BG\.ansibrightmagenta>", Back.LIGHTMAGENTA_EX),
+                ("<BG\.ansibrightcyan>", Back.LIGHTCYAN_EX),
             )
             for search, replace in searchReplace:
-                #text = text.replace(search, replace)
+                text = re.sub(search, replace, text)
+        else:
+            text = re.sub("<[^<>]*?>", "", text)
+
+        return text
+
+    @staticmethod
+    def colourTerminalText(text):
+        if config.isPrompt_toolkitInstalled:
+            searchReplace = (
+                #("(<u><b>|<h>|<h[0-9]>|<h[0-9] .*?>)", r"「{0}」".format(config.terminalHeadingTextColor)),
+                #("(</h[0-9]+?>|</h>|</b></u>)", r"「/{0}」".format(config.terminalHeadingTextColor)),
+                # make sure tags are paired
+                ("(<u><b>)(.*?)(</b></u>)", r"\1「{0}」\2「/{0}」\3".format(config.terminalHeadingTextColor)),
+                ("(<h>|<h[0-9]>|<h[0-9] .*?>)(.*?)(</h[0-9]+?>|</h>)", r"\1「{0}」\2「/{0}」\3".format(config.terminalHeadingTextColor)),
+                #("(<ref>|<ref .*?>|<grk>|<grk .*?>|<heb>|<heb .*?>)", r"「{0}」".format(config.terminalResourceLinkColor)),
+                #("(</heb>|</grk>|</ref>)", r"「/{0}」".format(config.terminalResourceLinkColor)),
+                ("(<ref>|<ref .*?>)(.*?)(</ref>)", r"\1「{0}」\2「/{0}」\3".format(config.terminalResourceLinkColor)),
+                ("(<heb>|<heb .*?>)(.*?)(</heb>)", r"\1「{0}」\2「/{0}」\3".format(config.terminalResourceLinkColor)),
+                ("(<grk>|<grk .*?>)(.*?)(</grk>)", r"\1「{0}」\2「/{0}」\3".format(config.terminalResourceLinkColor)),
+                #("(<vid .*?>)", r"「{0}」".format(config.terminalVerseNumberColor)),
+                #("(</vid>)", r"「/{0}」".format(config.terminalVerseNumberColor)),
+                ("(<vid>|<vid .*?>)(.*?)(</vid>)", r"\1「{0}」\2「/{0}」\3".format(config.terminalResourceLinkColor)),
+                #("<z>", """「tmsh fg="{1}" bg="{0}"」""".format(config.terminalSearchHighlightBackground, config.terminalSearchHighlightForeground)),
+                #("</z>", "「/tmsh」"),
+                ("(<z>)(.*?)(</z>)", r"""\1「tmsh fg="{1}" bg="{0}"」\2「/tmsh」\3""".format(config.terminalSearchHighlightBackground, config.terminalSearchHighlightForeground)),
+            )
+            for search, replace in searchReplace:
                 text = re.sub(search, replace, text)
         return text
 
@@ -69,7 +155,7 @@ class TextUtil:
             content = re.sub("""(<heb|<grk)( [^<>]*?onclick="luW\([0-9]+?,')([0-9]+?)('[^<>]*?>)""", r"[<ref>\3</ref> ]\1\2\3\4", content)
             content = re.sub("""(<ref onclick="[^<>]+?\(')([^<>]+?)('\)">)""", r"[<ref>\2</ref> ] ", content)
         # Format text colours
-        if config.runMode == "terminal" and config.isColoramaInstalled and colours:
+        if config.runMode == "terminal" and config.isPrompt_toolkitInstalled and colours:
             content = TextUtil.colourTerminalText(content)
         # cconvert text
         if isHtmlTextInstalled:
@@ -83,50 +169,48 @@ class TextUtil:
             content = re.sub("<br/?>|<br>", "\n", content)
             content = re.sub('<[^<]+?>', '', content)
         if config.runMode == "terminal" and not colours:
-            content = re.sub("「(Fore|Back|Style)\.[A-Z_]+?」", "", content)
-        elif config.runMode == "terminal" and config.isColoramaInstalled and colours:
-            from colorama import init
-            init()
-            from colorama import Fore, Back, Style
+            content = re.sub("""「ansi[^「」]+？」|「tm[a-z][a-z] fg="[^「」]*?" bg="[^「」]*?"」|「/tm[a-z][a-z]」""", "", content)
+        elif config.runMode == "terminal" and config.isPrompt_toolkitInstalled and colours:
             searchReplace = (
-                ("「Fore.BLACK」", Fore.BLACK),
-                ("「Fore.WHITE」", Fore.WHITE),
-                ("「Fore.RED」", Fore.RED),
-                ("「Fore.GREEN」", Fore.GREEN),
-                ("「Fore.YELLOW」", Fore.YELLOW),
-                ("「Fore.BLUE」", Fore.BLUE),
-                ("「Fore.MAGENTA」", Fore.MAGENTA),
-                ("「Fore.CYAN」", Fore.CYAN),
-                ("「Fore.LIGHTBLACK_EX」", Fore.LIGHTBLACK_EX),
-                ("「Fore.LIGHTRED_EX」", Fore.LIGHTRED_EX),
-                ("「Fore.LIGHTGREEN_EX」", Fore.LIGHTGREEN_EX),
-                ("「Fore.LIGHTYELLOW_EX」", Fore.LIGHTYELLOW_EX),
-                ("「Fore.LIGHTBLUE_EX」", Fore.LIGHTBLUE_EX),
-                ("「Fore.LIGHTMAGENTA_EX」", Fore.LIGHTMAGENTA_EX),
-                ("「Fore.LIGHTCYAN_EX」", Fore.LIGHTCYAN_EX),
-                ("「Fore.LIGHTWHITE_EX」", Fore.LIGHTWHITE_EX),
-                ("「Back.BLACK」", Back.BLACK),
-                ("「Back.WHITE」", Back.WHITE),
-                ("「Back.RED」", Back.RED),
-                ("「Back.GREEN」", Back.GREEN),
-                ("「Back.YELLOW」", Back.YELLOW),
-                ("「Back.BLUE」", Back.BLUE),
-                ("「Back.MAGENTA」", Back.MAGENTA),
-                ("「Back.CYAN」", Back.CYAN),
-                ("「Back.LIGHTBLACK_EX」", Back.LIGHTBLACK_EX),
-                ("「Back.LIGHTRED_EX」", Back.LIGHTRED_EX),
-                ("「Back.LIGHTGREEN_EX」", Back.LIGHTGREEN_EX),
-                ("「Back.LIGHTYELLOW_EX」", Back.LIGHTYELLOW_EX),
-                ("「Back.LIGHTBLUE_EX」", Back.LIGHTBLUE_EX),
-                ("「Back.LIGHTMAGENTA_EX」", Back.LIGHTMAGENTA_EX),
-                ("「Back.LIGHTCYAN_EX」", Back.LIGHTCYAN_EX),
-                ("「Back.LIGHTWHITE_EX」", Back.LIGHTWHITE_EX),
-                ("[ ]*「Fore.RESET」", Fore.RESET),
-                ("[ ]*「Back.RESET」", Back.RESET),
-                ("[ ]*「Style.RESET_ALL」", Style.RESET_ALL),
+                ("「ansiblack」", "<ansiblack>"),
+                ("「ansired」", "<ansired>"),
+                ("「ansigreen」", "<ansigreen>"),
+                ("「ansiyellow」", "<ansiyellow>"),
+                ("「ansiblue」", "<ansiblue>"),
+                ("「ansimagenta」", "<ansimagenta>"),
+                ("「ansicyan」", "<ansicyan>"),
+                ("「ansigray」", "<ansigray>"),
+                ("「ansiwhite」", "<ansiwhite>"),
+                ("「ansibrightred」", "<ansibrightred>"),
+                ("「ansibrightgreen」", "<ansibrightgreen>"),
+                ("「ansibrightyellow」", "<ansibrightyellow>"),
+                ("「ansibrightblue」", "<ansibrightblue>"),
+                ("「ansibrightmagenta」", "<ansibrightmagenta>"),
+                ("「ansibrightcyan」", "<ansibrightcyan>"),
+                ("「ansibrightblack」", "<ansibrightblack>"),
+                ("「/ansiblack」", "</ansiblack>"),
+                ("「/ansired」", "</ansired>"),
+                ("「/ansigreen」", "</ansigreen>"),
+                ("「/ansiyellow」", "</ansiyellow>"),
+                ("「/ansiblue」", "</ansiblue>"),
+                ("「/ansimagenta」", "</ansimagenta>"),
+                ("「/ansicyan」", "</ansicyan>"),
+                ("「/ansigray」", "</ansigray>"),
+                ("「/ansiwhite」", "</ansiwhite>"),
+                ("「/ansibrightred」", "</ansibrightred>"),
+                ("「/ansibrightgreen」", "</ansibrightgreen>"),
+                ("「/ansibrightyellow」", "</ansibrightyellow>"),
+                ("「/ansibrightblue」", "</ansibrightblue>"),
+                ("「/ansibrightmagenta」", "</ansibrightmagenta>"),
+                ("「/ansibrightcyan」", "</ansibrightcyan>"),
+                ("「/ansibrightblack」", "</ansibrightblack>"),
+                ("""「(tm[a-z][a-z] fg="[^「」]*?" bg="[^「」]*?")」""", r"<\1>"),
+                ("「(/tm[a-z][a-z])」", r"<\1>"),
+                #("[ ]*「Fore.RESET」", Fore.RESET),
+                #("[ ]*「Back.RESET」", Back.RESET),
+                #("[ ]*「Style.RESET_ALL」", Style.RESET_ALL),
             )
             for search, replace in searchReplace:
-                #content = content.replace(search, replace)
                 content = re.sub(search, replace, content)
 
         searchReplace = (
@@ -134,7 +218,6 @@ class TextUtil:
             (" [ ]+?([^ ])", r" \1"),
         )
         for search, replace in searchReplace:
-            #content = content.replace(search, replace)
             content = re.sub(search, replace, content)
         return content
 
