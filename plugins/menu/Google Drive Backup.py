@@ -13,7 +13,9 @@ def uploadFiles():
     from plugins.menu.GoogleDriveUtility.access_google_drive import convertFilePath
     message = ""
     try:
-        filesToBackupFile = os.path.join("plugins", "menu", "GoogleDriveUtility", "files_to_backup.txt")
+        filesToBackupFile = os.path.join("plugins", "menu", "GoogleDriveUtility", "my_files_to_backup.txt")
+        if not os.path.exists(filesToBackupFile):
+            filesToBackupFile = os.path.join("plugins", "menu", "GoogleDriveUtility", "files_to_backup.txt")
         filesToBackupList = []
         if os.path.exists(filesToBackupFile):
             with open(filesToBackupFile) as input:
@@ -24,6 +26,7 @@ def uploadFiles():
             if not os.path.exists(file):
                 message += f"{file} does not exist\n"
             else:
+                print(f"Backing up {file}")
                 fileCloudId = os.path.join("plugins", "menu", "GoogleDriveUtility", convertFilePath(file))
                 upload = subprocess.Popen("{0} {1} upload {2}".format(sys.executable, os.path.join("plugins", "menu", "GoogleDriveUtility", "access_google_drive.py"), file), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 stdout, stderr = upload.communicate()
@@ -35,6 +38,10 @@ def uploadFiles():
                         f.write(text)
                     message += f"Uploaded {file}\n"
                 else:
+                    print("Error: {0} {1} upload {2}".format(sys.executable,
+                      os.path.join("plugins", "menu",
+                       "GoogleDriveUtility",
+                       "access_google_drive.py"), file))
                     print(stderr)
                     message += f"Could not upload {file}\n"
     except Exception as ex:
