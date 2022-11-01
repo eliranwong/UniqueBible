@@ -1,3 +1,8 @@
+Changes in 32.92:
+* Add more logging to Google drive backup
+* Add Portable Python
+- https://github.com/eliranwong/UniqueBible/wiki/Portable-Python
+
 Changes in 32.91:
 Terminal mode:
 * Now support swapping color brightness, by pressing "escape+s"
