@@ -269,7 +269,10 @@ class RemoteCliMainWindow(CrossPlatform):
                     break
                 try:
                     # display text
-                    print(textList[index])
+                    if config.runMode == "terminal":
+                        config.mainWindow.print(textList[index])
+                    else:
+                        print(textList[index])
                     # vlc on macOS
                     if config.macVlc:
                         os.system(f"{config.macVlc} --intf rc --play-and-exit --rate {config.vlcSpeed} {audioFile} &> /dev/null")

@@ -296,10 +296,11 @@ class ConfigUtil:
             config.terminalFindHighlightForeground = "ansidefault"
         
         # aligh text display and prompt color themes
-        if config.terminalPromptIndicatorColor1.startswith("ansibright") and config.terminalResourceLinkColor.startswith("ansibright"):
-            config.terminalSwapColors = False
-        elif not config.terminalPromptIndicatorColor1.startswith("ansibright") and not config.terminalResourceLinkColor.startswith("ansibright"):
-            config.terminalSwapColors = True
+#        if config.terminalPromptIndicatorColor1.startswith("ansibright") and config.terminalResourceLinkColor.startswith("ansibright"):
+#            config.terminalSwapColors = False
+#        elif not config.terminalPromptIndicatorColor1.startswith("ansibright") and not config.terminalResourceLinkColor.startswith("ansibright"):
+#            config.terminalSwapColors = True
+        config.terminalSwapColors = True if config.terminalResourceLinkColor.startswith("ansibright") else False
         # End of terminal mode settings
 
         # Start of terminal mode customised input settings

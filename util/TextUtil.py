@@ -72,6 +72,18 @@ class TextUtil:
         # extended colours: "LIGHTBLACK_EX", "LIGHTRED_EX", "LIGHTGREEN_EX", "LIGHTYELLOW_EX", "LIGHTBLUE_EX", "LIGHTMAGENTA_EX", "LIGHTCYAN_EX", "LIGHTWHITE_EX"
         if config.isColoramaInstalled:
             from colorama import Fore, Back, Style
+
+            searchReplace = (
+                ("<b>", "\033[1m"),
+                ("<i>", "\033[3m"),
+                ("<u>", "\033[4m"),
+                ("</b>", "\033[0m"),
+                ("</i>", "\033[0m"),
+                ("</u>", "\033[0m"),
+            )
+            for search, replace in searchReplace:
+                text = text.replace(search, replace)
+
             searchReplace = (
                 ("</ansi[^<>]+?>", Fore.RESET),
                 ("</tmvs>|</tmsh>", Style.RESET_ALL),
@@ -116,6 +128,8 @@ class TextUtil:
                 ("<BG\.ansibrightblue>", Back.LIGHTBLUE_EX),
                 ("<BG\.ansibrightmagenta>", Back.LIGHTMAGENTA_EX),
                 ("<BG\.ansibrightcyan>", Back.LIGHTCYAN_EX),
+
+                ("<[^<>]*?>", ""),
             )
             for search, replace in searchReplace:
                 text = re.sub(search, replace, text)
@@ -136,7 +150,7 @@ class TextUtil:
                 #("(<ref>|<ref .*?>|<grk>|<grk .*?>|<heb>|<heb .*?>)", r"「{0}」".format(config.terminalResourceLinkColor)),
                 #("(</heb>|</grk>|</ref>)", r"「/{0}」".format(config.terminalResourceLinkColor)),
                 ("(<ref>|<ref .*?>)(.*?)(</ref>)", r"\1「{0}」\2「/{0}」\3".format(config.terminalResourceLinkColor)),
-                ("(<heb>|<heb .*?>)(.*?)(</heb>)", r"\1「{0}」\2「/{0}」\3".format(config.terminalResourceLinkColor)),
+                ("(<heb>|<heb .*?>)(.*?)(</heb>)", r"\1「b」「{0}」\2「/{0}」「/b」\3".format(config.terminalResourceLinkColor)),
                 ("(<grk>|<grk .*?>)(.*?)(</grk>)", r"\1「{0}」\2「/{0}」\3".format(config.terminalResourceLinkColor)),
                 #("(<vid .*?>)", r"「{0}」".format(config.terminalVerseNumberColor)),
                 #("(</vid>)", r"「/{0}」".format(config.terminalVerseNumberColor)),
@@ -144,6 +158,9 @@ class TextUtil:
                 #("<z>", """「tmsh fg="{1}" bg="{0}"」""".format(config.terminalSearchHighlightBackground, config.terminalSearchHighlightForeground)),
                 #("</z>", "「/tmsh」"),
                 ("(<z>)(.*?)(</z>)", r"""\1「tmsh fg="{1}" bg="{0}"」\2「/tmsh」\3""".format(config.terminalSearchHighlightBackground, config.terminalSearchHighlightForeground)),
+                # basic html
+                ("<(b|u|i)>", r"「\1」"),
+                ("</(b|u|i)>", r"「/\1」"),
             )
             for search, replace in searchReplace:
                 text = re.sub(search, replace, text)
@@ -206,6 +223,8 @@ class TextUtil:
                 ("「/ansibrightblack」", "</ansibrightblack>"),
                 ("""「(tm[a-z][a-z] fg="[^「」]*?" bg="[^「」]*?")」""", r"<\1>"),
                 ("「(/tm[a-z][a-z])」", r"<\1>"),
+                ("「(b|u|i)」", r"<\1>"),
+                ("「/(b|u|i)」", r"</\1>"),
                 #("[ ]*「Fore.RESET」", Fore.RESET),
                 #("[ ]*「Back.RESET」", Back.RESET),
                 #("[ ]*「Style.RESET_ALL」", Style.RESET_ALL),
