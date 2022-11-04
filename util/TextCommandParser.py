@@ -542,11 +542,13 @@ class TextCommandParser:
             "readword": (self.readWord, """
             # [KEYWORD] READWORD
             # Feature: read a word
+            # Usage - READWORD:::[BIBLE_VERSION].[BOOK_NO].[CHAPTER_NO].[VERSE_NO].[WORD_NO]
             # e.g. READWORD:::BHS5.1.1.1.1
             """),
             "readlexeme": (self.readLexeme, """
             # [KEYWORD] READLEXEME
             # Feature: read a lexeme
+            # Usage - READLEXEME:::[BIBLE_VERSION].[BOOK_NO].[CHAPTER_NO].[VERSE_NO].[WORD_NO]
             # e.g. READLEXEME:::BHS5.1.1.1.1
             """),
             "readbible": (self.readBible, """
@@ -1345,13 +1347,16 @@ class TextCommandParser:
         #    b, c, v, *_ = verse
         #    bibleSqlite = Bible(text)
         #    b, c, v, content = bibleSqlite.readTextVerse(b, c, v)
+        bibleSqlite = Bible(text)
         if text in formattedBibles and text not in ("OHGB", "OHGBi", "LXX") and config.readFormattedBibles:
-            bibleSqlite = Bible(text)
             content = bibleSqlite.readFormattedChapter(verse)
         else:
             # use plain bibles database when corresponding formatted version is not available
-            language = Bible(text).getLanguage()
+            language = bibleSqlite.getLanguage()
             content = BiblesSqlite(language).readPlainChapter(text, verse, source)
+        if config.runMode == "terminal":
+            singleVerse = self.textPlainBible([verse], text)
+            content = f"{content}<p>{config.mainWindow.divider}<br>{singleVerse}</p>"
         return content
 
     # cmd:::
@@ -3368,6 +3373,39 @@ class TextCommandParser:
         if not content or content == "INVALID_COMMAND_ENTERED":
             return self.invalidCommand()
         else:
+            if config.runMode == "terminal":
+                if module == "ConcordanceBook":
+                    def searchBookLink(match):
+                        lexicalEntry = match.group(1)
+                        bookAbb = match.group(2)
+                        try:
+                            bookNo = BibleBooks.name2number[bookAbb]
+                        except:
+                            bookNo = BibleBooks.name2number[f"{bookAbb}."]
+                        return f"""<br>[<ref>MORPHOLOGY:::LexicalEntry LIKE '%{lexicalEntry},%' AND Book = {bookNo}</ref>]"""
+
+                    p = re.compile("""\[<ref onclick="searchBook\('([^']+?)','([^']+?)'\)">search</ref>\]""")
+                    content = p.sub(searchBookLink, content)
+                elif module == "ConcordanceMorphology":
+                    def searchMorphologyLink(match):
+                        lexicalEntry = match.group(1)
+                        morphologyCode = match.group(2)
+                        return f"""<br>[<ref>MORPHOLOGYCODE:::{lexicalEntry},{morphologyCode}</ref>]"""
+
+                    p = re.compile("""\[<ref onclick="searchCode\('([^']+?)','([^']+?)'\)">search</ref>\]""")
+                    content = p.sub(searchMorphologyLink, content)
+
+                    def morphologyDescription(match):
+                        morphologyModule = match.group(1)
+                        if morphologyModule.endswith("morph"):
+                            morphologyModule = morphologyModule[:-5]
+                        morphologyModule = morphologyModule.upper()
+                        morpohlogyCode = match.group(2)
+                        return f"<u><b>{morpohlogyCode}</b></u><br>[<ref>SEARCHTOOL:::m{morphologyModule}:::{morpohlogyCode}</ref>]"
+
+                    p = re.compile("""<u><b><ref onclick="(rmac|etcbcmorph|lxxmorph)\('([^']+?)'\)">[^<>]*?</ref></b></u>""")
+                    content = p.sub(morphologyDescription, content)
+
             title = "RevLex" if reverse else "Lex"
             return ("study", content, {'tab_title': title + ':' + module + ':' + entries})
 

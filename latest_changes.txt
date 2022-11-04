@@ -1,3 +1,7 @@
+Changes in 32.97:
+* Added a word features menu to terminal mode.
+* Added a few terminal mode commands.
+
 Changes in 32.96:
 * Support bold, italic and underline text display on terminal mode.
 * Hebrew text in terminal mode are now bold for better reading.

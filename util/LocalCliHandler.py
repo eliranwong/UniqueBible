@@ -37,9 +37,9 @@ from prompt_toolkit.completion import WordCompleter, NestedCompleter, ThreadedCo
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.styles import Style
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+from prompt_toolkit.shortcuts import radiolist_dialog
 from util.prompt_shared_key_bindings import prompt_shared_key_bindings
 from util.prompt_multiline_shared_key_bindings import prompt_multiline_shared_key_bindings
-
 
 class LocalCliHandler:
 
@@ -294,6 +294,8 @@ class LocalCliHandler:
             ".openbible": ("open bible", self.openbible),
             ".openbiblenote": ("open bible module note", self.openbiblemodulenote),
             ".original": ("open Hebrew & Greek bibles", self.original),
+            ".ohgb": ("open hebrew & Greek bible", lambda: self.getContent("TEXT:::OHGB")),
+            ".ohgbi": ("open hebrew & Greek bible [interlinear]", lambda: self.getContent("TEXT:::OHGBi")),
             ".mob": ("open hebrew & Greek original bible", lambda: self.web(".mob", False)),
             ".mib": ("open hebrew & Greek interlinear bible", lambda: self.web(".mib", False)),
             ".mtb": ("open hebrew & Greek trilingual bible", lambda: self.web(".mtb", False)),
@@ -321,6 +323,8 @@ class LocalCliHandler:
             ".opendictionaries": ("open dictionaries", lambda: self.openTools("DICTIONARY", self.showdictionaries)),
             ".openencyclopedia": ("open encyclopedia", lambda: self.openTools("ENCYCLOPEDIA", self.showencyclopedia)),
             ".openlexicons": ("open lexicons", lambda: self.openTools("LEXICON", self.showlexicons)),
+            ".openconcordancebybook": ("open Hebrew / Greek concordance sorted by books", lambda: self.openTools("LEXICON", self.showlexicons, "ConcordanceBook")),
+            ".openconcordancebymorphology": ("open Hebrew / Greek concordance sorted by morphology", lambda: self.openTools("LEXICON", self.showlexicons, "ConcordanceMorphology")),
             ".openthirdpartydictionaries": ("open third-party dictionaries", lambda: self.openTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
             ".open3dict": ("an alias to the '.openthirdpartydictionaries' command", lambda: self.openTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
             ".editbooknote": ("edit bible book note", lambda: self.openbookfeature("EDITBOOKNOTE")),
@@ -355,7 +359,8 @@ class LocalCliHandler:
             ".opentske": ("open Treasury of Scripture Knowledge (Enhanced)", lambda: self.openversefeature("TSKE")),
             ".openverseindex": ("open verse index", lambda: self.openversefeature("INDEX")),
             ".opencombo": ("open combination of translation, discourse and words features", lambda: self.openversefeature("COMBO")),
-            ".openwords": ("open original words", lambda: self.openversefeature("WORDS")),
+            ".openwords": ("open all word data in a single verse", lambda: self.openversefeature("WORDS")),
+            ".openword": ("open Hebrew / Greek word data", self.openword),
             ".opendiscourse": ("open discourse features", lambda: self.openversefeature("DISCOURSE")),
             ".opentranslation": ("open original word translation", lambda: self.openversefeature("TRANSLATION")),
             ".openoverview": ("open chapter overview", self.openchapterfeature),
@@ -367,7 +372,10 @@ class LocalCliHandler:
             ".openbookfeatures": ("open bible book features", self.openbookfeatures),
             ".openchapterfeatures": ("open bible chapter features", self.openchapterfeatures),
             ".openversefeatures": ("open bible verse features", self.openversefeatures),
+            ".openwordfeatures": ("open Hebrew / Greek word features", self.openwordfeatures),
             ".quickopen": ("quick open", lambda: self.quickopen(False)),
+            ".readword": ("read Hebrew or Greek word", self.readword),
+            ".readlexeme": ("read Hebrew or Greek lexeme", lambda: self.readword(True)),
             ".qo": ("an alias to the '.quickopen' command", lambda: self.quickopen(False)),
             ".standardcommands": ("display standard UBA command help menu", self.standardcommands),
             ".terminalcommands": ("display terminal mode commands", self.terminalcommands),
@@ -405,6 +413,7 @@ class LocalCliHandler:
             ".extract": ("extract bible references from the latest content", self.extract),
             ".extractcopiedtext": ("extract bible references from the latest content.", self.extractcopiedtext),
             ".editor": ("launch built-in text editor", self.cliTool),
+            ".ed": ("an alias to the '.editor' command", self.cliTool),
             ".editnewfile": ("edit new file in text editor", lambda: self.cliTool(config.terminalNoteEditor)),
             ".editcontent": ("edit latest content in text editor", lambda: self.cliTool(config.terminalNoteEditor, self.getPlainText())),
             ".editconfig": ("edit 'config.py' in text editor", lambda: self.editConfig(config.terminalNoteEditor)),
@@ -420,7 +429,8 @@ class LocalCliHandler:
             ".restorelastnotes": ("restore note database file", lambda: self.restoreLastFile("marvelData/note.sqlite")),
             ".restorelastjournals": ("restore journal database file", lambda: self.restoreLastFile("marvelData/journal.sqlite")),
             ".changemymenu": ("change my menu", self.changemymenu),
-            ".changecurrentbible": ("change current bible version", lambda: self.changeDefaultModule("mainText", self.crossPlatform.textList, config.mainText, self.showbibles)),
+            ".changebible": ("change current bible version", lambda: self.changeDefaultModule("mainText", self.crossPlatform.textList, config.mainText, self.showbibles)),
+            ".changebibledialog": ("change current bible version dialog", self.changebibledialog),
             ".changefavouritebible1": ("change favourite bible version 1", lambda: self.changeDefaultModule("favouriteBible", self.crossPlatform.textList, config.favouriteBible, self.showbibles)),
             ".changefavouritebible2": ("change favourite bible version 2", lambda: self.changeDefaultModule("favouriteBible2", self.crossPlatform.textList, config.favouriteBible2, self.showbibles)),
             ".changefavouritebible3": ("change favourite bible version 3", lambda: self.changeDefaultModule("favouriteBible3", self.crossPlatform.textList, config.favouriteBible3, self.showbibles)),
@@ -800,19 +810,19 @@ class LocalCliHandler:
             elif i == ".latest":
                 suggestions[i] = self.getDummyDict(["bible", "changes",])
             elif i == ".read":
-                suggestions[i] = self.getDummyDict(["sync",])
+                suggestions[i] = self.getDummyDict(["lexeme", "sync", "word"])
             elif i == ".restore":
                 suggestions[i] = self.getDummyDict(["journals", "lastjournals", "lastnotes", "notes",])
             elif i == ".tts":
                 suggestions[i] = self.getDummyDict(["copiedtext",])
             elif i == ".change":
-                suggestions[i] = self.getDummyDict(["biblesearchmode", "colors", "colours", "commentary", "concordance", "config", "currentbible", "defaultcommand", "dictionary", "encyclopedia", "favouritebible1", "favouritebible2", "favouritebible3", "favouriteoriginalbible", "lexicon", "mymenu", "noteeditor", "referencebook", "terminalmodeconfig", "thirdpartydictionary", "ttslanguage1", "ttslanguage2", "ttslanguage3"])
+                suggestions[i] = self.getDummyDict(["bible", "bibledialog", "biblesearchmode", "colors", "colours", "commentary", "concordance", "config", "defaultcommand", "dictionary", "encyclopedia", "favouritebible1", "favouritebible2", "favouritebible3", "favouriteoriginalbible", "lexicon", "mymenu", "noteeditor", "referencebook", "terminalmodeconfig", "thirdpartydictionary", "ttslanguage1", "ttslanguage2", "ttslanguage3"])
             elif i == ".exec":
                 suggestions[i] = self.getDummyDict(["file",])
             elif i == ".edit":
                 suggestions[i] = self.getDummyDict(["booknote", "chapternote", "config", "content", "filters", "journal", "newfile", "textfile", "versenote"])
             elif i == ".open":
-                suggestions[i] = self.getDummyDict(["365readingplan", "3dict", "audio", "bible", "biblenote", "bookfeatures", "booknote", "chapterfeatures", "chapterindex", "chapternote", "characters", "combo", "commentary", "comparison", "crossreference", "data", "dictionaries", "dictionarybookentry", "difference", "discourse", "encyclopedia", "encyclopediabookentry", "introduction", "journal", "lexicons", "locations", "maps", "names", "overview", "parallels", "promises", "referencebook", "summary", "textfile", "thirdpartydictionaries", "timelines", "topics", "translation", "tske", "versefeatures", "verseindex", "versenote", "words"])
+                suggestions[i] = self.getDummyDict(["365readingplan", "3dict", "audio", "bible", "biblenote", "bookfeatures", "booknote", "chapterfeatures", "chapterindex", "chapternote", "characters", "combo", "commentary", "comparison", "concordancebybook", "concordancebymorphology", "crossreference", "data", "dictionaries", "dictionarybookentry", "difference", "discourse", "encyclopedia", "encyclopediabookentry", "introduction", "journal", "lexicons", "locations", "maps", "names", "overview", "parallels", "promises", "referencebook", "summary", "textfile", "thirdpartydictionaries", "timelines", "topics", "translation", "tske", "versefeatures", "verseindex", "versenote", "word", "wordfeatures", "words"])
             elif i == ".quick":
                 suggestions[i] = self.getDummyDict(["edit", "editcopiedtext", "open", "opencopiedtext", "search", "searchcopiedtext", "start"])
             elif i == ".search":
@@ -1831,13 +1841,13 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             return config.textEditor.openFile(filepath)
         return config.textEditor.multilineEditor(text, placeholder)
 
-    def simplePrompt(self, numberOnly=False, multiline=False, inputIndicator=""):
+    def simplePrompt(self, numberOnly=False, multiline=False, inputIndicator="", default=""):
         if not inputIndicator:
             inputIndicator = self.inputIndicator
         if numberOnly:
-            userInput = prompt(inputIndicator, key_bindings=self.prompt_multiline_shared_key_bindings if multiline else self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(multiline), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, validator=NumberValidator(), multiline=multiline,).strip()
+            userInput = prompt(inputIndicator, key_bindings=self.prompt_multiline_shared_key_bindings if multiline else self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(multiline), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, validator=NumberValidator(), multiline=multiline, default=default).strip()
         else:
-            userInput = prompt(inputIndicator, key_bindings=self.prompt_multiline_shared_key_bindings if multiline else self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(multiline), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, multiline=multiline,).strip()
+            userInput = prompt(inputIndicator, key_bindings=self.prompt_multiline_shared_key_bindings if multiline else self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(multiline), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, multiline=multiline, default=default).strip()
         return userInput
 
     def isUrlAlive(self, url):
@@ -2267,7 +2277,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         except:
             return self.printInvalidOptionEntered()
 
-    def openTools(self, moduleType, showModules):
+    def openTools(self, moduleType, showModules, defaultModule=""):
         try:
             elements = {
                 "TOPICS": (config.topic, self.crossPlatform.topicListAbb, config.topicEntry, self.terminal_topics_selection_session, ""),
@@ -2276,13 +2286,16 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 "THIRDDICTIONARY": (config.thirdDictionary, self.crossPlatform.thirdPartyDictionaryList, config.thirdDictionaryEntry, self.terminal_thridPartyDictionaries_selection_session, "SEARCHTHIRDDICTIONARY"),
                 "LEXICON": (config.lexicon, self.crossPlatform.lexiconList, config.lexiconEntry, self.terminal_lexicons_selection_session, "SEARCHLEXICON"),
             }
-            self.print(self.divider)
-            self.print(showModules())
+            if not defaultModule:
+                self.print(self.divider)
+                self.print(showModules())
             default, abbList, latestEntry, historySession, searchKeyword = elements[moduleType]
+            if defaultModule:
+                default = defaultModule
             if not searchKeyword:
                 searchKeyword = "SEARCHTOOL"
             completer = WordCompleter(abbList, ignore_case=True)
-            userInput = historySession.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer, default=default).strip()
+            userInput = historySession.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer, accept_default=True if defaultModule else False, default=default).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in abbList:
@@ -2443,6 +2456,76 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         except:
             return self.printInvalidOptionEntered()
 
+    def openword(self):
+        try:
+            self.print(self.divider)
+            self.print(self.showbibleabbreviations(text="KJV"))
+            self.print(self.divider)
+            self.print("Enter a book number:")
+            bookNo = self.simplePrompt(True, default=str(config.mainB))
+            if not bookNo or bookNo.lower() == config.terminal_cancel_action:
+                return self.cancelAction()
+            if 66 >= int(bookNo) > 0:
+                self.print("Enter a word number:")
+                wordNo = self.simplePrompt(True)
+                if not wordNo or wordNo.lower() == config.terminal_cancel_action:
+                    return self.cancelAction()
+                command = f"WORD:::{bookNo}:::{wordNo}"
+                self.printRunningCommand(command)
+                content = self.getContent(command)
+                return content
+            else:
+                return self.printInvalidOptionEntered()
+        except:
+            return self.printInvalidOptionEntered()
+
+    def readword(self, lexeme=False):
+        try:
+            self.print(self.divider)
+            self.print(self.showbibleabbreviations(text="KJV"))
+            self.print(self.divider)
+            self.print("Enter a book number:")
+            bookNo = self.simplePrompt(True, default=str(config.mainB))
+            if not bookNo or bookNo.lower() == config.terminal_cancel_action:
+                return self.cancelAction()
+            if 66 >= int(bookNo) > 0:
+                self.print(self.divider)
+                self.showbiblechapters(text="KJV", b=int(bookNo))
+                self.print(self.divider)
+                self.print("Enter a chapter number:")
+                chapterNo = self.simplePrompt(True)
+                if not chapterNo or chapterNo.lower() == config.terminal_cancel_action:
+                    return self.cancelAction()
+                if int(chapterNo) in self.currentBibleChapters:
+                    self.print(self.divider)
+                    self.showbibleverses(text="KJV", b=int(bookNo), c=int(chapterNo))
+                    self.print(self.divider)
+                    self.print("Enter a verse number:")
+                    verseNo = self.simplePrompt(True)
+                    if not verseNo or verseNo.lower() == config.terminal_cancel_action:
+                        return self.cancelAction()
+                    if int(verseNo) in self.currentBibleVerses:
+                        self.print(self.divider)
+                        reference = self.textCommandParser.bcvToVerseReference(int(bookNo), int(chapterNo), int(verseNo))
+                        self.print(self.getContent(f"TRANSLATION:::{reference}"))
+                        self.print(self.divider)
+                        self.print("Enter a word number:")
+                        wordNo = self.simplePrompt(True)
+                        if not wordNo or wordNo.lower() == config.terminal_cancel_action:
+                            return self.cancelAction()
+                        command = f"{'READLEXEME' if lexeme else 'READWORD'}:::{'BHS5' if int(bookNo) < 40 else 'OGNT'}.{bookNo}.{chapterNo}.{verseNo}.{int(wordNo)}"
+                        self.print(self.divider)
+                        self.printRunningCommand(command)
+                        content = self.getContent(command)
+                        return content
+                    else:
+                        return self.printInvalidOptionEntered()
+                else:
+                    return self.printInvalidOptionEntered()
+            else:
+                return self.printInvalidOptionEntered()
+        except:
+            return self.printInvalidOptionEntered()
 
     def openversefeature(self, feature="CROSSREFERENCE"):
         try:
@@ -3095,6 +3178,19 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         self.print("config.terminalMyMenu is changed to:")
         self.print(config.terminalMyMenu)
 
+    def changebibledialog(self):
+        values = [(abb, self.crossPlatform.textFullNameList[index]) for index, abb in enumerate(self.crossPlatform.textList)]
+
+        result = radiolist_dialog(
+            values=values,
+            title="Change bible version",
+            text="Select a version:",
+        ).run()
+        if result:
+            return self.getContent(f"TEXT:::{result}")
+        else:
+            return self.cancelAction()
+
     def changebiblesearchmode(self):
         try:
             self.print(self.divider)
@@ -3438,7 +3534,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def open(self):
         heading = "Open"
-        features = (".openbible", ".openbiblenote", ".original", ".open365readingplan", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".opencommentary", ".openreferencebook", ".openaudio", ".opendata", ".opentopics", ".openpromises", ".openparallels", ".opennames", ".opencharacters", ".openlocations", ".openmaps", ".opentimelines", ".opendictionaries", ".openencyclopedia", ".openlexicons", ".openthirdpartydictionaries", ".opentextfile")
+        features = (".openbible", ".openbiblenote", ".original", ".open365readingplan", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".openwordfeatures", ".opencommentary", ".openreferencebook", ".openaudio", ".opendata", ".opentopics", ".openpromises", ".openparallels", ".opennames", ".opencharacters", ".openlocations", ".openmaps", ".opentimelines", ".opendictionaries", ".openencyclopedia", ".openthirdpartydictionaries", ".opentextfile")
         return self.displayFeatureMenu(heading, features)
 
     def quick(self):
@@ -3448,7 +3544,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def original(self):
         heading = "Hebrew & Greek Bibles"
-        features = (".mob", ".mib", ".mtb", ".mpb", ".mab", ".lxx1i", ".lxx2i")
+        features = (".ohgb", ".ohgbi", ".mob", ".mib", ".mtb", ".mpb", ".mab", ".lxx1i", ".lxx2i")
         return self.displayFeatureMenu(heading, features)
 
     def tools(self):
@@ -3488,7 +3584,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def change(self):
         heading = "Change"
-        features = (".changecurrentbible", ".changefavouritebible1", ".changefavouritebible2", ".changefavouritebible3", ".changefavouriteoriginalbible", ".changecommentary", ".changelexicon", ".changedictionary", ".changethirdpartydictionary", ".changeencyclopedia", ".changeconcordance", ".changereferencebook", ".changettslanguage1", ".changettslanguage2", ".changettslanguage3", ".changedefaultcommand", ".changebiblesearchmode", ".changenoteeditor", ".changecolors", ".changeterminalmodeconfig", ".changeconfig")
+        features = (".changebible", ".changefavouritebible1", ".changefavouritebible2", ".changefavouritebible3", ".changefavouriteoriginalbible", ".changecommentary", ".changelexicon", ".changedictionary", ".changethirdpartydictionary", ".changeencyclopedia", ".changeconcordance", ".changereferencebook", ".changettslanguage1", ".changettslanguage2", ".changettslanguage3", ".changedefaultcommand", ".changebiblesearchmode", ".changenoteeditor", ".changecolors", ".changeterminalmodeconfig", ".changeconfig")
         return self.displayFeatureMenu(heading, features)
 
     def help(self):
@@ -3536,6 +3632,11 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
     def openversefeatures(self):
         heading = "Bible Verse Featues"
         features = (".opencrossreference", ".opentske", ".opencomparison", ".opendifference", ".openverseindex", ".openwords", ".opendiscourse", ".opentranslation", ".opencombo")
+        return self.displayFeatureMenu(heading, features)
+
+    def openwordfeatures(self):
+        heading = "Original Word Featues"
+        features = (".openword", ".openconcordancebybook", ".openconcordancebymorphology", ".openlexicons", ".readword", ".readlexeme")
         return self.displayFeatureMenu(heading, features)
 
     def accessNoteFeatures(self):

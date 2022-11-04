@@ -33,7 +33,7 @@ import platform, os, subprocess
 
 class GetPath:
 
-    def __init__(self, cancel_entry=".cancel", promptIndicatorColor="yellow", promptEntryColor="skyblue", subHeadingColor="cyan", itemColor="skyblue", workingDirectory="", ctrl_q_to_exit=False, ctrl_s_to_system=False):
+    def __init__(self, cancel_entry=".cancel", promptIndicatorColor="ansicyan", promptEntryColor="ansigreen", subHeadingColor="ansigreen", itemColor="ansiyellow", workingDirectory="", ctrl_q_to_exit=False, ctrl_s_to_system=False):
         self.cancel_entry = cancel_entry
         self.promptIndicatorColor = promptIndicatorColor
         self.promptEntryColor = promptEntryColor

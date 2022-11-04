@@ -238,6 +238,9 @@ class TextUtil:
         )
         for search, replace in searchReplace:
             content = re.sub(search, replace, content)
+        # fine tune
+        if config.runMode == "terminal":
+            content = re.sub(r"""(G[0-9]+?)'\)" class="G\1" onmouseover="ld\('\1'\); hl1\('','','\1'\)" onmouseout="hl0\('','','\1""", r"\1", content)
         return content
 
     @staticmethod
