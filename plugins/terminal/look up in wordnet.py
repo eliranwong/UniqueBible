@@ -16,7 +16,7 @@ else:
         content = config.mainWindow.getContent(command)
     else:
         exactMatch = True
-    print(content)
+    config.mainWindow.print(content)
     print(config.mainWindow.divider)
     if not exactMatch:
         print("Enter an entry:")
@@ -27,4 +27,4 @@ else:
             command = f"THIRDDICTIONARY:::wordnet:::{userInput}"
             config.mainWindow.printRunningCommand(command)
             print(config.mainWindow.divider)
-            print(config.mainWindow.getContent(command))
+            config.mainWindow.print(config.mainWindow.getContent(command))

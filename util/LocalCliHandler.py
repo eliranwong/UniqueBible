@@ -124,6 +124,8 @@ class LocalCliHandler:
             config.open = config.openWindows
 
     def print(self, content):
+        if content.startswith("[MESSAGE]"):
+            content = content[9:]
         try:
             print_formatted_text(HTML(content))
         except:

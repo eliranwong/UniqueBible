@@ -1,3 +1,6 @@
+Changes in 32.99:
+* updated a terminal plugin
+
 Changes in 32.98:
 * Added single verse display before or after chapter display in terminal mode.
 
