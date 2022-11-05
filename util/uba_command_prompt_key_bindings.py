@@ -87,7 +87,14 @@ def _(event):
     event.app.current_buffer.text = ".restart"
     event.app.current_buffer.validate_and_handle()
 
+# Escape+B
 @uba_command_prompt_key_bindings.add("escape", "b")
 def _(event):
-    event.app.current_buffer.text = ".changebible"
+    event.app.current_buffer.text = ".changebibledialog"
+    event.app.current_buffer.validate_and_handle()
+
+# Escape+W
+@uba_command_prompt_key_bindings.add("escape", "w")
+def _(event):
+    event.app.current_buffer.text = ".wordnet"
     event.app.current_buffer.validate_and_handle()

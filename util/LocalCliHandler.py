@@ -474,6 +474,7 @@ class LocalCliHandler:
             ".system": ("run system command prompt", self.system),
             ".sys": ("an alias to the '.system' command", self.system),
             ".clear": ("clear the current screen", clear),
+            ".wordnet": ("clear the current screen", self.wordnet),
         }
 
     def getSystemCommands(self):
@@ -617,13 +618,13 @@ class LocalCliHandler:
             self.print("Errors!")
         return ""
 
-    def plugins(self):
+    def plugins(self, default="", accept_default=False):
         availablePlugins = FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "terminal"), "py")
         self.print(self.divider)
         self.printOptionsDisplay(availablePlugins, "Plugins")
         self.print(self.divider)
         self.print("Enter a number:")
-        userInput = self.simplePrompt(True)
+        userInput = self.simplePrompt(True, default=default, accept_default=accept_default)
         if not userInput or userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
         try:
@@ -632,6 +633,11 @@ class LocalCliHandler:
             return ""
         except:
             return self.printInvalidOptionEntered()
+
+    def wordnet(self):
+        filepath = os.path.join("plugins", "terminal", "look up in wordnet.py")
+        self.execPythonFile(filepath)
+        return ""
 
     def howto(self):
         availableHowto = FileUtil.fileNamesWithoutExtension(os.path.join("terminal_mode", "how_to"), "md")
@@ -1843,13 +1849,13 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             return config.textEditor.openFile(filepath)
         return config.textEditor.multilineEditor(text, placeholder)
 
-    def simplePrompt(self, numberOnly=False, multiline=False, inputIndicator="", default=""):
+    def simplePrompt(self, numberOnly=False, multiline=False, inputIndicator="", default="", accept_default=False):
         if not inputIndicator:
             inputIndicator = self.inputIndicator
         if numberOnly:
-            userInput = prompt(inputIndicator, key_bindings=self.prompt_multiline_shared_key_bindings if multiline else self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(multiline), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, validator=NumberValidator(), multiline=multiline, default=default).strip()
+            userInput = prompt(inputIndicator, key_bindings=self.prompt_multiline_shared_key_bindings if multiline else self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(multiline), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, validator=NumberValidator(), multiline=multiline, default=default, accept_default=accept_default).strip()
         else:
-            userInput = prompt(inputIndicator, key_bindings=self.prompt_multiline_shared_key_bindings if multiline else self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(multiline), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, multiline=multiline, default=default).strip()
+            userInput = prompt(inputIndicator, key_bindings=self.prompt_multiline_shared_key_bindings if multiline else self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(multiline), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, multiline=multiline, default=default, accept_default=accept_default).strip()
         return userInput
 
     def isUrlAlive(self, url):
@@ -3536,7 +3542,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def open(self):
         heading = "Open"
-        features = (".openbible", ".openbiblenote", ".original", ".open365readingplan", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".openwordfeatures", ".opencommentary", ".openreferencebook", ".openaudio", ".opendata", ".opentopics", ".openpromises", ".openparallels", ".opennames", ".opencharacters", ".openlocations", ".openmaps", ".opentimelines", ".opendictionaries", ".openencyclopedia", ".openthirdpartydictionaries", ".opentextfile")
+        features = (".openbible", ".openbiblenote", ".original", ".open365readingplan", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".openwordfeatures", ".opencommentary", ".openreferencebook", ".openaudio", ".opendata", ".opentopics", ".openpromises", ".openparallels", ".opennames", ".opencharacters", ".openlocations", ".openmaps", ".opentimelines", ".opendictionaries", ".openencyclopedia", ".openthirdpartydictionaries", ".wordnet", ".opentextfile")
         return self.displayFeatureMenu(heading, features)
 
     def quick(self):

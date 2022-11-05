@@ -96,11 +96,5 @@ def _(event):
         buffer.cursor_position = buffer.cursor_position - 1
         buffer.cut_selection()
 
-# insert text with TAB key
-@prompt_shared_key_bindings.add("c-i")
-def _(event):
-    buffer = event.app.current_buffer
-    buffer.insert_text(config.terminalEditorTabText)
-
 # binded in this set
 #a, j, e, c, v, x, h, i

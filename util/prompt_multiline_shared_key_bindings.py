@@ -141,3 +141,9 @@ def _(event):
 def _(event):
     buffer = event.app.current_buffer
     buffer.cursor_down(config.terminalEditorScrollLineCount)
+
+# insert text with TAB key
+@prompt_multiline_shared_key_bindings.add("c-i")
+def _(event):
+    buffer = event.app.current_buffer
+    buffer.insert_text(config.terminalEditorTabText)
