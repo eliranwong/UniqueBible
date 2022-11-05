@@ -1,3 +1,6 @@
+Changes in 33.01:
+* Fixed displaying abbreviations in terminal mode.
+
 Changes in 33.00:
 * Added .wordnet command in terminal mode.
 
