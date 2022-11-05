@@ -1355,8 +1355,12 @@ class TextCommandParser:
             language = bibleSqlite.getLanguage()
             content = BiblesSqlite(language).readPlainChapter(text, verse, source)
         if config.runMode == "terminal":
-            singleVerse = self.textPlainBible([verse], text)
-            content = f"{content}<p>{config.mainWindow.divider}<br>{singleVerse}</p>"
+            if config.terminalEnablePager:
+                singleVerse = self.textPlainBible([verse], text)
+                content = f"{singleVerse}<br>{config.mainWindow.divider}<br>{content}"
+            else:
+                singleVerse = self.textPlainBible([verse], text)
+                content = f"{content}<br>{config.mainWindow.divider}<br>{singleVerse}"
         return content
 
     # cmd:::
