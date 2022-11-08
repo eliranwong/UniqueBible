@@ -364,7 +364,7 @@ class HtmlGeneratorUtil:
                 defaultSearchText = config.mainText
             menu += "<hr><b>{1}</b> <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span>".format(defaultSearchText, config.thisTranslation["html_searchBible2"])
             menu += "<br><br><input type='text' id='bibleSearch' style='width:95%' autofocus><br><br>"
-            searchOptions = ("SEARCH", "SEARCHREFERENCE", "SEARCHOT", "SEARCHNT", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
+            searchOptions = ("COUNT", "SEARCHREFERENCE", "SEARCHOT", "SEARCHNT", "SEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
             for searchMode in searchOptions:
                 menu += "<button  id='{0}' type='button' onclick='checkSearch(\"{0}\", \"{1}\");' class='ubaButton'>{0}</button> ".format(searchMode, defaultSearchText)
             # menu - Search multiple bibles
@@ -379,7 +379,7 @@ class HtmlGeneratorUtil:
             for searchMode in searchOptions:
                 menu += "<button id='multi{0}' type='button' onclick='checkMultiSearch(\"{0}\");' class='ubaButton'>{0}</button> ".format(searchMode)
             # Perform search when "ENTER" key is pressed
-            menu += biblesSqlite.inputEntered("bibleSearch", "SEARCH")
+            menu += biblesSqlite.inputEntered("bibleSearch", "COUNT")
             menu += biblesSqlite.inputEntered("multiBibleSearch", "multiSEARCH")
         return menu
 

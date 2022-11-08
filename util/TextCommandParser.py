@@ -178,32 +178,32 @@ class TextCommandParser:
             # e.g. CONCORDANCE:::KJVx:::G3087
             # e.g. CONCORDANCE:::ESVx_KJVx_NIVx_WEBx:::G3087
             # e.g. CONCORDANCE:::ALL:::G3087"""),
-            "search": (self.textCountSearch, """
-            # [KEYWORD] SEARCH
-            # Feature - Search bible / bibles for a string, displaying numbers of hits in individual bible books
-            # Usage - SEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]:::[BIBLE_BOOKS]
+            "count": (self.textCountSearch, """
+            # [KEYWORD] COUNT
+            # Feature - Count occurrences of a string in bible books.
+            # Usage - COUNT:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]:::[BIBLE_BOOKS]
             # To search for a string in a bible
-            # e.g. SEARCH:::KJV:::love
+            # e.g. COUNT:::KJV:::love
             # To search with a wild card character "%"
-            # e.g. SEARCH:::KJV:::Christ%Jesus
+            # e.g. COUNT:::KJV:::Christ%Jesus
             # To search multiple bibles, separate versions with a character "_"
+            # e.g. COUNT:::KJV_WEB:::love
+            # e.g. COUNT:::KJV_WEB:::Christ%Jesus
+            # To search specific books of bible
+            # e.g. COUNT:::KJV:::love:::Matt-John, 1Cor, Rev
+            # e.g. COUNT:::KJV:::temple:::OT
+            """),
+            "search": (self.textSearchBasic, """
+            # [KEYWORD] SEARCH
+            # Feature - Search bible / bibles for a string
+            # Usage - SEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]:::[BIBLE_BOOKS]
+            # SEARCH::: is different from COUNT::: that COUNT::: shows the number of hits in individual books only whereas SEARCH::: display all texts of the result.
+            # e.g. SEARCH:::KJV:::love
+            # To work on multiple bibles, separate bible versions with a character "_":
             # e.g. SEARCH:::KJV_WEB:::love
-            # e.g. SEARCH:::KJV_WEB:::Christ%Jesus
             # To search specific books of bible
             # e.g. SEARCH:::KJV:::love:::Matt-John, 1Cor, Rev
             # e.g. SEARCH:::KJV:::temple:::OT
-            """),
-            "searchall": (self.textSearchBasic, """
-            # [KEYWORD] SEARCHALL
-            # Feature - Search bible / bibles for a string
-            # Usage - SEARCHALL:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]:::[BIBLE_BOOKS]
-            # SEARCHALL::: is different from SEARCH::: that SEARCH::: shows the number of hits in individual books only whereas SEARCHALL::: display all texts of the result.
-            # e.g. SEARCHALL:::KJV:::love
-            # To work on multiple bibles, separate bible versions with a character "_":
-            # e.g. SEARCHALL:::KJV_WEB:::love
-            # To search specific books of bible
-            # e.g. SEARCHALL:::KJV:::love:::Matt-John, 1Cor, Rev
-            # e.g. SEARCHALL:::KJV:::temple:::OT
             """),
             "searchreference": (self.textSearchReference, """
             # [KEYWORD] SEARCHREFERENCE"""),
@@ -998,8 +998,8 @@ class TextCommandParser:
             "passages": self.getCoreBiblesInfo(),
             "diff": self.getCoreBiblesInfo(),
             "difference": self.getCoreBiblesInfo(),
+            "count": self.getCoreBiblesInfo(),
             "search": self.getCoreBiblesInfo(),
-            "searchall": self.getCoreBiblesInfo(),
             "advancedsearch": self.getCoreBiblesInfo(),
             "andsearch": self.getCoreBiblesInfo(),
             "orsearch": self.getCoreBiblesInfo(),
@@ -1226,7 +1226,7 @@ class TextCommandParser:
         # Use the latest search mode for bible search.
         # Qt library users can change bible search mode via master control
         # Terminal mode users can change default search mode via ".changebiblesearchmode"
-        searchModes = ("SEARCH", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
+        searchModes = ("COUNT", "SEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
         if config.useLiteVerseParsing:
             verseList = self.extractAllVersesFast(command)
             if verseList[0][0] == 0:
@@ -3187,11 +3187,11 @@ class TextCommandParser:
         except:
             return self.invalidCommand()
 
-    # SEARCH:::
+    # COUNT:::
     def textCountSearch(self, command, source):
         return self.textCount(command, config.addFavouriteToMultiRef)
 
-    # called by SEARCH:::
+    # called by COUNT:::
     def textCount(self, command, interlinear):
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.mainText, command)
@@ -3210,7 +3210,7 @@ class TextCommandParser:
             searchResult = "<hr>".join([biblesSqlite.countSearchBible(text, searchEntry, interlinear, booksRange) for text in texts])
             return ("study", searchResult, {})
 
-    # SEARCHALL:::
+    # SEARCH:::
     def textSearchBasic(self, command, source):
         return self.textSearch(command, source, "BASIC", config.addFavouriteToMultiRef)
 
@@ -3263,13 +3263,15 @@ class TextCommandParser:
         command = ":::".join(commandList)
         return self.textSearch(command, source, "ADVANCED", config.addFavouriteToMultiRef)
 
-    # called by SEARCHALL::: & ANDSEARCH::: & ORSEARCH::: & ADVANCEDSEARCH::: & REGEXSEARCH:::
+    # called by SEARCH::: & ANDSEARCH::: & ORSEARCH::: & ADVANCEDSEARCH::: & REGEXSEARCH:::
     def textSearch(self, command, source, mode, favouriteVersion=False, referenceOnly=False):
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.mainText, command)
         commandList = self.splitCommand(command)
-        texts = self.getConfirmedTexts(commandList[0])
-        searchEntry = commandList[1]
+        texts = self.getConfirmedTexts(commandList[0], True)
+        if not texts:
+            texts = [config.mainText]
+        searchEntry = commandList[1] if texts[0] in commandList[0] else command
         booksRange = ""
         if searchEntry.count(":::") > 0:
             searchEntry, booksRange = self.splitCommand(searchEntry)

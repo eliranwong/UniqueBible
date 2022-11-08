@@ -533,7 +533,7 @@ class TextEditor:
             # enable system prompt without auto-completion
             # use escape+!
             enable_system_prompt=True,
-            swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors),
+            swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")),
         )
         clear_title()
         return userInput

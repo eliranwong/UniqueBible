@@ -90,7 +90,7 @@ def _(event):
 # Escape+B
 @uba_command_prompt_key_bindings.add("escape", "b")
 def _(event):
-    event.app.current_buffer.text = ".changebibledialog"
+    event.app.current_buffer.text = ".changebible"
     event.app.current_buffer.validate_and_handle()
 
 # Escape+W

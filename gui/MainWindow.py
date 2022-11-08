@@ -1639,7 +1639,7 @@ class MainWindow(QMainWindow):
     def searchBibleForClipboardContent(self):
         clipboardText = self.getClipboardText()
         if clipboardText:
-            self.runTextCommand("SEARCH:::{0}".format(clipboardText))
+            self.runTextCommand("COUNT:::{0}".format(clipboardText))
         else:
             self.displayMessage(config.thisTranslation["noClipboardContent"])
 
@@ -2735,11 +2735,11 @@ class MainWindow(QMainWindow):
     # Action - bible search commands
     def displaySearchBibleCommand(self):
         self.focusCommandLineField()
-        self.textCommandLineEdit.setText("SEARCH:::{0}:::".format(config.mainText))
+        self.textCommandLineEdit.setText("COUNT:::{0}:::".format(config.mainText))
 
     def displaySearchStudyBibleCommand(self):
         self.focusCommandLineField()
-        self.textCommandLineEdit.setText("SEARCH:::{0}:::".format(config.studyText))
+        self.textCommandLineEdit.setText("COUNT:::{0}:::".format(config.studyText))
 
     def displaySearchBibleMenu(self):
         self.openControlPanelTab(3)
@@ -4983,7 +4983,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     def addMaterialIconButton(self, toolTip, icon, action, toolbar, button=None, translation=True, toolButton=False):
         if button is None:
             button = QToolButton() if toolButton else QPushButton()
-        button.setFixedSize(config.iconButtonSize * 4/3, config.iconButtonSize * 4/3)
+        button.setFixedSize(int(config.iconButtonSize * 4/3), int(config.iconButtonSize * 4/3))
         button.setCursor(QCursor(Qt.PointingHandCursor))
         button.setToolTip(config.thisTranslation[toolTip] if translation else toolTip)
         qIcon = self.getQIcon(icon)

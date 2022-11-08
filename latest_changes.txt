@@ -1,3 +1,16 @@
+Changes in 33.02:
+* Added various dialogs to terminal modes.
+* Added searchable input and prompt to terminal mode:
+    Users can either enter a valid option or search for valid options.
+    This is currently applied to text-to-speech feature only, but will be applied to other features in coming updates.
+* Added config.ttsDefaultLangauge4
+* Fixed fresh installation iconButtonSize issue.
+* Fixed aligning theme colors in all prompts.
+* Fixed opening bible note in terminal mode.
+* Fixed displaying NET bible with Strong's numbers in terminal mode.
+* Fixed searching bible with book range specified.
+* Changed command keyword SEARCH::: to COUNT::: and SEARCHALL::: to SEARCH:::
+
 Changes in 33.01:
 * Fixed displaying abbreviations in terminal mode.
 

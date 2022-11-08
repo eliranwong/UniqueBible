@@ -10,7 +10,6 @@ class ConfigUtil:
 
     @staticmethod
     def swapTerminalColors():
-        config.terminalSwapColors = not config.terminalSwapColors
         if config.terminalPromptIndicatorColor1 in config.terminalColors:
             config.terminalPromptIndicatorColor1 = config.terminalColors[config.terminalPromptIndicatorColor1]
         if config.terminalCommandEntryColor1 in config.terminalColors:
@@ -37,6 +36,7 @@ class ConfigUtil:
             config.terminalFindHighlightBackground = config.terminalColors[config.terminalFindHighlightBackground]
         if config.terminalFindHighlightForeground in config.terminalColors:
             config.terminalFindHighlightForeground = config.terminalColors[config.terminalFindHighlightForeground]
+        #config.terminalSwapColors = (config.terminalResourceLinkColor.startswith("ansibright"))
 
     @staticmethod
     def setup():
@@ -212,10 +212,10 @@ class ConfigUtil:
         if not hasattr(config, "terminalVerseSelectionEnd"):
             config.terminalVerseSelectionEnd = "⋯^"
         # support swap between light and dark themes
-        config.help["terminalSwapColors"] = """
+        #config.help["terminalSwapColors"] = """
         # Swap between light and dark colors in terminal mode."""
-        if not hasattr(config, "terminalSwapColors"):
-            config.terminalSwapColors = True
+        #if not hasattr(config, "terminalSwapColors"):
+        #    config.terminalSwapColors = True
         config.terminalColors = {
             "ansidefault": "ansidefault",
             "ansiblack": "ansiwhite",
@@ -300,7 +300,7 @@ class ConfigUtil:
 #            config.terminalSwapColors = False
 #        elif not config.terminalPromptIndicatorColor1.startswith("ansibright") and not config.terminalResourceLinkColor.startswith("ansibright"):
 #            config.terminalSwapColors = True
-        config.terminalSwapColors = True if config.terminalResourceLinkColor.startswith("ansibright") else False
+        #config.terminalSwapColors = (config.terminalResourceLinkColor.startswith("ansibright"))
         # End of terminal mode settings
 
         # Start of terminal mode customised input settings
@@ -684,6 +684,10 @@ class ConfigUtil:
         # Third text-to-speech language"""
         if not hasattr(config, "ttsDefaultLangauge3"):
             config.ttsDefaultLangauge3 = ""
+        config.help["ttsDefaultLangauge4"] = """
+        # Fourth text-to-speech language"""
+        if not hasattr(config, "ttsDefaultLangauge4"):
+            config.ttsDefaultLangauge4 = ""
         config.help["ttsChineseAlwaysCantonese"] = """
         # Force text-to-speech feature to use Cantonese for all Chinese text."""
         if not hasattr(config, "ttsChineseAlwaysCantonese"):
@@ -1092,7 +1096,7 @@ class ConfigUtil:
         config.help["bibleSearchMode"] = """
         # Search Bible Mode
         # Accept value: 0-5
-        # Correspond to ("SEARCH", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")"""
+        # Correspond to ("COUNT", "SEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")"""
         if not hasattr(config, "bibleSearchMode"):
             config.bibleSearchMode = 0
         config.help["workspaceDirectory"] = """
@@ -1819,7 +1823,7 @@ class ConfigUtil:
             ("terminalStopHttpServerOnExit", config.terminalStopHttpServerOnExit),
             ("terminalVerseSelectionStart", config.terminalVerseSelectionStart),
             ("terminalVerseSelectionEnd", config.terminalVerseSelectionEnd),
-            ("terminalSwapColors", config.terminalSwapColors),
+            #("terminalSwapColors", config.terminalSwapColors),
             ("terminalPromptIndicatorColor1", config.terminalPromptIndicatorColor1),
             ("terminalCommandEntryColor1", config.terminalCommandEntryColor1),
             ("terminalPromptIndicatorColor2", config.terminalPromptIndicatorColor2),
@@ -1914,6 +1918,7 @@ class ConfigUtil:
             ("ttsDefaultLangauge", config.ttsDefaultLangauge),
             ("ttsDefaultLangauge2", config.ttsDefaultLangauge2),
             ("ttsDefaultLangauge3", config.ttsDefaultLangauge3),
+            ("ttsDefaultLangauge4", config.ttsDefaultLangauge4),
             ("ttsEnglishAlwaysUS", config.ttsEnglishAlwaysUS),
             ("ttsEnglishAlwaysUK", config.ttsEnglishAlwaysUK),
             ("ttsChineseAlwaysMandarin", config.ttsChineseAlwaysMandarin),

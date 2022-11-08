@@ -413,13 +413,13 @@ input.addEventListener('keyup', function(event) {0}
         if text in self.marvelBibles and not text in ["LXX1", "LXX1i", "LXX2", "LXX2i"]:
             searchString = TextUtil.removeVowelAccent(searchString)
             searchString = TextUtil.removeSpecialCharacters(searchString)
-        content = "SEARCH:::{0}:::{1}".format(text, searchString)
+        content = "COUNT:::{0}:::{1}".format(text, searchString)
         if booksRange:
             content += ":::{0}".format(booksRange)
             bookList = BibleVerseParser(config.parserStandarisation).extractBookListAsBookNumberList(booksRange)
         else:
             bookList = self.getBookList(text)
-        showCommand = "SEARCHALL"
+        showCommand = "SEARCH"
         searchFunction = "searchBibleBook"
         bookCountList = [self.countSearchBook(text, book, searchString) for book in bookList]
         content += "<p>Total: <ref onclick='document.title=\"{3}:::{1}:::{2}\"'>{0} verse(s)</ref> found in {1}. <ref onclick='document.title=\"SEARCHREFERENCE:::{1}:::{2}\"'>***</ref></p><table><tr><th>Book</th><th>Verse(s)</th></tr>".format(sum(bookCountList), text, searchString, showCommand)
@@ -461,7 +461,7 @@ input.addEventListener('keyup', function(event) {0}
             if referenceOnly:
                 searchCommand = "SEARCHREFERENCE"
             else:
-                searchCommand = "SEARCHALL"
+                searchCommand = "SEARCH"
             formatedText += "{0}:::<z>{1}</z>:::{2}".format(searchCommand, text, searchString)
             t = ("%{0}%".format(searchString),)
             query += "(Scripture LIKE ?)"

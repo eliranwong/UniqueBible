@@ -1331,7 +1331,7 @@ class WebEngineView(QWebEngineView):
         if not selectedText:
             self.messageNoSelection()
         else:
-            searchCommand = "SEARCH:::{0}:::{1}".format(self.getText() if text is None or not text else text, selectedText)
+            searchCommand = "COUNT:::{0}:::{1}".format(self.getText() if text is None or not text else text, selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def openReferencesInBook(self, book):
@@ -1352,7 +1352,7 @@ class WebEngineView(QWebEngineView):
         if not selectedText:
             self.messageNoSelection()
         else:
-            searchCommand = "SEARCH:::{0}:::{1}".format(config.favouriteBible, selectedText)
+            searchCommand = "COUNT:::{0}:::{1}".format(config.favouriteBible, selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def searchSelectedTextOriginal(self):
@@ -1360,7 +1360,7 @@ class WebEngineView(QWebEngineView):
         if not selectedText:
             self.messageNoSelection()
         else:
-            searchCommand = "SEARCH:::{0}:::{1}".format("MOB", selectedText)
+            searchCommand = "COUNT:::{0}:::{1}".format("MOB", selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def searchHebrewGreekLexicon(self, module=""):

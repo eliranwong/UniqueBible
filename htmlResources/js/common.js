@@ -1231,7 +1231,7 @@ function wordnote(module, wordID) {
 }
 
 function searchBible(module, item) {
-    document.title = "SEARCH:::"+module+":::"+item;
+    document.title = "COUNT:::"+module+":::"+item;
 }
 
 function searchVerse(module, item, b, c, v) {

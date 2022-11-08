@@ -37,9 +37,10 @@ from prompt_toolkit.completion import WordCompleter, NestedCompleter, ThreadedCo
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.styles import Style
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
-from prompt_toolkit.shortcuts import radiolist_dialog
 from util.prompt_shared_key_bindings import prompt_shared_key_bindings
 from util.prompt_multiline_shared_key_bindings import prompt_multiline_shared_key_bindings
+from util.terminal_mode_dialogs import TerminalModeDialogs
+
 
 class LocalCliHandler:
 
@@ -52,6 +53,7 @@ class LocalCliHandler:
         self.crossPlatform.setupResourceLists()
         self.html = "<ref >Unique Bible App</ref>"
         self.plainText = "Unique Bible App"
+        self.setupDialogs()
         self.command = command
         self.dotCommands = self.getDotCommands()
         self.addShortcuts()
@@ -81,6 +83,30 @@ class LocalCliHandler:
             itemColor=config.terminalResourceLinkColor,
         )
         self.shareKeyBindings()
+
+    def setupDialogs(self):
+        self.dialogs = TerminalModeDialogs(self)
+        self.changebible = self.dialogs.changebible
+        self.changeparallelbibles = self.dialogs.changeparallelbibles
+        self.changefavouritebible1 = self.dialogs.changefavouritebible1
+        self.changefavouritebible2 = self.dialogs.changefavouritebible2
+        self.changefavouritebible3 = self.dialogs.changefavouritebible3
+        self.changefavouriteoriginalbible = self.dialogs.changefavouriteoriginalbible
+        self.changecommentary = self.dialogs.changecommentary
+        self.changelexicon = self.dialogs.changelexicon
+        self.changedictionary = self.dialogs.changedictionary
+        self.changethirdpartydictionary = self.dialogs.changethirdpartydictionary
+        self.changeencyclopedia = self.dialogs.changeencyclopedia
+        self.changeconcordance = self.dialogs.changeconcordance
+        self.changereferencebook = self.dialogs.changereferencebook
+        self.changereferencebookchapter = self.dialogs.changereferencebookchapter
+        self.changenoteeditor = self.dialogs.changenoteeditor
+        self.changebiblesearchmode = self.dialogs.changebiblesearchmode
+        self.displayFeatureMenu = self.dialogs.displayFeatureMenu
+        self.changettslanguage1 = self.dialogs.changettslanguage1
+        self.changettslanguage2 = self.dialogs.changettslanguage2
+        self.changettslanguage3 = self.dialogs.changettslanguage3
+        self.changettslanguage4 = self.dialogs.changettslanguage4
 
     def shareKeyBindings(self):
         this_key_bindings = KeyBindings()
@@ -253,8 +279,16 @@ class LocalCliHandler:
             ".swap": ("swap to a favourite bible", self.swap),
             ".web": ("open web version", self.web),
             ".share": ("copy a web link for sharing", self.share),
-            ".tts": ("open text-to-speech feature", lambda: self.tts(False)),
-            ".ttscopiedtext": ("run text-to-speech on copied text", self.tts),
+            ".tts": ("text to speech ANY", lambda: self.tts(False)),
+            ".tts1": ("text to speech 1", lambda: self.tts(False, defaultLanguage=config.ttsDefaultLangauge)),
+            ".tts2": ("text to speech 2", lambda: self.tts(False, defaultLanguage=config.ttsDefaultLangauge2)),
+            ".tts3": ("text to speech 3", lambda: self.tts(False, defaultLanguage=config.ttsDefaultLangauge3)),
+            ".tts4": ("text to speech 4", lambda: self.tts(False, defaultLanguage=config.ttsDefaultLangauge4)),
+            ".ttscopiedtext": ("copied text to speech ANY", self.tts),
+            ".ttscopiedtext1": ("copied text to speech 1", lambda: self.tts(True, defaultLanguage=config.ttsDefaultLangauge)),
+            ".ttscopiedtext2": ("copied text to speech 2", lambda: self.tts(True, defaultLanguage=config.ttsDefaultLangauge2)),
+            ".ttscopiedtext3": ("copied text to speech 3", lambda: self.tts(True, defaultLanguage=config.ttsDefaultLangauge3)),
+            ".ttscopiedtext4": ("copied text to speech 4", lambda: self.tts(True, defaultLanguage=config.ttsDefaultLangauge4)),
             ".ttsc": ("an alias to the '.ttscopiedtext' command", self.tts),
             ".paste": ("display copied text", self.getclipboardtext),
             ".copy": ("copy the last opened content", self.copy),
@@ -379,32 +413,34 @@ class LocalCliHandler:
             ".readword": ("read Hebrew or Greek word", self.readword),
             ".readlexeme": ("read Hebrew or Greek lexeme", lambda: self.readword(True)),
             ".qo": ("an alias to the '.quickopen' command", lambda: self.quickopen(False)),
-            ".standardcommands": ("display standard UBA command help menu", self.standardcommands),
+            ".standardcommands": ("display standard UBA command", self.standardcommands),
             ".terminalcommands": ("display terminal mode commands", self.terminalcommands),
             ".aliases": ("display terminal mode command shortcuts", self.commandAliases),
             ".keys": ("display customised keyboard shortcuts", self.keys),
-            ".menu": ("display main menu", self.menu),
-            ".my": ("display my menu", self.my),
-            ".show": ("display show menu", self.info),
-            ".open": ("display open menu", self.open),
-            ".search": ("display search menu", self.search),
-            ".note": ("display note / journal menu", self.accessNoteFeatures),
-            ".edit": ("display edit menu", self.edit),
-            ".quick": ("display quick menu", self.quick),
-            ".control": ("display control menu", self.control),
-            ".toggle": ("display toggle menu", self.toggle),
-            ".clipboard": ("display clipboard menu", self.clipboard),
+            ".menu": ("display master menu", self.menu),
+            ".my": ("my favourites", self.my),
+            ".show": ("show ...", self.info),
+            ".speak": ("speak ...", self.speak),
+            ".translate": ("translate ...", self.translate),
+            ".open": ("open ...", self.open),
+            ".search": ("search ...", self.search),
+            ".note": ("note / journal", self.accessNoteFeatures),
+            ".edit": ("edit ...", self.edit),
+            ".quick": ("quick features", self.quick),
+            ".control": ("control menu", self.control),
+            ".toggle": ("toggle ...", self.toggle),
+            ".clipboard": ("clipboard features", self.clipboard),
             ".clip": ("an alias to the '.clipboard' command", self.clipboard),
-            ".change": ("display change menu", self.change),
-            ".tools": ("display tool menu", self.tools),
-            ".plugins": ("display plugin menu", self.plugins),
-            ".howto": ("display how-to menu", self.howto),
-            ".maintain": ("display maintain menu", self.maintain),
-            ".download": ("display download menu", self.download),
-            ".backup": ("display backup menu", self.backup),
-            ".restore": ("display restore menu", self.restore),
-            ".develop": ("display developer menu", self.develop),
-            ".help": ("display help menu", self.help),
+            ".change": ("change ...", self.change),
+            ".tools": ("tool menu", self.tools),
+            ".plugins": ("plugin menu", self.plugins),
+            ".howto": ("how-to menu", self.howto),
+            ".maintain": ("maintain ...", self.maintain),
+            ".download": ("download ...", self.download),
+            ".backup": ("backup ...", self.backup),
+            ".restore": ("restore ...", self.restore),
+            ".develop": ("developer menu", self.develop),
+            ".help": ("get help", self.help),
             ".wiki": ("open online wiki page", self.wiki),
             ".quickstart": ("show how to install text editor micro", lambda: self.readHowTo("quick start")),
             ".helpinstallmicro": ("show how to install text editor micro", lambda: self.readHowTo("install micro")),
@@ -431,22 +467,25 @@ class LocalCliHandler:
             ".restorelastnotes": ("restore note database file", lambda: self.restoreLastFile("marvelData/note.sqlite")),
             ".restorelastjournals": ("restore journal database file", lambda: self.restoreLastFile("marvelData/journal.sqlite")),
             ".changemymenu": ("change my menu", self.changemymenu),
-            ".changebible": ("change current bible version", lambda: self.changeDefaultModule("mainText", self.crossPlatform.textList, config.mainText, self.showbibles)),
-            ".changebibledialog": ("change current bible version dialog", self.changebibledialog),
-            ".changefavouritebible1": ("change favourite bible version 1", lambda: self.changeDefaultModule("favouriteBible", self.crossPlatform.textList, config.favouriteBible, self.showbibles)),
-            ".changefavouritebible2": ("change favourite bible version 2", lambda: self.changeDefaultModule("favouriteBible2", self.crossPlatform.textList, config.favouriteBible2, self.showbibles)),
-            ".changefavouritebible3": ("change favourite bible version 3", lambda: self.changeDefaultModule("favouriteBible3", self.crossPlatform.textList, config.favouriteBible3, self.showbibles)),
-            ".changefavouriteoriginalbible": ("change favourite Hebrew & Greek bible", lambda: self.changeDefaultModule("favouriteOriginalBible", self.crossPlatform.textList, config.favouriteOriginalBible, self.showbibles)),
-            ".changecommentary": ("change default commentary module", lambda: self.changeDefaultModule("commentaryText", self.crossPlatform.commentaryList, config.commentaryText, self.showcommentaries)),
-            ".changelexicon": ("change default lexicon", lambda: self.changeDefaultModule("lexicon", self.crossPlatform.lexiconList, config.lexicon, self.showlexicons)),
-            ".changedictionary": ("change default dictionary", lambda: self.changeDefaultModule("dictionary", self.crossPlatform.dictionaryListAbb, config.dictionary, self.showdictionaries)),
-            ".changethirdpartydictionary": ("change default third-party dictionary", lambda: self.changeDefaultModule("thirdDictionary", self.crossPlatform.thirdPartyDictionaryList, config.thirdDictionary, self.showthirdpartydictionary)),
-            ".changeencyclopedia": ("change default encyclopedia", lambda: self.changeDefaultModule("encyclopedia", self.crossPlatform.encyclopediaListAbb, config.encyclopedia, self.showencyclopedia)),
-            ".changeconcordance": ("change default concordance", lambda: self.changeDefaultModule("concordance", self.crossPlatform.strongBibles, config.concordance, self.showstrongbibles)),
-            ".changereferencebook": ("change default reference book", lambda: self.changeDefaultModule("book", self.crossPlatform.referenceBookList, config.book, self.showreferencebooks)),
-            ".changettslanguage1": ("change default text-to-speech language 1", lambda: self.changeDefaultModule("ttsDefaultLangauge", self.ttsLanguageCodes, config.ttsDefaultLangauge, self.showttslanguages)),
-            ".changettslanguage2": ("change default text-to-speech language 2", lambda: self.changeDefaultModule("ttsDefaultLangauge2", self.ttsLanguageCodes, config.ttsDefaultLangauge2, self.showttslanguages)),
-            ".changettslanguage3": ("change default text-to-speech language 3", lambda: self.changeDefaultModule("ttsDefaultLangauge3", self.ttsLanguageCodes, config.ttsDefaultLangauge3, self.showttslanguages)),
+            #".changebible": ("change current bible version", lambda: self.changeDefaultModule("mainText", self.crossPlatform.textList, config.mainText, self.showbibles)),
+            ".changebible": ("change current bible version", self.changebible),
+            ".changeparallelbibles": ("change parallel bible versions", self.changeparallelbibles),
+            ".changefavouritebible1": ("change favourite bible version 1", self.changefavouritebible1),
+            ".changefavouritebible2": ("change favourite bible version 2", self.changefavouritebible2),
+            ".changefavouritebible3": ("change favourite bible version 3", self.changefavouritebible3),
+            ".changefavouriteoriginalbible": ("change favourite Hebrew & Greek bible", self.changefavouriteoriginalbible),
+            ".changecommentary": ("change default commentary module", self.changecommentary),
+            ".changelexicon": ("change default lexicon", self.changelexicon),
+            ".changedictionary": ("change default dictionary", self.changedictionary),
+            ".changethirdpartydictionary": ("change default third-party dictionary", self.changethirdpartydictionary),
+            ".changeencyclopedia": ("change default encyclopedia", self.changeencyclopedia),
+            ".changeconcordance": ("change default concordance", self.changeconcordance),
+            ".changereferencebook": ("change default reference book", self.changereferencebook),
+            ".changereferencebookchapter": ("change default reference book chapter", self.changereferencebookchapter),
+            ".changettslanguage1": ("change default text-to-speech language 1", self.changettslanguage1),
+            ".changettslanguage2": ("change default text-to-speech language 2", self.changettslanguage2),
+            ".changettslanguage3": ("change default text-to-speech language 3", self.changettslanguage3),
+            ".changettslanguage4": ("change default text-to-speech language 4", self.changettslanguage4),
             ".changedefaultcommand": ("change default command", self.changeDefaultCommand),
             ".changebiblesearchmode": ("change default bible search mode", self.changebiblesearchmode),
             ".changenoteeditor": ("change default note editor", self.changenoteeditor),
@@ -516,7 +555,7 @@ class LocalCliHandler:
                 dirIndicator = "\\" if platform.system() == "Windows" else "/"
                 completer = WordCompleter(sorted(set(systemCommands + [f"{i}{dirIndicator}" if os.path.isdir(i) else i for i in os.listdir()])))
                 auto_suggestion=AutoSuggestFromHistory()
-                userInput = self.terminal_system_command_session.prompt(inputIndicator, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, key_bindings=this_key_bindings, auto_suggest=auto_suggestion, completer=completer, bottom_toolbar=self.getToolBar()).strip()
+                userInput = self.terminal_system_command_session.prompt(inputIndicator, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, key_bindings=this_key_bindings, auto_suggest=auto_suggestion, completer=completer, bottom_toolbar=self.getToolBar()).strip()
                 if userInput and not userInput == config.terminal_cancel_action:
                     os.system(userInput)
                     # check if directory is changed
@@ -557,7 +596,7 @@ class LocalCliHandler:
             self.print("Enter mulitple filters:")
             self.print("(enter each on a single line)")
             self.print("(newly added filters will be automatically saved)")
-            userInput = self.terminal_live_filter_session.prompt(self.inputIndicator, key_bindings=self.prompt_multiline_shared_key_bindings, bottom_toolbar=self.getToolBar(True), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, multiline=True).strip()
+            userInput = self.terminal_live_filter_session.prompt(self.inputIndicator, key_bindings=self.prompt_multiline_shared_key_bindings, bottom_toolbar=self.getToolBar(True), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, multiline=True).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             currentFilters = []
@@ -595,7 +634,7 @@ class LocalCliHandler:
         try:
             self.print(self.divider)
             self.print("Enter a python script:")
-            userInput = self.terminal_python_string_session.prompt(self.inputIndicator, key_bindings=self.prompt_multiline_shared_key_bindings, bottom_toolbar=self.getToolBar(True), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, multiline=True).strip()
+            userInput = self.terminal_python_string_session.prompt(self.inputIndicator, key_bindings=self.prompt_multiline_shared_key_bindings, bottom_toolbar=self.getToolBar(True), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, multiline=True).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             exec(userInput, globals())
@@ -662,63 +701,67 @@ class LocalCliHandler:
         return self.getContent(command)
 
     def getContent(self, command, checkDotCommand=True):
-        command = command.strip()
-        # allow use of tts::: no matter which tts engine is in place
-        if command.lower().startswith("tts:::"):
-            command = f"{self.ttsCommandKeyword}{command[3:]}"
-        # study window applies to Qt library users only
-        if command.lower().startswith("study:::") or command.lower().startswith("studytext:::"):
-            config.studyText, config.studyB, config.studyC, config.studyV = config.mainText, config.mainB, config.mainC, config.mainV
-        originalCommand = command
-        # Shortcuts to change chapter or verse or both chapter and verse for bible reading.
-        if command:
-            try:
-                bc = command.split(":", 1)
-                bci = [int(i) for i in bc if i]
-                if len(bc) == 2 and len(bci) == 1:
-                    # Users specify a verse number, e.g. :16
-                    if command.startswith(":"):
-                        command = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, bci[0])
-                    # Users specify a chapter number, e.g. 3:
-                    elif command.endswith(":"):
-                        command = self.textCommandParser.bcvToVerseReference(config.mainB, bci[0], 1)
-                # Users specify both a chapter number and a verse number, e.g. 3:16
-                elif len(bc) == 2 and len(bci) == 2:
-                    command = self.textCommandParser.bcvToVerseReference(config.mainB, bci[0], bci[1])
-                if not originalCommand == command:
-                    prefix = f"COMPARE:::{config.compareParallelList}:::" if config.terminalBibleComparison else "BIBLE:::"
-                    command = f"{prefix}{command}"
-                    self.printRunningCommand(command)
-            except:
-                pass
-        # Redirect heavy html content to web version.
-        if not command.lower().startswith(".") and re.search('^(map:::|qrcode:::|bible:::mab:::|bible:::mib:::|bible:::mob:::|bible:::mpb:::|bible:::mtb:::|text:::mab|text:::mib|text:::mob|text:::mpb|text:::mtb|study:::mab:::|study:::mib:::|study:::mob:::|study:::mpb:::|study:::mtb:::|studytext:::mab|studytext:::mib|studytext:::mob|studytext:::mpb|studytext:::mtb)', command.lower()):
-            return self.web(command)
-        # Dot commands
-        if command == ".":
-            return ""
-        elif checkDotCommand and command.startswith("."):
-            return self.getDotCommandContent(command.lower())
-        # Non-dot commands
-        view, content, dict = self.textCommandParser.parser(command, "cli")
-        # keep record of last command
-        self.command = command
-        if config.bibleWindowContentTransformers:
-            for transformer in config.bibleWindowContentTransformers:
-                content = transformer(content)
-        if content:
-            #self.crossPlatform.addHistoryRecord(view, command)
-            self.html = content
-        else:
-            content = "Command processed!"
-        # Convert html to plain text
-        plainText = TextUtil.htmlToPlainText(content).strip()
-        self.plainText = "" if content == "Command processed!" else plainText
-        # Update main text, b, c, v
-        references = self.textCommandParser.extractAllVerses(command)
-        if references:
-            config.mainB, config.mainC, config.mainV, *_ = references[-1]
-        return plainText
+        try:
+        #if True:
+            command = command.strip()
+            # allow use of tts::: no matter which tts engine is in place
+            if command.lower().startswith("tts:::"):
+                command = f"{self.ttsCommandKeyword}{command[3:]}"
+            # study window applies to Qt library users only
+            if command.lower().startswith("study:::") or command.lower().startswith("studytext:::"):
+                config.studyText, config.studyB, config.studyC, config.studyV = config.mainText, config.mainB, config.mainC, config.mainV
+            originalCommand = command
+            # Shortcuts to change chapter or verse or both chapter and verse for bible reading.
+            if command:
+                try:
+                    bc = command.split(":", 1)
+                    bci = [int(i) for i in bc if i]
+                    if len(bc) == 2 and len(bci) == 1:
+                        # Users specify a verse number, e.g. :16
+                        if command.startswith(":"):
+                            command = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, bci[0])
+                        # Users specify a chapter number, e.g. 3:
+                        elif command.endswith(":"):
+                            command = self.textCommandParser.bcvToVerseReference(config.mainB, bci[0], 1)
+                    # Users specify both a chapter number and a verse number, e.g. 3:16
+                    elif len(bc) == 2 and len(bci) == 2:
+                        command = self.textCommandParser.bcvToVerseReference(config.mainB, bci[0], bci[1])
+                    if not originalCommand == command:
+                        prefix = f"COMPARE:::{config.compareParallelList}:::" if config.terminalBibleComparison else "BIBLE:::"
+                        command = f"{prefix}{command}"
+                        self.printRunningCommand(command)
+                except:
+                    pass
+            # Redirect heavy html content to web version.
+            if not command.lower().startswith(".") and re.search('^(map:::|qrcode:::|bible:::mab:::|bible:::mib:::|bible:::mob:::|bible:::mpb:::|bible:::mtb:::|text:::mab|text:::mib|text:::mob|text:::mpb|text:::mtb|study:::mab:::|study:::mib:::|study:::mob:::|study:::mpb:::|study:::mtb:::|studytext:::mab|studytext:::mib|studytext:::mob|studytext:::mpb|studytext:::mtb)', command.lower()):
+                return self.web(command)
+            # Dot commands
+            if command == ".":
+                return ""
+            elif checkDotCommand and command.startswith("."):
+                return self.getDotCommandContent(command.lower())
+            # Non-dot commands
+            view, content, dict = self.textCommandParser.parser(command, "cli")
+            # keep record of last command
+            self.command = command
+            if config.bibleWindowContentTransformers:
+                for transformer in config.bibleWindowContentTransformers:
+                    content = transformer(content)
+            if content:
+                #self.crossPlatform.addHistoryRecord(view, command)
+                self.html = content
+            else:
+                content = "Command processed!"
+            # Convert html to plain text
+            plainText = TextUtil.htmlToPlainText(content).strip()
+            self.plainText = "" if content == "Command processed!" else plainText
+            # Update main text, b, c, v
+            references = self.textCommandParser.extractAllVerses(command)
+            if references:
+                config.mainB, config.mainC, config.mainV, *_ = references[-1]
+            return plainText
+        except:
+            return self.printInvalidOptionEntered()
 
     def fineTuneTextForWebBrowserDisplay(self, text=""):
         if not text:
@@ -822,9 +865,9 @@ class LocalCliHandler:
             elif i == ".restore":
                 suggestions[i] = self.getDummyDict(["journals", "lastjournals", "lastnotes", "notes",])
             elif i == ".tts":
-                suggestions[i] = self.getDummyDict(["copiedtext",])
+                suggestions[i] = self.getDummyDict(["1", "2", "3", "4", "copiedtext", "copiedtext1", "copiedtext2", "copiedtext3", "copiedtext4",])
             elif i == ".change":
-                suggestions[i] = self.getDummyDict(["bible", "bibledialog", "biblesearchmode", "colors", "colours", "commentary", "concordance", "config", "defaultcommand", "dictionary", "encyclopedia", "favouritebible1", "favouritebible2", "favouritebible3", "favouriteoriginalbible", "lexicon", "mymenu", "noteeditor", "referencebook", "terminalmodeconfig", "thirdpartydictionary", "ttslanguage1", "ttslanguage2", "ttslanguage3"])
+                suggestions[i] = self.getDummyDict(["bible", "bibledialog", "biblesearchmode", "colors", "colours", "commentary", "concordance", "config", "defaultcommand", "dictionary", "encyclopedia", "favouritebible1", "favouritebible2", "favouritebible3", "favouriteoriginalbible", "lexicon", "mymenu", "noteeditor", "parallelbibles", "referencebook", "referencebookchapter", "terminalmodeconfig", "thirdpartydictionary", "ttslanguage1", "ttslanguage2", "ttslanguage3", "ttslanguage4"])
             elif i == ".exec":
                 suggestions[i] = self.getDummyDict(["file",])
             elif i == ".edit":
@@ -845,7 +888,7 @@ class LocalCliHandler:
                 suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ".")
             elif i in ("compare:::",):
                 suggestions[i] = self.getDummyDict(self.crossPlatform.textList, "_")
-            elif i in ("search:::", "searchall:::", "andsearch:::", "orsearch:::", "advancedsearch:::", "regexsearch:::",):
+            elif i in ("count:::", "search:::", "andsearch:::", "orsearch:::", "advancedsearch:::", "regexsearch:::",):
                 suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ":::")
             elif i in ("bible:::", "main:::", "study:::", "read:::", "readsync:::", "_verses:::"):
                 suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ":::", None if config.terminalUseLighterCompleter else self.allKJVreferences)
@@ -1010,7 +1053,7 @@ class LocalCliHandler:
         server = "http://localhost:8080"
         serverAlive = "ON" if self.isUrlAlive(server) else "OFF"
         self.print(f"{server} [{serverAlive}]")
-        searchModes = ("SEARCH", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
+        searchModes = ("COUNT", "SEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
         self.print(f"Current search mode: {searchModes[config.bibleSearchMode]}")
         bibleReference = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
         self.print("BIBLE:::{0}:::{1} [{2}.{3}.{4}]".format(config.mainText, bibleReference, config.mainB, config.mainC, config.mainV))
@@ -1061,7 +1104,8 @@ class LocalCliHandler:
         bible = Bible(config.mainText if not text else text)
         bibleBooks = self.bibleBooks
         bookNumbers = bible.getBookList()
-        self.print([f"[{b}] {bibleBooks.getStandardBookAbbreviation(b)}" for b in bookNumbers])
+        display = [f"[<ref>{b}</ref>] {bibleBooks.getStandardBookAbbreviation(b)}" for b in bookNumbers]
+        self.print(TextUtil.htmlToPlainText(" ".join(display)))
         self.currentBibleAbbs = [bibleBooks.getStandardBookAbbreviation(b) for b in bookNumbers]
         try:
             if commentary:
@@ -1077,7 +1121,8 @@ class LocalCliHandler:
         bible = Bible(config.mainText if not text else text)
         bibleBooks = self.bibleBooks
         bookNumbers = bible.getBookList()
-        self.print([f"[{b}] {bibleBooks.getStandardBookFullName(b)}" for b in bookNumbers])
+        display = [f"[<ref>{b}</ref>] {bibleBooks.getStandardBookFullName(b)}" for b in bookNumbers]
+        self.print(TextUtil.htmlToPlainText(" ".join(display)))
         self.currentBibleBooks = [bibleBooks.getStandardBookFullName(b) for b in bookNumbers]
         try:
             self.currentBibleBook = bibleBooks.getStandardBookFullName(config.mainB)
@@ -1095,14 +1140,16 @@ class LocalCliHandler:
     def showbiblechapters(self, text="", b=None):
         bible = Bible(config.mainText if not text else text)
         chapterList = bible.getChapterList(config.mainB if b is None else b)
-        self.print(chapterList)
+        chapterListDisplay = " | ".join([f"<ref>{c}</ref>" for c in chapterList])
+        self.print(f"| {TextUtil.htmlToPlainText(chapterListDisplay)} |")
         self.currentBibleChapters = chapterList
         return ""
 
     def showbibleverses(self, text="", b=None, c=None):
         bible = Bible(config.mainText if not text else text)
         verseList = bible.getVerseList(config.mainB if b is None else b, config.mainC if c is None else c)
-        self.print(verseList)
+        verseListDisplay = " | ".join([f"<ref>{v}</ref>" for v in verseList])
+        self.print(f"| {TextUtil.htmlToPlainText(verseListDisplay)} |")
         self.currentBibleVerses = verseList
         return ""
 
@@ -1182,7 +1229,6 @@ class LocalCliHandler:
         return self.plainText
 
     def showcommentaries(self):
-        #self.crossPlatform.setupResourceLists()
         content = ""
         content += """<h2><ref onclick="window.parent.submitCommand('.commentarymenu')">{0}</ref></h2>""".format(config.thisTranslation["menu4_commentary"])
         content += "<br>".join(["""[<ref>{0}</ref> ] {1}""".format(abb, self.crossPlatform.commentaryFullNameList[index]) for index, abb in enumerate(self.crossPlatform.commentaryList)])
@@ -1191,7 +1237,6 @@ class LocalCliHandler:
         return self.plainText
 
     def showreferencebooks(self):
-        #self.crossPlatform.setupResourceLists()
         content = ""
         content += "<h2>{0}</h2>".format(config.thisTranslation["menu5_selectBook"])
         content += "<br>".join(["""[<ref>{0}</ref> ] {0}""".format(book) for book in self.crossPlatform.referenceBookList])
@@ -1200,7 +1245,6 @@ class LocalCliHandler:
         return self.plainText
 
     def showdata(self):
-        #self.crossPlatform.setupResourceLists()
         content = ""
         content += "<h2>{0}</h2>".format(config.thisTranslation["menu_data"])
         content += "<br>".join(["[<ref>{0}</ref> ]".format(book) for book in self.crossPlatform.dataList])
@@ -1258,12 +1302,11 @@ class LocalCliHandler:
 
     def showttslanguages(self):
         codes = self.ttsLanguageCodes
+        #languages = [self.ttsLanguages[code][-1] for code in codes]
 
         display = "<h2>Languages</h2>"
-        languages = []
         for code in codes:
             language = self.ttsLanguages[code][-1]
-            languages.append(language)
             display += f"[<ref>{code}</ref> ] {language}<br>"
         display = display[:-4]
         self.html = display
@@ -1318,7 +1361,7 @@ class LocalCliHandler:
         self.print(self.divider)
         self.print("Enter an abbreviation")
         completer = WordCompleter(options, ignore_case=True)
-        userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer, default=default).strip()
+        userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer, default=default).strip()
         if not userInput or userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
         if userInput in options:
@@ -1328,39 +1371,46 @@ class LocalCliHandler:
         else:
             return self.printInvalidOptionEntered()
 
-    def tts(self, runOnSelectedText=True, defaultText=""):
+    def tts(self, runOnSelectedText=True, defaultText="", defaultLanguage=""):
         if runOnSelectedText:
             clipboardText = defaultText if defaultText else self.getclipboardtext()
-        codes = self.ttsLanguageCodes
-        #display = "<h2>Languages</h2>"
-        shortCodes = []
-        languages = []
-        for code in codes:
-            shortCodes.append(re.sub("\-.*?$", "", code))
-            languages.append(self.ttsLanguages[code])
-            #display += f"[<ref>{codes}</ref> ] {languages}<br>"
-        #display = display[:-4]
-
         try:
+        #if True:
+            suggestions = self.ttsLanguageCodes
+            languages = [self.ttsLanguages[code][-1] for code in suggestions]
+            #shortCodes = []
+            #languages = []
+            #for code in codes:
+            #    shortCodes.append(re.sub("\-.*?$", "", code))
+            #    languages.append(self.ttsLanguages[code][-1])
+            # suggestions
+            #suggestions = codes + shortCodes
+            #suggestions = list(set(suggestions))
             self.print(self.divider)
-            self.print(self.showttslanguages())
-            self.printChooseItem()
-            self.print("Enter a language code:")
-            suggestions = shortCodes + codes
-            suggestions = list(set(suggestions))
-            completer = WordCompleter(suggestions, ignore_case=True)
             default = config.ttsDefaultLangauge if config.ttsDefaultLangauge in suggestions else ""
-            userInput = self.terminal_tts_language_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer, default=default).strip()
+            if defaultLanguage and defaultLanguage in suggestions:
+                userInput = defaultLanguage
+            else:
+                # display available languages
+                self.print(self.showttslanguages())
+                self.printChooseItem()
+                self.print("Enter / Search for a language:")
+                userInput = self.searchablePrompt(self.inputIndicator, default=default, options=suggestions, descriptions=languages, promptSession=self.terminal_tts_language_session)
+            # alternative: use input dialog
+            #if defaultLanguage and defaultLanguage in suggestions:
+            #    userInput = defaultLanguage
+            #else:
+            #    userInput = self.dialogs.searchableInput(title="Text-to-speech", text="Enter or search for a language code:", options=suggestions)
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in suggestions:
-                config.ttsDefaultLangauge = userInput
+                #config.ttsDefaultLangauge = userInput
                 commandPrefix = f"{self.getDefaultTtsKeyword()}:::{userInput}:::"
                 if runOnSelectedText:
                     userInput = clipboardText
                 else:
                     self.print(self.divider)
-                    self.print("Enter text to be read:")
+                    self.print("Enter text:")
                     userInput = self.simplePrompt(multiline=True)
                 if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
@@ -1392,7 +1442,7 @@ class LocalCliHandler:
                 self.print("(enter a language code)")
                 suggestions = codes
                 completer = WordCompleter(suggestions, ignore_case=True)
-                userInput = self.terminal_watson_translate_from_language_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer).strip()
+                userInput = self.terminal_watson_translate_from_language_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer).strip()
                 if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 if userInput in suggestions:
@@ -1412,7 +1462,7 @@ class LocalCliHandler:
                     self.print("(enter a language code)")
                     suggestions = codes
                     completer = WordCompleter(suggestions, ignore_case=True)
-                    userInput = self.terminal_watson_translate_to_language_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer).strip()
+                    userInput = self.terminal_watson_translate_to_language_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer).strip()
                     if not userInput or userInput.lower() == config.terminal_cancel_action:
                         return self.cancelAction()
 
@@ -1459,7 +1509,7 @@ class LocalCliHandler:
                 self.print("(enter a language code)")
                 suggestions = codes
                 completer = WordCompleter(suggestions, ignore_case=True)
-                userInput = self.terminal_google_translate_from_language_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer).strip()
+                userInput = self.terminal_google_translate_from_language_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer).strip()
                 if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 if userInput in suggestions:
@@ -1471,7 +1521,7 @@ class LocalCliHandler:
                     self.print("(enter a language code)")
                     suggestions = codes
                     completer = WordCompleter(suggestions, ignore_case=True)
-                    userInput = self.terminal_google_translate_to_language_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer).strip()
+                    userInput = self.terminal_google_translate_to_language_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer).strip()
                     if not userInput or userInput.lower() == config.terminal_cancel_action:
                         return self.cancelAction()
 
@@ -1654,7 +1704,7 @@ class LocalCliHandler:
 
     def find(self):
         self.print("Enter a search pattern: ")
-        userInput = self.terminal_find_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle).strip()
+        userInput = self.terminal_find_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle).strip()
         if not userInput or userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
         if config.isColoramaInstalled:
@@ -1852,11 +1902,99 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
     def simplePrompt(self, numberOnly=False, multiline=False, inputIndicator="", default="", accept_default=False):
         if not inputIndicator:
             inputIndicator = self.inputIndicator
-        if numberOnly:
-            userInput = prompt(inputIndicator, key_bindings=self.prompt_multiline_shared_key_bindings if multiline else self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(multiline), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, validator=NumberValidator(), multiline=multiline, default=default, accept_default=accept_default).strip()
-        else:
-            userInput = prompt(inputIndicator, key_bindings=self.prompt_multiline_shared_key_bindings if multiline else self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(multiline), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, multiline=multiline, default=default, accept_default=accept_default).strip()
+        userInput = prompt(
+            inputIndicator,
+            key_bindings=self.prompt_multiline_shared_key_bindings if multiline else self.prompt_shared_key_bindings,
+            bottom_toolbar=self.getToolBar(multiline),
+            enable_system_prompt=True,
+            swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")),
+            style=self.promptStyle,
+            validator=NumberValidator() if numberOnly else None,
+            multiline=multiline,
+            default=default,
+            accept_default=accept_default,
+        ).strip()
         return userInput
+
+        """
+        (function) prompt: (
+        message: AnyFormattedText = None, *, 
+        history: History | None = None, 
+        editing_mode: EditingMode | None = None, 
+        refresh_interval: float | None = None, 
+        vi_mode: bool | None = None, 
+        lexer: Lexer | None = None, 
+        completer: Completer | None = None, 
+        complete_in_thread: bool | None = None, 
+        is_password: bool | None = None, 
+        key_bindings: KeyBindingsBase | None = None, 
+        bottom_toolbar: AnyFormattedText = None, 
+        style: BaseStyle | None = None, 
+        color_depth: ColorDepth | None = None, 
+        cursor: AnyCursorShapeConfig = None, 
+        include_default_pygments_style: FilterOrBool | None = None, 
+        style_transformation: StyleTransformation | None = None, 
+        swap_light_and_dark_colors: FilterOrBool | None = None, 
+        rprompt: AnyFormattedText = None, 
+        multiline: FilterOrBool | None = None, 
+        prompt_continuation: PromptContinuationText | None = None, 
+        wrap_lines: FilterOrBool | None = None, 
+        enable_history_search: FilterOrBool | None = None, 
+        search_ignore_case: FilterOrBool | None = None, 
+        complete_while_typing: FilterOrBool | None = None, 
+        validate_while_typing: FilterOrBool | None = None, 
+        complete_style: CompleteStyle | None = None, 
+        auto_suggest: AutoSuggest | None = None, 
+        validator: Validator | None = None, 
+        clipboard: Clipboard | None = None, 
+        mouse_support: FilterOrBool | None = None, 
+        input_processors: List[Processor] | None = None, 
+        placeholder: AnyFormattedText = None, 
+        reserve_space_for_menu: int | None = None, 
+        enable_system_prompt: FilterOrBool | None = None, 
+        enable_suspend: FilterOrBool | None = None, 
+        enable_open_in_editor: FilterOrBool | None = None, 
+        tempfile_suffix: str | (() -> str) | None = None, 
+        tempfile: str | (() -> str) | None = None, default: str = "", 
+        accept_default: bool = False, 
+        pre_run: (() -> None) | None = None
+        ) -> str
+        """
+
+    # a wrapper to standard input_dialog; open radiolist_dialog showing available options when user input is not a valid option.
+    def searchablePrompt(self, inputIndicator="", multiline=False, default="", accept_default=False, completer=None, options=[], descriptions=[], validator=None, numberOnly=False, promptSession=None):
+        inputPrompt = promptSession.prompt if promptSession is not None else prompt
+        if not inputIndicator:
+            inputIndicator = self.inputIndicator
+        if completer is None and options:
+            completer = WordCompleter(options, ignore_case=True)
+        if validator is None and numberOnly:
+            validator=NumberValidator()
+        result = inputPrompt(
+            message=inputIndicator,
+            key_bindings=self.prompt_multiline_shared_key_bindings if multiline else self.prompt_shared_key_bindings,
+            bottom_toolbar=self.getToolBar(multiline),
+            enable_system_prompt=True,
+            swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")),
+            style=self.promptStyle,
+            completer=completer,
+            validator=NumberValidator() if numberOnly else None,
+            multiline=multiline,
+            default=default,
+            accept_default=accept_default,
+        ).strip()
+        if result.lower() == config.terminal_cancel_action:
+            return result
+        if options:
+            if result and result in options:
+                return result
+            else:
+                return self.dialogs.getValidOptions(options=options, descriptions=descriptions, filter=result)
+        else:
+            if result:
+                return result
+            else:
+                return ""
 
     def isUrlAlive(self, url):
         #print(urllib.request.urlopen("https://www.stackoverflow.com").getcode())
@@ -1977,7 +2115,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 self.print(content)
                 self.print(self.divider)
                 self.print(f"Enter an item to open:")
-                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle).strip()
+                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle).strip()
                 if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 self.print(self.divider)
@@ -2002,7 +2140,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             searchPrefix, showAll, openPrefix = elements[moduleType]
             self.print(self.divider)
             self.printSearchEntryPrompt()
-            userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle).strip()
+            userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle).strip()
             if userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             elif not userInput:
@@ -2018,7 +2156,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 self.print(content)
                 self.print(self.divider)
                 self.print(f"Enter an item to open:")
-                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle).strip()
+                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle).strip()
                 if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 self.print(self.divider)
@@ -2163,7 +2301,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     self.print(self.divider)
                 else:
                     self.getclipboardtext()
-            searchModes = ("SEARCH", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
+            searchModes = ("COUNT", "SEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
             options = {
                 "0": ("Whole Bible", searchModes[config.bibleSearchMode], "", config.mainText, ""),
                 "1": ("Old Testament", searchModes[config.bibleSearchMode], "", config.mainText, ":::OT"),
@@ -2250,14 +2388,14 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             if not searchKeyword:
                 searchKeyword = "SEARCHTOOL"
             completer = WordCompleter(abbList, ignore_case=True)
-            userInput = historySession.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer, default=default).strip()
+            userInput = historySession.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer, default=default).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in abbList:
                 module = userInput
                 self.print(self.divider)
                 self.printSearchEntryPrompt()
-                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle).strip()
+                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle).strip()
                 if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 command = f"{searchKeyword}:::{module}:::{userInput}"
@@ -2269,7 +2407,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 self.print(content[10:] if content.startswith("[MESSAGE]") else content)
                 self.print(self.divider)
                 self.print(f"To open, enter a module entry (e.g. {latestEntry}):")
-                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle).strip()
+                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle).strip()
                 if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 self.print(self.divider)
@@ -2303,7 +2441,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             if not searchKeyword:
                 searchKeyword = "SEARCHTOOL"
             completer = WordCompleter(abbList, ignore_case=True)
-            userInput = historySession.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer, accept_default=True if defaultModule else False, default=default).strip()
+            userInput = historySession.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer, accept_default=True if defaultModule else False, default=default).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in abbList:
@@ -2318,7 +2456,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 self.print(content[10:] if content.startswith("[MESSAGE]") else content)
                 self.print(self.divider)
                 self.print(f"To open, enter a module entry (e.g. {latestEntry}):")
-                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle).strip()
+                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle).strip()
                 if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 self.print(self.divider)
@@ -2334,14 +2472,14 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         except:
             return self.printInvalidOptionEntered()
 
-    def openreferencebook(self):
+    def openreferencebook(self, default="", accept_default=False):
         try:
             self.print(self.divider)
             self.print(self.showreferencebooks())
             self.print(self.divider)
             self.print("Enter a reference book:")
             completer = WordCompleter(self.crossPlatform.referenceBookList, ignore_case=True)
-            userInput = self.terminal_books_selection_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer, default=config.book).strip()
+            userInput = self.terminal_books_selection_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer, default=default if default else config.book, accept_default=accept_default).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in self.crossPlatform.referenceBookList:
@@ -2354,7 +2492,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 self.print(self.divider)
                 self.print("Enter a chapter title:")
                 completer = WordCompleter(chapterList, ignore_case=True)
-                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer, default=config.bookChapter if config.bookChapter in chapterList else "").strip()
+                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer, default=config.bookChapter if config.bookChapter in chapterList else "").strip()
                 if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 if userInput in chapterList:
@@ -2373,21 +2511,21 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             today = date.today()
             self.print(self.divider)
             self.print(f"Enter a year, e.g. {today.year}:")
-            userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, default=str(today.year)).strip()
+            userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, default=str(today.year)).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if int(userInput):
                 year = userInput
                 self.print(self.divider)
                 self.print(f"Enter a month, e.g. {today.month}:")
-                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, default=str(today.month)).strip()
+                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, default=str(today.month)).strip()
                 if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 if int(userInput):
                     month = userInput
                     self.print(self.divider)
                     self.print(f"Enter a day, e.g. {today.day}:")
-                    userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, default=str(today.day)).strip()
+                    userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, default=str(today.day)).strip()
                     if not userInput or userInput.lower() == config.terminal_cancel_action:
                         return self.cancelAction()
                     if int(userInput):
@@ -2412,7 +2550,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             # select bible or bibles
             completer = WordCompleter(self.crossPlatform.textList, ignore_case=True)
             defaultText = self.getDefaultText()
-            userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer, default=defaultText).strip()
+            userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer, default=defaultText).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in self.crossPlatform.textList:
@@ -2424,11 +2562,10 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 self.print("(enter a book number)")
                 # select bible book
                 completer = WordCompleter([str(i) for i in self.bookNumbers], ignore_case=True)
-                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, validator=NumberValidator(), completer=completer, default=str(config.mainB)).strip()
+                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, validator=NumberValidator(), completer=completer, default=str(config.mainB)).strip()
                 if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 if int(userInput) in self.bookNumbers:
-                    self.print(userInput, self.bookNumbers)
                     bibleBookNumber = userInput
                     self.print(self.divider)
                     self.showbiblechapters(text=bible, b=bibleBookNumber)
@@ -2437,7 +2574,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     self.print("(enter a chapter number)")
                     # select bible chapter
                     defaultChapter = str(config.mainC) if config.mainC in self.currentBibleChapters else str(self.currentBibleChapters[0])
-                    userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, validator=NumberValidator(), default=defaultChapter).strip()
+                    userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, validator=NumberValidator(), default=defaultChapter).strip()
                     if not userInput or userInput.lower() == config.terminal_cancel_action:
                         return self.cancelAction()
                     if int(userInput) in self.currentBibleChapters:
@@ -2449,7 +2586,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         self.print("(enter a verse number)")
                         # select verse number
                         defaultVerse = str(config.mainV) if config.mainV in self.currentBibleVerses else str(self.currentBibleVerses[0])
-                        userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, validator=NumberValidator(), default=defaultVerse).strip()
+                        userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, validator=NumberValidator(), default=defaultVerse).strip()
                         if not userInput or userInput.lower() == config.terminal_cancel_action:
                             return self.cancelAction()
                         if int(userInput) in self.currentBibleVerses:
@@ -2544,7 +2681,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             self.printChooseItem()
             self.print("(enter a book abbreviation)")
             completer = WordCompleter(self.currentBibleAbbs, ignore_case=True)
-            userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer, default=self.currentBibleAbb).strip()
+            userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer, default=self.currentBibleAbb).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in self.currentBibleAbbs:
@@ -2557,7 +2694,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 self.printChooseItem()
                 self.print("(enter a chapter number)")
                 defaultChapter = str(config.mainC) if config.mainC in self.currentBibleChapters else str(self.currentBibleChapters[0])
-                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, validator=NumberValidator(), default=defaultChapter).strip()
+                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, validator=NumberValidator(), default=defaultChapter).strip()
                 if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 if int(userInput) in self.currentBibleChapters:
@@ -2568,7 +2705,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     self.printChooseItem()
                     self.print("(enter a verse number)")
                     defaultVerse = str(config.mainV) if config.mainV in self.currentBibleVerses else str(self.currentBibleVerses[0])
-                    userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, validator=NumberValidator(), default=defaultVerse).strip()
+                    userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, validator=NumberValidator(), default=defaultVerse).strip()
                     if not userInput or userInput.lower() == config.terminal_cancel_action:
                         return self.cancelAction()
                     if int(userInput) in self.currentBibleVerses:
@@ -2592,7 +2729,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             self.printChooseItem()
             self.print("(enter a book abbreviation)")
             completer = WordCompleter(self.currentBibleAbbs, ignore_case=True)
-            userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer, default=self.currentBibleAbb).strip()
+            userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer, default=self.currentBibleAbb).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in self.currentBibleAbbs:
@@ -2605,7 +2742,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 self.printChooseItem()
                 self.print("(enter a chapter number)")
                 defaultChapter = str(config.mainC) if config.mainC in self.currentBibleChapters else str(self.currentBibleChapters[0])
-                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, validator=NumberValidator(), default=defaultChapter).strip()
+                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, validator=NumberValidator(), default=defaultChapter).strip()
                 if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 if int(userInput) in self.currentBibleChapters:
@@ -2629,7 +2766,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             self.printChooseItem()
             self.print("(enter a book abbreviation)")
             completer = WordCompleter(self.currentBibleBooks, ignore_case=True)
-            userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer, default=self.currentBibleBook).strip()
+            userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer, default=self.currentBibleBook).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in self.currentBibleBooks:
@@ -2662,7 +2799,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             # select bible or bibles
             completer = WordCompleter(self.crossPlatform.textList, ignore_case=True)
             defaultText = self.getDefaultText()
-            userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer, default=defaultText).strip()
+            userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer, default=defaultText).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if self.isValidBibles(userInput):
@@ -2675,7 +2812,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 self.print("(enter a book abbreviation)")
                 # select bible book
                 completer = WordCompleter(self.currentBibleAbbs, ignore_case=True)
-                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer, default=self.currentBibleAbb).strip()
+                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer, default=self.currentBibleAbb).strip()
                 if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 if userInput in self.currentBibleAbbs:
@@ -2689,7 +2826,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     self.print("(enter a chapter number)")
                     # select bible chapter
                     defaultChapter = str(config.mainC) if config.mainC in self.currentBibleChapters else str(self.currentBibleChapters[0])
-                    userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, validator=NumberValidator(), default=defaultChapter).strip()
+                    userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, validator=NumberValidator(), default=defaultChapter).strip()
                     if not userInput or userInput.lower() == config.terminal_cancel_action:
                         return self.cancelAction()
                     if int(userInput) in self.currentBibleChapters:
@@ -2701,7 +2838,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         self.print("(enter a verse number)")
                         # select verse number
                         defaultVerse = str(config.mainV) if config.mainV in self.currentBibleVerses else str(self.currentBibleVerses[0])
-                        userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, validator=NumberValidator(), default=defaultVerse).strip()
+                        userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, validator=NumberValidator(), default=defaultVerse).strip()
                         if not userInput or userInput.lower() == config.terminal_cancel_action:
                             return self.cancelAction()
                         if int(userInput) in self.currentBibleVerses:
@@ -2728,7 +2865,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             self.printChooseItem()
             commands = self.getTextCommandSuggestion(False)
             completer = WordCompleter(commands, ignore_case=True)
-            userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer).strip()
+            userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in commands:
@@ -2751,7 +2888,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             self.print("Enter a bible abbreviation to search a single version, e.g. 'KJVx'")
             self.print("To search multiple versions, use '_' as a delimiter, e.g. 'KJVx_RWVx_OHGBi'")
             completer = WordCompleter(self.crossPlatform.strongBibles, ignore_case=True)
-            userInput = self.terminal_search_strong_bible_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer, default=config.concordance).strip()
+            userInput = self.terminal_search_strong_bible_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer, default=config.concordance).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if self.isValidBibles(userInput):
@@ -2778,7 +2915,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             self.print("To compare multiple versions, use '_' as a delimiter, e.g. 'KJV_NET_OHGBi'")
             completer = WordCompleter(self.crossPlatform.textList, ignore_case=True)
             defaultText = self.getDefaultText()
-            userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer, default=defaultText).strip()
+            userInput = self.terminal_bible_selection_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer, default=defaultText).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if self.isValidBibles(userInput):
@@ -2796,7 +2933,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 self.print("(e.g. 'ALL', 'OT', 'NT', 'Gen, John', 'Matt-John, 1Cor, Rev', etc.)")
                 # select bible book range
                 completer = WordCompleter(["ALL", "OT", "NT"] + self.currentBibleAbbs, ignore_case=True)
-                userInput = self.terminal_search_bible_book_range_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer, default="ALL").strip()
+                userInput = self.terminal_search_bible_book_range_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer, default="ALL").strip()
                 if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 if BibleVerseParser(config.parserStandarisation).extractBookListAsString(userInput):
@@ -2804,8 +2941,8 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     bookRange = userInput
 
                     searchOptions = {
-                        "SEARCH": ("search for occurrence of a string", "plain text", "Jesus love"),
-                        "SEARCHALL": ("search for string", "plain text", "Jesus love"),
+                        "COUNT": ("count occurrence of a string", "plain text", r"Jesus%love"),
+                        "SEARCH": ("search for string", "plain text", r"Jesus%love"),
                         "ANDSEARCH": ("search for a combination of strings appeared in the same verse", "multiple plain text strings, delimited by '|'", "Jesus|love|disciple"),
                         "ORSEARCH": ("search for either one of the entered strings appeared in a single verse", "multiple plain text strings, delimited by '|'", "Jesus|love|disciple"),
                         "ADVANCEDSEARCH": ("search for a condition or a combination of conditions", "condition statement placed after the keyword 'WHERE' in a SQL query", 'Book = 1 AND Scripture LIKE "%worship%"'),
@@ -2819,7 +2956,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     self.print(self.divider)
                     self.printChooseItem()
                     self.print("(enter a number)")
-                    userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, validator=NumberValidator(), default=str(config.bibleSearchMode)).strip()
+                    userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, validator=NumberValidator(), default=str(config.bibleSearchMode)).strip()
                     if not userInput or userInput.lower() == config.terminal_cancel_action:
                         return self.cancelAction()
                     userInput = int(userInput)
@@ -2833,7 +2970,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         *_, stringFormat, example = searchOptions[searchOptionsList[userInput]]
                         self.print(f"(format: {stringFormat})")
                         self.print(f"(example: {example})")
-                        userInput = self.terminal_search_bible_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle).strip()
+                        userInput = self.terminal_search_bible_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle).strip()
                         if not userInput or userInput.lower() == config.terminal_cancel_action:
                             return self.cancelAction()
                         command = f"{keyword}:::{bible}:::{userInput}:::{bookRange}"
@@ -2841,7 +2978,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         # Check if it is a case-sensitive search
                         self.print(self.divider)
                         self.print("Case sensitive? ([y]es or [n]o)")
-                        userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, default="Y" if config.enableCaseSensitiveSearch else "N").strip()
+                        userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, default="Y" if config.enableCaseSensitiveSearch else "N").strip()
                         if not userInput or userInput.lower() == config.terminal_cancel_action:
                             return self.cancelAction()
                         if userInput.lower() in ("yes", "y", "no", "n"):
@@ -2868,7 +3005,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             self.print("Enter a commentary abbreviation, e.g. 'CBSC'")
             completer = WordCompleter(self.crossPlatform.commentaryList, ignore_case=True)
             defaultText = config.commentaryText
-            userInput = self.terminal_commentary_selection_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer, default=defaultText).strip()
+            userInput = self.terminal_commentary_selection_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer, default=defaultText).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in self.crossPlatform.commentaryList:
@@ -2880,7 +3017,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 self.printChooseItem()
                 self.print("(enter a book abbreviation)")
                 completer = WordCompleter(self.currentBibleAbbs, ignore_case=True)
-                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer, default=self.currentBibleAbb).strip()
+                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer, default=self.currentBibleAbb).strip()
                 if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 if userInput in self.currentBibleAbbs:
@@ -2893,7 +3030,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     self.printChooseItem()
                     self.print("(enter a chapter number)")
                     defaultChapter = str(config.commentaryC) if config.commentaryC in self.currentBibleChapters else str(self.currentBibleChapters[0])
-                    userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, validator=NumberValidator(), default=defaultChapter).strip()
+                    userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, validator=NumberValidator(), default=defaultChapter).strip()
                     if not userInput or userInput.lower() == config.terminal_cancel_action:
                         return self.cancelAction()
                     if int(userInput) in self.currentBibleChapters:
@@ -2904,7 +3041,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         self.printChooseItem()
                         self.print("(enter a verse number)")
                         defaultVerse = str(config.commentaryV) if config.commentaryV in self.currentBibleVerses else str(self.currentBibleVerses[0])
-                        userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, validator=NumberValidator(), default=defaultVerse).strip()
+                        userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, validator=NumberValidator(), default=defaultVerse).strip()
                         if not userInput or userInput.lower() == config.terminal_cancel_action:
                             return self.cancelAction()
                         if int(userInput) in self.currentBibleVerses:
@@ -2964,7 +3101,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         self.printEnterNumber((len(options) - 1))
         self.printCancelOption()
         completer = WordCompleter([str(i) for i in range(len(options))])
-        userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer, validator=NumberValidator())
+        userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer, validator=NumberValidator())
         if userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
         try:
@@ -2980,7 +3117,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             self.printEnterNumber((len(options) - 1))
             self.printCancelOption()
             completer = WordCompleter([str(i) for i in range(len(options))])
-            userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer, validator=NumberValidator())
+            userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer, validator=NumberValidator())
             if userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             else:
@@ -3090,7 +3227,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         try:
             self.print(self.divider)
             self.printSearchEntryPrompt()
-            userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle).strip()
+            userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle).strip()
             if userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             command = f"{keyword}:::{userInput}"
@@ -3179,34 +3316,21 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         self.print("Enter a terminal command on each line:")
         self.print(self.divider)
         default = "\n".join(config.terminalMyMenu)
-        userInput = prompt(self.inputIndicator, key_bindings=self.prompt_multiline_shared_key_bindings, bottom_toolbar=self.getToolBar(True), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, multiline=True, default=default).strip()
+        userInput = prompt(self.inputIndicator, key_bindings=self.prompt_multiline_shared_key_bindings, bottom_toolbar=self.getToolBar(True), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, multiline=True, default=default).strip()
         if userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
         config.terminalMyMenu = [i.lower().strip() for i in userInput.split("\n") if i.lower().strip() in config.mainWindow.dotCommands]
         self.print("config.terminalMyMenu is changed to:")
         self.print(config.terminalMyMenu)
 
-    def changebibledialog(self):
-        values = [(abb, self.crossPlatform.textFullNameList[index]) for index, abb in enumerate(self.crossPlatform.textList)]
-
-        result = radiolist_dialog(
-            values=values,
-            title="Change bible version",
-            text="Select a version:",
-        ).run()
-        if result:
-            return self.getContent(f"TEXT:::{result}")
-        else:
-            return self.cancelAction()
-
-    def changebiblesearchmode(self):
+    def changebiblesearchmodeOLD(self):
         try:
             self.print(self.divider)
-            searchModes = ("SEARCH", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
+            searchModes = ("COUNT", "SEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
             self.printOptionsDisplay(searchModes, "Change default bible search mode")
             self.print(self.divider)
             self.print("Enter a number:")
-            userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, validator=NumberValidator(), default=str(config.bibleSearchMode)).strip()
+            userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, validator=NumberValidator(), default=str(config.bibleSearchMode)).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             # define key
@@ -3221,7 +3345,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         filepath = os.path.join("terminal_mode", "how_to", f"{filename}.md")
         return self.readPlainTextFile(filepath)
 
-    def changenoteeditor(self):
+    def changenoteeditorOLD(self):
         try:
             self.print(self.divider)
             self.print("Select default note / journal editor:")
@@ -3237,7 +3361,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             self.print(self.divider)
             self.print("Enter your favourite text editor:")
             completer = WordCompleter(configurablesettings)
-            userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer).strip()
+            userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             # define key
@@ -3313,7 +3437,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             self.print("Enter the item you want to change:")
             
             completer = WordCompleter(configurablesettings, ignore_case=True)
-            userInput = self.terminal_config_selection_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, completer=completer).strip()
+            userInput = self.terminal_config_selection_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, completer=completer).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             # define key
@@ -3323,7 +3447,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 self.print(self.getContent(f"_setconfig:::{value}"))
                 self.print(self.divider)
                 self.print("Enter a value:")
-                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle).strip()
+                userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle).strip()
                 if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 self.print(self.getContent(f"_setconfig:::{value}:::{userInput}"))
@@ -3347,7 +3471,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 return ".restart"
         else:
             self.print("Do you want to proceed? [y]es / [N]o")
-            userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, default="N").strip()
+            userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, default="N").strip()
             userInput = userInput.lower()
             if userInput in ("y", "yes"):
                 self.print("reading config content ...")
@@ -3507,7 +3631,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     # organise user interactive menu
 
-    def displayFeatureMenu(self, heading, features):
+    def displayFeatureMenuOLD(self, heading, features):
         featureItems = [f"[<ref>{index}</ref> {item if config.terminalDisplayCommandOnMenu else ''} ] {self.dotCommands[item][0]}" for index, item in enumerate(features)]
         content = f"<h2>{heading}</h2>"
         content += "<br>".join(featureItems)
@@ -3516,7 +3640,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         self.print(self.divider)
         #self.printChooseItem()
         self.print("Enter a number:")
-        userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: config.terminalSwapColors), style=self.promptStyle, validator=NumberValidator()).strip()
+        userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, validator=NumberValidator()).strip()
         if not userInput or userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
         try:
@@ -3527,8 +3651,8 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             return self.printInvalidOptionEntered()
 
     def menu(self):
-        heading = "UBA Terminal Mode Menu"
-        features = [".show", ".open", ".search", ".note", ".edit", ".clipboard", ".quick", ".control", ".tools", ".plugins", ".change", ".download", ".maintain", ".develop", ".help", ".restart", ".quit"]
+        heading = "Master Menu"
+        features = [".show", ".open", ".search", ".note", ".edit", ".speak", ".translate", ".clipboard", ".quick", ".control", ".tools", ".plugins", ".change", ".download", ".maintain", ".develop", ".help", ".restart", ".quit"]
         if config.terminalMyMenu:
             features.insert(0, ".my")
         return self.displayFeatureMenu(heading, features)
@@ -3557,7 +3681,17 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def tools(self):
         heading = "Tools"
-        features = (".web", ".share", ".extract", ".filters", ".read", ".readsync", ".tts", ".googletranslate", ".watsontranslate")
+        features = (".web", ".share", ".extract", ".filters", ".read", ".readsync")
+        return self.displayFeatureMenu(heading, features)
+
+    def speak(self):
+        heading = "Speak"
+        features = (".tts", ".tts1", ".tts2", ".tts3", ".tts4", ".ttscopiedtext", ".ttscopiedtext1", ".ttscopiedtext2", ".ttscopiedtext3", ".ttscopiedtext4")
+        return self.displayFeatureMenu(heading, features)
+
+    def translate(self):
+        heading = "Translate"
+        features = (".googletranslate", ".googletranslatecopiedtext", ".watsontranslate", ".watsontranslatecopiedtext")
         return self.displayFeatureMenu(heading, features)
 
     def control(self):
@@ -3572,7 +3706,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def clipboard(self):
         heading = "Copy & Copied Text"
-        features = (".copy", ".copyhtml", ".paste", ".run", ".findcopiedtext", ".ttscopiedtext", ".googletranslatecopiedtext", ".watsontranslatecopiedtext", ".extractcopiedtext")
+        features = (".copy", ".copyhtml", ".paste", ".run", ".findcopiedtext", ".extractcopiedtext")
         return self.displayFeatureMenu(heading, features)
 
     def search(self):
@@ -3592,7 +3726,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def change(self):
         heading = "Change"
-        features = (".changebible", ".changefavouritebible1", ".changefavouritebible2", ".changefavouritebible3", ".changefavouriteoriginalbible", ".changecommentary", ".changelexicon", ".changedictionary", ".changethirdpartydictionary", ".changeencyclopedia", ".changeconcordance", ".changereferencebook", ".changettslanguage1", ".changettslanguage2", ".changettslanguage3", ".changedefaultcommand", ".changebiblesearchmode", ".changenoteeditor", ".changecolors", ".changeterminalmodeconfig", ".changeconfig")
+        features = (".changebible", ".changeparallelbibles", ".changefavouritebible1", ".changefavouritebible2", ".changefavouritebible3", ".changefavouriteoriginalbible", ".changecommentary", ".changelexicon", ".changedictionary", ".changethirdpartydictionary", ".changeencyclopedia", ".changeconcordance", ".changereferencebook", ".changereferencebookchapter", ".changettslanguage1", ".changettslanguage2", ".changettslanguage3", ".changedefaultcommand", ".changebiblesearchmode", ".changenoteeditor", ".changecolors", ".changeterminalmodeconfig", ".changeconfig")
         return self.displayFeatureMenu(heading, features)
 
     def help(self):
