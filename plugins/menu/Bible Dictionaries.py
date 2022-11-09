@@ -158,5 +158,5 @@ if os.path.isfile(databaseFile):
         databaseInfo = ((config.marvelData, "data", "dictionary.data"), "1NfbkhaR-dtmT1_Aue34KypR3mfPtqCZn")
         config.mainWindow.downloadHelper(databaseInfo)
 else:
-    databaseInfo = ((config.marvelData, "search.sqlite"), "1A4s8ewpxayrVXamiva2l1y1AinAcIKAh"),
+    databaseInfo = ((config.marvelData, "search.sqlite"), "1A4s8ewpxayrVXamiva2l1y1AinAcIKAh")
     config.mainWindow.downloadHelper(databaseInfo)
