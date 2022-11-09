@@ -160,5 +160,5 @@ if os.path.isfile(databaseFile):
         databaseInfo = ((config.marvelData, "data", "exlb3.data"), "1gp2Unsab85Se-IB_tmvVZQ3JKGvXLyMP")
         config.mainWindow.downloadHelper(databaseInfo)
 else:
-    databaseInfo = ((config.marvelData, "search.sqlite"), "1A4s8ewpxayrVXamiva2l1y1AinAcIKAh"),
+    databaseInfo = ((config.marvelData, "search.sqlite"), "1A4s8ewpxayrVXamiva2l1y1AinAcIKAh")
     config.mainWindow.downloadHelper(databaseInfo)

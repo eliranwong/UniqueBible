@@ -1,3 +1,6 @@
+Changes in 33.03:
+* Fixed downloading resources.
+
 Changes in 33.02:
 * Added various dialogs to terminal modes.
 * Added searchable input and prompt to terminal mode:

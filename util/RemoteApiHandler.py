@@ -60,6 +60,7 @@ class RemoteApiHandler(ApiRequestHandler):
         self.send_header("Cache-Control", "no-cache, no-store, must-revalidate"),
         self.send_header("Pragma", "no-cache"),
         self.send_header("Expires", "0")
+        self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
 
     def sendError(self, message):
