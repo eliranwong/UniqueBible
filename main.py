@@ -190,6 +190,8 @@ def closingTerminalMode():
         ConfigUtil.save()
     if config.terminalStopHttpServerOnExit:
         config.mainWindow.stophttpserver()
+    if not config.doNotStop3rdPartyMediaPlayerOnExit:
+        config.mainWindow.textCommandParser.parent.closeMediaPlayer()
 config.closingTerminalMode = closingTerminalMode
 
 def initiateMainPrompt():

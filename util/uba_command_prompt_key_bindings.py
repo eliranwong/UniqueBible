@@ -57,44 +57,80 @@ if config.terminal_ctrl_y.strip():
         event.app.current_buffer.text = config.terminal_ctrl_y
         event.app.current_buffer.validate_and_handle()
 
-# Escape+M open main menu
+# Escape+O launch open menu
+@uba_command_prompt_key_bindings.add("escape", "o")
+def _(event):
+    event.app.current_buffer.text = ".open"
+    event.app.current_buffer.validate_and_handle()
+
+# Escape+D run default command
+@uba_command_prompt_key_bindings.add("escape", "d")
+def _(event):
+    event.app.current_buffer.text = ".my"
+    event.app.current_buffer.validate_and_handle()
+
+# Escape+T launch text-to-speech menu
+@uba_command_prompt_key_bindings.add("escape", "t")
+def _(event):
+    event.app.current_buffer.text = ".speak"
+    event.app.current_buffer.validate_and_handle()
+
+# Escape+P launch plugins menu
+@uba_command_prompt_key_bindings.add("escape", "p")
+def _(event):
+    event.app.current_buffer.text = ".plugins"
+    event.app.current_buffer.validate_and_handle()
+
+# Escape+M launch master menu
 @uba_command_prompt_key_bindings.add("escape", "m")
 def _(event):
     event.app.current_buffer.text = ".menu"
     event.app.current_buffer.validate_and_handle()
 
-# Escape+H open menu
+# Escape+H launch help menu
 @uba_command_prompt_key_bindings.add("escape", "h")
 def _(event):
     event.app.current_buffer.text = ".help"
     event.app.current_buffer.validate_and_handle()
 
-# Escape+S open system command prompt
+# Escape+C open system command prompt
 @uba_command_prompt_key_bindings.add("escape", "c")
 def _(event):
     event.app.current_buffer.text = ".system"
     event.app.current_buffer.validate_and_handle()
 
-# Ctrl+Q reserves for quiting UBA
+# Ctrl+Q quit UBA
 @uba_command_prompt_key_bindings.add("c-q")
 def _(event):
     event.app.current_buffer.text = ".quit"
     event.app.current_buffer.validate_and_handle()
 
-# Ctrl+Q reserves for restarting UBA
+# Ctrl+Z restart UBA
 @uba_command_prompt_key_bindings.add("c-z")
 def _(event):
     event.app.current_buffer.text = ".restart"
     event.app.current_buffer.validate_and_handle()
 
-# Escape+B
-@uba_command_prompt_key_bindings.add("escape", "b")
+# Escape+W open wordnet
+@uba_command_prompt_key_bindings.add("escape", "w")
+def _(event):
+    event.app.current_buffer.text = ".wordnet"
+    event.app.current_buffer.validate_and_handle()
+
+# F1 change bible
+@uba_command_prompt_key_bindings.add("f1")
 def _(event):
     event.app.current_buffer.text = ".changebible"
     event.app.current_buffer.validate_and_handle()
 
-# Escape+W
-@uba_command_prompt_key_bindings.add("escape", "w")
+# F2 change bibles for comparison
+@uba_command_prompt_key_bindings.add("f2")
 def _(event):
-    event.app.current_buffer.text = ".wordnet"
+    event.app.current_buffer.text = ".changebibles"
+    event.app.current_buffer.validate_and_handle()
+
+# F3 change commentary
+@uba_command_prompt_key_bindings.add("f3")
+def _(event):
+    event.app.current_buffer.text = ".changecommentary"
     event.app.current_buffer.validate_and_handle()

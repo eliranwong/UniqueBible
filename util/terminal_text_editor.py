@@ -4,7 +4,8 @@ from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.shortcuts import confirm
 from prompt_toolkit import PromptSession
 from prompt_toolkit import prompt
-from prompt_toolkit.styles import Attrs, Style, SwapLightAndDarkStyleTransformation
+from prompt_toolkit.styles import Style
+from prompt_toolkit.shortcuts import radiolist_dialog
 from prompt_toolkit.shortcuts import clear, set_title, clear_title
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.key_binding import merge_key_bindings
@@ -43,6 +44,35 @@ class TextEditor:
             subHeadingColor=config.terminalHeadingTextColor,
             itemColor=config.terminalResourceLinkColor,
             workingDirectory=working_directory,
+        )
+        self.dialogStyle = Style.from_dict(
+            {
+                "dialog": "bg:ansiblack",
+                "dialog text-area": f"bg:ansiblack {config.terminalCommandEntryColor2}",
+                "dialog text-area.prompt": config.terminalPromptIndicatorColor2,
+                "dialog radio-checked": config.terminalResourceLinkColor,
+                "dialog checkbox-checked": config.terminalResourceLinkColor,
+                "dialog button.arrow": config.terminalResourceLinkColor,
+                "dialog button.focused": f"bg:{config.terminalResourceLinkColor} ansiblack",
+                "dialog frame.border": config.terminalResourceLinkColor,
+                "dialog frame.label": f"bg:ansiblack {config.terminalResourceLinkColor}",
+                "dialog.body": "bg:ansiblack ansiwhite",
+                "dialog shadow": "bg:ansiblack",
+            }
+        ) if config.terminalResourceLinkColor.startswith("ansibright") else Style.from_dict(
+            {
+                "dialog": "bg:ansiwhite",
+                "dialog text-area": f"bg:ansiblack {config.terminalCommandEntryColor2}",
+                "dialog text-area.prompt": config.terminalPromptIndicatorColor2,
+                "dialog radio-checked": config.terminalResourceLinkColor,
+                "dialog checkbox-checked": config.terminalResourceLinkColor,
+                "dialog button.arrow": config.terminalResourceLinkColor,
+                "dialog button.focused": f"bg:{config.terminalResourceLinkColor} ansiblack",
+                "dialog frame.border": config.terminalResourceLinkColor,
+                "dialog frame.label": f"bg:ansiwhite {config.terminalResourceLinkColor}",
+                "dialog.body": "bg:ansiwhite ansiblack",
+                "dialog shadow": "bg:ansiwhite",
+            }
         )
 
     def prompt_continuation(self, width, line_number, wrap_count):
@@ -397,7 +427,7 @@ class TextEditor:
             self.oldChanges = self.editorTextChanges
             self.editorReload = "c-t"
             buffer.validate_and_handle()
-        # open UBA main menu
+        # open UBA master menu
         if config.ubaIsRunning:
             @this_key_bindings.add("escape", "m")
             def _(event):
@@ -545,19 +575,40 @@ class TextEditor:
     def plugins(self):
         pluginDir = os.path.join(self.wd, "plugins", "text_editor") if self.wd else os.path.join("plugins", "text_editor")
         availablePlugins = FileUtil.fileNamesWithoutExtension(pluginDir, "py")
-        print(self.parent.divider)
-        self.parent.printOptionsDisplay(availablePlugins, "Plugins")
-        print(self.parent.divider)
-        print("Enter a number:")
-        userInput = self.simplePrompt(True)
+        userInput = self.getValidOptions(options=availablePlugins, title="Plugins")
         if not userInput or userInput.lower() == config.terminal_cancel_action:
             return self.parent.cancelAction()
         try:
-            filepath = os.path.join("plugins", "text_editor", f"{availablePlugins[int(userInput)]}.py")
+            filepath = os.path.join("plugins", "text_editor", f"{userInput}.py")
             self.parent.execPythonFile(filepath)
             return ""
         except:
             return self.parent.printInvalidOptionEntered()
+
+    def getValidOptions(self, options=[], descriptions=[], bold_descriptions=False, filter="", default="", title="Available Options", text="Select an item:"):
+        if not options:
+            return ""
+        filter = filter.strip().lower()
+        if descriptions:
+            descriptionslower = [i.lower() for i in descriptions]
+            values = [(option, HTML(f"<b>{descriptions[index]}</b>") if bold_descriptions else descriptions[index]) for index, option in enumerate(options) if (filter in option.lower() or filter in descriptionslower[index])]
+        else:
+            values = [(option, option) for option in options if filter in option.lower()]
+        if not values:
+            if descriptions:
+                values = [(option, HTML(f"<b>{descriptions[index]}</b>") if bold_descriptions else descriptions[index]) for index, option in enumerate(options)]
+            else:
+                values = [(option, option) for option in options]
+        result = radiolist_dialog(
+            title=title,
+            text=text,
+            values=values,
+            default=default if default and default in options else values[0][0],
+            style=self.dialogStyle,
+        ).run()
+        if result:
+            return result
+        return ""
 
     def simplePrompt(self, numberOnly=False, multiline=False, inputIndicator=""):
         if not inputIndicator:

@@ -100,7 +100,7 @@ class TerminalModeDialogs:
         return ""
 
     def displayFeatureMenu(self, heading, features):
-        values = [(command, self.parent.dotCommands[command][0]) for command in features]
+        values = [(command, command if config.terminalDisplayCommandOnMenu else self.parent.dotCommands[command][0]) for command in features]
         result = radiolist_dialog(
             title=heading,
             text="Select a feature:",

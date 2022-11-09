@@ -1,3 +1,10 @@
+Changes in 33.05:
+Terminal mode:
+* Fixed open and edit book note
+* Fixed saving bible note
+* Replace all selection menu with radio dialog
+* support use of config.doNotStop3rdPartyMediaPlayerOnExit
+
 Changes in 33.04:
 Terminal mode:
 * Integrated searchable prompts and multiple bible selection menu.

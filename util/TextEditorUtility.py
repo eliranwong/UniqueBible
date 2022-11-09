@@ -8,7 +8,6 @@ from util.HebrewTransliteration import HebrewTransliteration
 from util.WebtopUtil import WebtopUtil
 from install.module import *
 
-
 # Created for running text editor without UBA
 class TextEditorUtility:
 
@@ -649,16 +648,6 @@ class TextEditorUtility:
             return ""
         except:
             return self.noClipboardUtility()
-
-    def printOptionsDisplay(self, options, heading=""):
-        print(self.getOptionsDisplay(options, heading))
-
-    def getOptionsDisplay(self, options, heading=""):
-        optionsDisplay = [f"[<ref>{i}</ref> ] {mode}" for i, mode in enumerate(options)]
-        optionsDisplay = "<br>".join(optionsDisplay)
-        if heading:
-            optionsDisplay = f"<h2>{heading}</h2>{optionsDisplay}<br>"
-        return TextUtil.htmlToPlainText(optionsDisplay).strip()
 
     def getSystemCommands(self):
         try:

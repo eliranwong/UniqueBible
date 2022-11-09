@@ -40,6 +40,7 @@ from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from util.prompt_shared_key_bindings import prompt_shared_key_bindings
 from util.prompt_multiline_shared_key_bindings import prompt_multiline_shared_key_bindings
 from util.terminal_mode_dialogs import TerminalModeDialogs
+from util.ConfigUtil import ConfigUtil
 
 
 class LocalCliHandler:
@@ -259,6 +260,8 @@ class LocalCliHandler:
     def getDotCommands(self):
         return {
             config.terminal_cancel_action: ("cancel action in current prompt", self.cancelAction),
+            ".togglecolorbrightness": ("toggle color brightness", self.togglecolorbrightness),
+            ".togglecolourbrightness": ("an alias to the '.togglecolorbrightness' command", self.togglecolorbrightness),
             ".togglepager": ("toggle paging for text output", self.togglePager),
             ".toggleclipboardmonitor": ("toggle paging for text output", self.toggleClipboardMonitor),
             ".togglebiblecomparison": ("toggle bible comparison view", self.togglebiblecomparison),
@@ -400,7 +403,7 @@ class LocalCliHandler:
             ".openverseindex": ("open verse index", lambda: self.openversefeature("INDEX")),
             ".opencombo": ("open combination of translation, discourse and words features", lambda: self.openversefeature("COMBO")),
             ".openwords": ("open all word data in a single verse", lambda: self.openversefeature("WORDS")),
-            ".openword": ("open Hebrew / Greek word data", self.openword),
+            ".openword": ("open Hebrew / Greek word data", lambda: self.readword(dataOnly=True)),
             ".opendiscourse": ("open discourse features", lambda: self.openversefeature("DISCOURSE")),
             ".opentranslation": ("open original word translation", lambda: self.openversefeature("TRANSLATION")),
             ".openoverview": ("open chapter overview", self.openchapterfeature),
@@ -420,7 +423,7 @@ class LocalCliHandler:
             ".standardcommands": ("display standard UBA command", self.standardcommands),
             ".terminalcommands": ("display terminal mode commands", self.terminalcommands),
             ".aliases": ("display terminal mode command shortcuts", self.commandAliases),
-            ".keys": ("display customised keyboard shortcuts", self.keys),
+            ".keys": ("display keyboard shortcuts", self.keys),
             ".menu": ("display master menu", self.menu),
             ".my": ("my favourites", self.my),
             ".show": ("show ...", self.info),
@@ -664,15 +667,15 @@ class LocalCliHandler:
 
     def plugins(self, default="", accept_default=False):
         availablePlugins = FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "terminal"), "py")
-        self.print(self.divider)
-        self.printOptionsDisplay(availablePlugins, "Plugins")
-        self.print(self.divider)
-        self.print("Enter a number:")
-        userInput = self.simplePrompt(True, default=default, accept_default=accept_default)
+        if default and accept_default:
+            userInput = self.simplePrompt(default=default, accept_default=accept_default)
+        else:
+            userInput = self.dialogs.getValidOptions(options=availablePlugins, title="Plugins", default=default)
         if not userInput or userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
         try:
-            filepath = os.path.join("plugins", "terminal", f"{availablePlugins[int(userInput)]}.py")
+            #filepath = os.path.join("plugins", "terminal", f"{availablePlugins[int(userInput)]}.py")
+            filepath = os.path.join("plugins", "terminal", f"{userInput}.py")
             self.execPythonFile(filepath)
             return ""
         except:
@@ -685,15 +688,11 @@ class LocalCliHandler:
 
     def howto(self):
         availableHowto = FileUtil.fileNamesWithoutExtension(os.path.join("terminal_mode", "how_to"), "md")
-        self.print(self.divider)
-        self.printOptionsDisplay(availableHowto, "Plugins")
-        self.print(self.divider)
-        self.print("Enter a number:")
-        userInput = self.simplePrompt(True)
+        userInput = self.dialogs.getValidOptions(options=availableHowto, title="How-to")
         if not userInput or userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
         try:
-            filepath = os.path.join("terminal_mode", "how_to", f"{availableHowto[int(userInput)]}.md")
+            filepath = os.path.join("terminal_mode", "how_to", f"{userInput}.md")
             return self.readPlainTextFile(filepath)
         except:
             return self.printInvalidOptionEntered()
@@ -886,7 +885,7 @@ class LocalCliHandler:
             elif i == ".show":
                 suggestions[i] = self.getDummyDict(["bibleabbreviations", "biblebooks", "biblechapters", "bibles", "bibleverses", "commentaries", "data", "dictionaries", "downloads", "encyclopedia", "lexicons", "referencebooks", "strongbibles", "thirdpartydictionary", "topics", "ttslanguages"])
             elif i == ".toggle":
-                suggestions[i] = self.getDummyDict(["biblechapterplainlayout", "biblecomparison", "biblelexicalentries", "biblenoteindicator", "clipboardmonitor", "favoriteverses", "favouriteverses", "pager", "plainbiblechaptersubheadings", "usernoteindicator", "versenumberdisplay"])
+                suggestions[i] = self.getDummyDict(["biblechapterplainlayout", "biblecomparison", "biblelexicalentries", "biblenoteindicator", "clipboardmonitor", "colorbrightness", "colourbrightness", "favoriteverses", "favouriteverses", "pager", "plainbiblechaptersubheadings", "usernoteindicator", "versenumberdisplay"])
             elif i in ("text:::", "studytext:::", "_chapters", "_bibleinfo:::"):
                 suggestions[i] = self.getDummyDict(self.crossPlatform.textList)
             elif i in ("_vnsc:::", "_vndc:::", "readchapter:::", "readverse:::", "readword:::", "readlexeme:::",):
@@ -1004,11 +1003,26 @@ class LocalCliHandler:
         return ""
 
     def keys(self):
+        bulitinKeyBindings = """Built-in keyboard shortcuts:
+Ctrl+Q quit UBA
+Ctrl+Z restart UBA
+Escape+C open system command prompt
+Escape+D run default command
+Escape+H launch help menu
+Escape+M launch master menu
+Escape+O launch open menu
+Escape+P launch plugins menu
+Escape+S swap colour brightness
+Escape+T launch text-to-speech menu
+Escape+W open wordnet
+F1 change bible
+F2 change bibles for comparison
+F3 change commentary"""
         content = "Customised keyboard shortcuts:\n"
-        keyCombo = ["ctrl+a", "ctrl+b", "ctrl+c", "ctrl+f", "ctrl+g", "ctrl+i", "ctrl+k", "ctrl+l", "ctrl+r", "ctrl+s", "ctrl+u", "ctrl+w", "ctrl+x", "ctrl+y"]
-        configEntry = [config.terminal_ctrl_a, config.terminal_ctrl_b, config.terminal_ctrl_c, config.terminal_ctrl_f, config.terminal_ctrl_g, config.terminal_ctrl_i, config.terminal_ctrl_k, config.terminal_ctrl_l, config.terminal_ctrl_r, config.terminal_ctrl_s, config.terminal_ctrl_u, config.terminal_ctrl_w, config.terminal_ctrl_x, config.terminal_ctrl_y]
+        keyCombo = ["ctrl+b", "ctrl+f", "ctrl+g", "ctrl+k", "ctrl+l", "ctrl+r", "ctrl+s", "ctrl+u", "ctrl+w", "ctrl+y"]
+        configEntry = [config.terminal_ctrl_b, config.terminal_ctrl_f, config.terminal_ctrl_g, config.terminal_ctrl_k, config.terminal_ctrl_l, config.terminal_ctrl_r, config.terminal_ctrl_s, config.terminal_ctrl_u, config.terminal_ctrl_w, config.terminal_ctrl_y]
         content += pprint.pformat(dict(zip(keyCombo, configEntry)))
-        self.print(self.keepContent(content))
+        self.print(self.keepContent(f"{self.divider}\n{bulitinKeyBindings}\n{self.divider}\n{content}"))
         return ""
 
     def open365readingplan(self):
@@ -1610,26 +1624,22 @@ class LocalCliHandler:
         return True if references else False
 
     def openbibleaudio(self):
-        self.print(self.divider)
-        self.printOptionsDisplay(self.crossPlatform.bibleAudioModules, "Installed Bible Audio")
-        self.print(self.divider)
         try:
-            self.print("Enter a number")
-            userInput = self.simplePrompt(True)
+            default = config.mainText if config.mainText in self.crossPlatform.bibleAudioModules else ""
+            userInput = self.dialogs.getValidOptions(options=self.crossPlatform.bibleAudioModules, title="Downlaod Bible Audio", default=default)
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
-            if -1 < int(userInput) < len(self.crossPlatform.bibleAudioModules):
-                module = self.crossPlatform.bibleAudioModules[int(userInput)]
-                self.print(f"You selected '{module}'.")
-                self.print("Enter bible reference(s) below:")
-                userInput = self.simplePrompt()
-                if not userInput or userInput.lower() == config.terminal_cancel_action:
-                    return self.cancelAction()
-                if self.isBibleReference(userInput):
-                    command = f"READ:::{module}:::{userInput}"
-                    return self.getContent(command)
-                else:
-                    return self.printInvalidOptionEntered()
+            module = userInput
+            self.print(f"You selected '{module}'.")
+            self.print("Enter bible reference(s) below:")
+            userInput = self.simplePrompt()
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
+                return self.cancelAction()
+            if self.isBibleReference(userInput):
+                command = f"READ:::{module}:::{userInput}"
+                return self.getContent(command)
+            else:
+                return self.printInvalidOptionEntered()
         except:
             return self.printInvalidOptionEntered()
 
@@ -2087,19 +2097,13 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def opendata(self):
         try:
-            self.print(self.divider)
-            self.printOptionsDisplay(self.crossPlatform.dataList, "Bible Data")
-            self.print(self.divider)
-            self.print("Enter a number:")
-            userInput = self.simplePrompt(True)
+            default = config.dataset if config.dataset in self.crossPlatform.dataList else ""
+            userInput = self.dialogs.getValidOptions(options=self.crossPlatform.dataList, title="Bible Data", default=default)
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
-            if int(userInput) in range(len(self.crossPlatform.dataList)):
-                command = f"DATA:::{self.crossPlatform.dataList[int(userInput)]}"
-                self.printRunningCommand(command)
-                return self.getContent(command)
-            else:
-                return self.printInvalidOptionEntered()
+            command = f"DATA:::{userInput}"
+            self.printRunningCommand(command)
+            return self.getContent(command)
         except:
             return self.printInvalidOptionEntered()
 
@@ -2222,13 +2226,8 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 "2": ("Bible Verse Notes", "EDITVERSENOTE", ""),
                 "3": ("Journals", "EDITJOURNAL", ""),
             }
-            display = [f"[<ref>{key}</ref> ] {value[0]} - {value[-1]}" for key, value in options.items()]
-            display = "<br>".join(display)
-            display = f"<h2>Quick Open Selected Entry in Editor</h2>{display}" if runOnSelectedText else f"<h2>Quick Edit</h2>{display}"
-            self.print(TextUtil.htmlToPlainText(display))
-            self.print(self.divider)
-            self.print("Enter a number:")
-            userInput = self.simplePrompt(True)
+            descriptions = [i[0] for i in options.values()]
+            userInput = self.dialogs.getValidOptions(options=list(options.keys()), descriptions=descriptions, title="Quick Open")
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             # define key
@@ -2299,13 +2298,8 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 "34": ("Bible Lexicon Content", "REVERSELEXICON", config.lexicon),
                 "35": ("Bible Concordance", "CONCORDANCE", config.concordance),
             }
-            display = [f"[<ref>{key}</ref> ] {value[0]} - {value[-1]}" for key, value in options.items()]
-            display = "<br>".join(display)
-            display = f"<h2>Quick Open Selected Text in ...</h2>{display}" if runOnSelectedText else f"<h2>Quick Open</h2>{display}"
-            self.print(TextUtil.htmlToPlainText(display))
-            self.print(self.divider)
-            self.print("Enter a number:")
-            userInput = self.simplePrompt(True)
+            descriptions = [i[0] for i in options.values()]
+            userInput = self.dialogs.getValidOptions(options=list(options.keys()), descriptions=descriptions, title="Quick Open")
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             # define key
@@ -2363,13 +2357,8 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 "19": ("Bible Lexicon Content", "REVERSELEXICON", "", config.lexicon, ""),
                 "20": ("Bible Concordance", "CONCORDANCE", "", config.concordance, ""),
             }
-            display = [f"[<ref>{key}</ref> ] {value[0]} - {value[-2]}" for key, value in options.items()]
-            display = "<br>".join(display)
-            display = f"<h2>Quick Search Selected Text in ...</h2>{display}" if runOnSelectedText else f"<h2>Quick Search</h2>{display}"
-            self.print(TextUtil.htmlToPlainText(display))
-            self.print(self.divider)
-            self.print("Enter a number:")
-            userInput = self.simplePrompt(True)
+            descriptions = [i[0] for i in options.values()]
+            userInput = self.dialogs.getValidOptions(options=list(options.keys()), descriptions=descriptions, title="Quick Open")
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             # define key
@@ -2490,20 +2479,10 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 content = re.sub(f"<{config.terminalResourceLinkColor}>[^<>]+?','", f"<{config.terminalResourceLinkColor}>", content)
                 if moduleType == "REVERSELEXICON":
                     return content
-                else:
-                    entries = re.compile("<{0}>(.*?)</{0}> .*?\] (.*?)$".format(config.terminalResourceLinkColor), flags=re.M).findall(content)
-                    options = []
-                    descriptions = []
-                    if entries:
-                        for option, description in entries:
-                            options.append(option)
-                            descriptions.append(description)
-                    else:
-                        options = re.compile("<{0}>(.*?)</{0}>".format(config.terminalResourceLinkColor)).findall(content)
                 self.print(content[10:] if content.startswith("[MESSAGE]") else content)
                 self.print(self.divider)
                 self.print(f"Enter a module entry (e.g. {latestEntry}):")
-                userInput = self.searchablePrompt(self.inputIndicator, options=options, descriptions=descriptions)
+                userInput = self.promptSelectionFromContent(content)
                 if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 self.print(self.divider)
@@ -2645,30 +2624,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         except:
             return self.printInvalidOptionEntered()
 
-    def openword(self):
-        try:
-            self.print(self.divider)
-            self.print(self.showbibleabbreviations(text="KJV"))
-            self.print(self.divider)
-            self.print("Enter a book number:")
-            bookNo = self.simplePrompt(True, default=str(config.mainB))
-            if not bookNo or bookNo.lower() == config.terminal_cancel_action:
-                return self.cancelAction()
-            if 66 >= int(bookNo) > 0:
-                self.print("Enter a word number:")
-                wordNo = self.simplePrompt(True)
-                if not wordNo or wordNo.lower() == config.terminal_cancel_action:
-                    return self.cancelAction()
-                command = f"WORD:::{bookNo}:::{wordNo}"
-                self.printRunningCommand(command)
-                content = self.getContent(command)
-                return content
-            else:
-                return self.printInvalidOptionEntered()
-        except:
-            return self.printInvalidOptionEntered()
-
-    def readword(self, lexeme=False):
+    def readword(self, lexeme=False, dataOnly=False):
         try:
             self.print(self.divider)
             self.print(self.showbibleabbreviations(text="KJV"))
@@ -2707,10 +2663,13 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                                 descriptions.append(description)
                         self.print(self.divider)
                         self.print("Enter a word number:")
-                        wordNo = self.searchablePrompt(options=options, descriptions=descriptions, bold_descriptions=(int(chapterNo) < 40), numberOnly=True)
+                        wordNo = self.searchablePrompt(options=options, descriptions=descriptions, bold_descriptions=(int(bookNo) < 40), numberOnly=True)
                         if not wordNo or wordNo.lower() == config.terminal_cancel_action:
                             return self.cancelAction()
-                        command = f"{'READLEXEME' if lexeme else 'READWORD'}:::{'BHS5' if int(bookNo) < 40 else 'OGNT'}.{bookNo}.{chapterNo}.{verseNo}.{int(wordNo)}"
+                        if dataOnly:
+                            command = f"WORD:::{bookNo}:::{wordNo}"
+                        else:
+                            command = f"{'READLEXEME' if lexeme else 'READWORD'}:::{'BHS5' if int(bookNo) < 40 else 'OGNT'}.{bookNo}.{chapterNo}.{verseNo}.{int(wordNo)}"
                         self.print(self.divider)
                         self.printRunningCommand(command)
                         content = self.getContent(command)
@@ -2826,10 +2785,12 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     "encyclopedia": (f"SEARCHTOOL:::{config.encyclopedia}", f"ENCYCLOPEDIA:::{config.encyclopedia}"),
                     "timelines": "SEARCHBOOKCHAPTER:::Timelines",
                 }
-                searchPrefix, openPrefix = features.get(feature, feature)
+                searchPrefix, openPrefix = features.get(feature, (feature, ""))
                 command = f"{searchPrefix}:::{bibleBook}"
                 self.printRunningCommand(command)
                 content = self.getContent(command)
+                if not openPrefix:
+                    return content
                 content = re.sub("(<{0}>)[^<>]*?','".format(config.terminalResourceLinkColor), r"\1", content)
                 self.print(self.divider)
                 self.print(content)
@@ -3212,22 +3173,14 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         self.toast(message)
         return ""
 
-    def downloadbibleaudio(self):
+    def downloadbibleaudio(self, default=""):
         options = list(self.crossPlatform.verseByVerseAudio.keys())
-        self.print(self.divider)
-        self.print(self.getOptionsDisplay(options, "Download Bible Audio"))
-        self.print(self.divider)
-        userInput = self.simplePrompt(True)
+        userInput = self.dialogs.getValidOptions(options=options, title="Downlaod Bible Audio", default=default)
         if not userInput or userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
-        index = int(userInput)
-        if index in range(len(options)):
-            choice = options[index]
-            self.print(f"You selected '{choice}'.")
-            module, repo, *_ = self.crossPlatform.verseByVerseAudio[choice]
-            self.downloadbibleaudioaction(module, repo)
-        else:
-            self.printInvalidOptionEntered()
+        self.print(f"You selected '{userInput}'.")
+        module, repo, *_ = self.crossPlatform.verseByVerseAudio[userInput]
+        self.downloadbibleaudioaction(module, repo)
 
     def downloadbibleaudioaction(self, module, repo):
         try:
@@ -3338,43 +3291,22 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             definition = synsets[0].definition()
         return definition
 
-    def printOptionsDisplay(self, options, heading=""):
-        self.print(self.getOptionsDisplay(options, heading))
-
-    def getOptionsDisplay(self, options, heading=""):
-        optionsDisplay = [f"[<ref>{i}</ref> ] {mode}" for i, mode in enumerate(options)]
-        optionsDisplay = "<br>".join(optionsDisplay)
-        if heading:
-            optionsDisplay = f"<h2>{heading}</h2>{optionsDisplay}"
-        return TextUtil.htmlToPlainText(optionsDisplay).strip()
-
     def changeDefaultCommand(self):
         try:
-            self.print(self.divider)
-            self.print("Change default command")
-            self.print("(What is 'default command'?  \nUBA runs default command when users simply press Enter key in command prompt without text entry)\n")
-            self.print("Current default command is:")
-            self.print(config.terminalDefaultCommand)
-            self.print(self.divider)
-            options = (".menu", ".run", ".search", ".quicksearch", ".quicksearchcopiedtext", "[CUSTOMISE]")
-            self.printOptionsDisplay(options, "Change Default Command")
-            self.print(self.divider)
-            self.print("Enter a number:")
-            userInput = self.simplePrompt(True)
+            options = (".my", ".menu", ".search", ".quicksearch", ".quicksearchcopiedtext", "[CUSTOMISE]")
+            default = config.terminalDefaultCommand if config.terminalDefaultCommand in options else ""
+            userInput = self.dialogs.getValidOptions(options=options, default=default, title="Change default command", text="UBA runs default command when users enter an emptry string.")
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             # define key
-            if userInput in ("0", "1", "2", "3", "4"):
-                return self.getContent(f"_setconfig:::terminalDefaultCommand:::'{options[int(userInput)]}'")
-            elif userInput == "5":
-                self.print(self.divider)
-                self.print("Enter an UBA command:")
-                userInput = self.simplePrompt()
-                if not userInput or userInput.lower() == config.terminal_cancel_action:
-                    return self.cancelAction()
+            if not userInput == "[CUSTOMISE]":
                 return self.getContent(f"_setconfig:::terminalDefaultCommand:::'{userInput}'")
-            else:
-                return self.printInvalidOptionEntered()
+            self.print(self.divider)
+            self.print("Enter an UBA command:")
+            userInput = self.simplePrompt(default=config.terminalDefaultCommand)
+            if not userInput or userInput.lower() == config.terminal_cancel_action:
+                return self.cancelAction()
+            return self.getContent(f"_setconfig:::terminalDefaultCommand:::'{userInput}'")
         except:
             return self.printInvalidOptionEntered()
 
@@ -3441,6 +3373,10 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         else:
             self.printTermuxApiDisabled()
         return ""
+
+    def togglecolorbrightness(self):
+        ConfigUtil.swapTerminalColors()
+        return "[MESSAGE]Changed!"
 
     def changeconfig(self, terminalCommandOnly=False):
         if config.terminalEnableTermuxAPI:
@@ -3594,9 +3530,6 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
     def saveNote(self, noteDB, noteType, b=None, c=None, v=None, year=None, month=None, day=None, note=""):
         note = TextUtil.fixNoteFont(note)
         if noteType == "book":
-            #NoteService.saveBookNote(b, note)
-            #noteDB = NoteSqlite()
-            #noteDB.saveBookNote(b, note)
             noteDB.saveBookNote(b, note, DateUtil.epoch())
         elif noteType == "chapter":
             noteDB.saveChapterNote(b, c, note, DateUtil.epoch())
@@ -3649,26 +3582,6 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         return self.getContent(".l")
 
     # organise user interactive menu
-
-    def displayFeatureMenuOLD(self, heading, features):
-        featureItems = [f"[<ref>{index}</ref> {item if config.terminalDisplayCommandOnMenu else ''} ] {self.dotCommands[item][0]}" for index, item in enumerate(features)]
-        content = f"<h2>{heading}</h2>"
-        content += "<br>".join(featureItems)
-        self.print(self.divider)
-        self.print(TextUtil.htmlToPlainText(content).strip())
-        self.print(self.divider)
-        #self.printChooseItem()
-        self.print("Enter a number:")
-        userInput = prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, validator=NumberValidator()).strip()
-        if not userInput or userInput.lower() == config.terminal_cancel_action:
-            return self.cancelAction()
-        try:
-            command = features[int(userInput)]
-            self.printRunningCommand(command)
-            return self.getContent(command)
-        except:
-            return self.printInvalidOptionEntered()
-
     def menu(self):
         heading = "Master Menu"
         features = [".show", ".open", ".search", ".note", ".edit", ".speak", ".translate", ".clipboard", ".quick", ".control", ".tools", ".plugins", ".change", ".download", ".maintain", ".develop", ".help", ".restart", ".quit"]
