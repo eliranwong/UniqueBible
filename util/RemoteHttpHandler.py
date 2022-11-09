@@ -370,8 +370,8 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{3}.css?v=1.064'>
-                <script src='js/http_server.js?v=1.064'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{3}.css?v=1.065'>
+                <script src='js/http_server.js?v=1.065'></script>
                 </head>
                 <body>... {1} ...
                 <script>
@@ -539,7 +539,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
 
         if ('tab_title' in infoDict.keys() and infoDict['tab_title'] == "Map"):
             content = content.replace("<title>Google Maps - gmplot</title>", """<title>UniqueBible.app</title>
-                <script src='js/http_server.js?v=1.064'></script>
+                <script src='js/http_server.js?v=1.065'></script>
                 <script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {0}
@@ -595,7 +595,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.064'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.065'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -725,12 +725,12 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5}
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.064'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.064'>
-                <script src='js/common.js?v=1.064'></script>
-                <script src='js/{9}.js?v=1.064'></script>
-                <script src='w3.js?v=1.064'></script>
-                <script src='js/http_server.js?v=1.064'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.065'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.065'>
+                <script src='js/common.js?v=1.065'></script>
+                <script src='js/{9}.js?v=1.065'></script>
+                <script src='w3.js?v=1.065'></script>
+                <script src='js/http_server.js?v=1.065'></script>
                 <script>
                 var queryString = window.location.search;	
                 queryString = queryString.substring(1);
@@ -1080,12 +1080,12 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 "zh {2} font-family:'{6}'; {3} "
                 ".ubaButton {2} background-color: {10}; color: {11}; border: none; padding: 2px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 17px; margin: 2px 2px; cursor: pointer; {3}"
                 "{8}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.064'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.064'>"
-                "<script src='js/common.js?v=1.064'></script>"
-                "<script src='js/{7}.js?v=1.064'></script>"
-                "<script src='w3.js?v=1.064'></script>"
-                "<script src='js/http_server.js?v=1.064'></script>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.065'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.065'>"
+                "<script src='js/common.js?v=1.065'></script>"
+                "<script src='js/{7}.js?v=1.065'></script>"
+                "<script src='w3.js?v=1.065'></script>"
+                "<script src='js/http_server.js?v=1.065'></script>"
                 """<script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}
@@ -1101,7 +1101,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 "{0}"
                 """<script>var versionList = []; var compareList = []; var parallelList = [];
                 var diffList = []; var searchList = [];</script>"""
-                "<script src='js/custom.js?v=1.064'></script>"
+                "<script src='js/custom.js?v=1.065'></script>"
                 "</head><body><span id='v0.0.0'></span>{1}"
                 "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible();document.querySelector('body').addEventListener('click', window.parent.closeSideNav);</script></body></html>"
                 ).format(activeBCVsettings,

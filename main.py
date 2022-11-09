@@ -199,6 +199,14 @@ def initiateMainPrompt():
     config.main_prompt_session = PromptSession(history=FileHistory(command_history))
 config.initiateMainPrompt = initiateMainPrompt
 
+def checkCommand(command):
+    if command.lower().startswith("http://") or command.lower().startswith("https://"):
+        return f"_website:::{command}"
+    elif (command.lower().endswith(".jpg") or command.lower().endswith(".jpeg") or command.lower().endswith(".png")) and os.path.isfile(os.path.join("htmlResources", "images", *command.split("/"))):
+        return f"_htmlimage:::{command}"
+    else:
+        return command
+
 def run_terminal_mode():
     #if config.isPrompt_toolkitInstalled:
     from prompt_toolkit.shortcuts import set_title, clear_title
@@ -272,6 +280,7 @@ def run_terminal_mode():
         import readline
 
     if command:
+        command = checkCommand(command)
         # display
         print(config.mainWindow.divider)
         try:
@@ -329,6 +338,7 @@ def run_terminal_mode():
         else:
             command = input(promptIndicator).strip()
         if command:
+            command = checkCommand(command)
             # remove spaces before and after ":::"
             command = re.sub("[ ]*?:::[ ]+?([^ ])", r":::\1", command)
             # remove "_" before ":::"

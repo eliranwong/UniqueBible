@@ -1,3 +1,19 @@
+Changes in 33.04:
+Terminal mode:
+* Integrated searchable prompts and multiple bible selection menu.
+* Improved 'open' menu features.
+* Integrate ability to open and search the following tools into single commands:
+    "promises", 
+    "parallels", 
+    "names", 
+    "characters", 
+    "locations", 
+    "dictionaries", 
+    "encyclopedia", 
+    "topics",
+    "thirdpartydictionaries",
+    "lexicons", 
+
 Changes in 33.03:
 * Fixed downloading resources.
 

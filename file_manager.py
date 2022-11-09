@@ -113,6 +113,7 @@ class FileManager:
                     userInput = input(indicator).strip()
                 #userInput = self.simplePrompt(inputIndicator=inputIndicator).strip()
                 if userInput and not userInput == config.terminal_cancel_action:
+                    userInput = userInput.replace("~", os.environ["HOME"])
                     os.system(userInput)
                     # check if directory is changed
                     #userInput = re.sub("^.*?[ ;&]*(cd .+?)[;&]*$", r"\1", userInput)

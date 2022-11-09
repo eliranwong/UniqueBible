@@ -168,6 +168,7 @@ class TextUtil:
 
     @staticmethod
     def htmlToPlainText(content, colours=True):
+        content = content.replace("<hr>", "<br><b>--------------------</b><br>")
         if config.runMode == "terminal":
             content = re.sub(r"""<ref onclick="lex\('(H[0-9]+?)'\)" class="G\1" onmouseover="ld\('\1'\); hl1\('','','\1'\)" onmouseout="hl0\('','','\1'\)">\1</ref>""", r"[<ref>\1</ref> ] ", content)
             content = re.sub("""(<heb|<grk)( [^<>]*?onclick="luW\([0-9]+?,')([0-9]+?)('[^<>]*?>)""", r"[<ref>\3</ref> ]\1\2\3\4", content)
@@ -434,12 +435,12 @@ class TextUtil:
                 "zh {2} font-family:'{6}'; {3} "
                 ".ubaButton {2} background-color: {10}; color: {11}; border: none; padding: 2px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 17px; margin: 2px 2px; cursor: pointer; {3}"
                 "{8}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.064'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.064'>"
-                "<script src='js/common.js?v=1.064'></script>"
-                "<script src='js/{7}.js?v=1.064'></script>"
-                "<script src='w3.js?v=1.064'></script>"
-                "<script src='js/http_server.js?v=1.064'></script>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.065'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.065'>"
+                "<script src='js/common.js?v=1.065'></script>"
+                "<script src='js/{7}.js?v=1.065'></script>"
+                "<script src='w3.js?v=1.065'></script>"
+                "<script src='js/http_server.js?v=1.065'></script>"
                 """<script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}
@@ -455,7 +456,7 @@ class TextUtil:
                 "{0}"
                 """<script>var versionList = []; var compareList = []; var parallelList = [];
                 var diffList = []; var searchList = [];</script>"""
-                "<script src='js/custom.js?v=1.064'></script>"
+                "<script src='js/custom.js?v=1.065'></script>"
                 "</head><body><span id='v0.0.0'></span>{1}"
                 "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible();document.querySelector('body').addEventListener('click', window.parent.closeSideNav);</script></body></html>"
                 ).format(activeBCVsettings,

@@ -1,5 +1,5 @@
 import config
-#from prompt_toolkit.formatted_text import HTML
+from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.styles import Style
 from prompt_toolkit.shortcuts import input_dialog, radiolist_dialog, checkboxlist_dialog, message_dialog
 from prompt_toolkit.completion import WordCompleter
@@ -66,34 +66,36 @@ class TerminalModeDialogs:
             if result and result in options:
                 return result
             else:
-                return self.getValidOptions(options=options, descriptions=descriptions, filter=result)
+                return self.getValidOptions(options=options, descriptions=descriptions, filter=result, default=default)
         else:
             if result:
                 return result
             else:
                 return ""
 
-    def getValidOptions(self, options=[], descriptions=[], filter=""):
+    def getValidOptions(self, options=[], descriptions=[], bold_descriptions=False, filter="", default="", title="Available Options", text="Select an item:"):
         if not options:
             return ""
+        filter = filter.strip().lower()
         if descriptions:
             descriptionslower = [i.lower() for i in descriptions]
-            values = [(option, descriptions[index]) for index, option in enumerate(options) if (filter.lower() in option.lower() or filter.lower() in descriptionslower[index])]
+            values = [(option, HTML(f"<b>{descriptions[index]}</b>") if bold_descriptions else descriptions[index]) for index, option in enumerate(options) if (filter in option.lower() or filter in descriptionslower[index])]
         else:
-            values = [(option, option) for option in options if filter in option]
+            values = [(option, option) for option in options if filter in option.lower()]
         if not values:
             if descriptions:
-                values = [(option, descriptions[index]) for index, option in enumerate(options)]
+                values = [(option, HTML(f"<b>{descriptions[index]}</b>") if bold_descriptions else descriptions[index]) for index, option in enumerate(options)]
             else:
                 values = [(option, option) for option in options]
         result = radiolist_dialog(
-            title="Available Options",
-            text="Select an item:",
+            title=title,
+            text=text,
             values=values,
-            default=values[0][0],
+            default=default if default and default in options else values[0][0],
             style=self.style,
         ).run()
         if result:
+            self.parent.print(result)
             return result
         return ""
 
@@ -112,12 +114,34 @@ class TerminalModeDialogs:
         else:
             return self.parent.cancelAction()
 
-    def getbible(self, title="Bible Selection", default=config.mainText):
+    def getbible(self, title="Bible Selection", default=config.mainText, text="Select a version:"):
         return radiolist_dialog(
             title=title,
-            text="Select a version:",
+            text=title,
             values=self.bibles,
             default=default,
+            style=self.style,
+        ).run()
+
+    def getBibles(self, title="Bible Comparison", text="Select bible versions:", default_values=[]):
+        if not default_values:
+            default_values = config.compareParallelList
+        return checkboxlist_dialog(
+            title=title,
+            text=text,
+            values=self.bibles,
+            default_values=default_values,
+            style=self.style,
+        ).run()
+
+    def getMultipleSelection(self, title="Bible Books", text="Select book(s):", options=["ALL"], default_values=["ALL"]):
+        if not default_values:
+            default_values = config.compareParallelList
+        return checkboxlist_dialog(
+            title=title,
+            text=text,
+            values=[(option, option) for option in options],
+            default_values=default_values,
             style=self.style,
         ).run()
 
@@ -128,14 +152,8 @@ class TerminalModeDialogs:
         else:
             return self.parent.cancelAction()
 
-    def changeparallelbibles(self):
-        results = checkboxlist_dialog(
-            title="Change Parallel Bibles",
-            text="Select bible versions:",
-            values=self.bibles,
-            default_values=config.compareParallelList,
-            style=self.style,
-        ).run()
+    def changebibles(self):
+        results = self.getBibles()
         if results:
             config.terminalBibleComparison = True
             config.compareParallelList = results
