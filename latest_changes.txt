@@ -1,3 +1,6 @@
+Changes in 33.06:
+* Fix startup of api-server
+
 Changes in 33.05:
 Terminal mode:
 * Fixed open and edit book note
