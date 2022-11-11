@@ -92,17 +92,17 @@ class GetPath:
             userInput = input(f"{message} (y/n)").strip()
             return True if userInput.lower() in ("y", "yes") else False
 
-    def getFilePath(self, check_isfile=False, empty_to_cancel=False, list_content_on_directory_change=False, keep_startup_directory=True, message="", bottom_toolbar=""):
+    def getFilePath(self, check_isfile=False, empty_to_cancel=False, list_content_on_directory_change=False, keep_startup_directory=True, message="", bottom_toolbar="", promptIndicator = ""):
         if not message:
             message = "Enter a file path:"
-        return self.getPath(check_isfile=check_isfile, empty_to_cancel=empty_to_cancel, list_content_on_directory_change=list_content_on_directory_change, keep_startup_directory=keep_startup_directory, message=message, bottom_toolbar=bottom_toolbar)
+        return self.getPath(check_isfile=check_isfile, empty_to_cancel=empty_to_cancel, list_content_on_directory_change=list_content_on_directory_change, keep_startup_directory=keep_startup_directory, message=message, bottom_toolbar=bottom_toolbar, promptIndicator=promptIndicator)
 
-    def getFolderPath(self, check_isdir=False, display_dir_only=False, create_dirs_if_not_exist=False, empty_to_cancel=False, list_content_on_directory_change=False, keep_startup_directory=True, message="", bottom_toolbar=""):
+    def getFolderPath(self, check_isdir=False, display_dir_only=False, create_dirs_if_not_exist=False, empty_to_cancel=False, list_content_on_directory_change=False, keep_startup_directory=True, message="", bottom_toolbar="", promptIndicator = ""):
         if not message:
             message = "Enter a directory path:"
-        return self.getPath(check_isdir=check_isdir, display_dir_only=display_dir_only, create_dirs_if_not_exist=create_dirs_if_not_exist, empty_to_cancel=empty_to_cancel, list_content_on_directory_change=list_content_on_directory_change, keep_startup_directory=keep_startup_directory, message=message, bottom_toolbar=bottom_toolbar)
+        return self.getPath(check_isdir=check_isdir, display_dir_only=display_dir_only, create_dirs_if_not_exist=create_dirs_if_not_exist, empty_to_cancel=empty_to_cancel, list_content_on_directory_change=list_content_on_directory_change, keep_startup_directory=keep_startup_directory, message=message, bottom_toolbar=bottom_toolbar, promptIndicator=promptIndicator)
 
-    def getPath(self, check_isfile=False, check_isdir=False, display_dir_only=False, create_dirs_if_not_exist=False, empty_to_cancel=False, list_content_on_directory_change=False, keep_startup_directory=True, message="", bottom_toolbar=""):
+    def getPath(self, check_isfile=False, check_isdir=False, display_dir_only=False, create_dirs_if_not_exist=False, empty_to_cancel=False, list_content_on_directory_change=False, keep_startup_directory=True, message="", bottom_toolbar="", promptIndicator = ""):
         if not message:
             message = "Enter a path:"
         thisPath = os.getcwd()
@@ -125,7 +125,7 @@ class GetPath:
         while promptEntry:
             promptEntry = False
             print(message)
-            indicator = "{0} {1} ".format(os.path.basename(os.getcwd()), "%")
+            indicator = promptIndicator if promptIndicator else "{0} {1} ".format(os.path.basename(os.getcwd()), "%")
             try:
                 # prompt toolkit is installed
                 from prompt_toolkit.completion import PathCompleter

@@ -1,3 +1,10 @@
+Changes in 33.07:
+* Added LOCATIONS::: command keyword
+Terminal mode:
+* Improved system command prompt
+* Added ".customisemaps" command for users to customise bible maps.
+* Added ".distance" command to calculate distance between two locations.
+
 Changes in 33.06:
 * Fix startup of api-server
 

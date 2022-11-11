@@ -18,6 +18,27 @@ class StartEditor:
         return config.textEditor.multilineEditor(text, placeholder)
 
 if __name__ == "__main__":
+
+    config.terminalColors = {
+        "ansidefault": "ansidefault",
+        "ansiblack": "ansiwhite",
+        "ansired": "ansibrightred",
+        "ansigreen": "ansibrightgreen",
+        "ansiyellow": "ansibrightyellow",
+        "ansiblue": "ansibrightblue",
+        "ansimagenta": "ansibrightmagenta",
+        "ansicyan": "ansibrightcyan",
+        "ansigray": "ansibrightblack",
+        "ansiwhite": "ansiblack",
+        "ansibrightred": "ansired",
+        "ansibrightgreen": "ansigreen",
+        "ansibrightyellow": "ansiyellow",
+        "ansibrightblue": "ansiblue",
+        "ansibrightmagenta": "ansimagenta",
+        "ansibrightcyan": "ansicyan",
+        "ansibrightblack": "ansigray",
+    }
+
     # make sure relative path of plugins folder works
     thisFile = os.path.realpath(__file__)
     wd = os.path.dirname(thisFile)

@@ -6,6 +6,7 @@ from util.GoogleCloudTTSVoices import GoogleCloudTTS
 from util.get_path_prompt import GetPath
 from util.HebrewTransliteration import HebrewTransliteration
 from util.WebtopUtil import WebtopUtil
+#from util.terminal_system_command_prompt import SystemCommandPrompt
 from install.module import *
 
 # Created for running text editor without UBA
@@ -51,7 +52,7 @@ class TextEditorUtility:
 
     def setOsOpenCmd(self):
         if config.terminalEnableTermuxAPI:
-            config.open = "termux-open"
+            config.open = "termux-share"
         elif platform.system() == "Linux":
             config.open = config.openLinux
         elif platform.system() == "Darwin":

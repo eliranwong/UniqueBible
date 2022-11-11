@@ -26,8 +26,14 @@ from util.WebtopUtil import WebtopUtil
 from util.Translator import Translator
 from util.HBN import HBN
 from util.terminal_text_editor import TextEditor
+from util.terminal_system_command_prompt import SystemCommandPrompt
+from util.terminal_mode_dialogs import TerminalModeDialogs
 from util.get_path_prompt import GetPath
 from util.PromptValidator import NumberValidator
+from util.prompt_shared_key_bindings import prompt_shared_key_bindings
+from util.prompt_multiline_shared_key_bindings import prompt_multiline_shared_key_bindings
+from util.ConfigUtil import ConfigUtil
+from util.exlbl import allLocations
 from prompt_toolkit import PromptSession, prompt, print_formatted_text, HTML
 from prompt_toolkit.shortcuts import clear, confirm
 from prompt_toolkit.filters import Condition
@@ -37,10 +43,7 @@ from prompt_toolkit.completion import WordCompleter, NestedCompleter, ThreadedCo
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.styles import Style
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
-from util.prompt_shared_key_bindings import prompt_shared_key_bindings
-from util.prompt_multiline_shared_key_bindings import prompt_multiline_shared_key_bindings
-from util.terminal_mode_dialogs import TerminalModeDialogs
-from util.ConfigUtil import ConfigUtil
+from haversine import haversine
 
 
 class LocalCliHandler:
@@ -142,7 +145,7 @@ class LocalCliHandler:
 
     def setOsOpenCmd(self):
         if config.terminalEnableTermuxAPI:
-            config.open = "termux-open"
+            config.open = "termux-share"
         elif platform.system() == "Linux":
             config.open = config.openLinux
         elif platform.system() == "Darwin":
@@ -194,7 +197,7 @@ class LocalCliHandler:
         google_translate_to_language_history = os.path.join(os.getcwd(), "terminal_history", "google_translate_to_language")
         python_string_history = os.path.join(os.getcwd(), "terminal_history", "python_string")
         python_file_history = os.path.join(os.getcwd(), "terminal_history", "python_file")
-        system_command_history = os.path.join(os.getcwd(), "terminal_history", "system_command")
+        #system_command_history = os.path.join(os.getcwd(), "terminal_history", "system_command")
 
         self.terminal_live_filter_session = PromptSession(history=FileHistory(live_filter))
         self.terminal_concordance_selection_session = PromptSession(history=FileHistory(module_history_concordance))
@@ -219,7 +222,7 @@ class LocalCliHandler:
         self.terminal_python_file_session = PromptSession(history=FileHistory(python_file_history))
         self.terminal_watson_translate_from_language_session = PromptSession(history=FileHistory(watson_translate_from_language_history))
         self.terminal_watson_translate_to_language_session = PromptSession(history=FileHistory(watson_translate_to_language_history))
-        self.terminal_system_command_session = PromptSession(history=FileHistory(system_command_history))
+        #self.terminal_system_command_session = PromptSession(history=FileHistory(system_command_history))
 
     def getShortcuts(self):
         return {
@@ -279,7 +282,8 @@ class LocalCliHandler:
             ".sas": ("an alias to the '.stopaudiosync' command", self.removeAudioPlayingFile),
             ".read": ("read available audio files", self.read),
             ".readsync": ("read available audio files with text synchronisation", self.readsync),
-            ".filters": ("filter latest content line-by-line", self.filters),
+            ".customisefilters": ("filter latest content", self.customisefilters),
+            ".customizefilters": ("an alias to the '.customisefilters' command", self.customisefilters),
             ".run": ("run copied text as command", self.runclipboardtext),
             ".forward": ("open one bible chapter forward", self.forward),
             ".backward": ("open one bible chapter backward", self.backward),
@@ -436,7 +440,7 @@ class LocalCliHandler:
             ".quick": ("quick features", self.quick),
             ".control": ("control menu", self.control),
             ".toggle": ("toggle ...", self.toggle),
-            ".clipboard": ("clipboard features", self.clipboard),
+            ".clipboard": ("copy / paste ...", self.clipboard),
             ".clip": ("an alias to the '.clipboard' command", self.clipboard),
             ".change": ("change ...", self.change),
             ".tools": ("tool menu", self.tools),
@@ -448,6 +452,7 @@ class LocalCliHandler:
             ".restore": ("restore ...", self.restore),
             ".develop": ("developer menu", self.develop),
             ".help": ("get help", self.help),
+            ".filters": ("filters", self.filters),
             ".wiki": ("open online wiki page", self.wiki),
             ".quickstart": ("show how to install text editor micro", lambda: self.readHowTo("quick start")),
             ".helpinstallmicro": ("show how to install text editor micro", lambda: self.readHowTo("install micro")),
@@ -462,7 +467,8 @@ class LocalCliHandler:
             ".editnewfile": ("edit new file in text editor", lambda: self.cliTool(config.terminalNoteEditor)),
             ".editcontent": ("edit latest content in text editor", lambda: self.cliTool(config.terminalNoteEditor, self.getPlainText())),
             ".editconfig": ("edit 'config.py' in text editor", lambda: self.editConfig(config.terminalNoteEditor)),
-            ".editfilters": ("edit 'filters.txt' in text editor", self.editfilters),
+            ".editfilters": ("edit saved filters", self.editfilters),
+            ".applyfilters": ("apply saved filters", self.applyfilters),
             ".searchbible": ("search bible", self.searchbible),
             ".whatis": ("read description about a command", self.whatis),
             ".starthttpserver": ("start UBA http-server", self.starthttpserver),
@@ -504,9 +510,9 @@ class LocalCliHandler:
             ".exec": ("execute a python string", self.execPythonString),
             ".execfile": ("execute a python file", self.execFile),
             ".reload": ("reload the latest content", self.reload),
-            ".restart": ("restart Unique Bible App", self.restartUBA),
+            ".restart": ("restart UBA", self.restartUBA),
             ".z": ("an alias to the '.restart' command", self.restartUBA),
-            ".quit": ("quit Unique Bible App", self.quitUBA),
+            ".quit": ("quit UBA", self.quitUBA),
             ".q": ("an alias to the '.quit' command", self.quitUBA),
             ".googletranslate": ("translate with Google Translate", lambda: self.googleTranslate(False)),
             ".googletranslatecopiedtext": ("translate copied text with Google Translate", self.googleTranslate),
@@ -517,70 +523,14 @@ class LocalCliHandler:
             ".wt": ("an alias to the '.watsontranslate' command", lambda: self.watsonTranslate(False)),
             ".wtc": ("an alias to the '.watsontranslatecopiedtext' command", self.watsonTranslate),
             ".buildportablepython": ("build portable python", self.buildPortablePython),
-            ".system": ("run system command prompt", self.system),
-            ".sys": ("an alias to the '.system' command", self.system),
+            ".system": ("run system command prompt", SystemCommandPrompt().run),
+            ".sys": ("an alias to the '.system' command", SystemCommandPrompt().run),
             ".clear": ("clear the current screen", clear),
             ".wordnet": ("clear the current screen", self.wordnet),
+            ".customisemaps": ("customise bible map", self.customisemaps),
+            ".customizemaps": ("an alias to the '.customisemap' command", self.customisemaps),
+            ".distance": ("distance between two locations", self.distance),
         }
-
-    def getSystemCommands(self):
-        try:
-            options = subprocess.Popen("bash -c 'compgen -ac | sort'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            stdout, *_ = options.communicate()
-            options = stdout.decode("utf-8").split("\n")
-            options = [option for option in options if option and not option in ("{", "}", ".", "!", ":")]
-            return options
-        except:
-            return []
-
-    def system(self):
-        self.runSystemCommandPrompt = True
-        # initial message
-        self.print("You are now using system command prompt!")
-        self.print(f"To go back, either press 'ctrl+q' or run '{config.terminal_cancel_action}'.")
-        # keep current path in case users change directory
-        ubaPath = os.getcwd()
-
-        this_key_bindings = KeyBindings()
-        @this_key_bindings.add("c-l")
-        def _(_):
-            self.print("")
-            self.print(self.divider)
-            run_in_terminal(lambda: self.getPath.displayDirectoryContent())
-
-        this_key_bindings = merge_key_bindings([
-            this_key_bindings,
-            self.prompt_shared_key_bindings,
-        ])
-
-        userInput = ""
-        systemCommands = self.getSystemCommands()
-        while self.runSystemCommandPrompt and not userInput == config.terminal_cancel_action:
-            try:
-                indicator = "{0} {1} ".format(os.path.basename(os.getcwd()), "%")
-                inputIndicator = [("class:indicator", indicator)]
-                dirIndicator = "\\" if platform.system() == "Windows" else "/"
-                completer = WordCompleter(sorted(set(systemCommands + [f"{i}{dirIndicator}" if os.path.isdir(i) else i for i in os.listdir()])))
-                auto_suggestion=AutoSuggestFromHistory()
-                userInput = self.terminal_system_command_session.prompt(inputIndicator, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, key_bindings=this_key_bindings, auto_suggest=auto_suggestion, completer=completer, bottom_toolbar=self.getToolBar()).strip()
-                if userInput and not userInput == config.terminal_cancel_action:
-                    userInput = userInput.replace("~", os.environ["HOME"])
-                    os.system(userInput)
-                    # check if directory is changed
-                    #userInput = re.sub("^.*?[ ;&]*(cd .+?)[;&]*$", r"\1", userInput)
-                    cmdList = []
-                    userInput = userInput.split(";")
-                    for i in userInput:
-                        subList = i.split("&")
-                        cmdList += subList
-                    cmdList = [i.strip() for i in cmdList if i and i.strip().startswith("cd ")]
-                    if cmdList:
-                        lastDir = cmdList[-1][3:]
-                        if os.path.isdir(lastDir):
-                            os.chdir(lastDir)
-            except:
-                pass
-        os.chdir(ubaPath)
 
     def editfilters(self):
         savedFiltersFile = os.path.join("terminal_mode", "filters.txt")
@@ -588,8 +538,20 @@ class LocalCliHandler:
         if changesMade:
             self.print("Filters updated!")
 
-    def filters(self):
+    def applyfilters(self):
+        savedFiltersFile = os.path.join("terminal_mode", "filters.txt")
+        if not os.path.isfile(savedFiltersFile):
+            with open(savedFiltersFile, "w", encoding="utf-8") as fileObj:
+                fileObj.write("jesus|christ\nGen \nJohn ")
+        with open(savedFiltersFile, "r", encoding="utf-8") as input_file:
+            savedFiltersFileContent = input_file.read()
+        savedFilters = [i for i in savedFiltersFileContent.split("\n") if i.strip()]
+        filters = self.dialogs.getMultipleSelection(options=savedFilters, descriptions=[], default_values=[savedFilters[0]], title="Apply Saved Filters", text="Select filters:")
+        return self.customisefilters(filters) if filters else ""
+
+    def customisefilters(self, defaultFilters=[]):
         try:
+        #if True:
             savedFiltersFile = os.path.join("terminal_mode", "filters.txt")
             if not os.path.isfile(savedFiltersFile):
                 with open(savedFiltersFile, "w", encoding="utf-8") as fileObj:
@@ -597,22 +559,26 @@ class LocalCliHandler:
             with open(savedFiltersFile, "r", encoding="utf-8") as input_file:
                 savedFiltersFileContent = input_file.read()
             savedFilters = [i for i in savedFiltersFileContent.split("\n") if i.strip()]
-            self.print(self.divider)
-            self.print(TextUtil.htmlToPlainText("<h2>Saved Filters are:</h2>"))
-            self.print(pprint.pformat(savedFilters))
-            self.print(self.divider)
-            self.print("Enter mulitple filters:")
-            self.print("(enter each on a single line)")
-            self.print("(newly added filters will be automatically saved)")
-            userInput = self.terminal_live_filter_session.prompt(self.inputIndicator, key_bindings=self.prompt_multiline_shared_key_bindings, bottom_toolbar=self.getToolBar(True), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, multiline=True).strip()
-            if not userInput or userInput.lower() == config.terminal_cancel_action:
-                return self.cancelAction()
-            currentFilters = []
-            for i in userInput.split("\n"):
-                if i.strip():
-                    if not i in savedFilters:
-                        savedFilters.append(i)
-                    currentFilters.append(i)
+
+            if defaultFilters:
+                currentFilters = defaultFilters
+            else:
+                self.print(self.divider)
+                self.print(TextUtil.htmlToPlainText("<h2>Saved Filters are:</h2>"))
+                self.print(pprint.pformat(savedFilters))
+                self.print(self.divider)
+                self.print("Enter mulitple filters:")
+                self.print("(enter each on a single line)")
+                self.print("(newly added filters will be automatically saved)")
+                userInput = self.terminal_live_filter_session.prompt(self.inputIndicator, key_bindings=self.prompt_multiline_shared_key_bindings, bottom_toolbar=self.getToolBar(True), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, multiline=True).strip()
+                if not userInput or userInput.lower() == config.terminal_cancel_action:
+                    return self.cancelAction()
+                currentFilters = []
+                for i in userInput.split("\n"):
+                    if i.strip():
+                        if not i in savedFilters:
+                            savedFilters.append(i)
+                        currentFilters.append(i)
             if not currentFilters:
                 return self.reload()
             filteredText = []
@@ -737,7 +703,7 @@ class LocalCliHandler:
                 except:
                     pass
             # Redirect heavy html content to web version.
-            if not command.lower().startswith(".") and re.search('^(map:::|qrcode:::|bible:::mab:::|bible:::mib:::|bible:::mob:::|bible:::mpb:::|bible:::mtb:::|text:::mab|text:::mib|text:::mob|text:::mpb|text:::mtb|study:::mab:::|study:::mib:::|study:::mob:::|study:::mpb:::|study:::mtb:::|studytext:::mab|studytext:::mib|studytext:::mob|studytext:::mpb|studytext:::mtb)', command.lower()):
+            if not command.lower().startswith(".") and re.search('^(map:::|locations:::|qrcode:::|bible:::mab:::|bible:::mib:::|bible:::mob:::|bible:::mpb:::|bible:::mtb:::|text:::mab|text:::mib|text:::mob|text:::mpb|text:::mtb|study:::mab:::|study:::mib:::|study:::mob:::|study:::mpb:::|study:::mtb:::|studytext:::mab|studytext:::mib|studytext:::mob|studytext:::mpb|studytext:::mtb)', command.lower()):
                 return self.web(command)
             # Dot commands
             if command == ".":
@@ -854,6 +820,12 @@ class LocalCliHandler:
                 suggestions[i] = self.getDummyDict(["journals", "notes",])
             elif i == ".copy":
                 suggestions[i] = self.getDummyDict(["html",])
+            elif i == ".apply":
+                suggestions[i] = self.getDummyDict(["filters",])
+            elif i == ".customise":
+                suggestions[i] = self.getDummyDict(["maps", "filters",])
+            elif i == ".customize":
+                suggestions[i] = self.getDummyDict(["maps", "filters",])
             elif i == ".download":
                 suggestions[i] = self.getDummyDict(["bibleaudio", "youtube",])
             elif i == ".extract":
@@ -986,7 +958,6 @@ class LocalCliHandler:
 
     def standardcommands(self):
         content = "UBA commands:"
-        #content += "\n".join([f"{key} - {self.dotCommands[key][0]}" for key in sorted(self.dotCommands.keys())])
         content += "\n".join([re.sub("            #", "#", value[-1]) for value in self.textCommandParser.interpreters.values()])
         return self.keepContent(content)
 
@@ -1006,6 +977,9 @@ class LocalCliHandler:
         bulitinKeyBindings = """Built-in keyboard shortcuts:
 Ctrl+Q quit UBA
 Ctrl+Z restart UBA
+Escape+1 change bible
+Escape+2 change bibles for comparison
+Escape+3 change commentary
 Escape+C open system command prompt
 Escape+D run default command
 Escape+H launch help menu
@@ -1014,10 +988,7 @@ Escape+O launch open menu
 Escape+P launch plugins menu
 Escape+S swap colour brightness
 Escape+T launch text-to-speech menu
-Escape+W open wordnet
-F1 change bible
-F2 change bibles for comparison
-F3 change commentary"""
+Escape+W open wordnet"""
         content = "Customised keyboard shortcuts:\n"
         keyCombo = ["ctrl+b", "ctrl+f", "ctrl+g", "ctrl+k", "ctrl+l", "ctrl+r", "ctrl+s", "ctrl+u", "ctrl+w", "ctrl+y"]
         configEntry = [config.terminal_ctrl_b, config.terminal_ctrl_f, config.terminal_ctrl_g, config.terminal_ctrl_k, config.terminal_ctrl_l, config.terminal_ctrl_r, config.terminal_ctrl_s, config.terminal_ctrl_u, config.terminal_ctrl_w, config.terminal_ctrl_y]
@@ -2120,6 +2091,68 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             options = re.compile("<{0}>(.*?)</{0}>".format(config.terminalResourceLinkColor)).findall(content)
 
         return self.searchablePrompt(self.inputIndicator, options=options, descriptions=descriptions)
+
+    def filterMultipleOptions(self, content, filters=[]):
+        if not content or not filters:
+            return ([], [])
+        entries = re.compile("<{0}>(.*?)</{0}> .*?\] (.*?)$".format(config.terminalResourceLinkColor), flags=re.M).findall(content)
+        options = []
+        descriptions = []
+        if entries:
+            for option, description in entries:
+                if option in filters:
+                    options.append(option)
+                    description = re.sub("<.*?>", "", description.strip())
+                    descriptions.append(description)
+        else:
+            options = re.compile("<{0}>(.*?)</{0}>".format(config.terminalResourceLinkColor)).findall(content)
+            options = [i for i in options if i in filters]
+            descriptions = options
+        return (options, descriptions)
+
+    def distance(self):
+        locationMap = {exlbl_entry: (name[0].upper(), name, float(latitude), float(longitude)) for exlbl_entry, name, latitude, longitude in allLocations}
+
+        content = self.getContent("SEARCHTOOL:::EXLBL:::")
+        self.print(self.divider)
+        self.print(content)
+        self.print(self.divider)
+
+        self.print("Enter a location:")
+        userInput = self.promptSelectionFromContent(content)
+        *_, lat, long = locationMap[userInput]
+        location1 = (lat, long)
+        
+        self.print("Enter another location:")
+        userInput = self.promptSelectionFromContent(content)
+        *_, lat, long = locationMap[userInput]
+        location2 = (lat, long)
+
+        self.print(self.divider)
+        self.print("Distance between the locations:")
+        self.print("{0} km".format(haversine(location1, location2)))
+        self.print("{0} mi".format(haversine(location1, location2, unit='mi')))
+
+    def customisemaps(self):
+        content = self.getContent("SEARCHTOOL:::EXLBL:::")
+        self.print(self.divider)
+        self.print(content)
+        self.print(self.divider)
+
+        locations = []
+        userInput = ""
+        while not userInput == config.terminal_cancel_action:
+            if userInput:
+                locations.append(userInput)
+            self.print("Add a location:")
+            userInput = self.promptSelectionFromContent(content)
+        if not locations:
+            locations = ["BL636"]
+        options, descriptions = self.filterMultipleOptions(content, locations)
+        # final confirmation of multiple selection; users may remove some
+        locations = self.dialogs.getMultipleSelection(options=options, descriptions=descriptions, default_values=options, title="Customise Bible Map", text="Confirm locations below:")
+        locations = "|".join(locations)
+        return self.web(f"LOCATIONS:::{locations}", False)
 
     def openTools2(self, moduleType):
         try:
@@ -3598,7 +3631,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def open(self):
         heading = "Open"
-        features = (".openbible", ".openbiblenote", ".original", ".open365readingplan", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".openwordfeatures", ".opencommentary", ".openreferencebook", ".openaudio", ".opendata", ".opentopics", ".openpromises", ".openparallels", ".opennames", ".opencharacters", ".openlocations", ".openmaps", ".opentimelines", ".opendictionaries", ".openencyclopedia", ".openthirdpartydictionaries", ".wordnet", ".opentextfile")
+        features = (".openbible", ".openbiblenote", ".original", ".open365readingplan", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".openwordfeatures", ".opencommentary", ".openreferencebook", ".openaudio", ".opendata", ".opentopics", ".openpromises", ".openparallels", ".opennames", ".opencharacters", ".openlocations", ".openmaps", ".customisemaps", ".distance", ".opentimelines", ".opendictionaries", ".openencyclopedia", ".openthirdpartydictionaries", ".wordnet", ".opentextfile")
         return self.displayFeatureMenu(heading, features)
 
     def quick(self):
@@ -3649,6 +3682,11 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
     def info(self):
         heading = "Information"
         features = (".latest", ".history", ".showbibles", ".showstrongbibles", ".showbiblebooks", ".showbibleabbreviations", ".showbiblechapters", ".showbibleverses", ".showcommentaries", ".showtopics", ".showlexicons", ".showencyclopedia", ".showdictionaries", ".showthirdpartydictionary", ".showreferencebooks", ".showdata", ".showttslanguages", ".commands", ".config")
+        return self.displayFeatureMenu(heading, features)
+
+    def filters(self):
+        heading = "Filters"
+        features = (".customisefilters", ".applyfilters", ".editfilters")
         return self.displayFeatureMenu(heading, features)
 
     def edit(self):

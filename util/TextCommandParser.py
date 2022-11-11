@@ -307,6 +307,11 @@ class TextCommandParser:
             # Feature - Open a Google map with bible locations pinned
             # Usage - MAP:::[BIBLE_REFERENCE]
             # e.g. MAP:::Act 15:36-18:22"""),
+            "locations": (self.textLocations, """
+            # [KEYWORD] LOCATIONS
+            # Feature - Customise a Google map with bible locations pinned; locations separated by |
+            # Usage - LOCATIONS:::[BIBLE_LOCATIONS]
+            # e.g. LOCATIONS:::BL634|BL636"""),
             "crossreference": (self.textCrossReference, """
             # [KEYWORD] CROSSREFERENCE
             # e.g. CROSSREFERENCE:::Gen 1:1
@@ -3920,15 +3925,25 @@ class TextCommandParser:
             except:
                 return self.invalidCommand()
 
-    def selectLocations(self, locations):
-        checkList = []
-        for location in locations:
-            # e.g. <p><ref onclick="exlbl('BL1163')">Hiddekel</ref> ... <ref onclick="exlbl('BL421')">Euphrates</ref></p>
-            searchPattern = "exlbl\('BL([0-9]+?)'\)"
-            found = re.findall(searchPattern, location[0])
-            if found:
-                for entry in found:
-                    checkList.append(entry)
+    # LOCATIONS:::
+    def textLocations(self, command, source):
+        selectedLocations = command.split("|")
+        selectedLocations = self.selectLocations(defaultChecklist=[i[2:] for i in selectedLocations])
+        html = self.displayMap(selectedLocations)
+        return ("study", html, {'tab_title': "Map"})
+
+    def selectLocations(self, locations=[], defaultChecklist=[]):
+        if defaultChecklist:
+            checkList = defaultChecklist
+        else:
+            checkList = []
+            for location in locations:
+                # e.g. <p><ref onclick="exlbl('BL1163')">Hiddekel</ref> ... <ref onclick="exlbl('BL421')">Euphrates</ref></p>
+                searchPattern = "exlbl\('BL([0-9]+?)'\)"
+                found = re.findall(searchPattern, location[0])
+                if found:
+                    for entry in found:
+                        checkList.append(entry)
         checkList = [int(item) for item in checkList]
         checkList = list(set(checkList))
         #checkList.sort()
@@ -3944,7 +3959,7 @@ class TextCommandParser:
 
         return formattedList
 
-    def displayMap(self, selectedLocations, browser=False, displayOnStudyWindow=False):
+    def displayMap(self, selectedLocations):
         import gmplot
         gmap = gmplot.GoogleMapPlotter(33.877444, 34.234935, 6, map_type='hybrid')
         if config.myGoogleApiKey:

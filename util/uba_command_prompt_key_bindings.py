@@ -117,20 +117,20 @@ def _(event):
     event.app.current_buffer.text = ".wordnet"
     event.app.current_buffer.validate_and_handle()
 
-# F1 change bible
-@uba_command_prompt_key_bindings.add("f1")
+# Escape+1 change bible
+@uba_command_prompt_key_bindings.add("escape", "1")
 def _(event):
     event.app.current_buffer.text = ".changebible"
     event.app.current_buffer.validate_and_handle()
 
-# F2 change bibles for comparison
-@uba_command_prompt_key_bindings.add("f2")
+# Escape+2 change bibles for comparison
+@uba_command_prompt_key_bindings.add("escape", "2")
 def _(event):
     event.app.current_buffer.text = ".changebibles"
     event.app.current_buffer.validate_and_handle()
 
-# F3 change commentary
-@uba_command_prompt_key_bindings.add("f3")
+# Escape+3 change commentary
+@uba_command_prompt_key_bindings.add("escape", "3")
 def _(event):
     event.app.current_buffer.text = ".changecommentary"
     event.app.current_buffer.validate_and_handle()

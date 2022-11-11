@@ -18,7 +18,7 @@ class FileManager:
 
     def setOsOpenCmd(self):
         if config.terminalEnableTermuxAPI:
-            self.openCommand = "termux-open"
+            self.openCommand = "termux-share"
         elif platform.system() == "Linux":
             self.openCommand = config.openLinux
         elif platform.system() == "Darwin":

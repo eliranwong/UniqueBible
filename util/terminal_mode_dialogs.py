@@ -134,13 +134,17 @@ class TerminalModeDialogs:
             style=self.style,
         ).run()
 
-    def getMultipleSelection(self, title="Bible Books", text="Select book(s):", options=["ALL"], default_values=["ALL"]):
+    def getMultipleSelection(self, title="Bible Books", text="Select book(s):", options=["ALL"], descriptions=["ALL"], default_values=["ALL"]):
         if not default_values:
             default_values = config.compareParallelList
+        if descriptions:
+            values = [(option, descriptions[index]) for index, option in enumerate(options)]
+        else:
+            values = [(option, option) for option in options]
         return checkboxlist_dialog(
             title=title,
             text=text,
-            values=[(option, option) for option in options],
+            values=values,
             default_values=default_values,
             style=self.style,
         ).run()
