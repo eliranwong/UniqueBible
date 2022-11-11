@@ -5429,7 +5429,6 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
                 else:
                     WebtopUtil.run("vlc")
             elif config.isVlcInstalled:
-                print("testing")
                 from gui.VlcPlayer import VlcPlayer
                 if self.vlcPlayer is not None:
                     self.vlcPlayer.close()

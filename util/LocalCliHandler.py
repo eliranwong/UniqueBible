@@ -527,9 +527,17 @@ class LocalCliHandler:
             ".sys": ("an alias to the '.system' command", SystemCommandPrompt().run),
             ".clear": ("clear the current screen", clear),
             ".wordnet": ("clear the current screen", self.wordnet),
+            ".all": ("all ...", self.all),
+            ".apply": ("apply ...", self.apply),
+            ".customise": ("customise ...", self.customise),
+            ".customize": ("an alias to the '.customise' command", self.customise),
             ".customisemaps": ("customise bible map", self.customisemaps),
             ".customizemaps": ("an alias to the '.customisemap' command", self.customisemaps),
             ".distance": ("distance between two locations", self.distance),
+            ".mp3": ("play mp3 files in music folder", self.mp3),
+            ".allmp3": ("play mp3 files in music folder", lambda: self.mp3(default="[ALL]")),
+            ".mp4": ("play mp4 files in video folder", self.mp4),
+            ".allmp4": ("play all mp4 files in video folder", lambda: self.mp4(default="[ALL]")),
         }
 
     def editfilters(self):
@@ -645,6 +653,46 @@ class LocalCliHandler:
             self.execPythonFile(filepath)
             return ""
         except:
+            return self.printInvalidOptionEntered()
+
+    def mp3(self, default="", accept_default=False):
+        vlcSpeed = config.vlcSpeed
+        config.vlcSpeed = 1.0
+        options = FileUtil.fileNamesWithoutExtension(config.musicFolder, "mp3")
+        if default and accept_default:
+            userInput = self.simplePrompt(default=default, accept_default=accept_default)
+            userInput = [userInput]
+        else:
+            userInput = self.dialogs.getMultipleSelection(options=options, descriptions=[], title="Music", text="Select file(s):", default_values=options if default == "[ALL]" else [default])
+        if not userInput:
+            return self.cancelAction()
+        try:
+            playlist = [os.path.join(os.getcwd(), config.musicFolder, f"{i}.mp3") for i in userInput]
+            self.textCommandParser.parent.playAudioBibleFilePlayList(playlist)
+            config.vlcSpeed = vlcSpeed
+            return ""
+        except:
+            config.vlcSpeed = vlcSpeed
+            return self.printInvalidOptionEntered()
+
+    def mp4(self, default="", accept_default=False):
+        vlcSpeed = config.vlcSpeed
+        config.vlcSpeed = 1.0
+        options = FileUtil.fileNamesWithoutExtension(config.videoFolder, "mp4")
+        if default and accept_default:
+            userInput = self.simplePrompt(default=default, accept_default=accept_default)
+            userInput = [userInput]
+        else:
+            userInput = self.dialogs.getMultipleSelection(options=options, descriptions=[], title="Video", text="Select file(s):", default_values=options if default == "[ALL]" else [default])
+        if not userInput:
+            return self.cancelAction()
+        try:
+            playlist = [os.path.join(os.getcwd(), config.videoFolder, f"{i}.mp4") for i in userInput]
+            self.textCommandParser.parent.playAudioBibleFilePlayList(playlist)
+            config.vlcSpeed = vlcSpeed
+            return ""
+        except:
+            config.vlcSpeed = vlcSpeed
             return self.printInvalidOptionEntered()
 
     def wordnet(self):
@@ -820,6 +868,8 @@ class LocalCliHandler:
                 suggestions[i] = self.getDummyDict(["journals", "notes",])
             elif i == ".copy":
                 suggestions[i] = self.getDummyDict(["html",])
+            elif i == ".all":
+                suggestions[i] = self.getDummyDict(["mp3", "mp4"])
             elif i == ".apply":
                 suggestions[i] = self.getDummyDict(["filters",])
             elif i == ".customise":
@@ -3632,6 +3682,21 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
     def open(self):
         heading = "Open"
         features = (".openbible", ".openbiblenote", ".original", ".open365readingplan", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".openwordfeatures", ".opencommentary", ".openreferencebook", ".openaudio", ".opendata", ".opentopics", ".openpromises", ".openparallels", ".opennames", ".opencharacters", ".openlocations", ".openmaps", ".customisemaps", ".distance", ".opentimelines", ".opendictionaries", ".openencyclopedia", ".openthirdpartydictionaries", ".wordnet", ".opentextfile")
+        return self.displayFeatureMenu(heading, features)
+
+    def all(self):
+        heading = "All"
+        features = (".allmp3", ".allmp4",)
+        return self.displayFeatureMenu(heading, features)
+
+    def apply(self):
+        heading = "Apply"
+        features = (".applyfilters",)
+        return self.displayFeatureMenu(heading, features)
+
+    def customise(self):
+        heading = "Customise"
+        features = (".customisemaps", ".customisefilters")
         return self.displayFeatureMenu(heading, features)
 
     def quick(self):

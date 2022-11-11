@@ -120,7 +120,7 @@ class SystemCommandPrompt:
                         if stdout:
                             print(stdout.decode("utf-8"))
                         if stderr:
-                            os.system(f"{self.openCommand} {userInput}")
+                            os.system(f'{self.openCommand} "{userInput}"')
                     # open directory if input is a valid directory
                     elif os.path.isdir(userInput):
                         os.system(f"{self.openCommand} {userInput}")
