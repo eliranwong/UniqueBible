@@ -294,8 +294,10 @@ def run_terminal_mode():
             command = ".menu"
             config.mainWindow.printRunningCommand(command)
             content = config.mainWindow.getContent(command)
-        if content:
+        if content.strip():
             config.mainWindow.displayOutputOnTerminal(content)
+        else:
+            command = ".latestbible"
     while not command.lower() in (".quit", ".restart", ".q", ".z"):
         default = config.terminalCommandDefault
         config.terminalCommandDefault = ""

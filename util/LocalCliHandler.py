@@ -75,7 +75,7 @@ class LocalCliHandler:
             self.unsupportedCommands.append("sidebyside")
         self.ttsCommandKeyword = self.getDefaultTtsKeyword().lower()
         self.unsupportedCommands.append("gtts" if self.ttsCommandKeyword == "speak" else "speak")
-        self.startupException1 = [config.terminal_cancel_action, ".", ".ed", ".sys", ".system", ".quit", ".q", ".restart", ".z", ".togglepager", ".filters", ".toggleclipboardmonitor", ".history", ".update", ".find", ".sa", ".sas", ".read", ".readsync", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".downloadyoutube", ".web", ".gtts", ".buildportablepython", ".opentextfile"]
+        self.startupException1 = [config.terminal_cancel_action, ".", ".ed", ".sys", ".system", ".quit", ".q", ".restart", ".z", ".togglepager", ".filters", ".toggleclipboardmonitor", ".history", ".update", ".find", ".sa", ".sas", ".read", ".readsync", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".downloadyoutube", ".web", ".gtts", ".buildportablepython", ".textfile"]
         self.startupException2 = "^(_setconfig:::|\.edit|\.change|\.toggle|\.stop|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::|download:::|read:::|readsync:::)"
         #config.cliTtsProcess = None
         config.audio_playing_file = os.path.join("temp", "000_audio_playing.txt")
@@ -285,10 +285,10 @@ class LocalCliHandler:
             ".customisefilters": ("filter latest content", self.customisefilters),
             ".customizefilters": ("an alias to the '.customisefilters' command", self.customisefilters),
             ".run": ("run copied text as command", self.runclipboardtext),
-            ".forward": ("open one bible chapter forward", self.forward),
-            ".backward": ("open one bible chapter backward", self.backward),
+            ".forward": ("one bible chapter forward", self.forward),
+            ".backward": ("one bible chapter backward", self.backward),
             ".swap": ("swap to a favourite bible", self.swap),
-            ".web": ("open web version", self.web),
+            ".web": ("web version", self.web),
             ".share": ("copy a web link for sharing", self.share),
             ".tts": ("text to speech ANY", lambda: self.tts(False)),
             ".tts1": ("text to speech 1", lambda: self.tts(False, defaultLanguage=config.ttsDefaultLangauge)),
@@ -338,42 +338,48 @@ class LocalCliHandler:
             ".showdownloads": ("display available downloads", self.showdownloads),
             ".downloadyoutube": ("download youtube file", self.downloadyoutube),
             ".downloadbibleaudio": ("download bible audio", self.downloadbibleaudio),
-            ".openbible": ("open bible", self.openbible),
-            ".openbiblenote": ("open bible module note", self.openbiblemodulenote),
-            ".original": ("open Hebrew & Greek bibles", self.original),
-            ".ohgb": ("open hebrew & Greek bible", lambda: self.getContent("TEXT:::OHGB")),
-            ".ohgbi": ("open hebrew & Greek bible [interlinear]", lambda: self.getContent("TEXT:::OHGBi")),
-            ".mob": ("open hebrew & Greek original bible", lambda: self.web(".mob", False)),
-            ".mib": ("open hebrew & Greek interlinear bible", lambda: self.web(".mib", False)),
-            ".mtb": ("open hebrew & Greek trilingual bible", lambda: self.web(".mtb", False)),
-            ".mpb": ("open hebrew & Greek parallel bible", lambda: self.web(".mpb", False)),
-            ".mab": ("open hebrew & Greek annotated bible", lambda: self.web(".mab", False)),
-            ".lxx1i": ("open Septuagint interlinear I", lambda: self.web("TEXT:::LXX1i", False)),
-            ".lxx2i": ("open Septuagint interlinear II", lambda: self.web("TEXT:::LXX2i", False)),
-            ".open365readingplan": ("open 365-day bible reading plan", self.open365readingplan),
-            ".opencommentary": ("open commentary", self.opencommentary),
-            ".openreferencebook": ("open reference book", self.openreferencebook),
-            ".openaudio": ("open bible audio", self.openbibleaudio),
-            ".openbooknote": ("open bible book note", lambda: self.openbookfeature("OPENBOOKNOTE")),
-            ".openchapternote": ("open bible chapter note", lambda: self.openchapterfeature("OPENCHAPTERNOTE")),
-            ".openversenote": ("open bible verse note", lambda: self.openversefeature("OPENVERSENOTE")),
-            ".openjournal": ("open journal", lambda: self.journalFeature("OPENJOURNAL")),
-            ".openpromises": ("open bible promises", lambda: self.openTools2("promises")),
-            ".openparallels": ("open bible parallels", lambda: self.openTools2("parallels")),
-            ".opennames": ("open bible names", lambda: self.openTools2("names")),
-            ".opencharacters": ("open bible characters", lambda: self.openTools2("characters")),
-            ".openlocations": ("open bible locations", lambda: self.openTools2("locations")),
-            ".openmaps": ("open bible maps", self.openmaps),
-            ".opendata": ("open bible data", self.opendata),
-            ".opentimelines": ("open bible timelines", lambda: self.web(".timelineMenu", False)),
-            ".opentopics": ("open bible topics", lambda: self.openTools("TOPICS", self.showtopics)),
-            ".opendictionaries": ("open dictionaries", lambda: self.openTools("DICTIONARY", self.showdictionaries)),
-            ".openencyclopedia": ("open encyclopedia", lambda: self.openTools("ENCYCLOPEDIA", self.showencyclopedia)),
-            ".openlexicons": ("open lexicons", lambda: self.openTools("LEXICON", self.showlexicons)),
-            ".openconcordancebybook": ("open Hebrew / Greek concordance sorted by books", lambda: self.openTools("LEXICON", self.showlexicons, "ConcordanceBook")),
-            ".openconcordancebymorphology": ("open Hebrew / Greek concordance sorted by morphology", lambda: self.openTools("LEXICON", self.showlexicons, "ConcordanceMorphology")),
-            ".openthirdpartydictionaries": ("open third-party dictionaries", lambda: self.openTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
-            ".open3dict": ("an alias to the '.openthirdpartydictionaries' command", lambda: self.openTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
+            ".bible": ("bible", self.openbible),
+            ".biblenote": ("bible module note", self.openbiblemodulenote),
+            ".original": ("Hebrew & Greek bibles", self.original),
+            ".ohgb": ("hebrew & Greek bible", lambda: self.getContent("TEXT:::OHGB")),
+            ".ohgbi": ("hebrew & Greek bible [interlinear]", lambda: self.getContent("TEXT:::OHGBi")),
+            ".mob": ("hebrew & Greek original bible", lambda: self.web(".mob", False)),
+            ".mib": ("hebrew & Greek interlinear bible", lambda: self.web(".mib", False)),
+            ".mtb": ("hebrew & Greek trilingual bible", lambda: self.web(".mtb", False)),
+            ".mpb": ("hebrew & Greek parallel bible", lambda: self.web(".mpb", False)),
+            ".mab": ("hebrew & Greek annotated bible", lambda: self.web(".mab", False)),
+            ".lxx1i": ("Septuagint interlinear I", lambda: self.web("TEXT:::LXX1i", False)),
+            ".lxx2i": ("Septuagint interlinear II", lambda: self.web("TEXT:::LXX2i", False)),
+            ".open365readingplan": ("365-day bible reading plan", self.open365readingplan),
+            ".commentary": ("commentary", self.opencommentary),
+            ".referencebook": ("reference book", self.openreferencebook),
+            ".audio": ("bible audio", self.openbibleaudio),
+            ".booknote": ("bible book note", lambda: self.openbookfeature("OPENBOOKNOTE")),
+            ".chapternote": ("bible chapter note", lambda: self.openchapterfeature("OPENCHAPTERNOTE")),
+            ".versenote": ("bible verse note", lambda: self.openversefeature("OPENVERSENOTE")),
+            ".journal": ("journal", lambda: self.journalFeature("OPENJOURNAL")),
+            ".promises": ("bible promises", lambda: self.openTools2("promises")),
+            ".parallels": ("bible parallels", lambda: self.openTools2("parallels")),
+            #".names": ("bible names", lambda: self.openTools2("names")),
+            ".names": ("bible names", self.names),
+            ".characters": ("bible characters", self.characters),
+            ".locations": ("bible locations", self.locations),
+            ".exlbp": ("exhaustive library of bible people", lambda: self.openTools2("characters")),
+            ".exlbl": ("exhaustive library of bible locations", lambda: self.openTools2("locations")),
+            ".maps": ("bible maps", self.openmaps),
+            ".customisemaps": ("customise bible maps", self.customisemaps),
+            ".customizemaps": ("an alias to the '.customisemap' command", self.customisemaps),
+            ".distance": ("distance between two locations", self.distance),
+            ".data": ("bible data", self.opendata),
+            ".timelines": ("bible timelines", lambda: self.web(".timelineMenu", False)),
+            ".topics": ("bible topics", lambda: self.openTools("TOPICS", self.showtopics)),
+            ".dictionaries": ("dictionaries", lambda: self.openTools("DICTIONARY", self.showdictionaries)),
+            ".encyclopedia": ("encyclopedia", lambda: self.openTools("ENCYCLOPEDIA", self.showencyclopedia)),
+            ".lexicons": ("lexicons", lambda: self.openTools("LEXICON", self.showlexicons)),
+            ".concordancebybook": ("Hebrew / Greek concordance sorted by books", lambda: self.openTools("LEXICON", self.showlexicons, "ConcordanceBook")),
+            ".concordancebymorphology": ("Hebrew / Greek concordance sorted by morphology", lambda: self.openTools("LEXICON", self.showlexicons, "ConcordanceMorphology")),
+            ".thirdpartydictionaries": ("third-party dictionaries", lambda: self.openTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
+            ".3dict": ("an alias to the '.openthirdpartydictionaries' command", lambda: self.openTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
             ".editbooknote": ("edit bible book note", lambda: self.openbookfeature("EDITBOOKNOTE")),
             ".editchapternote": ("edit bible chapter note", lambda: self.openchapterfeature("EDITCHAPTERNOTE")),
             ".editversenote": ("edit bible verse note", lambda: self.openversefeature("EDITVERSENOTE")),
@@ -400,26 +406,26 @@ class LocalCliHandler:
             ".searchconcordance": ("search for concordance", self.searchconcordance),
             ".quicksearch": ("quick search", lambda: self.quickSearch(False)),
             ".qs": ("an alias to the '.quicksearch' command", lambda: self.quickSearch(False)),
-            ".opencrossreference": ("open cross reference", self.openversefeature),
-            ".opencomparison": ("open verse comparison", lambda: self.openversefeature("COMPARE")),
-            ".opendifference": ("open verse comparison with differences", lambda: self.openversefeature("DIFFERENCE")),
-            ".opentske": ("open Treasury of Scripture Knowledge (Enhanced)", lambda: self.openversefeature("TSKE")),
-            ".openverseindex": ("open verse index", lambda: self.openversefeature("INDEX")),
-            ".opencombo": ("open combination of translation, discourse and words features", lambda: self.openversefeature("COMBO")),
-            ".openwords": ("open all word data in a single verse", lambda: self.openversefeature("WORDS")),
-            ".openword": ("open Hebrew / Greek word data", lambda: self.readword(dataOnly=True)),
-            ".opendiscourse": ("open discourse features", lambda: self.openversefeature("DISCOURSE")),
-            ".opentranslation": ("open original word translation", lambda: self.openversefeature("TRANSLATION")),
-            ".openoverview": ("open chapter overview", self.openchapterfeature),
-            ".opensummary": ("open chapter summary", lambda: self.openchapterfeature("SUMMARY")),
-            ".openchapterindex": ("open chapter index", lambda: self.openchapterfeature("CHAPTERINDEX")),
-            ".openintroduction": ("open book introduction", self.openbookfeature),
-            ".opendictionarybookentry": ("open bible book entry in dictionary", lambda: self.openbookfeature("dictionary")),
-            ".openencyclopediabookentry": ("open bible book entry in encyclopedia", lambda: self.openbookfeature("encyclopedia")),
-            ".openbookfeatures": ("open bible book features", self.openbookfeatures),
-            ".openchapterfeatures": ("open bible chapter features", self.openchapterfeatures),
-            ".openversefeatures": ("open bible verse features", self.openversefeatures),
-            ".openwordfeatures": ("open Hebrew / Greek word features", self.openwordfeatures),
+            ".crossreference": ("cross reference", self.openversefeature),
+            ".comparison": ("verse comparison", lambda: self.openversefeature("COMPARE")),
+            ".difference": ("verse comparison with differences", lambda: self.openversefeature("DIFFERENCE")),
+            ".tske": ("Treasury of Scripture Knowledge (Enhanced)", lambda: self.openversefeature("TSKE")),
+            ".verseindex": ("verse index", lambda: self.openversefeature("INDEX")),
+            ".combo": ("combination of translation, discourse and words features", lambda: self.openversefeature("COMBO")),
+            ".words": ("all word data in a single verse", lambda: self.openversefeature("WORDS")),
+            ".word": ("Hebrew / Greek word data", lambda: self.readword(dataOnly=True)),
+            ".discourse": ("discourse features", lambda: self.openversefeature("DISCOURSE")),
+            ".translation": ("original word translation", lambda: self.openversefeature("TRANSLATION")),
+            ".overview": ("chapter overview", self.openchapterfeature),
+            ".summary": ("chapter summary", lambda: self.openchapterfeature("SUMMARY")),
+            ".chapterindex": ("chapter index", lambda: self.openchapterfeature("CHAPTERINDEX")),
+            ".introduction": ("book introduction", self.openbookfeature),
+            ".dictionarybookentry": ("bible book entry in dictionary", lambda: self.openbookfeature("dictionary")),
+            ".encyclopediabookentry": ("bible book entry in encyclopedia", lambda: self.openbookfeature("encyclopedia")),
+            ".bookfeatures": ("bible book features", self.openbookfeatures),
+            ".chapterfeatures": ("bible chapter features", self.openchapterfeatures),
+            ".versefeatures": ("bible verse features", self.openversefeatures),
+            ".wordfeatures": ("Hebrew / Greek word features", self.openwordfeatures),
             ".quickopen": ("quick open", lambda: self.quickopen(False)),
             ".readword": ("read Hebrew or Greek word", self.readword),
             ".readlexeme": ("read Hebrew or Greek lexeme", lambda: self.readword(True)),
@@ -453,12 +459,12 @@ class LocalCliHandler:
             ".develop": ("developer menu", self.develop),
             ".help": ("get help", self.help),
             ".filters": ("filters", self.filters),
-            ".wiki": ("open online wiki page", self.wiki),
+            ".wiki": ("online wiki page", self.wiki),
             ".quickstart": ("show how to install text editor micro", lambda: self.readHowTo("quick start")),
             ".helpinstallmicro": ("show how to install text editor micro", lambda: self.readHowTo("install micro")),
-            #".w3m": ("open html content in w3m", lambda: self.cliTool("w3m -T text/html", self.html)),
-            #".lynx": ("open html content in lynx", lambda: self.cliTool("lynx -stdin", self.html)),
-            ".opentextfile": ("open text file", self.opentext),
+            #".w3m": ("html content in w3m", lambda: self.cliTool("w3m -T text/html", self.html)),
+            #".lynx": ("html content in lynx", lambda: self.cliTool("lynx -stdin", self.html)),
+            ".textfile": ("text file", self.opentext),
             ".edittextfile": ("edit text file", lambda: self.opentext(True)),
             ".extract": ("extract bible references from the latest content", self.extract),
             ".extractcopiedtext": ("extract bible references from the latest content.", self.extractcopiedtext),
@@ -531,9 +537,6 @@ class LocalCliHandler:
             ".apply": ("apply ...", self.apply),
             ".customise": ("customise ...", self.customise),
             ".customize": ("an alias to the '.customise' command", self.customise),
-            ".customisemaps": ("customise bible map", self.customisemaps),
-            ".customizemaps": ("an alias to the '.customisemap' command", self.customisemaps),
-            ".distance": ("distance between two locations", self.distance),
             ".mp3": ("play mp3 files in music folder", self.mp3),
             ".allmp3": ("play mp3 files in music folder", lambda: self.mp3(default="[ALL]")),
             ".mp4": ("play mp4 files in video folder", self.mp4),
@@ -759,7 +762,7 @@ class LocalCliHandler:
             elif checkDotCommand and command.startswith("."):
                 return self.getDotCommandContent(command.lower())
             # Non-dot commands
-            view, content, dict = self.textCommandParser.parser(command, "cli")
+            _, content, _ = self.textCommandParser.parser(command, "cli")
             # keep record of last command
             self.command = command
             if config.bibleWindowContentTransformers:
@@ -850,9 +853,18 @@ class LocalCliHandler:
         command = command.replace(" ", "")
         if command in self.dotCommands:
             return self.dotCommands[command][-1]()
-        return self.getContent(enteredCommand, False)
-        #print(f"Command not found: {command}")
-        #return ""
+        else:
+            options = []
+            descriptions = []
+            for key, value in self.dotCommands.items():
+                options.append(key)
+                descriptions.append(value[0])
+            # allow users to search for commands
+            userInput = self.dialogs.getValidOptions(options=options, descriptions=descriptions, filter=command[1:])
+            if userInput:
+                return self.dotCommands[userInput][-1]()
+            else:
+                return self.getContent(enteredCommand, False)
 
     def getDummyDict(self, data, suffix="", furtherOptions=None):
         # set is supported in NestedCompleter but not preferred as set is unordered
@@ -898,8 +910,6 @@ class LocalCliHandler:
                 suggestions[i] = self.getDummyDict(["file",])
             elif i == ".edit":
                 suggestions[i] = self.getDummyDict(["booknote", "chapternote", "config", "content", "filters", "journal", "newfile", "textfile", "versenote"])
-            elif i == ".open":
-                suggestions[i] = self.getDummyDict(["365readingplan", "3dict", "audio", "bible", "biblenote", "bookfeatures", "booknote", "chapterfeatures", "chapterindex", "chapternote", "characters", "combo", "commentary", "comparison", "concordancebybook", "concordancebymorphology", "crossreference", "data", "dictionaries", "dictionarybookentry", "difference", "discourse", "encyclopedia", "encyclopediabookentry", "introduction", "journal", "lexicons", "locations", "maps", "names", "overview", "parallels", "promises", "referencebook", "summary", "textfile", "thirdpartydictionaries", "timelines", "topics", "translation", "tske", "versefeatures", "verseindex", "versenote", "word", "wordfeatures", "words"])
             elif i == ".quick":
                 suggestions[i] = self.getDummyDict(["edit", "editcopiedtext", "open", "opencopiedtext", "search", "searchcopiedtext", "start"])
             elif i == ".search":
@@ -2115,6 +2125,18 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def printToolNotFound(self, tool):
         self.print(f"Tool '{tool}' is not found on your system!")
+
+    def names(self):
+        with open(os.path.join("plugins", "menu", "Bible Data", "Bible Names.txt"), "r", encoding="utf-8") as input_file:
+            names = input_file.read().split("\n")
+        self.print("Search for a name:")
+        userInput = self.simplePrompt()
+        names = [i for i in names if userInput.lower() in i.lower()]
+        if names:
+            self.print("\n".join(names))
+        else:
+            self.print("[not found]")
+        return ""
 
     def opendata(self):
         try:
@@ -3681,7 +3703,17 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def open(self):
         heading = "Open"
-        features = (".openbible", ".openbiblenote", ".original", ".open365readingplan", ".openbookfeatures", ".openchapterfeatures", ".openversefeatures", ".openwordfeatures", ".opencommentary", ".openreferencebook", ".openaudio", ".opendata", ".opentopics", ".openpromises", ".openparallels", ".opennames", ".opencharacters", ".openlocations", ".openmaps", ".customisemaps", ".distance", ".opentimelines", ".opendictionaries", ".openencyclopedia", ".openthirdpartydictionaries", ".wordnet", ".opentextfile")
+        features = (".bible", ".biblenote", ".original", ".open365readingplan", ".bookfeatures", ".chapterfeatures", ".versefeatures", ".wordfeatures", ".commentary", ".referencebook", ".audio", ".data", ".topics", ".promises", ".parallels", ".characters", ".locations", ".timelines", ".dictionaries", ".encyclopedia", ".thirdpartydictionaries", ".wordnet", ".textfile")
+        return self.displayFeatureMenu(heading, features)
+
+    def characters(self):
+        heading = "Bible Characters"
+        features = (".names", ".exlbp")
+        return self.displayFeatureMenu(heading, features)
+
+    def locations(self):
+        heading = "Bible Locations"
+        features = (".exlbl", ".customisemaps", ".distance")
         return self.displayFeatureMenu(heading, features)
 
     def all(self):
@@ -3798,27 +3830,27 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def openbookfeatures(self):
         heading = "Bible Book Featues"
-        features = (".openintroduction", ".opendictionarybookentry", ".openencyclopediabookentry")
+        features = (".introduction", ".dictionarybookentry", ".encyclopediabookentry")
         return self.displayFeatureMenu(heading, features)
 
     def openchapterfeatures(self):
         heading = "Bible Chapter Featues"
-        features = (".openoverview", ".opensummary", ".openchapterindex")
+        features = (".overview", ".summary", ".chapterindex")
         return self.displayFeatureMenu(heading, features)
 
     def openversefeatures(self):
         heading = "Bible Verse Featues"
-        features = (".opencrossreference", ".opentske", ".opencomparison", ".opendifference", ".openverseindex", ".openwords", ".opendiscourse", ".opentranslation", ".opencombo")
+        features = (".crossreference", ".tske", ".comparison", ".difference", ".verseindex", ".words", ".discourse", ".translation", ".combo")
         return self.displayFeatureMenu(heading, features)
 
     def openwordfeatures(self):
         heading = "Original Word Featues"
-        features = (".openword", ".openconcordancebybook", ".openconcordancebymorphology", ".openlexicons", ".readword", ".readlexeme")
+        features = (".word", ".concordancebybook", ".concordancebymorphology", ".lexicons", ".readword", ".readlexeme")
         return self.displayFeatureMenu(heading, features)
 
     def accessNoteFeatures(self):
         heading = "Note / Journal Features"
-        features = (".openbooknote", ".openchapternote", ".openversenote", ".openjournal", ".searchbooknote", ".searchchapternote", ".searchversenote", ".searchjournal", ".editbooknote", ".editchapternote", ".editversenote", ".editjournal", ".changenoteeditor")
+        features = (".booknote", ".chapternote", ".versenote", ".journal", ".searchbooknote", ".searchchapternote", ".searchversenote", ".searchjournal", ".editbooknote", ".editchapternote", ".editversenote", ".editjournal", ".changenoteeditor")
         return self.displayFeatureMenu(heading, features)
 
     # Download Helper

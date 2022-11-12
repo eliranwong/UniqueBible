@@ -1,3 +1,6 @@
+Changes in 33.09:
+* Allow terminal mode users to both enter and search for commands in single prompt.
+
 Changes in 33.08:
 * Added .mp3 and .mp4 commands in terminal mode.
 
