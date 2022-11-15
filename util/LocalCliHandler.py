@@ -2245,7 +2245,10 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         fullFilePath = os.path.abspath(filePath)
         with open(fullFilePath, "w", encoding="utf-8") as fileObj:
             fileObj.write(html)
-        webbrowser.open("file://{0}".format(fullFilePath))
+        if config.terminalEnableTermuxAPI:
+            self.openLocalHtmlWithAndroidApps(fullFilePath)
+        else:
+            webbrowser.open("file://{0}".format(fullFilePath))
         return ""
         
         #locations = "|".join(locations)

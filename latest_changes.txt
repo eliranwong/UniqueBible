@@ -1,3 +1,6 @@
+Changes in 33.12:
+* support opening customised maps on Android
+
 Changes in 33.10, 33.11:
 * Improve bible map featuers in terminal mode:
     - map::: command now accepts multiple references
