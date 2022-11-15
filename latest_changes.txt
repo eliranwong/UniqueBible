@@ -1,3 +1,6 @@
+Changes in 33.10:
+* Terminal mode customise maps feature now accepts bible reference.
+
 Changes in 33.09:
 * Allow terminal mode users to both enter and search for commands in single prompt.
 

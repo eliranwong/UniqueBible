@@ -3891,14 +3891,9 @@ class TextCommandParser:
         html = BibleVerseParser(config.parserStandarisation).parseText(html)
         return ("study", html, {'tab_title': "Data"})
 
-    # MAP:::
-    def textMap(self, command, source):
-        verseList = self.extractAllVerses(command)
-        if not verseList or not config.isGmplotInstalled:
-            return self.invalidCommand()
-        else:
+    def getLocationsFromReference(self, reference):
+        if reference:
             combinedLocations = []
-            reference = verseList[0]
             indexesSqlite = IndexesSqlite()
             if len(reference) == 5:
                 b, c, v, ce, ve = reference
@@ -3916,7 +3911,18 @@ class TextCommandParser:
             else:
                 b, c, v, *_ = reference
                 combinedLocations += indexesSqlite.getVerseLocations(b, c, v)
+            return combinedLocations
+        else:
+            return []
 
+    # MAP:::
+    def textMap(self, command, source):
+        verseList = self.extractAllVerses(command)
+        if not verseList or not config.isGmplotInstalled:
+            return self.invalidCommand()
+        else:
+            reference = verseList[0]
+            combinedLocations = self.getLocationsFromReference(reference)
             try:
                 selectedLocations = self.selectLocations(combinedLocations)
                 html = self.displayMap(selectedLocations)

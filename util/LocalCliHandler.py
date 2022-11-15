@@ -2216,15 +2216,32 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         while not userInput == config.terminal_cancel_action:
             if userInput:
                 locations.append(userInput)
-            self.print("Add a location:")
-            userInput = self.promptSelectionFromContent(content)
+            userInput = self.dialogs.getValidOptions(options=["add a location", "add a reference", "done"])
+            if userInput == "add a location":
+                #self.print("Add a location:")
+                userInput = self.promptSelectionFromContent(content)
+            elif userInput == "add a reference":
+                #self.print("Add a reference:")
+                userInput = self.simplePrompt()
+                verseList = self.textCommandParser.extractAllVerses(userInput)
+                if verseList:
+                    referenceLocations = self.textCommandParser.getLocationsFromReference(verseList[0])
+                    for referenceLocation in referenceLocations:
+                        searchPattern = "exlbl\('(BL[0-9]+?)'\)"
+                        found = re.findall(searchPattern, referenceLocation[0])
+                        locations += found
+                userInput = ""
+            elif userInput == "done":
+                userInput = config.terminal_cancel_action
         if not locations:
             locations = ["BL636"]
         options, descriptions = self.filterMultipleOptions(content, locations)
         # final confirmation of multiple selection; users may remove some
         locations = self.dialogs.getMultipleSelection(options=options, descriptions=descriptions, default_values=options, title="Customise Bible Map", text="Confirm locations below:")
+        locations = list(set(locations))
         locations = "|".join(locations)
         return self.web(f"LOCATIONS:::{locations}", False)
+        #return self.web(f"LOCATIONS:::", False)
 
     def openTools2(self, moduleType):
         try:
