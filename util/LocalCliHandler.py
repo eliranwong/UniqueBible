@@ -1,4 +1,4 @@
-import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json, shutil
+import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json, shutil, webbrowser
 from functools import partial
 from datetime import date
 from pathlib import Path
@@ -2239,8 +2239,17 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         # final confirmation of multiple selection; users may remove some
         locations = self.dialogs.getMultipleSelection(options=options, descriptions=descriptions, default_values=options, title="Customise Bible Map", text="Confirm locations below:")
         locations = list(set(locations))
-        locations = "|".join(locations)
-        return self.web(f"LOCATIONS:::{locations}", False)
+        locations = self.textCommandParser.selectLocations(defaultChecklist=[i[2:] for i in locations])
+        html = self.textCommandParser.displayMap(locations)
+        filePath = os.path.join("htmlResources", "bible_map.html")
+        fullFilePath = os.path.abspath(filePath)
+        with open(fullFilePath, "w", encoding="utf-8") as fileObj:
+            fileObj.write(html)
+        webbrowser.open("file://{0}".format(fullFilePath))
+        return ""
+        
+        #locations = "|".join(locations)
+        #return self.web(f"LOCATIONS:::{locations}", False)
         #return self.web(f"LOCATIONS:::", False)
 
     def openTools2(self, moduleType):

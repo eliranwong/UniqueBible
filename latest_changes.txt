@@ -1,5 +1,7 @@
-Changes in 33.10:
-* Terminal mode customise maps feature now accepts bible reference.
+Changes in 33.10, 33.11:
+* Improve bible map featuers in terminal mode:
+    - map::: command now accepts multiple references
+    - cusomisation allows both location and reference entries
 
 Changes in 33.09:
 * Allow terminal mode users to both enter and search for commands in single prompt.

@@ -3921,8 +3921,11 @@ class TextCommandParser:
         if not verseList or not config.isGmplotInstalled:
             return self.invalidCommand()
         else:
-            reference = verseList[0]
-            combinedLocations = self.getLocationsFromReference(reference)
+            combinedLocations = []
+            #reference = verseList[0]
+            #combinedLocations = self.getLocationsFromReference(reference)
+            for reference in verseList:
+                combinedLocations += self.getLocationsFromReference(reference)
             try:
                 selectedLocations = self.selectLocations(combinedLocations)
                 html = self.displayMap(selectedLocations)
