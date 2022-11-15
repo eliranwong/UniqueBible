@@ -3968,7 +3968,7 @@ class TextCommandParser:
 
         return formattedList
 
-    def displayMap(self, selectedLocations):
+    def displayMap(self, selectedLocations, browser=False):
         import gmplot
         gmap = gmplot.GoogleMapPlotter(33.877444, 34.234935, 6, map_type='hybrid')
         if config.myGoogleApiKey:
@@ -3985,8 +3985,10 @@ class TextCommandParser:
                     elif config.standardAbbreviation == "SC" and exlbl_entry in sc_location_names and sc_location_names[exlbl_entry]:
                         name = sc_location_names[exlbl_entry]
                     googleEarthLink = "https://earth.google.com/web/search/{0},+{1}".format(str(latitude).replace(".", "%2e"), str(longitude).replace(".", "%2e"))
-                    if config.enableHttpServer:
-                        info = """<a href="#" onclick="document.title = 'EXLB:::exlbl:::{0}';">{1}</a> [<a href='{2}' target='_blank';">3D</a>]""".format(exlbl_entry, name, googleEarthLink)
+                    if browser:
+                        info = "<a href='https://marvel.bible/tool.php?exlbl={0}' target='_blank'>{1}</a> [<a href='{2}' target='_blank'>3D</a>]".format(exlbl_entry, name, googleEarthLink)
+                    elif config.enableHttpServer:
+                        info = """<a href="#" onclick="document.title = 'EXLB:::exlbl:::{0}';">{1}</a> [<a href='{2}' target='_blank'>3D</a>]""".format(exlbl_entry, name, googleEarthLink)
                     else:
                         info = """<a href="#" onclick="document.title = 'EXLB:::exlbl:::{0}';">{1}</a> [<a href="#" onclick="document.title = 'online:::{2}';">3D</a>]""".format(exlbl_entry, name, googleEarthLink)
                     gmap.marker(latitude, longitude, label=label, title=name, info_window=info)
@@ -3994,7 +3996,12 @@ class TextCommandParser:
                     pass
         else:
             googleEarthLink = r"https://earth.google.com/web/search/31%2e777444,+35%2e234935"
-            info = """<ref onclick="document.title = 'EXLB:::exlbl:::BL636';">Jerusalem</ref> [<ref onclick="document.title = 'online:::{0}';">3D</a>]""".format(googleEarthLink)
+            if browser:
+                info = "<a href='https://marvel.bible/tool.php?exlbl=BL636' target='_blank'>Jerusalem</a> [<a href='{0}' target='_blank'>3D</a>]".format(googleEarthLink)
+            elif config.enableHttpServer:
+                info = """<ref onclick="document.title = 'EXLB:::exlbl:::BL636';">Jerusalem</ref> [<a href='{0}' target='_blank'>3D</a>]""".format(googleEarthLink)
+            else:
+                info = """<ref onclick="document.title = 'EXLB:::exlbl:::BL636';">Jerusalem</ref> [<ref onclick="document.title = 'online:::{0}';">3D</ref>]""".format(googleEarthLink)
             gmap.marker(31.777444, 35.234935, label="J", title="Jerusalem", info_window=info)
 
         # HTML text

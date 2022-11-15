@@ -1,3 +1,6 @@
+Changes in 33.13:
+* Fixed external links in customised maps.
+
 Changes in 33.12:
 * support opening customised maps on Android
 

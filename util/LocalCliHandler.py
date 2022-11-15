@@ -2240,7 +2240,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         locations = self.dialogs.getMultipleSelection(options=options, descriptions=descriptions, default_values=options, title="Customise Bible Map", text="Confirm locations below:")
         locations = list(set(locations))
         locations = self.textCommandParser.selectLocations(defaultChecklist=[i[2:] for i in locations])
-        html = self.textCommandParser.displayMap(locations)
+        html = self.textCommandParser.displayMap(locations, browser=True)
         filePath = os.path.join("htmlResources", "bible_map.html")
         fullFilePath = os.path.abspath(filePath)
         with open(fullFilePath, "w", encoding="utf-8") as fileObj:
