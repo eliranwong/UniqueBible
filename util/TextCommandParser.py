@@ -3986,7 +3986,7 @@ class TextCommandParser:
                         name = sc_location_names[exlbl_entry]
                     googleEarthLink = "https://earth.google.com/web/search/{0},+{1}".format(str(latitude).replace(".", "%2e"), str(longitude).replace(".", "%2e"))
                     if browser:
-                        info = "<a href='https://marvel.bible/tool.php?exlbl={0}' target='_blank'>{1}</a> [<a href='{2}' target='_blank'>3D</a>]".format(exlbl_entry, name, googleEarthLink)
+                        info = "<a href='https://bible.gospelchurch.uk/index.html?cmd=EXLB%3A%3A%3Aexlbl%3A%3A%3A{0}' target='_blank'>{1}</a> [<a href='{2}' target='_blank'>3D</a>]".format(exlbl_entry, name, googleEarthLink)
                     elif config.enableHttpServer:
                         info = """<a href="#" onclick="document.title = 'EXLB:::exlbl:::{0}';">{1}</a> [<a href='{2}' target='_blank'>3D</a>]""".format(exlbl_entry, name, googleEarthLink)
                     else:
@@ -3997,7 +3997,7 @@ class TextCommandParser:
         else:
             googleEarthLink = r"https://earth.google.com/web/search/31%2e777444,+35%2e234935"
             if browser:
-                info = "<a href='https://marvel.bible/tool.php?exlbl=BL636' target='_blank'>Jerusalem</a> [<a href='{0}' target='_blank'>3D</a>]".format(googleEarthLink)
+                info = "<a href='https://bible.gospelchurch.uk/index.html?cmd=EXLB%3A%3A%3Aexlbl%3A%3A%3ABL636' target='_blank'>Jerusalem</a> [<a href='{0}' target='_blank'>3D</a>]".format(googleEarthLink)
             elif config.enableHttpServer:
                 info = """<ref onclick="document.title = 'EXLB:::exlbl:::BL636';">Jerusalem</ref> [<a href='{0}' target='_blank'>3D</a>]""".format(googleEarthLink)
             else:
