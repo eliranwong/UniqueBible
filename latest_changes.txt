@@ -1,3 +1,6 @@
+Changes in 33.14:
+* Allow customisation of external links
+
 Changes in 33.13:
 * Fixed external links in customised maps.
 

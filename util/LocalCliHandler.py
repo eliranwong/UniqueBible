@@ -1644,10 +1644,7 @@ Escape+W open wordnet"""
     # use local http-server if it is running
     # otherwise, use public
     def web(self, command="", filterCommand=True):
-        server = "http://localhost:8080"
-        if not self.isUrlAlive(server):
-            server = ""
-        weblink = TextUtil.getWeblink(self.getCommand(command) if filterCommand else command, server=server)
+        weblink = self.textCommandParser.getWeblink(command, filterCommand)
         return self.getContent(f"_website:::{weblink}")
 
     def isBibleReference(self, text):

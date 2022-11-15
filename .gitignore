@@ -96,3 +96,4 @@ uba_gui_*.sh
 uba_terminal_*.sh
 terminal_mode/filters.txt
 system_command
+personal_notes.txt
