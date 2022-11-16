@@ -1,3 +1,6 @@
+Changes in 33.15:
+* Fixed cancel menu action
+
 Changes in 33.14:
 * Allow customisation of external links
 

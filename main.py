@@ -167,14 +167,16 @@ def getHistoryRecords():
     return records
 
 def runTerminalModeCommand(command):
-    content = config.mainWindow.getContent(command)
-    if content:
-        if content == ".restart" or content == ".z":
-            return ".restart"
-        else:
-            # display
-            config.mainWindow.displayOutputOnTerminal(content)
+    if command:
+        content = config.mainWindow.getContent(command)
+        if content:
+            if content == ".restart" or content == ".z":
+                return ".restart"
+            else:
+                # display
+                config.mainWindow.displayOutputOnTerminal(content)
     return command
+
 def runTerminalModeCommandWrapper(command):
     runTerminalModeCommand(command)
     default = config.terminalCommandDefault
@@ -210,26 +212,29 @@ def checkCommand(command):
         return command
 
 def run_terminal_mode():
-    #if config.isPrompt_toolkitInstalled:
+    from util.LocalCliHandler import LocalCliHandler
+    from util.prompt_shared_key_bindings import prompt_shared_key_bindings
+    from util.uba_command_prompt_key_bindings import uba_command_prompt_key_bindings
+    from prompt_toolkit.key_binding import merge_key_bindings
     from prompt_toolkit.shortcuts import set_title, clear_title
+    from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+    from prompt_toolkit.styles import Style
+    from prompt_toolkit.filters import Condition
+
+
+    # startup
     set_title(f"Unique Bible App [{config.version}]")
     config.saveConfigOnExit = True
     print(f"Running Unique Bible App {config.version} in terminal mode ...")
     checkMigration()
     needUpdate = checkApplicationUpdateCli()
-
     # set up config.mainWindow for terminal mode
-    from util.LocalCliHandler import LocalCliHandler
     config.mainWindow = LocalCliHandler()
-
+    # command default
     config.terminalCommandDefault = ""
     default = ""
-    if config.isPrompt_toolkitInstalled:
-        from prompt_toolkit.key_binding import merge_key_bindings
-        from util.prompt_shared_key_bindings import prompt_shared_key_bindings
-        from util.uba_command_prompt_key_bindings import uba_command_prompt_key_bindings
-        # make key bindings available in config to allow futher customisation via plugins
-        config.key_bindings = uba_command_prompt_key_bindings
+    # make key bindings available in config to allow futher customisation via plugins
+    config.key_bindings = uba_command_prompt_key_bindings
     # run plugin where users may add customised key bindings
     runStartupPlugins()
     if config.isPrompt_toolkitInstalled:
@@ -256,31 +261,21 @@ def run_terminal_mode():
     if config.terminalStartHttpServerOnStartup:
         config.mainWindow.starthttpserver()
 
+    # initiate main prompt session
+    initiateMainPrompt()
+    command_completer = config.mainWindow.getCommandCompleter()
+    auto_suggestion=AutoSuggestFromHistory()
+    toolbar = " [ctrl+q] .quit [escape+m] .menu [escape+h] .help "
+    style = Style.from_dict({
+        # User input (default text).
+        "": config.terminalCommandEntryColor1,
+        # Prompt.
+        "indicator": config.terminalPromptIndicatorColor1,
+    })
     promptIndicator = ">>> "
-
-    if config.isPrompt_toolkitInstalled:
-        from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
-
-        # initiate main prompt session
-        initiateMainPrompt()
-        command_completer = config.mainWindow.getCommandCompleter()
-        auto_suggestion=AutoSuggestFromHistory()
-        toolbar = " [ctrl+q] .quit [escape+m] .menu [escape+h] .help "
-
-        from prompt_toolkit.styles import Style
-        style = Style.from_dict({
-            # User input (default text).
-            "": config.terminalCommandEntryColor1,
-            # Prompt.
-            "indicator": config.terminalPromptIndicatorColor1,
-        })
-        promptIndicator = [
-            ("class:indicator", promptIndicator),
-        ]
-
-    elif sys.platform in ("linux", "darwin"):
-        import readline
-
+    promptIndicator = [
+        ("class:indicator", promptIndicator),
+    ]
     if command:
         command = checkCommand(command)
         # display
@@ -303,44 +298,21 @@ def run_terminal_mode():
         config.terminalCommandDefault = ""
         config.mainWindow.initialDisplay()
         # User command input
-        if config.isPrompt_toolkitInstalled:
-            from prompt_toolkit.filters import Condition
-
-            if config.terminalUseLighterCompleter:
-                command = config.main_prompt_session.prompt(
-                    promptIndicator,
-                    style=style,
-                    completer=command_completer,
-                    auto_suggest=auto_suggestion,
-                    bottom_toolbar=toolbar,
-                    default=default,
-                    key_bindings=config.key_bindings,
-                    # enable system prompt without auto-completion
-                    # use escape+!
-                    enable_system_prompt=True,
-                    swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")),
-                    #rprompt="Enter an UBA command",
-                ).strip()
-            else:
-                command = config.main_prompt_session.prompt(promptIndicator,
-                    style=style,
-                    completer=command_completer,
-                    complete_in_thread=True,
-                    auto_suggest=auto_suggestion,
-                    bottom_toolbar=toolbar,
-                    default=default,
-                    key_bindings=config.key_bindings,
-                    # enable system prompt without auto-completion
-                    # use escape+!
-                    enable_system_prompt=True,
-                    swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")),
-                    #rprompt="Enter an UBA command",
-                ).strip()
-        elif sys.platform in ("linux", "darwin"):
-            import readline
-            command = input(promptIndicator).strip()
-        else:
-            command = input(promptIndicator).strip()
+        command = config.main_prompt_session.prompt(
+            promptIndicator,
+            style=style,
+            completer=command_completer,
+            complete_in_thread=None if config.terminalUseLighterCompleter else True,
+            auto_suggest=auto_suggestion,
+            bottom_toolbar=toolbar,
+            default=default,
+            key_bindings=config.key_bindings,
+            # enable system prompt without auto-completion
+            # use escape+!
+            enable_system_prompt=True,
+            swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")),
+            #rprompt="Enter an UBA command",
+        ).strip()
         if command:
             command = checkCommand(command)
             # remove spaces before and after ":::"

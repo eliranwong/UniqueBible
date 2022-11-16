@@ -112,7 +112,8 @@ class TerminalModeDialogs:
             self.parent.printRunningCommand(result)
             return self.parent.getContent(result)
         else:
-            return self.parent.cancelAction()
+            #return self.parent.cancelAction()
+            return ""
 
     def getbible(self, title="Bible Selection", default=config.mainText, text="Select a version:"):
         return radiolist_dialog(
