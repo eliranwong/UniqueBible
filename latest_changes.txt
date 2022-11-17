@@ -1,3 +1,6 @@
+Changes in 33.18:
+* Fixed .quit and .restart in terminal mode.
+
 Changes in 33.17:
 * Changed a command description.
 
