@@ -435,7 +435,7 @@ class LocalCliHandler:
             ".aliases": ("terminal mode command shortcuts", self.commandAliases),
             ".keys": ("keyboard shortcuts", self.keys),
             ".menu": ("master menu", self.menu),
-            ".my": ("my favourites", self.my),
+            ".my": ("my menu", self.my),
             ".info": ("information", self.info),
             ".speak": ("speak ...", self.speak),
             ".translate": ("translate ...", self.translate),
