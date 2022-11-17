@@ -37,12 +37,12 @@ from util.exlbl import allLocations
 from prompt_toolkit import PromptSession, prompt, print_formatted_text, HTML
 from prompt_toolkit.shortcuts import clear, confirm
 from prompt_toolkit.filters import Condition
-from prompt_toolkit.application import run_in_terminal
+#from prompt_toolkit.application import run_in_terminal
 from prompt_toolkit.key_binding import KeyBindings, merge_key_bindings
 from prompt_toolkit.completion import WordCompleter, NestedCompleter, ThreadedCompleter
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.styles import Style
-from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+#from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from haversine import haversine
 
 
@@ -75,7 +75,7 @@ class LocalCliHandler:
             self.unsupportedCommands.append("sidebyside")
         self.ttsCommandKeyword = self.getDefaultTtsKeyword().lower()
         self.unsupportedCommands.append("gtts" if self.ttsCommandKeyword == "speak" else "speak")
-        self.startupException1 = [config.terminal_cancel_action, ".", ".ed", ".sys", ".system", ".quit", ".q", ".restart", ".z", ".togglepager", ".filters", ".toggleclipboardmonitor", ".history", ".update", ".find", ".sa", ".sas", ".read", ".readsync", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".downloadyoutube", ".web", ".gtts", ".buildportablepython", ".textfile"]
+        self.startupException1 = [config.terminal_cancel_action, ".", ".ed", ".sys", ".system", ".quit", ".q", ".restart", ".z", ".togglepager", ".filters", ".toggleclipboardmonitor", ".history", ".update", ".find", ".sa", ".sas", ".read", ".readsync", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".downloadyoutube", ".web", ".gtts", ".portablepython", ".textfile"]
         self.startupException2 = "^(_setconfig:::|\.edit|\.change|\.toggle|\.stop|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::|download:::|read:::|readsync:::)"
         #config.cliTtsProcess = None
         config.audio_playing_file = os.path.join("temp", "000_audio_playing.txt")
@@ -258,32 +258,32 @@ class LocalCliHandler:
         for key, value in self.getShortcuts().items():
             value = value.strip()
             if value:
-                self.dotCommands[key] = (f"an alias to command '{value}'", partial(self.getContent, value))
+                self.dotCommands[key] = (f"an alias to '{value}'", partial(self.getContent, value))
 
     def getDotCommands(self):
         return {
             config.terminal_cancel_action: ("cancel action in current prompt", self.cancelAction),
             ".togglecolorbrightness": ("toggle color brightness", self.togglecolorbrightness),
-            ".togglecolourbrightness": ("an alias to the '.togglecolorbrightness' command", self.togglecolorbrightness),
+            ".togglecolourbrightness": ("an alias to '.togglecolorbrightness'", self.togglecolorbrightness),
             ".togglepager": ("toggle paging for text output", self.togglePager),
             ".toggleclipboardmonitor": ("toggle paging for text output", self.toggleClipboardMonitor),
             ".togglebiblecomparison": ("toggle bible comparison view", self.togglebiblecomparison),
             ".togglebiblechapterplainlayout": ("toggle bible chapter plain layout", self.toggleBibleChapterFormat),
             ".toggleplainbiblechaptersubheadings": ("toggle bible chapter subheadings in plain layout", self.toggleaddTitleToPlainChapter),
             ".togglefavouriteverses": ("toggle favourite bible verses in displaying multiple verses", self.toggleaddFavouriteToMultiRef),
-            ".togglefavoriteverses": ("an alias to the '.togglefavouriteverses' command", self.toggleaddFavouriteToMultiRef),
+            ".togglefavoriteverses": ("an alias to '.togglefavouriteverses'", self.toggleaddFavouriteToMultiRef),
             ".toggleversenumberdisplay": ("toggle verse number display", self.toggleshowVerseReference),
             ".toggleusernoteindicator": ("toggle user note indicator display", self.toggleshowUserNoteIndicator),
             ".togglebiblenoteindicator": ("toggle bible note indicator display", self.toggleshowBibleNoteIndicator),
             ".togglebiblelexicalentries": ("toggle lexical entry display", self.togglehideLexicalEntryInBible),
             ".stopaudio": ("stop audio", self.stopAudio),
-            ".sa": ("an alias to the '.stopaudio' command", self.stopAudio),
+            ".sa": ("an alias to '.stopaudio'", self.stopAudio),
             ".stopaudiosync": ("stop audio with text synchronisation", self.removeAudioPlayingFile),
-            ".sas": ("an alias to the '.stopaudiosync' command", self.removeAudioPlayingFile),
-            ".read": ("read available audio files", self.read),
-            ".readsync": ("read available audio files with text synchronisation", self.readsync),
-            ".customisefilters": ("filter latest content", self.customisefilters),
-            ".customizefilters": ("an alias to the '.customisefilters' command", self.customisefilters),
+            ".sas": ("an alias to '.stopaudiosync'", self.removeAudioPlayingFile),
+            ".read": ("play audio", self.read),
+            ".readsync": ("play audio with text synchronisation", self.readsync),
+            ".customisefilters": ("customise filters", self.customisefilters),
+            ".customizefilters": ("an alias to '.customisefilters'", self.customisefilters),
             ".run": ("run copied text as command", self.runclipboardtext),
             ".forward": ("one bible chapter forward", self.forward),
             ".backward": ("one bible chapter backward", self.backward),
@@ -300,42 +300,42 @@ class LocalCliHandler:
             ".ttscopiedtext2": ("copied text to speech 2", lambda: self.tts(True, defaultLanguage=config.ttsDefaultLangauge2)),
             ".ttscopiedtext3": ("copied text to speech 3", lambda: self.tts(True, defaultLanguage=config.ttsDefaultLangauge3)),
             ".ttscopiedtext4": ("copied text to speech 4", lambda: self.tts(True, defaultLanguage=config.ttsDefaultLangauge4)),
-            ".ttsc": ("an alias to the '.ttscopiedtext' command", self.tts),
-            ".paste": ("display copied text", self.getclipboardtext),
+            ".ttsc": ("an alias to '.ttscopiedtext'", self.tts),
+            ".paste": ("copied text", self.getclipboardtext),
             ".copy": ("copy the last opened content", self.copy),
             ".copyhtml": ("copy the last opened content in html format", self.copyHtml),
-            ".quicksearchcopiedtext": ("quick search copied text", self.quickSearch),
-            ".qsc": ("an alias to the '.quicksearchcopiedtext' command", self.quickSearch),
-            ".quickopencopiedtext": ("quick open copied text", self.quickopen),
-            ".qoc": ("an alias to the '.quickopencopiedtext' command", self.quickopen),
-            ".quickeditcopiedtext": ("quick edit copied text", self.quickedit),
-            ".qec": ("an alias to the '.quickeditcopiedtext' command", self.quickedit),
-            ".find": ("find a string in the lastest content", self.find),
-            ".findcopiedtext": ("find a string in the copied text", self.findCopiedText),
-            ".findc": ("an alias to the '.findcopiedtext' command", self.findCopiedText),
-            ".history": ("display history records", self.history),
-            ".latestchanges": ("display latest changes", self.latestchanges),
-            ".latest": ("display the lastest selection", self.latest),
-            ".latestbible": ("display the lastest bible chapter", self.latestBible),
+            ".quicksearchcopiedtext": ("run quick search on copied text", self.quickSearch),
+            ".qsc": ("an alias to '.quicksearchcopiedtext'", self.quickSearch),
+            ".quickopencopiedtext": ("run quick open on copied text", self.quickopen),
+            ".qoc": ("an alias to '.quickopencopiedtext'", self.quickopen),
+            ".quickeditcopiedtext": ("run quick edit on copied text", self.quickedit),
+            ".qec": ("an alias to '.quickeditcopiedtext'", self.quickedit),
+            ".find": ("search the lastest content", self.find),
+            ".findcopiedtext": ("search the copied text", self.findCopiedText),
+            ".findc": ("an alias to '.findcopiedtext'", self.findCopiedText),
+            ".history": ("history records", self.history),
+            ".latestchanges": ("latest changes", self.latestchanges),
+            ".latest": ("the lastest selection", self.latest),
+            ".latestbible": ("the lastest bible chapter", self.latestBible),
             ".update": ("update Unique Bible App to the latest version", self.update),
-            ".commands": ("display available commands", self.commands),
-            ".config": ("display UBA configurations", self.config),
-            ".showbibles": ("display installed bibles", self.showbibles),
-            ".showstrongbibles": ("display installed bibles with Strong's numbers", self.showstrongbibles),
-            ".showbiblebooks": ("display bible book list", self.showbiblebooks),
-            ".showbibleabbreviations": ("display bible book name list", self.showbibleabbreviations),
-            ".showbiblechapters": ("display bible chapter list", self.showbiblechapters),
-            ".showbibleverses": ("display bible verse list", self.showbibleverses),
-            ".showcommentaries": ("display installed commentaries", self.showcommentaries),
-            ".showtopics": ("display installed bible topic modules", self.showtopics),
-            ".showlexicons": ("display installed lexicons", self.showlexicons),
-            ".showencyclopedia": ("display installed encyclopedia", self.showencyclopedia),
-            ".showdictionaries": ("display installed dictionaries", self.showdictionaries),
-            ".showthirdpartydictionary": ("display installed third-party dictionaries", self.showthirdpartydictionary),
-            ".showreferencebooks": ("display installed reference books", self.showreferencebooks),
-            ".showdata": ("display installed data", self.showdata),
-            ".showttslanguages": ("display text-to-speech languages", self.showttslanguages),
-            ".showdownloads": ("display available downloads", self.showdownloads),
+            ".commands": ("available commands", self.commands),
+            ".config": ("UBA configurations", self.config),
+            ".showbibles": ("installed bibles", self.showbibles),
+            ".showstrongbibles": ("installed bibles with Strong's numbers", self.showstrongbibles),
+            ".showbiblebooks": ("bible book list", self.showbiblebooks),
+            ".showbibleabbreviations": ("bible book name list", self.showbibleabbreviations),
+            ".showbiblechapters": ("bible chapter list", self.showbiblechapters),
+            ".showbibleverses": ("bible verse list", self.showbibleverses),
+            ".showcommentaries": ("installed commentaries", self.showcommentaries),
+            ".showtopics": ("installed bible topic modules", self.showtopics),
+            ".showlexicons": ("installed lexicons", self.showlexicons),
+            ".showencyclopedia": ("installed encyclopedia", self.showencyclopedia),
+            ".showdictionaries": ("installed dictionaries", self.showdictionaries),
+            ".showthirdpartydictionary": ("installed third-party dictionaries", self.showthirdpartydictionary),
+            ".showreferencebooks": ("installed reference books", self.showreferencebooks),
+            ".showdata": ("installed data", self.showdata),
+            ".showttslanguages": ("text-to-speech languages", self.showttslanguages),
+            ".showdownloads": ("available downloads", self.showdownloads),
             ".downloadyoutube": ("download youtube file", self.downloadyoutube),
             ".downloadbibleaudio": ("download bible audio", self.downloadbibleaudio),
             ".bible": ("bible", self.openbible),
@@ -350,7 +350,7 @@ class LocalCliHandler:
             ".mab": ("hebrew & Greek annotated bible", lambda: self.web(".mab", False)),
             ".lxx1i": ("Septuagint interlinear I", lambda: self.web("TEXT:::LXX1i", False)),
             ".lxx2i": ("Septuagint interlinear II", lambda: self.web("TEXT:::LXX2i", False)),
-            ".open365readingplan": ("365-day bible reading plan", self.open365readingplan),
+            ".365": ("365-day bible reading plan", self.open365readingplan),
             ".commentary": ("commentary", self.opencommentary),
             ".referencebook": ("reference book", self.openreferencebook),
             ".audio": ("bible audio", self.openbibleaudio),
@@ -368,7 +368,7 @@ class LocalCliHandler:
             ".exlbl": ("exhaustive library of bible locations", lambda: self.openTools2("locations")),
             ".maps": ("bible maps", self.openmaps),
             ".customisemaps": ("customise bible maps", self.customisemaps),
-            ".customizemaps": ("an alias to the '.customisemap' command", self.customisemaps),
+            ".customizemaps": ("an alias to '.customisemap'", self.customisemaps),
             ".distance": ("distance between two locations", self.distance),
             ".data": ("bible data", self.opendata),
             ".timelines": ("bible timelines", lambda: self.web(".timelineMenu", False)),
@@ -379,13 +379,13 @@ class LocalCliHandler:
             ".concordancebybook": ("Hebrew / Greek concordance sorted by books", lambda: self.openTools("LEXICON", self.showlexicons, "ConcordanceBook")),
             ".concordancebymorphology": ("Hebrew / Greek concordance sorted by morphology", lambda: self.openTools("LEXICON", self.showlexicons, "ConcordanceMorphology")),
             ".thirdpartydictionaries": ("third-party dictionaries", lambda: self.openTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
-            ".3dict": ("an alias to the '.openthirdpartydictionaries' command", lambda: self.openTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
+            ".3dict": ("an alias to '.openthirdpartydictionaries'", lambda: self.openTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
             ".editbooknote": ("edit bible book note", lambda: self.openbookfeature("EDITBOOKNOTE")),
             ".editchapternote": ("edit bible chapter note", lambda: self.openchapterfeature("EDITCHAPTERNOTE")),
             ".editversenote": ("edit bible verse note", lambda: self.openversefeature("EDITVERSENOTE")),
             ".editjournal": ("edit journal", lambda: self.journalFeature("EDITJOURNAL")),
             ".quickedit": ("quick edit", lambda: self.quickedit(False)),
-            ".qe": ("an alias to the '.quickedit' command", lambda: self.quickedit(False)),
+            ".qe": ("an alias to '.quickedit'", lambda: self.quickedit(False)),
             ".searchbooknote": ("search bible book note", lambda: self.searchNote("SEARCHBOOKNOTE")),
             ".searchchapternote": ("search bible chapter note", lambda: self.searchNote("SEARCHCHAPTERNOTE")),
             ".searchversenote": ("search bible verse note", lambda: self.searchNote("SEARCHVERSENOTE")),
@@ -402,10 +402,10 @@ class LocalCliHandler:
             ".searchreferencebooks": ("search reference books", lambda: self.searchTools("BOOK", self.showreferencebooks)),
             #".searchtopics": ("search topics", lambda: self.searchTools("TOPICS", self.showtopics)),
             #".searchthirdpartydictionaries": ("search third-party dictionaries", lambda: self.searchTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
-            #".search3dict": ("an alias to the '.searchthirdpartydictionaries' command", lambda: self.searchTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
-            ".searchconcordance": ("search for concordance", self.searchconcordance),
+            #".search3dict": ("an alias to '.searchthirdpartydictionaries'", lambda: self.searchTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
+            ".searchconcordance": ("search concordance", self.searchconcordance),
             ".quicksearch": ("quick search", lambda: self.quickSearch(False)),
-            ".qs": ("an alias to the '.quicksearch' command", lambda: self.quickSearch(False)),
+            ".qs": ("an alias to '.quicksearch'", lambda: self.quickSearch(False)),
             ".crossreference": ("cross reference", self.openversefeature),
             ".comparison": ("verse comparison", lambda: self.openversefeature("COMPARE")),
             ".difference": ("verse comparison with differences", lambda: self.openversefeature("DIFFERENCE")),
@@ -429,14 +429,14 @@ class LocalCliHandler:
             ".quickopen": ("quick open", lambda: self.quickopen(False)),
             ".readword": ("read Hebrew or Greek word", self.readword),
             ".readlexeme": ("read Hebrew or Greek lexeme", lambda: self.readword(True)),
-            ".qo": ("an alias to the '.quickopen' command", lambda: self.quickopen(False)),
-            ".standardcommands": ("display standard UBA command", self.standardcommands),
-            ".terminalcommands": ("display terminal mode commands", self.terminalcommands),
-            ".aliases": ("display terminal mode command shortcuts", self.commandAliases),
-            ".keys": ("display keyboard shortcuts", self.keys),
-            ".menu": ("display master menu", self.menu),
+            ".qo": ("an alias to '.quickopen'", lambda: self.quickopen(False)),
+            ".standardcommands": ("standard UBA command", self.standardcommands),
+            ".terminalcommands": ("terminal mode commands", self.terminalcommands),
+            ".aliases": ("terminal mode command shortcuts", self.commandAliases),
+            ".keys": ("keyboard shortcuts", self.keys),
+            ".menu": ("master menu", self.menu),
             ".my": ("my favourites", self.my),
-            ".show": ("show ...", self.info),
+            ".info": ("information", self.info),
             ".speak": ("speak ...", self.speak),
             ".translate": ("translate ...", self.translate),
             ".open": ("open ...", self.open),
@@ -444,39 +444,39 @@ class LocalCliHandler:
             ".note": ("note / journal", self.accessNoteFeatures),
             ".edit": ("edit ...", self.edit),
             ".quick": ("quick features", self.quick),
-            ".control": ("control menu", self.control),
+            ".control": ("control", self.control),
             ".toggle": ("toggle ...", self.toggle),
             ".clipboard": ("copy / paste ...", self.clipboard),
-            ".clip": ("an alias to the '.clipboard' command", self.clipboard),
+            ".clip": ("an alias to '.clipboard'", self.clipboard),
             ".change": ("change ...", self.change),
-            ".tools": ("tool menu", self.tools),
-            ".plugins": ("plugin menu", self.plugins),
-            ".howto": ("how-to menu", self.howto),
+            ".tools": ("tools", self.tools),
+            ".python": ("python tools", self.python),
+            ".plugins": ("plugins", self.plugins),
+            ".howto": ("how-to", self.howto),
             ".maintain": ("maintain ...", self.maintain),
             ".download": ("download ...", self.download),
             ".backup": ("backup ...", self.backup),
             ".restore": ("restore ...", self.restore),
-            ".develop": ("developer menu", self.develop),
-            ".help": ("get help", self.help),
+            ".help": ("help", self.help),
             ".filters": ("filters", self.filters),
             ".wiki": ("online wiki page", self.wiki),
-            ".quickstart": ("show how to install text editor micro", lambda: self.readHowTo("quick start")),
-            ".helpinstallmicro": ("show how to install text editor micro", lambda: self.readHowTo("install micro")),
+            ".quickstart": ("how to quick start", lambda: self.readHowTo("quick start")),
+            ".helpinstallmicro": ("how to install micro", lambda: self.readHowTo("install micro")),
             #".w3m": ("html content in w3m", lambda: self.cliTool("w3m -T text/html", self.html)),
             #".lynx": ("html content in lynx", lambda: self.cliTool("lynx -stdin", self.html)),
-            ".textfile": ("text file", self.opentext),
+            ".textfile": ("read text file", self.opentext),
             ".edittextfile": ("edit text file", lambda: self.opentext(True)),
             ".extract": ("extract bible references from the latest content", self.extract),
-            ".extractcopiedtext": ("extract bible references from the latest content.", self.extractcopiedtext),
-            ".editor": ("launch built-in text editor", self.cliTool),
-            ".ed": ("an alias to the '.editor' command", self.cliTool),
-            ".editnewfile": ("edit new file in text editor", lambda: self.cliTool(config.terminalNoteEditor)),
-            ".editcontent": ("edit latest content in text editor", lambda: self.cliTool(config.terminalNoteEditor, self.getPlainText())),
-            ".editconfig": ("edit 'config.py' in text editor", lambda: self.editConfig(config.terminalNoteEditor)),
+            ".extractcopiedtext": ("extract bible references from copied text", self.extractcopiedtext),
+            ".editor": ("built-in text editor", self.cliTool),
+            ".ed": ("an alias to '.editor'", self.cliTool),
+            ".editnewfile": ("edit a new file", lambda: self.cliTool(config.terminalNoteEditor)),
+            ".editcontent": ("edit the latest content", lambda: self.cliTool(config.terminalNoteEditor, self.getPlainText())),
+            ".editconfig": ("edit 'config.py'", lambda: self.editConfig(config.terminalNoteEditor)),
             ".editfilters": ("edit saved filters", self.editfilters),
             ".applyfilters": ("apply saved filters", self.applyfilters),
             ".searchbible": ("search bible", self.searchbible),
-            ".whatis": ("read description about a command", self.whatis),
+            ".whatis": ("command description", self.whatis),
             ".starthttpserver": ("start UBA http-server", self.starthttpserver),
             ".stophttpserver": ("stop UBA http-server", self.stophttpserver),
             ".backupnotes": ("backup note database file", lambda: self.sendFile("marvelData/note.sqlite")),
@@ -509,38 +509,41 @@ class LocalCliHandler:
             ".changebiblesearchmode": ("change default bible search mode", self.changebiblesearchmode),
             ".changenoteeditor": ("change default note editor", self.changenoteeditor),
             ".changecolors": ("change colors", self.changecolors),
-            ".changecolours": ("an alias to the '.changecolors' command", self.changecolors),
+            ".changecolours": ("an alias to '.changecolors'", self.changecolors),
             ".changeconfig": ("change UBA configurations", self.changeconfig),
             ".changeterminalmodeconfig": ("change UBA terminal mode configurations", lambda: self.changeconfig(True)),
-            ".gitstatus": ("display git status", self.gitstatus),
+            ".gitstatus": ("git status", self.gitstatus),
             ".exec": ("execute a python string", self.execPythonString),
             ".execfile": ("execute a python file", self.execFile),
             ".reload": ("reload the latest content", self.reload),
             ".restart": ("restart UBA", self.restartUBA),
-            ".z": ("an alias to the '.restart' command", self.restartUBA),
+            ".z": ("an alias to '.restart'", self.restartUBA),
             ".quit": ("quit UBA", self.quitUBA),
-            ".q": ("an alias to the '.quit' command", self.quitUBA),
-            ".googletranslate": ("translate with Google Translate", lambda: self.googleTranslate(False)),
-            ".googletranslatecopiedtext": ("translate copied text with Google Translate", self.googleTranslate),
-            ".gt": ("an alias to the '.googletranslate' command", lambda: self.googleTranslate(False)),
-            ".gtc": ("an alias to the '.googletranslatecopiedtext' command", self.googleTranslate),
-            ".watsontranslate": ("translate with IBM Watson Translator", lambda: self.watsonTranslate(False)),
-            ".watsontranslatecopiedtext": ("translate copied text with IBM Watson Translator", self.watsonTranslate),
-            ".wt": ("an alias to the '.watsontranslate' command", lambda: self.watsonTranslate(False)),
-            ".wtc": ("an alias to the '.watsontranslatecopiedtext' command", self.watsonTranslate),
-            ".buildportablepython": ("build portable python", self.buildPortablePython),
-            ".system": ("run system command prompt", SystemCommandPrompt().run),
-            ".sys": ("an alias to the '.system' command", SystemCommandPrompt().run),
-            ".clear": ("clear the current screen", clear),
-            ".wordnet": ("clear the current screen", self.wordnet),
+            ".q": ("an alias to '.quit'", self.quitUBA),
+            ".googletranslate": ("run Google Translate", lambda: self.googleTranslate(False)),
+            ".googletranslatecopiedtext": ("run Google Translate on copied text", self.googleTranslate),
+            ".gt": ("an alias to '.googletranslate'", lambda: self.googleTranslate(False)),
+            ".gtc": ("an alias to '.googletranslatecopiedtext'", self.googleTranslate),
+            ".watsontranslate": ("run IBM Watson Translator", lambda: self.watsonTranslate(False)),
+            ".watsontranslatecopiedtext": ("run IBM Watson Translator on copied text", self.watsonTranslate),
+            ".wt": ("an alias to '.watsontranslate'", lambda: self.watsonTranslate(False)),
+            ".wtc": ("an alias to '.watsontranslatecopiedtext'", self.watsonTranslate),
+            ".portablepython": ("build portable python", self.buildPortablePython),
+            ".system": ("system command prompt", SystemCommandPrompt().run),
+            ".sys": ("an alias to '.system'", SystemCommandPrompt().run),
+            ".clear": ("clear screen", clear),
+            ".wordnet": ("wordnet dictionary", self.wordnet),
+            ".customize": ("an alias to '.customise'", self.customise),
+            ".mp3": ("play mp3 files in music folder", self.mp3),
+            ".allmp3": ("play all mp3 files in music folder", lambda: self.mp3(default="[ALL]")),
+            ".mp4": ("play mp4 files in video folder", self.mp4),
+            ".allmp4": ("play all mp4 files in video folder", lambda: self.mp4(default="[ALL]")),
+            # dummy 
             ".all": ("all ...", self.all),
             ".apply": ("apply ...", self.apply),
             ".customise": ("customise ...", self.customise),
-            ".customize": ("an alias to the '.customise' command", self.customise),
-            ".mp3": ("play mp3 files in music folder", self.mp3),
-            ".allmp3": ("play mp3 files in music folder", lambda: self.mp3(default="[ALL]")),
-            ".mp4": ("play mp4 files in video folder", self.mp4),
-            ".allmp4": ("play all mp4 files in video folder", lambda: self.mp4(default="[ALL]")),
+            ".google": ("google ...", self.google),
+            ".google": ("google ...", self.watson),
         }
 
     def editfilters(self):
@@ -880,6 +883,10 @@ class LocalCliHandler:
                 suggestions[i] = self.getDummyDict(["journals", "notes",])
             elif i == ".copy":
                 suggestions[i] = self.getDummyDict(["html",])
+            elif i == ".google":
+                suggestions[i] = self.getDummyDict(["translate", "translatecopiedtext"])
+            elif i == ".watson":
+                suggestions[i] = self.getDummyDict(["translate", "translatecopiedtext"])
             elif i == ".all":
                 suggestions[i] = self.getDummyDict(["mp3", "mp4"])
             elif i == ".apply":
@@ -1609,9 +1616,8 @@ Escape+W open wordnet"""
                 return clipboardText
             elif confirmMessage:
                 self.print("No copied text is found!")
-                return self.cancelAction()
-            else:
-                return ""
+                #return self.cancelAction()
+            return ""
         except:
             return self.noClipboardUtility()
 
@@ -3367,7 +3373,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
     def printEnterNumber(self, number):
         self.print(f"Enter a number [0 ... {number}]:")
 
-    # Get latest content in plain text
+    # Get the latest content in plain text
     def getPlainText(self, content=None):
         return TextUtil.htmlToPlainText(self.html if content is None else content, False).strip()
 
@@ -3716,7 +3722,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
     # organise user interactive menu
     def menu(self):
         heading = "Master Menu"
-        features = [".show", ".open", ".search", ".note", ".edit", ".speak", ".translate", ".clipboard", ".quick", ".control", ".tools", ".plugins", ".change", ".download", ".maintain", ".develop", ".help", ".restart", ".quit"]
+        features = [".open", ".search", ".note", ".edit", ".speak", ".translate", ".clipboard", ".quick", ".control", ".tools", ".plugins", ".change", ".download", ".maintain", ".help", ".restart", ".quit"]
         if config.terminalMyMenu:
             features.insert(0, ".my")
         return self.displayFeatureMenu(heading, features)
@@ -3730,7 +3736,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def open(self):
         heading = "Open"
-        features = (".bible", ".biblenote", ".original", ".open365readingplan", ".bookfeatures", ".chapterfeatures", ".versefeatures", ".wordfeatures", ".commentary", ".referencebook", ".audio", ".data", ".topics", ".promises", ".parallels", ".characters", ".locations", ".timelines", ".dictionaries", ".encyclopedia", ".thirdpartydictionaries", ".wordnet", ".textfile")
+        features = (".bible", ".biblenote", ".original", ".365", ".bookfeatures", ".chapterfeatures", ".versefeatures", ".wordfeatures", ".commentary", ".referencebook", ".audio", ".data", ".topics", ".promises", ".parallels", ".characters", ".locations", ".timelines", ".dictionaries", ".encyclopedia", ".thirdpartydictionaries", ".wordnet", ".textfile")
         return self.displayFeatureMenu(heading, features)
 
     def characters(self):
@@ -3740,7 +3746,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def locations(self):
         heading = "Bible Locations"
-        features = (".exlbl", ".customisemaps", ".distance")
+        features = (".exlbl", ".maps", ".customisemaps", ".distance")
         return self.displayFeatureMenu(heading, features)
 
     def all(self):
@@ -3751,6 +3757,16 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
     def apply(self):
         heading = "Apply"
         features = (".applyfilters",)
+        return self.displayFeatureMenu(heading, features)
+
+    def google(self):
+        heading = "Google"
+        features = (".googletranslate", ".googletranslatecopiedtext")
+        return self.displayFeatureMenu(heading, features)
+
+    def watson(self):
+        heading = "Watson"
+        features = (".watsontranslate", ".watsontranslatecopiedtext")
         return self.displayFeatureMenu(heading, features)
 
     def customise(self):
@@ -3770,7 +3786,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def tools(self):
         heading = "Tools"
-        features = (".web", ".share", ".extract", ".filters", ".read", ".readsync")
+        features = (".web", ".share", ".extract", ".filters", ".read", ".readsync", ".system", ".python")
         return self.displayFeatureMenu(heading, features)
 
     def speak(self):
@@ -3805,7 +3821,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def info(self):
         heading = "Information"
-        features = (".latest", ".history", ".showbibles", ".showstrongbibles", ".showbiblebooks", ".showbibleabbreviations", ".showbiblechapters", ".showbibleverses", ".showcommentaries", ".showtopics", ".showlexicons", ".showencyclopedia", ".showdictionaries", ".showthirdpartydictionary", ".showreferencebooks", ".showdata", ".showttslanguages", ".commands", ".config")
+        features = (".latest", ".history", ".showbibles", ".showstrongbibles", ".showbiblebooks", ".showbibleabbreviations", ".showbiblechapters", ".showbibleverses", ".showcommentaries", ".showtopics", ".showlexicons", ".showencyclopedia", ".showdictionaries", ".showthirdpartydictionary", ".showreferencebooks", ".showdata", ".showttslanguages", ".gitstatus", ".commands", ".config")
         return self.displayFeatureMenu(heading, features)
 
     def filters(self):
@@ -3825,7 +3841,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def help(self):
         heading = "Help"
-        features = (".wiki", ".quickstart", ".howto", ".terminalcommands", ".standardcommands", ".aliases", ".keys", ".whatis")
+        features = (".wiki", ".quickstart", ".howto", ".info", ".terminalcommands", ".standardcommands", ".aliases", ".keys", ".whatis")
         return self.displayFeatureMenu(heading, features)
 
     def maintain(self):
@@ -3850,9 +3866,9 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         features = (".showdownloads", ".downloadbibleaudio", ".downloadyoutube")
         return self.displayFeatureMenu(heading, features)
 
-    def develop(self):
-        heading = "Developer Tools"
-        features = (".system", ".gitstatus", ".exec", ".execfile", ".buildportablepython",)
+    def python(self):
+        heading = "Python Tools"
+        features = (".exec", ".execfile", ".portablepython",)
         return self.displayFeatureMenu(heading, features)
 
     def openbookfeatures(self):
