@@ -353,7 +353,6 @@ def isColoramaInstalled():
 def isPrompt_toolkitInstalled():
     try:
         from prompt_toolkit import PromptSession
-        config.isPrompt_toolkitInstalled = True
         return True
     except:
         return False

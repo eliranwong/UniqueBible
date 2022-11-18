@@ -6,8 +6,18 @@ from util.GoogleCloudTTSVoices import GoogleCloudTTS
 from util.get_path_prompt import GetPath
 from util.HebrewTransliteration import HebrewTransliteration
 from util.WebtopUtil import WebtopUtil
-#from util.terminal_system_command_prompt import SystemCommandPrompt
+from util.PromptValidator import NumberValidator
 from install.module import *
+from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+from prompt_toolkit.completion import WordCompleter
+from prompt_toolkit.application import run_in_terminal
+from prompt_toolkit.key_binding import KeyBindings
+from prompt_toolkit import prompt
+from prompt_toolkit import PromptSession
+from prompt_toolkit.history import FileHistory
+from prompt_toolkit.styles import Style
+#from util.terminal_system_command_prompt import SystemCommandPrompt
+
 
 # Created for running text editor without UBA
 class TextEditorUtility:
@@ -29,17 +39,12 @@ class TextEditorUtility:
     def simplePrompt(self, numberOnly=False, multiline=False, inputIndicator=""):
         if not inputIndicator:
             inputIndicator = self.inputIndicator
-        if config.isPrompt_toolkitInstalled:
-            from prompt_toolkit import prompt
-            from util.PromptValidator import NumberValidator
-            if numberOnly:
-                if multiline:
-                    self.printMultilineNote()
-                userInput = prompt(inputIndicator, style=self.promptStyle, validator=NumberValidator(), multiline=multiline).strip()
-            else:
-                userInput = prompt(inputIndicator, style=self.promptStyle, multiline=multiline).strip()
+        if numberOnly:
+            if multiline:
+                self.printMultilineNote()
+            userInput = prompt(inputIndicator, style=self.promptStyle, validator=NumberValidator(), multiline=multiline).strip()
         else:
-            userInput = input(inputIndicator).strip()
+            userInput = prompt(inputIndicator, style=self.promptStyle, multiline=multiline).strip()
         return userInput
 
     def printInvalidOptionEntered(self):
@@ -63,31 +68,25 @@ class TextEditorUtility:
     def initPromptElements(self):
         self.divider = "--------------------"
         self.inputIndicator = ">>> "
-        if config.isPrompt_toolkitInstalled:
-            from prompt_toolkit import PromptSession
-            from prompt_toolkit.history import FileHistory
-            from prompt_toolkit.styles import Style
-            self.promptStyle = Style.from_dict({
-                # User input (default text).
-                "": config.terminalCommandEntryColor2,
-                # Prompt.
-                "indicator": config.terminalPromptIndicatorColor2,
-            })
-            self.inputIndicator = [
-                ("class:indicator", self.inputIndicator),
-            ]
+        self.promptStyle = Style.from_dict({
+            # User input (default text).
+            "": config.terminalCommandEntryColor2,
+            # Prompt.
+            "indicator": config.terminalPromptIndicatorColor2,
+        })
+        self.inputIndicator = [
+            ("class:indicator", self.inputIndicator),
+        ]
 
-            tts_language_history = os.path.join(os.getcwd(), "terminal_history", "tts_language")
-            google_translate_from_language_history = os.path.join(os.getcwd(), "terminal_history", "google_translate_from_language")
-            google_translate_to_language_history = os.path.join(os.getcwd(), "terminal_history", "google_translate_to_language")
-            system_command_history = os.path.join(os.getcwd(), "terminal_history", "system_command")
+        tts_language_history = os.path.join(os.getcwd(), "terminal_history", "tts_language")
+        google_translate_from_language_history = os.path.join(os.getcwd(), "terminal_history", "google_translate_from_language")
+        google_translate_to_language_history = os.path.join(os.getcwd(), "terminal_history", "google_translate_to_language")
+        system_command_history = os.path.join(os.getcwd(), "terminal_history", "system_command")
 
-            self.terminal_system_command_session = PromptSession(history=FileHistory(system_command_history))
-            self.terminal_tts_language_session = PromptSession(history=FileHistory(tts_language_history))
-            self.terminal_google_translate_from_language_session = PromptSession(history=FileHistory(google_translate_from_language_history))
-            self.terminal_google_translate_to_language_session = PromptSession(history=FileHistory(google_translate_to_language_history))
-        else:
-            pass
+        self.terminal_system_command_session = PromptSession(history=FileHistory(system_command_history))
+        self.terminal_tts_language_session = PromptSession(history=FileHistory(tts_language_history))
+        self.terminal_google_translate_from_language_session = PromptSession(history=FileHistory(google_translate_from_language_history))
+        self.terminal_google_translate_to_language_session = PromptSession(history=FileHistory(google_translate_to_language_history))
 
     def getCliOutput(self, cli):
         try:
@@ -324,9 +323,6 @@ class TextEditorUtility:
             if runOnSelectedText:
                 clipboardText = defaultText if defaultText else self.getclipboardtext()
             try:
-                if config.isPrompt_toolkitInstalled:
-                    from prompt_toolkit.completion import WordCompleter
-
                 codes = []
                 display = []
                 for key, value in Languages.googleTranslateCodes.items():
@@ -339,12 +335,9 @@ class TextEditorUtility:
                 print(display)
                 print("Translate from:")
                 print("(enter a language code)")
-                if config.isPrompt_toolkitInstalled:
-                    suggestions = codes
-                    completer = WordCompleter(suggestions, ignore_case=True)
-                    userInput = self.terminal_google_translate_from_language_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer).strip()
-                else:
-                    userInput = input(self.inputIndicator).strip()
+                suggestions = codes
+                completer = WordCompleter(suggestions, ignore_case=True)
+                userInput = self.terminal_google_translate_from_language_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer).strip()
                 if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
                 if userInput in suggestions:
@@ -354,12 +347,9 @@ class TextEditorUtility:
                     print(display)
                     print("Translate to:")
                     print("(enter a language code)")
-                    if config.isPrompt_toolkitInstalled:
-                        suggestions = codes
-                        completer = WordCompleter(suggestions, ignore_case=True)
-                        userInput = self.terminal_google_translate_to_language_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer).strip()
-                    else:
-                        userInput = input(self.inputIndicator).strip()
+                    suggestions = codes
+                    completer = WordCompleter(suggestions, ignore_case=True)
+                    userInput = self.terminal_google_translate_to_language_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer).strip()
                     if not userInput or userInput.lower() == config.terminal_cancel_action:
                         return self.cancelAction()
 
@@ -431,21 +421,15 @@ class TextEditorUtility:
         #display = display[:-4]
 
         try:
-            if config.isPrompt_toolkitInstalled:
-                from prompt_toolkit.completion import WordCompleter
-
             print(self.divider)
             print(self.showttslanguages())
             self.printChooseItem()
             print("Enter a language code:")
-            if config.isPrompt_toolkitInstalled:
-                suggestions = shortCodes + codes
-                suggestions = list(set(suggestions))
-                completer = WordCompleter(suggestions, ignore_case=True)
-                default = config.ttsDefaultLangauge if config.ttsDefaultLangauge in suggestions else ""
-                userInput = self.terminal_tts_language_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=default).strip()
-            else:
-                userInput = input(self.inputIndicator).strip()
+            suggestions = shortCodes + codes
+            suggestions = list(set(suggestions))
+            completer = WordCompleter(suggestions, ignore_case=True)
+            default = config.ttsDefaultLangauge if config.ttsDefaultLangauge in suggestions else ""
+            userInput = self.terminal_tts_language_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=default).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             if userInput in suggestions:
@@ -667,38 +651,28 @@ class TextEditorUtility:
         print(f"To go back, either press 'ctrl+q' or run '{config.terminal_cancel_action}'.")
         # keep current path in case users change directory
         ubaPath = os.getcwd()
-
-        if config.isPrompt_toolkitInstalled:
-            from prompt_toolkit.application import run_in_terminal
-            from prompt_toolkit.key_binding import KeyBindings
-            this_key_bindings = KeyBindings()
-            @this_key_bindings.add("c-q")
-            def _(event):
-                event.app.current_buffer.text = config.terminal_cancel_action
-                event.app.current_buffer.validate_and_handle()
-            @this_key_bindings.add("c-l")
-            def _(_):
-                print("")
-                print(self.divider)
-                run_in_terminal(lambda: self.getPath.displayDirectoryContent())
+            
+        this_key_bindings = KeyBindings()
+        @this_key_bindings.add("c-q")
+        def _(event):
+            event.app.current_buffer.text = config.terminal_cancel_action
+            event.app.current_buffer.validate_and_handle()
+        @this_key_bindings.add("c-l")
+        def _(_):
+            print("")
+            print(self.divider)
+            run_in_terminal(lambda: self.getPath.displayDirectoryContent())
 
         userInput = ""
-        if config.isPrompt_toolkitInstalled:
-            systemCommands = self.getSystemCommands()
+        systemCommands = self.getSystemCommands()
         while self.runSystemCommandPrompt and not userInput == config.terminal_cancel_action:
             try:
                 indicator = "{0} {1} ".format(os.path.basename(os.getcwd()), "%")
                 inputIndicator = [("class:indicator", indicator)]
-                if config.isPrompt_toolkitInstalled:
-                    from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
-                    from prompt_toolkit.completion import WordCompleter
-                    dirIndicator = "\\" if platform.system() == "Windows" else "/"
-                    completer = WordCompleter(sorted(set(systemCommands + [f"{i}{dirIndicator}" if os.path.isdir(i) else i for i in os.listdir()])))
-                    auto_suggestion=AutoSuggestFromHistory()
-                    userInput = self.terminal_system_command_session.prompt(inputIndicator, style=self.promptStyle, key_bindings=this_key_bindings, auto_suggest=auto_suggestion, completer=completer).strip()
-                else:
-                    userInput = input(indicator).strip()
-                #userInput = self.simplePrompt(inputIndicator=inputIndicator).strip()
+                dirIndicator = "\\" if platform.system() == "Windows" else "/"
+                completer = WordCompleter(sorted(set(systemCommands + [f"{i}{dirIndicator}" if os.path.isdir(i) else i for i in os.listdir()])))
+                auto_suggestion=AutoSuggestFromHistory()
+                userInput = self.terminal_system_command_session.prompt(inputIndicator, style=self.promptStyle, key_bindings=this_key_bindings, auto_suggest=auto_suggestion, completer=completer).strip()
                 if userInput and not userInput == config.terminal_cancel_action:
                     userInput = userInput.replace("~", os.environ["HOME"])
                     os.system(userInput)

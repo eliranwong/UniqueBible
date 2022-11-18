@@ -1,5 +1,13 @@
 import config, os, platform, subprocess
 from util.get_path_prompt import GetPath
+from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+from prompt_toolkit.completion import WordCompleter
+from prompt_toolkit.application import run_in_terminal
+from prompt_toolkit.key_binding import KeyBindings
+from prompt_toolkit import PromptSession
+from prompt_toolkit.history import FileHistory
+from prompt_toolkit.styles import Style
+
 
 class FileManager:
     def __init__(self, workingDirectory=""):
@@ -62,18 +70,14 @@ class FileManager:
 
     def system(self):
         self.divider = "--------------------"
-        if config.isPrompt_toolkitInstalled:
-            from prompt_toolkit import PromptSession
-            from prompt_toolkit.history import FileHistory
-            from prompt_toolkit.styles import Style
-            system_command_history = os.path.join(os.getcwd(), "system_command")
-            self.terminal_system_command_session = PromptSession(history=FileHistory(system_command_history))
-            self.promptStyle = Style.from_dict({
-                # User input (default text).
-                "": config.terminalCommandEntryColor2,
-                # Prompt.
-                "indicator": config.terminalPromptIndicatorColor2,
-            })
+        system_command_history = os.path.join(os.getcwd(), "system_command")
+        self.terminal_system_command_session = PromptSession(history=FileHistory(system_command_history))
+        self.promptStyle = Style.from_dict({
+            # User input (default text).
+            "": config.terminalCommandEntryColor2,
+            # Prompt.
+            "indicator": config.terminalPromptIndicatorColor2,
+        })
         self.runSystemCommandPrompt = True
         # initial message
         print("You are now using system command prompt!")
@@ -81,36 +85,27 @@ class FileManager:
         # keep current path in case users change directory
         ubaPath = os.getcwd()
 
-        if config.isPrompt_toolkitInstalled:
-            from prompt_toolkit.application import run_in_terminal
-            from prompt_toolkit.key_binding import KeyBindings
-            this_key_bindings = KeyBindings()
-            @this_key_bindings.add("c-q")
-            def _(event):
-                event.app.current_buffer.text = config.terminal_cancel_action
-                event.app.current_buffer.validate_and_handle()
-            @this_key_bindings.add("c-l")
-            def _(_):
-                print("")
-                print(self.divider)
-                run_in_terminal(lambda: self.getPath.displayDirectoryContent())
+        this_key_bindings = KeyBindings()
+        @this_key_bindings.add("c-q")
+        def _(event):
+            event.app.current_buffer.text = config.terminal_cancel_action
+            event.app.current_buffer.validate_and_handle()
+        @this_key_bindings.add("c-l")
+        def _(_):
+            print("")
+            print(self.divider)
+            run_in_terminal(lambda: self.getPath.displayDirectoryContent())
 
         userInput = ""
-        if config.isPrompt_toolkitInstalled:
-            systemCommands = self.getSystemCommands()
+        systemCommands = self.getSystemCommands()
         while self.runSystemCommandPrompt and not userInput == config.terminal_cancel_action:
             try:
                 indicator = "{0} {1} ".format(os.path.basename(os.getcwd()), "%")
                 inputIndicator = [("class:indicator", indicator)]
-                if config.isPrompt_toolkitInstalled:
-                    from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
-                    from prompt_toolkit.completion import WordCompleter
-                    dirIndicator = "\\" if platform.system() == "Windows" else "/"
-                    completer = WordCompleter(sorted(set(systemCommands + [f"{i}{dirIndicator}" if os.path.isdir(i) else i for i in os.listdir()])))
-                    auto_suggestion=AutoSuggestFromHistory()
-                    userInput = self.terminal_system_command_session.prompt(inputIndicator, style=self.promptStyle, key_bindings=this_key_bindings, auto_suggest=auto_suggestion, completer=completer).strip()
-                else:
-                    userInput = input(indicator).strip()
+                dirIndicator = "\\" if platform.system() == "Windows" else "/"
+                completer = WordCompleter(sorted(set(systemCommands + [f"{i}{dirIndicator}" if os.path.isdir(i) else i for i in os.listdir()])))
+                auto_suggestion=AutoSuggestFromHistory()
+                userInput = self.terminal_system_command_session.prompt(inputIndicator, style=self.promptStyle, key_bindings=this_key_bindings, auto_suggest=auto_suggestion, completer=completer).strip()
                 #userInput = self.simplePrompt(inputIndicator=inputIndicator).strip()
                 if userInput and not userInput == config.terminal_cancel_action:
                     userInput = userInput.replace("~", os.environ["HOME"])
@@ -132,8 +127,6 @@ class FileManager:
         os.chdir(ubaPath)
 
 if __name__ == "__main__":
-
-    config.isPrompt_toolkitInstalled = True
     workingDirectory = os.path.dirname(os.path.realpath(__file__))
     fileManager = FileManager(workingDirectory)
 

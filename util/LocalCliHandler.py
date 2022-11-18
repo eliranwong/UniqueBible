@@ -29,7 +29,7 @@ from util.terminal_text_editor import TextEditor
 from util.terminal_system_command_prompt import SystemCommandPrompt
 from util.terminal_mode_dialogs import TerminalModeDialogs
 from util.get_path_prompt import GetPath
-from util.PromptValidator import NumberValidator
+from util.PromptValidator import NumberValidator, NoAlphaValidator
 from util.prompt_shared_key_bindings import prompt_shared_key_bindings
 from util.prompt_multiline_shared_key_bindings import prompt_multiline_shared_key_bindings
 from util.ConfigUtil import ConfigUtil
@@ -513,6 +513,7 @@ class LocalCliHandler:
             ".changeconfig": ("change UBA configurations", self.changeconfig),
             ".changeterminalmodeconfig": ("change UBA terminal mode configurations", lambda: self.changeconfig(True)),
             ".gitstatus": ("git status", self.gitstatus),
+            ".calculate": ("calculator", self.calculate),
             ".exec": ("execute a python string", self.execPythonString),
             ".execfile": ("execute a python file", self.execFile),
             ".reload": ("reload the latest content", self.reload),
@@ -545,6 +546,16 @@ class LocalCliHandler:
             ".google": ("google ...", self.google),
             ".google": ("google ...", self.watson),
         }
+
+    def calculate(self):
+        userInput = ""
+        while not userInput == config.terminal_cancel_action:
+            userInput = self.simplePrompt(validator=NoAlphaValidator())
+            try:
+                self.print(eval(userInput))
+            except:
+                pass
+        return ""
 
     def editfilters(self):
         savedFiltersFile = os.path.join("terminal_mode", "filters.txt")
@@ -1937,10 +1948,12 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             return config.textEditor.openFile(filepath)
         return config.textEditor.multilineEditor(text, placeholder)
 
-    def simplePrompt(self, numberOnly=False, multiline=False, inputIndicator="", default="", accept_default=False, completer=None, promptSession=None):
+    def simplePrompt(self, numberOnly=False, validator=None, multiline=False, inputIndicator="", default="", accept_default=False, completer=None, promptSession=None):
         inputPrompt = promptSession.prompt if promptSession is not None else prompt
         if not inputIndicator:
             inputIndicator = self.inputIndicator
+        if numberOnly:
+            validator = NumberValidator()
         userInput = inputPrompt(
             inputIndicator,
             key_bindings=self.prompt_multiline_shared_key_bindings if multiline else self.prompt_shared_key_bindings,
@@ -1948,7 +1961,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             enable_system_prompt=True,
             swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")),
             style=self.promptStyle,
-            validator=NumberValidator() if numberOnly else None,
+            validator=validator,
             multiline=multiline,
             default=default,
             accept_default=accept_default,

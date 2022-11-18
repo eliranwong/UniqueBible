@@ -1,3 +1,7 @@
+Changes in 33.20:
+* Added UBA art text to terminal mode startup.
+* Added .calculate command to terminal mode.
+
 Changes in 33.19:
 * Fixed loading bible comparison.
 

@@ -140,30 +140,29 @@ class TextUtil:
 
     @staticmethod
     def colourTerminalText(text):
-        if config.isPrompt_toolkitInstalled:
-            searchReplace = (
-                #("(<u><b>|<h>|<h[0-9]>|<h[0-9] .*?>)", r"「{0}」".format(config.terminalHeadingTextColor)),
-                #("(</h[0-9]+?>|</h>|</b></u>)", r"「/{0}」".format(config.terminalHeadingTextColor)),
-                # make sure tags are paired
-                ("(<u><b>)(.*?)(</b></u>)", r"\1「{0}」\2「/{0}」\3".format(config.terminalHeadingTextColor)),
-                ("(<h>|<h[0-9]>|<h[0-9] .*?>)(.*?)(</h[0-9]+?>|</h>)", r"\1「{0}」\2「/{0}」\3".format(config.terminalHeadingTextColor)),
-                #("(<ref>|<ref .*?>|<grk>|<grk .*?>|<heb>|<heb .*?>)", r"「{0}」".format(config.terminalResourceLinkColor)),
-                #("(</heb>|</grk>|</ref>)", r"「/{0}」".format(config.terminalResourceLinkColor)),
-                ("(<ref>|<ref .*?>)(.*?)(</ref>)", r"\1「{0}」\2「/{0}」\3".format(config.terminalResourceLinkColor)),
-                ("(<heb>|<heb .*?>)(.*?)(</heb>)", r"\1「b」「{0}」\2「/{0}」「/b」\3".format(config.terminalResourceLinkColor)),
-                ("(<grk>|<grk .*?>)(.*?)(</grk>)", r"\1「{0}」\2「/{0}」\3".format(config.terminalResourceLinkColor)),
-                #("(<vid .*?>)", r"「{0}」".format(config.terminalVerseNumberColor)),
-                #("(</vid>)", r"「/{0}」".format(config.terminalVerseNumberColor)),
-                ("(<vid>|<vid .*?>)(.*?)(</vid>)", r"\1「{0}」\2「/{0}」\3".format(config.terminalResourceLinkColor)),
-                #("<z>", """「tmsh fg="{1}" bg="{0}"」""".format(config.terminalSearchHighlightBackground, config.terminalSearchHighlightForeground)),
-                #("</z>", "「/tmsh」"),
-                ("(<z>)(.*?)(</z>)", r"""\1「tmsh fg="{1}" bg="{0}"」\2「/tmsh」\3""".format(config.terminalSearchHighlightBackground, config.terminalSearchHighlightForeground)),
-                # basic html
-                ("<(b|u|i)>", r"「\1」"),
-                ("</(b|u|i)>", r"「/\1」"),
-            )
-            for search, replace in searchReplace:
-                text = re.sub(search, replace, text)
+        searchReplace = (
+            #("(<u><b>|<h>|<h[0-9]>|<h[0-9] .*?>)", r"「{0}」".format(config.terminalHeadingTextColor)),
+            #("(</h[0-9]+?>|</h>|</b></u>)", r"「/{0}」".format(config.terminalHeadingTextColor)),
+            # make sure tags are paired
+            ("(<u><b>)(.*?)(</b></u>)", r"\1「{0}」\2「/{0}」\3".format(config.terminalHeadingTextColor)),
+            ("(<h>|<h[0-9]>|<h[0-9] .*?>)(.*?)(</h[0-9]+?>|</h>)", r"\1「{0}」\2「/{0}」\3".format(config.terminalHeadingTextColor)),
+            #("(<ref>|<ref .*?>|<grk>|<grk .*?>|<heb>|<heb .*?>)", r"「{0}」".format(config.terminalResourceLinkColor)),
+            #("(</heb>|</grk>|</ref>)", r"「/{0}」".format(config.terminalResourceLinkColor)),
+            ("(<ref>|<ref .*?>)(.*?)(</ref>)", r"\1「{0}」\2「/{0}」\3".format(config.terminalResourceLinkColor)),
+            ("(<heb>|<heb .*?>)(.*?)(</heb>)", r"\1「b」「{0}」\2「/{0}」「/b」\3".format(config.terminalResourceLinkColor)),
+            ("(<grk>|<grk .*?>)(.*?)(</grk>)", r"\1「{0}」\2「/{0}」\3".format(config.terminalResourceLinkColor)),
+            #("(<vid .*?>)", r"「{0}」".format(config.terminalVerseNumberColor)),
+            #("(</vid>)", r"「/{0}」".format(config.terminalVerseNumberColor)),
+            ("(<vid>|<vid .*?>)(.*?)(</vid>)", r"\1「{0}」\2「/{0}」\3".format(config.terminalResourceLinkColor)),
+            #("<z>", """「tmsh fg="{1}" bg="{0}"」""".format(config.terminalSearchHighlightBackground, config.terminalSearchHighlightForeground)),
+            #("</z>", "「/tmsh」"),
+            ("(<z>)(.*?)(</z>)", r"""\1「tmsh fg="{1}" bg="{0}"」\2「/tmsh」\3""".format(config.terminalSearchHighlightBackground, config.terminalSearchHighlightForeground)),
+            # basic html
+            ("<(b|u|i)>", r"「\1」"),
+            ("</(b|u|i)>", r"「/\1」"),
+        )
+        for search, replace in searchReplace:
+            text = re.sub(search, replace, text)
         return text
 
     @staticmethod
@@ -174,7 +173,7 @@ class TextUtil:
             content = re.sub("""(<heb|<grk)( [^<>]*?onclick="luW\([0-9]+?,')([0-9]+?)('[^<>]*?>)""", r"[<ref>\3</ref> ]\1\2\3\4", content)
             content = re.sub("""(<ref onclick="[^<>]+?\(')([^<>]+?)('\)">)""", r"[<ref>\2</ref> ] ", content)
         # Format text colours
-        if config.runMode == "terminal" and config.isPrompt_toolkitInstalled and colours:
+        if config.runMode == "terminal" and colours:
             content = TextUtil.colourTerminalText(content)
         # cconvert text
         if isHtmlTextInstalled:
@@ -189,7 +188,7 @@ class TextUtil:
             content = re.sub('<[^<]+?>', '', content)
         if config.runMode == "terminal" and not colours:
             content = re.sub("""「ansi[^「」]+？」|「tm[a-z][a-z] fg="[^「」]*?" bg="[^「」]*?"」|「/tm[a-z][a-z]」""", "", content)
-        elif config.runMode == "terminal" and config.isPrompt_toolkitInstalled and colours:
+        elif config.runMode == "terminal" and colours:
             searchReplace = (
                 ("「ansiblack」", "<ansiblack>"),
                 ("「ansired」", "<ansired>"),

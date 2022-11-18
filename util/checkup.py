@@ -471,6 +471,13 @@ def isColoramaInstalled():
     except:
         return False
 
+def isArtInstalled():
+    try:
+        from art import text2art
+        return True
+    except:
+        return False
+
 def isPrompt_toolkitInstalled():
     try:
         from prompt_toolkit import PromptSession
@@ -612,6 +619,8 @@ def setInstallConfig(module, isInstalled):
         config.isPrompt_toolkitInstalled = isInstalled
     elif module in ("colorama", "-U colorama", "--upgrade colorama"):
         config.isColoramaInstalled = isInstalled
+    elif module in ("art", "-U art", "--upgrade art"):
+        config.isArtInstalled = isInstalled
     elif module in ("pyperclip", "-U pyperclip", "--upgrade pyperclip"):
         config.isPyperclipInstalled = isInstalled
     elif module in ("pickley", "-U pickley", "--upgrade pickley"):
@@ -760,7 +769,7 @@ optional = [
     ("pydnsbl", "Checks if ip is listed in anti-spam dns blacklists.", isPydnsblInstalled),
     ("gmplot", "Mark locations on Google Maps", isGmplotInstalled),
     ("haversine", "Calculate the distance between two points", isHaversineInstalled),
-    ("prompt_toolkit", "Command Line Interaction", isPrompt_toolkitInstalled),
+    ("art", "ASCII Art Library For Python", isArtInstalled),
     ("colorama", "Producing colored terminal text", isColoramaInstalled),
     ("pyperclip", "Cross-platform clipboard utilities", isPyperclipInstalled),
     ("numpy", "Array Computing", isNumpyInstalled),
@@ -803,7 +812,7 @@ optional = [
     ("pyluach", "Hebrew (Jewish) calendar dates", isPyluachInstalled),
     ("gmplot", "Mark locations on Google Maps", isGmplotInstalled),
     ("haversine", "Calculate the distance between two points", isHaversineInstalled),
-    ("prompt_toolkit", "Command Line Interaction", isPrompt_toolkitInstalled),
+    ("art", "ASCII Art Library For Python", isArtInstalled),
     ("colorama", "Producing colored terminal text", isColoramaInstalled),
     ("pyperclip", "Cross-platform clipboard utilities", isPyperclipInstalled),
     ("numpy", "Array Computing", isNumpyInstalled),

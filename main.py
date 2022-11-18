@@ -226,6 +226,10 @@ def run_terminal_mode():
     set_title(f"Unique Bible App [{config.version}]")
     config.saveConfigOnExit = True
     print(f"Running Unique Bible App {config.version} in terminal mode ...")
+    if config.isArtInstalled:
+        from art import text2art
+        print(text2art("UBA"))
+
     checkMigration()
     needUpdate = checkApplicationUpdateCli()
     # set up config.mainWindow for terminal mode
@@ -237,11 +241,10 @@ def run_terminal_mode():
     config.key_bindings = uba_command_prompt_key_bindings
     # run plugin where users may add customised key bindings
     runStartupPlugins()
-    if config.isPrompt_toolkitInstalled:
-        config.key_bindings = merge_key_bindings([
-            prompt_shared_key_bindings,
-            config.key_bindings,
-        ])
+    config.key_bindings = merge_key_bindings([
+        prompt_shared_key_bindings,
+        config.key_bindings,
+    ])
     # make sure user-customised menu contains valid item only.
     # validation can only be running after, not before, running startup plugin, as some startup plugin works on command shortcuts.
     config.terminalMyMenu = [i for i in config.terminalMyMenu if i in config.mainWindow.dotCommands]
