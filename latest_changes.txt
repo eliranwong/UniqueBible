@@ -1,3 +1,6 @@
+Changes in 33.19:
+* Fixed loading bible comparison.
+
 Changes in 33.18:
 * Fixed .quit and .restart in terminal mode.
 

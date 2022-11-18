@@ -751,7 +751,8 @@ class LocalCliHandler:
                     elif len(bc) == 2 and len(bci) == 2:
                         command = self.textCommandParser.bcvToVerseReference(config.mainB, bci[0], bci[1])
                     if not originalCommand == command:
-                        prefix = f"COMPARE:::{config.compareParallelList}:::" if config.terminalBibleComparison else "BIBLE:::"
+                        bibles = "_".join(config.compareParallelList)
+                        prefix = f"COMPARE:::{bibles}:::" if config.terminalBibleComparison else "BIBLE:::"
                         command = f"{prefix}{command}"
                         self.printRunningCommand(command)
                 except:
