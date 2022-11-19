@@ -195,6 +195,10 @@ class ConfigUtil:
         # To display bible chapter in comparison mode when users enter a reference in terminal mode."""
         if not hasattr(config, "terminalBibleComparison"):
             config.terminalBibleComparison = False
+        config.help["terminalBibleParallels"] = """
+        # To display bible chapter in side-by-side parallel layout."""
+        if not hasattr(config, "terminalBibleParallels"):
+            config.terminalBibleParallels = False
         config.help["terminalStartHttpServerOnStartup"] = """
         # To start http-server on UBA terminal mode startup."""
         if not hasattr(config, "terminalStartHttpServerOnStartup"):
@@ -322,7 +326,7 @@ class ConfigUtil:
         config.help["terminal_dot_c"] = """
         # Customise the command to be run with shortcut entry '.c'."""
         if not hasattr(config, "terminal_dot_c"):
-            config.terminal_dot_c = ".togglebiblecomparison"
+            config.terminal_dot_c = ".togglecomparison"
         config.help["terminal_dot_d"] = """
         # Customise the command to be run with shortcut entry '.d'."""
         if not hasattr(config, "terminal_dot_d"):
@@ -374,7 +378,7 @@ class ConfigUtil:
         config.help["terminal_dot_p"] = """
         # Customise the command to be run with shortcut entry '.p'."""
         if not hasattr(config, "terminal_dot_p"):
-            config.terminal_dot_p = ".plugins"
+            config.terminal_dot_p = ".toggleparallels"
         config.help["terminal_dot_r"] = """
         # Customise the command to be run with shortcut entry '.r'."""
         if not hasattr(config, "terminal_dot_r"):
@@ -1820,6 +1824,7 @@ class ConfigUtil:
             ("terminalEditorTabText", config.terminalEditorTabText),
             ("terminalEditorMaxTextChangeRecords", config.terminalEditorMaxTextChangeRecords),
             ("terminalBibleComparison", config.terminalBibleComparison),
+            ("terminalBibleParallels", config.terminalBibleParallels),
             ("terminalStopHttpServerOnExit", config.terminalStopHttpServerOnExit),
             ("terminalVerseSelectionStart", config.terminalVerseSelectionStart),
             ("terminalVerseSelectionEnd", config.terminalVerseSelectionEnd),

@@ -2339,11 +2339,14 @@ class TextCommandParser:
     # SIDEBYSIDE:::
     def textCompareSideBySide(self, command, source):
         if command.count(":::") == 0:
-            return ("", "", {})
-        else:
-            texts, references = self.splitCommand(command)
-            confirmedTexts = self.getConfirmedTexts(texts)
-            verseList = self.extractAllVerses(references)
+            if config.compareParallelList:
+                versions = "_".join(config.compareParallelList)
+                command = f"{versions}:::{command}"
+            else:
+                return ("", "", {})
+        texts, references = self.splitCommand(command)
+        confirmedTexts = self.getConfirmedTexts(texts)
+        verseList = self.extractAllVerses(references)
         if not confirmedTexts or not verseList:
             return self.invalidCommand()
         else:

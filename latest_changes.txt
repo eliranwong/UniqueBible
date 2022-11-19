@@ -1,3 +1,6 @@
+Changes in 33.21:
+* Added .toggleparallels command to terminal mode.
+
 Changes in 33.20:
 * Added UBA art text to terminal mode startup.
 * Added .calculate command to terminal mode.

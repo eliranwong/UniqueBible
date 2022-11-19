@@ -267,15 +267,16 @@ class LocalCliHandler:
             ".togglecolourbrightness": ("an alias to '.togglecolorbrightness'", self.togglecolorbrightness),
             ".togglepager": ("toggle paging for text output", self.togglePager),
             ".toggleclipboardmonitor": ("toggle paging for text output", self.toggleClipboardMonitor),
-            ".togglebiblecomparison": ("toggle bible comparison view", self.togglebiblecomparison),
-            ".togglebiblechapterplainlayout": ("toggle bible chapter plain layout", self.toggleBibleChapterFormat),
+            ".togglecomparison": ("toggle bible comparison view", self.togglebiblecomparison),
+            ".toggleparallels": ("toggle bible parallel view", self.togglebibleparallels),
+            ".togglechapterlayout": ("toggle bible chapter plain layout", self.toggleBibleChapterFormat),
             ".toggleplainbiblechaptersubheadings": ("toggle bible chapter subheadings in plain layout", self.toggleaddTitleToPlainChapter),
             ".togglefavouriteverses": ("toggle favourite bible verses in displaying multiple verses", self.toggleaddFavouriteToMultiRef),
             ".togglefavoriteverses": ("an alias to '.togglefavouriteverses'", self.toggleaddFavouriteToMultiRef),
-            ".toggleversenumberdisplay": ("toggle verse number display", self.toggleshowVerseReference),
+            ".toggleversenumber": ("toggle verse number display", self.toggleshowVerseReference),
             ".toggleusernoteindicator": ("toggle user note indicator display", self.toggleshowUserNoteIndicator),
-            ".togglebiblenoteindicator": ("toggle bible note indicator display", self.toggleshowBibleNoteIndicator),
-            ".togglebiblelexicalentries": ("toggle lexical entry display", self.togglehideLexicalEntryInBible),
+            ".togglenoteindicator": ("toggle bible note indicator display", self.toggleshowBibleNoteIndicator),
+            ".togglelexicalentries": ("toggle lexical entry display", self.togglehideLexicalEntryInBible),
             ".stopaudio": ("stop audio", self.stopAudio),
             ".sa": ("an alias to '.stopaudio'", self.stopAudio),
             ".stopaudiosync": ("stop audio with text synchronisation", self.removeAudioPlayingFile),
@@ -804,8 +805,7 @@ class LocalCliHandler:
             text = self.html
         if text.startswith("[BROWSER]"):
             text = text[9:]
-        text = re.sub("audiotrack", "", text)
-        text = re.sub("「(Back|Fore|Style)\.[^「」]+?」", "", text)
+        text = re.sub("「(Back|Fore|Style)\.[^「」]+?」|audiotrack|「tmvs [^「」]+?」|「/tmvs」", "", text)
         return text
 
     def displayOutputOnTerminal(self, content):
@@ -933,7 +933,7 @@ class LocalCliHandler:
             elif i == ".show":
                 suggestions[i] = self.getDummyDict(["bibleabbreviations", "biblebooks", "biblechapters", "bibles", "bibleverses", "commentaries", "data", "dictionaries", "downloads", "encyclopedia", "lexicons", "referencebooks", "strongbibles", "thirdpartydictionary", "topics", "ttslanguages"])
             elif i == ".toggle":
-                suggestions[i] = self.getDummyDict(["biblechapterplainlayout", "biblecomparison", "biblelexicalentries", "biblenoteindicator", "clipboardmonitor", "colorbrightness", "colourbrightness", "favoriteverses", "favouriteverses", "pager", "plainbiblechaptersubheadings", "usernoteindicator", "versenumberdisplay"])
+                suggestions[i] = self.getDummyDict(["chapterlayout", "comparison", "lexicalentries", "noteindicator", "parallels", "clipboardmonitor", "colorbrightness", "colourbrightness", "favoriteverses", "favouriteverses", "pager", "plainbiblechaptersubheadings", "usernoteindicator", "versenumber"])
             elif i in ("text:::", "studytext:::", "_chapters", "_bibleinfo:::"):
                 suggestions[i] = self.getDummyDict(self.crossPlatform.textList)
             elif i in ("_vnsc:::", "_vndc:::", "readchapter:::", "readverse:::", "readword:::", "readlexeme:::",):
@@ -3700,6 +3700,12 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         self.print("Reloading bible chapter ...")
         return self.getContent(".l")
 
+    def togglebibleparallels(self):
+        config.terminalBibleParallels = not config.terminalBibleParallels
+        self.print("Reloading bible chapter ...")
+        reference = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+        return self.getContent(f"SIDEBYSIDE:::{reference}") if config.terminalBibleParallels else self.getContent(reference)
+
     def toggleaddTitleToPlainChapter(self):
         config.addTitleToPlainChapter = not config.addTitleToPlainChapter
         self.print("Reloading bible chapter ...")
@@ -3817,7 +3823,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def toggle(self):
         heading = "Toggle"
-        features = (".togglepager", "toggleclipboardmonitor", ".togglebiblecomparison", ".togglebiblechapterplainlayout", ".toggleplainbiblechaptersubheadings", ".togglefavouriteverses", ".toggleversenumberdisplay", ".toggleusernoteindicator", ".togglebiblenoteindicator", ".togglebiblelexicalentries")
+        features = (".togglepager", "toggleclipboardmonitor", ".togglecomparison", ".togglechapterlayout", ".toggleplainbiblechaptersubheadings", ".togglefavouriteverses", ".toggleversenumber", ".toggleusernoteindicator", ".togglenoteindicator", ".togglelexicalentries")
         return self.displayFeatureMenu(heading, features)
 
     def clipboard(self):
