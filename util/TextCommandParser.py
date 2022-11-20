@@ -2022,6 +2022,11 @@ class TextCommandParser:
             html = "<hr>".join([Bible(text).formatStrongConcordance(strongNo) for text in texts])
             return ("study", html, {})
 
+    def cancelBibleParallels(self):
+        if config.runMode == "terminal":
+            config.terminalBibleParallels = False
+            config.terminalBibleComparison = False
+
     # BIBLE:::
     def textBible(self, command, source):
         if command.count(":::") == 0:
@@ -2036,6 +2041,7 @@ class TextCommandParser:
         if not texts:
             return self.invalidCommand()
         else:
+            self.cancelBibleParallels()
             text = texts[0]
             if text in marvelBibles:
                 fileItems = marvelBibles[text][0]
@@ -2054,6 +2060,7 @@ class TextCommandParser:
         if not texts:
             return self.invalidCommand()
         else:
+            self.cancelBibleParallels()
             marvelBibles = self.getMarvelBibles()
             text = texts[0]
             if text in marvelBibles:
@@ -2281,6 +2288,7 @@ class TextCommandParser:
         if not texts:
             return self.invalidCommand()
         else:
+            self.cancelBibleParallels()
             marvelBibles = self.getMarvelBibles()
             text = texts[0]
             if text in marvelBibles:
