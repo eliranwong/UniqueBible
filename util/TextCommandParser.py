@@ -1260,8 +1260,10 @@ class TextCommandParser:
             elif view == "study":
                 config.studyCssBibleFontStyle = css
             if (len(verseList) == 1) and (len(verseList[0]) == 3):
-                if config.runMode == "terminal" and config.terminalBibleComparison:
-                    compareParallelList = "_".join(config.compareParallelList)
+                compareParallelList = "_".join(config.compareParallelList)
+                if config.runMode == "terminal" and config.terminalBibleParallels:
+                    return self.textCompareSideBySide(f"{compareParallelList}:::{command}", view)
+                elif config.runMode == "terminal" and config.terminalBibleComparison:
                     return self.textCompare(f"{compareParallelList}:::{command}", view)
                 # i.e. only one verse reference is specified
                 bcvTuple = verseList[0]

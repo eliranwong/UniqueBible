@@ -72,6 +72,7 @@ class LocalCliHandler:
         self.allKJVreferencesBcv2 = self.getDummyDict(bcvReferences, ":::")
         self.unsupportedCommands = ["_mc", "_mastercontrol", "epub", "anypdf", "searchpdf", "pdffind", "pdf", "docx", "_savepdfcurrentpage", "searchallbookspdf", "readbible", "searchhighlight", "parallel", "_editfile", "_openfile", "_uba", "opennote", "_history", "_historyrecord", "_highlight"]
         if not WebtopUtil.isPackageInstalled("w3m"):
+            config.terminalBibleParallels = False
             self.unsupportedCommands.append("sidebyside")
         self.ttsCommandKeyword = self.getDefaultTtsKeyword().lower()
         self.unsupportedCommands.append("gtts" if self.ttsCommandKeyword == "speak" else "speak")
@@ -3701,10 +3702,15 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         return self.getContent(".l")
 
     def togglebibleparallels(self):
+        if not WebtopUtil.isPackageInstalled("w3m"):
+            config.terminalBibleParallels = False
+            self.printToolNotFound("w3m")
+            return ""
         config.terminalBibleParallels = not config.terminalBibleParallels
         self.print("Reloading bible chapter ...")
-        reference = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
-        return self.getContent(f"SIDEBYSIDE:::{reference}") if config.terminalBibleParallels else self.getContent(reference)
+        return self.getContent(".l")
+        #reference = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+        #return self.getContent(f"SIDEBYSIDE:::{reference}") if config.terminalBibleParallels else self.getContent(reference)
 
     def toggleaddTitleToPlainChapter(self):
         config.addTitleToPlainChapter = not config.addTitleToPlainChapter

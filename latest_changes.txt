@@ -1,3 +1,6 @@
+Changes in 33.22:
+* Improved bible parallels in terminal mode.
+
 Changes in 33.21:
 * Added .toggleparallels command to terminal mode.
 
