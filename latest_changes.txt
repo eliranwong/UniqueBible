@@ -1,3 +1,8 @@
+Changes in 33.24:
+* Terminal mode built-in text editor:
+    - support running go programming script, keyboard shortcut "escape+g"
+    - fixed running system command prompt
+
 Changes in 33.23:
 * Fixed loading single bible version in terminal mode.
 

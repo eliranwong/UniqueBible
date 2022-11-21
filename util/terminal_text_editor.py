@@ -116,6 +116,14 @@ class TextEditor:
                 print(self.divider)
                 self.textSelection = ""
                 goBackEditor()
+            elif self.editorReload == "e-g":
+                print(self.divider)
+                os.system("go version")
+                print(self.divider)
+                if os.path.isfile("temp.go"):
+                    os.system("go run temp.go")
+                print(self.divider)
+                goBackEditor()
             elif self.editorReload == "e-o" and self.textSelection:
                 print(self.divider)
                 print(self.parent.quickopen(True, self.textSelection))
@@ -139,7 +147,9 @@ class TextEditor:
             elif self.editorReload == "e-c":
                 print(self.divider)
                 try:
-                    config.mainWindow.system()
+                    from util.TextEditorUtility import TextEditorUtility
+                    TextEditorUtility().system()
+                    #config.mainWindow.system()
                 except:
                     pass
                 print(self.divider)
@@ -417,6 +427,16 @@ class TextEditor:
                 self.oldChanges = self.editorTextChanges
                 self.editorReload = "e-o"
                 buffer.validate_and_handle()
+        # run go
+        @this_key_bindings.add("escape", "g")
+        def _(event):
+            buffer = event.app.current_buffer
+            with open("temp.go", "w", encoding="utf-8") as fileObj:
+                fileObj.write(buffer.text)
+            self.editorCursorPosition = buffer.cursor_position
+            self.oldChanges = self.editorTextChanges
+            self.editorReload = "e-g"
+            buffer.validate_and_handle()
         # translate text
         @this_key_bindings.add("c-t")
         def _(event):
@@ -790,6 +810,7 @@ class TextEditor:
 
 <b># Scripts and Commands</b>
 <{1}>ctrl+p</{1}> run as <u>p</u>ython script
+<{1}>escape+g</{1}> run as <u>g</u>o script
 <{1}>escape+p</{1}> run text editor <u>p</u>lugins
 <{1}>escape+!</{1}> run system <u>c</u>oncole commands
 <{1}>escape+c</{1}> run system <u>c</u>oncole commands; with auto-completion
