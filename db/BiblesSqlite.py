@@ -850,7 +850,7 @@ class Bible:
                             allVerses.append((b, c, v))
                         c += 1
                     if (c == ce):
-                        for v in self.getVerseList(b, cs, 1, ve):
+                        for v in self.getVerseList(b, c, 1, ve):
                             allVerses.append((b, c, v))
         return allVerses
 
