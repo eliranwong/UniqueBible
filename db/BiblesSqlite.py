@@ -299,6 +299,17 @@ input.addEventListener('keyup', function(event) {0}
         else:
             return "".join([self.readTranslations(b, c, v, texts) for b, c, v, *_ in verseList])
 
+    def compareVerseRaw(self, verse, texts):
+        b, c, v, *_ = verse
+        data = []
+        for text in texts:
+            try:
+                record = Bible(text).readTextVerse(b, c, v)
+                data.append((text, record))
+            except:
+                pass
+        return data
+
     def parallelVerse(self, verseList, texts):
         b, c, v, *_ = verseList[0]
         content = """<h2><ref onclick="document.title='{0}'">{0}</ref></h2>""".format(self.bcvToVerseReference(b, c, v))
@@ -1132,7 +1143,10 @@ class Bible:
                     textVerse = re.sub("""(<heb onclick="w\([0-9]+?,)([0-9]+?)(\)".*?</heb>[ ]*)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::BHS5.{0}.{1}.{2}.\2'">{3}</ref>""".format(b, c, v, config.audioBibleIcon), textVerse)
                 else:
                     textVerse = re.sub("""(<grk onclick="w\([0-9]+?,)([0-9]+?)(\)".*?</grk>[ ]*)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::OGNT.{0}.{1}.{2}.\2'">{3}</ref>""".format(b, c, v, config.audioBibleIcon), textVerse)
-            return (b, c, v, f"{FileUtil.getVerseAudioTag(self.text, b, c, v)}{textVerse}")
+            if config.runMode == "api-server":
+                return (b, c, v, textVerse)
+            else:
+                return (b, c, v, f"{FileUtil.getVerseAudioTag(self.text, b, c, v)}{textVerse}")
         else:
             print("Verse table does not exist")
             return (b, c, v, "")

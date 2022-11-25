@@ -29383,6 +29383,14 @@ class LexicalData:
             return ""
 
     @staticmethod
+    def getLexicalDataRaw(lexicalEntry):
+        if lexicalEntry in LexicalData.data or "{0}a".format(lexicalEntry) in LexicalData.data:
+            lexeme, pos, gloss, transliteration = LexicalData.data[lexicalEntry if lexicalEntry in LexicalData.data else "{0}a".format(lexicalEntry)]
+            return (gloss, lexeme, transliteration, pos)
+        else:
+            return
+
+    @staticmethod
     def populatePronunciation():
         filename = "LexicalData.py"
         if os.path.isfile(filename):

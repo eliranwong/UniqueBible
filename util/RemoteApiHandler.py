@@ -1,3 +1,4 @@
+import base64
 import glob
 import json
 import logging
@@ -9,12 +10,14 @@ from http import HTTPStatus
 
 from http.server import SimpleHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
-from db.BiblesSqlite import BiblesSqlite
+from db.BiblesSqlite import BiblesSqlite, Bible
 from db.DevotionalSqlite import DevotionalSqlite
 from db.ToolsSqlite import Commentary, LexiconData, IndexesSqlite, Book, Lexicon, CrossReferenceSqlite, DictionaryData, \
     SearchSqlite
 from util.BibleBooks import BibleBooks
+from util.BibleVerseParser import BibleVerseParser
 from util.CatalogUtil import CatalogUtil
+from util.LexicalData import LexicalData
 
 
 class ApiRequestHandler(SimpleHTTPRequestHandler):
@@ -28,9 +31,16 @@ class RemoteApiHandler(ApiRequestHandler):
 
     jsonData = {}
 
+    ONE_SEC = "1"
+    ONE_HOUR = "3600"
+    ONE_DAY = "86400"
+    ONE_MONTH = "2592000"
+    ONE_YEAR = "31536000"
+
     def __init__(self, *args, **kwargs):
         self.logger = logging.getLogger('uba')
         config.internet = True
+        config.showHebrewGreekWordAudioLinks = False
         CatalogUtil.loadLocalCatalog()
         try:
             super().__init__(*args, directory="htmlResources", **kwargs)
@@ -48,6 +58,13 @@ class RemoteApiHandler(ApiRequestHandler):
         self.jsonData = {'status': 'Error', 'message': 'Unsupported method'}
         self.sendJsonData()
 
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header("Access-Control-Allow-Headers", '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.end_headers()
+
     def sendJsonData(self):
         data = json.dumps(self.jsonData)
         self.commonHeader()
@@ -57,10 +74,9 @@ class RemoteApiHandler(ApiRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "text/json")
         self.send_header("charset", "UTF-8")
-        self.send_header("Cache-Control", "no-cache, no-store, must-revalidate"),
         self.send_header("Pragma", "no-cache"),
-        self.send_header("Expires", "0")
         self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Cache-Control", "max-age=" + RemoteApiHandler.ONE_DAY + ", stale-while-revalidate=" + RemoteApiHandler.ONE_DAY),
         self.end_headers()
 
     def sendError(self, message):
@@ -75,6 +91,7 @@ class RemoteApiHandler(ApiRequestHandler):
         self.sendJsonData()
 
     def processRequest(self, request):
+        self.securityCheck()
         query = parse_qs(urlparse(request).query)
         self.jsonData = {'status': "OK"}
         if "?" in request:
@@ -91,6 +108,8 @@ class RemoteApiHandler(ApiRequestHandler):
                 self.processListCommand(cmd)
             elif command == "bible":
                 self.processBibleCommand(cmd)
+            elif command == "compare":
+                self.processCompareCommand(cmd, query)
             elif command == "book":
                 self.processBookCommand(cmd)
             elif command == "commentary":
@@ -103,10 +122,16 @@ class RemoteApiHandler(ApiRequestHandler):
                 self.processDictionaryCommand(cmd)
             elif command == "crossreference":
                 self.processCrossReferenceCommand(cmd)
+            elif command == "crossreference":
+                self.processCrossReferenceCommand(cmd)
+            elif command == "search":
+                self.processSearchCommand(cmd, query)
 
     # /data/bible/abbreviations?lang=[eng,sc,tc]
     # /data/bible/chapters
     # /data/bible/verses
+    # /data/bible/books/TRLIT
+    # /data/lex/H3068
     def processDataCommand(self, cmd, query):
         if cmd[1].lower() == "bible":
             if cmd[2].lower() == "abbreviations":
@@ -121,6 +146,21 @@ class RemoteApiHandler(ApiRequestHandler):
                 self.jsonData['data'] = BibleBooks.chapters
             elif cmd[2].lower() == "verses":
                 self.jsonData['data'] = BibleBooks.verses
+            elif cmd[2].lower() == "books":
+                self.jsonData['data'] = [book for book in BiblesSqlite().getBookList(cmd[3])]
+        elif cmd[1].lower() == "lex":
+            self.jsonData['data'] = LexicalData.getLexicalDataRaw(cmd[2])
+
+    def securityCheck(self):
+        clients = {'ubaclient': {'secret': 'uniquebibleapp'}}
+        auth = self.headers['Authorization']
+        if auth:
+            basic, creds = auth.split()
+            clientId, clientSecret = base64.b64decode(creds).decode().split(':')
+            if clientId in clients.keys():
+                if clientSecret == clients[clientId]['secret']:
+                    return
+        raise Exception('Unauthorized')
 
     # /bible
     # /bible/KJV/43/3
@@ -156,7 +196,10 @@ class RemoteApiHandler(ApiRequestHandler):
             self.jsonData['data'] = [topic for topic in Book(module).getTopicList()]
         else:
             chapter = cmd[2].replace("+", " ")
-            self.jsonData['data'] = Book(module).getContentByChapter(chapter)
+            chapter = chapter.replace("%3C", "<")
+            chapter = chapter.replace("%3E", ">")
+            data = Book(module).getContentByChapter(chapter)
+            self.jsonData['data'] = data if data else ("[Not found]",)
 
     # /commentary/ABC/43/1
     def processCommentaryCommand(self, cmd):
@@ -166,7 +209,8 @@ class RemoteApiHandler(ApiRequestHandler):
         elif len(cmd) < 4:
             self.sendError("Invalid Commentary command")
             return
-        self.jsonData['data'] = Commentary(cmd[1]).getRawContent(cmd[2], cmd[3])
+        data = Commentary(cmd[1]).getRawContent(cmd[2], cmd[3])
+        self.jsonData['data'] = data if data else ("[Not found]",)
 
     # /lexicon
     # /lexicon/TBESG/G5
@@ -177,7 +221,8 @@ class RemoteApiHandler(ApiRequestHandler):
         elif len(cmd) < 3:
             self.sendError("Invalid Lexicon command")
             return
-        self.jsonData['data'] = Lexicon(cmd[1]).getRawContent(cmd[2])
+        data = Lexicon(cmd[1]).getRawContent(cmd[2])
+        self.jsonData['data'] = data if data else ("[Not found]",)
 
     # /devotional
     # /devotional/Chambers+-+My+Utmost+For+His+Highest/12/25
@@ -208,9 +253,55 @@ class RemoteApiHandler(ApiRequestHandler):
             self.jsonData['data'] = DictionaryData().getRawContent(cmd[2])
 
     # /crossreference/1/1/1
+    # /crossreference/1/1/1/KJV
     def processCrossReferenceCommand(self, cmd):
         if len(cmd) < 4:
             self.sendError("Invalid Cross Reference command")
             return
-        self.jsonData['data'] = CrossReferenceSqlite().getCrossReferenceList((cmd[1], cmd[2], cmd[3]))
+        data = CrossReferenceSqlite().getCrossReferenceList((cmd[1], cmd[2], cmd[3]))
+        if len(cmd) == 4:
+            self.jsonData['data'] = data
+        else:
+            versesData = []
+            verses = BibleVerseParser(config.parserStandarisation).extractAllReferencesFast(data)
+            text = cmd[4]
+            for (b, c, v, *_) in verses:
+                record = Bible(text).readTextVerse(b, c, v)
+                versesData.append(record)
+            self.jsonData['data'] = versesData
+
+    # /compare/1/1/1?text=KJV&text=TRLIT&text=WEB
+    def processCompareCommand(self, cmd, query):
+        if len(cmd) < 4:
+            self.sendError("Invalid Compare command")
+            return
+        if query:
+            texts = query["text"]
+        else:
+            texts = ['KJV']
+        self.jsonData['data'] = BiblesSqlite().compareVerseRaw((cmd[1], cmd[2], cmd[3]), texts)
+
+    # /search?searchText=faith
+    def processSearchCommand(self, cmd, query):
+        try:
+            searchText = query["searchText"][0]
+            type = query["type"][0] if "type" in query.keys() else "bible"
+            if type == "bible":
+                text = query["text"][0] if "text" in query.keys() else "KJV"
+                query = "SELECT Book, Chapter, Verse, Scripture FROM Verses "
+                query += "WHERE "
+                query += "(Scripture LIKE ?) "
+                query += "ORDER BY Book, Chapter, Verse "
+                query += "LIMIT 5000 "
+                if '"' in searchText:
+                    searchText = searchText.replace('"', '')
+                else:
+                    searchText = searchText.replace(" ", "%").replace("+", "%")
+                t = ("%{0}%".format(searchText),)
+                verses = Bible(text).getSearchVerses(query, t)
+
+                self.jsonData['data'] = verses
+        except Exception as ex:
+            self.sendError("Invalid search command - " + ex)
+
 
