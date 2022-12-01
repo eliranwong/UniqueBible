@@ -1116,6 +1116,14 @@ class Bible:
         # return a list of tuple
         return textChapter
 
+    def readTextChapterRaw(self, b, c):
+        query = "SELECT Book, Chapter, Scripture FROM Bible WHERE Book=? AND Chapter=?"
+        self.cursor.execute(query, (b, c))
+        textChapter = self.cursor.fetchone()
+        if not textChapter:
+            return (b, c, "")
+        return textChapter
+
     def getHighlightedOHGBVerse(self, b, c, v, wordID, showReference=False, linkOnly=False):
         if self.text in ("OHGB", "OHGBi"):
             reference = """(<ref onclick="document.title='BIBLE:::{0}'">{0}</ref>) """.format(self.bcvToVerseReference(b, c, v)) if showReference else ""
@@ -1621,6 +1629,15 @@ class MorphologySqlite:
             query = "SELECT Lexeme, LexicalEntry, Morphology FROM morphology WHERE Book < 40 AND WordID = ?"
         else:
             query = "SELECT Lexeme, LexicalEntry, Morphology FROM morphology WHERE Book >= 40 AND WordID = ?"
+        t = (wordID,)
+        self.cursor.execute(query, t)
+        return self.cursor.fetchone()
+
+    def searchWordRaw(self, portion, wordID):
+        if portion == "1":
+            query = "SELECT * FROM morphology WHERE Book < 40 AND WordID = ? LIMIT 1"
+        else:
+            query = "SELECT * FROM morphology WHERE Book >= 40 AND WordID = ? LIMIT 1"
         t = (wordID,)
         self.cursor.execute(query, t)
         return self.cursor.fetchone()
