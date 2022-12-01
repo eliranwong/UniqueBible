@@ -3,6 +3,7 @@ import glob
 import json
 import logging
 import os
+import re
 from pathlib import Path
 
 import config
@@ -10,7 +11,7 @@ from http import HTTPStatus
 
 from http.server import SimpleHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
-from db.BiblesSqlite import BiblesSqlite, Bible
+from db.BiblesSqlite import BiblesSqlite, Bible, MorphologySqlite
 from db.DevotionalSqlite import DevotionalSqlite
 from db.ToolsSqlite import Commentary, LexiconData, IndexesSqlite, Book, Lexicon, CrossReferenceSqlite, DictionaryData, \
     SearchSqlite
@@ -126,6 +127,8 @@ class RemoteApiHandler(ApiRequestHandler):
                 self.processCrossReferenceCommand(cmd)
             elif command == "search":
                 self.processSearchCommand(cmd, query)
+            elif command == "morphology":
+                self.processMorphologyCommand(cmd)
 
     # /data/bible/abbreviations?lang=[eng,sc,tc]
     # /data/bible/chapters
@@ -173,7 +176,16 @@ class RemoteApiHandler(ApiRequestHandler):
             self.sendError("Invalid Bible command")
             return
         if len(cmd) == 4:
-            verses = BiblesSqlite().readTextChapter(cmd[1], cmd[2], cmd[3])
+            if cmd[1] in "MOB": # "MAB", "MIB", "MPB", "MTB"):
+                book, chapter, scripture = Bible(cmd[1]).readTextChapterRaw(cmd[2], cmd[3])
+                data = re.findall("<verse>(.*?)</verse>", scripture)
+                verses = []
+                count = 1
+                for passage in data:
+                    verses.append([cmd[2], cmd[3], count, passage])
+                    count += 1
+            else:
+                verses = BiblesSqlite().readTextChapter(cmd[1], cmd[2], cmd[3])
         elif len(cmd) == 5:
             verses = [BiblesSqlite().readTextVerse(cmd[1], cmd[2], cmd[3], cmd[4])]
         rows = []
@@ -304,4 +316,14 @@ class RemoteApiHandler(ApiRequestHandler):
         except Exception as ex:
             self.sendError("Invalid search command - " + ex)
 
+    # /morphology/1/34684
+    def processMorphologyCommand(self, cmd):
+        if len(cmd) < 3:
+            self.sendError("Invalid Morphology command")
+            return
+        morphologySqlite = MorphologySqlite()
+        wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation, gloss = morphologySqlite.searchWordRaw(cmd[1], cmd[2])
+        lexicalEntry = lexicalEntry.split(",")[0]
+        translations = morphologySqlite.distinctMorphology(lexicalEntry)
+        self.jsonData['data'] = (textWord, lexeme, lexicalEntry, morphologyCode, morphology, transliteration, pronuciation, interlinear, translation, gloss, translations)
 
