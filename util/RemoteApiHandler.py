@@ -176,7 +176,7 @@ class RemoteApiHandler(ApiRequestHandler):
             self.sendError("Invalid Bible command")
             return
         if len(cmd) == 4:
-            if cmd[1] in "MOB": # "MAB", "MIB", "MPB", "MTB"):
+            if cmd[1] in ["MOB", "MAB", "MIB", "MPB", "MTB"]:
                 book, chapter, scripture = Bible(cmd[1]).readTextChapterRaw(cmd[2], cmd[3])
                 data = re.findall("<verse>(.*?)</verse>", scripture)
                 verses = []
