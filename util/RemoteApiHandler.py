@@ -1,9 +1,11 @@
 import base64
 import glob
+import hashlib
 import json
 import logging
 import os
 import re
+from datetime import datetime, timezone
 from pathlib import Path
 
 import config
@@ -129,6 +131,8 @@ class RemoteApiHandler(ApiRequestHandler):
                 self.processSearchCommand(cmd, query)
             elif command == "morphology":
                 self.processMorphologyCommand(cmd)
+            elif command == "searchtool":
+                self.processSearchToolCommand(cmd)
 
     # /data/bible/abbreviations?lang=[eng,sc,tc]
     # /data/bible/chapters
@@ -155,15 +159,24 @@ class RemoteApiHandler(ApiRequestHandler):
             self.jsonData['data'] = LexicalData.getLexicalDataRaw(cmd[2])
 
     def securityCheck(self):
-        clients = {'ubaclient': {'secret': 'uniquebibleapp'}}
-        auth = self.headers['Authorization']
-        if auth:
-            basic, creds = auth.split()
-            clientId, clientSecret = base64.b64decode(creds).decode().split(':')
-            if clientId in clients.keys():
-                if clientSecret == clients[clientId]['secret']:
-                    return
-        raise Exception('Unauthorized')
+        if config.apiServerClientId == '':
+            return
+        else:
+            clients = {config.apiServerClientId: {'secret': self.encodeSecret(config.apiServerClientSecret)}}
+            auth = self.headers['Authorization']
+            if auth:
+                basic, creds = auth.split()
+                clientId, clientSecret = base64.b64decode(creds).decode().split(':')
+                if clientId in clients.keys():
+                    if clientSecret == clients[clientId]['secret']:
+                        return
+            raise Exception('Unauthorized')
+
+    def encodeSecret(self, secret):
+        secret = secret + str(datetime.now(timezone.utc).month)
+        secret = hashlib.md5(secret.encode())
+        secret = secret.hexdigest()
+        return secret
 
     # /bible
     # /bible/KJV/43/3
@@ -327,3 +340,10 @@ class RemoteApiHandler(ApiRequestHandler):
         translations = morphologySqlite.distinctMorphology(lexicalEntry)
         self.jsonData['data'] = (textWord, lexeme, lexicalEntry, morphologyCode, morphology, transliteration, pronuciation, interlinear, translation, gloss, translations)
 
+    # /searchtool/mETCBC/adjv.f.pl.a
+    def processSearchToolCommand(self, cmd):
+        try:
+            data = SearchSqlite().getContent(cmd[1], cmd[2])
+            self.jsonData['data'] = data
+        except Exception as ex:
+            self.sendError("Invalid search command - " + ex)

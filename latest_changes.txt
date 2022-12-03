@@ -1,3 +1,6 @@
+Changes in 33.27:
+* Added searchtool to api-server
+
 Changes in 33.26:
 * Added morphology to api-server
 
