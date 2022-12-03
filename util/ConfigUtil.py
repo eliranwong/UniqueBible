@@ -1783,6 +1783,18 @@ class ConfigUtil:
                     logger = logging.getLogger('uba')
                     logger.info(f"Using {patFile}")
 
+        config.help["apiServerClientId"] = """
+        # API Server Client ID
+        """
+        if not hasattr(config, "apiServerClientId"):
+            config.apiServerClientId = ''
+
+        config.help["apiServerClientSecret"] = """
+        # API Server Client Secret
+        """
+        if not hasattr(config, "apiServerClientSecret"):
+            config.apiServerClientSecret = ''
+
         ConfigUtil.loadColorConfig()
 
     # Save configurations on exit
@@ -2183,6 +2195,8 @@ class ConfigUtil:
             ("databaseConvertedOnStartup", config.databaseConvertedOnStartup),
             ("limitWorkspaceFilenameLength", config.limitWorkspaceFilenameLength),
             ("enableHttpRemoteErrorRedirection", config.enableHttpRemoteErrorRedirection),
+            ("apiServerClientId", config.apiServerClientId),
+            ("apiServerClientSecret", config.apiServerClientSecret)
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:
