@@ -2,7 +2,7 @@
 /venv*
 /venv_*
 /marvelData
-/marvelData_init
+/marvelData_*
 /build
 /dist
 /video
