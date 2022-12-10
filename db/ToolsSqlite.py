@@ -768,7 +768,8 @@ class Commentary:
         if self.text in self.getCommentaryList():
             query = "SELECT Scripture FROM Commentary WHERE Book=? AND Chapter=?"
             self.cursor.execute(query, (b, c))
-            return self.cursor.fetchone()
+            data = self.cursor.fetchone()
+            return data
         else:
             return ""
 

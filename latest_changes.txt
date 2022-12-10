@@ -1,3 +1,6 @@
+Changes in 33.28:
+* Fix accessing Chinese commentaries in api-server
+
 Changes in 33.27:
 * Added searchtool to api-server
 
