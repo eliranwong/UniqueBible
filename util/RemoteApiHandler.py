@@ -17,7 +17,7 @@ from urllib.parse import urlparse, parse_qs
 from db.BiblesSqlite import BiblesSqlite, Bible, MorphologySqlite
 from db.DevotionalSqlite import DevotionalSqlite
 from db.ToolsSqlite import Commentary, LexiconData, IndexesSqlite, Book, Lexicon, CrossReferenceSqlite, DictionaryData, \
-    SearchSqlite
+    SearchSqlite, VerseData
 from util.BibleBooks import BibleBooks
 from util.BibleVerseParser import BibleVerseParser
 from util.CatalogUtil import CatalogUtil
@@ -138,6 +138,8 @@ class RemoteApiHandler(ApiRequestHandler):
                 self.processMorphologyCommand(cmd)
             elif command == "searchtool":
                 self.processSearchToolCommand(cmd)
+            elif command == "discourse":
+                self.processDiscourseCommand(cmd)
 
     # /data/bible/abbreviations?lang=[eng,sc,tc]
     # /data/bible/chapters
@@ -358,3 +360,12 @@ class RemoteApiHandler(ApiRequestHandler):
             self.jsonData['data'] = data
         except Exception as ex:
             self.sendError("Invalid search command - " + ex)
+
+    # /discourse/1/1/1
+    def processDiscourseCommand(self, cmd):
+        try:
+            verseData = VerseData("discourse")
+            data = verseData.getContent((int(cmd[1]), int(cmd[2]), int(cmd[3])))
+            self.jsonData['data'] = data
+        except Exception as ex:
+            self.sendError("Invalid discourse command - " + ex)
