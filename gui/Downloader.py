@@ -22,13 +22,14 @@ class DownloadProcess(QObject):
                 gdown.download(self.cloudFile, self.localFile, quiet=True)
                 print("Downloaded!")
                 connection = True
-            except:
+            except Exception as ex:
                 cli = "gdown {0} -O {1}".format(self.cloudFile, self.localFile)
                 os.system(cli)
                 print("Downloaded!")
                 connection = True
-        except:
+        except Exception as ex:
             print("Failed to download '{0}'!".format(self.cloudFile))
+            print(ex)
             connection = False
         if connection and os.path.isfile(self.localFile) and self.localFile.endswith(".zip"):
             zipObject = zipfile.ZipFile(self.localFile, "r")
