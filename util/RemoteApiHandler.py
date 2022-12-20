@@ -142,6 +142,7 @@ class RemoteApiHandler(ApiRequestHandler):
                 self.processDiscourseCommand(cmd)
 
     # /data/bible/abbreviations?lang=[eng,sc,tc]
+    # /data/bible/book2number?lang=[eng,sc,tc]
     # /data/bible/chapters
     # /data/bible/verses
     # /data/bible/books/TRLIT
@@ -155,6 +156,14 @@ class RemoteApiHandler(ApiRequestHandler):
                 data = []
                 for key, value in BibleBooks().abbrev[lang].items():
                     data.append({'i': key, 'a': value[0], 'n': value[1]})
+                self.jsonData['data'] = data
+            elif cmd[2].lower() == "book2number":
+                lang = "eng"
+                if query and "lang" in query.keys():
+                    lang = query["lang"][0]
+                data = []
+                for key, value in BibleBooks.name2number.items():
+                    data.append({'b': key, 'n': value})
                 self.jsonData['data'] = data
             elif cmd[2].lower() == "chapters":
                 self.jsonData['data'] = BibleBooks.chapters
