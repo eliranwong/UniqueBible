@@ -64,11 +64,25 @@ def pip3InstallModule(module):
 def fixFcitxOnLinux(module):
     # Fixed fcitx for Linux users
     if platform.system() == "Linux" and not config.docker:
+        major, minor, micro, *_ = sys.version_info
+        venvDir = "venv_Linux_{0}.{1}.{2}".format(major, minor, micro)
         #if config.docker:
         #    fcitxPlugin = "/usr/lib/qt/plugins/platforminputcontexts/libfcitx5platforminputcontextplugin.so"
+        ubaInputPluginDir = os.path.join(os.getcwd(), venvDir, "lib/python{0}.{1}/site-packages/{2}/Qt/plugins/platforminputcontexts".format(major, minor, module))
+        # plugin file 1
         fcitxPlugin = "/usr/lib/x86_64-linux-gnu/qt5/plugins/platforminputcontexts/libfcitxplatforminputcontextplugin.so"
-        ubaInputPluginDir = os.path.join(os.getcwd(), "venv", "lib/python{0}.{1}/site-packages/{2}/Qt/plugins/platforminputcontexts".format(sys.version_info.major, sys.version_info.minor, module))
         ubaFcitxPlugin = os.path.join(ubaInputPluginDir, "libfcitxplatforminputcontextplugin.so")
+        #print(os.path.exists(fcitxPlugin), os.path.exists(ubaInputPluginDir), os.path.exists(ubaFcitxPlugin))
+        if os.path.exists(fcitxPlugin) and os.path.exists(ubaInputPluginDir) and not os.path.exists(ubaFcitxPlugin):
+            try:
+                copyfile(fcitxPlugin, ubaFcitxPlugin)
+                os.chmod(ubaFcitxPlugin, 0o755)
+                print("'fcitx' input plugin is installed. This will take effect the next time you relaunch Unique Bible App!")
+            except:
+                pass
+        # plugin file 2
+        fcitxPlugin = "/usr/lib/x86_64-linux-gnu/qt5/plugins/platforminputcontexts/libfcitx5platforminputcontextplugin.so"
+        ubaFcitxPlugin = os.path.join(ubaInputPluginDir, "libfcitx5platforminputcontextplugin.so")
         #print(os.path.exists(fcitxPlugin), os.path.exists(ubaInputPluginDir), os.path.exists(ubaFcitxPlugin))
         if os.path.exists(fcitxPlugin) and os.path.exists(ubaInputPluginDir) and not os.path.exists(ubaFcitxPlugin):
             try:
