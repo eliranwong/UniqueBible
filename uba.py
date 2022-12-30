@@ -47,6 +47,15 @@ if platform.system() == "Linux" and os.path.exists("/mnt/chromeos/"):
         except:
             pass
 
+# use xcb for qpa platform
+if os.path.isfile("use_xcb"):
+    os.environ["QT_QPA_PLATFORM"] = "xcb"
+
+# use waland for qpa platform
+if os.path.isfile("use_wayland"):
+    os.environ["QT_QPA_PLATFORM"] = "wayland"
+
+# use vnc for qpa platform
 if os.path.isfile("use_vnc"):
     os.environ["QT_QPA_PLATFORM"] = "vnc"
 

@@ -732,7 +732,9 @@ def switchToCli():
 
 
 # Set Qt input method variable to use fcitx / ibus if config.fcitx / config.ibus is "True"
-if config.fcitx:
+if config.fcitx5:
+    os.environ["QT_IM_MODULE"] = "fcitx5"
+elif config.fcitx:
     os.environ["QT_IM_MODULE"] = "fcitx"
 elif config.ibus:
     os.environ["QT_IM_MODULE"] = "ibus"

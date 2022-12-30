@@ -709,14 +709,17 @@ class ConfigUtil:
         if not hasattr(config, "ttsEnglishAlwaysUK"):
             config.ttsEnglishAlwaysUK = False
         config.help["ibus"] = """
-        # Options to use ibus as input method: True / False
-        # This option may be useful on some Linux systems, where qt4 and qt5 applications use different input method variables."""
+        # Use ibus, if installed, as input method."""
         if not hasattr(config, "ibus"):
             config.ibus = False
         config.help["fcitx"] = """
-        # This option may be useful on some Linux systems, where qt4 and qt5 applications use different input method variables."""
+        # Use fcitx, if installed, as input method."""
         if not hasattr(config, "fcitx"):
             config.fcitx = False
+        config.help["fcitx5"] = """
+        # Use fcitx5, if installed, as input method."""
+        if not hasattr(config, "fcitx5"):
+            config.fcitx5 = False
         config.help["virtualKeyboard"] = """
         # Options to use built-in virtual keyboards: True / False"""
         if not hasattr(config, "virtualKeyboard"):
@@ -1942,6 +1945,7 @@ class ConfigUtil:
             ("ttsChineseAlwaysCantonese", config.ttsChineseAlwaysCantonese),
             ("ibus", config.ibus),
             ("fcitx", config.fcitx),
+            ("fcitx5", config.fcitx5),
             ("virtualKeyboard", config.virtualKeyboard),
             ("marvelData", config.marvelData),
             ("marvelDataPublic", config.marvelDataPublic),

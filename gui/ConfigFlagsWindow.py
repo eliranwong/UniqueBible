@@ -157,6 +157,7 @@ class ConfigFlagsWindow(QDialog):
             options += [
                 ("enableSystemTrayOnLinux", config.enableSystemTrayOnLinux, self.enableSystemTrayOnLinuxChanged, False, config.thisTranslation["enableSystemTrayOnLinux"]),
                 ("linuxStartFullScreen", config.linuxStartFullScreen, self.linuxStartFullScreenChanged, False, config.thisTranslation["linuxStartFullScreen"]),
+                ("fcitx5", config.fcitx5, self.fcitx5Changed, False, f'[fcitx5] {config.thisTranslation["fcitx"]}'),
                 ("fcitx", config.fcitx, self.fcitxChanged, False, config.thisTranslation["fcitx"]),
                 ("ibus", config.ibus, self.ibusChanged, False, config.thisTranslation["ibus"]),
                 ("espeak", config.espeak, self.espeakChanged, False, config.thisTranslation["espeak"]),
@@ -224,6 +225,8 @@ class ConfigFlagsWindow(QDialog):
 
     def ibusChanged(self):
         config.ibus = not config.ibus
+        if config.fcitx5 and config.ibus:
+            config.fcitx5 = not config.fcitx5
         if config.fcitx and config.ibus:
             config.fcitx = not config.fcitx
         if config.virtualKeyboard and config.ibus:
@@ -232,9 +235,21 @@ class ConfigFlagsWindow(QDialog):
 
     def fcitxChanged(self):
         config.fcitx = not config.fcitx
+        if config.fcitx and config.fcitx5:
+            config.fcitx5 = not config.fcitx5
         if config.fcitx and config.ibus:
             config.ibus = not config.ibus
         if config.fcitx and config.virtualKeyboard:
+            config.virtualKeyboard = not config.virtualKeyboard
+        self.parent.handleRestart()
+
+    def fcitx5Changed(self):
+        config.fcitx5 = not config.fcitx5
+        if config.fcitx5 and config.fcitx:
+            config.fcitx = not config.fcitx
+        if config.fcitx5 and config.ibus:
+            config.ibus = not config.ibus
+        if config.fcitx5 and config.virtualKeyboard:
             config.virtualKeyboard = not config.virtualKeyboard
         self.parent.handleRestart()
 

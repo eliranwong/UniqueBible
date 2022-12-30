@@ -1,3 +1,11 @@
+Changes in 33.32:
+Tweaks for Linux / Chrome OS / Chrome OS Flex users:
+* support fcitx5
+    to enable fcitx5, turn on 'fcitx5' via Config Flag Window and restart UBA
+    read fcitx5 setup at https://github.com/eliranwong/ChromeOSLinux/blob/main/input_method/fcitx.md
+* support QT_QPA_PLATFORM options
+    read https://github.com/eliranwong/UniqueBible/wiki/QT_QPA_PLATFORM
+
 Changes in 33.31:
 * Added support of libfcitx5platforminputcontextplugin
 

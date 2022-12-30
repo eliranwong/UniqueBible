@@ -98,3 +98,6 @@ terminal_mode/filters.txt
 system_command
 personal_notes.txt
 temp.go
+use_wayland
+use_vnc
+use_xcb
