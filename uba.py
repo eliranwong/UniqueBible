@@ -52,8 +52,9 @@ if os.path.isfile("use_xcb"):
     os.environ["QT_QPA_PLATFORM"] = "xcb"
 
 # use waland for qpa platform
+# https://wiki.archlinux.org/title/wayland
 if os.path.isfile("use_wayland"):
-    os.environ["QT_QPA_PLATFORM"] = "wayland"
+    os.environ["QT_QPA_PLATFORM"] = "wayland;xcb"
 
 # use vnc for qpa platform
 if os.path.isfile("use_vnc"):
