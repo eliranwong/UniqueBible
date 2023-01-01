@@ -1,3 +1,6 @@
+Changes in 33.33:
+* Fix issue with jump to anchor
+
 Changes in 33.32:
 Tweaks for Linux / Chrome OS / Chrome OS Flex users:
 * support fcitx5

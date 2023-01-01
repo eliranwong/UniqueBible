@@ -3,6 +3,7 @@ Reading data from bibles.sqlite
 """
 import glob
 import os, apsw, config, re, logging
+import sys
 from datetime import datetime
 from pathlib import Path
 from functools import partial
@@ -1428,6 +1429,30 @@ class Bible:
 
 #        cursor.execute("COMMIT")
 
+    def exportToJson(self):
+        print("Exporting to JSON file")
+        query = "SELECT Book, Chapter, Verse, Scripture FROM Verses ORDER BY Book, Chapter, Verse"
+        self.cursor.execute(query)
+        records = self.cursor.fetchall()
+        versesData = []
+        ibook = 1
+        ichapter = 1
+        iverse = 1
+        with open('bible.json', 'w') as file:
+            file.write("{")
+            for record in records:
+                bookNum = record[0]
+                chapterNum = record[1]
+                verseNum = record[2]
+                scripture = record[3]
+                row = [bookNum, chapterNum, verseNum, scripture]
+                # versesData.append(row)
+                ibook = ibook + 1
+                file.write(scripture)
+                if ibook > 1:
+                    break
+            file.write("}")
+
 
 class ClauseData:
 
@@ -1455,7 +1480,6 @@ class ClauseONTData:
             return config.thisTranslation["notFound"]
         else:
             return content[0]
-
 
 class MorphologySqlite:
 
@@ -1768,8 +1792,21 @@ class MorphologySqlite:
         #print(end - start)
         return formatedText
 
+def printBibleData():
+    fileList = glob.glob(config.marvelData+"")
+    for file in fileList:
+        bible = None
+        try:
+            if os.path.isfile(file):
+                bibleName = Path(file).stem
+                bible = Bible(bibleName)
+                description = bible.bibleInfo()
+                lastBook = bible.getLastBook()
+                print("{0}:{1}:{2}".format(bibleName, lastBook, description))
+        except:
+            print("Error in {0}".format(bible))
 
-if __name__ == '__main__':
+def debugBiblesSqlite():
     # Bibles = BiblesSqlite()
     #
     # text = "John"
@@ -1803,33 +1840,28 @@ if __name__ == '__main__':
 
     # del Bibles
 
-    # bible = Bible("KJVx")
-    # bible.renameGlossToRef()
-    # print("Done")
-
-    # fileList = glob.glob(config.marvelData+"/bibles/*.bible")
-    # for file in fileList:
-    #     bible = None
-    #     try:
-    #         if os.path.isfile(file):
-    #             bibleName = Path(file).stem
-    #             bible = Bible(bibleName)
-    #             description = bible.bibleInfo()
-    #             lastBook = bible.getLastBook()
-    #             print("{0}:{1}:{2}".format(bibleName, lastBook, description))
-    #     except:
-    #         print("Error in {0}".format(bible))
+    bible = Bible("KJVx")
+    bible.renameGlossToRef()
+    print("Done")
 
 
-    fileList = glob.glob(config.marvelData+"")
-    for file in fileList:
-        bible = None
+if __name__ == '__main__':
+
+    if len(sys.argv) > 1:
         try:
-            if os.path.isfile(file):
-                bibleName = Path(file).stem
-                bible = Bible(bibleName)
-                description = bible.bibleInfo()
-                lastBook = bible.getLastBook()
-                print("{0}:{1}:{2}".format(bibleName, lastBook, description))
-        except:
-            print("Error in {0}".format(bible))
+            method = sys.argv[1].strip()
+            if len(sys.argv) == 2:
+                globals()[method]()
+            else:
+                name1 = sys.argv[2].strip()
+                if len(sys.argv) == 3:
+                    globals()[method](name1)
+                else:
+                    name2 = sys.argv[3].strip()
+                    globals()[method](name1, name2)
+            print("Done")
+        except Exception as e:
+            print("Error executing: " + str(e))
+    else:
+        Bible("KJV").exportToJson()
+
