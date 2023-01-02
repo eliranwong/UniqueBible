@@ -3642,7 +3642,7 @@ class MainWindow(QMainWindow):
             else:
                 self.mainPage.runJavaScript(self.getScrollActiveVerseJS(studyView=False, index=index))
 
-    def finishStudyViewLoading(self, index=None, js=""):
+    def finishStudyViewLoading(self, ok, index=None, js=""):
         if config.fixLoadingContent:
             QTimer.singleShot(config.fixLoadingContentDelayTime, lambda: self.fixLoadingContent(studyView=True, index=index))
         else:
