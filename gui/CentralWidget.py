@@ -54,7 +54,7 @@ class CentralWidget(QWidget):
             self.studyView.addTab(tabView, "{1}{0}".format(i+1, config.thisTranslation["tabStudy"]))
             tabView.titleChanged.connect(self.parent.studyTextCommandChanged)
             #tabView.loadFinished.connect(self.parent.finishStudyViewLoading)
-            tabView.loadFinished.connect(lambda ok, index=i: self.parent.finishStudyViewLoading(ok, index=index))
+            tabView.loadFinished.connect(lambda index=i: self.parent.finishStudyViewLoading(index=index))
             #tabView.renderProcessTerminated.connect(self.parent.checkStudyPageTermination)
             tabView.page().pdfPrintingFinished.connect(self.parent.pdfPrintingFinishedAction)
 

@@ -1,5 +1,8 @@
-Changes in 33.33:
+Changes in 33.34:
 * terminal mode now accepts bible version entry
+
+Changes in 33.33:
+* Fix issue with jump to anchor
 
 Changes in 33.32:
 Tweaks for Linux / Chrome OS / Chrome OS Flex users:
