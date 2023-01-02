@@ -751,6 +751,10 @@ class LocalCliHandler:
             # Shortcuts to change chapter or verse or both chapter and verse for bible reading.
             if command:
                 try:
+                    # match a bible version
+                    if command in self.crossPlatform.textList:
+                        command = f"TEXT:::{command}"
+                    # match a bible reference
                     bc = command.split(":", 1)
                     bci = [int(i) for i in bc if i]
                     if len(bc) == 2 and len(bci) == 1:
