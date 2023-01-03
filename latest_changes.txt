@@ -1,3 +1,6 @@
+Changes in 33.36:
+* Fixed book verse anchors
+
 Changes in 33.35:
 * Fixed commentary verse anchors
 

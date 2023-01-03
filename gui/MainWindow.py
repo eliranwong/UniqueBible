@@ -1302,7 +1302,7 @@ class MainWindow(QMainWindow):
             text = self.addOpenImageAction(text)
         if anchor is not None:
             js = "jump('{0}');".format(anchor)
-            self.studyView.currentWidget().loadFinished.connect(lambda: self.finishStudyViewLoading(js=js))
+            self.studyView.currentWidget().loadFinished.connect(lambda: self.finishStudyViewLoading(None, js=js))
         # check size of text content
         if config.forceGenerateHtml or sys.getsizeof(text) > 2097152:
             # save html in a separate file if text is larger than 2MB
