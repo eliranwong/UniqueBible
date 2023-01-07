@@ -2344,7 +2344,7 @@ class TextCommandParser:
                 updateViewConfig(viewText, verseList[-1])
             else:
                 updateViewConfig(confirmedTexts[0], verseList[-1])
-            return ("main", verses, {})
+            return ("study" if config.compareOnStudyWindow else "main", verses, {})
 
     # SIDEBYSIDE:::
     def textCompareSideBySide(self, command, source):
@@ -2374,7 +2374,7 @@ class TextCommandParser:
                 updateViewConfig(confirmedTexts[0], verseList[-1])
             if config.runMode == "terminal":
                 verses = f"[BROWSER]{verses}"
-            return ("main", verses, {})
+            return ("study" if config.compareOnStudyWindow else "main", verses, {})
 
     # DIFF:::
     # DIFFERENCE:::
@@ -2418,7 +2418,7 @@ class TextCommandParser:
                 if source in ('cli'):
                     tableList = ["{0} {1}".format(text, self.textBibleVerseParser(references, text, source, True)[1])
                                  for text in confirmedTexts]
-                    return("main", "<br>".join(tableList), {})
+                    return("study" if config.compareOnStudyWindow else "main", "<br>".join(tableList), {})
                 else:
                     tableList = [("<th><ref onclick='document.title=\"TEXT:::{0}\"'>{0}</ref></th>".format(text),
                                   "<td style='vertical-align: text-top;'><bibletext class={1}>{0}</bibletext></td>"
@@ -2429,7 +2429,7 @@ class TextCommandParser:
                     for text in confirmedTexts:
                         (fontFile, fontSize, css) = Bible(text).getFontInfo()
                         config.mainCssBibleFontStyle += css
-                    return ("main", "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)), {})
+                    return ("study" if config.compareOnStudyWindow else "main", "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)), {})
 
    # PASSAGES:::
     def textPassages(self, command, source):

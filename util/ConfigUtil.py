@@ -1192,6 +1192,10 @@ class ConfigUtil:
         # This feature is accessible via a left toolbar button, located under the "Comparison / Parallel Reading / Difference" button."""
         if not hasattr(config, "enforceCompareParallel"):
             config.enforceCompareParallel = False
+        config.help["compareOnStudyWindow"] = """
+        # Options to display comparison on Study Window: True / False"""
+        if not hasattr(config, "compareOnStudyWindow"):
+            config.compareOnStudyWindow = False
         config.help["showUserNoteIndicator"] = """
         # Options to show user note indicator on bible chapter: True / False"""
         if not hasattr(config, "showUserNoteIndicator"):
@@ -2037,6 +2041,7 @@ class ConfigUtil:
             ("showUserNoteIndicator", config.showUserNoteIndicator),
             ("showBibleNoteIndicator", config.showBibleNoteIndicator),
             ("enforceCompareParallel", config.enforceCompareParallel),
+            ("compareOnStudyWindow", config.compareOnStudyWindow),
             ("readFormattedBibles", config.readFormattedBibles),
             ("forceUseBuiltinMediaPlayer", config.forceUseBuiltinMediaPlayer),
             ("doNotStop3rdPartyMediaPlayerOnExit", config.doNotStop3rdPartyMediaPlayerOnExit),

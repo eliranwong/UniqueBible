@@ -123,6 +123,7 @@ class ConfigFlagsWindow(QDialog):
             ("enablePlugins", config.enablePlugins, self.enablePluginsChanged, True, config.thisTranslation["enablePlugins"]),
             ("hideBlankVerseCompare", config.hideBlankVerseCompare, self.hideBlankVerseCompareChanged, False, config.thisTranslation["hideBlankVerseCompare"]),
             ("enforceCompareParallel", config.enforceCompareParallel, self.parent.enforceCompareParallelButtonClicked, False, config.thisTranslation["enforceCompareParallel"]),
+            ("compareOnStudyWindow", config.compareOnStudyWindow, self.compareOnStudyWindowChanged, False, config.help["compareOnStudyWindow"][11:]),
             ("enableMenuUnderline", config.enableMenuUnderline, self.enableMenuUnderlineChanged, True, config.thisTranslation["enableMenuUnderline"]),
             ("openBibleInMainViewOnly", config.openBibleInMainViewOnly, self.parent.enableStudyBibleButtonClicked, False, config.thisTranslation["openBibleInMainViewOnly"]),
             ("addOHGBiToMorphologySearch", config.addOHGBiToMorphologySearch, self.addOHGBiToMorphologySearchChanged, True, config.thisTranslation["addOHGBiToMorphologySearch"]),
@@ -494,6 +495,9 @@ class ConfigFlagsWindow(QDialog):
     def enablePluginsChanged(self):
         config.enablePlugins = not config.enablePlugins
         self.parent.setupMenuLayout(config.menuLayout)
+
+    def compareOnStudyWindowChanged(self):
+        config.compareOnStudyWindow = not config.compareOnStudyWindow
 
     def usePySide2onWebtopChanged(self):
         config.usePySide2onWebtop = not config.usePySide2onWebtop

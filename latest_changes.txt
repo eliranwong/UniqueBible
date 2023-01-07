@@ -1,3 +1,7 @@
+Changes in 33.37:
+* Added a config flag 'compareOnStudyWindow', configurable via Config Flag Window.
+    Turn it on to display bible comparison on Study Window instead on Main Window.
+
 Changes in 33.36:
 * Fixed book verse anchors
 
