@@ -234,11 +234,13 @@ class RemoteApiHandler(ApiRequestHandler):
             self.sendError("Invalid Book command")
             return
         module = cmd[1].replace("+", " ")
+        module = module.replace("&quest;", "?")
         module = urllib.parse.unquote(module)
         if len(cmd) == 2:
             self.jsonData['data'] = [topic for topic in Book(module).getTopicList()]
         else:
             chapter = cmd[2].replace("+", " ")
+            chapter = chapter.replace("&quest;", "?")
             chapter = urllib.parse.unquote(chapter)
             # chapter = chapter.replace("%3C", "<")
             # chapter = chapter.replace("%3E", ">")
