@@ -1,0 +1,6 @@
+{
+    "files.watcherExclude": {
+        "**/htmlResources/material/**": true,
+        "**/venv_Linux_3.10.6/**": true
+    }
+}
