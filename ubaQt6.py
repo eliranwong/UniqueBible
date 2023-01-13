@@ -203,6 +203,7 @@ elif os.path.isfile("use_wayland"):
 elif os.path.isfile("use_xcb"):
     os.environ["QT_QPA_PLATFORM"] = "xcb"
 
+"""
 # Activate virtual environment
 if config.thisOS == "Windows":
     # Activate virtual environment
@@ -218,8 +219,9 @@ else:
         with open(activator) as f:
             code = compile(f.read(), activator, 'exec')
             exec(code, dict(__file__=activator))
+"""
 
-# Run checkup after virtual environment is ready
+# Run checkup
 from util.checkupQt6 import *
 
 # Run GUI

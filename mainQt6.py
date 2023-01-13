@@ -65,7 +65,7 @@ ShortcutUtil.setup(config.menuShortcuts)
 # Setup GUI windows
 from util.LanguageUtil import LanguageUtil
 from util.BibleVerseParser import BibleVerseParser
-from guiQt6.MainWindow import MainWindow
+from guiQt6.WebChannel import MainWindow
 from PySide6.QtWidgets import QApplication, QStyleFactory
 from PySide6.QtWidgets import QSystemTrayIcon
 from PySide6.QtGui import QIcon
@@ -229,6 +229,7 @@ except:
 # This offers a way for startup plugins to run codes after history records being loaded.
 config.actionsRightAfterLoadingHistoryRecords = []
 
+"""
 runStartupPlugins()
 
 # Run initial commands
@@ -311,7 +312,8 @@ def clipboardChanged():
 
 # Monitor Clipboard Changed
 QApplication.clipboard().dataChanged.connect(clipboardChanged)
-
+"""
 # Launch UBA
+config.mainWindow.show()
 config.restartUBA = False
-sys.exit(app.exec() if config.qtLibrary == "pyside6" else app.exec_())
+sys.exit(app.exec())
