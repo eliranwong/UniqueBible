@@ -2,6 +2,8 @@
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
 import os, platform, re, sys, subprocess, config
+
+from db.BiblesSqlite import BiblesSqlite
 from util.FileUtil import FileUtil
 from util.ConfigUtil import ConfigUtil
 # The following two imports must not be placed before checkup utilities
