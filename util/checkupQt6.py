@@ -1,96 +1,8 @@
-import config, subprocess, os, zipfile, platform, sys, re
+import config, subprocess, os, sys, re
 from shutil import copyfile
 from util.WebtopUtil import WebtopUtil
+from install.module import *
 
-
-def downloadFileIfNotFound(databaseInfo):
-    fileItems, cloudID, *_ = databaseInfo
-    targetFile = os.path.join(*fileItems)
-    if not os.path.isfile(targetFile):
-        cloudFile = "https://drive.google.com/uc?id={0}".format(cloudID)
-        localFile = "{0}.zip".format(targetFile)
-        # Download from google drive
-        import gdown
-        try:
-            print("Downloading initial content '{0}' ...".format(fileItems[-1]))
-            #print("from: {0}".format(cloudFile))
-            #print("to: {0}".format(localFile))
-            try:
-                gdown.download(cloudFile, localFile, quiet=True)
-                print("Downloaded!")
-                connection = True
-            except:
-                cli = "gdown {0} -O {1}".format(cloudFile, localFile)
-                os.system(cli)
-                print("Downloaded!")
-                connection = True
-        except:
-            print("Failed to download '{0}'!".format(fileItems[-1]))
-            connection = False
-        if connection and os.path.isfile(localFile) and localFile.endswith(".zip"):
-            print("Unpacking ...")
-            zipObject = zipfile.ZipFile(localFile, "r")
-            path, *_ = os.path.split(localFile)
-            zipObject.extractall(path)
-            zipObject.close()
-            os.remove(localFile)
-            print("'{0}' is installed!".format(fileItems[-1]))
-        else:
-            print("Failed to download '{0}'!".format(fileItems[-1]))
-
-def pip3InstallModule(module):
-    #executablePath = os.path.dirname(sys.executable)
-    #pippath = os.path.join(executablePath, "pip")
-    #pip = pippath if os.path.isfile(pippath) else "pip"
-    #pip3path = os.path.join(executablePath, "pip3")
-    #pip3 = pip3path if os.path.isfile(pip3path) else "pip3"
-    if not config.pipIsUpdated:
-        try:
-            # Automatic setup does not start on some device because pip tool is too old
-            updatePip = subprocess.Popen("pip3 install --upgrade pip", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            *_, stderr = updatePip.communicate()
-            if not stderr:
-                print("pip tool updated!")
-        except:
-            pass
-        config.pipIsUpdated = True
-    print("Installing missing module '{0}' ...".format(module))
-    # implement pip3 as a subprocess:
-    #install = subprocess.Popen(['pip3', 'install', module], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    install = subprocess.Popen(f"pip3 install {module}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    *_, stderr = install.communicate()
-    return stderr
-
-def fixFcitxOnLinux(module):
-    # Fixed fcitx for Linux users
-    if platform.system() == "Linux" and not config.docker:
-        major, minor, micro, *_ = sys.version_info
-        venvDir = "venv_Linux_{0}.{1}.{2}".format(major, minor, micro)
-        #if config.docker:
-        #    fcitxPlugin = "/usr/lib/qt/plugins/platforminputcontexts/libfcitx5platforminputcontextplugin.so"
-        ubaInputPluginDir = os.path.join(os.getcwd(), venvDir, "lib/python{0}.{1}/site-packages/{2}/Qt/plugins/platforminputcontexts".format(major, minor, module))
-        # plugin file 1
-        fcitxPlugin = "/usr/lib/x86_64-linux-gnu/qt5/plugins/platforminputcontexts/libfcitxplatforminputcontextplugin.so"
-        ubaFcitxPlugin = os.path.join(ubaInputPluginDir, "libfcitxplatforminputcontextplugin.so")
-        #print(os.path.exists(fcitxPlugin), os.path.exists(ubaInputPluginDir), os.path.exists(ubaFcitxPlugin))
-        if os.path.exists(fcitxPlugin) and os.path.exists(ubaInputPluginDir) and not os.path.exists(ubaFcitxPlugin):
-            try:
-                copyfile(fcitxPlugin, ubaFcitxPlugin)
-                os.chmod(ubaFcitxPlugin, 0o755)
-                print("'fcitx' input plugin is installed. This will take effect the next time you relaunch Unique Bible App!")
-            except:
-                pass
-        # plugin file 2
-        fcitxPlugin = "/usr/lib/x86_64-linux-gnu/qt5/plugins/platforminputcontexts/libfcitx5platforminputcontextplugin.so"
-        ubaFcitxPlugin = os.path.join(ubaInputPluginDir, "libfcitx5platforminputcontextplugin.so")
-        #print(os.path.exists(fcitxPlugin), os.path.exists(ubaInputPluginDir), os.path.exists(ubaFcitxPlugin))
-        if os.path.exists(fcitxPlugin) and os.path.exists(ubaInputPluginDir) and not os.path.exists(ubaFcitxPlugin):
-            try:
-                copyfile(fcitxPlugin, ubaFcitxPlugin)
-                os.chmod(ubaFcitxPlugin, 0o755)
-                print("'fcitx5' input plugin is installed. This will take effect the next time you relaunch Unique Bible App!")
-            except:
-                pass
 
 def isConfigInstalled():
     try:
@@ -102,23 +14,6 @@ def isConfigInstalled():
 def isPySide6Installed():
     try:
         from PySide6.QtWidgets import QApplication, QStyleFactory
-        fixFcitxOnLinux("PySide2")
-        return True
-    except:
-        return False
-
-def isPySide2Installed():
-    try:
-        from PySide2.QtWidgets import QApplication, QStyleFactory
-        fixFcitxOnLinux("PySide2")
-        return True
-    except:
-        return False
-
-def isPyQt5Installed():
-    try:
-        from PyQt5 import QtGui
-        fixFcitxOnLinux("PyQt5")
         return True
     except:
         return False
@@ -153,13 +48,6 @@ def isRequestsInstalled():
         return True
     except:
         return False
-
-#def isPyPDF2Installed():
-#    try:
-#        import PyPDF2
-#        return True
-#    except:
-#        return False
 
 def isMammothInstalled():
     try:
@@ -283,7 +171,7 @@ def isOfflineTtsInstalled():
 
     # Check macOS built-in text-to-speech voices
     config.macVoices = {}
-    if platform.system() == "Darwin":
+    if config.thisOS == "Darwin":
         macVoices = {}
         # reference about say command:
         # https://maithegeek.medium.com/having-fun-in-macos-with-say-command-d4a0d3319668
@@ -303,7 +191,7 @@ def isOfflineTtsInstalled():
             if not key.endswith("(Enhanced)") and not key.endswith("(Premium)"):
                 config.macVoices[key] = macVoices[key]
         return True if config.macVoices else False
-    elif platform.system() == "Linux" and config.espeak:
+    elif config.thisOS == "Linux" and config.espeak:
         espeakInstalled, _ = subprocess.Popen("which espeak", shell=True, stdout=subprocess.PIPE).communicate()
         if not espeakInstalled:
             config.espeak = False
@@ -646,153 +534,39 @@ def setInstallConfig(module, isInstalled):
     elif module in ("bcrypt", "-U bcrypt", "--upgrade bcrypt"):
         config.isBcryptInstalled = isInstalled
 
-# Specify qtLibrary for particular os
-if config.docker and config.usePySide2onWebtop:
-    config.qtLibrary = "pyside2"
-    os.environ["QT_API"] = config.qtLibrary
-    config.fixLoadingContent = False
-elif platform.system() == "Darwin" and config.usePySide6onMacOS:
-    config.qtLibrary = "pyside6"
-    config.fixLoadingContent = True
+
 # Check if required modules are installed
 required = [
     ("config", "Configurations", isConfigInstalled),
-    ("gdown", "Download UBA modules from Google drive", isGdownInstalled),
-    ("babel", "Internationalization and localization library", isBabelInstalled),
-    ("requests", "Download / Update files", isRequestsInstalled),
-    ("apsw", "Another Python SQLite Wrapper", isApswInstalled),
-    ("prompt_toolkit", "Command Line Interaction", isPrompt_toolkitInstalled),
-] if config.noQt else [
-    ("config", "Configurations", isConfigInstalled),
-    #("PySide2", "Qt Graphical Interface Library", isPySide2Installed) if config.qtLibrary.startswith("pyside") else ("PyQt5", "Qt Graphical Interface Library", isPyQt5Installed),
-    #("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled),
+    ("PySide6", "Qt Graphical Interface Library", isPySide6Installed),
+    ("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled),
     ("gdown", "Download UBA modules from Google drive", isGdownInstalled),
     ("babel", "Internationalization and localization library", isBabelInstalled),
     ("requests", "Download / Update files", isRequestsInstalled),
     ("apsw", "Another Python SQLite Wrapper", isApswInstalled),
 ]
-# Add Qt Library module
-if not config.noQt:
-    if config.qtLibrary == "pyside6":
-        required.append(("PySide6", "Qt Graphical Interface Library", isPySide6Installed))
-    else:
-        if config.qtLibrary == "pyside2":
-            required.append(("PySide2", "Qt Graphical Interface Library", isPySide2Installed))
-        else:
-            required.append(("PyQt5", "Qt Graphical Interface Library", isPyQt5Installed))
-        required.append(("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled))
 
 for module, feature, isInstalled in required or config.updateDependenciesOnStartup:
     if config.updateDependenciesOnStartup and not (module.startswith("-U ") or module.startswith("--upgrade ")):
             module = "--upgrade {0}".format(module)
     if not isInstalled():
-        pip3InstallModule(module)
-        if module == "PySide2" and not isInstalled():
-            module = "PyQt5"
-            isInstalled = isPyQt5Installed
-            if not isInstalled():
-                print("PySide2 is not found!  Trying to install 'PyQt5' instead ...")
-                if config.docker:
-                    WebtopUtil.installPackage("python-pyqt5 python-pyqt5-sip python-pyqt5-webengine")
-                else:
-                    pip3InstallModule(module)
-                    pip3InstallModule("PyQtWebEngine")
-                if isInstalled():
-                    config.qtLibrary == "pyqt5"
-                    os.environ["QT_API"] = config.qtLibrary
-                    print("Installed!")
-                else:
-                    #print("Required feature '{0}' is not enabled.\nInstall either 'PySide2' or 'PyQt5' first!".format(feature, module))
-                    #exit(1)
-                    runTerminalMode()
-            else:
-                config.qtLibrary == "pyqt5"
-                os.environ["QT_API"] = config.qtLibrary
-        elif module == "PyQt5" and not isInstalled():
-            module = "PySide2"
-            isInstalled = isPySide2Installed
-            if not isInstalled():
-                print("PyQt5 is not found!  Trying to install 'PySide2' instead ...")
-                if config.docker:
-                    WebtopUtil.installPackage("pyside2 pyside2-tools qt5-webengine")
-                else:
-                    pip3InstallModule(module)
-                if isInstalled():
-                    config.qtLibrary == "pyside2"
-                    os.environ["QT_API"] = config.qtLibrary
-                    print("Installed!")
-                else:
-                    #print("Required feature '{0}' is not enabled.\nInstall either 'PySide2' or 'PyQt5' first!".format(feature, module))
-                    #exit(1)
-                    runTerminalMode()
-            else:
-                config.qtLibrary == "pyside2"
-                os.environ["QT_API"] = config.qtLibrary
+        installmodule(module)
+
         if isInstalled():
             print("Installed!")
         else:
-            if module == "PySide6":
-                runTerminalMode()
-            else:
-                print("Required feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first!".format(feature, module))
-                exit(1)
+            print("Required feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first!".format(feature, module))
+            exit(1)
 
-major, minor, micro, *_ = sys.version_info
-thisOS = platform.system()
-cpu = ""
-if thisOS == "Darwin":
-    thisOS = "macOS"
-    *_, cpu = platform.mac_ver()
-    cpu = f"_{cpu}"
-venvDir = "venv_{0}{4}_{1}.{2}.{3}".format(thisOS, major, minor, micro, cpu)
 
+# Skip disabled optional modules
 disabledModules = []
-disabledModulesFilePath = os.path.join(venvDir, "disabled_modules.txt")
+disabledModulesFilePath = os.path.join(config.venvDir, "disabled_modules.txt")
 if os.path.exists(disabledModulesFilePath):
     with open(disabledModulesFilePath) as disabledModulesFile:
         disabledModules = [line.strip() for line in disabledModulesFile.readlines()]
 # Check if optional modules are installed
 optional = [
-    ("html-text", "Read html text", isHtmlTextInstalled),
-    ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
-    ("html5lib", "HTML Library", isHtml5libInstalled),
-    ("mammoth", "Open DOCX file", isMammothInstalled),
-    ("diff_match_patch", "Highlight Differences", isDiffMatchPatchInstalled),
-    ("langdetect", "Detect Language", isLangdetectInstalled),
-    ("pygithub", "Github access", isPygithubInstalled),
-    ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
-    ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
-    ("translate", "Google Translate", isTranslateInstalled),
-    ("qrcode", "QR Code", isQrCodeInstalled),
-    ("pillow", "QR Code", isPillowInstalled),
-    #("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "Pure Python PNG", isPurePythonPngInstalled),
-    ("python-vlc", "VLC Player", isVlcInstalled),
-    ("yt-dlp", "YouTube Downloader", isYoutubeDownloaderInstalled),
-    ("gTTS", "Google text-to-speech", isGTTSInstalled),
-    ("markdownify", "Convert HTML to Markdown", isMarkdownifyInstalled),
-    ("markdown", "Convert Markdown to HTML", isMarkdownInstalled),
-    #("paddleocr", "Multilingual OCR", isPaddleocrInstalled),
-    ("nltk", "Natural Language Toolkit (NLTK)", isNltkInstalled),
-    ("word-forms", "Generate English Word Forms", isWordformsInstalled),
-    ("lemmagen3", "Lemmatizer", isLemmagen3Installed),
-    ("chinese-english-lookup", "Chinese-to-English word definition", isChineseEnglishLookupInstalled),
-    ("textract", "Extract text from document", isTextractInstalled),
-    ("tabulate", "Pretty-print tabular data", isTabulateInstalled),
-    #("apsw", "Another Python SQLite Wrapper", isApswInstalled),
-    ("pyluach", "Hebrew (Jewish) calendar dates", isPyluachInstalled),
-    ("pydnsbl", "Checks if ip is listed in anti-spam dns blacklists.", isPydnsblInstalled),
-    ("gmplot", "Mark locations on Google Maps", isGmplotInstalled),
-    ("haversine", "Calculate the distance between two points", isHaversineInstalled),
-    ("art", "ASCII Art Library For Python", isArtInstalled),
-    ("colorama", "Producing colored terminal text", isColoramaInstalled),
-    ("pyperclip", "Cross-platform clipboard utilities", isPyperclipInstalled),
-    ("numpy", "Array Computing", isNumpyInstalled),
-    ("matplotlib", "Plotting Package", isMatplotlibInstalled),
-    ("pickley", "Automate installation of standalone python CLIs", isPickleyInstalled),
-    ("Pygments", "Syntax highlighting package", isPygmentsInstalled),
-    ("asyncssh", "Asynchronous SSHv2 client and server library", isAsyncsshInstalled),
-    ("bcrypt", "Modern password hashing for your software and your servers", isBcryptInstalled),
-] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
     ("html5lib", "HTML Library", isHtml5libInstalled),
@@ -836,7 +610,7 @@ optional = [
     ("asyncssh", "Asynchronous SSHv2 client and server library", isAsyncsshInstalled),
     ("bcrypt", "Modern password hashing for your software and your servers", isBcryptInstalled),
 ]
-if platform.system() == "Darwin":
+if config.thisOS == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))
 for module, feature, isInstalled in optional:
     if module in disabledModules:
@@ -845,7 +619,7 @@ for module, feature, isInstalled in optional:
     elif not isInstalled() or config.updateDependenciesOnStartup:
         if config.updateDependenciesOnStartup and not (module.startswith("-U ") or module.startswith("--upgrade ")):
             module = "--upgrade {0}".format(module)
-        pip3InstallModule(module)
+        installmodule(module)
         available = isInstalled()
         print("Installed!" if available else "Optional feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first.".format(feature, module))
     else:
@@ -855,12 +629,7 @@ for module, feature, isInstalled in optional:
 # Check if other optional features are installed
 # [Optional] Text-to-Speech feature
 # Check is OFFLINE tts is in place
-if config.docker:
-    config.isOfflineTtsInstalled = False
-    config.enableSystemTrayOnLinux = False
-    config.macVoices = {}
-else:
-    config.isOfflineTtsInstalled = isOfflineTtsInstalled()
+config.isOfflineTtsInstalled = isOfflineTtsInstalled()
 # Check if official Google Cloud text-to-speech service is in place
 config.isGoogleCloudTTSAvailable = os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json"))
 if config.isGoogleCloudTTSAvailable and config.ttsDefaultLangauge == "en":
@@ -875,7 +644,7 @@ if not config.isOfflineTtsInstalled and not config.isOnlineTtsInstalled:
     print("Text-to-speech feature is not enabled or supported on your device.")
 else:
     config.noTtsFound = False
-# Check if TTS speed adjustment is supported
+# Check TTS configs
 if config.forceOnlineTts and not config.isOnlineTtsInstalled:
     config.forceOnlineTts = False
 config.noTtsSpeedAdjustment = (config.isGTTSInstalled and not config.isGoogleCloudTTSAvailable and ((not config.isOfflineTtsInstalled) or (config.isOfflineTtsInstalled and config.forceOnlineTts)))
@@ -884,24 +653,11 @@ if config.forceUseBuiltinMediaPlayer and not config.isVlcInstalled:
     config.forceUseBuiltinMediaPlayer = False
 # Check if 3rd-party VLC player is installed on macOS
 macVlc = "/Applications/VLC.app/Contents/MacOS/VLC"
-config.macVlc = macVlc if platform.system() == "Darwin" and os.path.isfile(macVlc) else ""
-
+config.macVlc = macVlc if config.thisOS == "Darwin" and os.path.isfile(macVlc) else ""
+# Check if 3rd-party VLC player is installed on Windows
 windowsVlc = r'C:\Program Files\VideoLAN\VLC\vlc.exe'
-config.windowsVlc = windowsVlc if platform.system() == "Windows" and os.path.isfile(windowsVlc) else ""
+config.windowsVlc = windowsVlc if config.thisOS == "Windows" and os.path.isfile(windowsVlc) else ""
 
-# Check if system tray is enabled
-config.enableSystemTray = True if config.enableSystemTrayOnLinux or not platform.system() == "Linux" else False
-
-# Import modules for developer
-if config.developer:
-    # import exlbl
-    pass
-
-# Download initial content for fresh installation
-files = (
-    # Core bible functionality
-    ((config.marvelData, "images.sqlite"), "1-aFEfnSiZSIjEPUQ2VIM75I4YRGIcy5-"),
-    ((config.marvelData, "commentaries", "cCBSC.commentary"), "1IxbscuAMZg6gQIjzMlVkLtJNDQ7IzTh6"),
-)
-for file in files:
-    downloadFileIfNotFound(file)
+# Other tweaks
+config.fixLoadingContent = True if config.thisOS == "Darwin" else False
+config.enableSystemTray = True if config.enableSystemTrayOnLinux or not config.thisOS == "Linux" else False

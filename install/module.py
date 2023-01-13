@@ -1,4 +1,4 @@
-import config, subprocess, os, sys
+import config, subprocess
 
 def installmodule(module):
     #executablePath = os.path.dirname(sys.executable)
@@ -19,8 +19,8 @@ def installmodule(module):
         config.pipIsUpdated = True
     try:
         print("Installing '{0}' ...".format(module))
-        updatePip = subprocess.Popen(f"pip3 install {module}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        *_, stderr = updatePip.communicate()
+        installNewModule = subprocess.Popen(f"pip3 install {module}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        *_, stderr = installNewModule.communicate()
         if not stderr:
             print("Module '{0}' is installed!".format(module))
     except:
