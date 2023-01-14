@@ -11,13 +11,13 @@ from util.SystemUtil import SystemUtil
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer
     from PySide6.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor, QAction, QShortcut
-    from PySide6.QtWidgets import QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QColorDialog, QComboBox, QToolButton, QMenu, QCompleter
+    from PySide6.QtWidgets import QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QColorDialog, QComboBox, QToolButton, QMenu, QCompleter, QHBoxLayout
     from PySide6.QtWebEngineCore import QWebEnginePage
     from PySide6.QtGui import QClipboard
 else:
     from qtpy.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer
     from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor
-    from qtpy.QtWidgets import QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog, QComboBox, QToolButton, QMenu, QCompleter
+    from qtpy.QtWidgets import QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog, QComboBox, QToolButton, QMenu, QCompleter, QHBoxLayout
     from qtpy.QtWebEngineWidgets import QWebEnginePage
     from qtpy.QtGui import QClipboard
 from gui.WorkSpace import Workspace
@@ -79,11 +79,24 @@ from util.CrossPlatform import CrossPlatform
 from util.GoogleCloudTTSVoices import GoogleCloudTTS
 from util.HebrewTransliteration import HebrewTransliteration
 from install.module import *
+from gui.WebEngineViewPopover import WebEngineViewPopover
 # These "unused" window imports are actually used.  Do not delete these lines.
 from gui.AlephMainWindow import AlephMainWindow
 from gui.ClassicMainWindow import ClassicMainWindow
 from gui.FocusMainWindow import FocusMainWindow
 from gui.MaterialMainWindow import MaterialMainWindow
+
+
+class Tooltip(QWidget):
+
+    def __init__(self, parent):
+        super().__init__()
+        self.parent = parent
+        self.instantView = WebEngineViewPopover(self.parent, "main", "main", windowTitle=config.thisTranslation["menu2_hover"], enableCloseAction=False)
+        layout = QHBoxLayout()
+        layout.addWidget(self.instantView)
+        self.setLayout(layout)
+
 
 class MainWindow(QMainWindow):
 
@@ -4037,6 +4050,14 @@ class MainWindow(QMainWindow):
                 # The following condition applies where view is not empty only.
                 elif view:
                     views[view].setHtml(html, baseUrl)
+                
+                if view == "instant" and config.extraInstantView:
+                    cursor_position = QCursor.pos().toTuple()
+                    self.toolTip = Tooltip(self)
+                    self.toolTip.instantView.setHtml(html, baseUrl)
+                    self.toolTip.show()
+                    self.toolTip.move(*cursor_position)
+                    self.toolTip.setGeometry(cursor_position[0], cursor_position[1], 300, 200)
 
                 if addRecord:
                     tab = "0"

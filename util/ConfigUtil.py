@@ -940,6 +940,10 @@ class ConfigUtil:
         # Options to trigger instant information: True / False"""
         if not hasattr(config, "instantInformationEnabled"):
             config.instantInformationEnabled = True
+        config.help["extraInstantView"] = """
+        # Options to enable an extra view for instant information display: True / False"""
+        if not hasattr(config, "extraInstantView"):
+            config.extraInstantView = False
         config.help["fontSize"] = """
         # Default font size of content in main window and workspace"""
         if not hasattr(config, "fontSize"):
@@ -1998,6 +2002,7 @@ class ConfigUtil:
             ("enableInstantHighlight", config.enableInstantHighlight),
             ("enableSelectionMonitoring", config.enableSelectionMonitoring),
             ("instantInformationEnabled", config.instantInformationEnabled),
+            ("extraInstantView", config.extraInstantView),
             ("miniBrowserHome", config.miniBrowserHome),
             ("fontSize", config.fontSize),
             ("font", config.font),
