@@ -1,3 +1,6 @@
+Changes in 33.40:
+* Added menu plugins to system tray sub-menu.
+
 Changes in 33.39:
 * Added a menu plugin to open a bible directly on a new window.
 

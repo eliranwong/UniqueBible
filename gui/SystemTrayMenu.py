@@ -19,6 +19,19 @@ trayMenu.addAction(showMainWindow)
 showWorkspace = QAction(config.thisTranslation["workspace"])
 showWorkspace.triggered.connect(config.mainWindow.displayWorkspace)
 trayMenu.addAction(showWorkspace)
+# Menu plugins
+if config.enablePlugins:
+    subMenu = QMenu()
+    for index, plugin in enumerate(FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu"), "py")):
+        if not plugin in config.excludeMenuPlugins:
+            feature, *_ = plugin.split("_", 1)
+            exec("menuPlugin{0} = QAction(feature)".format(index))
+            #exec("menuPlugin{0}.triggered.connect(config.mainWindow.showFromTray)".format(index))
+            exec("menuPlugin{0}.triggered.connect(partial(config.mainWindow.runPlugin, plugin))".format(index))
+            exec("subMenu.addAction(menuPlugin{0})".format(index))
+    menuPlugins = QAction(config.thisTranslation["menu_plugins"])
+    menuPlugins.setMenu(subMenu)
+    trayMenu.addAction(menuPlugins)
 # Add a separator
 trayMenu.addSeparator()
 # Control Panel
@@ -141,11 +154,12 @@ trayMenu.addAction(addToWorkSpace)
 if config.enablePlugins:
     subMenu = QMenu()
     for index, plugin in enumerate(FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "context"), "py")):
-        feature, *_ = plugin.split("_", 1)
-        exec("action{0} = QAction(feature)".format(index))
-        exec("action{0}.triggered.connect(config.mainWindow.showFromTray)".format(index))
-        exec("action{0}.triggered.connect(partial(config.mainWindow.runContextPluginOnClipboardContent, plugin))".format(index))
-        exec("subMenu.addAction(action{0})".format(index))
+        if not plugin in config.excludeContextPlugins:
+            feature, *_ = plugin.split("_", 1)
+            exec("contextPlugin{0} = QAction(feature)".format(index))
+            exec("contextPlugin{0}.triggered.connect(config.mainWindow.showFromTray)".format(index))
+            exec("contextPlugin{0}.triggered.connect(partial(config.mainWindow.runContextPluginOnClipboardContent, plugin))".format(index))
+            exec("subMenu.addAction(contextPlugin{0})".format(index))
     contextPlugins = QAction(config.thisTranslation["runContextPluginOnClipboardContent"])
     contextPlugins.setMenu(subMenu)
     trayMenu.addAction(contextPlugins)
