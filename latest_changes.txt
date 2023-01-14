@@ -1,3 +1,6 @@
+Changes in 33.39:
+* Added a menu plugin to open a bible directly on a new window.
+
 Changes in 33.38:
 * Fix api-server to retrieve book chapter with question mark in name
 

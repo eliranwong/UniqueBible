@@ -1,6 +1,5 @@
 import config, os, re
 from gui.WebEngineViewPopover import WebEngineViewPopover
-from db.ToolsSqlite import Commentary
 from db.BiblesSqlite import BiblesSqlite
 from util.BibleVerseParser import BibleVerseParser
 if config.qtLibrary == "pyside6":
@@ -14,13 +13,13 @@ else:
     from qtpy.QtGui import QStandardItemModel, QStandardItem, QGuiApplication
     from qtpy.QtWidgets import QWidget, QPushButton, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
 
-class BibleCommentaries(QWidget):
+class Bibles(QWidget):
 
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
         # set title
-        self.setWindowTitle(config.thisTranslation["menu4_commentary"])
+        self.setWindowTitle(config.thisTranslation["menu5_bible"])
         #self.setMinimumSize(830, 500)
         # set variables
         self.setupVariables()
@@ -36,15 +35,10 @@ class BibleCommentaries(QWidget):
         self.books = [self.bookNo2Abb[str(b)] for b in range(1, 67)]
         self.chapters = []
         self.verses = []
-        # Commentary reference
-        if config.syncCommentaryWithMainWindow:
-            self.b = config.mainB
-            self.c = config.mainC
-            self.v = config.mainV
-        else:
-            self.b = config.commentaryB
-            self.c = config.commentaryC
-            self.v = config.commentaryV
+        # Bible reference
+        self.b = config.mainB
+        self.c = config.mainC
+        self.v = config.mainV
         # Entries
         self.entries = []
         self.refreshing = False
@@ -71,7 +65,7 @@ class BibleCommentaries(QWidget):
         initialIndex = self.b - 1
         if initialIndex < 0 or initialIndex > 65:
             initialIndex = 0
-            self.b, self.c, self.v, config.commentaryB, config.commentaryC, config.commentaryV = 1, 1, 1, 1, 1, 1
+            self.b, self.c, self.v, config.mainB, config.mainC, config.mainV = 1, 1, 1, 1, 1, 1
         self.bookView.setCurrentIndex(initialIndex)
         self.bookView.currentIndexChanged.connect(self.bookSelected)
         self.chapterView = QComboBox()
@@ -79,12 +73,16 @@ class BibleCommentaries(QWidget):
         self.verseView = QComboBox()
         self.verseView.currentIndexChanged.connect(self.verseSelected)
         ###
+        self.referenceEntry = QLineEdit()
+        self.referenceEntry.setClearButtonEnabled(True)
+        reference = config.mainWindow.bcvToVerseReference(self.b, self.c, self.v)
+        self.referenceEntry.setText(reference)
+        self.referenceEntry.returnPressed.connect(self.referenceEntered)
+        ###
         self.searchEntry = QLineEdit()
         self.searchEntry.setClearButtonEnabled(True)
-        self.searchEntry.setText(config.commentaryText)
-        #self.searchEntry.setText(config.commentaryText)
+        self.searchEntry.setText(config.mainText)
         self.searchEntry.textChanged.connect(self.filterEntry)
-        #self.searchEntry.returnPressed.connect(self.filterEntry)
         entryView = QListView()
         entryView.setEditTriggers(QAbstractItemView.NoEditTriggers)
         entryView.setWordWrap(True)
@@ -92,13 +90,14 @@ class BibleCommentaries(QWidget):
         entryView.setModel(self.entryViewModel)
         self.filterEntry()
         entryView.selectionModel().selectionChanged.connect(self.entrySelected)
-        openButton = QPushButton(config.thisTranslation["html_openStudy"])
+        openButton = QPushButton(config.thisTranslation["html_openMain"])
         openButton.clicked.connect(self.openOnMainWindow)
         layoutBcv = QHBoxLayout()
         layoutBcv.addWidget(self.bookView)
         layoutBcv.addWidget(self.chapterView)
         layoutBcv.addWidget(self.verseView)
         layout000Lt.addLayout(layoutBcv)
+        layout000Lt.addWidget(self.referenceEntry)
         layout000Lt.addWidget(self.searchEntry)
         layout000Lt.addWidget(entryView)
         layout000Lt.addWidget(openButton)
@@ -107,8 +106,8 @@ class BibleCommentaries(QWidget):
         self.searchEntryRt = QLineEdit()
         self.searchEntryRt.setClearButtonEnabled(True)
         self.searchEntryRt.textChanged.connect(self.highlightContent)
-        self.contentView = WebEngineViewPopover(config.mainWindow, "main", "main", windowTitle=config.thisTranslation["menu4_commentary"], enableCloseAction=False)
-        html = config.mainWindow.wrapHtml("<h2>{0}</h2>".format(config.thisTranslation["menu4_commentary"]))
+        self.contentView = WebEngineViewPopover(config.mainWindow, "main", "main", windowTitle=config.thisTranslation["menu5_bible"], enableCloseAction=False)
+        html = config.mainWindow.wrapHtml("<h2>{0}</h2>".format(config.thisTranslation["menu5_bible"]))
         self.contentView.setHtml(html, config.baseUrl)
         layout000Rt.addWidget(self.searchEntryRt)
         layout000Rt.addWidget(self.contentView)
@@ -119,25 +118,38 @@ class BibleCommentaries(QWidget):
         searchString = self.searchEntryRt.text().strip()
         self.contentView.findText(searchString, QWebEnginePage.FindFlags())
 
+    def referenceEntered(self):
+        reference = self.referenceEntry.text().strip()
+        if reference:
+            verseList = BibleVerseParser(config.parserStandarisation).extractAllReferences(reference)
+            if verseList:
+                verse = verseList[0]
+                self.b, self.c, self.v, *_ = verse
+                if 66 >= self.b >=1:
+                    self.bookSelected(self.b - 1, True)
+
     def bookSelected(self, index, initialSetup=False):
-        self.refreshing = True
-        if not initialSetup:
-            self.b = index + 1
-        self.populateChapterView(initialSetup=initialSetup)
-        self.populateVerseView(initialSetup=initialSetup)
-        self.displayCommentary()
-        self.refreshing = False
+        if self.refreshing == False:
+            self.refreshing = True
+            if initialSetup:
+                self.bookView.setCurrentIndex(index)
+            else:
+                self.b = index + 1
+            self.populateChapterView(initialSetup=initialSetup)
+            self.populateVerseView(initialSetup=initialSetup)
+            self.displayBible()
+            self.refreshing = False
 
     def chapterSelected(self, index):
         if not self.refreshing:
             self.c = int(self.chapters[index])
             self.populateVerseView()
-            self.displayCommentary()
+            self.displayBible()
 
     def verseSelected(self, index):
         if not self.refreshing:
             self.v = int(self.verses[index])
-            self.displayCommentary()
+            self.displayBible()
 
     def populateChapterView(self, initialSetup=False):
         self.refreshing = True
@@ -183,13 +195,13 @@ class BibleCommentaries(QWidget):
         # get search string
         searchString = self.searchEntry.text().strip()
         # get all entries
-        self.entries = config.mainWindow.commentaryFullNameList
+        self.entries = config.mainWindow.textFullNameList
         for index, entryID in enumerate(self.entries):
-            commentaryAbb = config.mainWindow.commentaryList[index]
-            if searchString.lower() in entryID.lower() or searchString.lower() == commentaryAbb.lower():
-                commentary = "[{0}] {1}".format(commentaryAbb, entryID)
-                item = QStandardItem(commentary)
-                item.setToolTip(commentary)
+            bibleAbb = config.mainWindow.textList[index]
+            if searchString.lower() in entryID.lower() or searchString.lower() == bibleAbb.lower():
+                bible = "[{0}] {1}".format(bibleAbb, entryID)
+                item = QStandardItem(bible)
+                item.setToolTip(bible)
                 self.entryViewModel.appendRow(item)
 
     def entrySelected(self, selection):
@@ -197,32 +209,34 @@ class BibleCommentaries(QWidget):
             # get articleEntry
             index = selection[0].indexes()[0].row()
             toolTip = self.entryViewModel.item(index).toolTip()
-            config.commentaryText = re.sub("^\[(.*?)\].*?$", r"\1", toolTip)
-            self.displayCommentary()
+            config.mainText = re.sub("^\[(.*?)\].*?$", r"\1", toolTip)
+            self.displayBible()
     
-    def displayCommentary(self):
+    def displayBible(self):
         # fetch entry data
-        commentary = Commentary(config.commentaryText)
         bcvTuple = (self.b, self.c, self.v)
-        content = commentary.getContent(bcvTuple)
+        reference = config.mainWindow.bcvToVerseReference(*bcvTuple)
+        self.referenceEntry.setText(reference)
+        content = config.mainWindow.textCommandParser.textBibleVerseParser(reference, config.mainText, "main")[1]
         if not content == "INVALID_COMMAND_ENTERED":
-            config.mainWindow.textCommandParser.setCommentaryVerse(config.commentaryText, bcvTuple)
+            config.mainWindow.textCommandParser.setMainVerse(config.mainText, bcvTuple)
         content = config.mainWindow.wrapHtml(content)
         self.contentView.setHtml(content, config.baseUrl)
-        config.commentaryB, config.commentaryC, config.commentaryV = self.b, self.c, self.v
-        config.mainWindow.updateCommentaryRefButton()
+        config.mainB, config.mainC, config.mainV = self.b, self.c, self.v
+        # enable auto-scrolling
+        config.studyB, config.studyC, config.studyV = self.b, self.c, self.v
 
     def openOnMainWindow(self):
-        # command examples, COMMENTARY:::CBSC:::Rom 8:33
-        if config.commentaryText:
-            command = "COMMENTARY:::{0}:::{1}".format(config.commentaryText, config.mainWindow.bcvToVerseReference(self.b, self.c, self.v))
+        # command examples, BIBLE:::KJV:::John 3:16
+        if config.mainText:
+            command = "BIBLE:::{0}:::{1}".format(config.mainText, config.mainWindow.bcvToVerseReference(self.b, self.c, self.v))
             config.mainWindow.runTextCommand(command)
 
 
-databaseFile = os.path.join(config.marvelData, "commentaries", "cCBSC.commentary")
+databaseFile = os.path.join(config.marvelData, "images.sqlite")
 if os.path.isfile(databaseFile):
-    config.mainWindow.bibleCommentary = BibleCommentaries(config.mainWindow)
-    config.mainWindow.bibleCommentary.show()
+    config.mainWindow.pluginBible = Bibles(config.mainWindow)
+    config.mainWindow.pluginBible.show()
 else:
-    databaseInfo = ((config.marvelData, "commentaries", "cCBSC.commentary"), "1IxbscuAMZg6gQIjzMlVkLtJNDQ7IzTh6")
+    databaseInfo = ((config.marvelData, "images.sqlite"), "1-aFEfnSiZSIjEPUQ2VIM75I4YRGIcy5-")
     config.mainWindow.downloadHelper(databaseInfo)
