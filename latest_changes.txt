@@ -1,3 +1,10 @@
+Changes in 33.42:
+* floatable instant view is now enabled when main window instant view is closed and disabled when main window instant view is opened.
+* fine tuned extra instant view moving behaviour
+* removed config.extraInstantView
+* added config.floatableInstantViewWidth and config.floatableInstantViewHeight
+* save extra instant view window width and height after it is resized each time
+
 Changes in 33.41:
 * added config.extraInstantView; False by default; set to True to enable additional window for instant lookup display.
 

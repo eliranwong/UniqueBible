@@ -96,6 +96,13 @@ class Tooltip(QWidget):
         layout = QHBoxLayout()
         layout.addWidget(self.instantView)
         self.setLayout(layout)
+        self.setWindowTitle(config.thisTranslation["menu2_hover"])
+        self.resize(config.floatableInstantViewWidth, config.floatableInstantViewHeight)
+
+    def resizeEvent(self, event):
+        size = event.size()
+        config.floatableInstantViewWidth = size.width()
+        config.floatableInstantViewHeight = size.height()
 
 
 class MainWindow(QMainWindow):
@@ -161,6 +168,7 @@ class MainWindow(QMainWindow):
         # mainView & studyView are assigned with class "CentralWidget"
         self.mainView = None
         self.studyView = None
+        self.toolTip = None
         #self.noteEditor = None
         self.centralWidget = CentralWidget(self)
         self.instantView = self.centralWidget.instantView
@@ -4050,14 +4058,17 @@ class MainWindow(QMainWindow):
                 # The following condition applies where view is not empty only.
                 elif view:
                     views[view].setHtml(html, baseUrl)
-                
-                if view == "instant" and config.extraInstantView:
+
+                if view == "instant" and (config.instantMode == 0 or (config.iModeSplitterSizes[-1] == 0 and not config.instantMode > 0)):
                     cursor_position = QCursor.pos().toTuple()
-                    self.toolTip = Tooltip(self)
+                    if self.toolTip is None:
+                        self.toolTip = Tooltip(self)
+                    else:
+                        self.bringToForeground(self.toolTip)
                     self.toolTip.instantView.setHtml(html, baseUrl)
                     self.toolTip.show()
-                    self.toolTip.move(*cursor_position)
-                    self.toolTip.setGeometry(cursor_position[0], cursor_position[1], 300, 200)
+                    #self.toolTip.move(*cursor_position)
+                    self.toolTip.setGeometry(cursor_position[0] + 15, cursor_position[1], config.floatableInstantViewWidth, config.floatableInstantViewHeight)
 
                 if addRecord:
                     tab = "0"
