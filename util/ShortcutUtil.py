@@ -3,7 +3,10 @@ import pprint
 import sys
 import config
 from os import path
-from PySide6.QtCore import Qt
+if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import Qt
+else:
+    from qtpy.QtCore import Qt
 
 
 # Defined sets of shortcuts:
