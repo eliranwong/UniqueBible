@@ -1,3 +1,6 @@
+Changes in 33.45:
+* Fixed the issue that floatable instant view is opened outside screen boundaries.
+
 Changes in 33.44:
 * Workaround QtWebEngine display issues in Qt6
     It is observed that Qt6 library has a display issue.

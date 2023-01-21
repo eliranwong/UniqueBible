@@ -4047,15 +4047,7 @@ class MainWindow(QMainWindow):
                     views[view].setHtml(html, baseUrl)
 
                 if view == "instant" and (config.instantMode == 0 or (config.iModeSplitterSizes[-1] == 0 and not config.instantMode > 0)):
-                    cursor_position = QCursor.pos().toTuple()
-                    if self.toolTip is None:
-                        self.toolTip = Tooltip(self)
-                    else:
-                        self.bringToForeground(self.toolTip)
-                    self.toolTip.instantView.setHtml(html, baseUrl)
-                    self.toolTip.show()
-                    #self.toolTip.move(*cursor_position)
-                    self.toolTip.setGeometry(cursor_position[0] + 15, cursor_position[1], config.floatableInstantViewWidth, config.floatableInstantViewHeight)
+                    self.showFlotableInstantView(html)
 
                 if addRecord:
                     tab = "0"
@@ -4085,6 +4077,27 @@ class MainWindow(QMainWindow):
                 self.lastMainTextCommand = textCommand
             elif source == "study":
                 self.lastStudyTextCommand = textCommand
+
+    def showFlotableInstantView(self, html):
+        cursor_position = QCursor.pos().toTuple()
+        if self.toolTip is None:
+            self.toolTip = Tooltip(self)
+        else:
+            self.bringToForeground(self.toolTip)
+        self.toolTip.instantView.setHtml(html, baseUrl)
+        self.toolTip.show()
+
+        availableGeometry = QGuiApplication.primaryScreen().availableGeometry()
+        screenWidth = availableGeometry.width()
+        screenHeight = availableGeometry.height()
+        x = cursor_position[0] + 15
+        if (x + config.floatableInstantViewWidth) > screenWidth:
+            x = screenWidth - config.floatableInstantViewWidth
+        y = cursor_position[1]
+        if (y + config.floatableInstantViewHeight) > screenHeight:
+            y = screenHeight - config.floatableInstantViewHeight
+        #self.toolTip.move(*cursor_position)
+        self.toolTip.setGeometry(x, y, config.floatableInstantViewWidth, config.floatableInstantViewHeight)
 
     def closePopover(self, view="main"):
         views = {
