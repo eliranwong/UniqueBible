@@ -659,5 +659,4 @@ windowsVlc = r'C:\Program Files\VideoLAN\VLC\vlc.exe'
 config.windowsVlc = windowsVlc if config.thisOS == "Windows" and os.path.isfile(windowsVlc) else ""
 
 # Other tweaks
-config.fixLoadingContent = True if config.thisOS == "Darwin" else False
 config.enableSystemTray = True if config.enableSystemTrayOnLinux or not config.thisOS == "Linux" else False

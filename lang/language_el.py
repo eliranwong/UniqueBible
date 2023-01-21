@@ -886,7 +886,6 @@ translation = {
     "enableStudyWindowBible": "Ενεργοποίηση Αγίας Γραφής Παράθυρο",
     "clearAll": "Ελεύθερο!",
     "englishDictionaries": "Αγγλικά λεξικά",
-    "fixLoadingContent": "Το πρόβλημα φόρτωσης της φόρτωσης εμφανίζεται σε μακροεντολές.",
     "forceUseBuiltinMediaPlayer": "Χρησιμοποιήστε ενσωματωμένο media player αντί για τρίτο παίκτη media player.",
     "usePySide2onWebtop": "Χρήση PySide2 για Webtop έκδοση",
     "usePySide6onMacOS": "Χρήση του PySide6 για μακροεντολές",

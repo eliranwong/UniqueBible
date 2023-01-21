@@ -886,7 +886,6 @@ translation = {
     "enableStudyWindowBible": "ബൈബിള് പഠനം സജ്ജമാക്കുക",
     "clearAll": "എല്ലാം വൃത്തിയാക്കുക",
     "englishDictionaries": "ഇംഗ്ലീഷ് നിഘണ്ടുക്കൾ",
-    "fixLoadingContent": "ഫിക്സ് ലോഡ് ചെയ്യുന്ന ഉള്ളടക്കം മാക്കോസില് പ്രത്യക്ഷപ്പെട്ടു.",
     "forceUseBuiltinMediaPlayer": "മൂന്നാം പാർട്ടി മീഡിയ കളിക്കാരന്റെ പകരം ബിൽറ്റ് ഉപയോഗിക്കുക.",
     "usePySide2onWebtop": "വെബ്ടോപ്പ് പതിപ്പില് PySide2 ഉപയോഗിക്കുക",
     "usePySide6onMacOS": "à '- à', à ', à', à ', à', à ', à '",

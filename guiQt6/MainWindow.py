@@ -9,7 +9,7 @@ from util.ConfigUtil import ConfigUtil
 from util.SystemUtil import SystemUtil
 
 if config.qtLibrary == "pyside6":
-    from PySide6.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer
+    from PySide6.QtCore import QUrl, Qt, QEvent, QThread, QDir
     from PySide6.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor, QAction, QShortcut
     from PySide6.QtWidgets import QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QColorDialog, QComboBox, QToolButton, QMenu, QCompleter
     from PySide6.QtWebEngineCore import QWebEnginePage
@@ -608,8 +608,7 @@ class MainWindow(QMainWindow):
                 config.mainText = self.getTabText()
                 config.mainB, config.mainC, config.mainV, *_ = self.getTabBcv()
                 config.setMainVerse = True
-                if not config.fixLoadingContent:
-                    self.updateMainRefButton(True)
+                self.updateMainRefButton(True)
         if config.theme in ("dark", "night"):
             self.mainPage.setBackgroundColor(Qt.transparent)
         #self.mainPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
@@ -3460,9 +3459,7 @@ class MainWindow(QMainWindow):
 
     def updateVersionCombo(self):
         if hasattr(self, "bibleSelection") and self.bibleSelection is not None and config.menuLayout in ("material",):
-            if not config.fixLoadingContent:
-                #self.bibleSelection.setText(config.mainText)
-                self.setBibleSelection()
+            self.setBibleSelection()
         if self.versionCombo is not None and config.menuLayout in ("focus", "Starter", "aleph", "material"):
             self.refreshing = True
             textIndex = 0
@@ -3486,7 +3483,7 @@ class MainWindow(QMainWindow):
         *_, verseReference = self.verseReference("main")
         if config.mainC > 0:
             if config.menuLayout == "material":
-                if not config.fixLoadingContent or forceUpdate:
+                if not forceUpdate:
                     self.setBibleSelection()
                     self.setMainRefMenu()
             elif config.menuLayout == "aleph":
@@ -3506,9 +3503,8 @@ class MainWindow(QMainWindow):
     def updateStudyRefButton(self):
         *_, verseReference = self.verseReference("study")
         if config.menuLayout == "material":
-            if not config.fixLoadingContent:
-                self.setStudyBibleSelection()
-                self.setStudyRefMenu()
+            self.setStudyBibleSelection()
+            self.setStudyRefMenu()
         else:
             self.studyRefButton.setText(":::".join(self.verseReference("study")))
         if config.syncStudyWindowBibleWithMainWindow and not config.openBibleInMainViewOnly and not self.syncingBibles:
@@ -3524,7 +3520,7 @@ class MainWindow(QMainWindow):
             self.commentaryRefButton.setText(config.commentaryText)
 
     def updateCommentaryCombo(self):
-        if self.commentaryCombo is not None and config.menuLayout == "material" and not config.fixLoadingContent:
+        if self.commentaryCombo is not None and config.menuLayout == "material":
             self.refreshing = True
             textIndex = 0
             if config.commentaryText in self.commentaryList:
@@ -3627,43 +3623,19 @@ class MainWindow(QMainWindow):
         return js
 
     def finishMainViewLoading(self, ok, index=None):
-        if config.fixLoadingContent:
-            QTimer.singleShot(config.fixLoadingContentDelayTime, lambda: self.fixLoadingContent(studyView=False, index=index))
+        # scroll to the main verse
+        if index is not None:
+            self.mainView.widget(index).page().runJavaScript(self.getScrollActiveVerseJS(studyView=False, index=index))
         else:
-            # scroll to the main verse
-            if index is not None:
-                self.mainView.widget(index).page().runJavaScript(self.getScrollActiveVerseJS(studyView=False, index=index))
-            else:
-                self.mainPage.runJavaScript(self.getScrollActiveVerseJS(studyView=False, index=index))
+            self.mainPage.runJavaScript(self.getScrollActiveVerseJS(studyView=False, index=index))
 
     def finishStudyViewLoading(self, ok, index=None, js=""):
-        if config.fixLoadingContent:
-            QTimer.singleShot(config.fixLoadingContentDelayTime, lambda: self.fixLoadingContent(studyView=True, index=index))
-        else:
-            # scroll to the study verse
-            if index is not None:
-                self.studyView.widget(index).page().runJavaScript(js if js else self.getScrollActiveVerseJS(studyView=True, index=index))
-            else:
-                self.studyPage.runJavaScript(js if js else self.getScrollActiveVerseJS(studyView=True, index=index))
-
-    def fixLoadingContent(self, studyView=False, index=None):
-        cmd = self.textCommandLineEdit.text()
-        self.setupMenuLayout(config.menuLayout)
-        self.textCommandLineEdit.setText(cmd)
+        # scroll to the study verse
         if index is not None:
-            self.studyView.widget(index).page().runJavaScript(self.getScrollActiveVerseJS(studyView=True, index=index)) if studyView else self.mainView.widget(index).page().runJavaScript(self.getScrollActiveVerseJS(studyView=False, index=index))
+            self.studyView.widget(index).page().runJavaScript(js if js else self.getScrollActiveVerseJS(studyView=True, index=index))
         else:
-            self.studyPage.runJavaScript(self.getScrollActiveVerseJS(studyView=True, index=index)) if studyView else self.mainPage.runJavaScript(self.getScrollActiveVerseJS(studyView=False, index=index))
-#            splitter = self.centralWidget.instantSplitter
-#            thisPos = config.iModeSplitterSizes[0]
-#            splitter.moveSplitter(1, 1)
-#            splitter.moveSplitter(thisPos, 1)
-#            splitterWidth = splitter.handleWidth()
-#            splitter.setHandleWidth(splitterWidth + 7)
-#            splitter.setHandleWidth(splitterWidth)
-#            self.setNoToolBar()
-#            self.setNoToolBar()
-#            splitter.refresh()
+            self.studyPage.runJavaScript(js if js else self.getScrollActiveVerseJS(studyView=True, index=index))
+
 
     # finish pdf printing
     def pdfPrintingFinishedAction(self, filePath, success):

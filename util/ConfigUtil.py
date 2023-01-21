@@ -112,7 +112,7 @@ class ConfigUtil:
         config.help["usePySide6onMacOS"] = """
         # Use PySide6 as Qt Library, even config.qtLibrary is set to a value other than 'pyside6'."""
         if not hasattr(config, "usePySide6onMacOS"):
-            config.usePySide6onMacOS = True
+            config.usePySide6onMacOS = False
 
         # Start of terminal mode setting
         config.help["terminalEnableTermuxAPI"] = """
@@ -800,19 +800,6 @@ class ConfigUtil:
         # Options to update main reference buttons when Bible Window tabs are changed: True / False"""
         if not hasattr(config, "updateMainReferenceOnChaningTabs"):
             config.updateMainReferenceOnChaningTabs = False
-        config.help["fixLoadingContent"] = """
-        # Fix loading content issues encountered with PySide6."""
-        if not hasattr(config, "fixLoadingContent"):
-            config.fixLoadingContent = False
-        config.help["fixLoadingContentDelayTime"] = """
-        # Delay time to run fixLoadingContent codes.
-        # It is to be used together with config.fixLoadingContent set to True.
-        # This option is intended for developer to do testing only.
-        # General users do not need to adjust its value.
-        # The unit of the value is millisecond.
-        # Fix loading content codes are run the time specified in this option after page is finished loading."""
-        if not hasattr(config, "fixLoadingContentDelayTime"):
-            config.fixLoadingContentDelayTime = 1
         config.help["preferHtmlMenu"] = """
         # Options to open classic html menu when a bible chapter heading is clicked
         # It is set to False by default that clicking a chapter heading opens Master Control panel."""
@@ -1973,8 +1960,6 @@ class ConfigUtil:
             ("openBibleWindowContentOnNextTab", config.openBibleWindowContentOnNextTab),
             ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab),
             ("updateMainReferenceOnChaningTabs", config.updateMainReferenceOnChaningTabs),
-            ("fixLoadingContent", config.fixLoadingContent),
-            ("fixLoadingContentDelayTime", config.fixLoadingContentDelayTime),
             ("preferHtmlMenu", config.preferHtmlMenu),
             ("parserStandarisation", config.parserStandarisation),
             ("standardAbbreviation", config.standardAbbreviation),

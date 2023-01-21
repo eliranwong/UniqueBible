@@ -650,10 +650,8 @@ def setInstallConfig(module, isInstalled):
 if config.docker and config.usePySide2onWebtop:
     config.qtLibrary = "pyside2"
     os.environ["QT_API"] = config.qtLibrary
-    config.fixLoadingContent = False
 elif platform.system() == "Darwin" and config.usePySide6onMacOS:
     config.qtLibrary = "pyside6"
-    config.fixLoadingContent = True
 # Check if required modules are installed
 required = [
     ("config", "Configurations", isConfigInstalled),

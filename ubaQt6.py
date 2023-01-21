@@ -15,7 +15,7 @@ config.cli = False
 config.enableCli = False
 config.docker = False
 #config.fixLoadingContent = True
-config.fixLoadingContentDelayTime = 1
+#config.fixLoadingContentDelayTime = 1
 config.isChromeOS = False
 
 import sys, subprocess, platform, shutil

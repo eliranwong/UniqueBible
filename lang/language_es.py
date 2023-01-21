@@ -886,7 +886,6 @@ translation = {
     "enableStudyWindowBible": "Habilitar Biblia de ventana de estudio",
     "clearAll": "Borrar todo",
     "englishDictionaries": "Diccionarios Inglés",
-    "fixLoadingContent": "El problema de la carga de arreglos apareció en macOS.",
     "forceUseBuiltinMediaPlayer": "Utilice el reproductor multimedia incorporado en lugar del reproductor de medios de terceros.",
     "usePySide2onWebtop": "Utilice PySide2 en la versión de Webtop",
     "usePySide6onMacOS": "Utilice PySide6 en macOS",

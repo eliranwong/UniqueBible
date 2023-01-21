@@ -886,7 +886,6 @@ translation = {
     "enableStudyWindowBible": "अध्ययन विंडो बाइबल सक्षम करें",
     "clearAll": "सभी साफ़ करें",
     "englishDictionaries": "अंग्रेजी शब्दकोशों",
-    "fixLoadingContent": "MsOS पर लोड करने का सामग्री जारी है.",
     "forceUseBuiltinMediaPlayer": "तीसरे पक्ष के मीडिया प्लेयर के बजाय अंतर्निहित मीडिया प्लेयर का उपयोग करें.",
     "usePySide2onWebtop": "वेबटॉप संस्करण पर Pysie2 का उपयोग करें",
     "usePySide6onMacOS": "मैक्रोस पर PySO6 का प्रयोग करें",

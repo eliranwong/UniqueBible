@@ -1,3 +1,10 @@
+Changes in 33.44:
+* Workaround QtWebEngine display issues in Qt6
+    It is observed that Qt6 library has a display issue.
+    QtWebEngineView widgets inside tabs do not display content properly after html is loaded.
+    Workaround is implemented.
+* Removed config.fixLoadingContent and config.fixLoadingContentDelayTime
+
 Changes in 33.43:
 * fixed shortcut utilities
 
