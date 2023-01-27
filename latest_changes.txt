@@ -1,3 +1,6 @@
+Changes in 33.46:
+* Simplified config utilities
+
 Changes in 33.45:
 * Fixed the issue that floatable instant view is opened outside screen boundaries.
 
