@@ -9,6 +9,11 @@ import logging.handlers as handlers
 from util.FileUtil import FileUtil
 from util.NetworkUtil import NetworkUtil
 from util.WebtopUtil import WebtopUtil
+from datetime import datetime
+
+
+# check startup time
+bootStartTime = datetime.now()
 
 # Change working directory to UniqueBible directory
 thisFile = os.path.realpath(__file__)
@@ -542,12 +547,12 @@ if config.qtLibrary == "pyside6":
     from PySide6.QtWidgets import QApplication, QStyleFactory
     from PySide6.QtWidgets import QSystemTrayIcon
     from PySide6.QtGui import QIcon
-    from PySide6.QtCore import QEvent
+    from PySide6.QtCore import QEvent, QTimer
 else:
     from qtpy.QtWidgets import QApplication, QStyleFactory
     from qtpy.QtWidgets import QSystemTrayIcon
     from qtpy.QtGui import QIcon
-    from qtpy.QtCore import QEvent
+    from qtpy.QtCore import QEvent, QTimer
 from util.themes import Themes
 # [Optional] qt-material
 # qt-material have to be imported after PySide2
@@ -582,8 +587,7 @@ def setupMainWindow(availableGeometry):
     else:
         config.mainWindow.show()
 
-    # Check if migration is needed for version >= 0.56
-    config.mainWindow.checkMigration()
+
 
 def executeInitialTextCommand(textCommand, addRecord=False, source="main"):
     try:
@@ -797,12 +801,8 @@ else:
 config.studyTextTemp = config.studyText
 config.mainWindow = MainWindow()
 
-# Check screen size
-try:
-    availableGeometry = config.mainWindow.screen().availableGeometry()
-    setupMainWindow(availableGeometry)
-except:
-    pass
+# Check if migration is needed for version >= 0.56
+config.mainWindow.checkMigration()
 
 # A container of functions to be run after UBA loaded history records on startup
 # This offers a way for startup plugins to run codes after history records being loaded.
@@ -906,6 +906,20 @@ def clipboardChanged():
 
 # Monitor Clipboard Changed
 QApplication.clipboard().dataChanged.connect(clipboardChanged)
+
+# Check screen size
+try:
+    availableGeometry = config.mainWindow.screen().availableGeometry()
+    setupMainWindow(availableGeometry)
+except:
+    pass
+
+# show start up time in status bar
+bootEndTime = datetime.now()
+timeDifference = (bootEndTime - bootStartTime).total_seconds()
+messageTime = 1500
+config.mainWindow.statusBar().showMessage(f"Unique Bible App launches in {timeDifference}s.", timeout=messageTime)
+QTimer.singleShot(messageTime, config.mainWindow.statusBar().hide)
 
 # Launch UBA
 config.restartUBA = False

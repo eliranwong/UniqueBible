@@ -1,3 +1,6 @@
+Changes in 33.47:
+* show start up time on status bar
+
 Changes in 33.46:
 * Simplified config utilities
 
