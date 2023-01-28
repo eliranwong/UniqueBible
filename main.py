@@ -9,11 +9,11 @@ import logging.handlers as handlers
 from util.FileUtil import FileUtil
 from util.NetworkUtil import NetworkUtil
 from util.WebtopUtil import WebtopUtil
-from datetime import datetime
+#from datetime import datetime
 
 
 # check startup time
-bootStartTime = datetime.now()
+#bootStartTime = datetime.now()
 
 # Change working directory to UniqueBible directory
 thisFile = os.path.realpath(__file__)
@@ -547,12 +547,14 @@ if config.qtLibrary == "pyside6":
     from PySide6.QtWidgets import QApplication, QStyleFactory
     from PySide6.QtWidgets import QSystemTrayIcon
     from PySide6.QtGui import QIcon
-    from PySide6.QtCore import QEvent, QTimer
+    from PySide6.QtCore import QEvent
+    #from PySide6.QtCore import QTimer
 else:
     from qtpy.QtWidgets import QApplication, QStyleFactory
     from qtpy.QtWidgets import QSystemTrayIcon
     from qtpy.QtGui import QIcon
-    from qtpy.QtCore import QEvent, QTimer
+    from qtpy.QtCore import QEvent
+    #from qtpy.QtCore import QTimer
 from util.themes import Themes
 # [Optional] qt-material
 # qt-material have to be imported after PySide2
@@ -915,11 +917,11 @@ except:
     pass
 
 # show start up time in status bar
-bootEndTime = datetime.now()
-timeDifference = (bootEndTime - bootStartTime).total_seconds()
-messageTime = 1500
-config.mainWindow.statusBar().showMessage(f"Unique Bible App launches in {timeDifference}s.", timeout=messageTime)
-QTimer.singleShot(messageTime, config.mainWindow.statusBar().hide)
+#bootEndTime = datetime.now()
+#timeDifference = (bootEndTime - bootStartTime).total_seconds()
+#messageTime = 1500
+#config.mainWindow.statusBar().showMessage(f"Unique Bible App launches in {timeDifference}s.", timeout=messageTime)
+#QTimer.singleShot(messageTime, config.mainWindow.statusBar().hide)
 
 # Launch UBA
 config.restartUBA = False
