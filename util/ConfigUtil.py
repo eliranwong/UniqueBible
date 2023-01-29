@@ -658,7 +658,7 @@ class ConfigUtil:
         False)
         setConfig("displayLoadingTime", """
         # Time, in millisecond, to display Main/Study Window loading time""",
-        500)
+        1 if config.qtLibrary == "pyside6" else 500)
         setConfig("openBibleWindowContentOnNextTab", """
         # Options to open Bible Window's content in the tab next to the current one: True / False""",
         False)

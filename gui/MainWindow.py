@@ -3656,20 +3656,25 @@ class MainWindow(QMainWindow):
         # scroll to the main verse
         if index is not None:
             self.mainView.widget(index).page().runJavaScript(self.getScrollActiveVerseJS(studyView=False, index=index))
-            self.fixContentDisplay(self.mainView)
+            #self.fixContentDisplay(self.mainView)
+            self.displayLoadingTime()
         else:
             self.mainPage.runJavaScript(self.getScrollActiveVerseJS(studyView=False, index=index))
-            self.fixContentDisplay(self.mainView)
+            #self.fixContentDisplay(self.mainView)
+            self.displayLoadingTime()
 
     def finishStudyViewLoading(self, ok, index=None, js=""):
         # scroll to the study verse
         if index is not None:
             self.studyView.widget(index).page().runJavaScript(js if js else self.getScrollActiveVerseJS(studyView=True, index=index))
-            self.fixContentDisplay(self.studyView)
+            #self.fixContentDisplay(self.studyView)
+            self.displayLoadingTime()
         else:
             self.studyPage.runJavaScript(js if js else self.getScrollActiveVerseJS(studyView=True, index=index))
-            self.fixContentDisplay(self.studyView)
+            #self.fixContentDisplay(self.studyView)
+            self.displayLoadingTime()
 
+    """
     def fixContentDisplay(self, view):
         if config.qtLibrary == "pyside6":
             # It is observed that Qt6 library has a display issue.
@@ -3680,8 +3685,8 @@ class MainWindow(QMainWindow):
                 view.setCurrentIndex(index - 1)
             else:
                 view.setCurrentIndex(index + 1)
-            view.setCurrentIndex(index)
-
+            view.setCurrentIndex(index)"""
+    def displayLoadingTime(self):
         timeDifference = (datetime.now() - self.laodingStartTime).total_seconds()
         self.statusBar().showMessage(f"Loaded in {timeDifference}s.", timeout=config.displayLoadingTime)
         self.statusBar().show()
