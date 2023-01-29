@@ -3683,10 +3683,9 @@ class MainWindow(QMainWindow):
             view.setCurrentIndex(index)
 
         timeDifference = (datetime.now() - self.laodingStartTime).total_seconds()
-        messageTime = 500
-        self.statusBar().showMessage(f"Loaded in {timeDifference}s.", timeout=messageTime)
+        self.statusBar().showMessage(f"Loaded in {timeDifference}s.", timeout=config.displayLoadingTime)
         self.statusBar().show()
-        QTimer.singleShot(messageTime, self.statusBar().hide)
+        QTimer.singleShot(config.displayLoadingTime, self.statusBar().hide)
 
     # finish pdf printing
     def pdfPrintingFinishedAction(self, filePath, success):

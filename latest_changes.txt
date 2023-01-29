@@ -1,3 +1,6 @@
+Changes in 33.49:
+* Added config.displayLoadingTime
+
 Changes in 33.48:
 * Show Main/Study Window loading time on status bar
 

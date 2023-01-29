@@ -656,6 +656,9 @@ class ConfigUtil:
         setConfig("populateTabsOnStartup", """
         # Options to populate tabs with latest history records on start up: True / False""",
         False)
+        setConfig("displayLoadingTime", """
+        # Time, in millisecond, to display Main/Study Window loading time""",
+        500)
         setConfig("openBibleWindowContentOnNextTab", """
         # Options to open Bible Window's content in the tab next to the current one: True / False""",
         False)
