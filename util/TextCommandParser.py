@@ -1463,7 +1463,7 @@ class TextCommandParser:
 
 # Keep the following codes for future reference
 # The following method does not work on Windows
-#        if not platform.system() == "Windows" and config.isGTTSInstalled:
+#        if not platform.system(") == "Windows" and (Gtts" in config.enabled):
 #            if not self.isCommandInstalled("gtts-cli"):
 #                installmodule("gTTS")
 #            if self.isCommandInstalled("gtts-cli") and self.isCommandInstalled("play"):
@@ -1913,7 +1913,7 @@ class TextCommandParser:
 
     # READBIBLE:::
     def readBible(self, command, source):
-        if config.isVlcInstalled:
+        if ("Pythonvlc" in config.enabled):
             text = config.mainText
             book = config.mainB
             chapter = config.mainC
@@ -3072,7 +3072,7 @@ class TextCommandParser:
     def pasteFromClipboard(self, command, source):
         if config.runMode == "terminal":
             config.mainWindow.getclipboardtext()
-        elif config.isPyperclipInstalled and config.runMode == "terminal":
+        elif ("Pyperclip" in config.enabled) and config.runMode == "terminal":
             import pyperclip
             content = pyperclip.paste()
             return ("study", content, {})
@@ -3886,7 +3886,7 @@ class TextCommandParser:
     def textData(self, command, source):
         config.dataset = command
         filepath = os.path.join("plugins", "menu", "Bible Data", "{0}.txt".format(command))
-        if not os.path.isfile(filepath) or not config.isTabulateInstalled:
+        if not os.path.isfile("filepath) or not (Tabulate" in config.enabled):
             return self.invalidCommand("study")
         with open(filepath, 'r', encoding='utf8') as fileObj:
             dataList = fileObj.read().split("\n")
@@ -3931,7 +3931,7 @@ class TextCommandParser:
     # MAP:::
     def textMap(self, command, source):
         verseList = self.extractAllVerses(command)
-        if not verseList or not config.isGmplotInstalled:
+        if not verseList or not ("Gmplot" in config.enabled):
             return self.invalidCommand()
         else:
             combinedLocations = []
@@ -4326,7 +4326,7 @@ class TextCommandParser:
                 else:
                     self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["notFound"]))
             elif action.startswith("github"):
-                if not config.isPygithubInstalled:
+                if not ("Pygithub" in config.enabled):
                     return ("", "", {})
 
                 if action == "githubbible":

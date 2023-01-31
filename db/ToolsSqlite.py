@@ -1108,7 +1108,7 @@ class Book:
         query = "SELECT Content FROM Reference WHERE Chapter=?"
         self.cursor.execute(query, (entry,))
         data = self.cursor.fetchone()[0]
-        if config.isHtmlTextInstalled:
+        if ("Htmltext" in config.enabled):
             import html_text
             data = data.replace("\n", "[nl]")
             data = data.replace("<br><br>", "<br>")

@@ -100,7 +100,7 @@ class TextEditorUtility:
         try:
             if config.terminalEnableTermuxAPI:
                 clipboardText = self.getCliOutput("termux-clipboard-get")
-            elif config.isPyperclipInstalled:
+            elif ("Pyperclip" in config.enabled):
                 import pyperclip
                 clipboardText = pyperclip.paste()
             if clipboardText:
@@ -133,7 +133,7 @@ class TextEditorUtility:
             languages = {}
             for language, languageCode in GoogleCloudTTS.getLanguages().items():
                 languages[languageCode] = ("", language)
-        elif (not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled:
+        elif (not ("OfflineTts" in config.enabled) or config.forceOnlineTts) and ("Gtts" in config.enabled):
             languages = {}
             for language, languageCode in Languages.gTTSLanguageCodes.items():
                 languages[languageCode] = ("", language)
@@ -319,7 +319,7 @@ class TextEditorUtility:
             #print('Audio content written to file "{0}"'.format(outputFile))
 
     def googleTranslate(self, runOnSelectedText=True, defaultText=""):
-        if config.isTranslateInstalled:
+        if ("Translate" in config.enabled):
             if runOnSelectedText:
                 clipboardText = defaultText if defaultText else self.getclipboardtext()
             try:
@@ -380,7 +380,7 @@ class TextEditorUtility:
     def getDefaultTtsKeyword(self):
         if config.isGoogleCloudTTSAvailable:
             return "GTTS"
-        elif (not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled:
+        elif (not ("OfflineTts" in config.enabled) or config.forceOnlineTts) and ("Gtts" in config.enabled):
             return "GTTS"
         elif config.macVoices:
             return "SPEAK"

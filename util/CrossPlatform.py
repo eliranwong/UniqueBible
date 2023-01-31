@@ -227,7 +227,7 @@ class CrossPlatform:
             languages = {}
             for language, languageCode in GoogleCloudTTS.getLanguages().items():
                 languages[languageCode] = ("", language)
-        elif (not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled:
+        elif (not ("OfflineTts" in config.enabled) or config.forceOnlineTts) and ("Gtts" in config.enabled):
             languages = {}
             for language, languageCode in Languages.gTTSLanguageCodes.items():
                 languages[languageCode] = ("", language)

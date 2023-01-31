@@ -78,7 +78,7 @@ class InterlinearDataWindow(QWidget):
         button = QPushButton(self.translation[3])
         button.clicked.connect(self.exportSpreadsheet)
         buttonLayout.addWidget(button)
-        if config.isTabulateInstalled:
+        if ("Tabulate" in config.enabled):
             button = QPushButton(self.translation[5])
             button.clicked.connect(self.addToWorkspace)
             buttonLayout.addWidget(button)

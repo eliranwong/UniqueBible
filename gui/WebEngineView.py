@@ -86,7 +86,7 @@ class WebEngineView(QWebEngineView):
                     definition = self.getDefinition(lemma)
                     if definition:
                         definition = "<b>{0}</b> - {1}".format(lemma, definition)
-                    elif config.isChineseEnglishLookupInstalled:
+                    elif ("Chineseenglishlookup" in config.enabled):
                         definition = "<b>{0}</b> - {1}".format(lemma, config.cedict.lookup(lemma))
                 else:
                     definition = "<b>{0}</b> - {1}".format(selectedText, definition)
@@ -137,7 +137,7 @@ class WebEngineView(QWebEngineView):
         return book[self.name]
 
     def switchToCli(self):
-        if config.isHtmlTextInstalled:
+        if ("Htmltext" in config.enabled):
             config.pluginContext = self.name
             QGuiApplication.instance().setApplicationName("UniqueBible.app CLI")
             config.pluginContext = ""
@@ -423,7 +423,7 @@ class WebEngineView(QWebEngineView):
         action.triggered.connect(self.saveHtml)
         subMenu.addAction(action)
 
-        if config.isMarkdownInstalled:
+        if ("Markdown" in config.enabled):
             action = QAction(self)
             action.setText(config.thisTranslation["markdownFile"])
             action.triggered.connect(self.saveMarkdown)
@@ -434,7 +434,7 @@ class WebEngineView(QWebEngineView):
         action.triggered.connect(self.savePdf)
         subMenu.addAction(action)
 
-        if config.isHtmldocxInstalled:
+        if ("Htmldocx" in config.enabled):
             action = QAction(self)
             action.setText(config.thisTranslation["wordFile"])
             action.triggered.connect(self.saveDocx)
@@ -789,7 +789,7 @@ class WebEngineView(QWebEngineView):
         # End of Search section
 
         # Google TEXT-TO-SPEECH feature
-        if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled):
+        if config.isGoogleCloudTTSAvailable or ((not ("OfflineTts" in config.enabled) or config.forceOnlineTts) and ("Gtts" in config.enabled)):
 
             languageCodes = GoogleCloudTTS.getLanguages() if config.isGoogleCloudTTSAvailable else Languages.gTTSLanguageCodes
 
@@ -828,7 +828,7 @@ class WebEngineView(QWebEngineView):
             self.addAction(separator)
 
         # OFFLINE TEXT-TO-SPEECH feature
-        elif config.isOfflineTtsInstalled:
+        elif ("OfflineTts" in config.enabled):
 
             languages = self.parent.parent.getTtsLanguages()
 
@@ -869,7 +869,7 @@ class WebEngineView(QWebEngineView):
                 tts.setMenu(ttsMenu)
                 self.addAction(tts)
 
-                if config.isAudioConverterInstalled and WebtopUtil.isPackageInstalled("ffmpeg"):
+                if ("Audioconverter" in config.enabled) and WebtopUtil.isPackageInstalled("ffmpeg"):
                     ttsMenu = QMenu()
                     languageCodes = list(languages.keys())
                     items = [languages[code][1] for code in languageCodes]
@@ -1177,11 +1177,11 @@ class WebEngineView(QWebEngineView):
 
     # TEXT-TO-SPEECH feature
     def textToSpeech(self, activeSelection=False):
-        if config.isOfflineTtsInstalled:
+        if ("OfflineTts" in config.enabled):
             selectedText = self.selectedTextProcessed(activeSelection)
             if not selectedText:
                 self.messageNoSelection()
-            elif config.isLangdetectInstalled and config.useLangDetectOnTts:
+            elif ("Langdetect" in config.enabled) and config.useLangDetectOnTts:
                 from langdetect import detect, DetectorFactory
                 DetectorFactory.seed = 0
                 # https://pypi.org/project/langdetect/
@@ -1252,7 +1252,7 @@ class WebEngineView(QWebEngineView):
                     self.displayMessage(config.thisTranslation["message_fail"])
 
     def textToSpeechLanguage(self, language, activeSelection=False, selectedText=""):
-        if config.isOfflineTtsInstalled:
+        if ("OfflineTts" in config.enabled):
             if not selectedText:
                 selectedText = self.selectedTextProcessed(activeSelection)
             if not selectedText:
@@ -1287,7 +1287,7 @@ class WebEngineView(QWebEngineView):
         selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
-        elif config.isOnlineTtsInstalled:
+        elif ("OnlineTts" in config.enabled):
             # fine-tune
             selectedText, language = self.parent.parent.fineTuneGtts(selectedText, language)
 

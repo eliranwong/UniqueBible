@@ -105,8 +105,8 @@ def countVersesByChapter(verses):
     return counts
 
 # run plugin
-if config.isNumpyInstalled:
-    if config.isMatplotlibInstalled:
+if ("Numpy" in config.enabled):
+    if ("Matplotlib" in config.enabled):
         copiedText = config.mainWindow.getclipboardtext()
         generateCharts(copiedText)
     else:

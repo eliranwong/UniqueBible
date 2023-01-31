@@ -70,7 +70,7 @@ class TextUtil:
         # Reference: https://github.com/tartley/colorama/blob/master/colorama/ansi.py
         # standard colours: "RESET", "BLACK", "WHITE", "RED", "GREEN", "YELLOW", "BLUE", "MAGENTA", "CYAN"
         # extended colours: "LIGHTBLACK_EX", "LIGHTRED_EX", "LIGHTGREEN_EX", "LIGHTYELLOW_EX", "LIGHTBLUE_EX", "LIGHTMAGENTA_EX", "LIGHTCYAN_EX", "LIGHTWHITE_EX"
-        if config.isColoramaInstalled:
+        if ("Colorama" in config.enabled):
             from colorama import Fore, Back, Style
 
             searchReplace = (

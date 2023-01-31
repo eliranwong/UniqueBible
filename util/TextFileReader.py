@@ -7,11 +7,11 @@ from __future__ import (
 )
 
 import config
-if config.isMammothInstalled:
+if ("Mammoth" in config.enabled):
     import mammoth
-#if config.isPyPDF2Installed:
+#if ("PyPDF2" in config.enabled):
 #    import PyPDF2
-#if config.isPythonDocxInstalled:
+#if ("Pythondocx" in config.enabled):
 #    from docx import Document
 #    from docx.document import Document as _Document
 #    from docx.oxml.text.paragraph import CT_P

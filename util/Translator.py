@@ -15,7 +15,7 @@ class Translator:
 
     def authenticate(self):
         try:
-            if config.isIbmWatsonInstalled and config.myIBMWatsonApikey:
+            if ("Ibmwatson" in config.enabled) and config.myIBMWatsonApikey:
                 from ibm_watson import LanguageTranslatorV3
                 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
@@ -73,7 +73,7 @@ class Translator:
 
 
 if __name__ == "__main__":
-    config.isIbmWatsonInstalled = True
+    config.updateModules("Ibmwatson", True)
     translator = Translator()
     #translator.identify("这是中文")
     #translator.getLanguageLists()

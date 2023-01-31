@@ -1,3 +1,6 @@
+Changes in 33.50:
+* Reduced launch time.
+
 Changes in 33.49:
 * Added config.displayLoadingTime
 
@@ -1778,7 +1781,7 @@ Changes in 29.78:
 * The previous Open Marvel Interlinear Bible on Study Window button now opens the bible version, defined in config.favouriteOriginalBible.
 * Removed Morphology tab for now, as it does not reflect morphology items UBA use.  We may fix it.
     Meanwhile, sers can search morphology with commands or by double-clicking a word in marvel bibles.
-* Display media player tab on Master Control menu only if config.isVlcInstalled is True.
+* Display media player tab on Master Control menu only if ("Pythonvlc" in config.enabled) is True.
 * Fixed context menu shortcuts to support customised shortcuts.
 
 Changes in 29.77:

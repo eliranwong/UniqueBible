@@ -141,7 +141,7 @@ class ConfigFlagsWindow(QDialog):
             ("limitWorkspaceFilenameLength", config.limitWorkspaceFilenameLength, self.limitWorkspaceFilenameLengthChanged, True, config.thisTranslation["limitWorkspaceFilenameLength"]),
             ("enableHttpRemoteErrorRedirection", config.enableHttpRemoteErrorRedirection, self.enableHttpRemoteErrorRedirection, False, config.thisTranslation["enableHttpRemoteErrorRedirection"]),
         ]
-        if config.isOfflineTtsInstalled:
+        if ("OfflineTts" in config.enabled):
             options += [
                 ("useLangDetectOnTts", config.useLangDetectOnTts, self.useLangDetectOnTtsChanged, False, config.thisTranslation["useLangDetectOnTts"]),
                 ("ttsEnglishAlwaysUS", config.ttsEnglishAlwaysUS, self.ttsEnglishAlwaysUSChanged, False, config.thisTranslation["ttsEnglishAlwaysUS"]),
@@ -149,7 +149,7 @@ class ConfigFlagsWindow(QDialog):
                 ("ttsChineseAlwaysMandarin", config.ttsChineseAlwaysMandarin, self.ttsChineseAlwaysMandarinChanged, False, config.thisTranslation["ttsChineseAlwaysMandarin"]),
                 ("ttsChineseAlwaysCantonese", config.ttsChineseAlwaysCantonese, self.ttsChineseAlwaysCantoneseChanged, False, config.thisTranslation["ttsChineseAlwaysCantonese"]),
             ]
-        if config.isOnlineTtsInstalled:
+        if ("OnlineTts" in config.enabled):
             options += [
                 ("forceOnlineTts", config.forceOnlineTts, self.forceOnlineTtsChanged, False, config.thisTranslation["forceOnlineTts"]),
             ]
@@ -513,7 +513,7 @@ class ConfigFlagsWindow(QDialog):
             self.parent.enableQtMaterial(False)
 
     def enableGistChanged(self):
-        if not config.enableGist and config.isPygithubInstalled:
+        if not config.enableGist and ("Pygithub" in config.enabled):
             config.enableGist = True
             self.parent.handleRestart()
         elif config.enableGist:

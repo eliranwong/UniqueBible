@@ -485,7 +485,7 @@ class MiniControl(QWidget):
         text = self.searchLineEdit.text()
         if ":::" in text:
             text = text.split(":::")[-1]
-        if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled):
+        if config.isGoogleCloudTTSAvailable or ((not ("OfflineTts" in config.enabled) or config.forceOnlineTts) and ("Gtts" in config.enabled)):
             command = "GTTS:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
         else:
             command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
@@ -619,7 +619,7 @@ if __name__ == "__main__":
    config.parserStandarisation = 'NO'
    config.standardAbbreviation = 'ENG'
    config.marvelData = "/Users/otseng/dev/UniqueBible/marvelData/"
-   config.isOfflineTtsInstalled = False
+   config.updateModules("OfflineTts", False)
 
    ConfigUtil.setup()
    config.noQt = False

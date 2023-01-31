@@ -1398,7 +1398,7 @@ Escape+W open wordnet"""
     def getDefaultTtsKeyword(self):
         if config.isGoogleCloudTTSAvailable:
             return "GTTS"
-        elif (not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled:
+        elif (not ("OfflineTts" in config.enabled) or config.forceOnlineTts) and ("Gtts" in config.enabled):
             return "GTTS"
         elif config.macVoices:
             return "SPEAK"
@@ -1486,7 +1486,7 @@ Escape+W open wordnet"""
             return self.printInvalidOptionEntered()
 
     def watsonTranslate(self, runOnSelectedText=True, defaultText=""):
-        if config.isIbmWatsonInstalled:
+        if ("Ibmwatson" in config.enabled):
             if runOnSelectedText:
                 clipboardText = defaultText if defaultText else self.getclipboardtext()
             try:
@@ -1553,7 +1553,7 @@ Escape+W open wordnet"""
             return ""
 
     def googleTranslate(self, runOnSelectedText=True, defaultText=""):
-        if config.isTranslateInstalled:
+        if ("Translate" in config.enabled):
             if runOnSelectedText:
                 clipboardText = defaultText if defaultText else self.getclipboardtext()
             try:
@@ -1618,7 +1618,7 @@ Escape+W open wordnet"""
         try:
             if config.terminalEnableTermuxAPI:
                 clipboardText = self.getCliOutput("termux-clipboard-get")
-            elif config.isPyperclipInstalled:
+            elif ("Pyperclip" in config.enabled):
                 import pyperclip
                 clipboardText = pyperclip.paste()
             if clipboardText:
@@ -1761,7 +1761,7 @@ Escape+W open wordnet"""
         userInput = self.terminal_find_session.prompt(self.inputIndicator, key_bindings=self.prompt_shared_key_bindings, bottom_toolbar=self.getToolBar(), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle).strip()
         if not userInput or userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
-        if config.isColoramaInstalled:
+        if ("Colorama" in config.enabled):
             from colorama import init
             init()
             from colorama import Fore, Back, Style
@@ -1791,7 +1791,7 @@ Escape+W open wordnet"""
         return ""
 
     def buildPortablePython(self):
-        if config.isPickleyInstalled:
+        if ("Pickley" in config.enabled):
             if not WebtopUtil.isPackageInstalled("portable-python"):
                 os.system("pickley install portable-python")
             try:
@@ -2092,7 +2092,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         return ""
 
     def downloadyoutube(self):
-        if config.isYoutubeDownloaderInstalled and self.textCommandParser.isFfmpegInstalled():
+        if ("Ytdlp" in config.enabled) and self.textCommandParser.isFfmpegInstalled():
             try:
                 self.print(self.divider)
                 self.print("Enter a youtube link:")
@@ -2126,7 +2126,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         return ""
 
     def opentext(self, editMode=False):
-        if config.isTextractInstalled:
+        if ("Textract" in config.enabled):
             self.print(self.divider)
             userInput = self.getPath.getFilePath(check_isfile=True, empty_to_cancel=True)
             if userInput:
@@ -3429,7 +3429,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                             definition = self.getDefinition(lemma)
                             if definition:
                                 definition = "{0}{1}".format(lemma, definition)
-                            elif config.isChineseEnglishLookupInstalled:
+                            elif ("Chineseenglishlookup" in config.enabled):
                                 definition = "{0}{1}".format(lemma, config.cedict.lookup(lemma))
                     self.print("Definition:")
                     self.print(definition)
@@ -3640,7 +3640,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             note = noteDB.getChapterNote(b, c)[0]
         elif noteType == "verse":
             note = noteDB.getVerseNote(b, c, v)[0]
-        if config.isMarkdownifyInstalled:
+        if ("Markdownify" in config.enabled):
             # convert html into markdown
             from markdownify import markdownify
             note = markdownify(note, heading_style=config.markdownifyHeadingStyle)

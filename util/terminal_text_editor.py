@@ -496,7 +496,7 @@ class TextEditor:
     def startMultilineEditor(self, initialText="", placeholder="", editorStartupLine=1):
         # syntax highlighting
         lexer = None
-        if self.filepath and config.isPygmentsInstalled:
+        if self.filepath and ("Pygments" in config.enabled):
             #from prompt_toolkit.lexers import PygmentsLexer
             #from pygments.lexers.python import PythonLexer
             #from pygments.lexers.html import HtmlLexer
@@ -668,7 +668,7 @@ class TextEditor:
         return ""
 
     def extractFile(self, filepath="", getTextOnly=False):
-        if config.isTextractInstalled:
+        if ("Textract" in config.enabled):
             if not filepath:
                 print("Extracting text from file ...")
                 filepath = self.getPath.getFilePath(True)

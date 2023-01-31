@@ -24,7 +24,7 @@ def findText(html):
                 audioFiles = ' '.join(playlist)
                 os.system("pkill vlc")
                 WebtopUtil.runNohup(f"vlc {audioFiles}")
-            elif playlist and config.isVlcInstalled:
+            elif playlist and ("Pythonvlc" in config.enabled):
                 from gui.VlcPlayer import VlcPlayer
                 self = config.mainWindow
                 if self.vlcPlayer is not None:

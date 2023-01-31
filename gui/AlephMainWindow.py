@@ -182,7 +182,7 @@ class AlephMainWindow:
             )
             for feature, action in items:
                 addMenuItem(subMenu, feature, self, action)
-            if config.isOfflineTtsInstalled:
+            if ("OfflineTts" in config.enabled):
                 languages = self.getTtsLanguages()
                 languageCodes = list(languages.keys())
                 items = [languages[code][1] for code in languageCodes]
@@ -817,7 +817,7 @@ class AlephMainWindow:
 
         self.secondToolBar.addSeparator()
 
-        if config.isYoutubeDownloaderInstalled:
+        if ("Ytdlp" in config.enabled):
             button = QPushButton()
             button.setToolTip(config.thisTranslation["menu11_youtube"])
             buttonFile = os.path.join("htmlResources", "youtube.png")
@@ -826,7 +826,7 @@ class AlephMainWindow:
             self.secondToolBar.addWidget(button)
             self.secondToolBar.addSeparator()
 
-        if config.isVlcInstalled:
+        if ("Pythonvlc" in config.enabled):
             button = QPushButton()
             button.setToolTip(config.thisTranslation["mediaPlayer"])
             buttonFile = os.path.join("htmlResources", "buttons", "media_player.png")
@@ -1316,12 +1316,12 @@ class AlephMainWindow:
 
         self.secondToolBar.addSeparator()
 
-        if config.isYoutubeDownloaderInstalled:
+        if ("Ytdlp" in config.enabled):
             iconFile = os.path.join("htmlResources", "youtube.png")
             self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu11_youtube"], self.openYouTube)
             self.secondToolBar.addSeparator()
 
-        if config.isVlcInstalled:
+        if ("Pythonvlc" in config.enabled):
             iconFile = os.path.join("htmlResources", "buttons", "media_player.png")
             self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["mediaPlayer"], lambda: self.openVlcPlayer(""))
             self.secondToolBar.addSeparator()

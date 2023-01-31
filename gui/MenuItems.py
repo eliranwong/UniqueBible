@@ -102,7 +102,7 @@ def addMenuLayoutItems(parent, menu):
             addCheckableMenuItem(menu, pluginLayout, parent, lambda: parent.setupMenuLayout(pluginLayout), config.menuLayout, pluginLayout, translation=False)
 
 def addGithubDownloadMenuItems(self, subMenu):
-    if config.isPygithubInstalled:
+    if ("Pygithub" in config.enabled):
         subMenu.addSeparator()
         items = (
             ("githubBibles", self.installGithubBibles),
@@ -135,7 +135,7 @@ def addGithubDownloadMenuItems(self, subMenu):
 
 
 def addBuildMacroMenuItems(self, subMenu):
-    if config.isPygithubInstalled:
+    if ("Pygithub" in config.enabled):
         subMenu.addSeparator()
         items = (
             ("menu_command", self.macroSaveCommand),

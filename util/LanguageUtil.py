@@ -4,7 +4,7 @@ from util.Languages import Languages
 from util.Translator import Translator
 from util.FileUtil import FileUtil
 
-config.isIbmWatsonInstalled = True
+config.updateModules("Ibmwatson", True)
 
 
 class LanguageUtil:

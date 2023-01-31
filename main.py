@@ -9,11 +9,13 @@ import logging.handlers as handlers
 from util.FileUtil import FileUtil
 from util.NetworkUtil import NetworkUtil
 from util.WebtopUtil import WebtopUtil
-#from datetime import datetime
+from datetime import datetime
 
 
 # check startup time
-#bootStartTime = datetime.now()
+testStartupTime = False
+if testStartupTime:
+    bootStartTime = datetime.now()
 
 # Change working directory to UniqueBible directory
 thisFile = os.path.realpath(__file__)
@@ -42,7 +44,7 @@ config.enableCli = True if initialCommand.lower() in ("cli", "gui", "docker") el
 if initialCommand == "docker":
     docker = True
     initialCommand = "gui"
-    #config.isGTTSInstalled = True
+    #config.updateModules("Gtts", True)
     config.fcitx = True
     config.docker = True
     config.updateWithGitPull = True
@@ -231,7 +233,7 @@ def run_terminal_mode():
     set_title(f"Unique Bible App [{config.version}]")
     config.saveConfigOnExit = True
     print(f"Running Unique Bible App {config.version} in terminal mode ...")
-    if config.isArtInstalled:
+    if ("Art" in config.enabled):
         from art import text2art
         print(text2art("UBA"))
 
@@ -558,7 +560,7 @@ else:
 from util.themes import Themes
 # [Optional] qt-material
 # qt-material have to be imported after PySide2
-if config.qtMaterial and not config.isQtMaterialInstalled:
+if config.qtMaterial and not ("Qtmaterial" in config.enabled):
     config.qtMaterial = False
 if config.qtMaterial:
     from qt_material import apply_stylesheet
@@ -849,7 +851,7 @@ if config.actionsRightAfterLoadingHistoryRecords:
 config.mainWindow.runMacro(config.startupMacro)
 
 if initialCommand == "cli":
-    if config.isHtmlTextInstalled:
+    if ("Htmltext" in config.enabled):
         startWithCli()
     else:
         config.cli = False
@@ -917,11 +919,13 @@ except:
     pass
 
 # show start up time in status bar
-#bootEndTime = datetime.now()
-#timeDifference = (bootEndTime - bootStartTime).total_seconds()
-#messageTime = 1500
-#config.mainWindow.statusBar().showMessage(f"Unique Bible App launches in {timeDifference}s.", timeout=messageTime)
-#QTimer.singleShot(messageTime, config.mainWindow.statusBar().hide)
+if testStartupTime:
+    bootEndTime = datetime.now()
+    timeDifference = (bootEndTime - bootStartTime).total_seconds()
+    print(f"Unique Bible App launches in {timeDifference}s.")
+    #messageTime = 1500
+    #config.mainWindow.statusBar().showMessage(f"Unique Bible App launches in {timeDifference}s.", timeout=messageTime)
+    #QTimer.singleShot(messageTime, config.mainWindow.statusBar().hide)
 
 # Launch UBA
 config.restartUBA = False

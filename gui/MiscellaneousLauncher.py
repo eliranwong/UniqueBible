@@ -54,7 +54,7 @@ class MiscellaneousLauncher(QWidget):
         button.setToolTip(config.thisTranslation["presentation"])
         button.clicked.connect(lambda: self.parent.parent.runPlugin("Presentation"))
         subLayout.addWidget(button)
-        if config.isYoutubeDownloaderInstalled:
+        if ("Ytdlp" in config.enabled):
             button = QPushButton(config.thisTranslation["youtube_utility"])
             button.setToolTip(config.thisTranslation["youtube_utility"])
             button.clicked.connect(self.parent.parent.openYouTube)
@@ -146,7 +146,7 @@ class MiscellaneousLauncher(QWidget):
             else:
                 if ":::" in text:
                     text = text.split(":::")[-1]
-                if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled):
+                if config.isGoogleCloudTTSAvailable or ((not ("OfflineTts" in config.enabled) or config.forceOnlineTts) and ("Gtts" in config.enabled)):
                     command = "GTTS:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
                 else:
                     command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)

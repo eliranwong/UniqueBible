@@ -88,7 +88,7 @@ if not config.noTtsFound:
     readClipboardContent.triggered.connect(config.mainWindow.readClipboardContent)
     trayMenu.addAction(readClipboardContent)
     # Google TEXT-TO-SPEECH feature
-    if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled):
+    if config.isGoogleCloudTTSAvailable or ((not ("OfflineTts" in config.enabled) or config.forceOnlineTts) and ("Gtts" in config.enabled)):
         languageCodes = GoogleCloudTTS.getLanguages() if config.isGoogleCloudTTSAvailable else Languages.gTTSLanguageCodes
         ttsMenu = QMenu()
         index = 0
@@ -103,7 +103,7 @@ if not config.noTtsFound:
         # Add a separator
         trayMenu.addSeparator()
     # OFFLINE TEXT-TO-SPEECH feature
-    elif config.isOfflineTtsInstalled:
+    elif ("OfflineTts" in config.enabled):
         languages = config.mainWindow.getTtsLanguages()
         ttsMenu = QMenu()
         languageCodes = list(languages.keys())

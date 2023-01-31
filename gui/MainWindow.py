@@ -920,7 +920,7 @@ class MainWindow(QMainWindow):
         self.installFromGitHub(GitHubRepoInfo.epub)
 
     def installGithubBibleMp3(self, audioModule=""):
-        if config.isVlcInstalled:
+        if ("Pythonvlc" in config.enabled):
             from gui.DownloadBibleMp3Dialog import DownloadBibleMp3Dialog
             self.downloadBibleMp3Dialog = DownloadBibleMp3Dialog(self, audioModule)
             self.downloadBibleMp3Dialog.show()
@@ -952,7 +952,7 @@ class MainWindow(QMainWindow):
 
     def installFromGitHub(self, gitHubRepoInfo):
         repo, directory, title, extension = gitHubRepoInfo
-        if config.isPygithubInstalled:
+        if ("Pygithub" in config.enabled):
             try:
                 from util.GithubUtil import GithubUtil
 
@@ -1637,9 +1637,9 @@ class MainWindow(QMainWindow):
     def clipboardTts(self, language):
         clipboardText = self.getClipboardText()
         if clipboardText:
-            if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled):
+            if config.isGoogleCloudTTSAvailable or ((not ("OfflineTts" in config.enabled) or config.forceOnlineTts) and ("Gtts" in config.enabled)):
                 self.mainView.currentWidget().googleTextToSpeechLanguage(language, selectedText=clipboardText)
-            elif config.isOfflineTtsInstalled:
+            elif ("OfflineTts" in config.enabled):
                 self.mainView.currentWidget().textToSpeechLanguage(language, selectedText=clipboardText)
         else:
             self.displayMessage(config.thisTranslation["noClipboardContent"])
@@ -1647,7 +1647,7 @@ class MainWindow(QMainWindow):
     def readClipboardContent(self):
         clipboardText = self.getClipboardText()
         if clipboardText:
-            if config.isOnlineTtsInstalled and not config.isGoogleCloudTTSAvailable and not config.forceOnlineTts:
+            if ("OnlineTts" in config.enabled) and not config.isGoogleCloudTTSAvailable and not config.forceOnlineTts:
                 keyword = "SPEAK"
             else:
                 keyword = "GTTS"
@@ -1837,8 +1837,8 @@ class MainWindow(QMainWindow):
             self.openTextOnStudyView(text, tab_title=".md", toolTip=os.path.basename(fileName))
 
     def openDocxFile(self, fileName):
-        #if config.isPythonDocxInstalled:
-        if config.isMammothInstalled:
+        #if ("Pythondocx" in config.enabled):
+        if ("Mammoth" in config.enabled):
             if fileName:
                 text = TextFileReader().readDocxFile(fileName)
                 if config.parseWordDocument:
@@ -1967,7 +1967,7 @@ class MainWindow(QMainWindow):
         pdfPage.runJavaScript("if (typeof saveCurrentPage === 'function') { saveCurrentPage() } else { alert('No PDF is currently opened!') }")
 
 #    def openPdfFileOLD(self, fileName):
-#        if config.isPyPDF2Installed:
+#        if ("PyPDF2" in config.enabled):
 #            if fileName:
 #                text = TextFileReader().readPdfFile(fileName)
 #                text = self.htmlWrapper(text, True)
@@ -2008,13 +2008,13 @@ class MainWindow(QMainWindow):
             subprocess.Popen("{0} {1}".format(config.open, filename), shell=True)
 
     def exportMainPageToDocx(self):
-        if config.isHtmldocxInstalled:
+        if ("Htmldocx" in config.enabled):
             self.mainPage.toHtml(self.exportHtmlToDocx)
         else:
             self.displayMessage(config.thisTranslation["message_noSupport"])
 
     def exportStudyPageToDocx(self):
-        if config.isHtmldocxInstalled:
+        if ("Htmldocx" in config.enabled):
             self.studyPage.toHtml(self.exportHtmlToDocx)
         else:
             self.displayMessage(config.thisTranslation["message_noSupport"])
@@ -4764,7 +4764,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
                 value = DatafileLocation.marvelCommentaries[key]
                 if (value[0][2]) not in commentaryList:
                     outfile.write("DOWNLOAD:::MarvelCommentary:::{0}\n".format(key))
-            if config.isPygithubInstalled:
+            if ("Pygithub" in config.enabled):
                 from util.GithubUtil import GithubUtil
 
                 for file in GithubUtil(GitHubRepoInfo.bible[0]).getRepoData():
@@ -4812,7 +4812,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
                     file = file.replace(".commentary", "")
                     outfile.write("DOWNLOAD:::MarvelCommentary:::{0}\n".format(file))
 
-            if config.isPygithubInstalled:
+            if ("Pygithub" in config.enabled):
                 from util.GithubUtil import GithubUtil
                 for file in GithubUtil(GitHubRepoInfo.bible[0]).getRepoData():
                     if file in bibleList:
@@ -5434,7 +5434,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         self.selectionMonitoringButton.setToolTip(self.getSelectionMonitoringButtonToolTip())
 
     def instantTTS(self):
-        if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled):
+        if config.isGoogleCloudTTSAvailable or ((not ("OfflineTts" in config.enabled) or config.forceOnlineTts) and ("Gtts" in config.enabled)):
             # online tts
             self.mainView.currentWidget().googleTextToSpeechLanguage("", True)
         else:
@@ -5442,7 +5442,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.mainView.currentWidget().textToSpeech(True)
 
     def instantTTS2(self):
-        if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled):
+        if config.isGoogleCloudTTSAvailable or ((not ("OfflineTts" in config.enabled) or config.forceOnlineTts) and ("Gtts" in config.enabled)):
             # online tts
             self.mainView.currentWidget().googleTextToSpeechLanguage(config.ttsDefaultLangauge2, True)
         else:
@@ -5450,7 +5450,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.mainView.currentWidget().textToSpeechLanguage(config.ttsDefaultLangauge2, True)
 
     def instantTTS3(self):
-        if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled):
+        if config.isGoogleCloudTTSAvailable or ((not ("OfflineTts" in config.enabled) or config.forceOnlineTts) and ("Gtts" in config.enabled)):
             # online tts
             self.mainView.currentWidget().googleTextToSpeechLanguage(config.ttsDefaultLangauge3, True)
         else:
@@ -5458,7 +5458,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.mainView.currentWidget().textToSpeechLanguage(config.ttsDefaultLangauge3, True)
 
     def openVlcPlayer(self, filename=""):
-        print(config.isVlcInstalled)
+        #print(("Pythonvlc" in config.enabled))
         from gui.VlcPlayer import VlcPlayer
         self.vlcPlayer = VlcPlayer(self, filename)
         try:
@@ -5473,7 +5473,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
                     self.playAudioBibleFilePlayList([filename])
                 else:
                     WebtopUtil.run("vlc")
-            elif config.isVlcInstalled:
+            elif ("Pythonvlc" in config.enabled):
                 from gui.VlcPlayer import VlcPlayer
                 if self.vlcPlayer is not None:
                     self.vlcPlayer.close()
@@ -5531,7 +5531,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             vlcCmd = "vlc" if gui else "cvlc"
             #os.system("pkill vlc")
             WebtopUtil.run(f"{vlcCmd} --rate {config.vlcSpeed} {audioFiles}")
-        elif playlist and config.isVlcInstalled:
+        elif playlist and ("Pythonvlc" in config.enabled):
             from gui.VlcPlayer import VlcPlayer
             if self.vlcPlayer is not None:
                 self.vlcPlayer.close()
@@ -5564,7 +5564,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
                 audioFiles = ' '.join(fileList)
                 #os.system("pkill vlc")
                 WebtopUtil.run(f"vlc --rate {config.vlcSpeed} {audioFiles}")
-            elif config.isVlcInstalled:
+            elif ("Pythonvlc" in config.enabled):
                 from gui.VlcPlayer import VlcPlayer
                 if self.vlcPlayer is not None:
                     self.vlcPlayer.close()

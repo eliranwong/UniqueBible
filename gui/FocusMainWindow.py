@@ -236,7 +236,7 @@ class FocusMainWindow:
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
-        if config.isOfflineTtsInstalled:
+        if ("OfflineTts" in config.enabled):
             languages = self.getTtsLanguages()
             languageCodes = list(languages.keys())
             items = [languages[code][1] for code in languageCodes]
@@ -259,7 +259,7 @@ class FocusMainWindow:
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
         menu.addSeparator()
-        if config.isHtmldocxInstalled:
+        if ("Htmldocx" in config.enabled):
             subMenu = addSubMenu(menu, "exportToDocx")
             items = (
                 ("bar1_menu", self.exportMainPageToDocx),
@@ -642,10 +642,10 @@ class FocusMainWindow:
 
         self.addStandardIconButton("menu2_larger", "fontPlus.png", self.largerFont, self.secondToolBar)
         self.secondToolBar.addSeparator()
-        if config.isYoutubeDownloaderInstalled:
+        if ("Ytdlp" in config.enabled):
             self.addStandardIconButton("menu11_youtube", "youtube.png", self.openYouTube, self.secondToolBar)
             self.secondToolBar.addSeparator()
-        if config.isVlcInstalled:
+        if ("Pythonvlc" in config.enabled):
             self.addStandardIconButton("mediaPlayer", "buttons/media_player.png", lambda: self.openVlcPlayer(""), self.secondToolBar)
             self.secondToolBar.addSeparator()
         self.addStandardIconButton("menu1_reload", "reload.png", lambda: self.reloadCurrentRecord(True), self.secondToolBar)
@@ -662,7 +662,7 @@ class FocusMainWindow:
         self.addStandardIconButton("menu3_main", "history.png", self.mainHistoryButtonClicked, self.leftToolBar)
         self.addStandardIconButton("menu3_mainForward", "right.png", self.forward, self.leftToolBar)
         self.leftToolBar.addSeparator()
-        if config.isHtmldocxInstalled:
+        if ("Htmldocx" in config.enabled):
             self.addStandardIconButton("exportToDocx", "docx.png", self.exportMainPageToDocx, self.leftToolBar)
         self.addStandardIconButton("bar3_pdf", "pdf.png", self.printMainPage, self.leftToolBar)
         self.leftToolBar.addSeparator()
@@ -693,7 +693,7 @@ class FocusMainWindow:
         self.addStandardIconButton("menu3_study", "history.png", self.studyHistoryButtonClicked, self.rightToolBar)
         self.addStandardIconButton("menu3_studyForward", "right.png", self.studyForward, self.rightToolBar)
         self.rightToolBar.addSeparator()
-        if config.isHtmldocxInstalled:
+        if ("Htmldocx" in config.enabled):
             self.addStandardIconButton("exportToDocx", "docx.png", self.exportStudyPageToDocx, self.rightToolBar)
         self.addStandardIconButton("bar3_pdf", "pdf.png", self.printStudyPage, self.rightToolBar)
         self.rightToolBar.addSeparator()
@@ -863,12 +863,12 @@ class FocusMainWindow:
 
         self.secondToolBar.addSeparator()
 
-        if config.isYoutubeDownloaderInstalled:
+        if ("Ytdlp" in config.enabled):
             iconFile = os.path.join("htmlResources", "youtube.png")
             self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu11_youtube"], self.openYouTube)
             self.secondToolBar.addSeparator()
 
-        if config.isVlcInstalled:
+        if ("Pythonvlc" in config.enabled):
             iconFile = os.path.join("htmlResources", "buttons", "media_player.png")
             self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["mediaPlayer"], lambda: self.openVlcPlayer(""))
             self.secondToolBar.addSeparator()
@@ -896,7 +896,7 @@ class FocusMainWindow:
 
         self.leftToolBar.addSeparator()
 
-        if config.isHtmldocxInstalled:
+        if ("Htmldocx" in config.enabled):
             iconFile = os.path.join("htmlResources", "docx.png")
             self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["exportToDocx"], self.exportMainPageToDocx)
         iconFile = os.path.join("htmlResources", "pdf.png")
@@ -956,7 +956,7 @@ class FocusMainWindow:
 
         self.rightToolBar.addSeparator()
 
-        if config.isHtmldocxInstalled:
+        if ("Htmldocx" in config.enabled):
             iconFile = os.path.join("htmlResources", "docx.png")
             self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["exportToDocx"], self.exportStudyPageToDocx)
 

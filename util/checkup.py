@@ -553,99 +553,6 @@ def runTerminalMode():
     else:
         exit(1)
 
-# Set config values for optional features
-def setInstallConfig(module, isInstalled):
-    #if module == "PyPDF2":
-    #    config.isPyPDF2Installed = isInstalled
-    if module in ("mammoth", "-U mammoth", "--upgrade mammoth"):
-        config.isMammothInstalled = isInstalled
-    elif module in ("htmldocx", "-U htmldocx", "--upgrade htmldocx"):
-        config.isHtmldocxInstalled = isInstalled
-    elif module in ("python-docx", "-U python-docx", "--upgrade python-docx"):
-        config.isPythonDocxInstalled = isInstalled
-    elif module in ("diff_match_patch", "-U diff_match_patch", "--upgrade diff_match_patch"):
-        config.isDiffMatchPatchInstalled = isInstalled
-    elif module in ("langdetect", "-U langdetect", "--upgrade langdetect"):
-        config.isLangdetectInstalled = isInstalled
-    elif module in ("pygithub", "-U pygithub", "--upgrade pygithub"):
-        config.isPygithubInstalled = isInstalled
-    elif module in ("qt-material", "-U qt-material", "--upgrade qt-material"):
-        config.isQtMaterialInstalled = isInstalled
-    elif module in ("telnetlib3", "-U telnetlib3", "--upgrade telnetlib3"):
-        config.isTelnetlib3Installed = isInstalled
-    elif module in ("ibm-watson", "-U ibm-watson", "--upgrade ibm-watson"):
-        config.isIbmWatsonInstalled = isInstalled
-    elif module in ("numpy", "-U numpy", "--upgrade numpy"):
-        config.isNumpyInstalled = isInstalled
-    elif module in ("matplotlib", "-U matplotlib", "--upgrade matplotlib"):
-        config.isMatplotlibInstalled = isInstalled
-    elif module in ("translate", "-U translate", "--upgrade translate"):
-        config.isTranslateInstalled = isInstalled
-    elif module in ("html-text", "-U html-text", "--upgrade html-text"):
-        config.isHtmlTextInstalled = isInstalled
-    elif module in ("beautifulsoup4", "-U beautifulsoup4", "--upgrade beautifulsoup4"):
-        config.isBeautifulsoup4Installed = isInstalled
-    elif module in ("html5lib", "-U html5lib", "--upgrade html5lib"):
-        config.isHtml5libInstalled = isInstalled
-    elif module in ("qrcode", "-U qrcode", "--upgrade qrcode"):
-        config.isQrCodeInstalled = isInstalled
-    elif module in ("pillow", "-U pillow", "--upgrade pillow"):
-        config.isPillowInstalled = isInstalled
-    #elif module in ("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "-U git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "--upgrade git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png"):
-        #config.isPurePythonPngInstalled = isInstalled
-    elif module in ("python-vlc", "-U python-vlc", "--upgrade python-vlc"):
-        config.isVlcInstalled = isInstalled
-    elif module in ("yt-dlp", "-U yt-dlp", "--upgrade yt-dlp"):
-        config.isYoutubeDownloaderInstalled = isInstalled
-    elif module in ("gTTS", "-U gTTS", "--upgrade gTTS"):
-        config.isGTTSInstalled = isInstalled
-    elif module in ("markdownify", "-U markdownify", "--upgrade markdownify"):
-        config.isMarkdownifyInstalled = isInstalled
-    elif module in ("markdown", "-U markdown", "--upgrade markdown"):
-        config.isMarkdownInstalled = isInstalled
-    elif module in ("AudioConverter", "-U AudioConverter", "--upgrade AudioConverter"):
-        config.isAudioConverterInstalled = isInstalled
-    elif module in ("lemmagen3", "-U lemmagen3", "--upgrade lemmagen3"):
-        config.isLemmagen3Installed = isInstalled
-    elif module in ("word-forms", "-U word-forms", "--upgrade word-forms"):
-        config.isWordformsInstalled = isInstalled
-    elif module in ("chinese-english-lookup", "-U chinese-english-lookup", "--upgrade chinese-english-lookup"):
-        config.isChineseEnglishLookupInstalled = isInstalled
-    elif module in ("paddleocr", "-U paddleocr", "--upgrade paddleocr"):
-        config.isPaddleocrInstalled = isInstalled
-    elif module in ("nltk", "-U nltk", "--upgrade nltk"):
-        config.isNltkInstalled = isInstalled
-    elif module in ("textract", "-U textract", "--upgrade textract"):
-        config.isTextractInstalled = isInstalled
-    elif module in ("tabulate", "-U tabulate", "--upgrade tabulate"):
-        config.isTabulateInstalled = isInstalled
-    elif module in ("apsw", "-U apsw", "--upgrade apsw"):
-        config.isApswInstalled = isInstalled
-    elif module in ("pyluach", "-U pyluach", "--upgrade pyluach"):
-        config.isPyluachInstalled = isInstalled
-    elif module in ("pydnsbl", "-U pydnsbl", "--upgrade pydnsbl"):
-        config.isPydnsblInstalled = isInstalled
-    elif module in ("gmplot", "-U gmplot", "--upgrade gmplot"):
-        config.isGmplotInstalled = isInstalled
-    elif module in ("haversine", "-U haversine", "--upgrade haversine"):
-        config.isHaversineInstalled = isInstalled
-    elif module in ("prompt_toolkit", "-U prompt_toolkit", "--upgrade prompt_toolkit"):
-        config.isPrompt_toolkitInstalled = isInstalled
-    elif module in ("colorama", "-U colorama", "--upgrade colorama"):
-        config.isColoramaInstalled = isInstalled
-    elif module in ("art", "-U art", "--upgrade art"):
-        config.isArtInstalled = isInstalled
-    elif module in ("pyperclip", "-U pyperclip", "--upgrade pyperclip"):
-        config.isPyperclipInstalled = isInstalled
-    elif module in ("pickley", "-U pickley", "--upgrade pickley"):
-        config.isPickleyInstalled = isInstalled
-    elif module in ("Pygments", "-U Pygments", "--upgrade Pygments"):
-        config.isPygmentsInstalled = isInstalled
-    elif module in ("asyncssh", "-U asyncssh", "--upgrade asyncssh"):
-        config.isAsyncsshInstalled = isInstalled
-    elif module in ("bcrypt", "-U bcrypt", "--upgrade bcrypt"):
-        config.isBcryptInstalled = isInstalled
-
 # Specify qtLibrary for particular os
 if config.docker and config.usePySide2onWebtop:
     config.qtLibrary = "pyside2"
@@ -660,14 +567,6 @@ required = [
     ("requests", "Download / Update files", isRequestsInstalled),
     ("apsw", "Another Python SQLite Wrapper", isApswInstalled),
     ("prompt_toolkit", "Command Line Interaction", isPrompt_toolkitInstalled),
-] if config.noQt else [
-    ("config", "Configurations", isConfigInstalled),
-    #("PySide2", "Qt Graphical Interface Library", isPySide2Installed) if config.qtLibrary.startswith("pyside") else ("PyQt5", "Qt Graphical Interface Library", isPyQt5Installed),
-    #("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled),
-    ("gdown", "Download UBA modules from Google drive", isGdownInstalled),
-    ("babel", "Internationalization and localization library", isBabelInstalled),
-    ("requests", "Download / Update files", isRequestsInstalled),
-    ("apsw", "Another Python SQLite Wrapper", isApswInstalled),
 ]
 # Add Qt Library module
 if not config.noQt:
@@ -680,75 +579,62 @@ if not config.noQt:
             required.append(("PyQt5", "Qt Graphical Interface Library", isPyQt5Installed))
         required.append(("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled))
 
-for module, feature, isInstalled in required or config.updateDependenciesOnStartup:
-    if config.updateDependenciesOnStartup and not (module.startswith("-U ") or module.startswith("--upgrade ")):
-            module = "--upgrade {0}".format(module)
-    if not isInstalled():
-        pip3InstallModule(module)
-        if module == "PySide2" and not isInstalled():
-            module = "PyQt5"
-            isInstalled = isPyQt5Installed
-            if not isInstalled():
-                print("PySide2 is not found!  Trying to install 'PyQt5' instead ...")
-                if config.docker:
-                    WebtopUtil.installPackage("python-pyqt5 python-pyqt5-sip python-pyqt5-webengine")
+if not config.enabled:
+    for module, feature, isInstalled in required or config.updateDependenciesOnStartup:
+        if config.updateDependenciesOnStartup and not (module.startswith("-U ") or module.startswith("--upgrade ")):
+                module = "--upgrade {0}".format(module)
+        if not isInstalled():
+            pip3InstallModule(module)
+            if module == "PySide2" and not isInstalled():
+                module = "PyQt5"
+                isInstalled = isPyQt5Installed
+                if not isInstalled():
+                    print("PySide2 is not found!  Trying to install 'PyQt5' instead ...")
+                    if config.docker:
+                        WebtopUtil.installPackage("python-pyqt5 python-pyqt5-sip python-pyqt5-webengine")
+                    else:
+                        pip3InstallModule(module)
+                        pip3InstallModule("PyQtWebEngine")
+                    if isInstalled():
+                        config.qtLibrary == "pyqt5"
+                        os.environ["QT_API"] = config.qtLibrary
+                        print("Installed!")
+                    else:
+                        #print("Required feature '{0}' is not enabled.\nInstall either 'PySide2' or 'PyQt5' first!".format(feature, module))
+                        #exit(1)
+                        runTerminalMode()
                 else:
-                    pip3InstallModule(module)
-                    pip3InstallModule("PyQtWebEngine")
-                if isInstalled():
                     config.qtLibrary == "pyqt5"
                     os.environ["QT_API"] = config.qtLibrary
-                    print("Installed!")
+            elif module == "PyQt5" and not isInstalled():
+                module = "PySide2"
+                isInstalled = isPySide2Installed
+                if not isInstalled():
+                    print("PyQt5 is not found!  Trying to install 'PySide2' instead ...")
+                    if config.docker:
+                        WebtopUtil.installPackage("pyside2 pyside2-tools qt5-webengine")
+                    else:
+                        pip3InstallModule(module)
+                    if isInstalled():
+                        config.qtLibrary == "pyside2"
+                        os.environ["QT_API"] = config.qtLibrary
+                        print("Installed!")
+                    else:
+                        #print("Required feature '{0}' is not enabled.\nInstall either 'PySide2' or 'PyQt5' first!".format(feature, module))
+                        #exit(1)
+                        runTerminalMode()
                 else:
-                    #print("Required feature '{0}' is not enabled.\nInstall either 'PySide2' or 'PyQt5' first!".format(feature, module))
-                    #exit(1)
-                    runTerminalMode()
-            else:
-                config.qtLibrary == "pyqt5"
-                os.environ["QT_API"] = config.qtLibrary
-        elif module == "PyQt5" and not isInstalled():
-            module = "PySide2"
-            isInstalled = isPySide2Installed
-            if not isInstalled():
-                print("PyQt5 is not found!  Trying to install 'PySide2' instead ...")
-                if config.docker:
-                    WebtopUtil.installPackage("pyside2 pyside2-tools qt5-webengine")
-                else:
-                    pip3InstallModule(module)
-                if isInstalled():
                     config.qtLibrary == "pyside2"
                     os.environ["QT_API"] = config.qtLibrary
-                    print("Installed!")
-                else:
-                    #print("Required feature '{0}' is not enabled.\nInstall either 'PySide2' or 'PyQt5' first!".format(feature, module))
-                    #exit(1)
+            if isInstalled():
+                print("Installed!")
+            else:
+                if module == "PySide6":
                     runTerminalMode()
-            else:
-                config.qtLibrary == "pyside2"
-                os.environ["QT_API"] = config.qtLibrary
-        if isInstalled():
-            print("Installed!")
-        else:
-            if module == "PySide6":
-                runTerminalMode()
-            else:
-                print("Required feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first!".format(feature, module))
-                exit(1)
+                else:
+                    print("Required feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first!".format(feature, module))
+                    exit(1)
 
-major, minor, micro, *_ = sys.version_info
-thisOS = platform.system()
-cpu = ""
-if thisOS == "Darwin":
-    thisOS = "macOS"
-    *_, cpu = platform.mac_ver()
-    cpu = f"_{cpu}"
-venvDir = "venv_{0}{4}_{1}.{2}.{3}".format(thisOS, major, minor, micro, cpu)
-
-disabledModules = []
-disabledModulesFilePath = os.path.join(venvDir, "disabled_modules.txt")
-if os.path.exists(disabledModulesFilePath):
-    with open(disabledModulesFilePath) as disabledModulesFile:
-        disabledModules = [line.strip() for line in disabledModulesFile.readlines()]
 # Check if optional modules are installed
 optional = [
     ("html-text", "Read html text", isHtmlTextInstalled),
@@ -837,28 +723,31 @@ optional = [
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))
 for module, feature, isInstalled in optional:
-    if module in disabledModules:
-        print(f"{module} has been manually disabled")
-        available = False
-    elif not isInstalled() or config.updateDependenciesOnStartup:
-        if config.updateDependenciesOnStartup and not (module.startswith("-U ") or module.startswith("--upgrade ")):
-            module = "--upgrade {0}".format(module)
-        pip3InstallModule(module)
-        available = isInstalled()
-        print("Installed!" if available else "Optional feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first.".format(feature, module))
-    else:
-        available = True
-    setInstallConfig(module, available)
+    checkModule = re.sub("-|_", "", module)
+    checkModule = re.sub("^(-U |--upgrade )", "", checkModule).capitalize()
+    if not checkModule in config.enabled and not checkModule in config.disabled:
+        if not isInstalled() or config.updateDependenciesOnStartup:
+            if config.updateDependenciesOnStartup and not (module.startswith("-U ") or module.startswith("--upgrade ")):
+                module = "--upgrade {0}".format(module)
+            pip3InstallModule(module)
+            available = isInstalled()
+            print("Installed!" if available else "Optional feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first.".format(feature, module))
+        else:
+            available = True
+        if available:
+            config.enabled.append(checkModule)
+        else:
+            config.disabled.append(checkModule)
 
 # Check if other optional features are installed
 # [Optional] Text-to-Speech feature
 # Check is OFFLINE tts is in place
 if config.docker:
-    config.isOfflineTtsInstalled = False
+    config.updateModules("OfflineTts", False)
     config.enableSystemTrayOnLinux = False
     config.macVoices = {}
 else:
-    config.isOfflineTtsInstalled = isOfflineTtsInstalled()
+    config.updateModules("OfflineTts", isOfflineTtsInstalled())
 # Check if official Google Cloud text-to-speech service is in place
 config.isGoogleCloudTTSAvailable = os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json"))
 if config.isGoogleCloudTTSAvailable and config.ttsDefaultLangauge == "en":
@@ -866,19 +755,19 @@ if config.isGoogleCloudTTSAvailable and config.ttsDefaultLangauge == "en":
 elif not config.isGoogleCloudTTSAvailable and config.ttsDefaultLangauge == "en-GB":
     config.ttsDefaultLangauge = "en"
 # Check if ONLINE tts is in place
-config.isOnlineTtsInstalled = True if config.isGTTSInstalled or config.isGoogleCloudTTSAvailable else False
+config.updateModules("OnlineTts", True) if ("Gtts" in config.enabled) or config.isGoogleCloudTTSAvailable else False
 # Check if any tts is in place
-if not config.isOfflineTtsInstalled and not config.isOnlineTtsInstalled:
+if not ("OfflineTts" in config.enabled) and not ("OnlineTts" in config.enabled):
     config.noTtsFound = True
     print("Text-to-speech feature is not enabled or supported on your device.")
 else:
     config.noTtsFound = False
 # Check if TTS speed adjustment is supported
-if config.forceOnlineTts and not config.isOnlineTtsInstalled:
+if config.forceOnlineTts and not ("OnlineTts" in config.enabled):
     config.forceOnlineTts = False
-config.noTtsSpeedAdjustment = (config.isGTTSInstalled and not config.isGoogleCloudTTSAvailable and ((not config.isOfflineTtsInstalled) or (config.isOfflineTtsInstalled and config.forceOnlineTts)))
+config.noTtsSpeedAdjustment = (("Gtts" in config.enabled) and not config.isGoogleCloudTTSAvailable and ((not ("isOfflineTts" in config.enabled)) or (("OfflineTts" in config.enabled) and config.forceOnlineTts)))
 # Check if builtin media player is in place:
-if config.forceUseBuiltinMediaPlayer and not config.isVlcInstalled:
+if config.forceUseBuiltinMediaPlayer and not ("Pythonvlc" in config.enabled):
     config.forceUseBuiltinMediaPlayer = False
 # Check if 3rd-party VLC player is installed on macOS
 macVlc = "/Applications/VLC.app/Contents/MacOS/VLC"

@@ -85,6 +85,25 @@ class ConfigUtil:
                 default = pprint.pformat(default)
                 exec(f"""config.{name} = {default} """)
 
+        def updateModules(module, isInstalled):
+            if isInstalled:
+                if not module in config.enabled:
+                    config.enabled.append(module)
+                if module in config.disabled:
+                    config.disabled.remove(module)
+            else:
+                if not module in config.disabled:
+                    config.disabled.append(module)
+                if module in config.enabled:
+                    config.enabled.remove(module)
+
+        config.updateModules = updateModules
+        setConfig("enabled", """
+        # Enabled modules""",
+        [])
+        setConfig("disabled", """
+        # Disabled modules""",
+        [])
         setConfig("desktopUBAIcon", """
         # Desktop version UBA icon filename.  UniqueBible.app provides official icons in different colours.  We ask our users to use one of our official icons to acknowledge our development.""",
         os.path.join("htmlResources", "UniqueBibleApp.png"))
@@ -1459,8 +1478,11 @@ class ConfigUtil:
             #config.instantHighlightString = ""
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name in config.help.keys():
-                value = eval(f"config.{name}")
-                fileObj.write("{0} = {1}\n".format(name, pprint.pformat(value)))
+                try:
+                    value = eval(f"config.{name}")
+                    fileObj.write("{0} = {1}\n".format(name, pprint.pformat(value)))
+                except:
+                    print(name)
             if hasattr(config, "translationLanguage"):
                 fileObj.write("{0} = {1}\n".format("translationLanguage", pprint.pformat(config.translationLanguage)))
             if hasattr(config, "iModeSplitterSizes"):

@@ -10,7 +10,7 @@ def qrCodeCmd(command, source):
         return ("", "", {})
 
 def qrCode(command, source):
-    if not config.isQrCodeInstalled or not config.isPillowInstalled:
+    if not ("Qrcode" in config.enabled) or not ("Pillow" in config.enabled):
         return ("", "", {})
 
     import qrcode

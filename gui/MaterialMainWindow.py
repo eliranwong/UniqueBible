@@ -52,9 +52,9 @@ class MaterialMainWindow:
             ("htmlFile", self.saveHtml),
             ("pdfFile", self.savePdf),
         ]
-        if config.isMarkdownInstalled:
+        if ("Markdown" in config.enabled):
             items.append(("markdownFile", self.saveMarkdown))
-        if config.isHtmldocxInstalled:
+        if ("Htmldocx" in config.enabled):
             items.append(("wordFile", self.saveDocx))
         for feature, action in items:
             addMenuItem(subMenu1, feature, self, action)
@@ -64,9 +64,9 @@ class MaterialMainWindow:
             ("htmlFile", lambda: self.saveHtml("study")),
             ("pdfFile", lambda: self.savePdf("study")),
         ]
-        if config.isMarkdownInstalled:
+        if ("Markdown" in config.enabled):
             items.append(("markdownFile", lambda: self.saveMarkdown("study")))
-        if config.isHtmldocxInstalled:
+        if ("Htmldocx" in config.enabled):
             items.append(("wordFile", lambda: self.saveDocx("study")))
         for feature, action in items:
             addMenuItem(subMenu2, feature, self, action)
@@ -396,7 +396,7 @@ class MaterialMainWindow:
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
-        if config.isOfflineTtsInstalled:
+        if ("OfflineTts" in config.enabled):
             languages = self.getTtsLanguages()
             languageCodes = list(languages.keys())
             items = [languages[code][1] for code in languageCodes]
@@ -550,7 +550,7 @@ class MaterialMainWindow:
             menu.addSeparator()
 
         # Media Player
-        if WebtopUtil.isPackageInstalled("vlc") or config.isVlcInstalled:
+        if WebtopUtil.isPackageInstalled("vlc") or ("Pythonvlc" in config.enabled):
             subMenu = addSubMenu(menu, "mediaPlayer")
             items = (
                 ("launch", self.openVlcPlayer, sc.launchMediaPlayer),
@@ -1132,7 +1132,7 @@ class MaterialMainWindow:
 
         icon = "material/av/play_circle/materialiconsoutlined/48dp/2x/outline_play_circle_black_48dp.png"
         self.addMaterialIconButton("media", icon, partial(self.openControlPanelTab, 6), self.secondToolBar)
-        if config.isYoutubeDownloaderInstalled:
+        if ("Ytdlp" in config.enabled):
             icon = "material/hardware/browser_updated/materialiconsoutlined/48dp/2x/outline_browser_updated_black_48dp.png"
             self.addMaterialIconButton("menu11_youtube", icon, self.openYouTube, self.secondToolBar)
         self.secondToolBar.addSeparator()
@@ -1178,7 +1178,7 @@ class MaterialMainWindow:
         icon = "material/image/navigate_next/materialiconsoutlined/48dp/2x/outline_navigate_next_black_48dp.png"
         self.addMaterialIconButton("menu3_mainForward", icon, self.forward, self.leftToolBar)
         self.leftToolBar.addSeparator()
-#        if config.isHtmldocxInstalled:
+#        if ("Htmldocx" in config.enabled):
 #            icon = "material/action/description/materialiconsoutlined/48dp/2x/outline_description_black_48dp.png"
 #            self.addMaterialIconButton("exportToDocx", icon, self.exportMainPageToDocx, self.leftToolBar)
 #        icon = "material/image/picture_as_pdf/materialiconsoutlined/48dp/2x/outline_picture_as_pdf_black_48dp.png"
@@ -1245,7 +1245,7 @@ class MaterialMainWindow:
         icon = "material/image/navigate_next/materialiconsoutlined/48dp/2x/outline_navigate_next_black_48dp.png"
         self.addMaterialIconButton("menu3_studyForward", icon, self.studyForward, self.rightToolBar)
         self.rightToolBar.addSeparator()
-#        if config.isHtmldocxInstalled:
+#        if ("Htmldocx" in config.enabled):
 #            icon = "material/action/description/materialiconsoutlined/48dp/2x/outline_description_black_48dp.png"
 #            self.addMaterialIconButton("exportToDocx", icon, self.exportStudyPageToDocx, self.rightToolBar)
 #        icon = "material/image/picture_as_pdf/materialiconsoutlined/48dp/2x/outline_picture_as_pdf_black_48dp.png"

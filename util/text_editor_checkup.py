@@ -444,89 +444,89 @@ def runTerminalMode():
 # Set config values for optional features
 def setInstallConfig(module, isInstalled):
     #if module == "PyPDF2":
-    #    config.isPyPDF2Installed = isInstalled
+    #    ("PyPDF2" in config.enabled) = isInstalled
     if module in ("mammoth", "-U mammoth", "--upgrade mammoth"):
-        config.isMammothInstalled = isInstalled
+        ("Mammoth" in config.enabled) = isInstalled
     elif module in ("htmldocx", "-U htmldocx", "--upgrade htmldocx"):
-        config.isHtmldocxInstalled = isInstalled
+        ("Htmldocx" in config.enabled) = isInstalled
     elif module in ("python-docx", "-U python-docx", "--upgrade python-docx"):
-        config.isPythonDocxInstalled = isInstalled
+        ("Pythondocx" in config.enabled) = isInstalled
     elif module in ("diff_match_patch", "-U diff_match_patch", "--upgrade diff_match_patch"):
-        config.isDiffMatchPatchInstalled = isInstalled
+        ("Diffmatchpatch" in config.enabled) = isInstalled
     elif module in ("langdetect", "-U langdetect", "--upgrade langdetect"):
-        config.isLangdetectInstalled = isInstalled
+        ("Langdetect" in config.enabled) = isInstalled
     elif module in ("pygithub", "-U pygithub", "--upgrade pygithub"):
-        config.isPygithubInstalled = isInstalled
+        ("Pygithub" in config.enabled) = isInstalled
     elif module in ("qt-material", "-U qt-material", "--upgrade qt-material"):
-        config.isQtMaterialInstalled = isInstalled
+        ("Qtmaterial" in config.enabled) = isInstalled
     elif module in ("telnetlib3", "-U telnetlib3", "--upgrade telnetlib3"):
-        config.isTelnetlib3Installed = isInstalled
+        ("Telnetlib3" in config.enabled) = isInstalled
     elif module in ("ibm-watson", "-U ibm-watson", "--upgrade ibm-watson"):
-        config.isIbmWatsonInstalled = isInstalled
+        ("Ibmwatson" in config.enabled) = isInstalled
     elif module in ("numpy", "-U numpy", "--upgrade numpy"):
-        config.isNumpyInstalled = isInstalled
+        ("Numpy" in config.enabled) = isInstalled
     elif module in ("matplotlib", "-U matplotlib", "--upgrade matplotlib"):
-        config.isMatplotlibInstalled = isInstalled
+        ("Matplotlib" in config.enabled) = isInstalled
     elif module in ("translate", "-U translate", "--upgrade translate"):
-        config.isTranslateInstalled = isInstalled
+        ("Translate" in config.enabled) = isInstalled
     elif module in ("html-text", "-U html-text", "--upgrade html-text"):
-        config.isHtmlTextInstalled = isInstalled
+        ("Htmltext" in config.enabled) = isInstalled
     elif module in ("beautifulsoup4", "-U beautifulsoup4", "--upgrade beautifulsoup4"):
-        config.isBeautifulsoup4Installed = isInstalled
+        ("Beautifulsoup4" in config.enabled) = isInstalled
     elif module in ("html5lib", "-U html5lib", "--upgrade html5lib"):
-        config.isHtml5libInstalled = isInstalled
+        ("Html5lib" in config.enabled) = isInstalled
     elif module in ("qrcode", "-U qrcode", "--upgrade qrcode"):
-        config.isQrCodeInstalled = isInstalled
+        ("Qrcode" in config.enabled) = isInstalled
     elif module in ("pillow", "-U pillow", "--upgrade pillow"):
-        config.isPillowInstalled = isInstalled
+        ("Pillow" in config.enabled) = isInstalled
     #elif module in ("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "-U git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "--upgrade git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png"):
-        #config.isPurePythonPngInstalled = isInstalled
+        #("PurePythonPng" in config.enabled) = isInstalled
     elif module in ("python-vlc", "-U python-vlc", "--upgrade python-vlc"):
-        config.isVlcInstalled = isInstalled
+        ("Pythonvlc" in config.enabled) = isInstalled
     elif module in ("yt-dlp", "-U yt-dlp", "--upgrade yt-dlp"):
-        config.isYoutubeDownloaderInstalled = isInstalled
+        ("Ytdlp" in config.enabled) = isInstalled
     elif module in ("gTTS", "-U gTTS", "--upgrade gTTS"):
-        config.isGTTSInstalled = isInstalled
+        ("Gtts" in config.enabled) = isInstalled
     elif module in ("markdownify", "-U markdownify", "--upgrade markdownify"):
-        config.isMarkdownifyInstalled = isInstalled
+        ("Markdownify" in config.enabled) = isInstalled
     elif module in ("markdown", "-U markdown", "--upgrade markdown"):
-        config.isMarkdownInstalled = isInstalled
+        ("Markdown" in config.enabled) = isInstalled
     elif module in ("AudioConverter", "-U AudioConverter", "--upgrade AudioConverter"):
-        config.isAudioConverterInstalled = isInstalled
+        ("Audioconverter" in config.enabled) = isInstalled
     elif module in ("lemmagen3", "-U lemmagen3", "--upgrade lemmagen3"):
-        config.isLemmagen3Installed = isInstalled
+        ("Lemmagen3" in config.enabled) = isInstalled
     elif module in ("word-forms", "-U word-forms", "--upgrade word-forms"):
-        config.isWordformsInstalled = isInstalled
+        ("Wordforms" in config.enabled) = isInstalled
     elif module in ("chinese-english-lookup", "-U chinese-english-lookup", "--upgrade chinese-english-lookup"):
-        config.isChineseEnglishLookupInstalled = isInstalled
+        ("Chineseenglishlookup" in config.enabled) = isInstalled
     elif module in ("paddleocr", "-U paddleocr", "--upgrade paddleocr"):
-        config.isPaddleocrInstalled = isInstalled
+        ("Paddleocr" in config.enabled) = isInstalled
     elif module in ("nltk", "-U nltk", "--upgrade nltk"):
-        config.isNltkInstalled = isInstalled
+        ("Nltk" in config.enabled) = isInstalled
     elif module in ("textract", "-U textract", "--upgrade textract"):
-        config.isTextractInstalled = isInstalled
+        ("Textract" in config.enabled) = isInstalled
     elif module in ("tabulate", "-U tabulate", "--upgrade tabulate"):
-        config.isTabulateInstalled = isInstalled
+        ("Tabulate" in config.enabled) = isInstalled
     elif module in ("apsw", "-U apsw", "--upgrade apsw"):
-        config.isApswInstalled = isInstalled
+        ("Apsw" in config.enabled) = isInstalled
     elif module in ("pyluach", "-U pyluach", "--upgrade pyluach"):
-        config.isPyluachInstalled = isInstalled
+        ("Pyluach" in config.enabled) = isInstalled
     elif module in ("pydnsbl", "-U pydnsbl", "--upgrade pydnsbl"):
-        config.isPydnsblInstalled = isInstalled
+        ("Pydnsbl" in config.enabled) = isInstalled
     elif module in ("gmplot", "-U gmplot", "--upgrade gmplot"):
-        config.isGmplotInstalled = isInstalled
+        ("Gmplot" in config.enabled) = isInstalled
     elif module in ("haversine", "-U haversine", "--upgrade haversine"):
-        config.isHaversineInstalled = isInstalled
+        ("Haversine" in config.enabled) = isInstalled
     elif module in ("prompt_toolkit", "-U prompt_toolkit", "--upgrade prompt_toolkit"):
-        config.isPrompt_toolkitInstalled = isInstalled
+        ("Prompttoolkit" in config.enabled) = isInstalled
     elif module in ("colorama", "-U colorama", "--upgrade colorama"):
-        config.isColoramaInstalled = isInstalled
+        ("Colorama" in config.enabled) = isInstalled
     elif module in ("pyperclip", "-U pyperclip", "--upgrade pyperclip"):
-        config.isPyperclipInstalled = isInstalled
+        ("Pyperclip" in config.enabled) = isInstalled
     elif module in ("pickley", "-U pickley", "--upgrade pickley"):
-        config.isPickleyInstalled = isInstalled
+        ("Pickley" in config.enabled) = isInstalled
     elif module in ("Pygments", "-U Pygments", "--upgrade Pygments"):
-        config.isPygmentsInstalled = isInstalled
+        ("Pygments" in config.enabled) = isInstalled
 
 # Specify qtLibrary for particular os
 if config.docker and config.usePySide2onWebtop:
@@ -594,7 +594,7 @@ for module, feature, isInstalled in optional:
 # Check if other optional features are installed
 # [Optional] Text-to-Speech feature
 # Check is OFFLINE tts is in place
-config.isOfflineTtsInstalled = isOfflineTtsInstalled()
+("OfflineTts" in config.enabled) = isOfflineTtsInstalled()
 # Check if official Google Cloud text-to-speech service is in place
 config.isGoogleCloudTTSAvailable = os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json"))
 if config.isGoogleCloudTTSAvailable and config.ttsDefaultLangauge == "en":
@@ -602,19 +602,19 @@ if config.isGoogleCloudTTSAvailable and config.ttsDefaultLangauge == "en":
 elif not config.isGoogleCloudTTSAvailable and config.ttsDefaultLangauge == "en-GB":
     config.ttsDefaultLangauge = "en"
 # Check if ONLINE tts is in place
-config.isOnlineTtsInstalled = True if config.isGTTSInstalled or config.isGoogleCloudTTSAvailable else False
+config.updateModules("OnlineTts", True) if ("Gtts" in config.enabled) or config.isGoogleCloudTTSAvailable else False
 # Check if any tts is in place
-if not config.isOfflineTtsInstalled and not config.isOnlineTtsInstalled:
+if not ("OfflineTts" in config.enabled) and not ("OnlineTts" in config.enabled):
     config.noTtsFound = True
     print("Text-to-speech feature is not enabled or supported on your device.")
 else:
     config.noTtsFound = False
 # Check if TTS speed adjustment is supported
-if config.forceOnlineTts and not config.isOnlineTtsInstalled:
+if config.forceOnlineTts and not ("OnlineTts" in config.enabled):
     config.forceOnlineTts = False
-config.noTtsSpeedAdjustment = (config.isGTTSInstalled and not config.isGoogleCloudTTSAvailable and ((not config.isOfflineTtsInstalled) or (config.isOfflineTtsInstalled and config.forceOnlineTts)))
+config.noTtsSpeedAdjustment = ("(Gtts" in config.enabled) and not ("GoogleCloudTTSAvailable and ((not config.isOfflineTts" in config.enabled)) or ("(OfflineTts" in config.enabled) and config.forceOnlineTts)))
 # Check if builtin media player is in place:
-if config.forceUseBuiltinMediaPlayer and not config.isVlcInstalled:
+if config.forceUseBuiltinMediaPlayer and not ("Pythonvlc" in config.enabled):
     config.forceUseBuiltinMediaPlayer = False
 # Check if 3rd-party VLC player is installed on macOS
 macVlc = "/Applications/VLC.app/Contents/MacOS/VLC"

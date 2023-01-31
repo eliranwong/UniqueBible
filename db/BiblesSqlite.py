@@ -325,7 +325,7 @@ input.addEventListener('keyup', function(event) {0}
         return content
 
     def diffVerse(self, verseList, texts=["ALL"]):
-        if config.isDiffMatchPatchInstalled:
+        if ("Diffmatchpatch" in config.enabled):
             return "".join([self.readTranslationsDiff(b, c, v, texts) for b, c, v, *_ in verseList])
         else:
             return config.thisTranslation["message_noSupport"]
@@ -1203,7 +1203,7 @@ class Bible:
     def insertReadBibleLink(text, b, c, v=None):
         text = FileUtil.getMP3TextFile(text)
         data = ""
-        if (config.runMode == "gui" and config.isVlcInstalled) or config.enableHttpServer:
+        if (config.runMode == "gui" and ("Pythonvlc" in config.enabled)) or config.enableHttpServer:
             directory = os.path.join(config.audioFolder, "bibles", text)
             if os.path.isdir(directory):
                 directories = [d for d in sorted(os.listdir(directory)) if
