@@ -3,8 +3,7 @@
 # UniqueBible.app
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
-import glob
-import os, platform, logging, re, sys, subprocess
+import glob, os, platform, logging, re, sys, subprocess, shutil
 import logging.handlers as handlers
 from util.FileUtil import FileUtil
 from util.NetworkUtil import NetworkUtil
@@ -33,7 +32,42 @@ import config
 # Setup config values
 from util.ConfigUtil import ConfigUtil
 ConfigUtil.setup()
-from gui.Styles import *
+
+# set enviornment variables
+env = (
+    ("PYTHONUNBUFFERED", "1"),
+    ("QT_API", "pyside2"),
+    ("QT_LOGGING_RULES", "*=false"),
+)
+for key, value in env:
+    os.environ[key] = value
+
+# Tweak for ChromeOS Linux (Debian 10) ONLY:
+if config.isChromeOS:
+    # On ChromeOS, there are two major options of QT_QPA_PLATFORM: xcb and wayland
+    # If QT_QPA_PLATFORM is set to wayland, UBA does not work with touchscreen and its main window closes and opens unexpectedly.
+    os.environ["QT_QPA_PLATFORM"] = "xcb"
+    # Trouble-shoot an issue: https://github.com/eliranwong/ChromeOSLinux/blob/main/troubleshooting/qt.qpa.plugin_cannot_load_xcb.md
+    # The issue causes UBA unable to start up.
+    libxcbUtil0 = "/usr/lib/x86_64-linux-gnu/libxcb-util.so.0"
+    libxcbUtil1 = "/usr/lib/x86_64-linux-gnu/libxcb-util.so.1"
+    if os.path.exists(libxcbUtil0) and not os.path.exists(libxcbUtil1):
+        try:
+            subprocess.Popen(f"sudo ln -s {libxcbUtil0} {libxcbUtil1}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        except:
+            pass
+
+# Options to override "QT_QPA_PLATFORM"
+# use vnc for qpa platform
+if os.path.isfile("use_vnc"):
+    os.environ["QT_QPA_PLATFORM"] = "vnc"
+# use waland for qpa platform
+# https://wiki.archlinux.org/title/wayland
+elif os.path.isfile("use_wayland"):
+    os.environ["QT_QPA_PLATFORM"] = "wayland;xcb"
+# use xcb for qpa platform
+elif os.path.isfile("use_xcb"):
+    os.environ["QT_QPA_PLATFORM"] = "xcb"
 
 # Check argument passed to UBA as a parameter
 initialCommand = " ".join(sys.argv[1:]).strip()
@@ -81,6 +115,19 @@ from util.checkup import *
 # The following two imports must not be placed before checkup utilities
 import requests
 from util.UpdateUtil import UpdateUtil
+
+if "Nltk" in config.enabled:
+    # copy nltk data to virtual environment directory
+    nltk_data1 = os.path.join("nltk_data", "corpora", "omw-1.4.zip")
+    nltk_data1_destination_folder = os.path.join(config.venvDir, nltk_data1[:-4])
+    nltk_data2 = os.path.join("nltk_data", "corpora", "wordnet.zip")
+    nltk_data2_destination_folder = os.path.join(config.venvDir, nltk_data2[:-4])
+    corpora_folder = os.path.join(config.venvDir, "nltk_data", "corpora")
+    os.makedirs(corpora_folder, exist_ok=True)
+    if os.path.isfile(nltk_data1) and not os.path.isdir(nltk_data1_destination_folder):
+        shutil.unpack_archive(nltk_data1, corpora_folder)
+    if os.path.isfile(nltk_data2) and not os.path.isdir(nltk_data2_destination_folder):
+        shutil.unpack_archive(nltk_data2, corpora_folder)
 
 if initialCommand == "setup-only":
     print("UniqueBibleApp installed!")
@@ -544,6 +591,7 @@ ShortcutUtil.setup(config.menuShortcuts)
 # Setup GUI windows
 from util.LanguageUtil import LanguageUtil
 from util.BibleVerseParser import BibleVerseParser
+from gui.Styles import *
 from gui.MainWindow import MainWindow
 if config.qtLibrary == "pyside6":
     from PySide6.QtWidgets import QApplication, QStyleFactory

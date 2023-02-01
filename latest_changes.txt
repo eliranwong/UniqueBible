@@ -1,3 +1,7 @@
+Changes in 33.51:
+* fixed venv directory content when python version is updated
+* added shortcut file to Linux desktop
+
 Changes in 33.50:
 * Reduced launch time.
 

@@ -1,7 +1,6 @@
 import codecs
 import logging
-import os, pprint, config
-from platform import system
+import os, pprint, config, platform, sys
 from util.DateUtil import DateUtil
 from lang import language_en_GB
 
@@ -39,6 +38,18 @@ class ConfigUtil:
 
     @staticmethod
     def setup():
+
+        # check os
+        config.thisOS = platform.system()
+        config.isChromeOS = True if config.thisOS == "Linux" and os.path.exists("/mnt/chromeos/") else False
+
+        # check current directory
+        config.ubaDir = os.getcwd()
+
+        # check running mode
+        config.runMode = sys.argv[1] if len(sys.argv) > 1 else ""
+        if config.runMode and not config.runMode.lower() in ("cli", "gui", "terminal", "docker", "telnet-server", "http-server", "execute-macro", "api-server"):
+            config.runMode = ""
 
         # Check current version
         with open("UniqueBibleAppVersion.txt", "r", encoding="utf-8") as fileObject:
@@ -97,6 +108,14 @@ class ConfigUtil:
                 if module in config.enabled:
                     config.enabled.remove(module)
 
+        def getCurrentVenvDir():
+            major, minor, micro, *_ = sys.version_info
+            cpu = ""
+            if config.thisOS == "Darwin":
+                *_, cpu = platform.mac_ver()
+                cpu = f"_{cpu}"
+            return "venv_{0}{4}_{1}.{2}.{3}".format("macOS" if config.thisOS == "Darwin" else config.thisOS, major, minor, micro, cpu)
+
         config.updateModules = updateModules
         setConfig("enabled", """
         # Enabled modules""",
@@ -104,6 +123,15 @@ class ConfigUtil:
         setConfig("disabled", """
         # Disabled modules""",
         [])
+        venvDir = getCurrentVenvDir()
+        setConfig("venvDir", """
+        # virtual environment directory""",
+        venvDir)
+        # in case python version is updated or device is changed
+        if not config.venvDir == venvDir:
+            config.enabled = []
+            config.disabled = []
+            config.venvDir = venvDir
         setConfig("desktopUBAIcon", """
         # Desktop version UBA icon filename.  UniqueBible.app provides official icons in different colours.  We ask our users to use one of our official icons to acknowledge our development.""",
         os.path.join("htmlResources", "UniqueBibleApp.png"))

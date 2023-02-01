@@ -1,6 +1,7 @@
 import config, subprocess, os, zipfile, platform, sys, re
 from shutil import copyfile
 from util.WebtopUtil import WebtopUtil
+from install.module import *
 
 
 def downloadFileIfNotFound(databaseInfo):
@@ -37,29 +38,6 @@ def downloadFileIfNotFound(databaseInfo):
             print("'{0}' is installed!".format(fileItems[-1]))
         else:
             print("Failed to download '{0}'!".format(fileItems[-1]))
-
-def pip3InstallModule(module):
-    #executablePath = os.path.dirname(sys.executable)
-    #pippath = os.path.join(executablePath, "pip")
-    #pip = pippath if os.path.isfile(pippath) else "pip"
-    #pip3path = os.path.join(executablePath, "pip3")
-    #pip3 = pip3path if os.path.isfile(pip3path) else "pip3"
-    if not config.pipIsUpdated:
-        try:
-            # Automatic setup does not start on some device because pip tool is too old
-            updatePip = subprocess.Popen("pip3 install --upgrade pip", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            *_, stderr = updatePip.communicate()
-            if not stderr:
-                print("pip tool updated!")
-        except:
-            pass
-        config.pipIsUpdated = True
-    print("Installing missing module '{0}' ...".format(module))
-    # implement pip3 as a subprocess:
-    #install = subprocess.Popen(['pip3', 'install', module], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    install = subprocess.Popen(f"pip3 install {module}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    *_, stderr = install.communicate()
-    return stderr
 
 def fixFcitxOnLinux(module):
     # Fixed fcitx for Linux users
@@ -584,7 +562,7 @@ if not config.enabled:
         if config.updateDependenciesOnStartup and not (module.startswith("-U ") or module.startswith("--upgrade ")):
                 module = "--upgrade {0}".format(module)
         if not isInstalled():
-            pip3InstallModule(module)
+            installmodule(module)
             if module == "PySide2" and not isInstalled():
                 module = "PyQt5"
                 isInstalled = isPyQt5Installed
@@ -593,8 +571,8 @@ if not config.enabled:
                     if config.docker:
                         WebtopUtil.installPackage("python-pyqt5 python-pyqt5-sip python-pyqt5-webengine")
                     else:
-                        pip3InstallModule(module)
-                        pip3InstallModule("PyQtWebEngine")
+                        installmodule(module)
+                        installmodule("PyQtWebEngine")
                     if isInstalled():
                         config.qtLibrary == "pyqt5"
                         os.environ["QT_API"] = config.qtLibrary
@@ -614,7 +592,7 @@ if not config.enabled:
                     if config.docker:
                         WebtopUtil.installPackage("pyside2 pyside2-tools qt5-webengine")
                     else:
-                        pip3InstallModule(module)
+                        installmodule(module)
                     if isInstalled():
                         config.qtLibrary == "pyside2"
                         os.environ["QT_API"] = config.qtLibrary
@@ -729,7 +707,7 @@ for module, feature, isInstalled in optional:
         if not isInstalled() or config.updateDependenciesOnStartup:
             if config.updateDependenciesOnStartup and not (module.startswith("-U ") or module.startswith("--upgrade ")):
                 module = "--upgrade {0}".format(module)
-            pip3InstallModule(module)
+            installmodule(module)
             available = isInstalled()
             print("Installed!" if available else "Optional feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first.".format(feature, module))
         else:

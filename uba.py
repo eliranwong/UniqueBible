@@ -1,69 +1,33 @@
 #!/usr/bin/env python3
 
-import os, sys, subprocess, platform, shutil
+import os, sys, subprocess, platform
 from shutil import copyfile
+from install.module import *
 
+# requires python 3.7+
+if sys.version_info < (3, 7):
+    print("Required python version [3.7 or above] is not found!")
+    print("Closing ...")
+    exit(1)
+
+# set enviornment variables
 os.environ["PYTHONUNBUFFERED"] = "1"
 
+# check running mode and initial command
+runMode = sys.argv[1] if len(sys.argv) > 1 else ""
+enableCli = True if runMode.lower() in ("cli", "cli.py", "gui", "terminal", "docker", "telnet-server", "http-server", "execute-macro", "api-server") else False
+initialCommand = input("Enter command: ").strip() if runMode == "-i" else " ".join(sys.argv[1:]).strip()
+initialCommand = initialCommand.strip()
+
+# define directories
+# set working directory
 thisFile = os.path.realpath(__file__)
 wd = os.path.dirname(thisFile)
 if os.getcwd() != wd:
     os.chdir(wd)
-
-# Required minimum python version: 3.5
-if sys.version_info < (3, 5):
-    print("UniqueBible.app runs only with Python 3.5 or later")
-    exit(1)
-# Message for running python version lower than 3.7
-if sys.version_info < (3, 7):
-    print("You are running a python version lower than 3.7.  Some optional features may not be enabled.  UniqueBible.app requires python version 3.7+ to run all its features.")
-
-# Take arguments
-initialCommand = " ".join(sys.argv[1:]).strip()
-
-# Set environment variable
-# os.environ["QT_API"] = "pyqt5" if initialCommand == "docker" else "pyside2"
-os.environ["QT_API"] = "pyside2"
-os.environ["QT_LOGGING_RULES"] = "*=false"
-
-if initialCommand == "-i":
-    initialCommand = input("Enter command: ").strip()
-enableCli = True if initialCommand.lower() in ("cli", "cli.py", "gui") \
-    or (len(sys.argv) > 1 and
-        sys.argv[1] in ("terminal", "telnet-server", "http-server", "execute-macro", "api-server")) else False
-
-# For ChromeOS Linux (Debian 10) ONLY:
-if platform.system() == "Linux" and os.path.exists("/mnt/chromeos/"):
-    # On ChromeOS, there are two major options of QT_QPA_PLATFORM: xcb and wayland
-    # If QT_QPA_PLATFORM is set to wayland, UBA does not work with touchscreen and its main window closes and opens unexpectedly.
-    os.environ["QT_QPA_PLATFORM"] = "xcb"
-    # Trouble-shoot an issue: https://github.com/eliranwong/ChromeOSLinux/blob/main/troubleshooting/qt.qpa.plugin_cannot_load_xcb.md
-    # The issue causes UBA unable to start up.
-    libxcbUtil0 = "/usr/lib/x86_64-linux-gnu/libxcb-util.so.0"
-    libxcbUtil1 = "/usr/lib/x86_64-linux-gnu/libxcb-util.so.1"
-    if os.path.exists(libxcbUtil0) and not os.path.exists(libxcbUtil1):
-        try:
-            subprocess.Popen("sudo ln -s /usr/lib/x86_64-linux-gnu/libxcb-util.so.0 /usr/lib/x86_64-linux-gnu/libxcb-util.so.1", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        except:
-            pass
-
-# use xcb for qpa platform
-if os.path.isfile("use_xcb"):
-    os.environ["QT_QPA_PLATFORM"] = "xcb"
-
-# use waland for qpa platform
-# https://wiki.archlinux.org/title/wayland
-if os.path.isfile("use_wayland"):
-    os.environ["QT_QPA_PLATFORM"] = "wayland;xcb"
-
-# use vnc for qpa platform
-if os.path.isfile("use_vnc"):
-    os.environ["QT_QPA_PLATFORM"] = "vnc"
-
-#python = "py" if platform.system() == "Windows" else "python3"
 # Do NOT use sys.executable directly
 python = os.path.basename(sys.executable)
-mainFile = os.path.join(os.getcwd(), "main.py")
+mainFile = os.path.join(wd, "main.py")
 major, minor, micro, *_ = sys.version_info
 thisOS = platform.system()
 cpu = ""
@@ -72,11 +36,56 @@ if thisOS == "Darwin":
     *_, cpu = platform.mac_ver()
     cpu = f"_{cpu}"
 venvDir = "venv_{0}{4}_{1}.{2}.{3}".format(thisOS, major, minor, micro, cpu)
-binDir = "Scripts" if platform.system() == "Windows" else "bin"
+binDir = "Scripts" if thisOS == "Windows" else "bin"
 
-def desktopFileContent():
-    iconPath = os.path.join(os.getcwd(), "htmlResources", "UniqueBibleApp.png")
-    return """#!/usr/bin/env xdg-open
+# Check if virtual environment is being used
+if sys.prefix == sys.base_prefix:
+    # Check if virtual environment is available
+    venvPython = os.path.join(wd, venvDir, binDir, python)
+    if not os.path.exists(venvPython):
+        # Installing virtual environment
+        # https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/
+        try:
+            import venv
+        except:
+            installmodule("virtualenv", False)
+        #subprocess.Popen([python, "-m", "venv", venvDir])
+        print("Setting up environment ...")
+        # optional: add file "use_system_site_packages" in UBA direcyory to use packages installed on system
+        try:
+            if not "venv" in sys.modules:
+                import venv
+            venv.create(env_dir=venvDir, with_pip=True, system_site_packages=True) if runMode == "docker" or os.path.isfile("use_system_site_packages") else venv.create(env_dir=venvDir, with_pip=True)
+        except:
+            pass
+
+# create shortcut files
+# On Windows
+if thisOS == "Windows":
+    # Create a .bat for application shortcut
+    shortcutBat = os.path.join(wd, "UniqueBibleApp.bat")
+    if not os.path.exists(shortcutBat):
+        with open(shortcutBat, "w") as fileObj:
+            fileObj.write('{0} "{1}"'.format(sys.executable, thisFile))
+# On non-Windows platforms
+else:
+    # Create application shortcuts and set file permission
+    shortcutSh = os.path.join(wd, "uba.sh")
+    if not os.path.exists(shortcutSh):
+        # Create .sh shortcut
+        with open(shortcutSh, "w") as fileObj:
+            fileObj.write("#!{0}\n{1} {2}".format(os.environ["SHELL"], sys.executable, thisFile))
+        # Set permission
+        for file in (thisFile, "main.py", "util/BibleVerseParser.py", "util/RegexSearch.py", shortcutSh):
+            try:
+                os.chmod(file, 0o755)
+            except:
+                pass
+# Additional shortcuts on Linux
+if thisOS == "Linux":
+    def desktopFileContent():
+        iconPath = os.path.join(wd, "htmlResources", "UniqueBibleApp.png")
+        return """#!/usr/bin/env xdg-open
 
 [Desktop Entry]
 Version=1.0
@@ -88,73 +97,35 @@ Icon={3}
 Name=Unique Bible App
 """.format(wd, sys.executable, thisFile, iconPath)
 
-# A method to install 
-def pip3InstallModule(module):
-    # update pip tool
-    try:
-        # Automatic setup does not start on some device because pip tool is too old
-        updatePip = subprocess.Popen("pip install --upgrade pip", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        *_, stderr = updatePip.communicate()
-        if not stderr:
-            print("pip tool updated!")
-    except:
-        pass
-    # Check if pip tool is available
-    isInstalled, _ = subprocess.Popen("pip3 -V", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
-    if isInstalled():
-        print("Installing missing module '{0}' ...".format(module))
-        # implement pip3 as a subprocess:
-        install = subprocess.Popen(['pip3', 'install', module], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        *_, stderr = install.communicate()
-        return stderr
-    else:
-        noPip3Message = "pip3 command is not found!"
-        print(noPip3Message)
-        return noPip3Message
-
-# Check if virtual environment is being used
-if sys.prefix == sys.base_prefix:
-    # Check if virtual environment is available
-    venvPython = os.path.join(os.getcwd(), venvDir, binDir, python)
-    if not os.path.exists(venvPython):
-        # Installing virtual environment
-        # https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/
+    ubaLinuxDesktopFile = os.path.join(wd, "UniqueBibleApp.desktop")
+    if not os.path.exists(ubaLinuxDesktopFile):
+        # Create .desktop shortcut
+        with open(ubaLinuxDesktopFile, "w") as fileObj:
+            fileObj.write(desktopFileContent())
         try:
-            import venv
-        except:
-            pip3InstallModule("virtualenv")
-        #subprocess.Popen([python, "-m", "venv", venvDir])
-        print("Setting up environment ...")
-        try:
-            if not "venv" in sys.modules:
-                import venv
-            venv.create(env_dir=venvDir, with_pip=True, system_site_packages=True) if initialCommand == "docker" or os.path.isfile("use_system_site_packages") else venv.create(env_dir=venvDir, with_pip=True)
+            # Try to copy the newly created .desktop file to:
+            from pathlib import Path
+            # ~/.local/share/applications
+            userAppDir = os.path.join(str(Path.home()), ".local", "share", "applications")
+            userAppDirShortcut = os.path.join(userAppDir, "UniqueBibleApp.desktop")
+            if not os.path.exists(userAppDirShortcut):
+                Path(userAppDir).mkdir(parents=True, exist_ok=True)
+                copyfile(ubaLinuxDesktopFile, userAppDirShortcut)
+            # ~/Desktop
+            homeDir = os.environ["HOME"]
+            desktopPath = f"{homeDir}/Desktop"
+            desktopPathShortcut = os.path.join(desktopPath, "UniqueBibleApp.desktop")
+            if os.path.exists(desktopPath) and not os.path.exists(desktopPathShortcut):
+                copyfile(ubaLinuxDesktopFile, desktopPathShortcut)
         except:
             pass
 
-nltk_data1 = os.path.join("nltk_data", "corpora", "omw-1.4.zip")
-nltk_data1_destination_folder = os.path.join(venvDir, nltk_data1[:-4])
-nltk_data2 = os.path.join("nltk_data", "corpora", "wordnet.zip")
-nltk_data2_destination_folder = os.path.join(venvDir, nltk_data2[:-4])
-corpora_folder = os.path.join(venvDir, "nltk_data", "corpora")
-os.makedirs(corpora_folder, exist_ok=True)
-if os.path.isfile(nltk_data1) and not os.path.isdir(nltk_data1_destination_folder):
-    shutil.unpack_archive(nltk_data1, corpora_folder)
-if os.path.isfile(nltk_data2) and not os.path.isdir(nltk_data2_destination_folder):
-    shutil.unpack_archive(nltk_data2, corpora_folder)
-
 # Run main.py
-if platform.system() == "Windows":
+if thisOS == "Windows":
     if python.endswith(".exe"):
         python = python[:-4]
-    # Create a .bat for application shortcut
-    shortcutBat = os.path.join(os.getcwd(), "UniqueBibleApp.bat")
-    if not os.path.exists(shortcutBat):
-        with open(shortcutBat, "w") as fileObj:
-            #fileObj.write('{0} "{1}"'.format(python, thisFile))
-            fileObj.write('{0} "{1}" gui'.format(sys.executable, thisFile))
     # Activate virtual environment
-    activator = os.path.join(os.getcwd(), venvDir, binDir, "activate")
+    activator = os.path.join(wd, venvDir, binDir, "activate")
     # Run main.py
     mainPy = "main.py {0}".format(initialCommand) if initialCommand else "main.py"
     if enableCli:
@@ -168,42 +139,15 @@ if platform.system() == "Windows":
         else:
             subprocess.Popen("{0} {1}".format(python, mainPy), shell=True)
 else:
-    # Create application shortcuts and set file permission
-    shortcutSh = os.path.join(os.getcwd(), "uba.sh")
-    if not os.path.exists(shortcutSh):
-        # Create .sh shortcut
-        with open(shortcutSh, "w") as fileObj:
-            fileObj.write("#!{0}\n{1} {2}{3}".format(os.environ["SHELL"], sys.executable, thisFile, " gui"))
-        # Set permission
-        for file in (thisFile, "main.py", "util/BibleVerseParser.py", "util/RegexSearch.py", shortcutSh):
-            try:
-                os.chmod(file, 0o755)
-            except:
-                pass
-    shortcutDesktop = os.path.join(os.getcwd(), "UniqueBibleApp.desktop")
-    if not os.path.exists(shortcutDesktop):
-        # Create .desktop shortcut
-        with open(shortcutDesktop, "w") as fileObj:
-            fileObj.write(desktopFileContent())
-        # Try to copy the newly created .desktop file to ~/.local/share/applications
-        try:
-            from pathlib import Path
-            userAppDir = os.path.join(str(Path.home()), ".local", "share", "applications")
-            # Create directory if it does not exists
-            Path(userAppDir).mkdir(parents=True, exist_ok=True)
-            # Copy .desktop file
-            copyfile(shortcutDesktop, os.path.join(userAppDir, "UniqueBibleApp.desktop"))
-        except:
-            pass
     # Activate virtual environment
-    activator = os.path.join(os.getcwd(), venvDir, binDir, "activate_this.py")
+    activator = os.path.join(wd, venvDir, binDir, "activate_this.py")
     if not os.path.exists(activator):
         copyfile("activate_this.py", activator)
     with open(activator) as f:
         code = compile(f.read(), activator, 'exec')
         exec(code, dict(__file__=activator))
     # Run main.py
-    if enableCli or initialCommand == "docker":
-        os.system("{0} {1} {2}".format(python, mainFile, initialCommand))
+    if enableCli:
+        os.system("{0} {1}{2}".format(python, mainFile, f" {initialCommand}" if initialCommand else ""))
     else:
         subprocess.Popen([python, mainFile, initialCommand] if initialCommand else [python, mainFile])
