@@ -23,7 +23,7 @@ config.parseEnglishBooksOnly = False
 config.searchBibleIfCommandNotFound = True
 config.regexSearchBibleIfCommandNotFound = False
 config.noQt = True
-
+config.parseClearSpecialCharacters = True
 
 from util.TextCommandParser import TextCommandParser
 
