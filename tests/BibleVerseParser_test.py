@@ -19,6 +19,8 @@ class BibleVerseParserTestCase(unittest.TestCase):
         config.searchBibleIfCommandNotFound = True
         config.regexSearchBibleIfCommandNotFound = False
         config.parseClearSpecialCharacters = False
+        config.useLiteVerseParsing = True
+        config.parseClearSpecialCharacters = True
         self.parser = BibleVerseParser(config.standardAbbreviation)
 
     def test_gen_parseText(self):
