@@ -31,7 +31,7 @@ Oliver Tseng (https://github.com/otseng)
 
 # Quick Start
 
-('git' and 'python3' are required)
+('git' and 'python 3.7+' are required)
 
 To download and set up Unique Bible app, run:
 
