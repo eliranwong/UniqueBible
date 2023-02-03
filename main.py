@@ -3,8 +3,7 @@
 # UniqueBible.app
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
-import os, platform, logging, sys, subprocess, shutil
-import logging.handlers as handlers
+import os, platform, sys, subprocess, shutil
 from util.FileUtil import FileUtil
 from util.WebtopUtil import WebtopUtil
 
@@ -114,33 +113,10 @@ if config.runMode == "setup-only":
     print("UniqueBibleApp installed!")
     exit()
 
-# Setup logging
-logger = logging.getLogger('uba')
-if config.enableLogging:
-    logger.setLevel(logging.DEBUG)
-    logHandler = handlers.TimedRotatingFileHandler('uba.log', when='D', interval=1, backupCount=0)
-    logHandler.setLevel(logging.DEBUG)
-    logger.addHandler(logHandler)
-    logging.getLogger("requests").setLevel(logging.WARNING)
-    logging.getLogger("urllib3").setLevel(logging.WARNING)
-else:
-    logger.addHandler(logging.NullHandler())
-
-def global_excepthook(type, value, traceback):
-    logger.error("Uncaught exception", exc_info=(type, value, traceback))
-    print(traceback.format_exc())
-
-sys.excepthook = global_excepthook
-
-from share import *
-
-# clean up
-cleanupTempFiles()
-
 # Running non-gui modes
 # ("terminal", "ssh-server", "telnet-server", "http-server", "api-server", "execute-macro")
 if config.noQt:
-    from nonGui import *
+    from startup.nonGui import *
     if config.runMode == "terminal":
         run_terminal_mode()
     elif config.runMode == "ssh-server":
@@ -164,4 +140,4 @@ if config.noQt:
     elif config.runMode == "execute-macro":
         startMacro()
 else:
-    from guiQt import *
+    from startup.guiQt import *

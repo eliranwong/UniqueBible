@@ -1,3 +1,6 @@
+Changes in 33.53:
+* fixed pytests
+
 Changes in 33.52:
 * support initial command argument in terminal mode
 

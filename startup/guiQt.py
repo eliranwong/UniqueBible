@@ -1,28 +1,18 @@
 import os, platform, sys, subprocess, re
 from util.FileUtil import FileUtil
 from util.ConfigUtil import ConfigUtil
-from datetime import datetime
-from share import *
-
-
-# check startup time
-testStartupTime = False
-if testStartupTime:
-    bootStartTime = datetime.now()
-
-# check initial command
-initialCommand = " ".join(sys.argv[2:]).strip() if config.runMode else " ".join(sys.argv[1:]).strip()
-initialCommandIsPython = True if initialCommand.endswith(".py") and os.path.isfile(initialCommand) else False
-
-# Running gui mode
-# Setup menu shortcut configuration file
-if not platform.system() == "Windows" and not config.enableHttpServer:
-    import readline
-from util.ShortcutUtil import ShortcutUtil
-ShortcutUtil.setup(config.menuShortcuts)
-# Setup GUI windows
 from util.LanguageUtil import LanguageUtil
 from util.BibleVerseParser import BibleVerseParser
+from datetime import datetime
+from startup.share import *
+if not platform.system() == "Windows" and not config.enableHttpServer:
+    import readline
+
+
+# Setup menu shortcut configuration file
+from util.ShortcutUtil import ShortcutUtil
+ShortcutUtil.setup(config.menuShortcuts)
+# Import Qt Library
 from gui.Styles import *
 from gui.MainWindow import MainWindow
 if config.qtLibrary == "pyside6":
@@ -42,6 +32,16 @@ if config.qtMaterial and not ("Qtmaterial" in config.enabled):
     config.qtMaterial = False
 if config.qtMaterial:
     from qt_material import apply_stylesheet
+
+
+# check startup time
+testStartupTime = False
+if testStartupTime:
+    bootStartTime = datetime.now()
+
+# check initial command
+initialCommand = " ".join(sys.argv[2:]).strip() if config.runMode else " ".join(sys.argv[1:]).strip()
+initialCommandIsPython = True if initialCommand.endswith(".py") and os.path.isfile(initialCommand) else False
 
 # Set screen size at first launch
 def setupMainWindow(availableGeometry):
@@ -208,18 +208,23 @@ def switchToCli():
         else:
             config.mainWindow.show()
 
+# Clipboard Monitoring
+def clipboardChanged():
+    clipboardText = QApplication.clipboard().text().strip()
+    config.clipboardText = clipboardText
+    if config.enableClipboardMonitoring:
+        if clipboardText:
+            parser = BibleVerseParser(config.parserStandarisation)
+            verseList = parser.extractAllReferences(clipboardText, False)
+            if verseList:
+                references = "; ".join([parser.bcvToVerseReference(*verse) for verse in verseList])
+                config.mainWindow.showFromTray()
+                config.mainWindow.runTextCommand(references)
+                if config.enableSystemTray:
+                    tray.showMessage("Unique Bible App", "{0}: {1}".format(config.thisTranslation["open"], references))
+            #elif platform.system() == "Darwin":
+            #    config.mainWindow.showFromTray()
 
-# Set Qt input method variable to use fcitx / ibus if config.fcitx / config.ibus is "True"
-if config.fcitx5:
-    os.environ["QT_IM_MODULE"] = "fcitx5"
-elif config.fcitx:
-    os.environ["QT_IM_MODULE"] = "fcitx"
-elif config.ibus:
-    os.environ["QT_IM_MODULE"] = "ibus"
-
-# Set Qt input method variable to use Qt virtual keyboards if config.virtualKeyboard is "True"
-if config.virtualKeyboard:
-    os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
 
 # Start PySide2 gui
 class UBA(QApplication):
@@ -234,6 +239,18 @@ class UBA(QApplication):
         if event.type() == QEvent.ApplicationActivate and config.mainWindowHidden:
             config.mainWindow.showFromTray()
         return super().event(event)
+
+
+# Set Qt input method variable to use Qt virtual keyboards if config.virtualKeyboard is "True"
+if config.virtualKeyboard:
+    os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
+# Set Qt input method variable to use fcitx / ibus if config.fcitx / config.ibus is "True"
+elif config.fcitx5:
+    os.environ["QT_IM_MODULE"] = "fcitx5"
+elif config.fcitx:
+    os.environ["QT_IM_MODULE"] = "fcitx"
+elif config.ibus:
+    os.environ["QT_IM_MODULE"] = "ibus"
 
 config.startup = True
 config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
@@ -353,23 +370,6 @@ if config.enableSystemTray:
     quitApp.triggered.connect(config.mainWindow.quitApp)
     trayMenu.addAction(quitApp)
     tray.setContextMenu(trayMenu)
-
-# Clipboard Monitoring
-def clipboardChanged():
-    clipboardText = QApplication.clipboard().text().strip()
-    config.clipboardText = clipboardText
-    if config.enableClipboardMonitoring:
-        if clipboardText:
-            parser = BibleVerseParser(config.parserStandarisation)
-            verseList = parser.extractAllReferences(clipboardText, False)
-            if verseList:
-                references = "; ".join([parser.bcvToVerseReference(*verse) for verse in verseList])
-                config.mainWindow.showFromTray()
-                config.mainWindow.runTextCommand(references)
-                if config.enableSystemTray:
-                    tray.showMessage("Unique Bible App", "{0}: {1}".format(config.thisTranslation["open"], references))
-            #elif platform.system() == "Darwin":
-            #    config.mainWindow.showFromTray()
 
 # Monitor Clipboard Changed
 QApplication.clipboard().dataChanged.connect(clipboardChanged)

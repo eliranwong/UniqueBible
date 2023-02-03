@@ -3,7 +3,7 @@ from util.ConfigUtil import ConfigUtil
 # The following two imports must not be placed before checkup utilities
 import requests
 from util.UpdateUtil import UpdateUtil
-from share import *
+from startup.share import *
 
 
 # manage latest update

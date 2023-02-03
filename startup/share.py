@@ -1,4 +1,5 @@
-import glob, os, config
+import glob, os, config, sys, logging
+import logging.handlers as handlers
 from util.FileUtil import FileUtil
 
 
@@ -40,3 +41,25 @@ def printContentOnConsole(text):
     #subprocess.Popen(["echo", html_text.extract_text(text)])
     #sys.stdout.flush()
     return text
+
+
+# clean up
+cleanupTempFiles()
+
+# Setup logging
+logger = logging.getLogger('uba')
+if config.enableLogging:
+    logger.setLevel(logging.DEBUG)
+    logHandler = handlers.TimedRotatingFileHandler('uba.log', when='D', interval=1, backupCount=0)
+    logHandler.setLevel(logging.DEBUG)
+    logger.addHandler(logHandler)
+    logging.getLogger("requests").setLevel(logging.WARNING)
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
+else:
+    logger.addHandler(logging.NullHandler())
+
+def global_excepthook(type, value, traceback):
+    logger.error("Uncaught exception", exc_info=(type, value, traceback))
+    print(traceback.format_exc())
+
+sys.excepthook = global_excepthook
