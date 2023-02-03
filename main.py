@@ -1,5 +1,3 @@
-#!venv/bin/python
-
 # UniqueBible.app
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
