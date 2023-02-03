@@ -3720,6 +3720,12 @@ class MainWindow(QMainWindow):
         newTextCommand = "{0}:::{1}".format(keyword, verseReference)
         self.textCommandChanged(newTextCommand, "main")
 
+    def bookAction(self, keyword, b=None):
+        if b is None:
+            b = config.mainB
+        engFullBookName = BibleBooks().abbrev["eng"][str(b)][1]
+        self.textCommandChanged(f"{keyword}:::{engFullBookName}", "main")
+
     def searchBookName(self, dictionary, b=None):
         if b is None:
             b = config.mainB
@@ -5058,6 +5064,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         subMenu = menu.addMenu(config.thisTranslation["menu4_book"])
         features = (
             ("html_introduction", lambda: self.searchBookChapter("Tidwell_The_Bible_Book_by_Book")),
+            ("outline", lambda: self.bookAction("OUTLINE")),
             ("html_timelines", lambda: self.searchBookChapter("Timelines")),
             ("context1_dict", lambda: self.searchBookName(True)),
             ("context1_encyclopedia", lambda: self.searchBookName(False)),

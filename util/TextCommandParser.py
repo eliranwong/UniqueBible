@@ -164,11 +164,20 @@ class TextCommandParser:
             # 5) If a chapter reference is entered, only verse 1 of the chapter specified is displayed.
             # e.g. PASSAGES:::Mat 3:13-17; Mark 1:9-11; Luk 3:21-23
             # e.g. PASSAGES:::KJV:::Mat 3:13-17; Mark 1:9-11; Luk 3:21-23"""),
+            "outline": (self.textBookOutline, """
+            # [KEYWORD] OUTLINE
+            # Feature - Display all subheadings in a bible book
+            # Usage - OUTLINE:::[BIBLE_BOOK]
+            # e.g. outline:::John"""),
             "overview": (self.textChapterOverview, """
             # [KEYWORD] OVERVIEW
+            # Feature - Display overview of a bible chapter
+            # Usage - OVERVIEW:::[BIBLE_CHAPTER]
             # e.g. overview:::John 3"""),
             "summary": (self.textChapterSummary, """
             # [KEYWORD] SUMMARY
+            # Feature - Display summary of a bible chapter
+            # Usage - SUMMARY:::[BIBLE_CHAPTER]
             # e.g. summary:::John 3"""),
             "concordance": (self.textConcordance, """
             # [KEYWORD] CONCORDANCE
@@ -1966,6 +1975,20 @@ class TextCommandParser:
         return playlist
 
     # functions about bible
+
+    # outline:::
+    def textBookOutline(self, command, source):
+        verseList = self.extractAllVerses(command)
+        if not verseList:
+            return self.invalidCommand()
+        else:
+            b, *_ = verseList[0]
+            bookName = BibleBooks.abbrev["eng"][str(b)][-1]
+            content = f"<h2>{bookName}</h2>"
+            for c in Bible(config.mainText).getChapterList(b):
+                subheadings = BiblesSqlite().getChapterSubheadings(b, c)
+                content += f"<p>{subheadings}</p>"
+            return ("study", content, {})
 
     # overview:::
     def textChapterOverview(self, command, source):

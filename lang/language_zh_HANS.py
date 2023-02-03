@@ -1003,4 +1003,5 @@ translation = {
     "bibleMaps": "圣经地图",
     "readingPlan": "阅读计划",
     "bibleInAYear": "365 天圣经阅读计划",
+    "outline": "大纲",
 }

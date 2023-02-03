@@ -1003,4 +1003,5 @@ translation = {
     "bibleMaps": "Mapas Bíblicos",
     "readingPlan": "Plan de lectura",
     "bibleInAYear": "Plan de lectura de la Biblia de 365 días",
+    "outline": "Esquema",
 }

@@ -1003,4 +1003,5 @@ translation = {
     "bibleMaps": "ബൈബിള് മാപ്പുകള്",
     "readingPlan": "പദ്ധതി വായിക്കുകName",
     "bibleInAYear": "365-ദിവസം ബൈബിൾ വായന പദ്ധതി",
+    "outline": "ഔട്ട്ലൈന്",
 }
