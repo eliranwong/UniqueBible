@@ -29,6 +29,18 @@ Oliver Tseng (https://github.com/otseng)
 
 <img width="1440" alt="Screenshot 2022-02-18 at 19 09 09" src="https://user-images.githubusercontent.com/25262722/154747249-adf94293-eaab-43aa-9461-04d4d688b3d1.png">
 
+# Quick Start
+
+('git' and 'python3' are required)
+
+To download and set up Unique Bible app, run:
+
+> git clone https://github.com/eliranwong/UniqueBible.git
+
+> cd UniqueBible
+
+> python3 uba.py
+
 # Setup or Installation
 
 Read our recommendations first at: https://github.com/eliranwong/UniqueBible/wiki/Recommendations-for-Different-Platforms
