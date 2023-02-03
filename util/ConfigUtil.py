@@ -47,8 +47,8 @@ class ConfigUtil:
         config.ubaDir = os.getcwd()
 
         # check running mode
-        config.runMode = sys.argv[1] if len(sys.argv) > 1 else ""
-        if config.runMode and not config.runMode.lower() in ("cli", "gui", "terminal", "docker", "telnet-server", "http-server", "execute-macro", "api-server"):
+        config.runMode = sys.argv[1].lower() if len(sys.argv) > 1 else ""
+        if config.runMode and not config.runMode in ("setup-only", "cli", "gui", "terminal", "docker", "telnet-server", "http-server", "execute-macro", "api-server"):
             config.runMode = ""
 
         # Check current version
@@ -76,7 +76,6 @@ class ConfigUtil:
         config.shortcutList = []
         config.enableHttpServer = False
         config.enableApiServer = False
-        config.runMode = "gui"
         #config.customBooksRangeSearch = ""
         config.mainCssBibleFontStyle = ""
         if not hasattr(config, "databaseConvertedOnStartup"):

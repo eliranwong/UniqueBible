@@ -1375,7 +1375,7 @@ class TextCommandParser:
     def osCommand(self, command, source):
         window = ""
         display = ""
-        if config.docker:
+        if (config.runMode == "docker"):
             WebtopUtil.run(command)
         elif config.runMode == "http-server" and not config.enableCmd:
             print("Command keyword CMD::: is not enabled for security reason.  To enable it, set 'enableCmd = True' in file 'config.py'.")
@@ -1699,7 +1699,7 @@ class TextCommandParser:
             else:
                 try:
                     os.system(r"cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
-                    if config.docker:
+                    if (config.runMode == "docker"):
                         WebtopUtil.openDir(dir)
                     else:
                         os.system(r"{0} {1}".format(config.open, outputFolder))

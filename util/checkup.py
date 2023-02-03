@@ -41,10 +41,10 @@ def downloadFileIfNotFound(databaseInfo):
 
 def fixFcitxOnLinux(module):
     # Fixed fcitx for Linux users
-    if platform.system() == "Linux" and not config.docker:
+    if platform.system() == "Linux" and not (config.runMode == "docker"):
         major, minor, micro, *_ = sys.version_info
         venvDir = "venv_Linux_{0}.{1}.{2}".format(major, minor, micro)
-        #if config.docker:
+        #if (config.runMode == "docker"):
         #    fcitxPlugin = "/usr/lib/qt/plugins/platforminputcontexts/libfcitx5platforminputcontextplugin.so"
         ubaInputPluginDir = os.path.join(os.getcwd(), venvDir, "lib/python{0}.{1}/site-packages/{2}/Qt/plugins/platforminputcontexts".format(major, minor, module))
         # plugin file 1
@@ -532,7 +532,7 @@ def runTerminalMode():
         exit(1)
 
 # Specify qtLibrary for particular os
-if config.docker and config.usePySide2onWebtop:
+if (config.runMode == "docker") and config.usePySide2onWebtop:
     config.qtLibrary = "pyside2"
     os.environ["QT_API"] = config.qtLibrary
 elif platform.system() == "Darwin" and config.usePySide6onMacOS:
@@ -568,7 +568,7 @@ if not config.enabled:
                 isInstalled = isPyQt5Installed
                 if not isInstalled():
                     print("PySide2 is not found!  Trying to install 'PyQt5' instead ...")
-                    if config.docker:
+                    if (config.runMode == "docker"):
                         WebtopUtil.installPackage("python-pyqt5 python-pyqt5-sip python-pyqt5-webengine")
                     else:
                         installmodule(module)
@@ -589,7 +589,7 @@ if not config.enabled:
                 isInstalled = isPySide2Installed
                 if not isInstalled():
                     print("PyQt5 is not found!  Trying to install 'PySide2' instead ...")
-                    if config.docker:
+                    if (config.runMode == "docker"):
                         WebtopUtil.installPackage("pyside2 pyside2-tools qt5-webengine")
                     else:
                         installmodule(module)
@@ -720,7 +720,7 @@ for module, feature, isInstalled in optional:
 # Check if other optional features are installed
 # [Optional] Text-to-Speech feature
 # Check is OFFLINE tts is in place
-if config.docker:
+if (config.runMode == "docker"):
     config.updateModules("OfflineTts", False)
     config.enableSystemTrayOnLinux = False
     config.macVoices = {}

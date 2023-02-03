@@ -1,3 +1,6 @@
+Changes in 33.52:
+* support initial command argument in terminal mode
+
 Changes in 33.51:
 * fixed venv directory content when python version is updated
 * added shortcut file to Linux desktop

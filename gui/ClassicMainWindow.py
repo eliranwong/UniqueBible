@@ -532,7 +532,7 @@ class ClassicMainWindow:
             menu999.addAction(QAction("testing", self, triggered=self.testing))
             addMenuItem(menu999, "edit_language_file", self, self.selectLanguageFileToEdit)
 
-        if config.docker:
+        if (config.runMode == "docker"):
             menu = addMenu(self.menuBar(), "menu_apps")
             with open("/defaults/menu.xml", "r") as fileObj:
                 for line in fileObj.readlines():

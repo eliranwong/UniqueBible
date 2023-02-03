@@ -2337,7 +2337,7 @@ class MainWindow(QMainWindow):
 
     # Action - open "images" directory
     def openDir(self, dir):
-        if config.docker:
+        if (config.runMode == "docker"):
             WebtopUtil.openDir(dir)
         else:
             self.runTextCommand("cmd:::{0} {1}".format(config.open, dir))

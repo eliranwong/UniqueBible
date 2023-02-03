@@ -6,7 +6,7 @@ from util.WebtopUtil import WebtopUtil
 config.pipIsUpdated = False
 config.runMode = "terminal"
 config.ubaIsRunning = False
-config.docker = False
+(config.runMode == "docker") = False
 config.noQt = True
 
 
@@ -529,7 +529,7 @@ def setInstallConfig(module, isInstalled):
         ("Pygments" in config.enabled) = isInstalled
 
 # Specify qtLibrary for particular os
-if config.docker and config.usePySide2onWebtop:
+if (config.runMode == "docker") and config.usePySide2onWebtop:
     config.qtLibrary = "pyside2"
     os.environ["QT_API"] = config.qtLibrary
 elif platform.system() == "Darwin" and config.usePySide6onMacOS:

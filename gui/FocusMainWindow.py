@@ -491,7 +491,7 @@ class FocusMainWindow:
             menu.addSeparator()
             addMenuItem(menu, "menu9_donate", self, self.donateToUs)
 
-        if config.docker:
+        if (config.runMode == "docker"):
             menu = addMenu(menuBar, "menu_apps")
             with open("/defaults/menu.xml", "r") as fileObj:
                 for line in fileObj.readlines():
@@ -503,7 +503,7 @@ class FocusMainWindow:
         if config.developer:
             menu = addMenu(menuBar, "developer")
             #addMenuItem(menu, "Download Google Static Maps", self, self.downloadGoogleStaticMaps, None, False)
-            if config.docker:
+            if (config.runMode == "docker"):
                 icon = "/usr/share/pixmaps/pycharm.png"
                 addIconMenuItem(icon, menu, "Pycharm", self, self.pycharm, "", translation=False)
                 icon = "/usr/share/pixmaps/vscodium.png"

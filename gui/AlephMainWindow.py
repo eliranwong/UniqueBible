@@ -220,7 +220,7 @@ class AlephMainWindow:
 
         if config.developer:
             menu = addMenu(menu1, "developer")
-            if config.docker:
+            if (config.runMode == "docker"):
                 icon = "/usr/share/pixmaps/pycharm.png"
                 addIconMenuItem(icon, menu, "Pycharm", self, self.pycharm, "", translation=False)
             addMenuItem(menu, "checkLanguageFiles", self, lambda: LanguageUtil.checkLanguageStringToAllFiles("checked"))
@@ -533,7 +533,7 @@ class AlephMainWindow:
         about_menu.addAction(QAction(config.thisTranslation["menu9_contact"], self, triggered=self.contactEliranWong))
         about_menu.addAction(QAction(config.thisTranslation["menu_donate"], self, triggered=self.donateToUs))
 
-        if config.docker:
+        if (config.runMode == "docker"):
             menu = addMenu(self.menuBar(), "menu_apps")
             with open("/defaults/menu.xml", "r") as fileObj:
                 for line in fileObj.readlines():
