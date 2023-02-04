@@ -1,3 +1,6 @@
+Changes in 33.58:
+* added more sync options
+
 Changes in 33.57:
 * fixed missing startup folder
 

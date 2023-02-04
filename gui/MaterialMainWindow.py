@@ -794,8 +794,9 @@ class MaterialMainWindow:
 
         self.firstToolBar.addSeparator()
 
-        icon = "material/action/ads_click/materialiconsoutlined/48dp/2x/outline_ads_click_black_48dp.png"
-        self.addMaterialIconButton("singleVersion", icon, self.openMainChapterMaterial, self.firstToolBar)
+        if not config.compareOnStudyWindow:
+            icon = "material/action/ads_click/materialiconsoutlined/48dp/2x/outline_ads_click_black_48dp.png"
+            self.addMaterialIconButton("singleVersion", icon, self.openMainChapterMaterial, self.firstToolBar)
         icon = "material/image/auto_awesome_motion/materialiconsoutlined/48dp/2x/outline_auto_awesome_motion_black_48dp.png"
         self.addMaterialIconButton("parallelVersions", icon, lambda: self.runCompareAction("PARALLEL"), self.firstToolBar)
         icon = "material/action/view_column/materialiconsoutlined/48dp/2x/outline_view_column_black_48dp.png"

@@ -494,6 +494,10 @@ class ConfigFlagsWindow(QDialog):
 
     def compareOnStudyWindowChanged(self):
         config.compareOnStudyWindow = not config.compareOnStudyWindow
+        if not config.compareOnStudyWindow and config.syncAction in ("PARALLEL", "SIDEBYSIDE", "COMPARE"):
+            config.syncAction = ""
+        if config.menuLayout == "material":
+            self.parent.setupMenuLayout("material")
 
     def usePySide2onWebtopChanged(self):
         config.usePySide2onWebtop = not config.usePySide2onWebtop

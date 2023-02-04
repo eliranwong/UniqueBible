@@ -1029,6 +1029,8 @@ class ConfigUtil:
         setConfig("syncAction", """
         # Command keyword, in upper case, for sync option.  Set empty string to disable sync action.""",
         "")
+        if not config.compareOnStudyWindow and config.syncAction in ("PARALLEL", "SIDEBYSIDE", "COMPARE"):
+            config.syncAction = ""
         setConfig("commentaryText", """
         # Last-opened commentary module""",
         "CBSC")

@@ -5070,6 +5070,22 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         addSyncAction("studyWindowBible", "STUDY")
         menu.addSeparator()
         features = (
+            ("menu_bible_chapter_notes", "OPENCHAPTERNOTE"),
+            ("menu_bible_verse_notes", "OPENVERSENOTE"),
+        )
+        for feature, keyword in features:
+            addSyncAction(feature, keyword)
+        menu.addSeparator()
+        if config.compareOnStudyWindow:
+            features = (
+                ("parallelVersions", "PARALLEL"),
+                ("sideBySideComparison", "SIDEBYSIDE"),
+                ("rowByRowComparison", "COMPARE"),
+            )
+            for feature, keyword in features:
+                addSyncAction(feature, keyword)
+            menu.addSeparator()
+        features = (
             ("html_overview", "OVERVIEW"),
             ("html_chapterIndex", "CHAPTERINDEX"),
             ("html_summary", "SUMMARY"),
