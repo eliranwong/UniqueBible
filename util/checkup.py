@@ -561,7 +561,7 @@ if not config.enabled:
     for module, feature, isInstalled in required or config.updateDependenciesOnStartup:
         if config.updateDependenciesOnStartup and not (module.startswith("-U ") or module.startswith("--upgrade ")):
                 module = "--upgrade {0}".format(module)
-        if not isInstalled():
+        if not isInstalled() or config.updateDependenciesOnStartup:
             installmodule(module)
             if module == "PySide2" and not isInstalled():
                 module = "PyQt5"
@@ -761,6 +761,10 @@ config.enableSystemTray = True if config.enableSystemTrayOnLinux or not platform
 if config.developer:
     # import exlbl
     pass
+
+# turn OFF config.updateDependenciesOnStartup after update
+if config.updateDependenciesOnStartup:
+    config.updateDependenciesOnStartup = False
 
 # Download initial content for fresh installation
 files = (

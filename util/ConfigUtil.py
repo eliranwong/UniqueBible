@@ -530,6 +530,9 @@ class ConfigUtil:
         setConfig("updateDependenciesOnStartup", """
         # Update Dependencies on Startup: True / False""",
         False)
+        if config.updateDependenciesOnStartup:
+            config.enabled = []
+            config.disabled = []
         setConfig("showControlPanelOnStartup", """
         # Options to use control panel: True / False
         # This feature is created for use in church settings.

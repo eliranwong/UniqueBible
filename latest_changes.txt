@@ -1,3 +1,6 @@
+Changes in 33.59:
+* fixed use of config.updateDependenciesOnStartup
+
 Changes in 33.58:
 * added more sync options
 
