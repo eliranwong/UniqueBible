@@ -1004,4 +1004,6 @@ translation = {
     "readingPlan": "План чтения",
     "bibleInAYear": "План чтения Библии 365 дней",
     "outline": "Контур",
+    "sync": "Синхронизация",
+    "none": "Нет",
 }

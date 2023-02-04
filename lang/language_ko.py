@@ -1004,4 +1004,6 @@ translation = {
     "readingPlan": "독서 계획",
     "bibleInAYear": "365일 성경 읽기 계획",
     "outline": "윤곽선",
+    "sync": "동기화",
+    "none": "없음",
 }

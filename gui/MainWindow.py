@@ -181,7 +181,7 @@ class MainWindow(QMainWindow):
         if config.openBibleWindowContentOnNextTab:
             self.mainView.setCurrentIndex(config.numberOfTab - 1)
         self.setMainPage()
-        if config.openStudyWindowContentOnNextTab and not config.syncStudyWindowBibleWithMainWindow and not config.syncCommentaryWithMainWindow:
+        if config.openStudyWindowContentOnNextTab and not config.syncAction:
             self.studyView.setCurrentIndex(config.numberOfTab - 1)
         self.setStudyPage()
         self.instantPage = self.instantView.page()
@@ -3049,7 +3049,7 @@ class MainWindow(QMainWindow):
                     self.studyV.setEnabled(True)
                 else:
                     self.studyRefButton.setVisible(True)
-                self.enableSyncStudyWindowBibleButton.setVisible(True)
+                #self.enableSyncStudyWindowBibleButton.setVisible(True)
                 self.swapBibleButton.setVisible(True)
             else:
                 self.studyBibleToolBar.show()
@@ -3066,7 +3066,7 @@ class MainWindow(QMainWindow):
                     self.studyV.setDisabled(True)
                 else:
                     self.studyRefButton.setVisible(False)
-                self.enableSyncStudyWindowBibleButton.setVisible(False)
+                #self.enableSyncStudyWindowBibleButton.setVisible(False)
                 self.swapBibleButton.setVisible(False)
             else:
                 self.studyBibleToolBar.hide()
@@ -3438,7 +3438,7 @@ class MainWindow(QMainWindow):
         self.runTextCommand("_qr:::{0}".format(self.getOnlineLink()))
 
     def studyRefButtonClickedMaterial(self):
-        if config.syncStudyWindowBibleWithMainWindow:
+        if (config.syncAction == "STUDY"):
             self.runTextCommand("STUDY:::{0}:::{1}".format(config.studyText, self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)))
         else:
             self.showAllChaptersMenuStudy()
@@ -3461,7 +3461,7 @@ class MainWindow(QMainWindow):
         config.mainText, config.mainB, config.mainC, config.mainV = sText, sb, sc, sv
         config.studyText, config.studyB, config.studyC, config.studyV = mText, mb, mc, mv
         self.runTextCommand("BIBLE:::{0}:::{1}".format(config.mainText, self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)))
-        if not config.syncStudyWindowBibleWithMainWindow:
+        if not (config.syncAction == "STUDY"):
             self.runTextCommand("STUDY:::{0}:::{1}".format(config.studyText, self.bcvToVerseReference(config.studyB, config.studyC, config.studyV)))        
 
     def commentaryRefButtonClicked(self):
@@ -3500,7 +3500,7 @@ class MainWindow(QMainWindow):
     def changeCommentaryVersion(self, index):
         if not self.refreshing:
             commentary = self.commentaryList[index]
-            if config.syncCommentaryWithMainWindow:
+            if config.syncAction == "COMMENTARY":
                 command = "COMMENTARY:::{0}:::{1}".format(commentary, self.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
             else:
                 command = "_commentarychapters:::{0}".format(commentary)
@@ -3518,13 +3518,13 @@ class MainWindow(QMainWindow):
             else:
                 self.mainRefButton.setText(verseReference)
             self.updateVersionCombo()
-            if config.syncStudyWindowBibleWithMainWindow and not config.openBibleInMainViewOnly and not self.syncingBibles:
+            if (config.syncAction == "STUDY") and not config.openBibleInMainViewOnly and not self.syncingBibles:
                 self.syncingBibles = True
                 newTextCommand = "STUDY:::{0}".format(verseReference)
                 self.runTextCommand(newTextCommand, True, "study")
-            elif config.syncCommentaryWithMainWindow:
+            elif config.syncAction:
                 self.syncingBibles = True
-                newTextCommand = "COMMENTARY:::{0}".format(verseReference)
+                newTextCommand = f"{config.syncAction}:::{verseReference}"
                 self.runTextCommand(newTextCommand, True, "study")
 
     def updateStudyRefButton(self):
@@ -3534,7 +3534,7 @@ class MainWindow(QMainWindow):
             self.setStudyRefMenu()
         else:
             self.studyRefButton.setText(":::".join(self.verseReference("study")))
-        if config.syncStudyWindowBibleWithMainWindow and not config.openBibleInMainViewOnly and not self.syncingBibles:
+        if (config.syncAction == "STUDY") and not config.openBibleInMainViewOnly and not self.syncingBibles:
             self.syncingBibles = True
             newTextCommand = "MAIN:::{0}".format(verseReference)
             self.runTextCommand(newTextCommand, True, "main")
@@ -3543,7 +3543,6 @@ class MainWindow(QMainWindow):
         if hasattr(self, "commentaryCombo"):
             self.updateCommentaryCombo()
         if self.commentaryRefButton:
-            #self.commentaryRefButton.setText(self.verseReference("commentary"))
             self.commentaryRefButton.setText(config.commentaryText)
 
     def updateCommentaryCombo(self):
@@ -5046,6 +5045,60 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             button.clicked.connect(action)
         toolbar.addWidget(button)
         return button
+
+    def getSyncDisplay(self):
+        if config.syncAction:
+            return self.getCrossplatformPath("material/notification/sync/materialiconsoutlined/48dp/2x/outline_sync_black_48dp.png") if config.menuLayout == "material" else "sync.png"
+        else:
+            return self.getCrossplatformPath("material/notification/sync_disabled/materialiconsoutlined/48dp/2x/outline_sync_disabled_black_48dp.png") if config.menuLayout == "material" else "noSync.png"
+
+    def setSyncButton(self):
+        qIcon = self.getQIcon(self.getSyncDisplay())
+        self.syncButton.setStyleSheet(qIcon)
+        self.syncButton.setPopupMode(QToolButton.InstantPopup)
+        self.syncButton.setArrowType(Qt.NoArrow)
+        self.syncButton.setCursor(QCursor(Qt.PointingHandCursor))
+        self.syncButton.setToolTip("{0}: {1}".format(config.thisTranslation["sync"], config.thisTranslation["on"] if config.syncAction else config.thisTranslation["off"]))
+        menu = QMenu(self.syncButton)
+        def addSyncAction(feature, keyword):
+            action = menu.addAction(config.thisTranslation[feature])
+            action.triggered.connect(partial(self.syncAction, keyword))
+            action.setCheckable(True)
+            action.setChecked(True if config.syncAction == keyword else False)
+        addSyncAction("none", "")
+        menu.addSeparator()
+        addSyncAction("studyWindowBible", "STUDY")
+        menu.addSeparator()
+        features = (
+            ("html_overview", "OVERVIEW"),
+            ("html_chapterIndex", "CHAPTERINDEX"),
+            ("html_summary", "SUMMARY"),
+        )
+        for feature, keyword in features:
+            addSyncAction(feature, keyword)
+        menu.addSeparator()
+        features = (
+            ("menu4_commentary", "COMMENTARY"),
+            ("menu4_compareAll", "COMPARE"),
+            ("contrasts", "DIFFERENCE"),
+            ("menu4_crossRef", "CROSSREFERENCE"),
+            ("menu4_tske", "TSKE"),
+            ("menu4_traslations", "TRANSLATION"),
+            ("menu4_discourse", "DISCOURSE"),
+            ("menu4_words", "WORDS"),
+            ("menu4_tdw", "COMBO"),
+            ("menu4_indexes", "INDEX"),
+        )
+        for feature, keyword in features:
+            addSyncAction(feature, keyword)
+        self.syncButton.setMenu(menu)
+
+    def syncAction(self, keyword):
+        config.syncAction = keyword
+        if keyword:
+            *_, verseReference = self.verseReference("main")
+            self.runTextCommand(f"{config.syncAction}:::{verseReference}", True, "study")
+        self.setSyncButton()
 
     def setMainRefMenu(self):
         bible = Bible(config.mainText)

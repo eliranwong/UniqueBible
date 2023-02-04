@@ -1004,4 +1004,6 @@ translation = {
     "readingPlan": "Planul de lectură",
     "bibleInAYear": "365-Day Plan de citire a Bibliei",
     "outline": "Contur",
+    "sync": "Sincronizare",
+    "none": "Niciuna.",
 }

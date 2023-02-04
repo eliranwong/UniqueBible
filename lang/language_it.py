@@ -1004,4 +1004,6 @@ translation = {
     "readingPlan": "Piano di lettura",
     "bibleInAYear": "Piano di lettura della Bibbia di 365 giorni",
     "outline": "Schema",
+    "sync": "Sincronizzazione",
+    "none": "Nessuno",
 }

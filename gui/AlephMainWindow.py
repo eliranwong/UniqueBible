@@ -16,6 +16,8 @@ class AlephMainWindow:
     def create_menu(self):
 
         config.topToolBarOnly = False
+        config.syncStudyWindowBibleWithMainWindow = True
+        config.syncCommentaryWithMainWindow = False
 
         menu1 = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu1_app"]))
         menu1_language = addSubMenu(menu1, "languageSettings")

@@ -1004,4 +1004,6 @@ translation = {
     "readingPlan": "阅读计划",
     "bibleInAYear": "365 天圣经阅读计划",
     "outline": "大纲",
+    "sync": "同步",
+    "none": "没有",
 }

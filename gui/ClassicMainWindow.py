@@ -15,6 +15,8 @@ class ClassicMainWindow:
     def create_menu(self):
 
         config.topToolBarOnly = False
+        config.syncStudyWindowBibleWithMainWindow = False
+        config.syncCommentaryWithMainWindow = False
 
         menuBar = self.menuBar()
         # 1st column

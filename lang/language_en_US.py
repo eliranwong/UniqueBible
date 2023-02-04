@@ -1004,4 +1004,6 @@ translation = {
     "readingPlan": "Reading Plan",
     "bibleInAYear": "365-Day Bible Reading Plan",
     "outline": "Outline",
+    "sync": "Sync",
+    "none": "None",
 }

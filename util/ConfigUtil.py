@@ -1026,12 +1026,9 @@ class ConfigUtil:
         setConfig("showBibleNoteIndicator", """
         # Options to show bible module note indicator on bible chapter: True / False""",
         True)
-        setConfig("syncStudyWindowBibleWithMainWindow", """
-        # Options sync Study Window's with changes verse references on Main Window: True / False""",
-        False)
-        setConfig("syncCommentaryWithMainWindow", """
-        # Options sync commentary with changes verse references on Main Window: True / False""",
-        False)
+        setConfig("syncAction", """
+        # Command keyword, in upper case, for sync option.  Set empty string to disable sync action.""",
+        "")
         setConfig("commentaryText", """
         # Last-opened commentary module""",
         "CBSC")

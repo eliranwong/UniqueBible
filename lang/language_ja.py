@@ -1004,4 +1004,6 @@ translation = {
     "readingPlan": "計測値計画",
     "bibleInAYear": "365 日聖書朗読計画",
     "outline": "概略",
+    "sync": "同期",
+    "none": "なし",
 }

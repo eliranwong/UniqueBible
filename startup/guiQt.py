@@ -306,18 +306,18 @@ if config.populateTabsOnStartup:
     openBibleWindowContentOnNextTab, openStudyWindowContentOnNextTab, updateMainReferenceOnChaningTabs = config.openBibleWindowContentOnNextTab, config.openStudyWindowContentOnNextTab, config.updateMainReferenceOnChaningTabs
     config.updateMainReferenceOnChaningTabs = False
     forceGenerateHtml = config.forceGenerateHtml
-    syncStudyWindowBibleWithMainWindow = config.syncStudyWindowBibleWithMainWindow
+    syncAction = config.syncAction
     config.openBibleWindowContentOnNextTab = True
     config.openStudyWindowContentOnNextTab = True
     config.forceGenerateHtml = False
-    config.syncStudyWindowBibleWithMainWindow = False
+    config.syncAction = ""
     # Execute initial command on Study Window
     populateTabsOnStartup("study")
     # Execute initial command on Bible Window
     populateTabsOnStartup("main")
     config.openBibleWindowContentOnNextTab, config.openStudyWindowContentOnNextTab = openBibleWindowContentOnNextTab, openStudyWindowContentOnNextTab
     config.forceGenerateHtml = forceGenerateHtml
-    config.syncStudyWindowBibleWithMainWindow = syncStudyWindowBibleWithMainWindow
+    config.syncAction = syncAction
     config.updateMainReferenceOnChaningTabs = updateMainReferenceOnChaningTabs
 elif not config.disableLoadLastOpenFilesOnStartup:
     # Execute initial command on Bible Window

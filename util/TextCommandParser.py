@@ -3033,7 +3033,7 @@ class TextCommandParser:
                 self.parent.openControlPanelTab(index, int(b), int(c), int(v), text),
                 return ("", "", {})
             else:
-                if not config.verseNoSingleClickAction == "COMPARE" and config.syncStudyWindowBibleWithMainWindow:
+                if not config.verseNoSingleClickAction == "COMPARE" and (config.syncAction == "STUDY"):
                     self.parent.nextStudyWindowTab()
                 self.parent.addHistoryRecord("main" if config.verseNoSingleClickAction == "COMPARE" else "study", "{0}:::{1}".format(config.verseNoSingleClickAction, verseReference))
                 return self.mapVerseAction(config.verseNoSingleClickAction, verseReference, source)

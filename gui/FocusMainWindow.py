@@ -15,6 +15,8 @@ class FocusMainWindow:
 
     def create_menu(self):
 
+        config.syncStudyWindowBibleWithMainWindow = False
+        config.syncCommentaryWithMainWindow = False
         config.topToolBarOnly = False
         
         menuBar = self.menuBar()

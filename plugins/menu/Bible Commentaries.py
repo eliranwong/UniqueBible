@@ -37,7 +37,7 @@ class BibleCommentaries(QWidget):
         self.chapters = []
         self.verses = []
         # Commentary reference
-        if config.syncCommentaryWithMainWindow:
+        if config.syncAction == "COMMENTARY":
             self.b = config.mainB
             self.c = config.mainC
             self.v = config.mainV

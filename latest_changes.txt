@@ -1,3 +1,7 @@
+Changes in 33.56:
+* Added various options of sync action with changes in main window bible selection.
+* Integrated sync action with material menu layout.
+
 Changes in 33.55:
 * added outline::: command to display all subheadings of a bible book, e.g. OUTLINE:::Genesis
 * integrated book outline feature in material menu layout
