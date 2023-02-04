@@ -1,3 +1,6 @@
+Changes in 33.57:
+* fixed missing startup folder
+
 Changes in 33.56:
 * Added various options of sync action with changes in main window bible selection.
 * Integrated sync action with material menu layout.
