@@ -1,9 +1,8 @@
-import os, platform, sys, subprocess, re
+import os, platform, sys, subprocess, re, time
 from util.FileUtil import FileUtil
 from util.ConfigUtil import ConfigUtil
 from util.LanguageUtil import LanguageUtil
 from util.BibleVerseParser import BibleVerseParser
-from datetime import datetime
 from startup.share import *
 if not platform.system() == "Windows" and not config.enableHttpServer:
     import readline
@@ -37,7 +36,7 @@ if config.qtMaterial:
 # check startup time
 testStartupTime = False
 if testStartupTime:
-    bootStartTime = datetime.now()
+    bootStartTime = time.time()
 
 # check initial command
 initialCommand = " ".join(sys.argv[2:]).strip() if config.runMode else " ".join(sys.argv[1:]).strip()
@@ -383,8 +382,7 @@ except:
 
 # show start up time in status bar
 if testStartupTime:
-    bootEndTime = datetime.now()
-    timeDifference = (bootEndTime - bootStartTime).total_seconds()
+    timeDifference = time.time() - bootStartTime
     print(f"Unique Bible App launches in {timeDifference}s.")
 
 # Launch UBA
