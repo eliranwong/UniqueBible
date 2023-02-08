@@ -1,6 +1,5 @@
 import os, signal, sys, re, config, base64, webbrowser, platform, subprocess, requests, update, logging, zipfile, glob
-import markdown
-from datetime import datetime
+import markdown, time
 from distutils import util
 from functools import partial
 from pathlib import Path
@@ -113,7 +112,7 @@ class MainWindow(QMainWindow):
         self.logger = logging.getLogger('uba')
 
         config.inBootupMode = True
-        bootStartTime = datetime.now()
+        bootStartTime = time.time()
         # delete old files
         for items in update.oldFiles:
             filePath = os.path.join(*items)
@@ -136,7 +135,7 @@ class MainWindow(QMainWindow):
         # setup a global variable "baseURL"
         self.setupBaseUrl()
         # variables for history management
-        self.now = datetime.now()
+        self.now = time.time()
         self.lastMainTextCommand = ""
         self.lastStudyTextCommand = ""
         self.newTabException = False
@@ -216,8 +215,8 @@ class MainWindow(QMainWindow):
         self.ws.exemptSaving = False
 
         config.inBootupMode = False
-        bootEndTime = datetime.now()
-        timeDifference = (bootEndTime - bootStartTime).total_seconds()
+        bootEndTime = time.time()
+        timeDifference = bootEndTime - bootStartTime
 
         self.logger.info("Boot start time: {0}".format(timeDifference))
 
@@ -331,6 +330,7 @@ class MainWindow(QMainWindow):
             self.manageControlPanel()
         elif self.textCommandLineEdit.isVisible():
             self.textCommandLineEdit.setFocus()
+            self.textCommandLineEdit.selectAll()
         if config.clearCommandEntry:
             self.textCommandLineEdit.setText("")
 
@@ -3649,7 +3649,7 @@ class MainWindow(QMainWindow):
         return js
 
     def startLoading(self):
-        self.laodingStartTime = datetime.now()
+        self.laodingStartTime = time.time()
 
     def finishMainViewLoading(self, ok, index=None):
         # scroll to the main verse
@@ -3686,7 +3686,7 @@ class MainWindow(QMainWindow):
                 view.setCurrentIndex(index + 1)
             view.setCurrentIndex(index)"""
     def displayLoadingTime(self):
-        timeDifference = (datetime.now() - self.laodingStartTime).total_seconds()
+        timeDifference = time.time() - self.laodingStartTime
         self.statusBar().showMessage(f"Loaded in {timeDifference}s.", timeout=config.displayLoadingTime)
         self.statusBar().show()
         QTimer.singleShot(config.displayLoadingTime, self.statusBar().hide)
@@ -3955,7 +3955,31 @@ class MainWindow(QMainWindow):
                 self.studyView.load(QUrl(address))
                 self.addHistoryRecord("study", textCommand)
 
+    def refineCommand(self, command):
+        command = command.strip()
+        try:
+            # match a bible version
+            if command in self.crossPlatform.textList:
+                command = f"TEXT:::{command}"
+            # match a bible reference
+            bc = command.split(":", 1)
+            bci = [int(i) for i in bc if i]
+            if len(bc) == 2 and len(bci) == 1:
+                # Users specify a verse number, e.g. :16
+                if command.startswith(":"):
+                    command = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, bci[0])
+                # Users specify a chapter number, e.g. 3:
+                elif command.endswith(":"):
+                    command = self.textCommandParser.bcvToVerseReference(config.mainB, bci[0], 1)
+            # Users specify both a chapter number and a verse number, e.g. 3:16
+            elif len(bc) == 2 and len(bci) == 2:
+                command = self.textCommandParser.bcvToVerseReference(config.mainB, bci[0], bci[1])
+        except:
+            pass
+        return command
+
     def passRunTextCommand(self, textCommand, addRecord=True, source="main", forceExecute=False):
+        textCommand = self.refineCommand(textCommand)
         if config.logCommands:
             self.logger.debug(textCommand[:80])
         # reset document.title
@@ -3964,8 +3988,8 @@ class MainWindow(QMainWindow):
         self.studyPage.runJavaScript(changeTitle)
         self.instantPage.runJavaScript(changeTitle)
         # prevent repetitive command within unreasonable short time
-        now = datetime.now()
-        timeDifference = int((now - self.now).total_seconds())
+        now = time.time()
+        timeDifference = int(now - self.now)
         if textCommand == "_stayOnSameTab:::":
             self.newTabException = True
         elif (not forceExecute and (timeDifference <= 1 and ((source == "main" and textCommand == self.lastMainTextCommand) or (source == "study" and textCommand == self.lastStudyTextCommand)))) or textCommand == "main.html":
