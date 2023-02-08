@@ -290,7 +290,7 @@ class WebEngineViewPopover(QWebEngineView):
         if not self.selectedText():
             self.messageNoSelection()
         else:
-            self.page().triggerAction(self.page().Copy)
+            self.page().triggerAction(QWebEnginePage.Copy)
 
     def displayVersesInNewWindow(self):
         selectedText = self.selectedText().strip()

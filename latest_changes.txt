@@ -1,3 +1,6 @@
+Changes in 33.63:
+* Fixed copy action.
+
 Changes in 33.62:
 * Improved menu plugin 'Bible'
 

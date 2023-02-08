@@ -1017,7 +1017,7 @@ class WebEngineView(QWebEngineView):
         if not self.selectedTextProcessed():
             self.messageNoSelection()
         else:
-            self.page().triggerAction(self.page().Copy)
+            self.page().triggerAction(QWebEnginePage.Copy)
 
     def copySelectedTextWithReference(self):
         selectedText = self.selectedTextProcessed()
