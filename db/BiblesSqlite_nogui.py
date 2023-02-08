@@ -253,7 +253,7 @@ input.addEventListener('keyup', function(event) {0}
     def getChapterSubheadings(self, b, c):
         query = "SELECT * FROM title WHERE Book=? AND Chapter=? ORDER BY Verse"
         self.cursor.execute(query, (b, c))
-        return "<br>".join(['<ref onclick="bcv({0},{1},{2})">[{1}:{2}]</ref> {3}'.format(b, c, v, text.replace("<br>", " ")) for b, c, v, text in self.cursor.fetchall()])
+        return "<br>".join(['<ref onclick="bcv({0},{1},{2})">[{1}:{2}]</ref> {3}'.format(b, c, v, re.sub("<br>|<u>|</u>", " ", text)) for b, c, v, text in self.cursor.fetchall()])
 
     def getVerseList(self, b, c, text=config.mainText, language=""):
         plainBibleList, formattedBibleList = self.getTwoBibleLists()
