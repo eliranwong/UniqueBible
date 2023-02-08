@@ -1,3 +1,6 @@
+Changes in 33.64:
+* Removed underlining in overview and outline content
+
 Changes in 33.63:
 * Fixed copy action.
 
