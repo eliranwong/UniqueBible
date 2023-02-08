@@ -772,7 +772,8 @@ if config.updateDependenciesOnStartup:
     config.updateDependenciesOnStartup = False
 
 # Download initial content for fresh installation
-config.gdownIsUpdated = False
+if not hasattr(config, "gdownIsUpdated"):
+    config.gdownIsUpdated = False
 files = (
     # Core bible functionality
     ((config.marvelData, "images.sqlite"), "1-aFEfnSiZSIjEPUQ2VIM75I4YRGIcy5-"),

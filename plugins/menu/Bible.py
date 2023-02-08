@@ -1,17 +1,18 @@
 import config, os, re
 from gui.WebEngineViewPopover import WebEngineViewPopover
-from db.BiblesSqlite import BiblesSqlite
+from db.BiblesSqlite import BiblesSqlite, Bible
+from util.BibleBooks import BibleBooks
 from util.BibleVerseParser import BibleVerseParser
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt
     from PySide6.QtWebEngineCore import QWebEnginePage
     from PySide6.QtGui import QStandardItemModel, QStandardItem, QGuiApplication
-    from PySide6.QtWidgets import QWidget, QPushButton, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
+    from PySide6.QtWidgets import QWidget, QPushButton, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox, QCompleter
 else:
     from qtpy.QtCore import Qt
     from qtpy.QtWebEngineWidgets import QWebEnginePage
     from qtpy.QtGui import QStandardItemModel, QStandardItem, QGuiApplication
-    from qtpy.QtWidgets import QWidget, QPushButton, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
+    from qtpy.QtWidgets import QWidget, QPushButton, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox, QCompleter
 
 class Bibles(QWidget):
 
@@ -73,13 +74,32 @@ class Bibles(QWidget):
         self.verseView = QComboBox()
         self.verseView.currentIndexChanged.connect(self.verseSelected)
         ###
+        self.previousButton = QPushButton()
+        self.previousButton.setToolTip(config.thisTranslation["menu_previous_chapter"])
+        icon = "material/image/navigate_before/materialiconsoutlined/48dp/2x/outline_navigate_before_black_48dp.png"
+        style = self.parent.getQIcon(icon)
+        self.previousButton.setStyleSheet(style)
+        self.previousButton.clicked.connect(self.previousChapter)
+
+        self.nextButton = QPushButton()
+        self.nextButton.setToolTip(config.thisTranslation["menu_next_chapter"])
+        icon = "material/image/navigate_next/materialiconsoutlined/48dp/2x/outline_navigate_next_black_48dp.png"
+        style = self.parent.getQIcon(icon)
+        self.nextButton.setStyleSheet(style)
+        self.nextButton.clicked.connect(self.nextChapter)
+
         self.referenceEntry = QLineEdit()
+        self.referenceEntry.mousePressEvent = lambda _ : self.referenceEntry.selectAll()
+        referenceAutosuggestion = QCompleter(BibleBooks().getAllKJVreferences()[0])
+        referenceAutosuggestion.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        self.referenceEntry.setCompleter(referenceAutosuggestion)
         self.referenceEntry.setClearButtonEnabled(True)
         reference = config.mainWindow.bcvToVerseReference(self.b, self.c, self.v)
         self.referenceEntry.setText(reference)
         self.referenceEntry.returnPressed.connect(self.referenceEntered)
         ###
         self.searchEntry = QLineEdit()
+        self.searchEntry.mousePressEvent = lambda _ : self.searchEntry.selectAll()
         self.searchEntry.setClearButtonEnabled(True)
         self.searchEntry.setText(config.mainText)
         self.searchEntry.textChanged.connect(self.filterEntry)
@@ -97,13 +117,18 @@ class Bibles(QWidget):
         layoutBcv.addWidget(self.chapterView)
         layoutBcv.addWidget(self.verseView)
         layout000Lt.addLayout(layoutBcv)
-        layout000Lt.addWidget(self.referenceEntry)
+        layoutReference = QHBoxLayout()
+        layoutReference.addWidget(self.referenceEntry)
+        layoutReference.addWidget(self.previousButton)
+        layoutReference.addWidget(self.nextButton)
+        layout000Lt.addLayout(layoutReference)
         layout000Lt.addWidget(self.searchEntry)
         layout000Lt.addWidget(entryView)
         layout000Lt.addWidget(openButton)
 
         #widgets on the right
         self.searchEntryRt = QLineEdit()
+        self.searchEntryRt.mousePressEvent = lambda _ : self.searchEntryRt.selectAll()
         self.searchEntryRt.setClearButtonEnabled(True)
         self.searchEntryRt.textChanged.connect(self.highlightContent)
         self.contentView = WebEngineViewPopover(config.mainWindow, "main", "main", windowTitle=config.thisTranslation["menu5_bible"], enableCloseAction=False)
@@ -117,6 +142,38 @@ class Bibles(QWidget):
     def highlightContent(self):
         searchString = self.searchEntryRt.text().strip()
         self.contentView.findText(searchString, QWebEnginePage.FindFlags())
+
+    def previousChapter(self):
+        newChapter = config.mainC - 1
+        if newChapter == 0:
+            prevBook = Bible(config.mainText).getPreviousBook(config.mainB)
+            newChapter = BibleBooks.getLastChapter(prevBook)
+            config.mainB = prevBook
+        mainChapterList = BiblesSqlite().getChapterList(config.mainB)
+        if newChapter in mainChapterList:
+            newReference = config.mainWindow.bcvToVerseReference(config.mainB, newChapter, 1)
+            self.runNewReference(newReference)
+
+    def nextChapter(self):
+        if config.mainC < BibleBooks.getLastChapter(config.mainB):
+            newChapter = config.mainC + 1
+            mainChapterList = BiblesSqlite().getChapterList(config.mainB)
+            if newChapter in mainChapterList:
+                newReference = config.mainWindow.bcvToVerseReference(config.mainB, newChapter, 1)
+                self.runNewReference(newReference)
+        else:
+            self.nextMainBook()
+
+    def nextMainBook(self):
+        nextBook = Bible(config.mainText).getNextBook(config.mainB)
+        if nextBook:
+            newReference = config.mainWindow.bcvToVerseReference(nextBook, 1, 1)
+            if newReference:
+                self.runNewReference(newReference)
+
+    def runNewReference(self, reference):
+        self.referenceEntry.setText(reference)
+        self.referenceEntered()
 
     def referenceEntered(self):
         reference = self.referenceEntry.text().strip()

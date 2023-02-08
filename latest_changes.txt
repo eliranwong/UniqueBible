@@ -1,3 +1,6 @@
+Changes in 33.62:
+* Improved menu plugin 'Bible'
+
 Changes in 33.61:
 * upgrade gdown before using it.
 
