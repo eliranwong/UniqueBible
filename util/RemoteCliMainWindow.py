@@ -10,6 +10,7 @@ from util.WebtopUtil import WebtopUtil
 from util.FileUtil import FileUtil
 from db.BiblesSqlite import Bible, MorphologySqlite
 from util.BibleBooks import BibleBooks
+from install.module import *
 
 
 class RemoteCliMainWindow(CrossPlatform):
@@ -38,6 +39,9 @@ class RemoteCliMainWindow(CrossPlatform):
         cloudFile = "https://drive.google.com/uc?id={0}".format(cloudID)
         localFile = "{0}.zip".format(os.path.join(*fileItems))
         try:
+            if not config.gdownIsUpdated:
+                installmodule("--upgrade gdown")
+                config.gdownIsUpdated = True
             try:
                 gdown.download(cloudFile, localFile, quiet=True)
                 print("Downloaded!")

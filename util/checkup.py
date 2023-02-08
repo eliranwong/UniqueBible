@@ -13,6 +13,9 @@ def downloadFileIfNotFound(databaseInfo):
         # Download from google drive
         import gdown
         try:
+            if not config.gdownIsUpdated:
+                installmodule("--upgrade gdown")
+                config.gdownIsUpdated = True
             print("Downloading initial content '{0}' ...".format(fileItems[-1]))
             #print("from: {0}".format(cloudFile))
             #print("to: {0}".format(localFile))
@@ -605,6 +608,8 @@ if not config.enabled:
                     config.qtLibrary == "pyside2"
                     os.environ["QT_API"] = config.qtLibrary
             if isInstalled():
+                if module == "gdown":
+                    config.gdownIsUpdated = True
                 print("Installed!")
             else:
                 if module == "PySide6":
@@ -733,7 +738,7 @@ if config.isGoogleCloudTTSAvailable and config.ttsDefaultLangauge == "en":
 elif not config.isGoogleCloudTTSAvailable and config.ttsDefaultLangauge == "en-GB":
     config.ttsDefaultLangauge = "en"
 # Check if ONLINE tts is in place
-config.updateModules("OnlineTts", True) if ("Gtts" in config.enabled) or config.isGoogleCloudTTSAvailable else False
+config.updateModules("OnlineTts", True if ("Gtts" in config.enabled) or config.isGoogleCloudTTSAvailable else False)
 # Check if any tts is in place
 if not ("OfflineTts" in config.enabled) and not ("OnlineTts" in config.enabled):
     config.noTtsFound = True
@@ -767,6 +772,7 @@ if config.updateDependenciesOnStartup:
     config.updateDependenciesOnStartup = False
 
 # Download initial content for fresh installation
+config.gdownIsUpdated = False
 files = (
     # Core bible functionality
     ((config.marvelData, "images.sqlite"), "1-aFEfnSiZSIjEPUQ2VIM75I4YRGIcy5-"),

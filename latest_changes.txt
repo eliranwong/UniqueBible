@@ -1,3 +1,6 @@
+Changes in 33.61:
+* upgrade gdown before using it.
+
 Changes in 33.60:
 * added a few command shortcuts to gui mode:
     e.g. run "KJV" to open KJV version directly.

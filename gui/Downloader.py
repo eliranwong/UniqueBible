@@ -6,6 +6,7 @@ if config.qtLibrary == "pyside6":
 else:
     from qtpy.QtWidgets import QGridLayout, QPushButton, QDialog, QLabel
     from qtpy.QtCore import QObject, Signal
+from install.module import *
 
 
 class DownloadProcess(QObject):
@@ -18,6 +19,9 @@ class DownloadProcess(QObject):
 
     def downloadFile(self):
         try:
+            if not config.gdownIsUpdated:
+                installmodule("--upgrade gdown")
+                config.gdownIsUpdated = True
             try:
                 gdown.download(self.cloudFile, self.localFile, quiet=True)
                 print("Downloaded!")
