@@ -1,3 +1,6 @@
+Changes in 33.66:
+* Added speed adjustment under Master Control > Media Player menu
+
 Changes in 33.65:
 * fixed displaying both sync action and single click action into different tabs.
 

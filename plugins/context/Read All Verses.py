@@ -19,11 +19,11 @@ def findText(html):
             macVlc = '/Applications/VLC.app/Contents/MacOS/VLC'
             if platform.system() == "Darwin" and os.path.isfile(macVlc):
                 audioFiles = ' '.join(playlist)
-                WebtopUtil.runNohup(f"{macVlc} {audioFiles}")
+                WebtopUtil.runNohup(f"{macVlc} --rate {config.vlcSpeed} {audioFiles}")
             elif playlist and WebtopUtil.isPackageInstalled("vlc"):
                 audioFiles = ' '.join(playlist)
                 os.system("pkill vlc")
-                WebtopUtil.runNohup(f"vlc {audioFiles}")
+                WebtopUtil.runNohup(f"vlc --rate {config.vlcSpeed} {audioFiles}")
             elif playlist and ("Pythonvlc" in config.enabled):
                 from gui.VlcPlayer import VlcPlayer
                 self = config.mainWindow

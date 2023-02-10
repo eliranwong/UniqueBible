@@ -4651,6 +4651,11 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         if config.menuLayout == "material":
             self.setupMenuLayout("material")
 
+    def setVlcSpeed(self, option):
+        config.vlcSpeed = float(option)
+        if config.menuLayout == "material":
+            self.setSubMenuVlcSpeed()
+
     def setWorkspaceSavingOrder(self, option):
         savingOrder = {
             "Creation Order": 0,

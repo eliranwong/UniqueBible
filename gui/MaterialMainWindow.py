@@ -557,6 +557,15 @@ class MaterialMainWindow:
             for feature, action, shortcut in items:
                 addMenuItem(subMenu, feature, self, action, shortcut)
             menu.addSeparator()
+            subMenuVlcSpeed = addSubMenu(subMenu, "adjustSpeed")
+            def setSubMenuVlcSpeed():
+                subMenuVlcSpeed.clear()
+                options = ("0.5", "0.75", "1.0", "1.25", "1.5", "1.75", "2.0")
+                for option in options:
+                    addCheckableMenuItem(subMenuVlcSpeed, option, self, partial(self.setVlcSpeed, option), str(config.vlcSpeed), option, translation=False)
+            self.setSubMenuVlcSpeed = setSubMenuVlcSpeed
+            self.setSubMenuVlcSpeed()
+            
         
         # Reload
         subMenu = addSubMenu(menu, "menu_reload")
