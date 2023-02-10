@@ -1067,19 +1067,19 @@ class MainWindow(QMainWindow):
                 config.monitorOption1.setChecked(False)
                 config.monitorOption2.setChecked(True)
         if config.menuLayout == "material":
-            self.setupMenuLayout("material")
+            self.setClipboardMonitoringSubmenu()
 
     def setAppWindowStyle(self, style):
         config.windowStyle = "" if style == "default" else style
         #self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
         if config.menuLayout == "material":
-            self.setupMenuLayout("material")
+            self.setAppWindowStyleSubmenu()
         self.handleRestart()
 
     def setApplicationIcon(self, icon):
         config.desktopUBAIcon = icon
         if config.menuLayout == "material":
-            self.setupMenuLayout("material")
+            self.setApplicationIconSubmenu()
         self.handleRestart()
 
     def setQtMaterialTheme(self, theme):
@@ -1383,16 +1383,17 @@ class MainWindow(QMainWindow):
                              config.thisTranslation["attention"],
                              "Notes are currently opened and modified.  Do you really want to continue, without saving the changes?",
                              QMessageBox.NoButton, self)
-        msgBox.addButton("Cancel", QMessageBox.AcceptRole)
-        msgBox.addButton("&Continue", QMessageBox.RejectRole)
-        if msgBox.exec_() == QMessageBox.AcceptRole:
-            # Cancel
-            self.noteSaved = False
-            return False
-        else:
+        msgBox.addButton("Cancel", QMessageBox.RejectRole)
+        msgBox.addButton("&Continue", QMessageBox.AcceptRole)
+        answer = msgBox.exec_()
+        if answer == 1 or answer == QMessageBox.AcceptRole:
             # Continue
             self.noteSaved = True
             return True
+        else:
+            # Cancel
+            self.noteSaved = False
+            return False
 
     def insertContextTextToNoteEditor(self):
         if config.contextItem:
@@ -4429,7 +4430,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     def singleClickActionSelected(self, item):
         config.verseNoSingleClickAction = item
         if config.menuLayout == "material":
-            self.setupMenuLayout("material")
+            self.singleClickActionSelectedSubmenu()
 
     # Set verse number double-click action (config.verseNoDoubleClickAction)
     def selectDoubleClickActionDialog(self):
@@ -4444,7 +4445,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     def doubleClickActionSelected(self, item):
         config.verseNoDoubleClickAction = item
         if config.menuLayout == "material":
-            self.setupMenuLayout("material")
+            self.doubleClickActionSelectedSubmenu()
 
     # Set reference button single-click action (config.refButtonClickAction)
     def selectRefButtonSingleClickActionDialog(self):
@@ -4477,7 +4478,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     def defaultStrongsGreekLexiconSelected(self, item):
         config.defaultLexiconStrongG = item
         if config.menuLayout == "material":
-            self.setupMenuLayout("material")
+            self.defaultStrongsGreekLexiconSelectedSubmenu()
 
     # Set default Strongs Hebrew lexicon (config.defaultLexiconStrongH)
     def openSelectDefaultStrongsHebrewLexiconDialog(self):
@@ -4491,7 +4492,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     def defaultStrongsHebrewLexiconSelected(self, item):
         config.defaultLexiconStrongH = item
         if config.menuLayout == "material":
-            self.setupMenuLayout("material")
+            self.defaultStrongsHebrewLexiconSelectedSubmenu()
 
     # Set Favourite Bible Version
     def openFavouriteMarvelBibleDialog(self):
@@ -4611,14 +4612,15 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
                              config.thisTranslation["attention"],
                              "Restart Unique Bible App to make the changes effective?",
                              QMessageBox.NoButton, self)
-        msgBox.addButton("Later", QMessageBox.AcceptRole)
-        msgBox.addButton("&Now", QMessageBox.RejectRole)
-        if msgBox.exec_() == QMessageBox.AcceptRole:
+        msgBox.addButton("Later", QMessageBox.RejectRole)
+        msgBox.addButton("&Now", QMessageBox.AcceptRole)
+        answer = msgBox.exec_()
+        if answer == 1 or answer == QMessageBox.AcceptRole:
             # Cancel
-            return False
+            return True
         else:
             # Continue
-            return True
+            return False
 
     def setDefaultTtsLanguageDialog(self):
         languages = self.getTtsLanguages()
@@ -4649,7 +4651,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         config.standardAbbreviation = option
         self.reloadCurrentRecord(True)
         if config.menuLayout == "material":
-            self.setupMenuLayout("material")
+            self.setBibleAbbreviationsSelectedSubmenu()
 
     def setVlcSpeed(self, option):
         config.vlcSpeed = float(option)
@@ -4664,12 +4666,12 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         }
         config.workspaceSavingOrder = savingOrder[option]
         if config.menuLayout == "material":
-            self.setupMenuLayout("material")
+            self.setWorkspaceSavingOrderSubmenu()
 
     def setMarkdownExportHeadingStyle(self, option):
         config.markdownifyHeadingStyle = option
         if config.menuLayout == "material":
-            self.setupMenuLayout("material")
+            self.setMarkdownExportHeadingStyleSubmenu()
 
     # set default font
     def setDefaultFont(self):

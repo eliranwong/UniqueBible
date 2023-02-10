@@ -274,14 +274,15 @@ Your browser does not support the video tag.
                              config.thisTranslation["attention"],
                              config.thisTranslation["warnCloseAllWindows"],
                              QMessageBox.NoButton, self)
-        msgBox.addButton("Cancel", QMessageBox.AcceptRole)
-        msgBox.addButton("&Continue", QMessageBox.RejectRole)
-        if msgBox.exec_() == QMessageBox.AcceptRole:
-            # Cancel
-            return False
-        else:
+        msgBox.addButton("Cancel", QMessageBox.RejectRole)
+        msgBox.addButton("&Continue", QMessageBox.AcceptRole)
+        answer = msgBox.exec_()
+        if answer == 1 or answer == QMessageBox.AcceptRole:
             # Continue
             return True
+        else:
+            # Cancel
+            return False
 
     def clearWorkspace(self):
         if self.clearWorkspaceWarning():

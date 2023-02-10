@@ -1,3 +1,6 @@
+Changes in 33.67:
+* Fixed restart handler
+
 Changes in 33.66:
 * Added speed adjustment under Master Control > Media Player menu
 

@@ -74,10 +74,14 @@ class MaterialMainWindow:
         menu.addSeparator()
 
         # Clipboard Content
-        subMenu = addSubMenu(menu, "clipboardMonitoring")
-        for option in ("enable", "disable"):
-            optionValue = True if option == "enable" else False
-            addCheckableMenuItem(subMenu, option, self, partial(self.setClipboardMonitoring, optionValue), config.enableClipboardMonitoring, optionValue)
+        subMenuClipboardMonitoring = addSubMenu(menu, "clipboardMonitoring")
+        def setClipboardMonitoringSubmenu():
+            subMenuClipboardMonitoring.clear()
+            for option in ("enable", "disable"):
+                optionValue = True if option == "enable" else False
+                addCheckableMenuItem(subMenuClipboardMonitoring, option, self, partial(self.setClipboardMonitoring, optionValue), config.enableClipboardMonitoring, optionValue)
+        self.setClipboardMonitoringSubmenu = setClipboardMonitoringSubmenu
+        setClipboardMonitoringSubmenu()
         subMenu.addSeparator()
         clipboardMonitoringWiki = "https://github.com/eliranwong/UniqueBible/wiki/Monitor-Clipboard-Text-Bible-References"
         addMenuItem(subMenu, "menu_about", self, lambda: webbrowser.open(clipboardMonitoringWiki))
@@ -98,11 +102,15 @@ class MaterialMainWindow:
         subMenu0 = addSubMenu(menu, "appearance")
         # Window layout
 
-        subMenu01 = addSubMenu(subMenu0, "applicationIcon")
-        for icon in FileUtil.fileNamesWithoutExtension(os.path.join("htmlResources", "icons"), "png"):
-            iconFile = os.path.join("htmlResources", "icons", f"{icon}.png")
-            currentIconFile = os.path.basename(config.desktopUBAIcon)[:-4]
-            addCheckableMenuItem(subMenu01, icon, self, partial(self.setApplicationIcon, iconFile), currentIconFile, icon, translation=False, icon=iconFile)
+        subMenuApplicationIcon = addSubMenu(subMenu0, "applicationIcon")
+        def setApplicationIconSubmenu():
+            subMenuApplicationIcon.clear()
+            for icon in FileUtil.fileNamesWithoutExtension(os.path.join("htmlResources", "icons"), "png"):
+                iconFile = os.path.join("htmlResources", "icons", f"{icon}.png")
+                currentIconFile = os.path.basename(config.desktopUBAIcon)[:-4]
+                addCheckableMenuItem(subMenuApplicationIcon, icon, self, partial(self.setApplicationIcon, iconFile), currentIconFile, icon, translation=False, icon=iconFile)
+        self.setApplicationIconSubmenu = setApplicationIconSubmenu
+        setApplicationIconSubmenu()
 
         subMenu01 = addSubMenu(subMenu0, "menu2_view")
         subMenu = addSubMenu(subMenu01, "menu1_screenSize")
@@ -139,9 +147,13 @@ class MaterialMainWindow:
         addMenuItem(subMenu01, "menu2_landscape", self, self.switchLandscapeMode)
 
         # Window style
-        subMenu = addSubMenu(subMenu0, "menu1_selectWindowStyle")
-        for style in QStyleFactory.keys():
-            addCheckableMenuItem(subMenu, style, self, partial(self.setAppWindowStyle, style), config.windowStyle, style, None, False)
+        subMenuWindowStyle = addSubMenu(subMenu0, "menu1_selectWindowStyle")
+        def setAppWindowStyleSubmenu():
+            subMenuWindowStyle.clear()
+            for style in QStyleFactory.keys():
+                addCheckableMenuItem(subMenuWindowStyle, style, self, partial(self.setAppWindowStyle, style), config.windowStyle, style, None, False)
+        self.setAppWindowStyleSubmenu = setAppWindowStyleSubmenu
+        setAppWindowStyleSubmenu()
         # Menu layouts
         subMenu = addSubMenu(subMenu0, "menu1_selectMenuLayout")
         addMenuLayoutItems(self, subMenu)
@@ -266,16 +278,7 @@ class MaterialMainWindow:
             addCheckableMenuItem(subMenu, description, self, partial(self.selectRefButtonSingleClickAction, option), config.refButtonClickAction, option)
         # Others
         items = (
-            #("controlPreference", self.selectRefButtonSingleClickActionDialog),
             ("menu1_tabNo", self.setTabNumberDialog),
-            #("menu1_setAbbreviations", self.setBibleAbbreviations),
-            #("menu1_setMyFavouriteBible", self.openFavouriteBibleDialog),
-            #("menu1_setMyFavouriteBible2", self.openFavouriteBibleDialog2),
-            #("menu1_setMyFavouriteBible3", self.openFavouriteBibleDialog3),
-            #("selectFavouriteHebrewGreekBible", self.openFavouriteMarvelBibleDialog),
-            #("selectFavouriteHebrewGreekBible2", self.openFavouriteMarvelBibleDialog2),
-            #("menu1_setDefaultStrongsHebrewLexicon", self.openSelectDefaultStrongsHebrewLexiconDialog),
-            #("menu1_setDefaultStrongsGreekLexicon", self.openSelectDefaultStrongsGreekLexiconDialog),
         )
         for feature, action in items:
             addMenuItem(subMenu0, feature, self, action)
@@ -283,18 +286,30 @@ class MaterialMainWindow:
         subMenu = addSubMenu(subMenu0, "selectVerseNumberAction")
         values = ("_noAction", "_cp0", "_cp1", "_cp2", "_cp3", "_cp4", "_cp5", "_cp6", "STUDY", "COMPARE", "CROSSREFERENCE", "TSKE", "TRANSLATION", "DISCOURSE", "WORDS", "COMBO", "INDEX", "COMMENTARY", "STUDY", "_menu")
         descriptions = ["noAction", "cp0", "cp1", "cp2", "cp3", "cp4", "cp5", "cp6", "openInStudyWindow", "menu4_compareAll", "menu4_crossRef", "menu4_tske", "menu4_traslations", "menu4_discourse", "menu4_words", "menu4_tdw", "menu4_indexes", "menu4_commentary", "menu_syncStudyWindowBible", "classicMenu"]
-        options = dict(zip(values, descriptions))
-        subMenu1 = addSubMenu(subMenu, "singleClick")
-        for option, description in options.items():
-            addCheckableMenuItem(subMenu1, description, self, partial(self.singleClickActionSelected, option), config.verseNoSingleClickAction, option)
-        subMenu1 = addSubMenu(subMenu, "doubleClick")
-        for option, description in options.items():
-            addCheckableMenuItem(subMenu1, description, self, partial(self.doubleClickActionSelected, option), config.verseNoDoubleClickAction, option)
+        clickActionOptions = dict(zip(values, descriptions))
+        subMenuSingleClick = addSubMenu(subMenu, "singleClick")
+        def singleClickActionSelectedSubmenu():
+            subMenuSingleClick.clear()
+            for option, description in clickActionOptions.items():
+                addCheckableMenuItem(subMenuSingleClick, description, self, partial(self.singleClickActionSelected, option), config.verseNoSingleClickAction, option)
+        self.singleClickActionSelectedSubmenu = singleClickActionSelectedSubmenu
+        singleClickActionSelectedSubmenu()
+        subMenuDoubleClick = addSubMenu(subMenu, "doubleClick")
+        def doubleClickActionSelectedSubmenu():
+            subMenuDoubleClick.clear()
+            for option, description in clickActionOptions.items():
+                addCheckableMenuItem(subMenuDoubleClick, description, self, partial(self.doubleClickActionSelected, option), config.verseNoDoubleClickAction, option)
+        self.doubleClickActionSelectedSubmenu = doubleClickActionSelectedSubmenu
+        doubleClickActionSelectedSubmenu()
         # Abbreviation language
-        subMenu = addSubMenu(subMenu0, "menu1_setAbbreviations")
-        options = BibleBooks().booksMap.keys()
-        for option in options:
-            addCheckableMenuItem(subMenu, option, self, partial(self.setBibleAbbreviationsSelected, option), config.standardAbbreviation, option, translation=False)
+        subMenuSetAbbreviations = addSubMenu(subMenu0, "menu1_setAbbreviations")
+        def setBibleAbbreviationsSelectedSubmenu():
+            subMenuSetAbbreviations.clear()
+            options = BibleBooks().booksMap.keys()
+            for option in options:
+                addCheckableMenuItem(subMenuSetAbbreviations, option, self, partial(self.setBibleAbbreviationsSelected, option), config.standardAbbreviation, option, translation=False)
+        self.setBibleAbbreviationsSelectedSubmenu = setBibleAbbreviationsSelectedSubmenu
+        setBibleAbbreviationsSelectedSubmenu()
         # My Favourite Bibles
         subMenu = addSubMenu(subMenu0, "menu1_setMyFavouriteBible")
         for option in self.textList:
@@ -313,27 +328,43 @@ class MaterialMainWindow:
         for option in ("MOB", "MIB", "MTB", "MPB", "MAB"):
             addCheckableMenuItem(subMenu, option, self, partial(self.openFavouriteMarvelBibleSelected2, option), config.favouriteOriginalBible2, option, translation=False)
         # Default Lexicons
-        subMenu = addSubMenu(subMenu0, "menu1_setDefaultStrongsHebrewLexicon")
-        for option in self.lexiconList:
-            addCheckableMenuItem(subMenu, option, self, partial(self.defaultStrongsHebrewLexiconSelected, option), config.defaultLexiconStrongH, option, translation=False)
-        subMenu = addSubMenu(subMenu0, "menu1_setDefaultStrongsGreekLexicon")
-        for option in self.lexiconList:
-            addCheckableMenuItem(subMenu, option, self, partial(self.defaultStrongsGreekLexiconSelected, option), config.defaultLexiconStrongG, option, translation=False)
+        subMenuStrongsHebrewLexicon = addSubMenu(subMenu0, "menu1_setDefaultStrongsHebrewLexicon")
+        def defaultStrongsHebrewLexiconSelectedSubmenu():
+            subMenuStrongsHebrewLexicon.clear()
+            for option in self.lexiconList:
+                addCheckableMenuItem(subMenuStrongsHebrewLexicon, option, self, partial(self.defaultStrongsHebrewLexiconSelected, option), config.defaultLexiconStrongH, option, translation=False)
+        self.defaultStrongsHebrewLexiconSelectedSubmenu = defaultStrongsHebrewLexiconSelectedSubmenu
+        defaultStrongsHebrewLexiconSelectedSubmenu()
+        subMenuStrongsGreekLexicon = addSubMenu(subMenu0, "menu1_setDefaultStrongsGreekLexicon")
+        def defaultStrongsGreekLexiconSelectedSubmenu():
+            subMenuStrongsGreekLexicon.clear()
+            for option in self.lexiconList:
+                addCheckableMenuItem(subMenuStrongsGreekLexicon, option, self, partial(self.defaultStrongsGreekLexiconSelected, option), config.defaultLexiconStrongG, option, translation=False)
+        self.defaultStrongsGreekLexiconSelectedSubmenu = defaultStrongsGreekLexiconSelectedSubmenu
+        defaultStrongsGreekLexiconSelectedSubmenu()
         # Workspace saving order
-        subMenu = addSubMenu(subMenu0, "selectWorkspaceSavingOrder")
-        options = ("Creation Order", "Stacking Order", "Activation History Order")
-        savingOrder = {
-            0: "Creation Order",
-            1: "Stacking Order",
-            2: "Activation History Order",
-        }
-        for option in options:
-            addCheckableMenuItem(subMenu, option, self, partial(self.setWorkspaceSavingOrder, option), savingOrder[config.workspaceSavingOrder], option, translation=False)
+        subMenuWorkspaceSavingOrder = addSubMenu(subMenu0, "selectWorkspaceSavingOrder")
+        def setWorkspaceSavingOrderSubmenu():
+            subMenuWorkspaceSavingOrder.clear()
+            savingOrderOptions = ("Creation Order", "Stacking Order", "Activation History Order")
+            savingOrder = {
+                0: "Creation Order",
+                1: "Stacking Order",
+                2: "Activation History Order",
+            }
+            for option in savingOrderOptions:
+                addCheckableMenuItem(subMenuWorkspaceSavingOrder, option, self, partial(self.setWorkspaceSavingOrder, option), savingOrder[config.workspaceSavingOrder], option, translation=False)
+        self.setWorkspaceSavingOrderSubmenu = setWorkspaceSavingOrderSubmenu
+        setWorkspaceSavingOrderSubmenu()
         # Markdown export heading style
-        subMenu = addSubMenu(subMenu0, "markdownExportHeadingStyle")
-        options = ("ATX", "ATX_CLOSED", "SETEXT", "UNDERLINED")
-        for option in options:
-            addCheckableMenuItem(subMenu, option, self, partial(self.setMarkdownExportHeadingStyle, option), config.markdownifyHeadingStyle, option, translation=False)
+        subMenuMarkdownExportHeadingStyle = addSubMenu(subMenu0, "markdownExportHeadingStyle")
+        def setMarkdownExportHeadingStyleSubmenu():
+            subMenuMarkdownExportHeadingStyle.clear()
+            options = ("ATX", "ATX_CLOSED", "SETEXT", "UNDERLINED")
+            for option in options:
+                addCheckableMenuItem(subMenuMarkdownExportHeadingStyle, option, self, partial(self.setMarkdownExportHeadingStyle, option), config.markdownifyHeadingStyle, option, translation=False)
+        self.setMarkdownExportHeadingStyleSubmenu = setMarkdownExportHeadingStyleSubmenu
+        setMarkdownExportHeadingStyleSubmenu()
         # Default TTS voice
         if not config.noTtsFound:
             # Default tts voice
