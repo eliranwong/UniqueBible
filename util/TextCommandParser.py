@@ -3006,9 +3006,10 @@ class TextCommandParser:
             self.parent.openControlPanelTab(index, int(b), int(c), int(v), text),
             return ("", "", {})
         else:
+            compareOnMain = (config.verseNoSingleClickAction == "COMPARE" and not config.compareOnStudyWindow)
             *_, b, c, v = command.split(".")
             verseReference = "{0} {1}:{2}".format(BibleBooks().abbrev["eng"][b][0], c, v)
-            self.parent.addHistoryRecord("main" if config.verseNoDoubleClickAction == "COMPARE" else "study", "{0}:::{1}".format(config.verseNoDoubleClickAction, verseReference))
+            self.parent.addHistoryRecord("main" if compareOnMain else "study", "{0}:::{1}".format(config.verseNoDoubleClickAction, verseReference))
             return self.mapVerseAction(config.verseNoDoubleClickAction, verseReference, source)
 
     # _vnsc:::
@@ -3017,14 +3018,15 @@ class TextCommandParser:
             command = f"{config.mainText}.{config.mainB}.{config.mainC}.{config.mainV}"
         if command.count(".") != 4:
             return self.invalidCommand()
-        else:
-            text, b, c, v, verseReference = command.split(".")
-            bibleCommand = "BIBLE:::{0}:::{1}".format(text, verseReference)
-            if config.enableHttpServer:
-                config.mainText, config.mainB, config.mainC, config.mainV = text, int(b), int(c), int(v)
-                self.parent.addHistoryRecord("main", bibleCommand)
-            elif not config.verseNoSingleClickAction == "COMPARE":
-                self.parent.passRunTextCommand(bibleCommand, True, source)
+        compareOnMain = (config.verseNoSingleClickAction == "COMPARE" and not config.compareOnStudyWindow)
+        text, b, c, v, verseReference = command.split(".")
+        bibleCommand = "BIBLE:::{0}:::{1}".format(text, verseReference)
+        if config.enableHttpServer:
+            config.mainText, config.mainB, config.mainC, config.mainV = text, int(b), int(c), int(v)
+            self.parent.addHistoryRecord("main", bibleCommand)
+        elif not compareOnMain:
+            self.parent.passRunTextCommand(bibleCommand, True, source)
+        if not config.verseNoSingleClickAction.upper() == config.syncAction.upper():
             if config.verseNoSingleClickAction == "_menu" or (config.enableHttpServer and config.verseNoSingleClickAction.startswith("_cp")):
                 menu = HtmlGeneratorUtil().getMenu("{0}.{1}.{2}.{3}".format(text, b, c, v), source)
                 return (source, menu, {})
@@ -3033,10 +3035,11 @@ class TextCommandParser:
                 self.parent.openControlPanelTab(index, int(b), int(c), int(v), text),
                 return ("", "", {})
             else:
-                if not config.verseNoSingleClickAction == "COMPARE" and (config.syncAction == "STUDY"):
+                if not compareOnMain and config.syncAction == "STUDY":
                     self.parent.nextStudyWindowTab()
-                self.parent.addHistoryRecord("main" if config.verseNoSingleClickAction == "COMPARE" else "study", "{0}:::{1}".format(config.verseNoSingleClickAction, verseReference))
+                self.parent.addHistoryRecord("main" if compareOnMain else "study", "{0}:::{1}".format(config.verseNoSingleClickAction, verseReference))
                 return self.mapVerseAction(config.verseNoSingleClickAction, verseReference, source)
+        return ("", "", {})
 
     # _cp:::
     # _mastercontrol:::
