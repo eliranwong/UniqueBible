@@ -81,12 +81,12 @@ class WebEngineView(QWebEngineView):
                 definition = HBN.entries[selectedText]
             else:
                 definition = self.getDefinition(selectedText)
-                if not definition:
+                if not definition and hasattr(config, "lemmatizer"):
                     lemma = config.lemmatizer.lemmatize(selectedText)
                     definition = self.getDefinition(lemma)
                     if definition:
                         definition = "<b>{0}</b> - {1}".format(lemma, definition)
-                    elif ("Chineseenglishlookup" in config.enabled):
+                    elif ("Chineseenglishlookup" in config.enabled) and hasattr(config, "cedict"):
                         definition = "<b>{0}</b> - {1}".format(lemma, config.cedict.lookup(lemma))
                 else:
                     definition = "<b>{0}</b> - {1}".format(selectedText, definition)
@@ -94,9 +94,10 @@ class WebEngineView(QWebEngineView):
 
     def getDefinition(self, entry):
         definition = ""
-        synsets = config.wordnet.synsets(entry)
-        if synsets:
-            definition = synsets[0].definition()
+        if hasattr(config, "wordnet"):
+            synsets = config.wordnet.synsets(entry)
+            if synsets:
+                definition = synsets[0].definition()
         return definition
 
     def displayMessage(self, message):

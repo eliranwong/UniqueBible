@@ -533,6 +533,25 @@ class ConfigUtil:
         if config.updateDependenciesOnStartup:
             config.enabled = []
             config.disabled = []
+        if "Nltk" in config.enabled:
+            try:
+                from nltk.corpus import wordnet
+                wordnet.lemmas("english")
+                config.wordnet = wordnet
+            except:
+                pass
+        if "Lemmagen3" in config.enabled:
+            try:
+                from lemmagen3 import Lemmatizer
+                config.lemmatizer = Lemmatizer("en")
+            except:
+                pass
+        if "Chineseenglishlookup" in config.enabled:
+            try:
+                from chinese_english_lookup import Dictionary
+                config.cedict = Dictionary()
+            except:
+                pass
         setConfig("showControlPanelOnStartup", """
         # Options to use control panel: True / False
         # This feature is created for use in church settings.

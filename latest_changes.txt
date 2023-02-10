@@ -1,3 +1,6 @@
+Changes in 33.69:
+* Fixed selection monitoring features
+
 Changes in 33.68:
 * Fixed display of audio indicators
 
