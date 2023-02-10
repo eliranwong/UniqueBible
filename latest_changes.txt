@@ -1,3 +1,6 @@
+Changes in 33.68:
+* Fixed display of audio indicators
+
 Changes in 33.67:
 * Fixed restart handler
 

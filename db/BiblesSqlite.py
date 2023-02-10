@@ -25,6 +25,7 @@ from util.FileUtil import FileUtil
 from util.themes import Themes
 from util.NoteService import NoteService
 from util.TextUtil import TextUtil
+from util.WebtopUtil import WebtopUtil
 from util.LexicalData import LexicalData
 
 class BiblesSqlite:
@@ -1203,7 +1204,7 @@ class Bible:
     def insertReadBibleLink(text, b, c, v=None):
         text = FileUtil.getMP3TextFile(text)
         data = ""
-        if (config.runMode == "gui" and ("Pythonvlc" in config.enabled)) or config.enableHttpServer:
+        if (config.runMode in ("", "gui", "cli") and ("Pythonvlc" in config.enabled or WebtopUtil.isPackageInstalled("vlc"))) or config.enableHttpServer:
             directory = os.path.join(config.audioFolder, "bibles", text)
             if os.path.isdir(directory):
                 directories = [d for d in sorted(os.listdir(directory)) if
