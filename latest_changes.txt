@@ -1,3 +1,6 @@
+Changes in 33.71:
+* Fixed main reference button update
+
 Changes in 33.70:
 * Fixed use of config.updateMainReferenceOnChangingTabs
 

@@ -635,7 +635,7 @@ class MainWindow(QMainWindow):
                 config.mainText = self.getTabText()
                 config.mainB, config.mainC, config.mainV, *_ = self.getTabBcv()
                 config.setMainVerse = True
-                self.updateMainRefButton(True)
+                self.updateMainRefButton()
         if config.theme in ("dark", "night"):
             self.mainPage.setBackgroundColor(Qt.transparent)
         #self.mainPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
@@ -3507,13 +3507,12 @@ class MainWindow(QMainWindow):
                 command = "_commentarychapters:::{0}".format(commentary)
             self.runTextCommand(command)
 
-    def updateMainRefButton(self, forceUpdate=False):
+    def updateMainRefButton(self):
         *_, verseReference = self.verseReference("main")
         if config.mainC > 0:
             if config.menuLayout == "material":
-                if forceUpdate:
-                    self.setBibleSelection()
-                    self.setMainRefMenu()
+                self.setBibleSelection()
+                self.setMainRefMenu()
             elif config.menuLayout == "aleph":
                 self.mainRefButton.setText(":::".join(self.verseReference("main")))
             else:
