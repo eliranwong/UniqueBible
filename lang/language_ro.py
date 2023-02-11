@@ -889,7 +889,7 @@ translation = {
     "forceUseBuiltinMediaPlayer": "Utilizați built-in media player în loc de terță parte media player.",
     "usePySide2onWebtop": "Utilizați PySide2 pe versiunea Webtop",
     "usePySide6onMacOS": "Utilizați PySide6 pe macOS",
-    "updateMainReferenceOnChaningTabs": "Actualizați butoanele de referință principale atunci când filele ferestrei Bibliei sunt schimbate.",
+    "updateMainReferenceOnChangingTabs": "Actualizați butoanele de referință principale atunci când filele ferestrei Bibliei sunt schimbate.",
     "ttsLanguage2": "Selectați a doua voce Text-to-speech",
     "ttsLanguage3": "Selectați A Treia Voce Text-to-speech",
     "doNotStop3rdPartyMediaPlayerOnExit": "Nu închideți playerul media al terților atunci când UBA este închis.",

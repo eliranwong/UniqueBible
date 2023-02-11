@@ -889,7 +889,7 @@ translation = {
     "forceUseBuiltinMediaPlayer": "Используйте встроенный проигрыватель мультимедиа вместо стороннего медиаплеера.",
     "usePySide2onWebtop": "Использовать PySide2 в версии Webtop",
     "usePySide6onMacOS": "Использовать PySide6 в macOS",
-    "updateMainReferenceOnChaningTabs": "Обновить основные кнопки ссылок при изменении вкладок Окно Библии.",
+    "updateMainReferenceOnChangingTabs": "Обновить основные кнопки ссылок при изменении вкладок Окно Библии.",
     "ttsLanguage2": "Выбрать второй голосовой голос",
     "ttsLanguage3": "Выбрать третий голосовой голос",
     "doNotStop3rdPartyMediaPlayerOnExit": "Не закрывая стороннего медиаплеера при закрытии UBA.",

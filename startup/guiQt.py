@@ -302,8 +302,8 @@ runStartupPlugins()
 
 # Run initial commands
 if config.populateTabsOnStartup:
-    openBibleWindowContentOnNextTab, openStudyWindowContentOnNextTab, updateMainReferenceOnChaningTabs = config.openBibleWindowContentOnNextTab, config.openStudyWindowContentOnNextTab, config.updateMainReferenceOnChaningTabs
-    config.updateMainReferenceOnChaningTabs = False
+    openBibleWindowContentOnNextTab, openStudyWindowContentOnNextTab, updateMainReferenceOnChangingTabs = config.openBibleWindowContentOnNextTab, config.openStudyWindowContentOnNextTab, config.updateMainReferenceOnChangingTabs
+    config.updateMainReferenceOnChangingTabs = False
     forceGenerateHtml = config.forceGenerateHtml
     syncAction = config.syncAction
     config.openBibleWindowContentOnNextTab = True
@@ -317,7 +317,7 @@ if config.populateTabsOnStartup:
     config.openBibleWindowContentOnNextTab, config.openStudyWindowContentOnNextTab = openBibleWindowContentOnNextTab, openStudyWindowContentOnNextTab
     config.forceGenerateHtml = forceGenerateHtml
     config.syncAction = syncAction
-    config.updateMainReferenceOnChaningTabs = updateMainReferenceOnChaningTabs
+    config.updateMainReferenceOnChangingTabs = updateMainReferenceOnChangingTabs
 elif not config.disableLoadLastOpenFilesOnStartup:
     # Execute initial command on Bible Window
     if not initialCommand or initialCommandIsPython:

@@ -889,7 +889,7 @@ translation = {
     "forceUseBuiltinMediaPlayer": "サードパーティのメディアプレーヤーではなく、内蔵のメディアプレーヤーを",
     "usePySide2onWebtop": "Webtop バージョンで PySide2 を使用する",
     "usePySide6onMacOS": "macOS で PySide6 を使用する",
-    "updateMainReferenceOnChaningTabs": "「バイブル」ウィンドウのタブが変更された場合のメイン参照ボタン",
+    "updateMainReferenceOnChangingTabs": "「バイブル」ウィンドウのタブが変更された場合のメイン参照ボタン",
     "ttsLanguage2": "2 番目のテキストから音声への音声の選択",
     "ttsLanguage3": "3 番目のテキストから音声への音声を選択",
     "doNotStop3rdPartyMediaPlayerOnExit": "UBA のクローズ時には、サード・パーティーのメディアプレーヤーを閉じないでください",

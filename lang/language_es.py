@@ -889,7 +889,7 @@ translation = {
     "forceUseBuiltinMediaPlayer": "Utilice el reproductor multimedia incorporado en lugar del reproductor de medios de terceros.",
     "usePySide2onWebtop": "Utilice PySide2 en la versión de Webtop",
     "usePySide6onMacOS": "Utilice PySide6 en macOS",
-    "updateMainReferenceOnChaningTabs": "Actualizar los botones de referencia principales cuando se cambian las pestañas de ventana de la Biblia.",
+    "updateMainReferenceOnChangingTabs": "Actualizar los botones de referencia principales cuando se cambian las pestañas de ventana de la Biblia.",
     "ttsLanguage2": "Seleccione Second Text-to-speech Voice",
     "ttsLanguage3": "Seleccionar tercera voz de texto a voz",
     "doNotStop3rdPartyMediaPlayerOnExit": "No cierre el reproductor de medios de terceros cuando la UBA esté cerrada.",

@@ -889,7 +889,7 @@ translation = {
     "forceUseBuiltinMediaPlayer": "타사 미디어 플레이어 대신 내장 미디어 플레이어를 사용합니다.",
     "usePySide2onWebtop": "Webtop 버전에서 PySide2 사용하기",
     "usePySide6onMacOS": "macOS 에서 PySide6 사용하기",
-    "updateMainReferenceOnChaningTabs": "성경 창 탭이 변경되면 기본 참조 단추를 업데이트합니다.",
+    "updateMainReferenceOnChangingTabs": "성경 창 탭이 변경되면 기본 참조 단추를 업데이트합니다.",
     "ttsLanguage2": "두 번째 텍스트 대 음성 음성 선택",
     "ttsLanguage3": "3차 텍스트-음성 음성 선택",
     "doNotStop3rdPartyMediaPlayerOnExit": "UBA가 폐쇄될 때 제3자 미디어 플레이어를 닫지 마십시오.",

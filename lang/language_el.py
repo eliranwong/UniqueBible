@@ -889,7 +889,7 @@ translation = {
     "forceUseBuiltinMediaPlayer": "Χρησιμοποιήστε ενσωματωμένο media player αντί για τρίτο παίκτη media player.",
     "usePySide2onWebtop": "Χρήση PySide2 για Webtop έκδοση",
     "usePySide6onMacOS": "Χρήση του PySide6 για μακροεντολές",
-    "updateMainReferenceOnChaningTabs": "Ενημέρωση κύριων κουμπιών αναφοράς όταν αλλάζουν οι καρτέλες παραθύρων της Βίβλου.",
+    "updateMainReferenceOnChangingTabs": "Ενημέρωση κύριων κουμπιών αναφοράς όταν αλλάζουν οι καρτέλες παραθύρων της Βίβλου.",
     "ttsLanguage2": "Επιλέξτε Δεύτερη Φωνή από κείμενο σε ομιλία",
     "ttsLanguage3": "Επιλέξτε Φωνή κειμένου σε ομιλία",
     "doNotStop3rdPartyMediaPlayerOnExit": "Μην κλείσετε τον παίκτη μέσων τρίτων όταν κλείσει η UBA.",

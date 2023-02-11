@@ -889,7 +889,7 @@ translation = {
     "forceUseBuiltinMediaPlayer": "Verwenden Sie den integrierten Mediaplayer anstelle des Media-Players eines anderen Anbieters",
     "usePySide2onWebtop": "PySide2 auf Webtop-Version verwenden",
     "usePySide6onMacOS": "PySide6 auf macOS verwenden",
-    "updateMainReferenceOnChaningTabs": "Aktualisieren Sie die wichtigsten Referenzschaltflächen, wenn die Registerkarten für Bibelfenster geändert werden.",
+    "updateMainReferenceOnChangingTabs": "Aktualisieren Sie die wichtigsten Referenzschaltflächen, wenn die Registerkarten für Bibelfenster geändert werden.",
     "ttsLanguage2": "Zweite Text-zu-Sprache-Sprache auswählen",
     "ttsLanguage3": "Dritte Text-zu-Sprache-Stimme auswählen",
     "doNotStop3rdPartyMediaPlayerOnExit": "Schließen Sie den Media-Player von Drittanbietern nicht, wenn UBA geschlossen wird.",

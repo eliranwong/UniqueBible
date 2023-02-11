@@ -733,7 +733,7 @@ class ConfigUtil:
         setConfig("openStudyWindowContentOnNextTab", """
         # Options to open Study Window's content in the tab next to the current one: True / False""",
         True)
-        setConfig("updateMainReferenceOnChaningTabs", """
+        setConfig("updateMainReferenceOnChangingTabs", """
         # Options to update main reference buttons when Bible Window tabs are changed: True / False""",
         False)
         setConfig("preferHtmlMenu", """

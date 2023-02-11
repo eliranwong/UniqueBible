@@ -626,7 +626,7 @@ class MainWindow(QMainWindow):
         # main page changes as tab is changed.
         # print(self.mainView.currentIndex())
         self.mainPage = self.mainView.currentWidget().page()
-        if config.updateMainReferenceOnChaningTabs:
+        if config.updateMainReferenceOnChangingTabs:
             # check command stored in each tab's tooltip
             tabToolTip = self.mainView.tabToolTip(self.mainView.currentIndex()).strip()
             if tabToolTip:
@@ -1021,8 +1021,8 @@ class MainWindow(QMainWindow):
 
     # Open text on left and right view
     def openTextOnMainView(self, text, textCommand):
-        updateMainReferenceOnChaningTabs = config.updateMainReferenceOnChaningTabs
-        config.updateMainReferenceOnChaningTabs = False
+        updateMainReferenceOnChangingTabs = config.updateMainReferenceOnChangingTabs
+        config.updateMainReferenceOnChangingTabs = False
         if config.bibleWindowContentTransformers:
             for transformer in config.bibleWindowContentTransformers:
                 text = transformer(text)
@@ -1054,7 +1054,7 @@ class MainWindow(QMainWindow):
             reference = "{0}-{1}".format(lastKeyword[0:4], reference2)
         self.mainView.setTabText(self.mainView.currentIndex(), reference)
         self.mainView.setTabToolTip(self.mainView.currentIndex(), textCommand)
-        config.updateMainReferenceOnChaningTabs = updateMainReferenceOnChaningTabs
+        config.updateMainReferenceOnChangingTabs = updateMainReferenceOnChangingTabs
 
     def setClipboardMonitoring(self, option):
         if not config.enableClipboardMonitoring == option:
@@ -3511,7 +3511,7 @@ class MainWindow(QMainWindow):
         *_, verseReference = self.verseReference("main")
         if config.mainC > 0:
             if config.menuLayout == "material":
-                if not forceUpdate:
+                if forceUpdate:
                     self.setBibleSelection()
                     self.setMainRefMenu()
             elif config.menuLayout == "aleph":

@@ -69,7 +69,7 @@ class ConfigFlagsWindow(QDialog):
             ("clearCommandEntry", config.clearCommandEntry, self.clearCommandEntryChanged, False, config.thisTranslation["clearCommandEntry"]),
             ("openBibleWindowContentOnNextTab", config.openBibleWindowContentOnNextTab, self.openBibleWindowContentOnNextTabChanged, False, config.thisTranslation["openBibleWindowContentOnNextTab"]),
             ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab, self.openStudyWindowContentOnNextTabChanged, True, config.thisTranslation["openStudyWindowContentOnNextTab"]),
-            ("updateMainReferenceOnChaningTabs", config.updateMainReferenceOnChaningTabs, self.updateMainReferenceOnChaningTabsChanged, False, config.thisTranslation["updateMainReferenceOnChaningTabs"]),
+            ("updateMainReferenceOnChangingTabs", config.updateMainReferenceOnChangingTabs, self.updateMainReferenceOnChangingTabsChanged, False, config.thisTranslation["updateMainReferenceOnChangingTabs"]),
             ("usePySide2onWebtop", config.usePySide2onWebtop, self.usePySide2onWebtopChanged, True, config.thisTranslation["usePySide2onWebtop"]),
             ("usePySide6onMacOS", config.usePySide6onMacOS, self.usePySide6onMacOSChanged, True, config.thisTranslation["usePySide6onMacOS"]),
             ("populateTabsOnStartup", config.populateTabsOnStartup, self.populateTabsOnStartupChanged, False, config.thisTranslation["populateTabsOnStartup"]),
@@ -305,8 +305,8 @@ class ConfigFlagsWindow(QDialog):
     def showVerseNumbersInRangeChanged(self):
         config.showVerseNumbersInRange = not config.showVerseNumbersInRange
 
-    def updateMainReferenceOnChaningTabsChanged(self):
-        config.updateMainReferenceOnChaningTabs = not config.updateMainReferenceOnChaningTabs
+    def updateMainReferenceOnChangingTabsChanged(self):
+        config.updateMainReferenceOnChangingTabs = not config.updateMainReferenceOnChangingTabs
 
     #def customPythonOnStartupChanged(self):
     #    config.customPythonOnStartup = not config.customPythonOnStartup

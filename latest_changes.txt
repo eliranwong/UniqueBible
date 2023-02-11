@@ -1,3 +1,6 @@
+Changes in 33.70:
+* Fixed use of config.updateMainReferenceOnChangingTabs
+
 Changes in 33.69:
 * Fixed selection monitoring features
 
@@ -1258,7 +1261,7 @@ Changes in 30.91:
 * Switching from sqlite3 to apsw to increase speed.
 
 Changes in 30.90:
-* Fixed enabling both config.updateMainReferenceOnChaningTabs and config.openBibleWindowContentOnNextTab.
+* Fixed enabling both config.updateMainReferenceOnChangingTabs and config.openBibleWindowContentOnNextTab.
 
 Changes in 30.88, 30.89:
 * Fixed two tool buttons
@@ -1598,14 +1601,14 @@ Changes in 30.20:
 * Fixed checkable combo box display issues on macOS with PySide6.
 * Reduced Master Control Width.
 * Added tooltips in Master Ccontrol Search Tab drop down menu.
-* Changed default value of config.updateMainReferenceOnChaningTabs to False.
+* Changed default value of config.updateMainReferenceOnChangingTabs to False.
 
 Changes in 30.19:
 * Changed micron shortcut to stop media player from playing, to avoid conflict with the built-in shortcut combo Ctrl+Shift+Q on macOS.
     Changed from Ctrl+Shift+Q to Ctrl+Shift+Z
 
 Changes in 30.18:
-* Added config.updateMainReferenceOnChaningTabs to enable / disable updating main reference buttons when Bible Window tabs are changed.
+* Added config.updateMainReferenceOnChangingTabs to enable / disable updating main reference buttons when Bible Window tabs are changed.
 * Added a wiki page on how to create an application shortcut on macOS:
     https://github.com/eliranwong/UniqueBible/wiki/Create-an-Executable-Shortcut-on-macOS
 
