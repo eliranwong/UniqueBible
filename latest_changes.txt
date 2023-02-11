@@ -1,3 +1,6 @@
+Changes in 33.72:
+* Fixed theme when references are opened in new window
+
 Changes in 33.71:
 * Fixed main reference button update
 

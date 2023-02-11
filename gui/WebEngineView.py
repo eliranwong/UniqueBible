@@ -1665,7 +1665,7 @@ class WebEngineView(QWebEngineView):
             verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
             if verses:
                 html = BiblesSqlite().readMultipleVerses(self.getText(), verses)
-                self.openPopover(html=html)
+                self.openPopover(html=self.parent.parent.wrapHtml(html))
             else:
                 self.displayMessage(config.thisTranslation["message_noReference"])
         else:
