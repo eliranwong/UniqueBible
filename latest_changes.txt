@@ -1,3 +1,6 @@
+Changes in 33.74:
+* Uploaded chatGPT menu plugin
+
 Changes in 33.73:
 * Added OpenAI ChatGPT menu plugin
 * Support cookies in built-in mini browser
