@@ -1,14 +1,14 @@
-import config
+import config, os
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt
     from PySide6.QtGui import QAction
     from PySide6.QtWidgets import QApplication
-    from PySide6.QtWebEngineCore import QWebEnginePage, QWebEngineSettings
+    from PySide6.QtWebEngineCore import QWebEnginePage, QWebEngineSettings, QWebEngineProfile
     from PySide6.QtWebEngineWidgets import QWebEngineView
 else:
     from qtpy.QtCore import Qt
     from qtpy.QtWidgets import QAction, QApplication
-    from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView, QWebEngineSettings
+    from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView, QWebEngineSettings, QWebEngineProfile
 
 class YouTubePopover(QWebEngineView):
 
@@ -18,6 +18,16 @@ class YouTubePopover(QWebEngineView):
         self.setWindowTitle(config.thisTranslation["menu11_youtube"])
         self.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
         #self.page().fullScreenRequested.connect(lambda request: request.accept())
+
+        profile = QWebEngineProfile("youtube", self)
+        profile.setHttpCacheType(QWebEngineProfile.DiskHttpCache)
+        profile.setPersistentCookiesPolicy(QWebEngineProfile.ForcePersistentCookies)
+        storagePath = os.path.join(os.getcwd(), "webstorage")
+        profile.setCachePath(storagePath)
+        profile.setPersistentStoragePath(storagePath)
+        profile.setDownloadPath(storagePath)
+        webpage = QWebEnginePage(profile, self)
+        self.setPage(webpage)
         self.page().fullScreenRequested.connect(self.fullScreenRequested)
         #self.load(QUrl("https://www.youtube.com/"))
         self.urlString = ""

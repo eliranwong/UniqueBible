@@ -4911,9 +4911,9 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
                 file += ".ubam"
             MacroParser(self).parse(file)
 
-    def addMenuPluginButton(self, plugin, feature, icon, toolbar):
+    def addMenuPluginButton(self, plugin, feature, icon, toolbar, translation=True):
         if self.isMenuPlugin(plugin):
-            self.addMaterialIconButton(feature, icon, partial(self.runPlugin, plugin), toolbar)
+            self.addMaterialIconButton(feature, icon, partial(self.runPlugin, plugin), toolbar, translation=translation)
 
     def isMenuPlugin(self, plugin):
         return os.path.isfile(os.path.join("plugins", "menu", "{0}.py".format(plugin)))

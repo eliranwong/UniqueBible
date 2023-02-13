@@ -74,6 +74,7 @@ sample.color.zip
 macOS_voices.txt
 temp.txt
 temp/*
+webstorage/*
 workspace/**
 uba.sh
 util/GitHubCustomRepoCache.py

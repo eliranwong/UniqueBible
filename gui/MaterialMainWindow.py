@@ -1014,6 +1014,10 @@ class MaterialMainWindow:
                 icon = "material/av/interpreter_mode/materialiconsoutlined/48dp/2x/outline_interpreter_mode_black_48dp.png"
                 self.instantTtsButton3 = QPushButton()
                 self.addMaterialIconButton("{0} - {1}".format(config.thisTranslation["context1_speak"], config.ttsDefaultLangauge3), icon, self.instantTTS3, self.secondToolBar, self.instantTtsButton3, False)
+
+        icon = "material/hardware/smart_toy/materialiconsoutlined/48dp/2x/outline_smart_toy_black_48dp.png"
+        #self.addMaterialIconButton("ChatGPT", icon, partial(webbrowser.open, "https://chat.openai.com/chat"), self.secondToolBar, translation=False)
+        self.addMenuPluginButton("ChatGPT", "ChatGPT", icon, self.secondToolBar, translation=False)
         self.secondToolBar.addSeparator()
 
         icon = "material/av/play_circle/materialiconsoutlined/48dp/2x/outline_play_circle_black_48dp.png"
