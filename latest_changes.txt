@@ -1,3 +1,7 @@
+Changes in 33.78:
+* Added context plugin "Louw-Nida Lexicon Gloss"
+* Added language plugin "ml"
+
 Changes in 33.77:
 * Added support of file download in built-in web browsers
 * Added instant highlight features in built-in simple web browser
