@@ -1,3 +1,7 @@
+Changes in 33.76:
+* Improved simple browser UI
+* Added context plugins "Google", "YouTube", "YouTube Downloader"
+
 Changes in 33.75:
 * hide disabled menu plugins from material menu layout toolbar
 * added Office 365 plugins
