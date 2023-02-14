@@ -1019,6 +1019,9 @@ class MaterialMainWindow:
         self.addMenuPluginButton("ChatGPT", "ChatGPT", icon, self.secondToolBar, translation=False)
         self.secondToolBar.addSeparator()
 
+        icon = "material/social/travel_explore/materialiconsoutlined/48dp/2x/outline_travel_explore_black_48dp.png"
+        self.addMenuPluginButton("Google", "Google", icon, self.secondToolBar, translation=False)
+
         icon = "material/communication/email/materialiconsoutlined/48dp/2x/outline_email_black_48dp.png"
         self.addMenuPluginButton("Gmail", "Gmail", icon, self.secondToolBar, translation=False)
 

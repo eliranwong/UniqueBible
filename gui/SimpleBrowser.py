@@ -3,14 +3,15 @@ from util.TextUtil import TextUtil
 if config.qtLibrary == "pyside6":
     from PySide6.QtWebEngineWidgets import QWebEngineView
     from PySide6.QtWebEngineCore import QWebEngineProfile, QWebEnginePage
-    from PySide6.QtGui import QGuiApplication
+    from PySide6.QtGui import QGuiApplication, QKeySequence, QShortcut
     from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget, QLineEdit
     from PySide6.QtCore import QUrl
 else:
     from qtpy.QtWebEngineWidgets import QWebEngineView, QWebEngineProfile, QWebEnginePage
     from qtpy.QtGui import QGuiApplication
-    from qtpy.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget, QLineEdit
+    from qtpy.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget, QLineEdit, QShortcut
     from qtpy.QtCore import QUrl
+    from qtpy.QtGui import QKeySequence
 
 class SimpleBrowser(QWidget):
 
@@ -26,14 +27,23 @@ class SimpleBrowser(QWidget):
         self.setupUI()
         # set initial window size
         self.resize(QGuiApplication.primaryScreen().availableSize() * 3 / 4)
+        # setup keyboard shortcuts
+        self.setupKeyboardShortcuts()
+
+    def setupKeyboardShortcuts(self):
+        shortcut = QShortcut(QKeySequence("Ctrl+F"), self)
+        shortcut.activated.connect(self.toggleInstantHighlight)
 
     def setupVariables(self):
         self.home = None
+        self.enableInstantHighlight = False
 
     def setupUI(self):
         mainLayout = QVBoxLayout()
         topLayout = QHBoxLayout()
+        secondLayout = QHBoxLayout()
         mainLayout.addLayout(topLayout)
+        mainLayout.addLayout(secondLayout)
         self.setLayout(mainLayout)
 
         # go home button
@@ -60,6 +70,12 @@ class SimpleBrowser(QWidget):
         self.addressBar.setToolTip(config.thisTranslation["enter_fullURL"])
         self.addressBar.returnPressed.connect(self.addressEntered)
         topLayout.addWidget(self.addressBar)
+        # highlight button
+        icon = "material/image/auto_fix_off/materialiconsoutlined/48dp/2x/outline_auto_fix_off_black_48dp.png"
+        self.highlightButton = config.mainWindow.getIconPushButton(icon)
+        self.highlightButton.setToolTip(config.thisTranslation["instantHighlight"])
+        self.highlightButton.clicked.connect(self.toggleInstantHighlight)
+        topLayout.addWidget(self.highlightButton)
         # reload button
         icon = "material/navigation/refresh/materialiconsoutlined/48dp/2x/outline_refresh_black_48dp.png"
         button = config.mainWindow.getIconPushButton(icon)
@@ -73,23 +89,81 @@ class SimpleBrowser(QWidget):
         button.clicked.connect(lambda: webbrowser.open(self.addressBar.text()))
         topLayout.addWidget(button)
 
-        # webview
-        self.webview = QWebEngineView()
-        self.webview.urlChanged.connect(lambda url: self.addressBar.setText(url.toString()))
+        # find entry
+        self.findBar = QLineEdit()
+        self.findBar.setClearButtonEnabled(True)
+        self.findBar.setToolTip(config.thisTranslation["menu5_searchItems"])
+        self.findBar.textChanged.connect(lambda: self.highlightContent(True))
+        self.findBar.returnPressed.connect(lambda: self.highlightContent(True))
+        secondLayout.addWidget(self.findBar)
+
+        # go back button
+        icon = "material/image/navigate_before/materialiconsoutlined/48dp/2x/outline_navigate_before_black_48dp.png"
+        self.findButtonBackward = config.mainWindow.getIconPushButton(icon)
+        self.findButtonBackward.setToolTip(config.thisTranslation["youtube_back"])
+        self.findButtonBackward.clicked.connect(lambda: self.highlightContent(False))
+        secondLayout.addWidget(self.findButtonBackward)
+        # go forward button
+        icon = "material/image/navigate_next/materialiconsoutlined/48dp/2x/outline_navigate_next_black_48dp.png"
+        self.findButtonForward = config.mainWindow.getIconPushButton(icon)
+        self.findButtonForward.setToolTip(config.thisTranslation["youtube_forward"])
+        self.findButtonForward.clicked.connect(lambda: self.highlightContent(True))
+        secondLayout.addWidget(self.findButtonForward)
+
+        self.toggleInstantHighlight()
+
+        # profile, webpage, and webview
         # set up a non-off-the-record profile that supports cookies
-        profile = QWebEngineProfile(self.profileName, self.webview)
+        profile = QWebEngineProfile(self.profileName, self)
         profile.setHttpCacheType(QWebEngineProfile.DiskHttpCache)
         profile.setPersistentCookiesPolicy(QWebEngineProfile.ForcePersistentCookies)
         storagePath = os.path.join(os.getcwd(), "webstorage")
-        profile.setCachePath(storagePath)
-        profile.setPersistentStoragePath(storagePath)
-        profile.setDownloadPath(storagePath)
+        profile.setCachePath(os.path.join(storagePath, "Cache"))
+        profile.setPersistentStoragePath(os.path.join(storagePath, "PersistentStorage"))
+        homeDownloads = os.path.join(os.environ["HOME"], "Downloads")
+        homeDownload = os.path.join(os.environ["HOME"], "Download")
+        # set download path and handler of download request
+        if os.path.isdir(homeDownloads):
+            self.downloadPath = homeDownloads
+        elif os.path.isdir(homeDownload):
+            self.downloadPath = homeDownload
+        else:
+            self.downloadPath = os.path.join(storagePath, "Downloads")
+        profile.setDownloadPath(self.downloadPath)
+        profile.downloadRequested.connect(self.downloadRequested)
         # set up web engine page
         webpage = QWebEnginePage(profile, self)
-        #webpage.newWindowRequested.connect(lambda request: self.setUrl(request.requestedUrl()))
         webpage.newWindowRequested.connect(self.newWindowRequested)
-        self.webview.setPage(webpage)
+        # set up webview
+        self.webview = QWebEngineView(webpage)
+        self.webview.urlChanged.connect(lambda url: self.addressBar.setText(url.toString()))
         mainLayout.addWidget(self.webview)
+
+    def toggleInstantHighlight(self):
+        def getInstantHighlightDisplay():
+            if self.enableInstantHighlight:
+                return config.mainWindow.getCrossplatformPath("material/image/auto_fix_normal/materialiconsoutlined/48dp/2x/outline_auto_fix_normal_black_48dp.png")
+            else:
+                return config.mainWindow.getCrossplatformPath("material/image/auto_fix_off/materialiconsoutlined/48dp/2x/outline_auto_fix_off_black_48dp.png")
+        self.findBar.setVisible(self.enableInstantHighlight)
+        self.findButtonBackward.setVisible(self.enableInstantHighlight)
+        self.findButtonForward.setVisible(self.enableInstantHighlight)
+        self.highlightButton.setStyleSheet(config.mainWindow.getQIcon(getInstantHighlightDisplay()))
+        self.enableInstantHighlight = not self.enableInstantHighlight
+
+    def highlightContent(self, forward):
+        searchString = self.findBar.text().strip()
+        if forward:
+            self.webview.findText(searchString)
+        else:
+            self.webview.findText(searchString, QWebEnginePage.FindBackward)
+
+    def downloadRequested(self, request):
+        def isFinishedChanged(obj=None):
+            if request.isFinished():
+                os.system(f"{config.open} {self.downloadPath}")
+        request.isFinishedChanged.connect(isFinishedChanged)
+        request.accept()
 
     def newWindowRequested(self, request):
         # open in the same window
@@ -105,8 +179,8 @@ class SimpleBrowser(QWidget):
             # set home link when the first link is opened
             self.home = url
         if url.isValid():
-            self.webview.setUrl(url)
-            #self.webview.load(url)
+            #self.webview.setUrl(url)
+            self.webview.load(url)
         else:
             # search
             query = TextUtil.plainTextToUrl(self.addressBar.text())

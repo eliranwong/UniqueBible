@@ -23,10 +23,21 @@ class YouTubePopover(QWebEngineView):
         profile.setHttpCacheType(QWebEngineProfile.DiskHttpCache)
         profile.setPersistentCookiesPolicy(QWebEngineProfile.ForcePersistentCookies)
         storagePath = os.path.join(os.getcwd(), "webstorage")
-        profile.setCachePath(storagePath)
-        profile.setPersistentStoragePath(storagePath)
-        profile.setDownloadPath(storagePath)
+        profile.setCachePath(os.path.join(storagePath, "Cache"))
+        profile.setPersistentStoragePath(os.path.join(storagePath, "PersistentStorage"))
+        homeDownloads = os.path.join(os.environ["HOME"], "Downloads")
+        homeDownload = os.path.join(os.environ["HOME"], "Download")
+        # set download path and handler of download request
+        if os.path.isdir(homeDownloads):
+            self.downloadPath = homeDownloads
+        elif os.path.isdir(homeDownload):
+            self.downloadPath = homeDownload
+        else:
+            self.downloadPath = os.path.join(storagePath, "Downloads")
+        profile.setDownloadPath(self.downloadPath)
+        profile.downloadRequested.connect(self.downloadRequested)
         webpage = QWebEnginePage(profile, self)
+        webpage.newWindowRequested.connect(lambda request: self.videoLinkChanged(request.requestedUrl(), True))
         self.setPage(webpage)
         self.page().fullScreenRequested.connect(self.fullScreenRequested)
         #self.load(QUrl("https://www.youtube.com/"))
@@ -36,6 +47,13 @@ class YouTubePopover(QWebEngineView):
         self.setContextMenuPolicy(Qt.ActionsContextMenu)
         self.addMenuActions()
 
+    def downloadRequested(self, request):
+        def isFinishedChanged(obj=None):
+            if request.isFinished():
+                os.system(f"{config.open} {self.downloadPath}")
+        request.isFinishedChanged.connect(isFinishedChanged)
+        request.accept()
+
     def fullScreenRequested(self, request):
         self.parent.showFullScreen()
         request.accept()
@@ -44,9 +62,11 @@ class YouTubePopover(QWebEngineView):
         self.parent.showNormal()
         self.page().triggerAction(QWebEnginePage.ExitFullScreen)
 
-    def videoLinkChanged(self, url):
+    def videoLinkChanged(self, url, open=False):
         self.urlString = url.toString()
         self.parent.addressBar.setText(self.urlString)
+        if open:
+            self.parent.openURL()
 
     def addMenuActions(self):
         goBack = QAction(self)
