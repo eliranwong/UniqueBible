@@ -7,12 +7,12 @@ from util.HtmlColorCodes import HtmlColorCodes
 
 # Do not delete items from the following two lines.  It appears that some are not used but they are actually used somewhere else. 
 if config.qtLibrary == "pyside6":
-    from PySide6.QtGui import QIcon, QColor, QPixmap, QAction
+    from PySide6.QtGui import QIcon, QColor, QPixmap, QAction, QCursor
     from PySide6.QtCore import Qt
     from PySide6.QtWidgets import QToolBar, QPushButton, QLineEdit, QStyleFactory, QComboBox, QToolButton, QMenu, QLabel
     from PySide6.QtWebEngineCore import QWebEnginePage
 else:
-    from qtpy.QtGui import QIcon, QColor, QPixmap
+    from qtpy.QtGui import QIcon, QColor, QPixmap, QCursor
     from qtpy.QtCore import Qt
     from qtpy.QtWidgets import QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory, QComboBox, QToolButton, QMenu, QLabel
     from qtpy.QtWebEngineWidgets import QWebEnginePage

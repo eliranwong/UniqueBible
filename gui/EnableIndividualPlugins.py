@@ -34,6 +34,8 @@ class EnableIndividualPlugins(QWidget):
 
     def closeEvent(self, event):
         if self.changed:
+            if config.menuLayout == "material":
+                self.parent.setupMenuLayout("material")
             self.parent.displayMessage(config.thisTranslation["message_restart"])
 
     def setupUI(self):

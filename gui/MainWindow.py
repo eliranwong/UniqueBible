@@ -4912,7 +4912,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             MacroParser(self).parse(file)
 
     def addMenuPluginButton(self, plugin, feature, icon, toolbar, translation=True):
-        if self.isMenuPlugin(plugin):
+        if self.isMenuPlugin(plugin) and not plugin in config.excludeMenuPlugins:
             self.addMaterialIconButton(feature, icon, partial(self.runPlugin, plugin), toolbar, translation=translation)
 
     def isMenuPlugin(self, plugin):

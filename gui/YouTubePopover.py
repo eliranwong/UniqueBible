@@ -19,7 +19,7 @@ class YouTubePopover(QWebEngineView):
         self.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
         #self.page().fullScreenRequested.connect(lambda request: request.accept())
 
-        profile = QWebEngineProfile("youtube", self)
+        profile = QWebEngineProfile("google", self)
         profile.setHttpCacheType(QWebEngineProfile.DiskHttpCache)
         profile.setPersistentCookiesPolicy(QWebEngineProfile.ForcePersistentCookies)
         storagePath = os.path.join(os.getcwd(), "webstorage")

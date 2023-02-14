@@ -1016,9 +1016,35 @@ class MaterialMainWindow:
                 self.addMaterialIconButton("{0} - {1}".format(config.thisTranslation["context1_speak"], config.ttsDefaultLangauge3), icon, self.instantTTS3, self.secondToolBar, self.instantTtsButton3, False)
 
         icon = "material/hardware/smart_toy/materialiconsoutlined/48dp/2x/outline_smart_toy_black_48dp.png"
-        #self.addMaterialIconButton("ChatGPT", icon, partial(webbrowser.open, "https://chat.openai.com/chat"), self.secondToolBar, translation=False)
         self.addMenuPluginButton("ChatGPT", "ChatGPT", icon, self.secondToolBar, translation=False)
         self.secondToolBar.addSeparator()
+
+        icon = "material/communication/email/materialiconsoutlined/48dp/2x/outline_email_black_48dp.png"
+        self.addMenuPluginButton("Gmail", "Gmail", icon, self.secondToolBar, translation=False)
+
+        officeTools = ["Office 365", "Teams", "Outlook", "Calendar", "Word", "Excel", "PowerPoint", "Forms", "OneNote", "OneDrive"]
+        enabledOfficeTools = []
+        for tool in officeTools:
+            toolName = f"Microsoft {tool}"
+            if self.isMenuPlugin(toolName) and not toolName in config.excludeMenuPlugins:
+                enabledOfficeTools.append(tool)
+        if enabledOfficeTools:
+            officeButton = QToolButton()
+            icon = "material/action/work/materialiconsoutlined/48dp/2x/outline_work_black_48dp.png"
+            qIcon = self.getQIcon(self.getCrossplatformPath(icon))
+            officeButton.setStyleSheet(qIcon)
+            officeButton.setPopupMode(QToolButton.InstantPopup)
+            officeButton.setArrowType(Qt.NoArrow)
+            officeButton.setCursor(QCursor(Qt.PointingHandCursor))
+            officeButton.setToolTip("Microsoft")
+            officeButtonMenu = QMenu(officeButton)
+            for enabledTool in enabledOfficeTools:
+                enabledToolName = f"Microsoft {enabledTool}"
+                action = officeButtonMenu.addAction(enabledTool)
+                action.triggered.connect(partial(self.runPlugin, enabledToolName))
+            officeButton.setMenu(officeButtonMenu)
+            self.secondToolBar.addWidget(officeButton)
+            self.secondToolBar.addSeparator()
 
         icon = "material/av/play_circle/materialiconsoutlined/48dp/2x/outline_play_circle_black_48dp.png"
         self.addMaterialIconButton("media", icon, partial(self.openControlPanelTab, 6), self.secondToolBar)

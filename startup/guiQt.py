@@ -258,8 +258,8 @@ config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
 sys.argv.append("--disable-web-security")
 # Support running without sandbox
 sys.argv.append("--no-sandbox")
-#sys.argv.append("--user-data-dir")
-#sys.argv.append("--allow-file-access-from-files")
+sys.argv.append("--user-data-dir")
+sys.argv.append("--allow-file-access-from-files")
 #app = QApplication(sys.argv)
 app = UBA(sys.argv)
 

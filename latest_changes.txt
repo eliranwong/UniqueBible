@@ -1,3 +1,8 @@
+Changes in 33.75:
+* hide disabled menu plugins from material menu layout toolbar
+* added Office 365 plugins
+* fixed chatGPT plugin download
+
 Changes in 33.74:
 * Uploaded chatGPT menu plugin
 
