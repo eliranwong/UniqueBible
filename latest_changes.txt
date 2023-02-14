@@ -1,3 +1,6 @@
+Changes in 33.79:
+* added a missing icon to patch file
+
 Changes in 33.78:
 * Added context plugin "Louw-Nida Lexicon Gloss"
 * Added language plugin "ml"
