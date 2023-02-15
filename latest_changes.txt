@@ -1,3 +1,7 @@
+Changes in 33.80:
+* Improved url validation in built-in simple browser
+* Perform a google search when a link is failed to be loaded.
+
 Changes in 33.79:
 * added a missing icon to patch file
 

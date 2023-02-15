@@ -494,6 +494,13 @@ def isBcryptInstalled():
     except:
         return False
 
+def isValidatorsInstalled():
+    try:
+        import validators
+        return True
+    except:
+        return False
+
 def isAsyncsshInstalled():
     try:
         import asyncssh
@@ -659,6 +666,7 @@ optional = [
     ("Pygments", "Syntax highlighting package", isPygmentsInstalled),
     ("asyncssh", "Asynchronous SSHv2 client and server library", isAsyncsshInstalled),
     ("bcrypt", "Modern password hashing for your software and your servers", isBcryptInstalled),
+    ("validators", "Python Data Validation for Humans", isValidatorsInstalled),
 ] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -702,6 +710,7 @@ optional = [
     ("Pygments", "Syntax highlighting package", isPygmentsInstalled),
     ("asyncssh", "Asynchronous SSHv2 client and server library", isAsyncsshInstalled),
     ("bcrypt", "Modern password hashing for your software and your servers", isBcryptInstalled),
+    ("validators", "Python Data Validation for Humans", isValidatorsInstalled),
 ]
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))

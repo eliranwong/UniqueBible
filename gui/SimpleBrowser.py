@@ -1,4 +1,5 @@
-import config, os, webbrowser
+import config, os, webbrowser, re
+from util.NetworkUtil import NetworkUtil
 from util.TextUtil import TextUtil
 if config.qtLibrary == "pyside6":
     from PySide6.QtWebEngineWidgets import QWebEngineView
@@ -37,6 +38,7 @@ class SimpleBrowser(QWidget):
     def setupVariables(self):
         self.home = None
         self.enableInstantHighlight = False
+        self.urlString = ""
 
     def setupUI(self):
         mainLayout = QVBoxLayout()
@@ -137,6 +139,7 @@ class SimpleBrowser(QWidget):
         # set up webview
         self.webview = QWebEngineView(webpage)
         self.webview.urlChanged.connect(lambda url: self.addressBar.setText(url.toString()))
+        self.webview.loadFinished.connect(self.loadFinished)
         mainLayout.addWidget(self.webview)
 
     def toggleInstantHighlight(self):
@@ -175,15 +178,29 @@ class SimpleBrowser(QWidget):
         newWindow.show()
 
     def setUrl(self, url):
+        urlString = url.toString()
         if self.home is None:
             # set home link when the first link is opened
             self.home = url
-        if url.isValid():
+        if url.isValid() and NetworkUtil.is_valid_url(urlString):
             #self.webview.setUrl(url)
+            self.urlString = urlString
             self.webview.load(url)
         else:
+            self.searchGoogle()
+
+    def loadFinished(self, ok):
+        if not ok and not self.urlString == self.home.toString() and not self.urlString.startswith("https://www.google.com/"):
+            self.searchGoogle()
+
+    def searchGoogle(self):
+        if NetworkUtil.check_internet_connection():
+            address = self.addressBar.text().strip()
+            query = re.sub("^https://(.*?)[/]*$", r"\1", address)
+            if not address == query:
+                self.addressBar.setText(query)
             # search
-            query = TextUtil.plainTextToUrl(self.addressBar.text())
+            query = TextUtil.plainTextToUrl(query)
             url = QUrl(f"https://www.google.com/search?q={query}")
             self.webview.load(url)
 
