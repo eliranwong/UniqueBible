@@ -20,6 +20,6 @@ https://onedrive.live.com/about/en-gb/signin
 
 """
 
-config.mainWindow.msoffice365 = SimpleBrowser(config.mainWindow, "Microsoft Office 365", "microsoft")
+config.mainWindow.msoffice365 = SimpleBrowser(config.mainWindow, "Microsoft Office 365")
 config.mainWindow.msoffice365.setUrl(QUrl("https://office.com"))
 config.mainWindow.msoffice365.show()

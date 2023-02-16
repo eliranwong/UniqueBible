@@ -20,6 +20,6 @@ https://onedrive.live.com/about/en-gb/signin
 
 """
 
-config.mainWindow.msteams = SimpleBrowser(config.mainWindow, "Microsoft Teams", "microsoft")
+config.mainWindow.msteams = SimpleBrowser(config.mainWindow, "Microsoft Teams")
 config.mainWindow.msteams.setUrl(QUrl("https://teams.microsoft.com"))
 config.mainWindow.msteams.show()

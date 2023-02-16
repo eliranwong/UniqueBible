@@ -20,6 +20,6 @@ https://onedrive.live.com/about/en-gb/signin
 
 """
 
-config.mainWindow.msoutlook = SimpleBrowser(config.mainWindow, "Microsoft Outlook", "microsoft")
+config.mainWindow.msoutlook = SimpleBrowser(config.mainWindow, "Microsoft Outlook")
 config.mainWindow.msoutlook.setUrl(QUrl("https://outlook.office.com/mail"))
 config.mainWindow.msoutlook.show()

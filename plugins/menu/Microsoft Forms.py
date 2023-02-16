@@ -20,6 +20,6 @@ https://onedrive.live.com/about/en-gb/signin
 
 """
 
-config.mainWindow.msforms = SimpleBrowser(config.mainWindow, "Microsoft Forms", "microsoft")
+config.mainWindow.msforms = SimpleBrowser(config.mainWindow, "Microsoft Forms")
 config.mainWindow.msforms.setUrl(QUrl("https://www.office.com/launch/forms"))
 config.mainWindow.msforms.show()

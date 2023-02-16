@@ -20,6 +20,6 @@ https://onedrive.live.com/about/en-gb/signin
 
 """
 
-config.mainWindow.msword = SimpleBrowser(config.mainWindow, "Microsoft Word", "microsoft")
+config.mainWindow.msword = SimpleBrowser(config.mainWindow, "Microsoft Word")
 config.mainWindow.msword.setUrl(QUrl("https://www.office.com/launch/word"))
 config.mainWindow.msword.show()

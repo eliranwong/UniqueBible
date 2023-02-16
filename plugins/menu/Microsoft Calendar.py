@@ -20,6 +20,6 @@ https://onedrive.live.com/about/en-gb/signin
 
 """
 
-config.mainWindow.mscalendar = SimpleBrowser(config.mainWindow, "Microsoft Calendar", "microsoft")
+config.mainWindow.mscalendar = SimpleBrowser(config.mainWindow, "Microsoft Calendar")
 config.mainWindow.mscalendar.setUrl(QUrl("https://outlook.office.com/calendar"))
 config.mainWindow.mscalendar.show()

@@ -6,6 +6,6 @@ else:
     from qtpy.QtCore import QUrl
 
 
-config.mainWindow.chatGPT = SimpleBrowser(config.mainWindow, "OpenAI ChatGPT", "chatGPT")
+config.mainWindow.chatGPT = SimpleBrowser(config.mainWindow, "OpenAI ChatGPT")
 config.mainWindow.chatGPT.setUrl(QUrl("https://chat.openai.com/chat"))
 config.mainWindow.chatGPT.show()

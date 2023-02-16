@@ -20,6 +20,6 @@ https://onedrive.live.com/about/en-gb/signin
 
 """
 
-config.mainWindow.msonedrive = SimpleBrowser(config.mainWindow, "Microsoft OneDrive", "microsoft")
+config.mainWindow.msonedrive = SimpleBrowser(config.mainWindow, "Microsoft OneDrive")
 config.mainWindow.msonedrive.setUrl(QUrl("https://onedrive.live.com/about/en-gb/signin"))
 config.mainWindow.msonedrive.show()

@@ -7,6 +7,6 @@ else:
     from qtpy.QtCore import QUrl
 
 
-config.mainWindow.gmail = SimpleBrowser(config.mainWindow, "Gmail", "google")
+config.mainWindow.gmail = SimpleBrowser(config.mainWindow, "Gmail")
 config.mainWindow.gmail.setUrl(QUrl("https://gmail.com"))
 config.mainWindow.gmail.show()

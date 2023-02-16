@@ -7,6 +7,6 @@ else:
     from qtpy.QtCore import QUrl
 
 
-config.mainWindow.googleSearch = SimpleBrowser(config.mainWindow, "Google", "google")
+config.mainWindow.googleSearch = SimpleBrowser(config.mainWindow, "Google")
 config.mainWindow.googleSearch.setUrl(QUrl("https://www.google.com"))
 config.mainWindow.googleSearch.show()

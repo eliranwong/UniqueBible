@@ -20,6 +20,6 @@ https://onedrive.live.com/about/en-gb/signin
 
 """
 
-config.mainWindow.msexcel = SimpleBrowser(config.mainWindow, "Microsoft Excel", "microsoft")
+config.mainWindow.msexcel = SimpleBrowser(config.mainWindow, "Microsoft Excel")
 config.mainWindow.msexcel.setUrl(QUrl("https://www.office.com/launch/excel"))
 config.mainWindow.msexcel.show()

@@ -16,7 +16,7 @@ else:
 
 class SimpleBrowser(QWidget):
 
-    def __init__(self, parent, title="UniqueBible.app", profileName="UBA"):
+    def __init__(self, parent, title="UniqueBible.app", profileName="simplebrowser"):
         super().__init__()
         self.parent = parent
         self.profileName = profileName
@@ -135,9 +135,15 @@ class SimpleBrowser(QWidget):
         profile.downloadRequested.connect(self.downloadRequested)
         # set up web engine page
         webpage = QWebEnginePage(profile, self)
-        webpage.newWindowRequested.connect(self.newWindowRequested)
+        if config.qtLibrary == "pyside6":
+            webpage.newWindowRequested.connect(self.newWindowRequested)
+        else:
+            webpage.createWindow = self.createWindow
         # set up webview
-        self.webview = QWebEngineView(webpage)
+        self.webview = QWebEngineView()
+        self.webview.setPage(webpage)
+        # Alternately, construct a QWebEngineView with a QWebEnginePage directly in PySide6
+        #self.webview = QWebEngineView(webpage)
         self.webview.urlChanged.connect(lambda url: self.addressBar.setText(url.toString()))
         self.webview.loadFinished.connect(self.loadFinished)
         mainLayout.addWidget(self.webview)
@@ -168,12 +174,16 @@ class SimpleBrowser(QWidget):
         request.isFinishedChanged.connect(isFinishedChanged)
         request.accept()
 
-    def newWindowRequested(self, request):
-        # open in the same window
-        #self.setUrl(request.requestedUrl())
+    # work in PySide2 or PyQt5, but not in PySide6
+    def createWindow(self, windowType):
+        if windowType in (QWebEnginePage.WebBrowserWindow, QWebEnginePage.WebBrowserTab):
+            newWindow = SimpleBrowser(config.mainWindow, "New", self.profileName)
+            newWindow.show()
+            return newWindow.webview.page()
 
-        # open in a new window
-        newWindow = SimpleBrowser(config.mainWindow, "New Window", self.profileName)
+    # work in PySide6, but not in PySide2 or PyQt5
+    def newWindowRequested(self, request):
+        newWindow = SimpleBrowser(config.mainWindow, "New", self.profileName)
         newWindow.setUrl(QUrl(request.requestedUrl()))
         newWindow.show()
 

@@ -20,6 +20,6 @@ https://onedrive.live.com/about/en-gb/signin
 
 """
 
-config.mainWindow.mspowerpoint = SimpleBrowser(config.mainWindow, "Microsoft PowerPoint", "microsoft")
+config.mainWindow.mspowerpoint = SimpleBrowser(config.mainWindow, "Microsoft PowerPoint")
 config.mainWindow.mspowerpoint.setUrl(QUrl("https://www.office.com/launch/powerpoint"))
 config.mainWindow.mspowerpoint.show()

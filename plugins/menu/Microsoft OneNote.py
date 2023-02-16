@@ -20,6 +20,6 @@ https://onedrive.live.com/about/en-gb/signin
 
 """
 
-config.mainWindow.msonenote = SimpleBrowser(config.mainWindow, "Microsoft OneNote", "microsoft")
+config.mainWindow.msonenote = SimpleBrowser(config.mainWindow, "Microsoft OneNote")
 config.mainWindow.msonenote.setUrl(QUrl("https://www.office.com/launch/onenote"))
 config.mainWindow.msonenote.show()

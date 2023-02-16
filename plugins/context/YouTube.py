@@ -7,7 +7,7 @@ else:
     from qtpy.QtCore import QUrl
 
 
-config.mainWindow.googleYoutube = SimpleBrowser(config.mainWindow, "Youtube", "google")
+config.mainWindow.googleYoutube = SimpleBrowser(config.mainWindow, "Youtube")
 if config.pluginContext:
     content = TextUtil.plainTextToUrl(config.pluginContext)
     config.mainWindow.googleYoutube.setUrl(QUrl(f"https://youtube.com/results?search_query={content}"))

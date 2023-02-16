@@ -19,7 +19,7 @@ class YouTubePopover(QWebEngineView):
         self.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
         #self.page().fullScreenRequested.connect(lambda request: request.accept())
 
-        profile = QWebEngineProfile("google", self)
+        profile = QWebEngineProfile("simplebrowser", self)
         profile.setHttpCacheType(QWebEngineProfile.DiskHttpCache)
         profile.setPersistentCookiesPolicy(QWebEngineProfile.ForcePersistentCookies)
         storagePath = os.path.join(os.getcwd(), "webstorage")
@@ -37,7 +37,12 @@ class YouTubePopover(QWebEngineView):
         profile.setDownloadPath(self.downloadPath)
         profile.downloadRequested.connect(self.downloadRequested)
         webpage = QWebEnginePage(profile, self)
-        webpage.newWindowRequested.connect(lambda request: self.videoLinkChanged(request.requestedUrl(), True))
+        if config.qtLibrary == "pyside6":
+            webpage.newWindowRequested.connect(lambda request: self.videoLinkChanged(request.requestedUrl(), True))
+        else:
+            def createWindow(_type):
+                return webpage
+            webpage.createWindow = createWindow
         self.setPage(webpage)
         self.page().fullScreenRequested.connect(self.fullScreenRequested)
         #self.load(QUrl("https://www.youtube.com/"))
