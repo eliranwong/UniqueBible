@@ -13,12 +13,15 @@ if config.qtLibrary == "pyside6":
     from PySide6.QtWidgets import QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QColorDialog, QComboBox, QToolButton, QMenu, QCompleter, QHBoxLayout
     from PySide6.QtWebEngineCore import QWebEnginePage
     from PySide6.QtGui import QClipboard
+    from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
 else:
     from qtpy.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer
     from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor
     from qtpy.QtWidgets import QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog, QComboBox, QToolButton, QMenu, QCompleter, QHBoxLayout
     from qtpy.QtWebEngineWidgets import QWebEnginePage
     from qtpy.QtGui import QClipboard
+    from qtpy.QtMultimedia import QMediaPlayer, QMediaContent
+from gui.AudioPlayer import AudioPlayer
 from gui.WorkSpace import Workspace
 from db.DevotionalSqlite import DevotionalSqlite
 from gui.BibleCollectionDialog import BibleCollectionDialog
@@ -200,6 +203,8 @@ class MainWindow(QMainWindow):
         self.miniControl = None
         # Used in pause() to pause macros
         config.pauseMode = False
+        # Built-in Audio Player
+        self.setupAudioPlayer()
         # VLC Player
         self.vlcPlayer = None
 
@@ -219,6 +224,17 @@ class MainWindow(QMainWindow):
         timeDifference = bootEndTime - bootStartTime
 
         self.logger.info("Boot start time: {0}".format(timeDifference))
+
+    def setupAudioPlayer(self):
+        def playbackStateChanged(state):
+            if state == QMediaPlayer.StoppedState:
+                print("Stopped!")
+
+        self.audioPlayer = QMediaPlayer(self)
+        if config.qtLibrary == "pyside6":
+            self.audioPlayer.playbackStateChanged.connect(playbackStateChanged)
+        else:
+            self.audioPlayer.stateChanged.connect(playbackStateChanged)
 
     def __del__(self):
         del self.textCommandParser

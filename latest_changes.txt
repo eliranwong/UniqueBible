@@ -1,5 +1,8 @@
+Changes in 33.82:
+* Fixed pytest
+
 Changes in 33.81:
-* Fixed opening youtube downloader browser and plugins that use built-in simple browsers in PySide2 / PyQt5
+* Fixed opening youtube downloader browser and plugins that use built-in simple browser in PySide2 / PyQt5
 * Tested QMediaPlayer
 
 Changes in 33.80:

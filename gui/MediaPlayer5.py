@@ -109,7 +109,7 @@ class MediaPlayer(QMainWindow):
         toolBar.addWidget(self.volumeSlider)
 
         aboutMenu = self.menuBar().addMenu("&About")
-        aboutQtAct = QAction("About &Qt", self, triggered=qApp.aboutQt)
+        aboutQtAct = QAction("About &Qt", self, triggered=QApplication.aboutQt)
         aboutMenu.addAction(aboutQtAct)
 
         self.videoWidget = QVideoWidget()
