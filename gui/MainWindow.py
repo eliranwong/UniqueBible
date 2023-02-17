@@ -21,7 +21,6 @@ else:
     from qtpy.QtWebEngineWidgets import QWebEnginePage
     from qtpy.QtGui import QClipboard
     from qtpy.QtMultimedia import QMediaPlayer, QMediaContent
-from gui.AudioPlayer import AudioPlayer
 from gui.WorkSpace import Workspace
 from db.DevotionalSqlite import DevotionalSqlite
 from gui.BibleCollectionDialog import BibleCollectionDialog
@@ -226,15 +225,80 @@ class MainWindow(QMainWindow):
         self.logger.info("Boot start time: {0}".format(timeDifference))
 
     def setupAudioPlayer(self):
+        self.audioPlayList = []
+        self.resetAudioPlaylist()
+
         def playbackStateChanged(state):
             if state == QMediaPlayer.StoppedState:
-                print("Stopped!")
+                if self.audioPlayListIndex == -2: # stopped by users
+                    self.resetAudioPlaylist()
+                else:
+                    if self.audioPlayListIndex == len(self.audioPlayList) - 1:
+                        self.resetAudioPlaylist()
+                    else:
+                        self.audioPlayListIndex += 1
+                        self.playAudioPlayList()
 
         self.audioPlayer = QMediaPlayer(self)
         if config.qtLibrary == "pyside6":
             self.audioPlayer.playbackStateChanged.connect(playbackStateChanged)
         else:
             self.audioPlayer.stateChanged.connect(playbackStateChanged)
+
+    def resetAudioPlaylist(self):
+        self.audioPlayListIndex = 0
+        self.isAudioPlayListPlaying = False
+
+    def previousAudioFile(self):
+        if self.audioPlayList and not self.audioPlayListIndex == 0:
+            self.audioPlayListIndex = self.audioPlayListIndex - 2
+            self.audioPlayer.stop()
+
+    def nextAudioFile(self):
+        if self.audioPlayList and not self.audioPlayListIndex == (len(self.audioPlayListIndex) - 1):
+            self.audioPlayer.stop()
+
+    def stopAudioPlaying(self):
+        def stopPlaying():
+            self.audioPlayListIndex = -2
+            self.audioPlayer.stop()
+        if config.qtLibrary == "pyside6":
+            if not self.audioPlayer.playbackState() == QMediaPlayer.StoppedState:
+                stopPlaying()
+        else:
+            if not self.audioPlayer.state() == QMediaPlayer.StoppedState:
+                stopPlaying()
+
+    def addToAudioPlayList(self, newPlayList, clear=False):
+        if clear:
+            self.audioPlayList = []
+        # allow adding a single file path in a string rather than a list
+        if isinstance(newPlayList, str):
+            self.audioPlayList.append(newPlayList)
+        else:
+            self.audioPlayList = self.audioPlayList + newPlayList
+        if not self.isAudioPlayListPlaying:
+            self.playAudioPlayList()
+
+    def playAudioPlayList(self):
+        if self.audioPlayList:
+            self.isAudioPlayListPlaying = True
+            self.playAudioFile(self.audioPlayList[self.audioPlayListIndex])
+
+    def playAudioFile(self, filePath):
+        if config.qtLibrary == "pyside6":
+            # remarks: tested on Ubuntu
+            # for unknown reasons, the following three lines do not work when they are executed directly without puting into a string first
+            # work as expected when the string is executed with exec() method
+            script = f"""
+audioOutput = QAudioOutput()
+config.mainWindow.audioPlayer.setAudioOutput(audioOutput)
+config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile("{filePath}"))"""
+            exec(script, globals())
+        else:
+            media_content = QMediaContent(QUrl.fromLocalFile(filePath))
+            self.audioPlayer.setMedia(media_content)
+        self.audioPlayer.play()
 
     def __del__(self):
         del self.textCommandParser

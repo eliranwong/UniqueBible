@@ -1,3 +1,6 @@
+Changes in 33.83:
+* Added codes for built-in audio player controls
+
 Changes in 33.82:
 * Fixed pytest
 
