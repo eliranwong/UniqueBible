@@ -1904,7 +1904,9 @@ class TextCommandParser:
     def openVlcPlayer(self, command, source, gui=True):
         self.parent.closeMediaPlayer()
         try:
-            if config.macVlc and not config.forceUseBuiltinMediaPlayer:
+            if config.mainWindow.audioPlayer is not None:
+                config.mainWindow.addToAudioPlayList(command, True)
+            elif config.macVlc and not config.forceUseBuiltinMediaPlayer:
                 WebtopUtil.run(f'{config.macVlc} --rate {config.vlcSpeed} "{command}"')
             elif WebtopUtil.isPackageInstalled("vlc") and ((not config.forceUseBuiltinMediaPlayer) or (config.runMode == "terminal")):
                 vlcCmd = "vlc" if gui else "cvlc"

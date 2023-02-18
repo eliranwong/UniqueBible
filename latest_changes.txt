@@ -1,3 +1,6 @@
+Changes in 33.84:
+* Initial support of Qt MediaPlayer
+
 Changes in 33.83:
 * Added codes for built-in audio player controls
 

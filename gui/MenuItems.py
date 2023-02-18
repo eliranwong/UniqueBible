@@ -9,12 +9,12 @@ from util.HtmlColorCodes import HtmlColorCodes
 if config.qtLibrary == "pyside6":
     from PySide6.QtGui import QIcon, QColor, QPixmap, QAction, QCursor
     from PySide6.QtCore import Qt
-    from PySide6.QtWidgets import QToolBar, QPushButton, QLineEdit, QStyleFactory, QComboBox, QToolButton, QMenu, QLabel
+    from PySide6.QtWidgets import QToolBar, QPushButton, QLineEdit, QStyleFactory, QComboBox, QToolButton, QMenu, QLabel, QStyle, QSlider
     from PySide6.QtWebEngineCore import QWebEnginePage
 else:
     from qtpy.QtGui import QIcon, QColor, QPixmap, QCursor
     from qtpy.QtCore import Qt
-    from qtpy.QtWidgets import QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory, QComboBox, QToolButton, QMenu, QLabel
+    from qtpy.QtWidgets import QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory, QComboBox, QToolButton, QMenu, QLabel, QStyle, QSlider
     from qtpy.QtWebEngineWidgets import QWebEnginePage
 from functools import partial
 

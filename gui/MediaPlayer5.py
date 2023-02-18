@@ -45,9 +45,8 @@
 import sys
 from qtpy.QtCore import QStandardPaths, Qt, QUrl
 from qtpy.QtGui import QIcon, QKeySequence
-from qtpy.QtWidgets import (QAction, QApplication, QDialog, QFileDialog,
-    QMainWindow, QSlider, QStyle, QToolBar)
-from qtpy.QtMultimedia import QMediaPlayer, QMediaPlaylist
+from qtpy.QtWidgets import QAction, QApplication, QDialog, QFileDialog, QMainWindow, QSlider, QStyle, QToolBar, QWidget, QVBoxLayout
+from qtpy.QtMultimedia import QMediaPlayer, QMediaPlaylist, QMediaContent
 from qtpy.QtMultimediaWidgets import QVideoWidget
 
 class MediaPlayer(QMainWindow):
@@ -113,10 +112,25 @@ class MediaPlayer(QMainWindow):
         aboutMenu.addAction(aboutQtAct)
 
         self.videoWidget = QVideoWidget()
-        self.setCentralWidget(self.videoWidget)
+        #self.setCentralWidget(self.videoWidget)
         self.player.setPlaylist(self.playlist)
         self.player.stateChanged.connect(self.updateButtons)
         self.player.setVideoOutput(self.videoWidget)
+
+        # Edited by Eliran Wong
+        # Create a QSlider object for seeking through the video
+        self.seek_slider = QSlider(Qt.Horizontal, self)
+        self.seek_slider.setRange(0, 0)  # Set the range to 0 initially, as we don't know the duration yet
+        self.seek_slider.sliderMoved.connect(self.on_slider_moved)  # Connect the sliderMoved signal to our on_slider_moved slot
+        self.player.durationChanged.connect(self.on_duration_changed)  # Connect the durationChanged signal to our on_duration_changed slot
+        self.player.positionChanged.connect(self.on_position_changed)  # Connect the positionChanged signal to our on_position_changed slot
+
+        centralWidget = QWidget()
+        centralWidgetLayout = QVBoxLayout()
+        centralWidgetLayout.addWidget(self.videoWidget)
+        centralWidgetLayout.addWidget(self.seek_slider)
+        centralWidget.setLayout(centralWidgetLayout)
+        self.setCentralWidget(centralWidget)
 
         self.updateButtons(self.player.state())
 
@@ -126,13 +140,15 @@ class MediaPlayer(QMainWindow):
         if not supportedMimeTypes:
             supportedMimeTypes.append("video/x-msvideo") # AVI
         # modified by Eliran Wong
-        if not "video/mp4" in supportedMimeTypes:
-            supportedMimeTypes.append("video/mp4")
+        for mimeType in ("video/mp4", "audio/mpeg"):
+            if not mimeType in supportedMimeTypes:
+                supportedMimeTypes.append(mimeType)
         fileDialog.setMimeTypeFilters(supportedMimeTypes)
         moviesLocation = QStandardPaths.writableLocation(QStandardPaths.MoviesLocation)
         fileDialog.setDirectory(moviesLocation)
         if fileDialog.exec_() == QDialog.Accepted:
-            self.playlist.addMedia(fileDialog.selectedUrls()[0])
+            mediaContent = QMediaContent(fileDialog.selectedUrls()[0])
+            self.playlist.addMedia(mediaContent)
             self.player.play()
 
     def previousClicked(self):
@@ -187,11 +203,24 @@ class MediaPlayer(QMainWindow):
                 self.playlist.addMedia(url)
             self.player.play()
 
+    # to work with slider
+    def on_slider_moved(self, position):
+        # Seek to the position of the slider when it is moved
+        self.player.setPosition(position)
+
+    def on_duration_changed(self, duration):
+        # Set the range of the slider to the duration of the video when it is known
+        self.seek_slider.setRange(0, duration)
+
+    def on_position_changed(self, position):
+        # Set the value of the slider to the current position of the video
+        self.seek_slider.setValue(position)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     mainWin = MediaPlayer()
     availableGeometry = app.desktop().availableGeometry(mainWin)
-    mainWin.resize(availableGeometry.width() / 3, availableGeometry.height() / 2)
+    mainWin.resize(int(availableGeometry.width() / 3), int(availableGeometry.height() / 2))
     mainWin.show()
     sys.exit(app.exec_())

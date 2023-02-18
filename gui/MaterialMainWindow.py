@@ -582,7 +582,7 @@ class MaterialMainWindow:
         if WebtopUtil.isPackageInstalled("vlc") or ("Pythonvlc" in config.enabled):
             subMenu = addSubMenu(menu, "mediaPlayer")
             items = (
-                ("launch", self.openVlcPlayer, sc.launchMediaPlayer),
+                ("launch", self.openMediaPlayer, sc.launchMediaPlayer),
                 ("stop", self.closeMediaPlayer, sc.stopMediaPlayer),
             )
             for feature, action, shortcut in items:
@@ -1083,6 +1083,43 @@ class MaterialMainWindow:
         icon = "material/communication/cancel_presentation/materialiconsoutlined/48dp/2x/outline_cancel_presentation_black_48dp.png"
         self.addMaterialIconButton("clearAll", icon, self.clearAllWindowTabs, self.secondToolBar)
         self.secondToolBar.addSeparator()
+
+        # Second tool bar
+        self.thirdToolBar = QToolBar()
+        self.thirdToolBar.setWindowTitle(config.thisTranslation["menu11_audio"])
+        self.thirdToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.addToolBar(self.thirdToolBar)
+
+        style = self.style()
+        icon = QIcon.fromTheme("media-playback-start.png",
+                               style.standardIcon(QStyle.SP_MediaPlay))
+        self._play_action = self.thirdToolBar.addAction(icon, "Play")
+        self._play_action.triggered.connect(self.playAudioPlaying)
+
+        icon = QIcon.fromTheme("media-skip-backward-symbolic.svg",
+                               style.standardIcon(QStyle.SP_MediaSkipBackward))
+        self._previous_action = self.thirdToolBar.addAction(icon, "Previous")
+        self._previous_action.triggered.connect(self.previousAudioFile)
+
+        icon = QIcon.fromTheme("media-playback-pause.png",
+                               style.standardIcon(QStyle.SP_MediaPause))
+        self._pause_action = self.thirdToolBar.addAction(icon, "Pause")
+        self._pause_action.triggered.connect(self.pauseAudioPlaying)
+
+        icon = QIcon.fromTheme("media-skip-forward-symbolic.svg",
+                               style.standardIcon(QStyle.SP_MediaSkipForward))
+        self._next_action = self.thirdToolBar.addAction(icon, "Next")
+        self._next_action.triggered.connect(self.nextAudioFile)
+
+        icon = QIcon.fromTheme("media-playback-stop.png",
+                               style.standardIcon(QStyle.SP_MediaStop))
+        self._stop_action = self.thirdToolBar.addAction(icon, "Stop")
+        self._stop_action.triggered.connect(self.stopAudioPlaying)
+
+        self.seek_slider = QSlider(Qt.Horizontal, self)
+        self.seek_slider.setRange(0, 0)  # Set the range to 0 initially, as we don't know the duration yet
+        self.seek_slider.sliderMoved.connect(self.on_slider_moved)  # Connect the sliderMoved signal to our on_slider_moved slot
+        self.thirdToolBar.addWidget(self.seek_slider)
 
         # Left tool bar
         self.leftToolBar = QToolBar()

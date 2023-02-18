@@ -1204,7 +1204,7 @@ class Bible:
     def insertReadBibleLink(text, b, c, v=None):
         text = FileUtil.getMP3TextFile(text)
         data = ""
-        if (config.runMode in ("", "gui", "cli") and ("Pythonvlc" in config.enabled or WebtopUtil.isPackageInstalled("vlc"))) or config.enableHttpServer:
+        if config.runMode in ("", "gui", "cli") or config.enableHttpServer:
             directory = os.path.join(config.audioFolder, "bibles", text)
             if os.path.isdir(directory):
                 directories = [d for d in sorted(os.listdir(directory)) if

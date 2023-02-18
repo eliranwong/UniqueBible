@@ -227,18 +227,20 @@ class TextEditorUtility:
     def openVlcPlayer(self, command, source, gui=True):
         self.closeMediaPlayer()
         try:
-            if config.macVlc and not config.forceUseBuiltinMediaPlayer:
+            if config.mainWindow.audioPlayer is not None:
+                config.mainWindow.addToAudioPlayList(command, True)
+            elif config.macVlc and not config.forceUseBuiltinMediaPlayer:
                 WebtopUtil.run(f'{config.macVlc} --rate {config.vlcSpeed} "{command}"')
             elif WebtopUtil.isPackageInstalled("vlc") and ((not config.forceUseBuiltinMediaPlayer) or (config.runMode == "terminal")):
                 vlcCmd = "vlc" if gui else "cvlc"
                 if config.runMode == "terminal":
                     vlcCmd = "cvlc"
                 if '"' in command:
-                    self.openBuiltinPlayer(command, gui)
+                    config.mainWindow.textCommandParser.openBuiltinPlayer(command, gui)
                 else:
                     WebtopUtil.run('{0} --rate {2} "{1}"'.format(vlcCmd, command, config.vlcSpeed))
             else:
-                self.openBuiltinPlayer(command, gui)
+                config.mainWindow.textCommandParser.openBuiltinPlayer(command, gui)
         except:
             WebtopUtil.openFile(command)
         return ("", "", {})

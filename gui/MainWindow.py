@@ -14,13 +14,15 @@ if config.qtLibrary == "pyside6":
     from PySide6.QtWebEngineCore import QWebEnginePage
     from PySide6.QtGui import QClipboard
     from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
+    from gui.MediaPlayer6 import MediaPlayer
 else:
     from qtpy.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer
     from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor
     from qtpy.QtWidgets import QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog, QComboBox, QToolButton, QMenu, QCompleter, QHBoxLayout
     from qtpy.QtWebEngineWidgets import QWebEnginePage
     from qtpy.QtGui import QClipboard
-    from qtpy.QtMultimedia import QMediaPlayer, QMediaContent
+    from qtpy.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
+    from gui.MediaPlayer5 import MediaPlayer
 from gui.WorkSpace import Workspace
 from db.DevotionalSqlite import DevotionalSqlite
 from gui.BibleCollectionDialog import BibleCollectionDialog
@@ -225,6 +227,7 @@ class MainWindow(QMainWindow):
         self.logger.info("Boot start time: {0}".format(timeDifference))
 
     def setupAudioPlayer(self):
+        config.currentAudioFile = ""
         self.audioPlayList = []
         self.resetAudioPlaylist()
 
@@ -243,7 +246,12 @@ class MainWindow(QMainWindow):
         if config.qtLibrary == "pyside6":
             self.audioPlayer.playbackStateChanged.connect(playbackStateChanged)
         else:
+            #self.qt5playlist = QMediaPlaylist()
+            #self.audioPlayer.setPlaylist(self.qt5playlist)
             self.audioPlayer.stateChanged.connect(playbackStateChanged)
+        
+        self.audioPlayer.durationChanged.connect(self.on_duration_changed)  # Connect the durationChanged signal to our on_duration_changed slot
+        self.audioPlayer.positionChanged.connect(self.on_position_changed)  # Connect the positionChanged signal to our on_position_changed slot
 
     def resetAudioPlaylist(self):
         self.audioPlayListIndex = 0
@@ -255,19 +263,26 @@ class MainWindow(QMainWindow):
             self.audioPlayer.stop()
 
     def nextAudioFile(self):
-        if self.audioPlayList and not self.audioPlayListIndex == (len(self.audioPlayListIndex) - 1):
+        if self.audioPlayList and not self.audioPlayListIndex == (len(self.audioPlayList) - 1):
             self.audioPlayer.stop()
 
+    def getAudioPlayerState(self):
+        return self.audioPlayer.playbackState() if config.qtLibrary == "pyside6" else self.audioPlayer.state()
+
+    def pauseAudioPlaying(self):
+        if self.getAudioPlayerState() == QMediaPlayer.PlayingState:
+            self.audioPlayer.pause()
+
+    def playAudioPlaying(self):
+        if self.getAudioPlayerState() == QMediaPlayer.PausedState:
+            self.audioPlayer.play()
+        elif self.getAudioPlayerState() == QMediaPlayer.StoppedState and config.currentAudioFile:
+            self.playAudioPlayList()
+
     def stopAudioPlaying(self):
-        def stopPlaying():
+        if not self.getAudioPlayerState() == QMediaPlayer.StoppedState:
             self.audioPlayListIndex = -2
             self.audioPlayer.stop()
-        if config.qtLibrary == "pyside6":
-            if not self.audioPlayer.playbackState() == QMediaPlayer.StoppedState:
-                stopPlaying()
-        else:
-            if not self.audioPlayer.state() == QMediaPlayer.StoppedState:
-                stopPlaying()
 
     def addToAudioPlayList(self, newPlayList, clear=False):
         if clear:
@@ -286,19 +301,43 @@ class MainWindow(QMainWindow):
             self.playAudioFile(self.audioPlayList[self.audioPlayListIndex])
 
     def playAudioFile(self, filePath):
-        if config.qtLibrary == "pyside6":
-            # remarks: tested on Ubuntu
-            # for unknown reasons, the following three lines do not work when they are executed directly without puting into a string first
-            # work as expected when the string is executed with exec() method
-            script = f"""
+        if filePath:
+            config.currentAudioFile = filePath
+            if config.qtLibrary == "pyside6":
+                # remarks: tested on Ubuntu
+                # for unknown reasons, the following three lines do not work when they are executed directly without puting into a string first
+                # work as expected when the string is executed with exec() method
+                codes = f"""
 audioOutput = QAudioOutput()
 config.mainWindow.audioPlayer.setAudioOutput(audioOutput)
-config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile("{filePath}"))"""
-            exec(script, globals())
-        else:
-            media_content = QMediaContent(QUrl.fromLocalFile(filePath))
-            self.audioPlayer.setMedia(media_content)
-        self.audioPlayer.play()
+config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(config.currentAudioFile))"""
+                exec(codes, globals())
+            else:
+                media_content = QMediaContent(QUrl.fromLocalFile(filePath))
+                self.audioPlayer.setMedia(media_content)
+                #self.qt5playlist.clear()
+                #self.self.qt5playlist.addMedia(media_content)
+            self.audioPlayer.play()
+
+    # to work with slider
+    def on_slider_moved(self, position):
+        # Seek to the position of the slider when it is moved
+        self.audioPlayer.setPosition(position)
+        # note: need to reset audio output on Ubuntu to get audio working after chaning position
+        if config.qtLibrary == "pyside6":
+            codes = f"""
+audioOutput = QAudioOutput()
+config.mainWindow.audioPlayer.setAudioOutput(audioOutput)"""
+        exec(codes, globals())
+
+
+    def on_duration_changed(self, duration):
+        # Set the range of the slider to the duration of the video when it is known
+        self.seek_slider.setRange(0, duration)
+
+    def on_position_changed(self, position):
+        # Set the value of the slider to the current position of the video
+        self.seek_slider.setValue(position)
 
     def __del__(self):
         del self.textCommandParser
@@ -5643,10 +5682,21 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             # offline tts
             self.mainView.currentWidget().textToSpeechLanguage(config.ttsDefaultLangauge3, True)
 
+    def openMediaPlayer(self, filename=""):
+        config.currentMediaFile = filename
+        # For unknown reasons the following lines are not working if they are executed directly when PySide6 is used.
+        # However, they are executed as expected when they are placed into a string
+        # tested on Ubuntu
+        codes = """
+config.mainWindow.mediaPlayer = MediaPlayer(config.mainWindow)
+available_geometry = config.mainWindow.mediaPlayer.screen().availableGeometry()
+config.mainWindow.mediaPlayer.resize(int(available_geometry.width() / 3), int(available_geometry.height() / 2))
+config.mainWindow.mediaPlayer.show()
+if config.currentMediaFile:
+    config.mainWindow.mediaPlayer.openSingleFile(config.currentMediaFile)"""
+        exec(codes, globals())
+
     def openVlcPlayer(self, filename=""):
-        #print(("Pythonvlc" in config.enabled))
-        from gui.VlcPlayer import VlcPlayer
-        self.vlcPlayer = VlcPlayer(self, filename)
         try:
             if config.macVlc and not config.forceUseBuiltinMediaPlayer:
                 os.system("pkill VLC")
@@ -5669,6 +5719,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.displayMessage(config.thisTranslation["noMediaPlayer"])
 
     def closeMediaPlayer(self):
+        self.stopAudioPlaying()
         if WebtopUtil.isPackageInstalled("pkill"):
             if config.macVlc:
                 os.system("pkill VLC")
@@ -5707,7 +5758,9 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
 
     def playAudioBibleFilePlayList(self, playlist, gui=True):
         self.closeMediaPlayer()
-        if config.macVlc and not config.forceUseBuiltinMediaPlayer:
+        if self.audioPlayer is not None:
+            self.addToAudioPlayList(playlist, True)
+        elif config.macVlc and not config.forceUseBuiltinMediaPlayer:
             audioFiles = '" "'.join(playlist)
             audioFiles = '"{0}"'.format(audioFiles)
             WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFiles}")
@@ -5715,7 +5768,6 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             audioFiles = '" "'.join(playlist)
             audioFiles = '"{0}"'.format(audioFiles)
             vlcCmd = "vlc" if gui else "cvlc"
-            #os.system("pkill vlc")
             WebtopUtil.run(f"{vlcCmd} --rate {config.vlcSpeed} {audioFiles}")
         elif playlist and ("Pythonvlc" in config.enabled):
             from gui.VlcPlayer import VlcPlayer
@@ -5731,24 +5783,21 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     def playBibleMP3Playlist(self, playlist):
         self.closeMediaPlayer()
         if playlist:
-            if config.macVlc and not config.forceUseBuiltinMediaPlayer:
+            def getFilelist():
                 fileList = []
                 for listItem in playlist:
                     (text, book, chapter, verse, folder) = listItem
                     file = FileUtil.getBibleMP3File(text, book, folder, chapter, verse)
                     if file:
                         fileList.append(file)
-                audioFiles = ' '.join(fileList)
+                return fileList
+            if self.audioPlayer is not None:
+                self.addToAudioPlayList(getFilelist(), True)
+            elif config.macVlc and not config.forceUseBuiltinMediaPlayer:
+                audioFiles = ' '.join(getFilelist())
                 WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFiles}")
             elif WebtopUtil.isPackageInstalled("vlc") and not config.forceUseBuiltinMediaPlayer:
-                fileList = []
-                for listItem in playlist:
-                    (text, book, chapter, verse, folder) = listItem
-                    file = FileUtil.getBibleMP3File(text, book, folder, chapter, verse)
-                    if file:
-                        fileList.append(file)
-                audioFiles = ' '.join(fileList)
-                #os.system("pkill vlc")
+                audioFiles = ' '.join(getFilelist())
                 WebtopUtil.run(f"vlc --rate {config.vlcSpeed} {audioFiles}")
             elif ("Pythonvlc" in config.enabled):
                 from gui.VlcPlayer import VlcPlayer
