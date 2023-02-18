@@ -242,6 +242,33 @@ class MainWindow(QMainWindow):
         self.audioPlayer.setPlaybackRate(config.mediaSpeed)
         if config.menuLayout == "material":
             self.setSubMenuMediaSpeed()
+            self.setSpeedButtonButton()
+
+    def setSpeedButtonButton(self):
+        icon = "material/av/speed/materialiconsoutlined/48dp/2x/outline_speed_black_48dp.png"
+        qIcon = self.getQIcon(self.getCrossplatformPath(icon))
+        self.speedButton.setStyleSheet(qIcon)
+        self.speedButton.setPopupMode(QToolButton.InstantPopup)
+        self.speedButton.setArrowType(Qt.NoArrow)
+        self.speedButton.setCursor(QCursor(Qt.PointingHandCursor))
+        self.speedButton.setToolTip(config.thisTranslation["adjustSpeed"])
+        menu = QMenu(self.speedButton)
+        def addSpeedAction(value):
+            action = menu.addAction(str(value))
+            action.triggered.connect(partial(self.setMediaSpeed, value))
+            action.setCheckable(True)
+            action.setChecked(True if config.mediaSpeed == value else False)
+        # loop does not work
+        #for i in (0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0):
+        #    addSpeedAction(i)
+        addSpeedAction(0.5)
+        addSpeedAction(0.75)
+        addSpeedAction(1.0)
+        addSpeedAction(1.25)
+        addSpeedAction(1.5)
+        addSpeedAction(1.75)
+        addSpeedAction(2.0)
+        self.speedButton.setMenu(menu)
 
     def setupAudioPlayer(self):
         config.currentAudioFile = ""
@@ -317,25 +344,25 @@ class MainWindow(QMainWindow):
 
     def playAudioFile(self, filePath):
         if filePath and os.path.isfile(filePath):
-            
-            # _imv:::43.3.16, _instantWord:::1:::h2
-            # verse pattern, e.g. CSB_1_1_1.mp3
             basename = os.path.basename(filePath)
+            # verse pattern, e.g. CSB_1_1_1.mp3
             versePattern = re.compile("^([^_]+?)_([0-9]+?)_([0-9]+?)_([0-9]+?).mp3")
             isVerse = versePattern.search(basename)
             if not isVerse:
                 # word patterns, e.g. lex_OGNT_61_1_9_124169.mp3   OGNT_61_1_9_124169.mp3 BHS5_1_1_28_579.mp3  lex_BHS5_1_1_20_376.mp3
                 wordPattern = re.compile("^.*?(BHS|OGNT)_([0-9]+?)_[0-9]+?_[0-9]+?_([0-9]+?).mp3")
                 isWord = wordPattern.search(filePath)
+            def getDefaultInfo():
+                return ("instant", f"Playing audio file:<br>{basename}")
             if isVerse:
                 text, b, c, v = isVerse.groups()
-                if text in self.textList:
-                    instantInfo = self.textCommandParser.instantMainVerse(f"{b}.{c}.{v}", "main", text)
-                    self.instantView.setHtml(self.wrapHtml(instantInfo[1], "instant", False), baseUrl)
+                instantInfo = self.textCommandParser.instantMainVerse(f"{b}.{c}.{v}", "main", text) if text in self.textList else getDefaultInfo()
             elif isWord:
                 _, book, wordId = isWord.groups()
                 instantInfo = self.textCommandParser.instantWord(f"{book}:::{wordId}", "main")
-                self.instantView.setHtml(self.wrapHtml(instantInfo[1], "instant", False), baseUrl)
+            else:
+                instantInfo = getDefaultInfo()
+            self.instantView.setHtml(self.wrapHtml(instantInfo[1], "instant", False), baseUrl)
             
             # full path is required for PySide2 QMediaPlayer to work
             config.currentAudioFile = os.path.abspath(filePath)
@@ -5719,18 +5746,36 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.mainView.currentWidget().textToSpeechLanguage(config.ttsDefaultLangauge3, True)
 
     def openMediaPlayer(self, filename=""):
-        config.currentMediaFile = filename
-        # For unknown reasons the following lines are not working if they are executed directly when PySide6 is used.
-        # However, they are executed as expected when they are placed into a string
-        # tested on Ubuntu
-        codes = """
+        if isinstance(filename, str):
+            if filename and os.path.isfile(filename):
+                config.currentMediaFile = os.path.abspath(filename)
+                # For unknown reasons the following lines are not working if they are executed directly when PySide6 is used.
+                # However, they are executed as expected when they are placed into a string
+                # tested on Ubuntu
+                codes = """
 config.mainWindow.mediaPlayer = MediaPlayer(config.mainWindow)
 available_geometry = config.mainWindow.mediaPlayer.screen().availableGeometry()
 config.mainWindow.mediaPlayer.resize(int(available_geometry.width() / 3), int(available_geometry.height() / 2))
 config.mainWindow.mediaPlayer.show()
 if config.currentMediaFile:
     config.mainWindow.mediaPlayer.openSingleFile(config.currentMediaFile)"""
-        exec(codes, globals())
+                exec(codes, globals())
+        else:
+            # filelist
+            config.currentMediaFiles = []
+            for f in filename:
+                fullpath = os.path.abspath(f)
+                if os.path.isfile(fullpath):
+                    config.currentMediaFiles.append(fullpath)
+            if config.currentMediaFiles:
+                codes = """
+config.mainWindow.mediaPlayer = MediaPlayer(config.mainWindow)
+available_geometry = config.mainWindow.mediaPlayer.screen().availableGeometry()
+config.mainWindow.mediaPlayer.resize(int(available_geometry.width() / 3), int(available_geometry.height() / 2))
+config.mainWindow.mediaPlayer.show()
+config.mainWindow.mediaPlayer.openMultipleFiles(config.currentMediaFiles)"""
+                exec(codes, globals())
+            
 
     def openVlcPlayer(self, filename=""):
         try:

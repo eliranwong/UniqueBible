@@ -218,13 +218,13 @@ class TextEditorUtility:
                     self.saveGTTSAudio(text, language)
                 audioFile = self.getGttsFilename()
                 if os.path.isfile(audioFile):
-                    self.openVlcPlayer(audioFile, "main", gui=False)
+                    self.openMediaPlayer(audioFile, "main", gui=False)
         except:
             self.displayMessage(config.thisTranslation["message_fail"])
 
         return ("", "", {})
 
-    def openVlcPlayer(self, command, source, gui=True):
+    def openMediaPlayer(self, command, source, gui=True):
         self.closeMediaPlayer()
         try:
             if config.mainWindow.audioPlayer is not None:

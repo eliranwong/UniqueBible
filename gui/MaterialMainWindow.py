@@ -1040,7 +1040,9 @@ class MaterialMainWindow:
 
         icon = "material/social/travel_explore/materialiconsoutlined/48dp/2x/outline_travel_explore_black_48dp.png"
         self.addMenuPluginButton("Google", "Google", icon, self.secondToolBar, translation=False)
-
+        if ("Ytdlp" in config.enabled):
+            icon = "material/hardware/browser_updated/materialiconsoutlined/48dp/2x/outline_browser_updated_black_48dp.png"
+            self.addMaterialIconButton("menu11_youtube", icon, self.openYouTube, self.secondToolBar)
         icon = "material/communication/email/materialiconsoutlined/48dp/2x/outline_email_black_48dp.png"
         self.addMenuPluginButton("Gmail", "Gmail", icon, self.secondToolBar, translation=False)
 
@@ -1066,13 +1068,8 @@ class MaterialMainWindow:
                 action.triggered.connect(partial(self.runPlugin, enabledToolName))
             officeButton.setMenu(officeButtonMenu)
             self.secondToolBar.addWidget(officeButton)
-            self.secondToolBar.addSeparator()
+            #self.secondToolBar.addSeparator()
 
-        icon = "material/av/play_circle/materialiconsoutlined/48dp/2x/outline_play_circle_black_48dp.png"
-        self.addMaterialIconButton("media", icon, partial(self.openControlPanelTab, 6), self.secondToolBar)
-        if ("Ytdlp" in config.enabled):
-            icon = "material/hardware/browser_updated/materialiconsoutlined/48dp/2x/outline_browser_updated_black_48dp.png"
-            self.addMaterialIconButton("menu11_youtube", icon, self.openYouTube, self.secondToolBar)
         self.secondToolBar.addSeparator()
 
         icon = "material/editor/text_decrease/materialiconsoutlined/48dp/2x/outline_text_decrease_black_48dp.png"
@@ -1112,6 +1109,8 @@ class MaterialMainWindow:
         self.thirdToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.thirdToolBar)
 
+        icon = "material/file/folder_open/materialiconsoutlined/48dp/2x/outline_folder_open_black_48dp.png"
+        self.addMaterialIconButton("media", icon, partial(self.openControlPanelTab, 6), self.thirdToolBar)
         icon = "material/av/skip_previous/materialiconsoutlined/48dp/2x/outline_skip_previous_black_48dp.png"
         self.addMaterialIconButton("previous", icon, self.previousAudioFile, self.thirdToolBar)
         icon = "material/av/play_circle_outline/materialiconsoutlined/48dp/2x/outline_play_circle_outline_black_48dp.png"
@@ -1123,10 +1122,18 @@ class MaterialMainWindow:
         icon = "material/av/skip_next/materialiconsoutlined/48dp/2x/outline_skip_next_black_48dp.png"
         self.addMaterialIconButton("next", icon, self.nextAudioFile, self.thirdToolBar)
 
+        self.thirdToolBar.addSeparator()
+
         self.seek_slider = QSlider(Qt.Horizontal, self)
         self.seek_slider.setRange(0, 0)  # Set the range to 0 initially, as we don't know the duration yet
         self.seek_slider.sliderMoved.connect(self.on_slider_moved)  # Connect the sliderMoved signal to our on_slider_moved slot
         self.thirdToolBar.addWidget(self.seek_slider)
+
+        self.thirdToolBar.addSeparator()
+
+        self.speedButton = QToolButton()
+        self.setSpeedButtonButton()
+        self.thirdToolBar.addWidget(self.speedButton)
 
         icon = "material/action/open_in_full/materialiconsoutlined/48dp/2x/outline_open_in_full_black_48dp.png"
         self.addMaterialIconButton("menu1_resize", icon, self.resizeAudioPlayer, self.thirdToolBar)

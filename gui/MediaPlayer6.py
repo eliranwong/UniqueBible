@@ -210,7 +210,7 @@ class MediaPlayer(QMainWindow):
         self._player.setSource(url)
         self._player.play()
 
-    def openMultipleFile(self, filePathList):
+    def openMultipleFiles(self, filePathList):
         if filePathList:
             urlList = [QUrl.fromLocalFile(filePath) for filePath in filePathList]
             self._playlist = urlList
@@ -225,7 +225,7 @@ class MediaPlayer(QMainWindow):
         self._player.setSource(url)
         self._player.play()
 
-    def appendMultipleFile(self, filePathList):
+    def appendMultipleFiles(self, filePathList):
         if filePathList:
             urlList = [QUrl.fromLocalFile(filePath) for filePath in filePathList]
             self._playlist = self._playlist + urlList

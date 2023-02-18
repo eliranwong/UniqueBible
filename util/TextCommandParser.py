@@ -516,12 +516,11 @@ class TextCommandParser:
             "mp4": (self.mp4Download, """
             # [KEYWORD] MP4
             # Usage - MP4:::[youtube_link]"""),
-            "vlc": (self.openVlcPlayer, """
-            # [KEYWORD] VLC
-            # Feature: run VLC player to play mp3 and mp4 files
-            # e.g. VLC
-            # e.g. VLC:::music/AmazingGrace.mp3
-            # e.g. VLC:::video/ProdigalSon.mp4
+            "media": (self.openMediaPlayer, """
+            # [KEYWORD] MEDIA
+            # Feature: run media player to play mp3 and mp4 files
+            # e.g. MEDIA:::music/AmazingGrace.mp3
+            # e.g. MEDIA:::video/ProdigalSon.mp4
             """),
             "read": (self.textRead, """
             # [KEYWORD] READ
@@ -1466,7 +1465,7 @@ class TextCommandParser:
 
                 audioFile = self.parent.getGttsFilename()
                 if os.path.isfile(audioFile):
-                    self.openVlcPlayer(audioFile, "main", gui=False)
+                    self.openMediaPlayer(audioFile, "main", gui=False)
         except:
             self.parent.displayMessage(config.thisTranslation["message_fail"])
 
@@ -1819,7 +1818,7 @@ class TextCommandParser:
                         #os.system("pkill vlc")
                         WebtopUtil.run(f"{player} {audioFile}")
                     else:
-                        self.openVlcPlayer(audioFile, "main", (player == "vlc"))
+                        self.openMediaPlayer(audioFile, "main", (player == "vlc"))
                     return ("", "", {})
                 except:
                     return self.invalidCommand()
@@ -1849,7 +1848,7 @@ class TextCommandParser:
                         #os.system("pkill vlc")
                         WebtopUtil.run(f"cvlc --rate {config.vlcSpeed} {audioFile}")
                     else:
-                        self.openVlcPlayer(audioFile, "main", False)
+                        self.openMediaPlayer(audioFile, "main", False)
                     return ("", "", {})
                 except:
                     return self.invalidCommand()
@@ -1883,7 +1882,7 @@ class TextCommandParser:
                         #os.system("pkill vlc")
                         WebtopUtil.run(f"cvlc --rate {config.vlcSpeed} {audioFile}")
                     else:
-                        self.openVlcPlayer(audioFile, "main", False)
+                        self.openMediaPlayer(audioFile, "main", False)
                     return ("", "", {})
                 except:
                     return self.invalidCommand()
@@ -1895,22 +1894,16 @@ class TextCommandParser:
             else:
                 return self.noAudio()
 
-    # VLC:::
-    def openBuiltinPlayer(self, command, gui):
-        from gui.VlcPlayer import VlcPlayer
-        if self.parent.vlcPlayer is not None:
-            # Fix issue: https://github.com/eliranwong/UniqueBible/issues/947
-            #self.parent.vlcPlayer.stop()
-            #self.parent.vlcPlayer.loadAndPlayFile(filename)
-            self.parent.vlcPlayer.close()
-        self.parent.vlcPlayer = VlcPlayer(self.parent, command)
-        if gui:
-            self.parent.vlcPlayer.show()
-
-    def openVlcPlayer(self, command, source, gui=True):
+    # MEDIA:::
+    def openMediaPlayer(self, command, source, gui=True):
+        command = command.strip()
+        if not os.path.isfile(command):
+            return self.invalidCommand()
         self.parent.closeMediaPlayer()
         try:
-            if config.mainWindow.audioPlayer is not None:
+            if command.lower()[-4:] in (".mp4", ".avi"):
+                self.parent.openMediaPlayer(command)
+            elif config.mainWindow.audioPlayer is not None:
                 config.mainWindow.addToAudioPlayList(command, True)
             elif config.macVlc and not config.forceUseBuiltinMediaPlayer:
                 WebtopUtil.run(f'{config.macVlc} --rate {config.vlcSpeed} "{command}"')
@@ -1927,6 +1920,18 @@ class TextCommandParser:
         except:
             WebtopUtil.openFile(command)
         return ("", "", {})
+
+    # old vlc player
+    def openBuiltinPlayer(self, command, gui):
+        from gui.VlcPlayer import VlcPlayer
+        if self.parent.vlcPlayer is not None:
+            # Fix issue: https://github.com/eliranwong/UniqueBible/issues/947
+            #self.parent.vlcPlayer.stop()
+            #self.parent.vlcPlayer.loadAndPlayFile(filename)
+            self.parent.vlcPlayer.close()
+        self.parent.vlcPlayer = VlcPlayer(self.parent, command)
+        if gui:
+            self.parent.vlcPlayer.show()
 
     # READBIBLE:::
     def readBible(self, command, source):
@@ -3978,7 +3983,6 @@ class TextCommandParser:
             try:
                 selectedLocations = self.selectLocations(combinedLocations)
                 html = self.displayMap(selectedLocations)
-                #print(html)
                 return ("study", html, {'tab_title': "Map"})
             except:
                 return self.invalidCommand()

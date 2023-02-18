@@ -304,9 +304,9 @@ class LibraryCatalogDialog(QDialog):
         if type == "PDF":
             command = f"PDF:::{file}"
         elif type == "MP3":
-            command = "VLC:::{0}{1}".format(directory, file)
+            command = "MEDIA:::{0}{1}".format(directory, file)
         elif type == "MP4":
-            command = "VLC:::{0}{1}".format(directory, file)
+            command = "MEDIA:::{0}{1}".format(directory, file)
         elif type == "BOOK":
             if file.endswith(".book"):
                 file = file.replace(".book", "")

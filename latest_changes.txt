@@ -1,3 +1,7 @@
+Changes in 33.87:
+* Added speed adjustment button on toolbar
+* Fixed opening video files
+
 Changes in 33.86:
 * Improved audio player ui
 
