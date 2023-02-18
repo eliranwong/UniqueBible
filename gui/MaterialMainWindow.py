@@ -131,6 +131,7 @@ class MaterialMainWindow:
             ("menu2_topOnly", self.hideShowAdditionalToolBar, sc.hideShowAdditionalToolBar),
             ("menu2_top", self.hideShowMainToolBar, sc.hideShowMainToolBar),
             ("menu2_second", self.hideShowSecondaryToolBar, sc.hideShowSecondaryToolBar),
+            ("menu11_audio", self.toggleAudioPlayer, None),
             ("menu2_left", self.hideShowLeftToolBar, sc.hideShowLeftToolBar),
             ("menu2_right", self.hideShowRightToolBar, sc.hideShowRightToolBar),
         )
@@ -579,10 +580,28 @@ class MaterialMainWindow:
             menu.addSeparator()
 
         # Media Player
-        if WebtopUtil.isPackageInstalled("vlc") or ("Pythonvlc" in config.enabled):
+        if self.audioPlayer is not None:
             subMenu = addSubMenu(menu, "mediaPlayer")
             items = (
-                ("launch", self.openMediaPlayer, sc.launchMediaPlayer),
+                ("menu11_audio", self.toggleAudioPlayer, None),
+                ("menu11_video", self.openMediaPlayer, sc.launchMediaPlayer),
+                ("stop", self.closeMediaPlayer, sc.stopMediaPlayer),
+            )
+            for feature, action, shortcut in items:
+                addMenuItem(subMenu, feature, self, action, shortcut)
+            menu.addSeparator()
+            subMenuMediaSpeed = addSubMenu(subMenu, "adjustSpeed")
+            def setSubMenuMediaSpeed():
+                subMenuMediaSpeed.clear()
+                options = ("0.5", "0.75", "1.0", "1.25", "1.5", "1.75", "2.0")
+                for option in options:
+                    addCheckableMenuItem(subMenuMediaSpeed, option, self, partial(self.setMediaSpeed, option), str(config.mediaSpeed), option, translation=False)
+            self.setSubMenuMediaSpeed = setSubMenuMediaSpeed
+            self.setSubMenuMediaSpeed()
+        elif WebtopUtil.isPackageInstalled("vlc") or ("Pythonvlc" in config.enabled):
+            subMenu = addSubMenu(menu, "mediaPlayer")
+            items = (
+                ("launch", self.openVlcPlayer, sc.launchMediaPlayer),
                 ("stop", self.closeMediaPlayer, sc.stopMediaPlayer),
             )
             for feature, action, shortcut in items:
@@ -1084,42 +1103,33 @@ class MaterialMainWindow:
         self.addMaterialIconButton("clearAll", icon, self.clearAllWindowTabs, self.secondToolBar)
         self.secondToolBar.addSeparator()
 
-        # Second tool bar
+        if config.addBreakAfterTheSecondToolBar:
+            self.addToolBarBreak()
+
+        # Third tool bar
         self.thirdToolBar = QToolBar()
         self.thirdToolBar.setWindowTitle(config.thisTranslation["menu11_audio"])
         self.thirdToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.thirdToolBar)
 
-        style = self.style()
-        icon = QIcon.fromTheme("media-playback-start.png",
-                               style.standardIcon(QStyle.SP_MediaPlay))
-        self._play_action = self.thirdToolBar.addAction(icon, "Play")
-        self._play_action.triggered.connect(self.playAudioPlaying)
-
-        icon = QIcon.fromTheme("media-skip-backward-symbolic.svg",
-                               style.standardIcon(QStyle.SP_MediaSkipBackward))
-        self._previous_action = self.thirdToolBar.addAction(icon, "Previous")
-        self._previous_action.triggered.connect(self.previousAudioFile)
-
-        icon = QIcon.fromTheme("media-playback-pause.png",
-                               style.standardIcon(QStyle.SP_MediaPause))
-        self._pause_action = self.thirdToolBar.addAction(icon, "Pause")
-        self._pause_action.triggered.connect(self.pauseAudioPlaying)
-
-        icon = QIcon.fromTheme("media-skip-forward-symbolic.svg",
-                               style.standardIcon(QStyle.SP_MediaSkipForward))
-        self._next_action = self.thirdToolBar.addAction(icon, "Next")
-        self._next_action.triggered.connect(self.nextAudioFile)
-
-        icon = QIcon.fromTheme("media-playback-stop.png",
-                               style.standardIcon(QStyle.SP_MediaStop))
-        self._stop_action = self.thirdToolBar.addAction(icon, "Stop")
-        self._stop_action.triggered.connect(self.stopAudioPlaying)
+        icon = "material/av/skip_previous/materialiconsoutlined/48dp/2x/outline_skip_previous_black_48dp.png"
+        self.addMaterialIconButton("previous", icon, self.previousAudioFile, self.thirdToolBar)
+        icon = "material/av/play_circle_outline/materialiconsoutlined/48dp/2x/outline_play_circle_outline_black_48dp.png"
+        self.addMaterialIconButton("play", icon, self.playAudioPlaying, self.thirdToolBar)
+        icon = "material/av/pause_circle/materialiconsoutlined/48dp/2x/outline_pause_circle_black_48dp.png"
+        self.addMaterialIconButton("pause", icon, self.pauseAudioPlaying, self.thirdToolBar)
+        icon = "material/av/stop_circle/materialiconsoutlined/48dp/2x/outline_stop_circle_black_48dp.png"
+        self.addMaterialIconButton("stop", icon, self.stopAudioPlaying, self.thirdToolBar)
+        icon = "material/av/skip_next/materialiconsoutlined/48dp/2x/outline_skip_next_black_48dp.png"
+        self.addMaterialIconButton("next", icon, self.nextAudioFile, self.thirdToolBar)
 
         self.seek_slider = QSlider(Qt.Horizontal, self)
         self.seek_slider.setRange(0, 0)  # Set the range to 0 initially, as we don't know the duration yet
         self.seek_slider.sliderMoved.connect(self.on_slider_moved)  # Connect the sliderMoved signal to our on_slider_moved slot
         self.thirdToolBar.addWidget(self.seek_slider)
+
+        icon = "material/action/open_in_full/materialiconsoutlined/48dp/2x/outline_open_in_full_black_48dp.png"
+        self.addMaterialIconButton("menu1_resize", icon, self.resizeAudioPlayer, self.thirdToolBar)
 
         # Left tool bar
         self.leftToolBar = QToolBar()

@@ -161,6 +161,11 @@ class MainWindow(QMainWindow):
         QGuiApplication.setWindowIcon(appIcon)
         # setup user menu & toolbars
 
+        # Built-in Audio Player
+        self.setupAudioPlayer()
+        # VLC Player
+        self.vlcPlayer = None
+
         # Setup menu layout
         self.refreshing = False
         self.versionCombo = None
@@ -204,10 +209,6 @@ class MainWindow(QMainWindow):
         self.miniControl = None
         # Used in pause() to pause macros
         config.pauseMode = False
-        # Built-in Audio Player
-        self.setupAudioPlayer()
-        # VLC Player
-        self.vlcPlayer = None
 
         # Load resource descriptions
         self.loadResourceDescriptions()
@@ -226,6 +227,22 @@ class MainWindow(QMainWindow):
 
         self.logger.info("Boot start time: {0}".format(timeDifference))
 
+    def toggleAudioPlayer(self):
+        if self.thirdToolBar.isVisible():
+            self.thirdToolBar.hide()
+        else:
+            self.thirdToolBar.show()
+
+    def resizeAudioPlayer(self):
+        config.addBreakAfterTheSecondToolBar = not config.addBreakAfterTheSecondToolBar
+        self.setupMenuLayout(config.menuLayout)
+
+    def setMediaSpeed(self, option):
+        config.mediaSpeed = float(option)
+        self.audioPlayer.setPlaybackRate(config.mediaSpeed)
+        if config.menuLayout == "material":
+            self.setSubMenuMediaSpeed()
+
     def setupAudioPlayer(self):
         config.currentAudioFile = ""
         self.audioPlayList = []
@@ -243,11 +260,11 @@ class MainWindow(QMainWindow):
                         self.playAudioPlayList()
 
         self.audioPlayer = QMediaPlayer(self)
+        self.audioPlayer.setPlaybackRate(config.mediaSpeed)
         if config.qtLibrary == "pyside6":
             self.audioPlayer.playbackStateChanged.connect(playbackStateChanged)
         else:
             self.audioPlayer.stateChanged.connect(playbackStateChanged)
-        
         self.audioPlayer.durationChanged.connect(self.on_duration_changed)  # Connect the durationChanged signal to our on_duration_changed slot
         self.audioPlayer.positionChanged.connect(self.on_position_changed)  # Connect the positionChanged signal to our on_position_changed slot
 
@@ -394,6 +411,8 @@ config.mainWindow.audioPlayer.setAudioOutput(audioOutput)"""
                     self.menuBar().clear()
                     self.removeToolBar(self.firstToolBar)
                     self.removeToolBar(self.secondToolBar)
+                    if hasattr(self, "thirdToolBar"):
+                        self.removeToolBar(self.thirdToolBar)
                     self.removeToolBar(self.leftToolBar)
                     self.removeToolBar(self.rightToolBar)
                     self.removeToolBar(self.studyBibleToolBar)

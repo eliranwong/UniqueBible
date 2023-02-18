@@ -1,3 +1,6 @@
+Changes in 33.86:
+* Improved audio player ui
+
 Changes in 33.85:
 * Added support of text synchronisation with bible audio in gui mode.
 

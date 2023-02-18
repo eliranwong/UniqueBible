@@ -578,6 +578,9 @@ class ConfigUtil:
         setConfig("addBreakAfterTheFirstToolBar", """
         # Add a line break after the first toolbar.""",
         True)
+        setConfig("addBreakAfterTheSecondToolBar", """
+        # Add a line break after the second toolbar.""",
+        True)
         setConfig("addBreakBeforeTheLastToolBar", """
         # Add a line break before the last toolbar.""",
         False)
@@ -623,6 +626,9 @@ class ConfigUtil:
         160)
         setConfig("gcttsSpeed", """
         # Google Cloud text-to-speech speed""",
+        1.0)
+        setConfig("mediaSpeed", """
+        # Built-in media player playback speed""",
         1.0)
         setConfig("vlcSpeed", """
         # VLC player playback speed""",
