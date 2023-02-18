@@ -157,11 +157,15 @@ class BiblesSqlite:
             return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v, *args, isChapter)
         return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v, isChapter)
 
-    def getVersesMenu(self, b=config.mainB, c=config.mainC, text=config.mainText):
+    def getVersesMenu(self, b=config.mainB, c=config.mainC, text=""):
+        if not text:
+            text = config.mainText
         verseList = self.getVerseList(b, c, text)
         return " ".join(["{0}{1}</ref>".format(self.formVerseTagMenu(b, c, verse, text), verse) for verse in verseList])
 
-    def formVerseTagMenu(self, b, c, v, text=config.mainText):
+    def formVerseTagMenu(self, b, c, v, text=""):
+        if not text:
+            text = config.mainText
         verseReference = self.bcvToVerseReference(b, c, v)
         return "<ref id='v{0}.{1}.{2}' onclick='document.title=\"_menu:::{3}.{0}.{1}.{2}\"' onmouseover='document.title=\"_instantVerse:::{3}:::{0}.{1}.{2}\"' ondblclick='document.title=\"_menu:::{3}.{0}.{1}.{2}\"'>".format(b, c, v, text, verseReference)
 
@@ -177,19 +181,27 @@ input.addEventListener('keyup', function(event) {0}
 {1});
 </script>""".format("{", "}", inputID, buttonID)
 
-    def formTextTag(self, text=config.mainText):
+    def formTextTag(self, text=""):
+        if not text:
+            text = config.mainText
         return "<ref onclick='document.title=\"_chapters:::{0}\"' onmouseover='textName(\"{0}\")'>".format(text)
 
-    def formBookTag(self, b, text=config.mainText):
+    def formBookTag(self, b, text=""):
+        if not text:
+            text = config.mainText
         bookAbb = self.bcvToVerseReference(b, 1, 1)[:-4]
         return "<ref onclick='document.title=\"_menu:::{0}.{1}\"' onmouseover='bookName(\"{2}\")'>".format(text, b, bookAbb)
 
-    def formChapterTag(self, b, c, text=config.mainText):
+    def formChapterTag(self, b, c, text=""):
+        if not text:
+            text = config.mainText
         #return "<ref onclick='document.title=\"_menu:::{0}.{1}.{2}\"' onmouseover='document.title=\"_info:::Chapter {2}\"'>".format(text, b, c)
         #return "<ref onclick='document.title=\"_chapters:::{0}\"' onmouseover='document.title=\"_info:::Chapter {2}\"'>".format(text, b, c)
         return "<ref onclick='document.title=\"_chapters:::{0}_{1}.{2}\"' onmouseover='document.title=\"_info:::Chapter {2}\"'>".format(text, b, c)
 
-    def formVerseTag(self, b, c, v, text=config.mainText):
+    def formVerseTag(self, b, c, v, text=""):
+        if not text:
+            text = config.mainText
         verseReference = self.bcvToVerseReference(b, c, v)
         return "<ref id='v{0}.{1}.{2}' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{3}:::{4}\";' onmouseover='document.title=\"_instantVerse:::{3}:::{0}.{1}.{2}\"' ondblclick='document.title=\"_menu:::{3}.{0}.{1}.{2}\"'>".format(b, c, v, text, verseReference)
 
@@ -223,7 +235,9 @@ input.addEventListener('keyup', function(event) {0}
         textList = self.getBibleList()
         return " ".join(["{0}<button class='ubaButton'>{1}</button></ref>".format(self.formTextTag(text), text) for text in textList])
 
-    def getBookList(self, text=config.mainText):
+    def getBookList(self, text=""):
+        if not text:
+            text = config.mainText
         plainBibleList, formattedBibleList = self.getTwoBibleLists()
         if not text in plainBibleList and not text in formattedBibleList:
             if formattedBibleList:
@@ -237,12 +251,16 @@ input.addEventListener('keyup', function(event) {0}
         elif text in formattedBibleList:
             return Bible(text).getBookList()
 
-    def getBooks(self, text=config.mainText):
+    def getBooks(self, text=""):
+        if not text:
+            text = config.mainText
         bookList = self.getBookList(text)
         standardAbbreviation = BibleVerseParser(config.parserStandarisation).standardAbbreviation
         return " ".join(["{0}<button class='ubaButton'>{1}</button></ref>".format(self.formBookTag(book, text), standardAbbreviation[str(book)]) for book in bookList if str(book) in standardAbbreviation])
 
-    def getChapterList(self, b=config.mainB, text=config.mainText):
+    def getChapterList(self, b=config.mainB, text=""):
+        if not text:
+            text = config.mainText
         plainBibleList, formattedBibleList = self.getTwoBibleLists()
         if not text in plainBibleList and not text in formattedBibleList:
             if formattedBibleList:
@@ -256,11 +274,15 @@ input.addEventListener('keyup', function(event) {0}
         elif text in formattedBibleList:
             return Bible(text).getChapterList(b)
 
-    def getChapters(self, b=config.mainB, text=config.mainText):
+    def getChapters(self, b=config.mainB, text=""):
+        if not text:
+            text = config.mainText
         chapterList = self.getChapterList(b, text)
         return " ".join(["{0}{1}</ref>".format(self.formChapterTag(b, chapter, text), chapter) for chapter in chapterList])
 
-    def getChaptersMenu(self, b=config.mainB, c=config.mainC, text=config.mainText):
+    def getChaptersMenu(self, b=config.mainB, c=config.mainC, text=""):
+        if not text:
+            text = config.mainText
         chapterList = self.getChapterList(b, text)
         chaptersMenu = []
         for chapter in chapterList:
@@ -290,7 +312,9 @@ input.addEventListener('keyup', function(event) {0}
             bible = Bible(text)
             return bible.getVerseList(b, c)
 
-    def getVerses(self, b=config.mainB, c=config.mainC, text=config.mainText):
+    def getVerses(self, b=config.mainB, c=config.mainC, text=""):
+        if not text:
+            text = config.mainText
         verseList = self.getVerseList(b, c, text)
         return " ".join(["{0}{1}</ref>".format(self.formVerseTag(b, c, verse, text), verse) for verse in verseList])
 
@@ -1534,7 +1558,9 @@ class MorphologySqlite:
     def bcvToVerseReference(self, b, c, v):
         return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)
 
-    def formVerseTag(self, b, c, v, text=config.mainText):
+    def formVerseTag(self, b, c, v, text=""):
+        if not text:
+            text = config.mainText
         verseReference = self.bcvToVerseReference(b, c, v)
         return "<ref id='v{0}.{1}.{2}' onclick='document.title=\"BIBLE:::{3}:::{4}\"' onmouseover='document.title=\"_instantVerse:::{3}:::{0}.{1}.{2}\"' ondblclick='document.title=\"_menu:::{3}.{0}.{1}.{2}\"'>".format(b, c, v, text, verseReference)
 

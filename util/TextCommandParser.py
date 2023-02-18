@@ -1811,7 +1811,9 @@ class TextCommandParser:
             else:
                 try:
                     player = "cvlc" if config.hideVlcInterfaceReadingSingleVerse else "vlc"
-                    if config.macVlc and not config.forceUseBuiltinMediaPlayer:
+                    if config.mainWindow.audioPlayer is not None:
+                        config.mainWindow.addToAudioPlayList(audioFile, True)
+                    elif config.macVlc and not config.forceUseBuiltinMediaPlayer:
                         WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFile}")
                     elif WebtopUtil.isPackageInstalled(player) and not config.forceUseBuiltinMediaPlayer:
                         #os.system("pkill vlc")
@@ -1839,7 +1841,9 @@ class TextCommandParser:
                 return ("study", content, {})
             else:
                 try:
-                    if config.macVlc and not config.forceUseBuiltinMediaPlayer:
+                    if config.mainWindow.audioPlayer is not None:
+                        config.mainWindow.addToAudioPlayList(audioFile, True)
+                    elif config.macVlc and not config.forceUseBuiltinMediaPlayer:
                         WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFile}")
                     elif WebtopUtil.isPackageInstalled("cvlc") and not config.forceUseBuiltinMediaPlayer:
                         #os.system("pkill vlc")
@@ -1871,7 +1875,9 @@ class TextCommandParser:
                 return ("study", content, {})
             else:
                 try:
-                    if config.macVlc and not config.forceUseBuiltinMediaPlayer:
+                    if config.mainWindow.audioPlayer is not None:
+                        config.mainWindow.addToAudioPlayList(audioFile, True)
+                    elif config.macVlc and not config.forceUseBuiltinMediaPlayer:
                         WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFile}")
                     elif WebtopUtil.isPackageInstalled("cvlc") and not config.forceUseBuiltinMediaPlayer:
                         #os.system("pkill vlc")
@@ -2889,7 +2895,9 @@ class TextCommandParser:
             return ("", "", {})
 
     # _imv:::
-    def instantMainVerse(self, command, source, text=config.mainText):
+    def instantMainVerse(self, command, source, text=""):
+        if not text or not text in self.parent.textList:
+            text = config.mainText
         if config.instantInformationEnabled and command:
             bcvList = [int(i) for i in command.split(".")]
             info = BiblesSqlite().readMultipleVerses(text, [bcvList])

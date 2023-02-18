@@ -1,3 +1,6 @@
+Changes in 33.85:
+* Added support of text synchronisation with bible audio in gui mode.
+
 Changes in 33.84:
 * Initial support of Qt MediaPlayer
 

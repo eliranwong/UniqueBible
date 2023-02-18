@@ -246,8 +246,6 @@ class MainWindow(QMainWindow):
         if config.qtLibrary == "pyside6":
             self.audioPlayer.playbackStateChanged.connect(playbackStateChanged)
         else:
-            #self.qt5playlist = QMediaPlaylist()
-            #self.audioPlayer.setPlaylist(self.qt5playlist)
             self.audioPlayer.stateChanged.connect(playbackStateChanged)
         
         self.audioPlayer.durationChanged.connect(self.on_duration_changed)  # Connect the durationChanged signal to our on_duration_changed slot
@@ -301,8 +299,29 @@ class MainWindow(QMainWindow):
             self.playAudioFile(self.audioPlayList[self.audioPlayListIndex])
 
     def playAudioFile(self, filePath):
-        if filePath:
-            config.currentAudioFile = filePath
+        if filePath and os.path.isfile(filePath):
+            
+            # _imv:::43.3.16, _instantWord:::1:::h2
+            # verse pattern, e.g. CSB_1_1_1.mp3
+            basename = os.path.basename(filePath)
+            versePattern = re.compile("^([^_]+?)_([0-9]+?)_([0-9]+?)_([0-9]+?).mp3")
+            isVerse = versePattern.search(basename)
+            if not isVerse:
+                # word patterns, e.g. lex_OGNT_61_1_9_124169.mp3   OGNT_61_1_9_124169.mp3 BHS5_1_1_28_579.mp3  lex_BHS5_1_1_20_376.mp3
+                wordPattern = re.compile("^.*?(BHS|OGNT)_([0-9]+?)_[0-9]+?_[0-9]+?_([0-9]+?).mp3")
+                isWord = wordPattern.search(filePath)
+            if isVerse:
+                text, b, c, v = isVerse.groups()
+                if text in self.textList:
+                    instantInfo = self.textCommandParser.instantMainVerse(f"{b}.{c}.{v}", "main", text)
+                    self.instantView.setHtml(self.wrapHtml(instantInfo[1], "instant", False), baseUrl)
+            elif isWord:
+                _, book, wordId = isWord.groups()
+                instantInfo = self.textCommandParser.instantWord(f"{book}:::{wordId}", "main")
+                self.instantView.setHtml(self.wrapHtml(instantInfo[1], "instant", False), baseUrl)
+            
+            # full path is required for PySide2 QMediaPlayer to work
+            config.currentAudioFile = os.path.abspath(filePath)
             if config.qtLibrary == "pyside6":
                 # remarks: tested on Ubuntu
                 # for unknown reasons, the following three lines do not work when they are executed directly without puting into a string first
@@ -313,10 +332,8 @@ config.mainWindow.audioPlayer.setAudioOutput(audioOutput)
 config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(config.currentAudioFile))"""
                 exec(codes, globals())
             else:
-                media_content = QMediaContent(QUrl.fromLocalFile(filePath))
+                media_content = QMediaContent(QUrl.fromLocalFile(config.currentAudioFile))
                 self.audioPlayer.setMedia(media_content)
-                #self.qt5playlist.clear()
-                #self.self.qt5playlist.addMedia(media_content)
             self.audioPlayer.play()
 
     # to work with slider
