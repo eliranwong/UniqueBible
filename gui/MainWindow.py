@@ -23,6 +23,7 @@ else:
     from qtpy.QtGui import QClipboard
     from qtpy.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
     from gui.MediaPlayer5 import MediaPlayer
+from gui.PlaylistUI import PlaylistUI
 from gui.WorkSpace import Workspace
 from db.DevotionalSqlite import DevotionalSqlite
 from gui.BibleCollectionDialog import BibleCollectionDialog
@@ -253,21 +254,11 @@ class MainWindow(QMainWindow):
         self.speedButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.speedButton.setToolTip(config.thisTranslation["adjustSpeed"])
         menu = QMenu(self.speedButton)
-        def addSpeedAction(value):
+        for value in (0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0):
             action = menu.addAction(str(value))
             action.triggered.connect(partial(self.setMediaSpeed, value))
             action.setCheckable(True)
             action.setChecked(True if config.mediaSpeed == value else False)
-        # loop does not work
-        #for i in (0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0):
-        #    addSpeedAction(i)
-        addSpeedAction(0.5)
-        addSpeedAction(0.75)
-        addSpeedAction(1.0)
-        addSpeedAction(1.25)
-        addSpeedAction(1.5)
-        addSpeedAction(1.75)
-        addSpeedAction(2.0)
         self.speedButton.setMenu(menu)
 
     def setupAudioPlayer(self):
@@ -298,6 +289,10 @@ class MainWindow(QMainWindow):
     def resetAudioPlaylist(self):
         self.audioPlayListIndex = 0
         self.isAudioPlayListPlaying = False
+
+    def openAudioPlayListUI(self):
+        self.audioPlayListUI = PlaylistUI(self)
+        self.audioPlayListUI.show()
 
     def previousAudioFile(self):
         if self.audioPlayList and not self.audioPlayListIndex == 0:

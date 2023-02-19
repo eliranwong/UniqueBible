@@ -1121,6 +1121,8 @@ class MaterialMainWindow:
         self.addMaterialIconButton("stop", icon, self.stopAudioPlaying, self.thirdToolBar)
         icon = "material/av/skip_next/materialiconsoutlined/48dp/2x/outline_skip_next_black_48dp.png"
         self.addMaterialIconButton("next", icon, self.nextAudioFile, self.thirdToolBar)
+        icon = "material/av/queue_music/materialiconsoutlined/48dp/2x/outline_queue_music_black_48dp.png"
+        self.addMaterialIconButton("media", icon, self.openAudioPlayListUI, self.thirdToolBar)
 
         self.thirdToolBar.addSeparator()
 
