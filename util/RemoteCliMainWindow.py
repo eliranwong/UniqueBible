@@ -241,12 +241,12 @@ class RemoteCliMainWindow(CrossPlatform):
             print("Playing audio now ...")
             print("To stop it, run '.stopaudio' or '.sa' in UBA command prompt.")
             # vlc on macOS
-            if config.macVlc or config.windowsVlc:
+            if config.macVlc:
                 audioFiles = '" "'.join(playlist)
                 audioFiles = '"{0}"'.format(audioFiles)
                 WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFiles}")
             # vlc on Windows
-            if config.macVlc or config.windowsVlc:
+            elif config.windowsVlc:
                 audioFiles = '" "'.join(playlist)
                 audioFiles = '"{0}"'.format(audioFiles)
                 WebtopUtil.run(f"'{config.windowsVlc}' --rate {config.vlcSpeed} {audioFiles}")

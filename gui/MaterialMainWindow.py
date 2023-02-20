@@ -583,8 +583,8 @@ class MaterialMainWindow:
         if self.audioPlayer is not None:
             subMenu = addSubMenu(menu, "mediaPlayer")
             items = (
-                ("menu11_audio", self.toggleAudioPlayer, None),
-                ("menu11_video", self.openMediaPlayer, sc.launchMediaPlayer),
+                ("menu11_audio", self.toggleAudioPlayer, sc.launchMediaPlayer),
+                ("menu11_video", self.openVideoView, None),
                 ("stop", self.closeMediaPlayer, sc.stopMediaPlayer),
             )
             for feature, action, shortcut in items:
@@ -598,7 +598,7 @@ class MaterialMainWindow:
                     addCheckableMenuItem(subMenuMediaSpeed, option, self, partial(self.setMediaSpeed, option), str(config.mediaSpeed), option, translation=False)
             self.setSubMenuMediaSpeed = setSubMenuMediaSpeed
             self.setSubMenuMediaSpeed()
-        elif WebtopUtil.isPackageInstalled("vlc") or ("Pythonvlc" in config.enabled):
+        elif WebtopUtil.isPackageInstalled("vlc") or config.macVlc or config.windowsVlc:
             subMenu = addSubMenu(menu, "mediaPlayer")
             items = (
                 ("launch", self.openVlcPlayer, sc.launchMediaPlayer),
@@ -934,7 +934,6 @@ class MaterialMainWindow:
             self.studyC.setDisabled(True)
             self.studyRefLabel.setDisabled(False)
             self.studyV.setDisabled(False)
-            #self.enableSyncStudyWindowBibleButton.setVisible(False)
             self.swapBibleButton.setVisible(False)
         self.firstToolBar.addSeparator()
 
@@ -943,14 +942,6 @@ class MaterialMainWindow:
 
         if config.addBreakAfterTheFirstToolBar:
             self.addToolBarBreak()
-
-        #self.studyBibleToolBar = QToolBar()
-        #self.studyBibleToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
-        #self.studyBibleToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
-        #self.addToolBar(self.studyBibleToolBar)
-
-        #if config.addBreakBeforeTheLastToolBar:
-        #    self.addToolBarBreak()
 
         # Second tool bar
         self.secondToolBar = QToolBar()
@@ -1100,45 +1091,75 @@ class MaterialMainWindow:
         self.addMaterialIconButton("clearAll", icon, self.clearAllWindowTabs, self.secondToolBar)
         self.secondToolBar.addSeparator()
 
-        if config.addBreakAfterTheSecondToolBar:
-            self.addToolBarBreak()
+        if not config.useThirdPartyVLCplayer:
 
-        # Third tool bar
-        self.thirdToolBar = QToolBar()
-        self.thirdToolBar.setWindowTitle(config.thisTranslation["menu11_audio"])
-        self.thirdToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
-        self.addToolBar(self.thirdToolBar)
+            if config.maximiseMediaPlayerUI:
+                self.addToolBarBreak()
 
-        icon = "material/file/folder_open/materialiconsoutlined/48dp/2x/outline_folder_open_black_48dp.png"
-        self.addMaterialIconButton("media", icon, partial(self.openControlPanelTab, 6), self.thirdToolBar)
-        icon = "material/av/queue_music/materialiconsoutlined/48dp/2x/outline_queue_music_black_48dp.png"
-        self.addMaterialIconButton("media", icon, self.openAudioPlayListUI, self.thirdToolBar)
-        icon = "material/av/skip_previous/materialiconsoutlined/48dp/2x/outline_skip_previous_black_48dp.png"
-        self.addMaterialIconButton("previous", icon, self.previousAudioFile, self.thirdToolBar)
-        icon = "material/av/play_circle_outline/materialiconsoutlined/48dp/2x/outline_play_circle_outline_black_48dp.png"
-        self.addMaterialIconButton("play", icon, self.playAudioPlaying, self.thirdToolBar)
-        icon = "material/av/pause_circle/materialiconsoutlined/48dp/2x/outline_pause_circle_black_48dp.png"
-        self.addMaterialIconButton("pause", icon, self.pauseAudioPlaying, self.thirdToolBar)
-        icon = "material/av/stop_circle/materialiconsoutlined/48dp/2x/outline_stop_circle_black_48dp.png"
-        self.addMaterialIconButton("stop", icon, self.stopAudioPlaying, self.thirdToolBar)
-        icon = "material/av/skip_next/materialiconsoutlined/48dp/2x/outline_skip_next_black_48dp.png"
-        self.addMaterialIconButton("next", icon, self.nextAudioFile, self.thirdToolBar)
+            # Third tool bar
+            self.thirdToolBar = QToolBar()
+            self.thirdToolBar.setWindowTitle(config.thisTranslation["menu11_audio"])
+            self.thirdToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+            self.addToolBar(self.thirdToolBar)
 
-        self.thirdToolBar.addSeparator()
+            icon = "material/file/folder_open/materialiconsoutlined/48dp/2x/outline_folder_open_black_48dp.png"
+            self.addMaterialIconButton("media", icon, partial(self.openControlPanelTab, 6), self.thirdToolBar)
+            icon = "material/av/skip_previous/materialiconsoutlined/48dp/2x/outline_skip_previous_black_48dp.png"
+            self.addMaterialIconButton("previous", icon, self.previousAudioFile, self.thirdToolBar)
+            icon = "material/av/play_circle_outline/materialiconsoutlined/48dp/2x/outline_play_circle_outline_black_48dp.png"
+            self.addMaterialIconButton("play", icon, self.playAudioPlaying, self.thirdToolBar)
+            icon = "material/av/pause_circle/materialiconsoutlined/48dp/2x/outline_pause_circle_black_48dp.png"
+            self.addMaterialIconButton("pause", icon, self.pauseAudioPlaying, self.thirdToolBar)
+            icon = "material/av/stop_circle/materialiconsoutlined/48dp/2x/outline_stop_circle_black_48dp.png"
+            self.addMaterialIconButton("stop", icon, self.stopAudioPlaying, self.thirdToolBar)
+            icon = "material/av/skip_next/materialiconsoutlined/48dp/2x/outline_skip_next_black_48dp.png"
+            self.addMaterialIconButton("next", icon, self.nextAudioFile, self.thirdToolBar)
 
-        self.seek_slider = QSlider(Qt.Horizontal, self)
-        self.seek_slider.setRange(0, 0)  # Set the range to 0 initially, as we don't know the duration yet
-        self.seek_slider.sliderMoved.connect(self.on_slider_moved)  # Connect the sliderMoved signal to our on_slider_moved slot
-        self.thirdToolBar.addWidget(self.seek_slider)
+            self.thirdToolBar.addSeparator()
 
-        self.thirdToolBar.addSeparator()
+            self.seek_slider = QSlider(Qt.Horizontal, self)
+            self.seek_slider.setRange(0, 0)  # Set the range to 0 initially, as we don't know the duration yet
+            self.seek_slider.sliderMoved.connect(self.on_slider_moved)  # Connect the sliderMoved signal to our on_slider_moved slot
+            self.thirdToolBar.addWidget(self.seek_slider)
 
-        self.speedButton = QToolButton()
-        self.setSpeedButtonButton()
-        self.thirdToolBar.addWidget(self.speedButton)
+            #self.thirdToolBar.addSeparator()
 
-        icon = "material/action/open_in_full/materialiconsoutlined/48dp/2x/outline_open_in_full_black_48dp.png"
-        self.addMaterialIconButton("menu1_resize", icon, self.resizeAudioPlayer, self.thirdToolBar)
+            self.speedButton = QToolButton()
+            self.setSpeedButtonButton()
+            self.thirdToolBar.addWidget(self.speedButton)
+
+            self.thirdToolBar.addSeparator()
+
+            self.volumeSlider = QSlider()
+            self.volumeSlider.setOrientation(Qt.Horizontal)
+            self.volumeSlider.setMinimum(0)
+            self.volumeSlider.setMaximum(100)
+            available_width = self.screen().availableGeometry().width()
+            self.volumeSlider.setFixedWidth(available_width / 10)
+            #self.volumeSlider.setTickInterval(10)
+            #self.volumeSlider.setTickPosition(QSlider.TicksBelow)
+            self.volumeSlider.setToolTip(config.thisTranslation["volume"])
+            self.volumeSlider.valueChanged.connect(self.setAudioVolume)
+            self.volumeSlider.setValue(100)
+            self.thirdToolBar.addWidget(self.volumeSlider)
+
+            #self.thirdToolBar.addSeparator()
+
+            iconFile = os.path.join("htmlResources", self.getMuteAudioDisplay())
+            self.muteAudioButton = self.thirdToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground, True), self.getMuteAudioToolTip(), self.muteAudioButtonClicked)
+
+            self.thirdToolBar.addSeparator()
+
+            #self.muteAudioButton = QPushButton()
+            #self.addMaterialIconButton(self.getMuteAudioToolTip(), self.getMuteAudioDisplay(), self.muteAudioButtonClicked, self.thirdToolBar, self.muteAudioButton, False)
+            self.audioTextSyncButton = QPushButton()
+            self.addMaterialIconButton(self.getAudioTextSyncToolTip(), self.getAudioTextSyncDisplay(), self.audioTextSyncButtonClicked, self.thirdToolBar, self.audioTextSyncButton, False)
+            icon = "material/av/queue_music/materialiconsoutlined/48dp/2x/outline_queue_music_black_48dp.png"
+            self.addMaterialIconButton("playlist", icon, self.openAudioPlayListUI, self.thirdToolBar)
+            icon = "material/image/video_camera_front/materialiconsoutlined/48dp/2x/outline_video_camera_front_black_48dp.png"
+            self.addMaterialIconButton("menu11_video", icon, self.showVideoView, self.thirdToolBar)
+            icon = "material/action/open_in_full/materialiconsoutlined/48dp/2x/outline_open_in_full_black_48dp.png"
+            self.addMaterialIconButton("menu1_resize", icon, self.resizeAudioPlayer, self.thirdToolBar)
 
         # Left tool bar
         self.leftToolBar = QToolBar()

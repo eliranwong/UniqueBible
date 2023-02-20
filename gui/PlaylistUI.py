@@ -1,31 +1,41 @@
 import os, config
 if config.qtLibrary == "pyside6":
     from PySide6.QtGui import QStandardItem, QStandardItemModel
-    from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QListView, QFileDialog
+    from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QListView, QFileDialog, QAbstractItemView
 else:
     from qtpy.QtGui import QStandardItem, QStandardItemModel
-    from qtpy.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QListView, QFileDialog
+    from qtpy.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QListView, QFileDialog, QAbstractItemView
 
 class PlaylistUI(QWidget):
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
+        self.setWindowTitle(config.thisTranslation["media"])
 
         # Create the model and the view
         self.view = QListView()
+        self.view.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.model = QStandardItemModel(self.view)
         self.view.setModel(self.model)
         self.populateModel()
         self.view.selectionModel().selectionChanged.connect(self.selectionChanged)
 
         # Create the user interface widgets
-        self.add_button = QPushButton('Add')
-        self.remove_button = QPushButton('Remove')
-        self.clear_all_button = QPushButton('Clear All')
-        self.move_up_button = QPushButton('Move up')
-        self.move_down_button = QPushButton('Move down')
+        self.play_button = QPushButton(config.thisTranslation["play"]) #play
+        self.pause_button = QPushButton(config.thisTranslation["pause"])#pause
+        self.stop_button = QPushButton(config.thisTranslation["stop"]) #stop
+        self.add_button = QPushButton(config.thisTranslation["add"]) #add
+        self.remove_button = QPushButton(config.thisTranslation["remove"])#remove
+        self.clear_all_button = QPushButton(config.thisTranslation["clearAll"]) #clearAll
+        self.move_up_button = QPushButton(config.thisTranslation["moveUp"]) #moveUp
+        self.move_down_button = QPushButton(config.thisTranslation["moveDown"]) #moveDown
 
         # Create the layout
+        hbox0 = QHBoxLayout()
+        hbox0.addWidget(self.play_button)
+        hbox0.addWidget(self.pause_button)
+        hbox0.addWidget(self.stop_button)
+        
         hbox1 = QHBoxLayout()
         hbox1.addWidget(self.move_up_button)
         hbox1.addWidget(self.move_down_button)
@@ -36,6 +46,7 @@ class PlaylistUI(QWidget):
         hbox2.addWidget(self.clear_all_button)
 
         vbox = QVBoxLayout()
+        vbox.addLayout(hbox0)
         vbox.addWidget(self.view)
         vbox.addLayout(hbox1)
         vbox.addLayout(hbox2)
@@ -44,6 +55,9 @@ class PlaylistUI(QWidget):
         self.setLayout(vbox)
 
         # Connect the signals and slots
+        self.play_button.clicked.connect(self.parent.playAudioPlaying)
+        self.pause_button.clicked.connect(self.parent.pauseAudioPlaying)
+        self.stop_button.clicked.connect(self.parent.stopAudioPlaying)
         self.add_button.clicked.connect(self.add_item)
         self.remove_button.clicked.connect(self.remove_item)
         self.clear_all_button.clicked.connect(self.clear_all)
@@ -58,11 +72,12 @@ class PlaylistUI(QWidget):
             self.model.appendRow(item)
 
     def selectionChanged(self, selection):
-        row = selection[0].indexes()[0].row()
-        if not config.currentAudioFile == os.path.abspath(self.model.item(row).toolTip()):
-            self.parent.stopAudioPlaying()
-        self.parent.audioPlayListIndex = row
-        self.parent.playAudioPlaying()
+        if selection and selection[0].indexes() and self.model.rowCount():
+            row = selection[0].indexes()[0].row()
+            if not config.currentAudioFile == os.path.abspath(self.model.item(row).toolTip()):
+                self.parent.stopAudioPlaying()
+            self.parent.audioPlayListIndex = row
+            self.parent.playAudioPlaying()
 
     def updateMediaList(self):
         fileList = []
@@ -74,7 +89,7 @@ class PlaylistUI(QWidget):
         options = QFileDialog.Options()
         files, _ = QFileDialog.getOpenFileNames(self,
                                                     config.thisTranslation["menu11_audio"], "",
-                                                    "MP3 Files (*.mp3);;WAV Files (*.wav)",
+                                                    "MP3 Audio Files (*.mp3);;WAV Audio Files (*.wav);;MP4 Video Files (*.mp4);;AVI Video Files (*.avi)",
                                                     "", options)
         if files:
             for filePath in files:
@@ -88,7 +103,7 @@ class PlaylistUI(QWidget):
 
     def remove_item(self):
         # Get the selected index
-        current_row = self.view.currentIndex()
+        current_row = self.view.currentIndex().row()
         if current_row == self.parent.audioPlayListIndex:
             self.parent.stopAudioPlaying()
         # Remove the item from the model
@@ -101,6 +116,7 @@ class PlaylistUI(QWidget):
         self.model.clear()
         # update media list
         self.updateMediaList()
+        self.parent.stopAudioPlaying()
 
     def move_up(self):
         # Get the selected row

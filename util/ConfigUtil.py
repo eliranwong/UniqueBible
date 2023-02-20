@@ -578,9 +578,6 @@ class ConfigUtil:
         setConfig("addBreakAfterTheFirstToolBar", """
         # Add a line break after the first toolbar.""",
         True)
-        setConfig("addBreakAfterTheSecondToolBar", """
-        # Add a line break after the second toolbar.""",
-        True)
         setConfig("addBreakBeforeTheLastToolBar", """
         # Add a line break before the last toolbar.""",
         False)
@@ -847,6 +844,12 @@ class ConfigUtil:
         setConfig("floatableInstantViewHeight", """
         # Specify the height of extra instant view""",
         250)
+        setConfig("audioTextSync", """
+        # Options to enable text synchronisation with audio playing: True / False""",
+        True)
+        setConfig("maximiseMediaPlayerUI", """
+        # Options to maximise media player graphical user interface: True / False""",
+        True)
         setConfig("fontSize", """
         # Default font size of content in main window and workspace""",
         18)
@@ -884,8 +887,8 @@ class ConfigUtil:
         setConfig("showVerseReference", """
         # Options to display verse reference: True / False""",
         True)
-        setConfig("forceUseBuiltinMediaPlayer", """
-        # Options to force UBA to use builtin media player even third-party VLC player is installed: True / False""",
+        setConfig("useThirdPartyVLCplayer", """
+        # Options to use third-party VLC player: True / False""",
         False)
         setConfig("doNotStop3rdPartyMediaPlayerOnExit", """
         # Options to not stop 3rd-party media player on exit: True / False""",

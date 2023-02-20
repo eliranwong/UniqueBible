@@ -1773,27 +1773,27 @@ class TextCommandParser:
 
     # READCHAPTER:::
     def readChapter(self, command, source):
-        try:
-            content = ""
-            target = "study" if config.enableHttpServer else ""
-            items = command.split(".")
-            if len(items) == 3:
-                text, b, c = items
-                if config.enableHttpServer:
-                    playlist = self.parent.playAudioBibleChapterVerseByVerse(text, b, c)
-                    content = HtmlGeneratorUtil().getAudioPlayer(playlist)
-                else:
-                    self.parent.playAudioBibleChapterVerseByVerse(text, b, c)
-            elif len(items) == 4:
-                text, b, c, startVerse = items
-                if config.enableHttpServer:
-                    playlist = self.parent.playAudioBibleChapterVerseByVerse(text, b, c, int(startVerse))
-                    content = HtmlGeneratorUtil().getAudioPlayer(playlist)
-                else:
-                    self.parent.playAudioBibleChapterVerseByVerse(text, b, c, int(startVerse))
-            return (target, content, {})
-        except:
-            return self.invalidCommand()
+        #try:
+        content = ""
+        target = "study" if config.enableHttpServer else ""
+        items = command.split(".")
+        if len(items) == 3:
+            text, b, c = items
+            if config.enableHttpServer:
+                playlist = self.parent.playAudioBibleChapterVerseByVerse(text, b, c)
+                content = HtmlGeneratorUtil().getAudioPlayer(playlist)
+            else:
+                self.parent.playAudioBibleChapterVerseByVerse(text, b, c)
+        elif len(items) == 4:
+            text, b, c, startVerse = items
+            if config.enableHttpServer:
+                playlist = self.parent.playAudioBibleChapterVerseByVerse(text, b, c, int(startVerse))
+                content = HtmlGeneratorUtil().getAudioPlayer(playlist)
+            else:
+                self.parent.playAudioBibleChapterVerseByVerse(text, b, c, int(startVerse))
+        return (target, content, {})
+        #except:
+        #    return self.invalidCommand()
 
     # READVERSE:::
     def readVerse(self, command, source):
@@ -1812,9 +1812,9 @@ class TextCommandParser:
                     player = "cvlc" if config.hideVlcInterfaceReadingSingleVerse else "vlc"
                     if config.mainWindow.audioPlayer is not None:
                         config.mainWindow.addToAudioPlayList(audioFile, True)
-                    elif config.macVlc and not config.forceUseBuiltinMediaPlayer:
+                    elif config.macVlc:
                         WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFile}")
-                    elif WebtopUtil.isPackageInstalled(player) and not config.forceUseBuiltinMediaPlayer:
+                    elif WebtopUtil.isPackageInstalled(player):
                         #os.system("pkill vlc")
                         WebtopUtil.run(f"{player} {audioFile}")
                     else:
@@ -1842,9 +1842,9 @@ class TextCommandParser:
                 try:
                     if config.mainWindow.audioPlayer is not None:
                         config.mainWindow.addToAudioPlayList(audioFile, True)
-                    elif config.macVlc and not config.forceUseBuiltinMediaPlayer:
+                    elif config.macVlc:
                         WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFile}")
-                    elif WebtopUtil.isPackageInstalled("cvlc") and not config.forceUseBuiltinMediaPlayer:
+                    elif WebtopUtil.isPackageInstalled("cvlc"):
                         #os.system("pkill vlc")
                         WebtopUtil.run(f"cvlc --rate {config.vlcSpeed} {audioFile}")
                     else:
@@ -1876,9 +1876,9 @@ class TextCommandParser:
                 try:
                     if config.mainWindow.audioPlayer is not None:
                         config.mainWindow.addToAudioPlayList(audioFile, True)
-                    elif config.macVlc and not config.forceUseBuiltinMediaPlayer:
+                    elif config.macVlc:
                         WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFile}")
-                    elif WebtopUtil.isPackageInstalled("cvlc") and not config.forceUseBuiltinMediaPlayer:
+                    elif WebtopUtil.isPackageInstalled("cvlc"):
                         #os.system("pkill vlc")
                         WebtopUtil.run(f"cvlc --rate {config.vlcSpeed} {audioFile}")
                     else:
@@ -1901,13 +1901,11 @@ class TextCommandParser:
             return self.invalidCommand()
         self.parent.closeMediaPlayer()
         try:
-            if command.lower()[-4:] in (".mp4", ".avi"):
-                self.parent.openMediaPlayer(command)
-            elif config.mainWindow.audioPlayer is not None:
+            if config.mainWindow.audioPlayer is not None:
                 config.mainWindow.addToAudioPlayList(command, True)
-            elif config.macVlc and not config.forceUseBuiltinMediaPlayer:
+            elif config.macVlc:
                 WebtopUtil.run(f'{config.macVlc} --rate {config.vlcSpeed} "{command}"')
-            elif WebtopUtil.isPackageInstalled("vlc") and ((not config.forceUseBuiltinMediaPlayer) or (config.runMode == "terminal")):
+            elif WebtopUtil.isPackageInstalled("vlc") and (config.runMode == "terminal"):
                 vlcCmd = "vlc" if gui else "cvlc"
                 if config.runMode == "terminal":
                     vlcCmd = "cvlc"
@@ -1935,30 +1933,29 @@ class TextCommandParser:
 
     # READBIBLE:::
     def readBible(self, command, source):
-        if ("Pythonvlc" in config.enabled):
-            text = config.mainText
-            book = config.mainB
-            chapter = config.mainC
-            folder = config.defaultMP3BibleFolder
-            playlist = []
-            if command:
-                count = command.count(":::")
-                if count == 0:
-                    if command.startswith("@"):
-                        folder = command[1:]
-                        playlist.append((text, book, chapter, None, folder))
-                    else:
-                        playlist = self.getBiblePlaylist(command, text, folder)
-                elif count == 1:
-                    text, reference = self.splitCommand(command)
-                    playlist = self.getBiblePlaylist(reference, text, folder)
-                elif count == 2:
-                    text, commandList = self.splitCommand(command)
-                    reference, folder = self.splitCommand(commandList)
-                    playlist = self.getBiblePlaylist(reference, text, folder)
-            else:
-                playlist.append((text, book, chapter, None, folder))
-            self.parent.playBibleMP3Playlist(playlist)
+        text = config.mainText
+        book = config.mainB
+        chapter = config.mainC
+        folder = config.defaultMP3BibleFolder
+        playlist = []
+        if command:
+            count = command.count(":::")
+            if count == 0:
+                if command.startswith("@"):
+                    folder = command[1:]
+                    playlist.append((text, book, chapter, None, folder))
+                else:
+                    playlist = self.getBiblePlaylist(command, text, folder)
+            elif count == 1:
+                text, reference = self.splitCommand(command)
+                playlist = self.getBiblePlaylist(reference, text, folder)
+            elif count == 2:
+                text, commandList = self.splitCommand(command)
+                reference, folder = self.splitCommand(commandList)
+                playlist = self.getBiblePlaylist(reference, text, folder)
+        else:
+            playlist.append((text, book, chapter, None, folder))
+        self.parent.playBibleMP3Playlist(playlist)
         return ("", "", {})
 
     def getBiblePlaylist(self, command, text, folder):

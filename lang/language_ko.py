@@ -1006,4 +1006,10 @@ translation = {
     "outline": "윤곽선",
     "sync": "동기화",
     "none": "없음",
+    "moveUp": "위로 이동",
+    "moveDown": "아래로 이동",
+    "playlist": "플레이리스트",
+    "audioTextSync": "오디오 재생과 함께 텍스트 동기화",
+    "useThirdPartyVLCplayer": "써드 파티 VLC 플레이어 사용",
+    "mute": "음소거",
 }

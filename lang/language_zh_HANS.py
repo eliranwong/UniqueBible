@@ -1006,4 +1006,10 @@ translation = {
     "outline": "大纲",
     "sync": "同步",
     "none": "没有",
+    "moveUp": "上移",
+    "moveDown": "下移",
+    "playlist": "播放列表",
+    "audioTextSync": "文本同步与音频播放",
+    "useThirdPartyVLCplayer": "使用第三方 VLC 播放器",
+    "mute": "静音",
 }

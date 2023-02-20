@@ -3,10 +3,10 @@ import os
 import config
 if config.qtLibrary == "pyside6":
     from PySide6.QtGui import QStandardItemModel, QStandardItem
-    from PySide6.QtWidgets import QPushButton, QListView, QAbstractItemView, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget
+    from PySide6.QtWidgets import QPushButton, QListView, QAbstractItemView, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QFileDialog
 else:
     from qtpy.QtGui import QStandardItemModel, QStandardItem
-    from qtpy.QtWidgets import QPushButton, QListView, QAbstractItemView, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget
+    from qtpy.QtWidgets import QPushButton, QListView, QAbstractItemView, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QFileDialog
 
 class MediaLauncher(QWidget):
 
@@ -32,7 +32,10 @@ class MediaLauncher(QWidget):
         button.clicked.connect(lambda: self.playMedia("music"))
         buttons.addWidget(button)
         button = QPushButton(config.thisTranslation["openAll"])
-        button.clicked.connect(lambda: self.playAllAudio("music"))
+        button.clicked.connect(lambda: self.playAllMedia("music"))
+        buttons.addWidget(button)
+        button = QPushButton(config.thisTranslation["others"])
+        button.clicked.connect(lambda: self.openMediaFiles(False))
         buttons.addWidget(button)
         musicLayout.addLayout(buttons)
         leftColumnWidget.setLayout(musicLayout)
@@ -45,7 +48,10 @@ class MediaLauncher(QWidget):
         button.clicked.connect(lambda: self.playMedia("video"))
         buttons.addWidget(button)
         button = QPushButton(config.thisTranslation["openAll"])
-        button.clicked.connect(lambda: self.playAllVideo("video"))
+        button.clicked.connect(lambda: self.playAllMedia("video"))
+        buttons.addWidget(button)
+        button = QPushButton(config.thisTranslation["others"])
+        button.clicked.connect(lambda: self.openMediaFiles(True))
         buttons.addWidget(button)
         videoLayout.addLayout(buttons)
         rightColumnWidget.setLayout(videoLayout)
@@ -94,15 +100,20 @@ class MediaLauncher(QWidget):
         command = "MEDIA:::{0}".format(os.path.join(directory, self.mediaFile))
         self.parent.runTextCommand(command)
 
-    def playAllAudio(self, directory):
+    def playAllMedia(self, directory):
         playlist = self.musicList if directory == "music" else self.videoList
         playlist = [os.path.join(directory, filename) for filename in playlist]
         self.parent.parent.playAudioBibleFilePlayList(playlist)
 
-    def playAllVideo(self, directory):
-        playlist = self.musicList if directory == "music" else self.videoList
-        playlist = [os.path.join(directory, filename) for filename in playlist]
-        self.parent.parent.openMediaPlayer(playlist)
+    def openMediaFiles(self, video=False):
+        options = QFileDialog.Options()
+        files, _ = QFileDialog.getOpenFileNames(self,
+                                                    config.thisTranslation["menu11_video" if video else "menu11_audio"], "",
+                                                    "MP4 Video Files (*.mp4);;AVI Video Files (*.avi)" if video else "MP3 Audio Files (*.mp3);;WAV Audio Files (*.wav)",
+                                                    "", options)
+        if files:
+            self.parent.parent.playAudioBibleFilePlayList(files)
+
 
 ## Standalone development code
 

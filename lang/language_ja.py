@@ -1006,4 +1006,10 @@ translation = {
     "outline": "概略",
     "sync": "同期",
     "none": "なし",
+    "moveUp": "上へ移動",
+    "moveDown": "下へ移動",
+    "playlist": "プレイリスト",
+    "audioTextSync": "オーディオ・プレイングを使用したテキストの同期",
+    "useThirdPartyVLCplayer": "サード・パーティーの VLC プレイヤー",
+    "mute": "ミュート",
 }

@@ -229,9 +229,9 @@ class TextEditorUtility:
         try:
             if config.mainWindow.audioPlayer is not None:
                 config.mainWindow.addToAudioPlayList(command, True)
-            elif config.macVlc and not config.forceUseBuiltinMediaPlayer:
+            elif config.macVlc:
                 WebtopUtil.run(f'{config.macVlc} --rate {config.vlcSpeed} "{command}"')
-            elif WebtopUtil.isPackageInstalled("vlc") and ((not config.forceUseBuiltinMediaPlayer) or (config.runMode == "terminal")):
+            elif WebtopUtil.isPackageInstalled("vlc") and (config.runMode == "terminal"):
                 vlcCmd = "vlc" if gui else "cvlc"
                 if config.runMode == "terminal":
                     vlcCmd = "cvlc"

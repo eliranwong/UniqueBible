@@ -1006,4 +1006,10 @@ translation = {
     "outline": "Διάρθρωση:",
     "sync": "~ Συγχρονισμός",
     "none": "Καμία.",
+    "moveUp": "' ντε!",
+    "moveDown": "Κάτω!",
+    "playlist": "Λίστα αναπαραγωγής",
+    "audioTextSync": "Συγχρονισμός κειμένου με αναπαραγωγή ήχου",
+    "useThirdPartyVLCplayer": "Χρήση τρίτου προμηθευτή VLC player",
+    "mute": "Mute.",
 }

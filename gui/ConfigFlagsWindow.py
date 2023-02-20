@@ -134,7 +134,7 @@ class ConfigFlagsWindow(QDialog):
             ("disableLoadLastOpenFilesOnStartup", config.disableLoadLastOpenFilesOnStartup, self.disableLoadLastOpenFilesOnStartupChanged, False, config.thisTranslation["disableLoadLastOpenFilesOnStartup"]),
             ("disableOpenPopupWindowOnStartup", config.disableOpenPopupWindowOnStartup, self.disableOpenPopupWindowOnStartupChanged, True, config.thisTranslation["disableOpenPopupWindowOnStartup"]),
             ("showMiniKeyboardInMiniControl", config.showMiniKeyboardInMiniControl, self.showMiniKeyboardInMiniControlChanged, False, config.thisTranslation["showMiniKeyboardInMiniControl"]),
-            ("forceUseBuiltinMediaPlayer", config.forceUseBuiltinMediaPlayer, self.forceUseBuiltinMediaPlayerChanged, False, config.thisTranslation["forceUseBuiltinMediaPlayer"]),
+            ("useThirdPartyVLCplayer", config.useThirdPartyVLCplayer, self.useThirdPartyVLCplayerChanged, False, config.thisTranslation["useThirdPartyVLCplayer"]),
             ("hideVlcInterfaceReadingSingleVerse", config.hideVlcInterfaceReadingSingleVerse, self.hideVlcInterfaceReadingSingleVerseChanged, True, config.thisTranslation["hideVlcInterfaceReadingSingleVerse"]),
             ("doNotStop3rdPartyMediaPlayerOnExit", config.doNotStop3rdPartyMediaPlayerOnExit, self.doNotStop3rdPartyMediaPlayerOnExitChanged, False, config.thisTranslation["doNotStop3rdPartyMediaPlayerOnExit"]),
             ("refreshWindowsAfterSavingNote", config.refreshWindowsAfterSavingNote, self.refreshWindowsAfterSavingNoteChanged, True, config.thisTranslation["refreshWindowsAfterSavingNote"]),
@@ -282,8 +282,9 @@ class ConfigFlagsWindow(QDialog):
         if config.ttsChineseAlwaysMandarin and config.ttsChineseAlwaysCantonese:
             config.ttsChineseAlwaysCantonese = not config.ttsChineseAlwaysCantonese
 
-    def forceUseBuiltinMediaPlayerChanged(self):
-        config.forceUseBuiltinMediaPlayer = not config.forceUseBuiltinMediaPlayer
+    def useThirdPartyVLCplayerChanged(self):
+        config.useThirdPartyVLCplayer = not config.useThirdPartyVLCplayer
+        self.parent.handleRestart()
 
     def doNotStop3rdPartyMediaPlayerOnExitChanged(self):
         config.doNotStop3rdPartyMediaPlayerOnExit = not config.doNotStop3rdPartyMediaPlayerOnExit

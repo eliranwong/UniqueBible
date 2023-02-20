@@ -453,8 +453,6 @@ class ClassicMainWindow:
         menu11.addAction(QAction("YouTube -> mp3", self, triggered=self.downloadMp3Dialog))
         menu11.addAction(QAction("YouTube -> mp4", self, triggered=self.downloadMp4Dialog))
         menu11.addSeparator()
-        if ("Pythonvlc" in config.enabled):
-            menu11.addAction(QAction(config.thisTranslation["mediaPlayer"], self, triggered=lambda: self.openVlcPlayer("")))
 
         menu8 = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu8_resources"]))
         menu8.addAction(QAction(config.thisTranslation["menu8_marvelData"], self, triggered=self.openMarvelDataFolder))

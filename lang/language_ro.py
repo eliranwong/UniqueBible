@@ -1006,4 +1006,10 @@ translation = {
     "outline": "Contur",
     "sync": "Sincronizare",
     "none": "Niciuna.",
+    "moveUp": "Mută Sus",
+    "moveDown": "Dă-te jos.",
+    "playlist": "Listă de redare",
+    "audioTextSync": "Sincronizare text cu redare audio",
+    "useThirdPartyVLCplayer": "Utilizați terț jucător VLC",
+    "mute": "Mută",
 }

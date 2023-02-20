@@ -640,7 +640,7 @@ optional = [
     ("qrcode", "QR Code", isQrCodeInstalled),
     ("pillow", "QR Code", isPillowInstalled),
     #("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "Pure Python PNG", isPurePythonPngInstalled),
-    ("python-vlc", "VLC Player", isVlcInstalled),
+    #("python-vlc", "VLC Player", isVlcInstalled),
     ("yt-dlp", "YouTube Downloader", isYoutubeDownloaderInstalled),
     ("gTTS", "Google text-to-speech", isGTTSInstalled),
     ("markdownify", "Convert HTML to Markdown", isMarkdownifyInstalled),
@@ -685,7 +685,7 @@ optional = [
     ("qrcode", "QR Code", isQrCodeInstalled),
     ("pillow", "QR Code", isPillowInstalled),
     #("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "Pure Python PNG", isPurePythonPngInstalled),
-    ("python-vlc", "VLC Player", isVlcInstalled),
+    #("python-vlc", "VLC Player", isVlcInstalled),
     ("yt-dlp", "YouTube Downloader", isYoutubeDownloaderInstalled),
     ("gTTS", "Google text-to-speech", isGTTSInstalled),
     ("markdownify", "Convert HTML to Markdown", isMarkdownifyInstalled),
@@ -759,8 +759,8 @@ if config.forceOnlineTts and not ("OnlineTts" in config.enabled):
     config.forceOnlineTts = False
 config.noTtsSpeedAdjustment = (("Gtts" in config.enabled) and not config.isGoogleCloudTTSAvailable and ((not ("isOfflineTts" in config.enabled)) or (("OfflineTts" in config.enabled) and config.forceOnlineTts)))
 # Check if builtin media player is in place:
-if config.forceUseBuiltinMediaPlayer and not ("Pythonvlc" in config.enabled):
-    config.forceUseBuiltinMediaPlayer = False
+#if config.forceUseBuiltinMediaPlayer and not ("Pythonvlc" in config.enabled):
+#    config.forceUseBuiltinMediaPlayer = False
 # Check if 3rd-party VLC player is installed on macOS
 macVlc = "/Applications/VLC.app/Contents/MacOS/VLC"
 config.macVlc = macVlc if platform.system() == "Darwin" and os.path.isfile(macVlc) else ""

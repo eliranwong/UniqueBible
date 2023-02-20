@@ -262,7 +262,7 @@ class CrossPlatform:
         folder = os.path.join(config.musicFolder, "tmp")
         if not os.path.isdir(folder):
             os.makedirs(folder, exist_ok=True)
-        return os.path.join(folder, "gtts.mp3")
+        return os.path.abspath(os.path.join(folder, "gtts.mp3"))
 
     # Python package gTTS, not created by Google
     def saveGTTSAudio(self, inputText, languageCode, filename=""):

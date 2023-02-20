@@ -1,3 +1,15 @@
+Changes in 33.89:
+* Improved built-in media player, for examples:
+    - added volume slider
+    - added a button to turn off / off text synchronisation
+    - improved playlist gui
+    - added a video widget
+    - added two "others" buttons on media launcher to open audio / video files
+    - added a mute button
+* Added config.useThirdPartyVLCplayer to use third-party vlc instead of built-in qt media player.
+    Remarks: Third-party VLC does not support text synchronisation as the built-in player does.
+* Removed "python-vlc" from installation as optional package.
+
 Changes in 33.88:
 * Added audio playlist gui
 

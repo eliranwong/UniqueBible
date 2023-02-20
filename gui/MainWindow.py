@@ -6,7 +6,6 @@ from pathlib import Path
 
 from util.ConfigUtil import ConfigUtil
 from util.SystemUtil import SystemUtil
-
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer
     from PySide6.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor, QAction, QShortcut
@@ -14,15 +13,15 @@ if config.qtLibrary == "pyside6":
     from PySide6.QtWebEngineCore import QWebEnginePage
     from PySide6.QtGui import QClipboard
     from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
-    from gui.MediaPlayer6 import MediaPlayer
+    from PySide6.QtMultimediaWidgets import QVideoWidget
 else:
     from qtpy.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer
     from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor
     from qtpy.QtWidgets import QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog, QComboBox, QToolButton, QMenu, QCompleter, QHBoxLayout
     from qtpy.QtWebEngineWidgets import QWebEnginePage
     from qtpy.QtGui import QClipboard
-    from qtpy.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
-    from gui.MediaPlayer5 import MediaPlayer
+    from qtpy.QtMultimedia import QMediaPlayer, QMediaContent
+    from qtpy.QtMultimediaWidgets import QVideoWidget
 from gui.PlaylistUI import PlaylistUI
 from gui.WorkSpace import Workspace
 from db.DevotionalSqlite import DevotionalSqlite
@@ -163,7 +162,10 @@ class MainWindow(QMainWindow):
         # setup user menu & toolbars
 
         # Built-in Audio Player
-        self.setupAudioPlayer()
+        if config.useThirdPartyVLCplayer:
+            self.audioPlayer = None
+        else:
+            self.setupAudioPlayer()
         # VLC Player
         self.vlcPlayer = None
 
@@ -235,7 +237,7 @@ class MainWindow(QMainWindow):
             self.thirdToolBar.show()
 
     def resizeAudioPlayer(self):
-        config.addBreakAfterTheSecondToolBar = not config.addBreakAfterTheSecondToolBar
+        config.maximiseMediaPlayerUI = not config.maximiseMediaPlayerUI
         self.setupMenuLayout(config.menuLayout)
 
     def setMediaSpeed(self, option):
@@ -261,7 +263,27 @@ class MainWindow(QMainWindow):
             action.setChecked(True if config.mediaSpeed == value else False)
         self.speedButton.setMenu(menu)
 
+    def toggleAudioPlayerMuteOption(self):
+        config.audioMuted = not config.audioMuted
+        if config.qtLibrary == "pyside6":
+            config.audioOutput.setMuted(config.audioMuted)
+        else:
+            self.audioPlayer.setMuted(config.audioMuted)
+
+    def setAudioVolume(self, value):
+        if config.qtLibrary == "pyside6":
+            # PySide 6 volume range (float): 0.0-1.0
+            config.audioVolume = float(value/100)
+            config.audioOutput.setVolume(config.audioVolume)
+        else:
+            # PySide 2 volume range (int): 0-100
+            self.audioPlayer.setVolume(value)
+
     def setupAudioPlayer(self):
+        if config.qtLibrary == "pyside6":
+            config.audioVolume = 1.0
+            config.audioOutput = QAudioOutput()
+            config.audioMuted = config.audioOutput.isMuted()
         config.currentAudioFile = ""
         self.audioPlayList = []
         self.resetAudioPlaylist()
@@ -278,6 +300,8 @@ class MainWindow(QMainWindow):
                         self.playAudioPlayList()
 
         self.audioPlayer = QMediaPlayer(self)
+        if not config.qtLibrary == "pyside6":
+            config.audioMuted = config.audioPlayer.isMuted()
         self.audioPlayer.setPlaybackRate(config.mediaSpeed)
         if config.qtLibrary == "pyside6":
             self.audioPlayer.playbackStateChanged.connect(playbackStateChanged)
@@ -293,6 +317,10 @@ class MainWindow(QMainWindow):
     def openAudioPlayListUI(self):
         self.audioPlayListUI = PlaylistUI(self)
         self.audioPlayListUI.show()
+        self.selectAudioPlaylistUIItem()
+
+    def isPlayListUIOpened(self):
+        return (hasattr(self, "audioPlayListUI") and self.audioPlayListUI and self.audioPlayListUI.isVisible())
 
     def previousAudioFile(self):
         if self.audioPlayList and not self.audioPlayListIndex == 0:
@@ -322,6 +350,9 @@ class MainWindow(QMainWindow):
             self.audioPlayer.stop()
 
     def addToAudioPlayList(self, newPlayList, clear=False):
+        isPlayListUIOpened = self.isPlayListUIOpened()
+        if isPlayListUIOpened:
+            self.audioPlayListUI.close()
         if clear:
             self.audioPlayList = []
         # allow adding a single file path in a string rather than a list
@@ -331,33 +362,53 @@ class MainWindow(QMainWindow):
             self.audioPlayList = self.audioPlayList + newPlayList
         if not self.isAudioPlayListPlaying:
             self.playAudioPlayList()
+        if isPlayListUIOpened:
+            self.openAudioPlayListUI()
 
     def playAudioPlayList(self):
         if self.audioPlayList:
             self.isAudioPlayListPlaying = True
             self.playAudioFile(self.audioPlayList[self.audioPlayListIndex])
 
+    def showVideoView(self):
+        if not hasattr(self, "videoView") or not self.videoView or not self.videoView.isVisible():
+            self.openVideoView()
+        elif self.videoView.isVisible():
+            self.bringToForeground(self.videoView)
+
+    def openVideoView(self):
+        if not hasattr(self, "videoView") or not self.videoView or not self.videoView.isVisible():
+            self.videoView = QVideoWidget()
+            self.videoView.setWindowTitle(config.thisTranslation["menu11_video"])
+            self.audioPlayer.setVideoOutput(self.videoView)
+            self.videoView.show()
+
     def playAudioFile(self, filePath):
         if filePath and os.path.isfile(filePath):
+            # check if it is a supported video file
+            if re.search("(.mp4|.avi)$", filePath.lower()[-4:]):
+                self.openVideoView()
+
             basename = os.path.basename(filePath)
-            # verse pattern, e.g. CSB_1_1_1.mp3
-            versePattern = re.compile("^([^_]+?)_([0-9]+?)_([0-9]+?)_([0-9]+?).mp3")
-            isVerse = versePattern.search(basename)
-            if not isVerse:
-                # word patterns, e.g. lex_OGNT_61_1_9_124169.mp3   OGNT_61_1_9_124169.mp3 BHS5_1_1_28_579.mp3  lex_BHS5_1_1_20_376.mp3
-                wordPattern = re.compile("^.*?(BHS|OGNT)_([0-9]+?)_[0-9]+?_[0-9]+?_([0-9]+?).mp3")
-                isWord = wordPattern.search(filePath)
-            def getDefaultInfo():
-                return ("instant", f"Playing audio file:<br>{basename}")
-            if isVerse:
-                text, b, c, v = isVerse.groups()
-                instantInfo = self.textCommandParser.instantMainVerse(f"{b}.{c}.{v}", "main", text) if text in self.textList else getDefaultInfo()
-            elif isWord:
-                _, book, wordId = isWord.groups()
-                instantInfo = self.textCommandParser.instantWord(f"{book}:::{wordId}", "main")
-            else:
-                instantInfo = getDefaultInfo()
-            self.instantView.setHtml(self.wrapHtml(instantInfo[1], "instant", False), baseUrl)
+            if config.audioTextSync and not basename in ("gtts.mp3",):
+                # verse pattern, e.g. CSB_1_1_1.mp3
+                versePattern = re.compile("^([^_]+?)_([0-9]+?)_([0-9]+?)_([0-9]+?).mp3")
+                isVerse = versePattern.search(basename)
+                if not isVerse:
+                    # word patterns, e.g. lex_OGNT_61_1_9_124169.mp3   OGNT_61_1_9_124169.mp3 BHS5_1_1_28_579.mp3  lex_BHS5_1_1_20_376.mp3
+                    wordPattern = re.compile("^.*?(BHS|OGNT)_([0-9]+?)_[0-9]+?_[0-9]+?_([0-9]+?).mp3")
+                    isWord = wordPattern.search(filePath)
+                def getDefaultInfo():
+                    return ("instant", f"Playing media: {basename}")
+                if isVerse:
+                    text, b, c, v = isVerse.groups()
+                    instantInfo = self.textCommandParser.instantMainVerse(f"{b}.{c}.{v}", "main", text) if text in self.textList else getDefaultInfo()
+                elif isWord:
+                    _, book, wordId = isWord.groups()
+                    instantInfo = self.textCommandParser.instantWord(f"{book}:::{wordId}", "main")
+                else:
+                    instantInfo = getDefaultInfo()
+                self.instantView.setHtml(self.wrapHtml(instantInfo[1], "instant", False), baseUrl)
             
             # full path is required for PySide2 QMediaPlayer to work
             config.currentAudioFile = os.path.abspath(filePath)
@@ -366,14 +417,21 @@ class MainWindow(QMainWindow):
                 # for unknown reasons, the following three lines do not work when they are executed directly without puting into a string first
                 # work as expected when the string is executed with exec() method
                 codes = f"""
-audioOutput = QAudioOutput()
-config.mainWindow.audioPlayer.setAudioOutput(audioOutput)
+config.audioOutput = QAudioOutput()
+config.audioOutput.setVolume(config.audioVolume)
+config.audioOutput.setMuted(config.audioMuted)
+config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)
 config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(config.currentAudioFile))"""
                 exec(codes, globals())
             else:
                 media_content = QMediaContent(QUrl.fromLocalFile(config.currentAudioFile))
                 self.audioPlayer.setMedia(media_content)
             self.audioPlayer.play()
+            self.selectAudioPlaylistUIItem()
+
+    def selectAudioPlaylistUIItem(self):
+        if hasattr(self, "audioPlayListUI") and self.audioPlayListUI and self.audioPlayListUI.isVisible() and (self.audioPlayListUI.model.rowCount() > self.audioPlayListIndex >= 0):
+            self.audioPlayListUI.view.setCurrentIndex(self.audioPlayListUI.model.index(self.audioPlayListIndex, 0))
 
     # to work with slider
     def on_slider_moved(self, position):
@@ -382,8 +440,10 @@ config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(config.currentAudioFi
         # note: need to reset audio output on Ubuntu to get audio working after chaning position
         if config.qtLibrary == "pyside6":
             codes = f"""
-audioOutput = QAudioOutput()
-config.mainWindow.audioPlayer.setAudioOutput(audioOutput)"""
+config.audioOutput = QAudioOutput()
+config.audioOutput.setVolume(config.audioVolume)
+config.audioOutput.setMuted(config.audioMuted)
+config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
         exec(codes, globals())
 
 
@@ -1097,10 +1157,9 @@ config.mainWindow.audioPlayer.setAudioOutput(audioOutput)"""
         self.installFromGitHub(GitHubRepoInfo.epub)
 
     def installGithubBibleMp3(self, audioModule=""):
-        if ("Pythonvlc" in config.enabled):
-            from gui.DownloadBibleMp3Dialog import DownloadBibleMp3Dialog
-            self.downloadBibleMp3Dialog = DownloadBibleMp3Dialog(self, audioModule)
-            self.downloadBibleMp3Dialog.show()
+        from gui.DownloadBibleMp3Dialog import DownloadBibleMp3Dialog
+        self.downloadBibleMp3Dialog = DownloadBibleMp3Dialog(self, audioModule)
+        self.downloadBibleMp3Dialog.show()
 
     def installGithubPluginsContext(self):
         if self.installFromGitHub(GitHubRepoInfo.pluginsContext):
@@ -3991,6 +4050,48 @@ config.mainWindow.audioPlayer.setAudioOutput(audioOutput)"""
     def runINDEX(self):
         self.runFeature("INDEX")
 
+    # Actions - mute / unmute audio player
+    def getMuteAudioDisplay(self):
+        if config.audioMuted:
+            return self.getCrossplatformPath("material/av/volume_off/materialiconsoutlined/48dp/2x/outline_volume_off_black_48dp.png")
+        else:
+            return self.getCrossplatformPath("material/av/volume_up/materialiconsoutlined/48dp/2x/outline_volume_up_black_48dp.png")
+
+    def getMuteAudioToolTip(self):
+        if config.audioMuted:
+            return "{0}: {1}".format(config.thisTranslation["mute"], config.thisTranslation["on"])
+        else:
+            return "{0}: {1}".format(config.thisTranslation["mute"], config.thisTranslation["off"])
+
+    def muteAudioButtonClicked(self):
+        self.toggleAudioPlayerMuteOption()
+        #icon = self.getQIcon(self.getMuteAudioDisplay())
+        #self.muteAudioButton.setStyleSheet(icon)
+        #self.muteAudioButton.setToolTip(self.getMuteAudioToolTip())
+        iconFile = os.path.join("htmlResources", self.getMuteAudioDisplay())
+        qIcon = self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground, toolButton=True)
+        self.muteAudioButton.setIcon(qIcon)
+        self.muteAudioButton.setToolTip(self.getMuteAudioToolTip())
+
+    # Actions - enable or disable text synchronisation with audio 
+    def getAudioTextSyncDisplay(self):
+        if config.audioTextSync:
+            return self.getCrossplatformPath("material/editor/title/materialiconsoutlined/48dp/2x/outline_title_black_48dp.png")
+        else:
+            return self.getCrossplatformPath("material/editor/format_clear/materialiconsoutlined/48dp/2x/outline_format_clear_black_48dp.png")
+
+    def getAudioTextSyncToolTip(self):
+        if config.audioTextSync:
+            return "{0}: {1}".format(config.thisTranslation["audioTextSync"], config.thisTranslation["on"])
+        else:
+            return "{0}: {1}".format(config.thisTranslation["audioTextSync"], config.thisTranslation["off"])
+
+    def audioTextSyncButtonClicked(self):
+        config.audioTextSync = not config.audioTextSync
+        icon = self.getQIcon(self.getAudioTextSyncDisplay())
+        self.audioTextSyncButton.setStyleSheet(icon)
+        self.audioTextSyncButton.setToolTip(self.getAudioTextSyncToolTip())
+
     # Actions - enable or disable instant highlight
     def getInstantHighlightDisplay(self):
         if config.enableInstantHighlight:
@@ -5738,64 +5839,35 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.mainView.currentWidget().googleTextToSpeechLanguage(config.ttsDefaultLangauge3, True)
         else:
             # offline tts
-            self.mainView.currentWidget().textToSpeechLanguage(config.ttsDefaultLangauge3, True)
-
-    def openMediaPlayer(self, filename=""):
-        if isinstance(filename, str):
-            if filename and os.path.isfile(filename):
-                config.currentMediaFile = os.path.abspath(filename)
-                # For unknown reasons the following lines are not working if they are executed directly when PySide6 is used.
-                # However, they are executed as expected when they are placed into a string
-                # tested on Ubuntu
-                codes = """
-config.mainWindow.mediaPlayer = MediaPlayer(config.mainWindow)
-available_geometry = config.mainWindow.mediaPlayer.screen().availableGeometry()
-config.mainWindow.mediaPlayer.resize(int(available_geometry.width() / 3), int(available_geometry.height() / 2))
-config.mainWindow.mediaPlayer.show()
-if config.currentMediaFile:
-    config.mainWindow.mediaPlayer.openSingleFile(config.currentMediaFile)"""
-                exec(codes, globals())
-        else:
-            # filelist
-            config.currentMediaFiles = []
-            for f in filename:
-                fullpath = os.path.abspath(f)
-                if os.path.isfile(fullpath):
-                    config.currentMediaFiles.append(fullpath)
-            if config.currentMediaFiles:
-                codes = """
-config.mainWindow.mediaPlayer = MediaPlayer(config.mainWindow)
-available_geometry = config.mainWindow.mediaPlayer.screen().availableGeometry()
-config.mainWindow.mediaPlayer.resize(int(available_geometry.width() / 3), int(available_geometry.height() / 2))
-config.mainWindow.mediaPlayer.show()
-config.mainWindow.mediaPlayer.openMultipleFiles(config.currentMediaFiles)"""
-                exec(codes, globals())
-            
+            self.mainView.currentWidget().textToSpeechLanguage(config.ttsDefaultLangauge3, True)            
 
     def openVlcPlayer(self, filename=""):
         try:
-            if config.macVlc and not config.forceUseBuiltinMediaPlayer:
+            if config.macVlc:
                 os.system("pkill VLC")
                 if filename:
                     WebtopUtil.run(f'{config.macVlc} --rate {config.vlcSpeed} "{filename}"')
                 else:
                     WebtopUtil.run(config.macVlc)
-            elif WebtopUtil.isPackageInstalled("vlc") and not config.forceUseBuiltinMediaPlayer:
+            elif WebtopUtil.isPackageInstalled("vlc"):
                 if filename:
                     self.playAudioBibleFilePlayList([filename])
                 else:
                     WebtopUtil.run("vlc")
+            """
             elif ("Pythonvlc" in config.enabled):
                 from gui.VlcPlayer import VlcPlayer
                 if self.vlcPlayer is not None:
                     self.vlcPlayer.close()
                 self.vlcPlayer = VlcPlayer(self, filename)
                 self.vlcPlayer.show()
+            """
         except:
             self.displayMessage(config.thisTranslation["noMediaPlayer"])
 
     def closeMediaPlayer(self):
-        self.stopAudioPlaying()
+        if not config.useThirdPartyVLCplayer:
+            self.stopAudioPlaying()
         if WebtopUtil.isPackageInstalled("pkill"):
             if config.macVlc:
                 os.system("pkill VLC")
@@ -5836,15 +5908,16 @@ config.mainWindow.mediaPlayer.openMultipleFiles(config.currentMediaFiles)"""
         self.closeMediaPlayer()
         if self.audioPlayer is not None:
             self.addToAudioPlayList(playlist, True)
-        elif config.macVlc and not config.forceUseBuiltinMediaPlayer:
+        elif config.macVlc:
             audioFiles = '" "'.join(playlist)
             audioFiles = '"{0}"'.format(audioFiles)
             WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFiles}")
-        elif playlist and WebtopUtil.isPackageInstalled("vlc") and not config.forceUseBuiltinMediaPlayer:
+        elif playlist and WebtopUtil.isPackageInstalled("vlc"):
             audioFiles = '" "'.join(playlist)
             audioFiles = '"{0}"'.format(audioFiles)
             vlcCmd = "vlc" if gui else "cvlc"
             WebtopUtil.run(f"{vlcCmd} --rate {config.vlcSpeed} {audioFiles}")
+        """
         elif playlist and ("Pythonvlc" in config.enabled):
             from gui.VlcPlayer import VlcPlayer
             if self.vlcPlayer is not None:
@@ -5855,6 +5928,7 @@ config.mainWindow.mediaPlayer.openMultipleFiles(config.currentMediaFiles)"""
             if gui:
                 self.vlcPlayer.show()
             self.vlcPlayer.playNextInPlaylist()
+        """
 
     def playBibleMP3Playlist(self, playlist):
         self.closeMediaPlayer()
@@ -5869,12 +5943,13 @@ config.mainWindow.mediaPlayer.openMultipleFiles(config.currentMediaFiles)"""
                 return fileList
             if self.audioPlayer is not None:
                 self.addToAudioPlayList(getFilelist(), True)
-            elif config.macVlc and not config.forceUseBuiltinMediaPlayer:
+            elif config.macVlc:
                 audioFiles = ' '.join(getFilelist())
                 WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFiles}")
-            elif WebtopUtil.isPackageInstalled("vlc") and not config.forceUseBuiltinMediaPlayer:
+            elif WebtopUtil.isPackageInstalled("vlc"):
                 audioFiles = ' '.join(getFilelist())
                 WebtopUtil.run(f"vlc --rate {config.vlcSpeed} {audioFiles}")
+            """
             elif ("Pythonvlc" in config.enabled):
                 from gui.VlcPlayer import VlcPlayer
                 if self.vlcPlayer is not None:
@@ -5887,6 +5962,7 @@ config.mainWindow.mediaPlayer.openMultipleFiles(config.currentMediaFiles)"""
                         self.vlcPlayer.addToPlaylist(file)
                 self.vlcPlayer.show()
                 self.vlcPlayer.playNextInPlaylist()
+            """
 
     def playBibleMP3File(self, text, book, chapter, folder=config.defaultMP3BibleFolder):
         playlist = []

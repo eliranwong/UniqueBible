@@ -278,8 +278,8 @@ if config.forceOnlineTts and not ("OnlineTts" in config.enabled):
     config.forceOnlineTts = False
 config.noTtsSpeedAdjustment = (("Gtts" in config.enabled) and not config.isGoogleCloudTTSAvailable and ((not ("isOfflineTts" in config.enabled)) or (("OfflineTts" in config.enabled) and config.forceOnlineTts)))
 # Check if builtin media player is in place:
-if config.forceUseBuiltinMediaPlayer and not ("Pythonvlc" in config.enabled):
-    config.forceUseBuiltinMediaPlayer = False
+#if config.forceUseBuiltinMediaPlayer and not ("Pythonvlc" in config.enabled):
+#    config.forceUseBuiltinMediaPlayer = False
 # Check if 3rd-party VLC player is installed on macOS
 macVlc = "/Applications/VLC.app/Contents/MacOS/VLC"
 config.macVlc = macVlc if platform.system() == "Darwin" and os.path.isfile(macVlc) else ""

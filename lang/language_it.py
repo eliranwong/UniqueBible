@@ -1006,4 +1006,10 @@ translation = {
     "outline": "Schema",
     "sync": "Sincronizzazione",
     "none": "Nessuno",
+    "moveUp": "Muovi Up",
+    "moveDown": "Muovi giù",
+    "playlist": "Playlist",
+    "audioTextSync": "Sincronizzazione Testo con Audio Playing",
+    "useThirdPartyVLCplayer": "Usa lettore VLC di terze parti",
+    "mute": "Muto",
 }
