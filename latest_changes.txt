@@ -1,3 +1,6 @@
+Changes in 33.90:
+* Fixed launching UBA for PySide2 or PyQt5 users.
+
 Changes in 33.89:
 * Improved built-in media player, for examples:
     - added volume slider

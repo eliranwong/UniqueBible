@@ -301,7 +301,7 @@ class MainWindow(QMainWindow):
 
         self.audioPlayer = QMediaPlayer(self)
         if not config.qtLibrary == "pyside6":
-            config.audioMuted = config.audioPlayer.isMuted()
+            config.audioMuted = self.audioPlayer.isMuted()
         self.audioPlayer.setPlaybackRate(config.mediaSpeed)
         if config.qtLibrary == "pyside6":
             self.audioPlayer.playbackStateChanged.connect(playbackStateChanged)
