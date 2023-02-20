@@ -1,7 +1,10 @@
-import os
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QStandardItem, QStandardItemModel
-from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QListView
+import os, config
+if config.qtLibrary == "pyside6":
+    from PySide6.QtGui import QStandardItem, QStandardItemModel
+    from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QListView, QFileDialog
+else:
+    from qtpy.QtGui import QStandardItem, QStandardItemModel
+    from qtpy.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QListView, QFileDialog
 
 class PlaylistUI(QWidget):
     def __init__(self, parent):
@@ -9,34 +12,28 @@ class PlaylistUI(QWidget):
         self.parent = parent
 
         # Create the model and the view
-        self.model = QStandardItemModel()
         self.view = QListView()
+        self.model = QStandardItemModel(self.view)
         self.view.setModel(self.model)
-
-        # Add items to the model
-        for filePath in self.parent.audioPlayList:
-            item = QStandardItem(os.path.basename(filePath))
-            item.setToolTip(filePath)
-            self.model.appendRow(item)
+        self.populateModel()
+        self.view.selectionModel().selectionChanged.connect(self.selectionChanged)
 
         # Create the user interface widgets
-        self.label = QLabel('Add song:')
-        self.line_edit = QLineEdit()
         self.add_button = QPushButton('Add')
         self.remove_button = QPushButton('Remove')
+        self.clear_all_button = QPushButton('Clear All')
         self.move_up_button = QPushButton('Move up')
         self.move_down_button = QPushButton('Move down')
 
         # Create the layout
         hbox1 = QHBoxLayout()
-        hbox1.addWidget(self.label)
-        hbox1.addWidget(self.line_edit)
-        hbox1.addWidget(self.add_button)
+        hbox1.addWidget(self.move_up_button)
+        hbox1.addWidget(self.move_down_button)
 
         hbox2 = QHBoxLayout()
+        hbox2.addWidget(self.add_button)
         hbox2.addWidget(self.remove_button)
-        hbox2.addWidget(self.move_up_button)
-        hbox2.addWidget(self.move_down_button)
+        hbox2.addWidget(self.clear_all_button)
 
         vbox = QVBoxLayout()
         vbox.addWidget(self.view)
@@ -49,52 +46,93 @@ class PlaylistUI(QWidget):
         # Connect the signals and slots
         self.add_button.clicked.connect(self.add_item)
         self.remove_button.clicked.connect(self.remove_item)
+        self.clear_all_button.clicked.connect(self.clear_all)
         self.move_up_button.clicked.connect(self.move_up)
         self.move_down_button.clicked.connect(self.move_down)
 
+    def populateModel(self):
+        # Add items to the model
+        for filePath in self.parent.audioPlayList:
+            item = QStandardItem(os.path.basename(filePath))
+            item.setToolTip(filePath)
+            self.model.appendRow(item)
+
+    def selectionChanged(self, selection):
+        row = selection[0].indexes()[0].row()
+        if not config.currentAudioFile == os.path.abspath(self.model.item(row).toolTip()):
+            self.parent.stopAudioPlaying()
+        self.parent.audioPlayListIndex = row
+        self.parent.playAudioPlaying()
+
+    def updateMediaList(self):
+        fileList = []
+        for i in range(self.model.rowCount()):
+            fileList.append(self.model.item(i).toolTip())
+        self.parent.audioPlayList = fileList
+
     def add_item(self):
-        # Get the text from the line edit
-        text = self.line_edit.text()
-
-        # Add the item to the model
-        item = QStandardItem(text)
-        self.model.appendRow(item)
-
-        # Clear the line edit
-        self.line_edit.clear()
+        options = QFileDialog.Options()
+        files, _ = QFileDialog.getOpenFileNames(self,
+                                                    config.thisTranslation["menu11_audio"], "",
+                                                    "MP3 Files (*.mp3);;WAV Files (*.wav)",
+                                                    "", options)
+        if files:
+            for filePath in files:
+                item = QStandardItem(os.path.basename(filePath))
+                item.setToolTip(filePath)
+                self.model.appendRow(item)
+            # update media list
+            self.updateMediaList()
+            if not self.parent.isAudioPlayListPlaying:
+                self.parent.playAudioPlayList()
 
     def remove_item(self):
         # Get the selected index
-        index = self.view.currentIndex()
-
+        current_row = self.view.currentIndex()
+        if current_row == self.parent.audioPlayListIndex:
+            self.parent.stopAudioPlaying()
         # Remove the item from the model
-        self.model.removeRow(index.row())
+        self.model.removeRow(current_row)
+        # update media list
+        self.updateMediaList()
+    
+    def clear_all(self):
+        self.parent.stopAudioPlaying()
+        self.model.clear()
+        # update media list
+        self.updateMediaList()
 
     def move_up(self):
-        # Get the selected index
-        index = self.view.currentIndex()
-
+        # Get the selected row
+        current_row = self.view.currentIndex().row()
         # Move the item up in the model
-        if index.row() > 0:
-            item = self.model.takeItem(index.row())
-            self.model.insertRow(index.row() - 1, item)
-
+        if current_row > 0:
+            item = self.model.takeItem(current_row)
+            self.model.insertRow(current_row - 1, item)
+            # remove the empty row
+            self.model.removeRow(current_row + 1)
+            # update media list
+            self.updateMediaList()
             # Select the moved item
             new_index = self.model.indexFromItem(item)
             self.view.setCurrentIndex(new_index)
+            self.parent.audioPlayListIndex = new_index.row()
 
     def move_down(self):
-        # Get the selected index
-        index = self.view.currentIndex()
-
-        # Move the item down in the model
-        if index.row() < self.model.rowCount() - 1:
-            item = self.model.takeItem(index.row())
-            self.model.insertRow(index.row() + 1, item)
-
+        # Get the selected row
+        current_row = self.view.currentIndex().row()
+        if current_row < self.model.rowCount() - 1:
+            item = self.model.takeItem(current_row)
+            self.model.insertRow(current_row + 2, item)
+            # remove the empty row
+            self.model.removeRow(current_row)
+            # update media list
+            self.updateMediaList()
             # Select the moved item
             new_index = self.model.indexFromItem(item)
             self.view.setCurrentIndex(new_index)
+            self.parent.audioPlayListIndex = new_index.row()
+
 
 if __name__ == '__main__':
     app = QApplication([])

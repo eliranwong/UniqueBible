@@ -1111,6 +1111,8 @@ class MaterialMainWindow:
 
         icon = "material/file/folder_open/materialiconsoutlined/48dp/2x/outline_folder_open_black_48dp.png"
         self.addMaterialIconButton("media", icon, partial(self.openControlPanelTab, 6), self.thirdToolBar)
+        icon = "material/av/queue_music/materialiconsoutlined/48dp/2x/outline_queue_music_black_48dp.png"
+        self.addMaterialIconButton("media", icon, self.openAudioPlayListUI, self.thirdToolBar)
         icon = "material/av/skip_previous/materialiconsoutlined/48dp/2x/outline_skip_previous_black_48dp.png"
         self.addMaterialIconButton("previous", icon, self.previousAudioFile, self.thirdToolBar)
         icon = "material/av/play_circle_outline/materialiconsoutlined/48dp/2x/outline_play_circle_outline_black_48dp.png"
@@ -1121,8 +1123,6 @@ class MaterialMainWindow:
         self.addMaterialIconButton("stop", icon, self.stopAudioPlaying, self.thirdToolBar)
         icon = "material/av/skip_next/materialiconsoutlined/48dp/2x/outline_skip_next_black_48dp.png"
         self.addMaterialIconButton("next", icon, self.nextAudioFile, self.thirdToolBar)
-        icon = "material/av/queue_music/materialiconsoutlined/48dp/2x/outline_queue_music_black_48dp.png"
-        self.addMaterialIconButton("media", icon, self.openAudioPlayListUI, self.thirdToolBar)
 
         self.thirdToolBar.addSeparator()
 

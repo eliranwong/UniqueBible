@@ -1,3 +1,6 @@
+Changes in 33.88:
+* Added audio playlist gui
+
 Changes in 33.87:
 * Added speed adjustment button on toolbar
 * Fixed opening video files
