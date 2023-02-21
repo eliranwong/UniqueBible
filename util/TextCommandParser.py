@@ -1690,7 +1690,9 @@ class TextCommandParser:
             installmodule("--upgrade yt-dlp")
             config.youtubeDlIsUpdated = True
         if self.isFfmpegInstalled() or noFfmpeg:
-            if platform.system() == "Linux":
+            if config.runMode in ("", "cli", "gui"):
+                self.parent.workOnDownloadYouTubeFile(downloadCommand, youTubeLink, outputFolder)
+            elif platform.system() == "Linux":
                 try:
                     subprocess.run(["cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
                     subprocess.Popen([config.open, outputFolder])

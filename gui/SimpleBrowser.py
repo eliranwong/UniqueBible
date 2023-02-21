@@ -204,15 +204,15 @@ class SimpleBrowser(QWidget):
             self.searchGoogle()
 
     def searchGoogle(self):
-        if NetworkUtil.check_internet_connection():
-            address = self.addressBar.text().strip()
-            query = re.sub("^https://(.*?)[/]*$", r"\1", address)
-            if not address == query:
-                self.addressBar.setText(query)
-            # search
-            query = TextUtil.plainTextToUrl(query)
-            url = QUrl(f"https://www.google.com/search?q={query}")
-            self.webview.load(url)
+        #if NetworkUtil.check_internet_connection():
+        address = self.addressBar.text().strip()
+        query = re.sub("^https://(.*?)[/]*$", r"\1", address)
+        if not address == query:
+            self.addressBar.setText(query)
+        # search
+        query = TextUtil.plainTextToUrl(query)
+        url = QUrl(f"https://www.google.com/search?q={query}")
+        self.webview.load(url)
 
     def addressEntered(self):
         address = self.addressBar.text()

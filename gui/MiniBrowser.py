@@ -1,5 +1,6 @@
 import config, re, webbrowser
 from util.TextUtil import TextUtil
+from util.NetworkUtil import NetworkUtil
 if config.qtLibrary == "pyside6":
     from PySide6.QtWidgets import QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QWidget, QListView, QAbstractItemView, QMessageBox, QLabel, QDialog
     from PySide6.QtCore import QUrl, QStringListModel
@@ -169,12 +170,13 @@ class MiniBrowser(QWidget):
                 address = f"https://{address}"
             #self.youTubeView.load(QUrl(address))
             url = QUrl(address)
-            if url.isValid():
+            if url.isValid() and NetworkUtil.is_valid_url(url.toString()):
                 self.youTubeView.load(url)
             else:
                 # search
                 query = TextUtil.plainTextToUrl(self.addressBar.text())
-                url = QUrl(f"https://www.google.com/search?q={query}")
+                #url = QUrl(f"https://www.google.com/search?q={query}")
+                url = QUrl(f"https://youtube.com/results?search_query={query}")
                 self.youTubeView.load(url)
 
     def convertToFormat(self, fileType, address=""):

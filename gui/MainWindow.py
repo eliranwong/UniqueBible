@@ -6,8 +6,9 @@ from pathlib import Path
 
 from util.ConfigUtil import ConfigUtil
 from util.SystemUtil import SystemUtil
+from gui.Worker import Worker
 if config.qtLibrary == "pyside6":
-    from PySide6.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer
+    from PySide6.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer, QThreadPool
     from PySide6.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor, QAction, QShortcut
     from PySide6.QtWidgets import QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QColorDialog, QComboBox, QToolButton, QMenu, QCompleter, QHBoxLayout
     from PySide6.QtWebEngineCore import QWebEnginePage
@@ -15,7 +16,7 @@ if config.qtLibrary == "pyside6":
     from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
     from PySide6.QtMultimediaWidgets import QVideoWidget
 else:
-    from qtpy.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer
+    from qtpy.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer, QThreadPool
     from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor
     from qtpy.QtWidgets import QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog, QComboBox, QToolButton, QMenu, QCompleter, QHBoxLayout
     from qtpy.QtWebEngineWidgets import QWebEnginePage
@@ -112,6 +113,10 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
+
+        # support multithreading
+        self.threadpool = QThreadPool()
+
         self.crossPlatform = CrossPlatform()
         self.logger = logging.getLogger('uba')
 
@@ -229,6 +234,29 @@ class MainWindow(QMainWindow):
         timeDifference = bootEndTime - bootStartTime
 
         self.logger.info("Boot start time: {0}".format(timeDifference))
+
+    # Codes on multithreading
+
+    def downloadYouTubeFile(self, downloadCommand, youTubeLink, outputFolder):
+        os.system(r"cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
+        os.system(r"{0} {1}".format(config.open, outputFolder))
+        return "Downloaded!"
+
+    def print_output(self, s):
+        print(s)
+
+    def thread_complete(self):
+        print("THREAD COMPLETE!")
+
+    def workOnDownloadYouTubeFile(self, downloadCommand, youTubeLink, outputFolder):
+        # Pass the function to execute
+        worker = Worker(self.downloadYouTubeFile, downloadCommand, youTubeLink, outputFolder) # Any other args, kwargs are passed to the run function
+        worker.signals.result.connect(self.print_output)
+        worker.signals.finished.connect(self.thread_complete)
+        # Execute
+        self.threadpool.start(worker)
+
+    # Codes on Media Player
 
     def toggleAudioPlayer(self):
         if self.thirdToolBar.isVisible():

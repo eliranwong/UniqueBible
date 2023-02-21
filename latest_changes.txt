@@ -1,3 +1,7 @@
+Changes in 33.94:
+* Improved Youtube media download process
+    Downloading YouTube media now does not block the main thread.
+
 Changes in 33.93:
 * Added a button to enable/disable media playlist looping
 * Added a confirmation dialog to remind users for saving changes when they close ToDo menu plugin
