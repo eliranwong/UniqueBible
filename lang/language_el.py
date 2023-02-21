@@ -1012,5 +1012,5 @@ translation = {
     "audioTextSync": "Συγχρονισμός κειμένου με αναπαραγωγή ήχου",
     "useThirdPartyVLCplayer": "Χρήση τρίτου προμηθευτή VLC player",
     "mute": "Mute.",
-    "todo": ""Προς"",
+    "todo": "Προς",
 }
