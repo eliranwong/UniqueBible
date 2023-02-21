@@ -238,14 +238,22 @@ class MainWindow(QMainWindow):
     # Codes on multithreading
 
     def downloadYouTubeFile(self, downloadCommand, youTubeLink, outputFolder):
-        os.system(r"cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
-        os.system(r"{0} {1}".format(config.open, outputFolder))
+        try:
+            if platform.system() == "Windows":
+                os.system(r"cd .\{2}\ & {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
+            else:
+                os.system(r"cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
+            os.system(r"{0} {1}".format(config.open, outputFolder))
+        except:
+            self.displayMessage(config.thisTranslation["noSupportedUrlFormat"], title="ERROR:")
+            return config.thisTranslation["noSupportedUrlFormat"]
         return "Downloaded!"
 
     def print_output(self, s):
         print(s)
 
     def thread_complete(self):
+        self.reloadResources()
         print("THREAD COMPLETE!")
 
     def workOnDownloadYouTubeFile(self, downloadCommand, youTubeLink, outputFolder):

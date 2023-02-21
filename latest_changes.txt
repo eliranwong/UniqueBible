@@ -1,4 +1,4 @@
-Changes in 33.94:
+Changes in 33.94, 33.95:
 * Improved Youtube media download process
     Downloading YouTube media now does not block the main thread.
 

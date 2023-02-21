@@ -1636,7 +1636,9 @@ class TextCommandParser:
 
         if config.runMode == "terminal":
             return self.terminalDownloadYoutubeFile(downloadCommand, command, config.musicFolder)
-
+        else:
+            self.downloadYouTubeFile(downloadCommand, command, config.musicFolder)
+        """
         if not platform.system() == "Linux":
             # version 1: known issue - the download process blocks the main window
             self.downloadYouTubeFile(downloadCommand, command, config.musicFolder)
@@ -1644,7 +1646,8 @@ class TextCommandParser:
             # version 2: known issue - only works on Linux, but not macOS or Windows
             multiprocessing.Process(target=self.downloadYouTubeFile, args=(downloadCommand, command, config.musicFolder)).start()
             self.parent.displayMessage(config.thisTranslation["downloading"])
-        self.parent.reloadResources()
+        """
+        #self.parent.reloadResources()
         return ("", "", {})
 
     # mp4:::
@@ -1653,7 +1656,9 @@ class TextCommandParser:
 
         if config.runMode == "terminal":
             return self.terminalDownloadYoutubeFile(downloadCommand, command, config.videoFolder)
-
+        else:
+            self.downloadYouTubeFile(downloadCommand, command, config.videoFolder)
+        """
         if not platform.system() == "Linux":
             # version 1: known issue - the download process blocks the main window
             self.downloadYouTubeFile(downloadCommand, command, config.videoFolder)
@@ -1661,17 +1666,22 @@ class TextCommandParser:
             # version 2: known issue - only works on Linux, but not macOS or Windows
             multiprocessing.Process(target=self.downloadYouTubeFile, args=(downloadCommand, command, config.videoFolder)).start()
             self.parent.displayMessage(config.thisTranslation["downloading"])
-        self.parent.reloadResources()
+        """
+        #self.parent.reloadResources()
         return ("", "", {})
 
     def youtubeDownload(self, downloadCommand, youTubeLink):
+        self.downloadYouTubeFile(downloadCommand, youTubeLink, config.videoFolder)
+        """
         if not platform.system() == "Linux":
             # version 1: known issue - the download process blocks the main window
-            self.downloadYouTubeFile(downloadCommand, youTubeLink, config.videoFolder, True)
+            self.downloadYouTubeFile(downloadCommand, youTubeLink, config.videoFolder)
         else:
             # version 2: known issue - only works on Linux, but not macOS or Windows
-            multiprocessing.Process(target=self.downloadYouTubeFile, args=(downloadCommand, youTubeLink, config.videoFolder, True)).start()
+            multiprocessing.Process(target=self.downloadYouTubeFile, args=(downloadCommand, youTubeLink, config.videoFolder)).start()
             self.parent.displayMessage(config.thisTranslation["downloading"])
+        """
+        #self.parent.reloadResources()
 
     def isFfmpegInstalled(self):
         ffmpegVersion = subprocess.Popen("ffmpeg -version", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -1689,9 +1699,10 @@ class TextCommandParser:
         if not hasattr(config, "youtubeDlIsUpdated") or (hasattr(config, "youtubeDlIsUpdated") and not config.youtubeDlIsUpdated):
             installmodule("--upgrade yt-dlp")
             config.youtubeDlIsUpdated = True
-        if self.isFfmpegInstalled() or noFfmpeg:
+        if self.isFfmpegInstalled() or not noFfmpeg:
             if config.runMode in ("", "cli", "gui"):
                 self.parent.workOnDownloadYouTubeFile(downloadCommand, youTubeLink, outputFolder)
+            """
             elif platform.system() == "Linux":
                 try:
                     subprocess.run(["cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
@@ -1715,6 +1726,7 @@ class TextCommandParser:
                         os.system(r"{0} {1}".format(config.open, outputFolder))
                 except:
                     self.parent.displayMessage(config.thisTranslation["noSupportedUrlFormat"], title="ERROR:")
+            """
         else:
             self.parent.displayMessage(config.thisTranslation["ffmpegNotFound"])
             wikiPage = "https://github.com/eliranwong/UniqueBible/wiki/Install-ffmpeg"
