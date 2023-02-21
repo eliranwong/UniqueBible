@@ -378,9 +378,14 @@ class MainWindow(QMainWindow):
 
     def openVideoView(self):
         if not hasattr(self, "videoView") or not self.videoView or not self.videoView.isVisible():
-            self.videoView = QVideoWidget()
-            self.videoView.setWindowTitle(config.thisTranslation["menu11_video"])
-            self.audioPlayer.setVideoOutput(self.videoView)
+            if not hasattr(self, "videoView") or not self.videoView:
+                def closeEvent(event):
+                    event.ignore()
+                    self.videoView.hide()
+                self.videoView = QVideoWidget()
+                self.videoView.closeEvent = closeEvent
+                self.videoView.setWindowTitle(config.thisTranslation["menu11_video"])
+                self.audioPlayer.setVideoOutput(self.videoView)
             self.videoView.show()
 
     def playAudioFile(self, filePath):
@@ -388,6 +393,8 @@ class MainWindow(QMainWindow):
             # check if it is a supported video file
             if re.search("(.mp4|.avi)$", filePath.lower()[-4:]):
                 self.openVideoView()
+                if not self.videoView.isVisible():
+                    self.bringToForeground(self.videoView)
 
             basename = os.path.basename(filePath)
             if config.audioTextSync and not basename in ("gtts.mp3",):

@@ -1,3 +1,6 @@
+Changes in 33.92:
+* Improved opening video files
+
 Changes in 33.91:
 * Added a ToDo menu plugin
 
