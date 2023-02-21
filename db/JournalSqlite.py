@@ -30,6 +30,12 @@ class JournalSqlite:
             insert = "INSERT INTO Journal (year, month, day, note) VALUES (?, ?, ?, ?)"
             self.cursor.execute(insert, (year, month, day, note))
 
+    def appendJournalNote(self, year, month, day, note):
+        existingNote = self.getJournalNote(year, month, day)
+        if existingNote == config.thisTranslation["empty"]:
+            existingNote = ""
+        self.saveJournalNote(year, month, day, f"{existingNote}{note}")
+
     def isNotEmptyNote(self, text):
         p = re.compile("<body[^<>]*?>[ \r\n ]*?<p[^<>]*?>[ \r\n ]*?<br />[ \r\n ]*?</p>[ \r\n ]*?</body>[ \r\n ]*?</html>", flags=re.M)
         if p.search(text):

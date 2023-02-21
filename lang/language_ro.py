@@ -1012,4 +1012,5 @@ translation = {
     "audioTextSync": "Sincronizare text cu redare audio",
     "useThirdPartyVLCplayer": "Utilizați terț jucător VLC",
     "mute": "Mută",
+    "todo": "De A Face",
 }

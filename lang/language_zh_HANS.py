@@ -1012,4 +1012,5 @@ translation = {
     "audioTextSync": "文本同步与音频播放",
     "useThirdPartyVLCplayer": "使用第三方 VLC 播放器",
     "mute": "静音",
+    "todo": "待办事宜",
 }

@@ -1012,4 +1012,5 @@ translation = {
     "audioTextSync": "オーディオ・プレイングを使用したテキストの同期",
     "useThirdPartyVLCplayer": "サード・パーティーの VLC プレイヤー",
     "mute": "ミュート",
+    "todo": "タスク",
 }

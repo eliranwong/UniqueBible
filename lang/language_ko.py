@@ -1012,4 +1012,5 @@ translation = {
     "audioTextSync": "오디오 재생과 함께 텍스트 동기화",
     "useThirdPartyVLCplayer": "써드 파티 VLC 플레이어 사용",
     "mute": "음소거",
+    "todo": "작업관리",
 }

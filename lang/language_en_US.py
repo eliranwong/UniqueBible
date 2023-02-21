@@ -1012,4 +1012,5 @@ translation = {
     "audioTextSync": "Text Synchronization with Audio Playing",
     "useThirdPartyVLCplayer": "Use third-party VLC player",
     "mute": "Mute",
+    "todo": "To Do",
 }

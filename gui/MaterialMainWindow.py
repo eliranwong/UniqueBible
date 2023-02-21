@@ -971,6 +971,8 @@ class MaterialMainWindow:
 
         self.secondToolBar.addSeparator()
 
+        icon = "material/editor/checklist_rtl/materialiconsoutlined/48dp/2x/outline_checklist_rtl_black_48dp.png"
+        self.addMenuPluginButton("ToDo", "todo", icon, self.secondToolBar)
         icon = "material/action/calendar_month/materialiconsoutlined/48dp/2x/outline_calendar_month_black_48dp.png"
         self.addMenuPluginButton("Journal and Bible Reading Plan", "journalAndBibleReadingPlan", icon, self.secondToolBar)
         icon = "material/maps/pin_drop/materialiconsoutlined/48dp/2x/outline_pin_drop_black_48dp.png"
