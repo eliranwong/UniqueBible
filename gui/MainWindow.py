@@ -295,6 +295,8 @@ class MainWindow(QMainWindow):
                 else:
                     if self.audioPlayListIndex == len(self.audioPlayList) - 1:
                         self.resetAudioPlaylist()
+                        if config.loopMediaPlaylist:
+                            self.playAudioPlayList()
                     else:
                         self.audioPlayListIndex += 1
                         self.playAudioPlayList()
@@ -4079,6 +4081,25 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
         qIcon = self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground, toolButton=True)
         self.muteAudioButton.setIcon(qIcon)
         self.muteAudioButton.setToolTip(self.getMuteAudioToolTip())
+
+    # Actions - enable or disable playlist looping
+    def getLoopMediaButtonDisplay(self):
+        if config.loopMediaPlaylist:
+            return self.getCrossplatformPath("material/places/all_inclusive/materialiconsoutlined/48dp/2x/outline_all_inclusive_black_48dp.png")
+        else:
+            return self.getCrossplatformPath("material/action/hide_source/materialiconsoutlined/48dp/2x/outline_hide_source_black_48dp.png")
+
+    def getLoopMediaButtonToolTip(self):
+        if config.loopMediaPlaylist:
+            return "{0}: {1}".format(config.thisTranslation["loopPlaylist"], config.thisTranslation["on"])
+        else:
+            return "{0}: {1}".format(config.thisTranslation["loopPlaylist"], config.thisTranslation["off"])
+
+    def loopMediaButtonClicked(self):
+        config.loopMediaPlaylist = not config.loopMediaPlaylist
+        icon = self.getQIcon(self.getLoopMediaButtonDisplay())
+        self.loopMediaButton.setStyleSheet(icon)
+        self.loopMediaButton.setToolTip(self.getLoopMediaButtonToolTip())
 
     # Actions - enable or disable text synchronisation with audio 
     def getAudioTextSyncDisplay(self):

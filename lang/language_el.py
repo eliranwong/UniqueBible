@@ -1013,4 +1013,5 @@ translation = {
     "useThirdPartyVLCplayer": "Χρήση τρίτου προμηθευτή VLC player",
     "mute": "Mute.",
     "todo": "Προς",
+    "loopPlaylist": "Λίστα αναπαραγωγής Loop",
 }

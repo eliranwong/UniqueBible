@@ -1152,14 +1152,14 @@ class MaterialMainWindow:
 
             self.thirdToolBar.addSeparator()
 
-            #self.muteAudioButton = QPushButton()
-            #self.addMaterialIconButton(self.getMuteAudioToolTip(), self.getMuteAudioDisplay(), self.muteAudioButtonClicked, self.thirdToolBar, self.muteAudioButton, False)
-            self.audioTextSyncButton = QPushButton()
-            self.addMaterialIconButton(self.getAudioTextSyncToolTip(), self.getAudioTextSyncDisplay(), self.audioTextSyncButtonClicked, self.thirdToolBar, self.audioTextSyncButton, False)
-            icon = "material/av/queue_music/materialiconsoutlined/48dp/2x/outline_queue_music_black_48dp.png"
-            self.addMaterialIconButton("playlist", icon, self.openAudioPlayListUI, self.thirdToolBar)
             icon = "material/image/video_camera_front/materialiconsoutlined/48dp/2x/outline_video_camera_front_black_48dp.png"
             self.addMaterialIconButton("menu11_video", icon, self.showVideoView, self.thirdToolBar)
+            icon = "material/av/queue_music/materialiconsoutlined/48dp/2x/outline_queue_music_black_48dp.png"
+            self.addMaterialIconButton("playlist", icon, self.openAudioPlayListUI, self.thirdToolBar)
+            self.loopMediaButton = QPushButton()
+            self.addMaterialIconButton(self.getLoopMediaButtonToolTip(), self.getLoopMediaButtonDisplay(), self.loopMediaButtonClicked, self.thirdToolBar, self.loopMediaButton, False)
+            self.audioTextSyncButton = QPushButton()
+            self.addMaterialIconButton(self.getAudioTextSyncToolTip(), self.getAudioTextSyncDisplay(), self.audioTextSyncButtonClicked, self.thirdToolBar, self.audioTextSyncButton, False)
             icon = "material/action/open_in_full/materialiconsoutlined/48dp/2x/outline_open_in_full_black_48dp.png"
             self.addMaterialIconButton("menu1_resize", icon, self.resizeAudioPlayer, self.thirdToolBar)
 

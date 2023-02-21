@@ -1,3 +1,7 @@
+Changes in 33.93:
+* Added a button to enable/disable media playlist looping
+* Added a confirmation dialog to remind users for saving changes when they close ToDo menu plugin
+
 Changes in 33.92:
 * Improved opening video files
 

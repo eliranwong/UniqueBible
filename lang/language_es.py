@@ -1013,4 +1013,5 @@ translation = {
     "useThirdPartyVLCplayer": "Utilizar reproductor VLC de terceros",
     "mute": "Mute",
     "todo": "To Do",
+    "loopPlaylist": "Lista de reproducción de bucle",
 }

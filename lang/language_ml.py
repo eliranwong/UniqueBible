@@ -1013,4 +1013,5 @@ translation = {
     "useThirdPartyVLCplayer": "മൂന്നാം പാർട്ടി VLC കളിക്കാരെ ഉപയോഗിക്കുക",
     "mute": "മ്യൂട്ട്",
     "todo": "ചെയ്യാന്",
+    "loopPlaylist": "ലൂപ്പ് പ്ലേലിസ്റ്റ്",
 }

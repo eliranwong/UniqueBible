@@ -847,6 +847,9 @@ class ConfigUtil:
         setConfig("audioTextSync", """
         # Options to enable text synchronisation with audio playing: True / False""",
         True)
+        setConfig("loopMediaPlaylist", """
+        # Options to loop media player playlist: True / False""",
+        False)
         setConfig("maximiseMediaPlayerUI", """
         # Options to maximise media player graphical user interface: True / False""",
         True)

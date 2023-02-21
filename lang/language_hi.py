@@ -1013,4 +1013,5 @@ translation = {
     "useThirdPartyVLCplayer": "तृतीय-पार्टी वीएलसी खिलाड़ी का उपयोग करें",
     "mute": "गूंगा",
     "todo": "करने के लिए",
+    "loopPlaylist": "गीत-सूची",
 }

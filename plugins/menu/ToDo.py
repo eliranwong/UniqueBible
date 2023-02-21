@@ -3,12 +3,12 @@ from datetime import date
 from db.JournalSqlite import JournalSqlite
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt
-    from PySide6.QtGui import QStandardItem, QStandardItemModel
-    from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QListView, QSplitter, QAbstractItemView
+    from PySide6.QtGui import QStandardItem, QStandardItemModel, QGuiApplication
+    from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QListView, QSplitter, QAbstractItemView, QMessageBox
 else:
     from qtpy.QtCore import Qt
-    from qtpy.QtGui import QStandardItem, QStandardItemModel
-    from qtpy.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QListView, QSplitter, QAbstractItemView
+    from qtpy.QtGui import QStandardItem, QStandardItemModel, QGuiApplication
+    from qtpy.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QListView, QSplitter, QAbstractItemView, QMessageBox
 
 class ToDo(QWidget):
     def __init__(self):
@@ -89,6 +89,7 @@ class ToDo(QWidget):
         mainBox = QVBoxLayout()
         mainBox.addWidget(splitter)
         self.setLayout(mainBox)
+        self.resize(QGuiApplication.primaryScreen().availableSize() * 3 / 4)
 
         # Connect the signals and slots
         self.add_button.clicked.connect(self.add_item)
@@ -111,6 +112,8 @@ class ToDo(QWidget):
         for text in self.dataList:
             item = QStandardItem(text)
             self.model.appendRow(item)
+        if self.dataList:
+            self.view.setCurrentIndex(self.model.index(0, 0))
 
     def filter_item(self):
         self.searchModel.clear()
@@ -141,6 +144,24 @@ class ToDo(QWidget):
                 items.append(text)
         return "\n".join(items)
     
+    def closeEvent(self, event):
+        dataContent = self.getDataContent()
+        if not dataContent == "\n".join(self.dataList):
+            # Prompt the user for confirmation
+            msg_box = QMessageBox(
+                QMessageBox.Question, 
+                'Confirmation', 
+                f'Do you want to save changes?'
+            )
+            msg_box.addButton(QMessageBox.Yes)
+            msg_box.addButton(QMessageBox.No)
+            msg_box.setDefaultButton(QMessageBox.Yes)
+            button_clicked = msg_box.exec()
+            # Check the user's response
+            if button_clicked == QMessageBox.Yes or True or 1:
+                self.saveChanges()
+            event.accept()
+
     def saveChanges(self):
         dataContent = self.getDataContent()
         if dataContent == "\n".join(self.dataList):

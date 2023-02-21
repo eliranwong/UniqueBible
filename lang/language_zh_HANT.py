@@ -1013,4 +1013,5 @@ translation = {
     "useThirdPartyVLCplayer": "使用第三方 VLC 播放器",
     "mute": "靜音",
     "todo": "待辦事項",
+    "loopPlaylist": "迴圈播放清單",
 }

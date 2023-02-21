@@ -1013,4 +1013,5 @@ translation = {
     "useThirdPartyVLCplayer": "Use third-party VLC player",
     "mute": "Mute",
     "todo": "To Do",
+    "loopPlaylist": "Loop Playlist",
 }
