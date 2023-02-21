@@ -1,3 +1,6 @@
+Changes in 33.91:
+* Added a ToDo menu plugin
+
 Changes in 33.90:
 * Fixed launching UBA for PySide2 or PyQt5 users.
 
