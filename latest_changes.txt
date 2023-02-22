@@ -1,3 +1,6 @@
+Changes in 34.00:
+* fixed switching between qt libraries
+
 Changes in 33.99:
 * fixed restart after switching from Qt5 to Qt6
 

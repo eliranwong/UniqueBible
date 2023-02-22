@@ -114,6 +114,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        self.qt6 = True if config.qtLibrary == "pyside6" else False
         self.crossPlatform = CrossPlatform()
         self.logger = logging.getLogger('uba')
 
@@ -343,7 +344,7 @@ class MainWindow(QMainWindow):
             self.audioPlayer.stop()
 
     def getAudioPlayerState(self):
-        return self.audioPlayer.playbackState() if config.qtLibrary == "pyside6" and not config.switchFromQt5ToQt6 else self.audioPlayer.state()
+        return self.audioPlayer.playbackState() if self.qt6 else self.audioPlayer.state()
 
     def pauseAudioPlaying(self):
         if self.getAudioPlayerState() == QMediaPlayer.PlayingState:

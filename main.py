@@ -26,7 +26,7 @@ ConfigUtil.setup()
 # set enviornment variables
 env = (
     ("PYTHONUNBUFFERED", "1"),
-    ("QT_API", "pyside6"),
+    ("QT_API", "pyside2"),
     ("QT_LOGGING_RULES", "*=false"),
 )
 for key, value in env:

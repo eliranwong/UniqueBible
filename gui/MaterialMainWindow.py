@@ -297,39 +297,41 @@ class MaterialMainWindow:
                 return False
         def changeQtLibrary(option):
             if not config.qtLibrary == option.lower():
-                notAvailable = "Not available!"
-                # upgrade to the latest version if available
-                installmodule(f"--upgrade {option}")
-                if option in ("PySide2", "PyQt5"):
-                    installmodule("--upgrade qtpy")
-                    if not isQtpyInstalled():
-                        self.displayMessage(notAvailable)
-                        return None
-                isInstalled = {
-                    "PySide6": isPySide6Installed,
-                    "PySide2": isPySide2Installed,
-                    "PyQt5": isPyQt5Installed,
-                }
-                if isInstalled[option]():
-                    config.qtLibrary = option.lower()
-                    if option == "PySide6":
-                        config.switchFromQt5ToQt6 = True
-                    if self.warningRestart():
+                if self.warningRestart():
+                    notAvailable = "Not available!"
+                    # upgrade to the latest version if available
+                    installmodule(f"--upgrade {option}")
+                    if option in ("PySide2", "PyQt5"):
+                        installmodule("--upgrade qtpy")
+                        if not isQtpyInstalled():
+                            self.displayMessage(notAvailable)
+                            return None
+                    isInstalled = {
+                        "PySide6": isPySide6Installed,
+                        "PySide2": isPySide2Installed,
+                        "PyQt5": isPyQt5Installed,
+                    }
+                    if isInstalled[option]():
+                        config.qtLibrary = option.lower()
                         self.restartApp()
+                    else:
+                        self.displayMessage(notAvailable)
+                        if option == "PySide6":
+                            self.displayMessage("You may upgrade to the latest python version and try again.")
                 else:
-                    self.displayMessage(notAvailable)
-                    if option == "PySide6":
-                        self.displayMessage("You may upgrade to the latest python version and try again.")
-                self.setupMenuLayout(config.menuLayout)
-        config.switchFromQt5ToQt6 = False
-        subMenu = addSubMenu(subMenu0, "qtLibrary")
-        options = (
-            ("PySide6", "PySide 6 [recommended]"),
-            ("PySide2", "PySide 2"),
-            ("PyQt5", "PyQt 5"),
-        )
-        for option, description in options:
-            addCheckableMenuItem(subMenu, description, self, partial(changeQtLibrary, option), config.qtLibrary, option, translation=False)
+                    resetSubMenuChangeQtLibrary()
+
+        subMenuChangeQtLibrary = addSubMenu(subMenu0, "qtLibrary")
+        def resetSubMenuChangeQtLibrary():
+            subMenuChangeQtLibrary.clear()
+            options = (
+                ("PySide6", "PySide 6 [recommended]"),
+                ("PySide2", "PySide 2"),
+                ("PyQt5", "PyQt 5"),
+            )
+            for option, description in options:
+                addCheckableMenuItem(subMenuChangeQtLibrary, description, self, partial(changeQtLibrary, option), config.qtLibrary, option, translation=False)
+        resetSubMenuChangeQtLibrary()
 
         # Control Preference
         subMenu = addSubMenu(subMenu0, "controlPreference")
