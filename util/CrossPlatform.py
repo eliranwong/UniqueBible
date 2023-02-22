@@ -277,7 +277,9 @@ class CrossPlatform:
         from gtts import gTTS
         tts = gTTS(inputText, lang=languageCode)
         if not filename:
-            filename = self.getGttsFilename()
+            filename = os.path.abspath(self.getGttsFilename())
+        if os.path.isfile(filename):
+            os.remove(filename)
         tts.save(filename)
 
     # Official Google Cloud Text-to-speech Service
@@ -326,7 +328,9 @@ class CrossPlatform:
         # The response's audio_content is binary.
         # Save into mp3
         if not filename:
-            filename = self.getGttsFilename()
+            filename = os.path.abspath(self.getGttsFilename())
+        if os.path.isfile(filename):
+            os.remove(filename)
         with open(filename, "wb") as out:
             # Write the response to the output file.
             out.write(response.audio_content)

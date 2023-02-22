@@ -250,7 +250,7 @@ class TextEditorUtility:
         folder = os.path.join(config.musicFolder, "tmp")
         if not os.path.isdir(folder):
             os.makedirs(folder, exist_ok=True)
-        return os.path.join(folder, "gtts.mp3")
+        return os.path.abspath(os.path.join(folder, "gtts.mp3"))
 
     # Python package gTTS, not created by Google
     def saveGTTSAudio(self, inputText, languageCode, filename=""):
@@ -265,7 +265,9 @@ class TextEditorUtility:
         from gtts import gTTS
         tts = gTTS(inputText, lang=languageCode)
         if not filename:
-            filename = self.getGttsFilename()
+            filename = os.path.abspath(self.getGttsFilename())
+        if os.path.isfile(filename):
+            os.remove(filename)
         tts.save(filename)
 
     # Official Google Cloud Text-to-speech Service
@@ -314,7 +316,9 @@ class TextEditorUtility:
         # The response's audio_content is binary.
         # Save into mp3
         if not filename:
-            filename = self.getGttsFilename()
+            filename = os.path.abspath(self.getGttsFilename())
+        if os.path.isfile(filename):
+            os.remove(filename)
         with open(filename, "wb") as out:
             # Write the response to the output file.
             out.write(response.audio_content)
@@ -676,7 +680,7 @@ class TextEditorUtility:
                 auto_suggestion=AutoSuggestFromHistory()
                 userInput = self.terminal_system_command_session.prompt(inputIndicator, style=self.promptStyle, key_bindings=this_key_bindings, auto_suggest=auto_suggestion, completer=completer).strip()
                 if userInput and not userInput == config.terminal_cancel_action:
-                    userInput = userInput.replace("~", os.environ["HOME"])
+                    userInput = userInput.replace("~", os.path.expanduser("~"))
                     os.system(userInput)
                     # check if directory is changed
                     #userInput = re.sub("^.*?[ ;&]*(cd .+?)[;&]*$", r"\1", userInput)

@@ -1,3 +1,10 @@
+Changes in 33.96:
+* Multiple fixes for Windows users:
+    - fixed opening menu plugins that use simple browsers
+    - fixed opening youtube browser
+    - fixed handling restart
+    - fixed playing gtts audio
+
 Changes in 33.94, 33.95:
 * Improved Youtube media download process
     Downloading YouTube media now does not block the main thread.

@@ -470,6 +470,7 @@ config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(config.currentAudioFi
                 exec(codes, globals())
             else:
                 media_content = QMediaContent(QUrl.fromLocalFile(config.currentAudioFile))
+                self.audioPlayer.setMedia("")
                 self.audioPlayer.setMedia(media_content)
             self.audioPlayer.play()
             self.selectAudioPlaylistUIItem()
@@ -1667,7 +1668,8 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
         msgBox.addButton("Cancel", QMessageBox.RejectRole)
         msgBox.addButton("&Continue", QMessageBox.AcceptRole)
         answer = msgBox.exec_()
-        if answer == 1 or answer == QMessageBox.AcceptRole:
+        if answer:
+        #if answer == 1 or answer == QMessageBox.AcceptRole:
             # Continue
             self.noteSaved = True
             return True
@@ -4956,10 +4958,14 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         msgBox.addButton("Later", QMessageBox.RejectRole)
         msgBox.addButton("&Now", QMessageBox.AcceptRole)
         answer = msgBox.exec_()
-        if answer == 1 or answer == QMessageBox.AcceptRole:
+        print(answer)
+        if answer:
+        #if answer == 1 or answer == QMessageBox.AcceptRole:
             # Cancel
+            print("accept")
             return True
         else:
+            print("reject")
             # Continue
             return False
 
@@ -5930,7 +5936,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.displayMessage(config.thisTranslation["noMediaPlayer"])
 
     def closeMediaPlayer(self):
-        if not config.useThirdPartyVLCplayer:
+        if self.audioPlayer is not None:
             self.stopAudioPlaying()
         if WebtopUtil.isPackageInstalled("pkill"):
             if config.macVlc:

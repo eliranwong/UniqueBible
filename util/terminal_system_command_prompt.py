@@ -113,7 +113,7 @@ class SystemCommandPrompt:
                 elif userInput and not userInput == config.terminal_cancel_action:
                     self.systemCommandPromptEntry = ""
                     self.systemCommandPromptPosition = 0
-                    userInput = userInput.replace("~", os.environ["HOME"])
+                    userInput = userInput.replace("~", os.path.expanduser("~"))
                     # execute or open file if input is a valid file
                     if os.path.isfile(userInput):
                         stdout, stderr = subprocess.Popen(userInput, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()

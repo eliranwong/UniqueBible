@@ -25,8 +25,8 @@ class YouTubePopover(QWebEngineView):
         storagePath = os.path.join(os.getcwd(), "webstorage")
         profile.setCachePath(os.path.join(storagePath, "Cache"))
         profile.setPersistentStoragePath(os.path.join(storagePath, "PersistentStorage"))
-        homeDownloads = os.path.join(os.environ["HOME"], "Downloads")
-        homeDownload = os.path.join(os.environ["HOME"], "Download")
+        homeDownloads = os.path.join(os.path.expanduser("~"), "Downloads")
+        homeDownload = os.path.join(os.path.expanduser("~"), "Download")
         # set download path and handler of download request
         if os.path.isdir(homeDownloads):
             self.downloadPath = homeDownloads

@@ -277,7 +277,8 @@ Your browser does not support the video tag.
         msgBox.addButton("Cancel", QMessageBox.RejectRole)
         msgBox.addButton("&Continue", QMessageBox.AcceptRole)
         answer = msgBox.exec_()
-        if answer == 1 or answer == QMessageBox.AcceptRole:
+        if True:
+        #if answer == 1 or answer == QMessageBox.AcceptRole:
             # Continue
             return True
         else:

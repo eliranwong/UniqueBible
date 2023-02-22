@@ -258,7 +258,7 @@ def run_ssh_server(host="", port=2222, server_host_keys="", passphrase="the_best
                 print("Errors!")
 
     if not server_host_keys:
-        home = os.environ["HOME"]
+        home = os.path.expanduser("~")
         server_host_keys = f"{home}/.ssh/uba_ssh_server"
 
     # Set up logging.
