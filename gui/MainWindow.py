@@ -466,6 +466,7 @@ config.audioOutput = QAudioOutput()
 config.audioOutput.setVolume(config.audioVolume)
 config.audioOutput.setMuted(config.audioMuted)
 config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)
+config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(""))
 config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(config.currentAudioFile))"""
                 exec(codes, globals())
             else:
@@ -4958,7 +4959,6 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         msgBox.addButton("Later", QMessageBox.RejectRole)
         msgBox.addButton("&Now", QMessageBox.AcceptRole)
         answer = msgBox.exec_()
-        print(answer)
         if answer:
         #if answer == 1 or answer == QMessageBox.AcceptRole:
             # Cancel
