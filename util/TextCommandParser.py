@@ -2915,25 +2915,32 @@ class TextCommandParser:
         if not text or not text in self.parent.textList:
             text = config.mainText
         if config.instantInformationEnabled and command:
-            bcvList = [int(i) for i in command.split(".")]
-            info = BiblesSqlite().readMultipleVerses(text, [bcvList])
-            if text in config.rtlTexts and bcvList[0] < 40:
-                info = "<div style='direction: rtl;'>{0}</div>".format(info)
+            info = self.getInstantMainVerseInfo(command, text)
             return ("instant", info, {})
         else:
             return ("", "", {})
 
+    def getInstantMainVerseInfo(self, command, text):
+        bcvList = [int(i) for i in command.split(".")]
+        info = BiblesSqlite().readMultipleVerses(text, [bcvList])
+        if text in config.rtlTexts and bcvList[0] < 40:
+            info = "<div style='direction: rtl;'>{0}</div>".format(info)
+        return info
+
     # _instantword:::
-    def instantWord(self, command, source):
+    def instantWord(self, command, _):
         if config.instantInformationEnabled:
-            commandList = self.splitCommand(command)
-            morphologySqlite = MorphologySqlite()
-            wordID = commandList[1]
-            wordID = re.sub('^[h0]+?([^h0])', r'\1', wordID, flags=re.M)
-            info = morphologySqlite.instantWord(int(commandList[0]), int(wordID))
+            info = self.getInstantWordInfo(command)
             return ("instant", info, {})
         else:
             return ("", "", {})
+
+    def getInstantWordInfo(self, command):
+        commandList = self.splitCommand(command)
+        morphologySqlite = MorphologySqlite()
+        wordID = commandList[1]
+        wordID = re.sub('^[h0]+?([^h0])', r'\1', wordID, flags=re.M)
+        return morphologySqlite.instantWord(int(commandList[0]), int(wordID))
 
     # _bibleinfo:::
     def textBibleInfo(self, command, source):

@@ -1,3 +1,6 @@
+Changes in 34.01:
+* allow text synchronisation with audio playback when instant lookup is disabled
+
 Changes in 34.00:
 * fixed switching between qt libraries
 

@@ -421,19 +421,19 @@ class MainWindow(QMainWindow):
                 isVerse = versePattern.search(basename)
                 if not isVerse:
                     # word patterns, e.g. lex_OGNT_61_1_9_124169.mp3   OGNT_61_1_9_124169.mp3 BHS5_1_1_28_579.mp3  lex_BHS5_1_1_20_376.mp3
-                    wordPattern = re.compile("^.*?(BHS|OGNT)_([0-9]+?)_[0-9]+?_[0-9]+?_([0-9]+?).mp3")
+                    wordPattern = re.compile("^.*?(BHS5|OGNT)_([0-9]+?)_[0-9]+?_[0-9]+?_([0-9]+?).mp3")
                     isWord = wordPattern.search(filePath)
                 def getDefaultInfo():
-                    return ("instant", f"Playing media: {basename}")
+                    return f"Playing media: {basename}"
                 if isVerse:
                     text, b, c, v = isVerse.groups()
-                    instantInfo = self.textCommandParser.instantMainVerse(f"{b}.{c}.{v}", "main", text) if text in self.textList else getDefaultInfo()
+                    instantInfo = self.textCommandParser.getInstantMainVerseInfo(f"{b}.{c}.{v}", text) if text in self.textList else getDefaultInfo()
                 elif isWord:
                     _, book, wordId = isWord.groups()
-                    instantInfo = self.textCommandParser.instantWord(f"{book}:::{wordId}", "main")
+                    instantInfo = self.textCommandParser.getInstantWordInfo(f"{book}:::{wordId}")
                 else:
                     instantInfo = getDefaultInfo()
-                self.instantView.setHtml(self.wrapHtml(instantInfo[1], "instant", False), baseUrl)
+                self.instantView.setHtml(self.wrapHtml(instantInfo, "instant", False), baseUrl)
             
             # full path is required for PySide2 QMediaPlayer to work
             config.currentAudioFile = os.path.abspath(QDir.toNativeSeparators(filePath))
