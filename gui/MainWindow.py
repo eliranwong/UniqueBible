@@ -343,7 +343,7 @@ class MainWindow(QMainWindow):
             self.audioPlayer.stop()
 
     def getAudioPlayerState(self):
-        return self.audioPlayer.playbackState() if config.qtLibrary == "pyside6" else self.audioPlayer.state()
+        return self.audioPlayer.playbackState() if config.qtLibrary == "pyside6" and not config.switchFromQt5ToQt6 else self.audioPlayer.state()
 
     def pauseAudioPlaying(self):
         if self.getAudioPlayerState() == QMediaPlayer.PlayingState:

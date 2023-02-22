@@ -312,13 +312,16 @@ class MaterialMainWindow:
                 }
                 if isInstalled[option]():
                     config.qtLibrary = option.lower()
+                    if option == "PySide6":
+                        config.switchFromQt5ToQt6 = True
                     if self.warningRestart():
                         self.restartApp()
                 else:
                     self.displayMessage(notAvailable)
                     if option == "PySide6":
                         self.displayMessage("You may upgrade to the latest python version and try again.")
-                    self.setupMenuLayout(config.menuLayout)
+                self.setupMenuLayout(config.menuLayout)
+        config.switchFromQt5ToQt6 = False
         subMenu = addSubMenu(subMenu0, "qtLibrary")
         options = (
             ("PySide6", "PySide 6 [recommended]"),

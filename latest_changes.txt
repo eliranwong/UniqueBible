@@ -1,3 +1,6 @@
+Changes in 33.99:
+* fixed restart after switching from Qt5 to Qt6
+
 Changes in 33.98:
 * added menu options to switch between Qt Library
 * added config.openLinuxDirectory to specify the command / file manager to open a directory on Linux
