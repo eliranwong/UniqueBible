@@ -910,13 +910,13 @@ class Bible:
         query = "select book from bible where book > ? order by book asc limit 1"
         self.cursor.execute(query, (book,))
         info = self.cursor.fetchone()
-        return info[0]
+        return self.getBookList()[0] if info is None else info[0]
 
     def getPreviousBook(self, book):
         query = "select book from bible where book < ? order by book desc limit 1"
         self.cursor.execute(query, (book,))
         info = self.cursor.fetchone()
-        return info[0]
+        return self.getBookList()[-1] if info is None else info[0]
 
     def getBookList(self):
         query = "SELECT DISTINCT Book FROM Verses ORDER BY Book"

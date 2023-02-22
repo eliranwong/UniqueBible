@@ -1,5 +1,6 @@
 import config
 from gui.MenuItems import *
+from install.module import *
 from util.BibleBooks import BibleBooks
 from util.ShortcutUtil import ShortcutUtil
 from util.LanguageUtil import LanguageUtil
@@ -268,6 +269,64 @@ class MaterialMainWindow:
 
         # Other Preferences
         subMenu0 = addSubMenu(menu, "otherPreferences")
+        
+        # Change Qt Library
+        def isPySide6Installed():
+            try:
+                from PySide6.QtWidgets import QApplication, QStyleFactory
+                return True
+            except:
+                return False
+        def isPySide2Installed():
+            try:
+                from PySide2.QtWidgets import QApplication, QStyleFactory
+                return True
+            except:
+                return False
+        def isPyQt5Installed():
+            try:
+                from PyQt5.QtWidgets import QApplication, QStyleFactory
+                return True
+            except:
+                return False
+        def isQtpyInstalled():
+            try:
+                from qtpy import QtGui
+                return True
+            except:
+                return False
+        def changeQtLibrary(option):
+            if not config.qtLibrary == option.lower():
+                notAvailable = "Not available!"
+                # upgrade to the latest version if available
+                installmodule(f"--upgrade {option}")
+                if option in ("PySide2", "PyQt5"):
+                    installmodule("--upgrade qtpy")
+                    if not isQtpyInstalled():
+                        self.displayMessage(notAvailable)
+                        return None
+                isInstalled = {
+                    "PySide6": isPySide6Installed,
+                    "PySide2": isPySide2Installed,
+                    "PyQt5": isPyQt5Installed,
+                }
+                if isInstalled[option]():
+                    config.qtLibrary = option.lower()
+                    if self.warningRestart():
+                        self.restartApp()
+                else:
+                    self.displayMessage(notAvailable)
+                    if option == "PySide6":
+                        self.displayMessage("You may upgrade to the latest python version and try again.")
+                    self.setupMenuLayout(config.menuLayout)
+        subMenu = addSubMenu(subMenu0, "qtLibrary")
+        options = (
+            ("PySide6", "PySide 6 [recommended]"),
+            ("PySide2", "PySide 2"),
+            ("PyQt5", "PyQt 5"),
+        )
+        for option, description in options:
+            addCheckableMenuItem(subMenu, description, self, partial(changeQtLibrary, option), config.qtLibrary, option, translation=False)
 
         # Control Preference
         subMenu = addSubMenu(subMenu0, "controlPreference")
@@ -277,6 +336,7 @@ class MaterialMainWindow:
         )
         for option, description in options:
             addCheckableMenuItem(subMenu, description, self, partial(self.selectRefButtonSingleClickAction, option), config.refButtonClickAction, option)
+
         # Others
         items = (
             ("menu1_tabNo", self.setTabNumberDialog),
@@ -1137,7 +1197,7 @@ class MaterialMainWindow:
             self.volumeSlider.setMinimum(0)
             self.volumeSlider.setMaximum(100)
             available_width = self.screen().availableGeometry().width()
-            self.volumeSlider.setFixedWidth(available_width / 10)
+            self.volumeSlider.setFixedWidth(int(available_width / 10))
             #self.volumeSlider.setTickInterval(10)
             #self.volumeSlider.setTickPosition(QSlider.TicksBelow)
             self.volumeSlider.setToolTip(config.thisTranslation["volume"])

@@ -1,8 +1,8 @@
-import config, sys, traceback
+import config, sys, traceback, os, platform
 if config.qtLibrary == "pyside6":
-    from PySide6.QtCore import QRunnable, Slot, Signal, QObject
+    from PySide6.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool
 else:
-    from qtpy.QtCore import QRunnable, Slot, Signal, QObject
+    from qtpy.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool
 
 
 class WorkerSignals(QObject):
@@ -73,3 +73,37 @@ class Worker(QRunnable):
             self.signals.result.emit(result)  # Return the result of the processing
         finally:
             self.signals.finished.emit()  # Done
+
+class YouTubeDownloader:
+
+    def __init__(self, parent):
+        super().__init__()
+        self.parent = parent
+        self.threadpool = QThreadPool()
+
+    def downloadYouTubeFile(self, downloadCommand, youTubeLink, outputFolder):
+        try:
+            if platform.system() == "Windows":
+                os.system(r"cd .\{2}\ & {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
+            else:
+                os.system(r"cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
+            os.system(r"{0} {1}".format(config.openLinuxDirectory if platform.system() == "Linux" else config.open, outputFolder))
+        except:
+            self.parent.displayMessage(config.thisTranslation["noSupportedUrlFormat"], title="ERROR:")
+            return config.thisTranslation["noSupportedUrlFormat"]
+        return "Downloaded!"
+
+    def print_output(self, s):
+        print(s)
+
+    def thread_complete(self):
+        self.parent.reloadResources()
+        print("THREAD COMPLETE!")
+
+    def workOnDownloadYouTubeFile(self, downloadCommand, youTubeLink, outputFolder):
+        # Pass the function to execute
+        worker = Worker(self.downloadYouTubeFile, downloadCommand, youTubeLink, outputFolder) # Any other args, kwargs are passed to the run function
+        worker.signals.result.connect(self.print_output)
+        worker.signals.finished.connect(self.thread_complete)
+        # Execute
+        self.threadpool.start(worker)

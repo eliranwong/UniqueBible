@@ -37,7 +37,7 @@ def addCheckableMenuItem(menu, feature, object, action, currentValue, thisValue,
     if icon:
         qAction.setIcon(QIcon(icon))
     qAction.setCheckable(True)
-    if currentValue == thisValue:
+    if (isinstance(currentValue, str) and isinstance(thisValue, str) and currentValue.lower() == thisValue.lower()) or currentValue == thisValue:
         qAction.setChecked(True)
     return menu.addAction(qAction)
 

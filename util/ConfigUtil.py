@@ -149,7 +149,7 @@ class ConfigUtil:
             try:
                 config.qtLibrary = os.environ["QT_API"]
             except:
-                config.qtLibrary = "pyside2"
+                config.qtLibrary = "pyside6"
                 os.environ["QT_API"] = config.qtLibrary
         else:
             os.environ["QT_API"] = config.qtLibrary
@@ -686,6 +686,9 @@ class ConfigUtil:
         "xdg-open")
         setConfig("openLinuxPdf", """
         # Specify the command to open pdf file on Linux""",
+        "xdg-open")
+        setConfig("openLinuxDirectory", """
+        # Specify the command to open a directory on Linux""",
         "xdg-open")
         config.help["marvelData"] = """
         # Specify the folder path of resources"""

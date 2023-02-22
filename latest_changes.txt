@@ -1,3 +1,12 @@
+Changes in 33.98:
+* added menu options to switch between Qt Library
+* added config.openLinuxDirectory to specify the command / file manager to open a directory on Linux
+* fixed launching UBA with PyQt5
+* fixed opening video widget
+* fixed an error message when media player is closed on Windows
+* tested on Windows with Python 3.11.2 and PySide6
+    We recommend Windows users to use PySide6 to get access to all UBA available features.
+
 Changes in 33.97:
 * Fixed playing gtts audio for PySide6 users
 

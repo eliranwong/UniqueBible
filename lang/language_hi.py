@@ -1014,4 +1014,5 @@ translation = {
     "mute": "गूंगा",
     "todo": "करने के लिए",
     "loopPlaylist": "गीत-सूची",
+    "qtLibrary": "क्यूटी लाइब्रेरी",
 }

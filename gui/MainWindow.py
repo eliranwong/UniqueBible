@@ -6,9 +6,9 @@ from pathlib import Path
 
 from util.ConfigUtil import ConfigUtil
 from util.SystemUtil import SystemUtil
-from gui.Worker import Worker
+from gui.Worker import YouTubeDownloader
 if config.qtLibrary == "pyside6":
-    from PySide6.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer, QThreadPool
+    from PySide6.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer
     from PySide6.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor, QAction, QShortcut
     from PySide6.QtWidgets import QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QColorDialog, QComboBox, QToolButton, QMenu, QCompleter, QHBoxLayout
     from PySide6.QtWebEngineCore import QWebEnginePage
@@ -16,7 +16,7 @@ if config.qtLibrary == "pyside6":
     from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
     from PySide6.QtMultimediaWidgets import QVideoWidget
 else:
-    from qtpy.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer, QThreadPool
+    from qtpy.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer
     from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor
     from qtpy.QtWidgets import QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog, QComboBox, QToolButton, QMenu, QCompleter, QHBoxLayout
     from qtpy.QtWebEngineWidgets import QWebEnginePage
@@ -113,9 +113,6 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
-
-        # support multithreading
-        self.threadpool = QThreadPool()
 
         self.crossPlatform = CrossPlatform()
         self.logger = logging.getLogger('uba')
@@ -235,34 +232,10 @@ class MainWindow(QMainWindow):
 
         self.logger.info("Boot start time: {0}".format(timeDifference))
 
-    # Codes on multithreading
-
-    def downloadYouTubeFile(self, downloadCommand, youTubeLink, outputFolder):
-        try:
-            if platform.system() == "Windows":
-                os.system(r"cd .\{2}\ & {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
-            else:
-                os.system(r"cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
-            os.system(r"{0} {1}".format(config.open, outputFolder))
-        except:
-            self.displayMessage(config.thisTranslation["noSupportedUrlFormat"], title="ERROR:")
-            return config.thisTranslation["noSupportedUrlFormat"]
-        return "Downloaded!"
-
-    def print_output(self, s):
-        print(s)
-
-    def thread_complete(self):
-        self.reloadResources()
-        print("THREAD COMPLETE!")
+    # work with QThreadPool
 
     def workOnDownloadYouTubeFile(self, downloadCommand, youTubeLink, outputFolder):
-        # Pass the function to execute
-        worker = Worker(self.downloadYouTubeFile, downloadCommand, youTubeLink, outputFolder) # Any other args, kwargs are passed to the run function
-        worker.signals.result.connect(self.print_output)
-        worker.signals.finished.connect(self.thread_complete)
-        # Execute
-        self.threadpool.start(worker)
+        YouTubeDownloader(self).workOnDownloadYouTubeFile(downloadCommand, youTubeLink, outputFolder)
 
     # Codes on Media Player
 
@@ -415,14 +388,20 @@ class MainWindow(QMainWindow):
             self.bringToForeground(self.videoView)
 
     def openVideoView(self):
-        if not hasattr(self, "videoView") or not self.videoView or not self.videoView.isVisible():
+        if config.qtLibrary == "pyside6":
+            self.videoView = QVideoWidget()
+            self.videoView.setWindowTitle(config.thisTranslation["menu11_video"])
+            self.videoView.show()
+            self.audioPlayer.setVideoOutput(self.videoView)
+        elif not hasattr(self, "videoView") or not self.videoView or not self.videoView.isVisible():
             if not hasattr(self, "videoView") or not self.videoView:
                 def closeEvent(event):
                     event.ignore()
                     self.videoView.hide()
                 self.videoView = QVideoWidget()
-                self.videoView.closeEvent = closeEvent
                 self.videoView.setWindowTitle(config.thisTranslation["menu11_video"])
+                self.videoView.closeEvent = closeEvent
+                self.videoView.show()
                 self.audioPlayer.setVideoOutput(self.videoView)
             self.videoView.show()
 
@@ -456,7 +435,7 @@ class MainWindow(QMainWindow):
                 self.instantView.setHtml(self.wrapHtml(instantInfo[1], "instant", False), baseUrl)
             
             # full path is required for PySide2 QMediaPlayer to work
-            config.currentAudioFile = os.path.abspath(filePath)
+            config.currentAudioFile = os.path.abspath(QDir.toNativeSeparators(filePath))
             if config.qtLibrary == "pyside6":
                 # remarks: tested on Ubuntu
                 # for unknown reasons, the following three lines do not work when they are executed directly without puting into a string first
@@ -470,8 +449,10 @@ config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(""))
 config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(config.currentAudioFile))"""
                 exec(codes, globals())
             else:
+                dummy_media_content = QMediaContent(QUrl.fromLocalFile(""))
                 media_content = QMediaContent(QUrl.fromLocalFile(config.currentAudioFile))
-                self.audioPlayer.setMedia("")
+                # reset media is needed to repeatedly play files having the same filepaths but of different content
+                self.audioPlayer.setMedia(dummy_media_content)
                 self.audioPlayer.setMedia(media_content)
             self.audioPlayer.play()
             self.selectAudioPlaylistUIItem()
@@ -491,7 +472,7 @@ config.audioOutput = QAudioOutput()
 config.audioOutput.setVolume(config.audioVolume)
 config.audioOutput.setMuted(config.audioMuted)
 config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
-        exec(codes, globals())
+            exec(codes, globals())
 
 
     def on_duration_changed(self, duration):
@@ -2625,7 +2606,7 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
         if (config.runMode == "docker"):
             WebtopUtil.openDir(dir)
         else:
-            self.runTextCommand("cmd:::{0} {1}".format(config.open, dir))
+            self.runTextCommand("cmd:::{0} {1}".format(config.openLinuxDirectory if platform.system() == "Linux" else config.open, dir))
 
     def openImagesFolder(self):
         imageFolder = os.path.join("htmlResources", "images")
@@ -3971,7 +3952,7 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
             view.setCurrentIndex(index)"""
     def displayLoadingTime(self):
         timeDifference = time.time() - self.laodingStartTime
-        self.statusBar().showMessage(f"Loaded in {timeDifference}s.", timeout=config.displayLoadingTime)
+        self.statusBar().showMessage(f"Loaded in {timeDifference}s.", config.displayLoadingTime)
         self.statusBar().show()
         QTimer.singleShot(config.displayLoadingTime, self.statusBar().hide)
 
@@ -4962,10 +4943,8 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         if answer:
         #if answer == 1 or answer == QMessageBox.AcceptRole:
             # Cancel
-            print("accept")
             return True
         else:
-            print("reject")
             # Continue
             return False
 
@@ -5938,7 +5917,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     def closeMediaPlayer(self):
         if self.audioPlayer is not None:
             self.stopAudioPlaying()
-        if WebtopUtil.isPackageInstalled("pkill"):
+        if not platform.system() == "Windows" and WebtopUtil.isPackageInstalled("pkill"):
             if config.macVlc:
                 os.system("pkill VLC")
             if WebtopUtil.isPackageInstalled("vlc"):

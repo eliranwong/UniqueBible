@@ -1014,4 +1014,5 @@ translation = {
     "mute": "靜音",
     "todo": "待辦事項",
     "loopPlaylist": "迴圈播放清單",
+    "qtLibrary": "Qt 檔案庫",
 }

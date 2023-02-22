@@ -1014,4 +1014,5 @@ translation = {
     "mute": "Mute.",
     "todo": "Προς",
     "loopPlaylist": "Λίστα αναπαραγωγής Loop",
+    "qtLibrary": "Βιβλιοθήκη Qt",
 }
