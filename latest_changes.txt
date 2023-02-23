@@ -1,4 +1,4 @@
-Changes in 34.03:
+Changes in 34.03, 34.04:
 * added a menu plugin "Terminal Mode [konsole]" for non-Windows users
 
 Changes in 34.02:
