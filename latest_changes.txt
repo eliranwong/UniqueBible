@@ -1,3 +1,6 @@
+Changes in 34.02:
+* fixed installing PyQtWebEngine
+
 Changes in 34.01:
 * allow text synchronisation with audio playback when instant lookup is disabled
 

@@ -154,16 +154,25 @@ def isOfflineTtsInstalled():
         else:
             return True
     else:
-        try:
-            # Note: qtpy.QtTextToSpeech is not found!
-            from PySide2.QtTextToSpeech import QTextToSpeech
-            return True
-        except:
+        if config.qtLibrary == "pyside6":
             try:
-                from PyQt5.QtTextToSpeech import QTextToSpeech
+                #QtTextToSpeech is currently not in PySide6 pip3 package
+                #ModuleNotFoundError: No module named 'PySide6.QtTextToSpeech'
+                from PySide6.QtTextToSpeech import QTextToSpeech
                 return True
             except:
                 return False
+        else:
+            try:
+                # Note: qtpy.QtTextToSpeech is not found!
+                from PySide2.QtTextToSpeech import QTextToSpeech
+                return True
+            except:
+                try:
+                    from PyQt5.QtTextToSpeech import QTextToSpeech
+                    return True
+                except:
+                    return False
 
 def runTerminalMode():
     print("'{0}' is not installed!\nTo run UBA with graphical interface, install 'PySide6', 'PySide2' or 'PyQt5' first!".format(feature))

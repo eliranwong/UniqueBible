@@ -302,6 +302,8 @@ class MaterialMainWindow:
                     # upgrade to the latest version if available
                     installmodule(f"--upgrade {option}")
                     if option in ("PySide2", "PyQt5"):
+                        if option == "PyQt5":
+                            installmodule("PyQtWebEngine")
                         installmodule("--upgrade qtpy")
                         if not isQtpyInstalled():
                             self.displayMessage(notAvailable)

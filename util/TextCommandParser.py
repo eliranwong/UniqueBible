@@ -33,14 +33,22 @@ from db.JournalSqlite import JournalSqlite
 from install.module import *
 from util.DatafileLocation import DatafileLocation
 
-try:
-    # Note: qtpy.QtTextToSpeech is not found!
-    from PySide2.QtTextToSpeech import QTextToSpeech
-except:
+if config.qtLibrary == "pyside6":
     try:
-        from PyQt5.QtTextToSpeech import QTextToSpeech
+        #QtTextToSpeech is currently not in PySide6 pip3 package
+        #ModuleNotFoundError: No module named 'PySide6.QtTextToSpeech'
+        from PySide6.QtTextToSpeech import QTextToSpeech
     except:
         pass
+else:
+    try:
+        # Note: qtpy.QtTextToSpeech is not found!
+        from PySide2.QtTextToSpeech import QTextToSpeech
+    except:
+        try:
+            from PyQt5.QtTextToSpeech import QTextToSpeech
+        except:
+            pass
 
 
 class TextCommandParser:
