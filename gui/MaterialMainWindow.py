@@ -1,4 +1,4 @@
-import config
+import config, platform
 from gui.MenuItems import *
 from install.module import *
 from util.BibleBooks import BibleBooks
@@ -947,6 +947,12 @@ class MaterialMainWindow:
         self.addMaterialIconButton("masterSearch", icon, self.displaySearchBibleMenu, self.firstToolBar)
         icon = "material/action/filter_alt/materialiconsoutlined/48dp/2x/outline_filter_alt_black_48dp.png"
         self.addMaterialIconButton("liveFilter", icon, self.showLiveFilterDialog, self.firstToolBar)
+
+        self.firstToolBar.addSeparator()
+
+        if not platform.system() == "Windows" and WebtopUtil.isPackageInstalled("konsole") and not "Terminal Mode [konsole]" in config.excludeMenuPlugins:
+            icon = "material/editor/checklist_rtl/materialiconsoutlined/48dp/2x/outline_checklist_rtl_black_48dp.png"
+            self.addMenuPluginButton("Terminal Mode [konsole]", "todo", icon, self.firstToolBar)
 
         self.firstToolBar.addSeparator()
 
