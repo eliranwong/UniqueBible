@@ -62,11 +62,23 @@ if sys.prefix == sys.base_prefix:
 # create shortcut files
 # On Windows
 if thisOS == "Windows":
-    # Create a .bat for application shortcut
-    shortcutBat = os.path.join(wd, "UniqueBibleApp.bat")
-    if not os.path.exists(shortcutBat):
-        with open(shortcutBat, "w") as fileObj:
-            fileObj.write('{0} "{1}"'.format(sys.executable, thisFile))
+    shortcutBat1 = os.path.join(wd, "UniqueBibleApp.bat")
+    shortcutCommand1 = f'''powershell.exe -NoExit -Command "python '{thisFile}'"'''
+
+    shortcutBat2 = os.path.join(wd, "UniqueBibleAppTerminal.bat")
+    shortcutCommand2 = f'''powershell.exe -NoExit -Command "python '{thisFile}' terminal"'''
+
+    windowsShortcuts = {
+        shortcutBat1: shortcutCommand1,
+        shortcutBat2: shortcutCommand2,
+    }
+
+    # Create .bat for application shortcuts
+    for shortcutBat, shortcutCommand in windowsShortcuts.items():
+        if not os.path.exists(shortcutBat):
+            with open(shortcutBat, "w") as fileObj:
+                fileObj.write(shortcutCommand)
+
 # On non-Windows platforms
 else:
     # Create application shortcuts and set file permission

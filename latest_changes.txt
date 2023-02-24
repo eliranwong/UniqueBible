@@ -1,3 +1,7 @@
+Changes in 34.06:
+* changed menu plugin "Terminal Mode [konsole]" to "Terminal Mode"
+    the plugin now supports macOS, Windows, Linux and Chrome OS
+
 Changes in 34.05:
 * added a menu plugin "Terminal" to launch terminal
 

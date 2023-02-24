@@ -975,9 +975,8 @@ class MaterialMainWindow:
 
         icon = "material/action/terminal/materialiconsoutlined/48dp/2x/outline_terminal_black_48dp.png"
         self.addMenuPluginButton("Terminal", "terminal", icon, self.firstToolBar)
-        if not platform.system() == "Windows" and WebtopUtil.isPackageInstalled("konsole") and not "Terminal Mode [konsole]" in config.excludeMenuPlugins:
-            icon = "material/action/terminal/materialiconsoutlined/48dp/2x/outline_terminal_black_48dp.png"
-            self.addMenuPluginButton("Terminal Mode [konsole]", "terminalMode", icon, self.firstToolBar)
+        icon = "material/action/terminal/materialiconsoutlined/48dp/2x/outline_terminal_black_48dp.png"
+        self.addMenuPluginButton("Terminal Mode", "terminalMode", icon, self.firstToolBar)
 
         self.firstToolBar.addSeparator()
 
