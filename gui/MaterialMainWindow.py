@@ -950,12 +950,6 @@ class MaterialMainWindow:
 
         self.firstToolBar.addSeparator()
 
-        if not platform.system() == "Windows" and WebtopUtil.isPackageInstalled("konsole") and not "Terminal Mode [konsole]" in config.excludeMenuPlugins:
-            icon = "material/action/terminal/materialiconsoutlined/48dp/2x/outline_terminal_black_48dp.png"
-            self.addMenuPluginButton("Terminal Mode [konsole]", "todo", icon, self.firstToolBar)
-
-        self.firstToolBar.addSeparator()
-
         self.textCommandLineEdit = QLineEdit()
         self.textCommandLineEdit.setCompleter(self.getTextCommandSuggestion())
         self.textCommandLineEdit.setClearButtonEnabled(True)
@@ -976,6 +970,14 @@ class MaterialMainWindow:
         self.addMaterialIconButton("goOnline", icon, self.goOnline, self.firstToolBar)
         icon = "material/social/share/materialiconsoutlined/48dp/2x/outline_share_black_48dp.png"
         self.addMaterialIconButton("share", icon, self.shareOnline, self.firstToolBar)
+
+        self.firstToolBar.addSeparator()
+
+        icon = "material/action/terminal/materialiconsoutlined/48dp/2x/outline_terminal_black_48dp.png"
+        self.addMenuPluginButton("Terminal", "terminal", icon, self.firstToolBar)
+        if not platform.system() == "Windows" and WebtopUtil.isPackageInstalled("konsole") and not "Terminal Mode [konsole]" in config.excludeMenuPlugins:
+            icon = "material/action/terminal/materialiconsoutlined/48dp/2x/outline_terminal_black_48dp.png"
+            self.addMenuPluginButton("Terminal Mode [konsole]", "terminalMode", icon, self.firstToolBar)
 
         self.firstToolBar.addSeparator()
 

@@ -1015,4 +1015,6 @@ translation = {
     "todo": "작업관리",
     "loopPlaylist": "루프 플레이리스트",
     "qtLibrary": "Qt 라이브러리",
+    "terminalMode": "터미널 모드",
+    "terminal": "터미널",
 }

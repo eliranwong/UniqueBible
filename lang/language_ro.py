@@ -1015,4 +1015,6 @@ translation = {
     "todo": "De A Face",
     "loopPlaylist": "Listă de redare",
     "qtLibrary": "Biblioteca Qt",
+    "terminalMode": "Modul terminal",
+    "terminal": "Terminal",
 }

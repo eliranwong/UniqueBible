@@ -1015,4 +1015,6 @@ translation = {
     "todo": "Προς",
     "loopPlaylist": "Λίστα αναπαραγωγής Loop",
     "qtLibrary": "Βιβλιοθήκη Qt",
+    "terminalMode": "Κατάσταση τερματικού",
+    "terminal": "' Τερματικό",
 }

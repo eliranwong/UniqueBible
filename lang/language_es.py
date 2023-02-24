@@ -1015,4 +1015,6 @@ translation = {
     "todo": "To Do",
     "loopPlaylist": "Lista de reproducción de bucle",
     "qtLibrary": "Biblioteca Qt",
+    "terminalMode": "Modo terminal",
+    "terminal": "Terminal",
 }

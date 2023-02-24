@@ -1015,4 +1015,6 @@ translation = {
     "todo": "待办事宜",
     "loopPlaylist": "循环播放列表",
     "qtLibrary": "Qt 库",
+    "terminalMode": "终端方式",
+    "terminal": "终端",
 }

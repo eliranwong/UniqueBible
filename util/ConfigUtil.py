@@ -690,6 +690,9 @@ class ConfigUtil:
         setConfig("openLinuxDirectory", """
         # Specify the command to open a directory on Linux""",
         "xdg-open")
+        setConfig("openLinuxTerminal", """
+        # Specify the command to launch a terminal app on Linux""",
+        "x-terminal-emulator")
         config.help["marvelData"] = """
         # Specify the folder path of resources"""
         if not hasattr(config, "marvelData") or not os.path.isdir(config.marvelData):

@@ -1,3 +1,6 @@
+Changes in 34.05:
+* added a menu plugin "Terminal" to launch terminal
+
 Changes in 34.03, 34.04:
 * added a menu plugin "Terminal Mode [konsole]" for non-Windows users
 

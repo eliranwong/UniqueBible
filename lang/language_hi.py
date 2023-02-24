@@ -1015,4 +1015,6 @@ translation = {
     "todo": "करने के लिए",
     "loopPlaylist": "गीत-सूची",
     "qtLibrary": "क्यूटी लाइब्रेरी",
+    "terminalMode": "टर्मिनल मोड",
+    "terminal": "टर्मिनल",
 }

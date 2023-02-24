@@ -1015,4 +1015,6 @@ translation = {
     "todo": "ചെയ്യാന്",
     "loopPlaylist": "ലൂപ്പ് പ്ലേലിസ്റ്റ്",
     "qtLibrary": "ക്യൂട്ടി ലൈബ്രറി",
+    "terminalMode": "ടെര്മിനല് ദശ",
+    "terminal": "ടെര്മിനല്",
 }
