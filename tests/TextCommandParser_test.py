@@ -5,7 +5,7 @@ FileUtil.createCustomFiles()
 
 import config
 
-config.qtLibrary == "pyside6"
+config.qtLibrary = "pyside6"
 config.mainText = "MOB"
 config.mainB = 1
 config.mainC = 1
