@@ -1,7 +1,7 @@
 from html import entities
 from util.Languages import Languages
 from util.GoogleCloudTTSVoices import GoogleCloudTTS
-import config, os, platform, webbrowser, re
+import config, os, platform, re
 import shortcut as sc
 from functools import partial
 if config.qtLibrary == "pyside6":
@@ -23,6 +23,7 @@ from util.BibleVerseParser import BibleVerseParser
 from db.BiblesSqlite import BiblesSqlite
 from util.Translator import Translator
 from gui.WebEngineViewPopover import WebEngineViewPopover
+from gui.SimpleBrowser import SimpleBrowser
 from util.FileUtil import FileUtil
 from util.TextUtil import TextUtil
 from util.BibleBooks import BibleBooks
@@ -973,8 +974,13 @@ class WebEngineView(QWebEngineView):
 
         action = QAction(self)
         action.setText(config.thisTranslation["menu_about"])
-        action.triggered.connect(lambda: webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/Context-Menu"))
+        action.triggered.connect(lambda: self.openSimpleBrowser("https://github.com/eliranwong/UniqueBible/wiki/Context-Menu"))
         self.addAction(action)
+
+    def openSimpleBrowser(self, urlString):
+        simpleBrowser = SimpleBrowser(self.parent.parent)
+        simpleBrowser.setUrl(QUrl(urlString))
+        simpleBrowser.show()
 
     def selectedTextProcessed(self, activeSelection=False):
         if not activeSelection:
@@ -1137,7 +1143,7 @@ class WebEngineView(QWebEngineView):
         else:
             selectedText = TextUtil.plainTextToUrl(selectedText)
             url = "https://translate.google.com/?sl=origin_language_or_auto&tl={0}&text={1}&op=translate".format(language, selectedText)
-            webbrowser.open(url)
+            self.openSimpleBrowser(url)
 
     # Translate selected words into Selected Language (Watson Translator)
     def selectedTextToSelectedLanguage(self, language):

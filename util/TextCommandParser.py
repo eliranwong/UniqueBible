@@ -1497,6 +1497,8 @@ class TextCommandParser:
     # speak:::
     # run text to speech feature
     def textToSpeech(self, command, source):
+        if config.forceOnlineTts:
+            return self.googleTextToSpeech(command, source)
         # Stop current playing first if any:
         self.stopTtsAudio()
 

@@ -59,7 +59,7 @@ class MiniBrowser(QWidget):
     def __init__(self, parent, initialUrl=None):
         super().__init__()
         # Set title
-        self.setWindowTitle(config.thisTranslation["miniBrowser"])
+        self.setWindowTitle(config.thisTranslation["youtube_utility"])
         # Set up variables
         self.parent = parent
         self.isFfmpegInstalled = self.parent.textCommandParser.isFfmpegInstalled()

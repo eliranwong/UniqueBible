@@ -157,7 +157,7 @@ if config.enablePlugins:
         if not plugin in config.excludeContextPlugins:
             feature, *_ = plugin.split("_", 1)
             exec("contextPlugin{0} = QAction(feature)".format(index))
-            exec("contextPlugin{0}.triggered.connect(config.mainWindow.showFromTray)".format(index))
+            #exec("contextPlugin{0}.triggered.connect(config.mainWindow.showFromTray)".format(index))
             exec("contextPlugin{0}.triggered.connect(partial(config.mainWindow.runContextPluginOnClipboardContent, plugin))".format(index))
             exec("subMenu.addAction(contextPlugin{0})".format(index))
     contextPlugins = QAction(config.thisTranslation["runContextPluginOnClipboardContent"])
@@ -165,13 +165,22 @@ if config.enablePlugins:
     trayMenu.addAction(contextPlugins)
 # Add a separator
 trayMenu.addSeparator()
+# selected plugins
+toDo = QAction(config.thisTranslation["todo"])
+toDo.triggered.connect(partial(config.mainWindow.runPlugin, "ToDo"))
+trayMenu.addAction(toDo)
+chatgpt = QAction("Chat GPT")
+chatgpt.triggered.connect(partial(config.mainWindow.runPlugin, "ChatGPT"))
+trayMenu.addAction(chatgpt)
+# Add a separator
+trayMenu.addSeparator()
 # Media
 youtubeDownloader = QAction(config.thisTranslation["youtube_utility"])
-youtubeDownloader.triggered.connect(config.mainWindow.showFromTray)
+#youtubeDownloader.triggered.connect(config.mainWindow.showFromTray)
 youtubeDownloader.triggered.connect(config.mainWindow.openYouTube)
 trayMenu.addAction(youtubeDownloader)
 showMedia = QAction(config.thisTranslation["media"])
-showMedia.triggered.connect(config.mainWindow.showFromTray)
+#showMedia.triggered.connect(config.mainWindow.showFromTray)
 showMedia.triggered.connect(partial(config.mainWindow.openControlPanelTab, 6))
 trayMenu.addAction(showMedia)
 stopPlayMedia = QAction(config.thisTranslation["stopPlayMedia"])

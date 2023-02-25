@@ -1,3 +1,8 @@
+Changes in 34.07:
+* added selected plugins to system tray
+* use simple browser for google translate
+* fixed speak::: command when config.forceOnlineTts is set to True
+
 Changes in 34.06:
 * changed menu plugin "Terminal Mode [konsole]" to "Terminal Mode"
     the plugin now supports macOS, Windows, Linux and Chrome OS
