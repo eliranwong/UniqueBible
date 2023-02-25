@@ -1,3 +1,6 @@
+Changes in 34.08:
+* added "Copy All" button to "ToDo" plugin.
+
 Changes in 34.07:
 * added selected plugins to system tray
 * use simple browser for google translate

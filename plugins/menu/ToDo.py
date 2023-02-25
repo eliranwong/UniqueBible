@@ -4,11 +4,11 @@ from db.JournalSqlite import JournalSqlite
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt
     from PySide6.QtGui import QStandardItem, QStandardItemModel, QGuiApplication
-    from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QListView, QSplitter, QAbstractItemView, QMessageBox
+    from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QListView, QSplitter, QAbstractItemView, QMessageBox
 else:
     from qtpy.QtCore import Qt
     from qtpy.QtGui import QStandardItem, QStandardItemModel, QGuiApplication
-    from qtpy.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QListView, QSplitter, QAbstractItemView, QMessageBox
+    from qtpy.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QListView, QSplitter, QAbstractItemView, QMessageBox
 
 class ToDo(QWidget):
     def __init__(self):
@@ -46,6 +46,7 @@ class ToDo(QWidget):
         self.remove_button = QPushButton('Remove')
         self.move_up_button = QPushButton('Move up')
         self.move_down_button = QPushButton('Move down')
+        self.copy_all_button = QPushButton('Copy All')
         self.clear_all_button = QPushButton('Clear All')
         self.undo_button = QPushButton('Undo')
         self.save_button = QPushButton('Save Changes')
@@ -67,6 +68,10 @@ class ToDo(QWidget):
         hbox3.addWidget(self.undo_button)
         hbox3.addWidget(self.save_button)
 
+        hbox4 = QHBoxLayout()
+        hbox4.addWidget(self.done_button)
+        hbox4.addWidget(self.copy_all_button)
+
         leftBox = QVBoxLayout()
         leftBox.addWidget(self.filter)
         leftBox.addWidget(self.searchView)
@@ -77,7 +82,7 @@ class ToDo(QWidget):
         rightBox.addWidget(self.view)
         rightBox.addLayout(hbox1)
         rightBox.addLayout(hbox2)
-        rightBox.addWidget(self.done_button)
+        rightBox.addLayout(hbox4)
         rightBox.addLayout(hbox3)
         widgetRt = QWidget()
         widgetRt.setLayout(rightBox)
@@ -97,6 +102,7 @@ class ToDo(QWidget):
         self.move_up_button.clicked.connect(self.move_up)
         self.move_down_button.clicked.connect(self.move_down)
         self.clear_all_button.clicked.connect(self.model.clear)
+        self.copy_all_button.clicked.connect(lambda: QApplication.clipboard().setText("\n".join(self.dataList)))
         self.undo_button.clicked.connect(self.resetModel)
         self.save_button.clicked.connect(self.saveChanges)
         self.done_button.clicked.connect(self.done_and_keep_journal_record)
