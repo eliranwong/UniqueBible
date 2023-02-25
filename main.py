@@ -1,7 +1,7 @@
 # UniqueBible.app
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
-import os, platform, sys, subprocess, shutil
+import os, platform, sys, subprocess, shutil, ctypes
 from util.FileUtil import FileUtil
 from util.WebtopUtil import WebtopUtil
 
