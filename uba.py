@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os, sys, subprocess, platform
+import os, sys, subprocess, platform, ctypes
 from shutil import copyfile
 from install.module import *
 
@@ -25,11 +25,18 @@ thisFile = os.path.realpath(__file__)
 wd = os.path.dirname(thisFile)
 if os.getcwd() != wd:
     os.chdir(wd)
+
+thisOS = platform.system()
+if thisOS == "Windows":
+    myappid = "uniquebible.app"
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+    icon_path = os.path.abspath(os.path.join(sys.path[0], "htmlResources", "UniqueBibleApp.ico"))
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(icon_path)
+
 # Do NOT use sys.executable directly
 python = os.path.basename(sys.executable)
 mainFile = os.path.join(wd, "main.py")
 major, minor, micro, *_ = sys.version_info
-thisOS = platform.system()
 cpu = ""
 if thisOS == "Darwin":
     thisOS = "macOS"

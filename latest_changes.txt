@@ -1,3 +1,6 @@
+Changes in 34.09:
+* added Windows icon
+
 Changes in 34.08:
 * added "Copy All" button to "ToDo" plugin.
 

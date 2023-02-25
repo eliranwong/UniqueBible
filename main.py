@@ -5,16 +5,22 @@ import os, platform, sys, subprocess, shutil
 from util.FileUtil import FileUtil
 from util.WebtopUtil import WebtopUtil
 
-
 # Change working directory to UniqueBible directory
 thisFile = os.path.realpath(__file__)
 wd = thisFile[:-7]
 if os.getcwd() != wd:
     os.chdir(wd)
 
+thisOS = platform.system()
+if thisOS == "Windows":
+    myappid = "uniquebible.app"
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+    icon_path = os.path.abspath(os.path.join(sys.path[0], "htmlResources", "UniqueBibleApp.ico"))
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(icon_path)
+
 # Create custom files
 FileUtil.createCustomFiles()
-if not platform.system() == "Windows" and os.path.isfile("config.py"):
+if not thisOS == "Windows" and not os.path.isfile("config.py"):
     os.system("touch config.py")
 
 # Make sure config.py exists before importing config and all other scripts which depends on config
