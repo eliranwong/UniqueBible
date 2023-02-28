@@ -1,3 +1,6 @@
+Changes in 34.11:
+* added text sync with vlc playback
+
 Changes in 34.09, 34.10:
 * added Windows icon
 

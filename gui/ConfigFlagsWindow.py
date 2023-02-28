@@ -284,6 +284,8 @@ class ConfigFlagsWindow(QDialog):
 
     def useThirdPartyVLCplayerChanged(self):
         config.useThirdPartyVLCplayer = not config.useThirdPartyVLCplayer
+        if config.useThirdPartyVLCplayer and not config.isVlcAvailable:
+            config.useThirdPartyVLCplayer = False
         self.parent.handleRestart()
 
     def doNotStop3rdPartyMediaPlayerOnExitChanged(self):

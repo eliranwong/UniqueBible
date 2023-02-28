@@ -1,8 +1,9 @@
-import config, sys, traceback, os, platform
+import config, sys, traceback, os, platform, re
+from util.WebtopUtil import WebtopUtil
 if config.qtLibrary == "pyside6":
-    from PySide6.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool
+    from PySide6.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool, QThread
 else:
-    from qtpy.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool
+    from qtpy.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool, QThread
 
 
 class WorkerSignals(QObject):
@@ -73,6 +74,48 @@ class Worker(QRunnable):
             self.signals.result.emit(result)  # Return the result of the processing
         finally:
             self.signals.finished.emit()  # Done
+
+
+class VLC:
+
+    def __init__(self, parent):
+        super().__init__()
+        self.parent = parent
+        self.threadpool = QThreadPool()
+
+    def vlcFile(self):
+        # vlc gui for video only
+        config.isVlcPlaying = True
+        self.parent.playMediaFileVLC(config.currentAudioFile) if re.search("(.mp4|.avi)$", config.currentAudioFile.lower()[-4:]) else self.parent.playAudioFileCVLC(config.currentAudioFile)
+        self.parent.selectAudioPlaylistUIItem()
+        config.isVlcPlaying = False
+        self.thread_complete()
+        return "Finished Playing!"
+
+    def print_output(self, s):
+        print(s)
+
+    def thread_complete(self):
+        if self.parent.audioPlayListIndex == -2: # stopped by users
+            self.parent.resetAudioPlaylist()
+        else:
+            if self.parent.audioPlayListIndex == len(self.parent.audioPlayList) - 1:
+                self.parent.resetAudioPlaylist()
+                if config.loopMediaPlaylist:
+                    self.parent.playAudioPlayList()
+            else:
+                self.parent.audioPlayListIndex += 1
+                self.parent.playAudioPlayList()
+        #print("THREAD COMPLETE!")
+
+    def workOnVlcFile(self):
+        # Pass the function to execute
+        worker = Worker(self.vlcFile) # Any other args, kwargs are passed to the run function
+        #worker.signals.result.connect(self.print_output)
+        #worker.signals.finished.connect(self.thread_complete)
+        # Execute
+        self.threadpool.start(worker)
+
 
 class YouTubeDownloader:
 

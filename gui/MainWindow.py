@@ -6,7 +6,7 @@ from pathlib import Path
 
 from util.ConfigUtil import ConfigUtil
 from util.SystemUtil import SystemUtil
-from gui.Worker import YouTubeDownloader
+from gui.Worker import YouTubeDownloader, VLC
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer
     from PySide6.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor, QAction, QShortcut
@@ -164,9 +164,14 @@ class MainWindow(QMainWindow):
         QGuiApplication.setWindowIcon(appIcon)
         # setup user menu & toolbars
 
-        # Built-in Audio Player
+        # set up media player
+        config.currentAudioFile = ""
+        self.audioPlayList = []
+        self.resetAudioPlaylist()
         if config.useThirdPartyVLCplayer:
-            self.audioPlayer = None
+            self.vlc = None
+            self.audioPlayer = "vlc"
+            config.isVlcPlaying = False
         else:
             self.setupAudioPlayer()
         # VLC Player
@@ -294,9 +299,6 @@ class MainWindow(QMainWindow):
             config.audioVolume = 1.0
             config.audioOutput = QAudioOutput()
             config.audioMuted = config.audioOutput.isMuted()
-        config.currentAudioFile = ""
-        self.audioPlayList = []
-        self.resetAudioPlaylist()
 
         def playbackStateChanged(state):
             if state == QMediaPlayer.StoppedState:
@@ -357,7 +359,10 @@ class MainWindow(QMainWindow):
             self.playAudioPlayList()
 
     def stopAudioPlaying(self):
-        if not self.getAudioPlayerState() == QMediaPlayer.StoppedState:
+        if self.audioPlayer == "vlc":
+            if config.isVlcPlaying:
+                self.audioPlayListIndex = -2
+        elif not self.getAudioPlayerState() == QMediaPlayer.StoppedState:
             self.audioPlayListIndex = -2
             self.audioPlayer.stop()
 
@@ -406,57 +411,97 @@ class MainWindow(QMainWindow):
                 self.audioPlayer.setVideoOutput(self.videoView)
             self.videoView.show()
 
+    # play audio file with vlc without gui
+    def playAudioFileCVLC(self, filePath):
+        try:
+            # vlc on macOS
+            if config.macVlc:
+                os.system(f'''{config.macVlc} --intf rc --play-and-exit --rate {config.vlcSpeed} "{filePath}" &> /dev/null''')
+            # vlc on windows
+            elif config.windowsVlc:
+                os.system(f'''"{config.windowsVlc}" --play-and-exit --rate {config.vlcSpeed} "{filePath}"''')
+            # vlc on other platforms
+            elif WebtopUtil.isPackageInstalled("cvlc"):
+                os.system(f'''cvlc --intf rc --play-and-exit --rate {config.vlcSpeed} "{filePath}" &> /dev/null''')
+        except:
+            pass
+
+    # play video file with vlc with gui
+    def playMediaFileVLC(self, filePath):
+        try:
+            # vlc on macOS
+            if config.macVlc:
+                os.system(f'''{config.macVlc} --play-and-exit --rate {config.vlcSpeed} "{filePath}" &> /dev/null''')
+            # vlc on windows
+            elif config.windowsVlc:
+                os.system(f'''"{config.windowsVlc}" --play-and-exit --rate {config.vlcSpeed} "{filePath}"''')
+            # vlc on other platforms
+            elif WebtopUtil.isPackageInstalled("vlc"):
+                os.system(f'''vlc --play-and-exit --rate {config.vlcSpeed} "{filePath}" &> /dev/null''')
+        except:
+            pass
+
+    def syncAudioWithText(self, filePath):
+        basename = os.path.basename(filePath)
+        if config.audioTextSync and not basename in ("gtts.mp3",):
+            # verse pattern, e.g. CSB_1_1_1.mp3
+            versePattern = re.compile("^([^_]+?)_([0-9]+?)_([0-9]+?)_([0-9]+?).mp3")
+            isVerse = versePattern.search(basename)
+            if not isVerse:
+                # word patterns, e.g. lex_OGNT_61_1_9_124169.mp3   OGNT_61_1_9_124169.mp3 BHS5_1_1_28_579.mp3  lex_BHS5_1_1_20_376.mp3
+                wordPattern = re.compile("^.*?(BHS5|OGNT)_([0-9]+?)_[0-9]+?_[0-9]+?_([0-9]+?).mp3")
+                isWord = wordPattern.search(filePath)
+            def getDefaultInfo():
+                return f"Playing media: {basename}"
+            if isVerse:
+                text, b, c, v = isVerse.groups()
+                instantInfo = self.textCommandParser.getInstantMainVerseInfo(f"{b}.{c}.{v}", text) if text in self.textList else getDefaultInfo()
+            elif isWord:
+                _, book, wordId = isWord.groups()
+                instantInfo = self.textCommandParser.getInstantWordInfo(f"{book}:::{wordId}")
+            else:
+                instantInfo = getDefaultInfo()
+            #self.instantView.setHtml(self.wrapHtml(instantInfo, "instant", False), baseUrl)
+            # The line above does not work with QThreadPool on macOS, we use the following two lines instead
+            instantInfo = instantInfo.replace('"', '\\"')
+            self.instantPage.runJavaScript(f"""document.getElementsByTagName('body')[0].innerHTML = "{instantInfo}";""")
+
     def playAudioFile(self, filePath):
         if filePath and os.path.isfile(filePath):
-            # check if it is a supported video file
-            if re.search("(.mp4|.avi)$", filePath.lower()[-4:]):
-                self.openVideoView()
-                if not self.videoView.isVisible():
-                    self.bringToForeground(self.videoView)
-
-            basename = os.path.basename(filePath)
-            if config.audioTextSync and not basename in ("gtts.mp3",):
-                # verse pattern, e.g. CSB_1_1_1.mp3
-                versePattern = re.compile("^([^_]+?)_([0-9]+?)_([0-9]+?)_([0-9]+?).mp3")
-                isVerse = versePattern.search(basename)
-                if not isVerse:
-                    # word patterns, e.g. lex_OGNT_61_1_9_124169.mp3   OGNT_61_1_9_124169.mp3 BHS5_1_1_28_579.mp3  lex_BHS5_1_1_20_376.mp3
-                    wordPattern = re.compile("^.*?(BHS5|OGNT)_([0-9]+?)_[0-9]+?_[0-9]+?_([0-9]+?).mp3")
-                    isWord = wordPattern.search(filePath)
-                def getDefaultInfo():
-                    return f"Playing media: {basename}"
-                if isVerse:
-                    text, b, c, v = isVerse.groups()
-                    instantInfo = self.textCommandParser.getInstantMainVerseInfo(f"{b}.{c}.{v}", text) if text in self.textList else getDefaultInfo()
-                elif isWord:
-                    _, book, wordId = isWord.groups()
-                    instantInfo = self.textCommandParser.getInstantWordInfo(f"{book}:::{wordId}")
-                else:
-                    instantInfo = getDefaultInfo()
-                self.instantView.setHtml(self.wrapHtml(instantInfo, "instant", False), baseUrl)
-            
+            # text synchronisation with audio playback
+            self.syncAudioWithText(filePath)
             # full path is required for PySide2 QMediaPlayer to work
             config.currentAudioFile = os.path.abspath(QDir.toNativeSeparators(filePath))
-            if config.qtLibrary == "pyside6":
-                # remarks: tested on Ubuntu
-                # for unknown reasons, the following three lines do not work when they are executed directly without puting into a string first
-                # work as expected when the string is executed with exec() method
-                codes = f"""
+
+            if config.useThirdPartyVLCplayer:
+                VLC(self).workOnVlcFile()
+            else:
+                # check if it is a supported video file
+                if re.search("(.mp4|.avi)$", filePath.lower()[-4:]):
+                    self.openVideoView()
+                    if not self.videoView.isVisible():
+                        self.bringToForeground(self.videoView)
+                # play audio file with builtin media player
+                if config.qtLibrary == "pyside6":
+                    # remarks: tested on Ubuntu
+                    # for unknown reasons, the following three lines do not work when they are executed directly without puting into a string first
+                    # work as expected when the string is executed with exec() method
+                    codes = f"""
 config.audioOutput = QAudioOutput()
 config.audioOutput.setVolume(config.audioVolume)
 config.audioOutput.setMuted(config.audioMuted)
 config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)
 config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(""))
 config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(config.currentAudioFile))"""
-                exec(codes, globals())
-            else:
-                dummy_media_content = QMediaContent(QUrl.fromLocalFile(""))
-                media_content = QMediaContent(QUrl.fromLocalFile(config.currentAudioFile))
-                # reset media is needed to repeatedly play files having the same filepaths but of different content
-                self.audioPlayer.setMedia(dummy_media_content)
-                self.audioPlayer.setMedia(media_content)
-            self.audioPlayer.play()
-            self.selectAudioPlaylistUIItem()
+                    exec(codes, globals())
+                else:
+                    dummy_media_content = QMediaContent(QUrl.fromLocalFile(""))
+                    media_content = QMediaContent(QUrl.fromLocalFile(config.currentAudioFile))
+                    # reset media is needed to repeatedly play files having the same filepaths but of different content
+                    self.audioPlayer.setMedia(dummy_media_content)
+                    self.audioPlayer.setMedia(media_content)
+                self.audioPlayer.play()
+                self.selectAudioPlaylistUIItem()
 
     def selectAudioPlaylistUIItem(self):
         if hasattr(self, "audioPlayListUI") and self.audioPlayListUI and self.audioPlayListUI.isVisible() and (self.audioPlayListUI.model.rowCount() > self.audioPlayListIndex >= 0):
