@@ -1,10 +1,10 @@
 import config, sys, traceback, os, platform, re
-from util.WebtopUtil import WebtopUtil
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool, QThread
 else:
     from qtpy.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool, QThread
-
+from pydub import AudioSegment
+from pydub.playback import play
 
 class WorkerSignals(QObject):
     '''
@@ -150,3 +150,52 @@ class YouTubeDownloader:
         worker.signals.finished.connect(self.thread_complete)
         # Execute
         self.threadpool.start(worker)
+
+class PydubAudio:
+
+    def __init__(self, parent):
+        super().__init__()
+        self.parent = parent
+        self.threadpool = QThreadPool()
+
+    def vlcFile(self, _):
+        # vlc gui for video only
+        config.isPydubPlaying = True
+        # Load audio file
+        audio = AudioSegment.from_file(config.currentAudioFile, format="mp3")
+        # Change speed
+        faster_audio = audio.speedup(playback_speed=1.5)
+        # Change volume
+        louder_audio = faster_audio + 10
+        # Play audio
+        config.playback = play(louder_audio)
+
+        config.isPydubPlaying = False
+        #self.thread_complete()
+        return "Finished Playing!"
+
+    def print_output(self, s):
+        print(s)
+
+    def thread_complete(self):
+        if self.parent.audioPlayListIndex == -2: # stopped by users
+            self.parent.resetAudioPlaylist()
+        else:
+            if self.parent.audioPlayListIndex == len(self.parent.audioPlayList) - 1:
+                self.parent.resetAudioPlaylist()
+                if config.loopMediaPlaylist:
+                    self.parent.playAudioPlayList()
+            else:
+                self.parent.audioPlayListIndex += 1
+                self.parent.playAudioPlayList()
+        #print("THREAD COMPLETE!")
+
+    def workOnVlcFile(self):
+        # Pass the function to execute
+        worker = Worker(self.vlcFile, "test") # Any other args, kwargs are passed to the run function
+        #worker.signals.result.connect(self.print_output)
+        #worker.signals.finished.connect(self.thread_complete)
+        # Execute
+        self.threadpool.start(worker)
+        
+    # stop https://stackoverflow.com/questions/47596007/stop-the-audio-from-playing-in-pydub
