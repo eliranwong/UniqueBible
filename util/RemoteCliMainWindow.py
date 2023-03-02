@@ -10,6 +10,8 @@ from util.WebtopUtil import WebtopUtil
 from util.FileUtil import FileUtil
 from db.BiblesSqlite import Bible, MorphologySqlite
 from util.BibleBooks import BibleBooks
+from util.MediaUtil import MediaUtil
+from pydub.playback import play
 from install.module import *
 
 
@@ -277,16 +279,8 @@ class RemoteCliMainWindow(CrossPlatform):
                         config.mainWindow.print(textList[index])
                     else:
                         print(textList[index])
-                    # vlc on macOS
-                    if config.macVlc:
-                        os.system(f"{config.macVlc} --intf rc --play-and-exit --rate {config.vlcSpeed} {audioFile} &> /dev/null")
-                    # vlc on windows
-                    elif config.windowsVlc:
-                        os.system(f"'{config.windowsVlc}' --play-and-exit --rate {config.vlcSpeed} {audioFile}")
-                    # vlc on other platforms
-                    elif WebtopUtil.isPackageInstalled("vlc"):
-                        vlcCmd = "cvlc"
-                        os.system(f"{vlcCmd} --intf rc --play-and-exit --rate {config.vlcSpeed} {audioFile} &> /dev/null")
+                    # play audio with user customised speed
+                    play(MediaUtil.audioChangeSpeed(audioFile, config.mediaSpeed))
                 except:
                     pass
                 self.closeMediaPlayer()

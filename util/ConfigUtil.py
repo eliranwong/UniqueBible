@@ -627,6 +627,12 @@ class ConfigUtil:
         setConfig("mediaSpeed", """
         # Built-in media player playback speed""",
         1.0)
+        setConfig("speedUpFilterFrequency", """
+        # Cutoff frequency used for low_pass_filter and high_pass_filter when audio file speed is increased with pydub.
+        # Changing this value may change the quality of audio with increased speed.
+        # Read low_pass_filter and high_pass_filter at:
+        # https://github.com/jiaaro/pydub/blob/master/pydub/effects.py#L221""",
+        1000)
         setConfig("vlcSpeed", """
         # VLC player playback speed""",
         1.0)
