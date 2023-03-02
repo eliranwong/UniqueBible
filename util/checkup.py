@@ -593,10 +593,10 @@ if not config.enabled:
                 module = "PySide2"
                 isInstalled = isPySide2Installed
                 print("PySide6 is not found!  Trying to install 'PySide2' instead ...")
+                config.qtLibrary == "pyside2"
+                os.environ["QT_API"] = config.qtLibrary
                 installmodule(module)
                 if isInstalled():
-                    config.qtLibrary == "pyside2"
-                    os.environ["QT_API"] = config.qtLibrary
                     print("Installed!")
             if module == "PySide2" and not isInstalled():
                 module = "PyQt5"
