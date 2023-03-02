@@ -1,4 +1,4 @@
-import glob
+import glob, os
 import pprint
 import sys
 import config
@@ -7,8 +7,12 @@ if config.qtLibrary == "pyside6":
     try:
         from PySide6.QtCore import Qt
     except:
-        config.qtLibrary = "pyside2"
-        from qtpy.QtCore import Qt
+        try:
+            config.qtLibrary = os.environ["QT_API"] = "pyside2"
+            from qtpy.QtCore import Qt
+        except:
+            config.qtLibrary = os.environ["QT_API"] = "pyqt5"
+            from qtpy.QtCore import Qt
 else:
     from qtpy.QtCore import Qt
 

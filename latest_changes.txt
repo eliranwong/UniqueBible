@@ -1,3 +1,6 @@
+Changes in 34.14:
+* support stoping .readsync command in desktop version.
+
 Changes in 34.13:
 * fixed running .readsync command on Linux
 

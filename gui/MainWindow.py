@@ -165,6 +165,7 @@ class MainWindow(QMainWindow):
         # setup user menu & toolbars
 
         # set up media player
+        config.audio_playing_file = os.path.join("temp", "000_audio_playing.txt")
         config.currentAudioFile = ""
         self.audioPlayList = []
         self.resetAudioPlaylist()
@@ -5968,6 +5969,9 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.displayMessage(config.thisTranslation["noMediaPlayer"])
 
     def closeMediaPlayer(self):
+        # stop terminal mode .readsync loop
+        if os.path.isfile(config.audio_playing_file):
+            os.remove(config.audio_playing_file)
         if self.audioPlayer is not None:
             self.stopAudioPlaying()
         if not platform.system() == "Windows" and WebtopUtil.isPackageInstalled("pkill"):
