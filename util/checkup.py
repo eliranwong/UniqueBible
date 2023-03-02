@@ -510,6 +510,13 @@ def isValidatorsInstalled():
     except:
         return False
 
+def isPydubInstalled():
+    try:
+        from pydub import AudioSegment
+        return True
+    except:
+        return False
+
 def isAsyncsshInstalled():
     try:
         import asyncssh
@@ -567,6 +574,7 @@ required = [
 ]
 # Add Qt Library module
 if not config.noQt:
+    required.append(("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled))
     if config.qtLibrary == "pyside6":
         required.append(("PySide6", "Qt Graphical Interface Library", isPySide6Installed))
     else:
@@ -574,7 +582,6 @@ if not config.noQt:
             required.append(("PySide2", "Qt Graphical Interface Library", isPySide2Installed))
         else:
             required.append(("PyQt5", "Qt Graphical Interface Library", isPyQt5Installed))
-        required.append(("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled))
 
 if not config.enabled:
     for module, feature, isInstalled in required or config.updateDependenciesOnStartup:
@@ -582,6 +589,15 @@ if not config.enabled:
                 module = "--upgrade {0}".format(module)
         if not isInstalled() or config.updateDependenciesOnStartup:
             installmodule(module)
+            if module == "PySide6" and not isInstalled():
+                module = "PySide2"
+                isInstalled = isPySide2Installed
+                print("PySide6 is not found!  Trying to install 'PySide2' instead ...")
+                installmodule(module)
+                if isInstalled():
+                    config.qtLibrary == "pyside2"
+                    os.environ["QT_API"] = config.qtLibrary
+                    print("Installed!")
             if module == "PySide2" and not isInstalled():
                 module = "PyQt5"
                 isInstalled = isPyQt5Installed
@@ -676,6 +692,7 @@ optional = [
     ("asyncssh", "Asynchronous SSHv2 client and server library", isAsyncsshInstalled),
     ("bcrypt", "Modern password hashing for your software and your servers", isBcryptInstalled),
     ("validators", "Python Data Validation for Humans", isValidatorsInstalled),
+    ("pydub", "Manipulate audio", isPydubInstalled),
 ] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -720,6 +737,7 @@ optional = [
     ("asyncssh", "Asynchronous SSHv2 client and server library", isAsyncsshInstalled),
     ("bcrypt", "Modern password hashing for your software and your servers", isBcryptInstalled),
     ("validators", "Python Data Validation for Humans", isValidatorsInstalled),
+    ("pydub", "Manipulate audio", isPydubInstalled),
 ]
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))

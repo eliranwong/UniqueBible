@@ -169,9 +169,9 @@ class MainWindow(QMainWindow):
         self.audioPlayList = []
         self.resetAudioPlaylist()
         if config.useThirdPartyVLCplayer:
-            self.vlc = None
-            self.audioPlayer = "vlc"
-            config.isVlcPlaying = False
+            self.audioPlayer = None
+            #self.audioPlayer = "vlc"
+            #config.isMediaPlaying = False
         else:
             self.setupAudioPlayer()
         # VLC Player
@@ -301,6 +301,9 @@ class MainWindow(QMainWindow):
             config.audioMuted = config.audioOutput.isMuted()
 
         def playbackStateChanged(state):
+            """if state == QMediaPlayer.PlayingState:
+                self.audioPlayer.setPlaybackRate(config.mediaSpeed)
+            elif state == QMediaPlayer.StoppedState:"""
             if state == QMediaPlayer.StoppedState:
                 if self.audioPlayListIndex == -2: # stopped by users
                     self.resetAudioPlaylist()
@@ -321,6 +324,7 @@ class MainWindow(QMainWindow):
             self.audioPlayer.playbackStateChanged.connect(playbackStateChanged)
         else:
             self.audioPlayer.stateChanged.connect(playbackStateChanged)
+        #self.audioPlayer.mediaStatusChanged.connect(self.on_media_status_changed)
         self.audioPlayer.durationChanged.connect(self.on_duration_changed)  # Connect the durationChanged signal to our on_duration_changed slot
         self.audioPlayer.positionChanged.connect(self.on_position_changed)  # Connect the positionChanged signal to our on_position_changed slot
 
@@ -360,7 +364,7 @@ class MainWindow(QMainWindow):
 
     def stopAudioPlaying(self):
         if self.audioPlayer == "vlc":
-            if config.isVlcPlaying:
+            if config.isMediaPlaying:
                 self.audioPlayListIndex = -2
         elif not self.getAudioPlayerState() == QMediaPlayer.StoppedState:
             self.audioPlayListIndex = -2
@@ -520,6 +524,9 @@ config.audioOutput.setMuted(config.audioMuted)
 config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
             exec(codes, globals())
 
+    def on_media_status_changed(self, status):
+        if status == QMediaPlayer.BufferedMedia:
+            self.audioPlayer.setPlaybackRate(config.mediaSpeed)
 
     def on_duration_changed(self, duration):
         # Set the range of the slider to the duration of the video when it is known

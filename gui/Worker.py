@@ -1,10 +1,11 @@
 import config, sys, traceback, os, platform, re
 if config.qtLibrary == "pyside6":
-    from PySide6.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool, QThread
+    from PySide6.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool
 else:
-    from qtpy.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool, QThread
+    from qtpy.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool
 from pydub import AudioSegment
 from pydub.playback import play
+
 
 class WorkerSignals(QObject):
     '''
@@ -85,10 +86,10 @@ class VLC:
 
     def vlcFile(self):
         # vlc gui for video only
-        config.isVlcPlaying = True
+        config.isMediaPlaying = True
         self.parent.playMediaFileVLC(config.currentAudioFile) if re.search("(.mp4|.avi)$", config.currentAudioFile.lower()[-4:]) else self.parent.playAudioFileCVLC(config.currentAudioFile)
         self.parent.selectAudioPlaylistUIItem()
-        config.isVlcPlaying = False
+        config.isMediaPlaying = False
         self.thread_complete()
         return "Finished Playing!"
 
@@ -158,9 +159,9 @@ class PydubAudio:
         self.parent = parent
         self.threadpool = QThreadPool()
 
-    def vlcFile(self, _):
+    def pydubFile(self):
         # vlc gui for video only
-        config.isPydubPlaying = True
+        config.isMediaPlaying = True
         # Load audio file
         audio = AudioSegment.from_file(config.currentAudioFile, format="mp3")
         # Change speed
@@ -170,7 +171,7 @@ class PydubAudio:
         # Play audio
         config.playback = play(louder_audio)
 
-        config.isPydubPlaying = False
+        config.isMediaPlaying = False
         #self.thread_complete()
         return "Finished Playing!"
 
@@ -190,9 +191,9 @@ class PydubAudio:
                 self.parent.playAudioPlayList()
         #print("THREAD COMPLETE!")
 
-    def workOnVlcFile(self):
+    def workOnPydubFile(self):
         # Pass the function to execute
-        worker = Worker(self.vlcFile, "test") # Any other args, kwargs are passed to the run function
+        worker = Worker(self.pydubFile) # Any other args, kwargs are passed to the run function
         #worker.signals.result.connect(self.print_output)
         #worker.signals.finished.connect(self.thread_complete)
         # Execute

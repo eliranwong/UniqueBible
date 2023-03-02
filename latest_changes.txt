@@ -1,3 +1,8 @@
+Changes in 34.12:
+* simplified installing qtlibrary via multipass
+* fixed missing pydub package
+* removed text sync with vlc playback
+
 Changes in 34.11:
 * added text sync with vlc playback
 
