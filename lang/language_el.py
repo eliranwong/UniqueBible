@@ -1017,4 +1017,6 @@ translation = {
     "qtLibrary": "Βιβλιοθήκη Qt",
     "terminalMode": "Κατάσταση τερματικού",
     "terminal": "' Τερματικό",
+    "usePydubToChangeAudioSpeed": "Χρήση Pydub για αλλαγή της ταχύτητας ήχου",
+    "terminalForceVlc": "Force UBA για χρήση VLC media player σε λειτουργία τερματικού",
 }

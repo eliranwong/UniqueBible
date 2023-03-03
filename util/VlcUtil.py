@@ -1,0 +1,70 @@
+import config, os, sys, re, platform, subprocess
+
+class VlcUtil:
+
+    @staticmethod
+    def isPackageInstalled(package):
+        whichCommand = "where.exe" if platform.system() == "Windows" else "which"
+        try:
+            isInstalled, *_ = subprocess.Popen("{0} {1}".format(whichCommand, package), shell=True, stdout=subprocess.PIPE).communicate()
+            return True if isInstalled else False
+        except:
+            return False
+
+    @staticmethod
+    def playMediaFile(filePath, vlcSpeed, audioGui=False):
+        # on macOS
+        if not hasattr(config, "macVlc"):
+            macVlc = "/Applications/VLC.app/Contents/MacOS/VLC"
+            config.macVlc = macVlc if platform.system() == "Darwin" and os.path.isfile(macVlc) else ""
+        # on Windows
+        if not hasattr(config, "windowsVlc"):
+            windowsVlc = r'C:\Program(filePath, vlcSpeed): Files\VideoLAN\VLC\vlc.exe'
+            config.windowsVlc = windowsVlc if platform.system() == "Windows" and os.path.isfile(windowsVlc) else ""
+        filePath = os.path.abspath(filePath)
+        VlcUtil.playMediaFileVlcGui(filePath, vlcSpeed) if re.search("(.mp4|.avi)$", filePath.lower()[-4:]) or audioGui else VlcUtil.playMediaFileVlcNoGui(filePath, vlcSpeed)
+
+    # play audio file with vlc without gui
+    @staticmethod
+    def playMediaFileVlcNoGui(filePath, vlcSpeed):
+        try:
+            # vlc on macOS
+            if config.macVlc:
+                command = f'''{config.macVlc} --intf rc --play-and-exit --rate {vlcSpeed} "{filePath}" &> /dev/null'''
+            # vlc on windows
+            elif config.windowsVlc:
+                command = f'''"{config.windowsVlc}" --play-and-exit --rate {vlcSpeed} "{filePath}"'''
+            # vlc on other platforms
+            elif VlcUtil.isPackageInstalled("cvlc"):
+                command = f'''cvlc --play-and-exit --rate {vlcSpeed} "{filePath}" &> /dev/null'''
+            # use .communicate() to wait for the playback to be completed as .wait() or checking pid existence does not work
+            subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+        except:
+            pass
+
+    # play video file with vlc with gui
+    @staticmethod
+    def playMediaFileVlcGui(filePath, vlcSpeed):
+        try:
+            # vlc on macOS
+            if config.macVlc:
+                command = f'''{config.macVlc} --play-and-exit --rate {vlcSpeed} "{filePath}" &> /dev/null'''
+            # vlc on windows
+            elif config.windowsVlc:
+                command = f'''"{config.windowsVlc}" --play-and-exit --rate {vlcSpeed} "{filePath}"'''
+            # vlc on other platforms
+            elif VlcUtil.isPackageInstalled("vlc"):
+                command = f'''vlc --play-and-exit --rate {vlcSpeed} "{filePath}" &> /dev/null'''
+            # use .communicate() to wait for the playback to be completed as .wait() or checking pid existence does not work
+            subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+        except:
+            pass
+
+if __name__ == '__main__':
+    speed = float(sys.argv[1])
+    audioFile = " ".join(sys.argv[2:])
+    VlcUtil.playMediaFile(audioFile, speed)
+    isVlcPlaying = os.path.join("temp", "isVlcPlaying")
+    if os.path.isfile(isVlcPlaying):
+        os.remove(isVlcPlaying)
+

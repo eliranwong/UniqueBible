@@ -1017,4 +1017,6 @@ translation = {
     "qtLibrary": "ക്യൂട്ടി ലൈബ്രറി",
     "terminalMode": "ടെര്മിനല് ദശ",
     "terminal": "ടെര്മിനല്",
+    "usePydubToChangeAudioSpeed": "ഓഡിയോ വേഗത മാറ്റാന് Pydub ഉപയോഗിക്കുക",
+    "terminalForceVlc": "ടെര്മിനല് രീതിയില് VLC മീഡിയ കളിക്കാരനെ ഉപയോഗിക്കുവാന് UBA നിര്ബന്ധിയ്ക്കുക",
 }

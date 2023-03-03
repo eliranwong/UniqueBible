@@ -1,3 +1,6 @@
+Changes in 34.15:
+* improved .readsync running on terminal mode.
+
 Changes in 34.14:
 * support stoping .readsync command in desktop version.
 

@@ -1,4 +1,4 @@
-import os, config, zipfile, gdown, shutil, re, signal
+import os, config, zipfile, gdown, shutil, re, platform, subprocess, sys, signal
 
 from util.LanguageUtil import LanguageUtil
 from util.TextCommandParser import TextCommandParser
@@ -10,7 +10,8 @@ from util.WebtopUtil import WebtopUtil
 from util.FileUtil import FileUtil
 from db.BiblesSqlite import Bible, MorphologySqlite
 from util.BibleBooks import BibleBooks
-from util.MediaUtil import MediaUtil
+from util.PydubUtil import PydubUtil
+from util.VlcUtil import VlcUtil
 from pydub.playback import play
 from install.module import *
 
@@ -280,7 +281,19 @@ class RemoteCliMainWindow(CrossPlatform):
                     else:
                         print(textList[index])
                     # play audio with user customised speed
-                    play(MediaUtil.audioChangeSpeed(audioFile, config.mediaSpeed))
+                    if config.useThirdPartyVLCplayer or (config.terminalForceVlc and config.isVlcAvailable):
+                        VlcUtil.playMediaFile(audioFile, config.vlcSpeed)
+                    else:
+                        if not platform.system() == "Darwin":
+                            # use subprocess to hide pydub output
+                            isPydubPlaying = os.path.join("temp", "isPydubPlaying")
+                            FileUtil.touchFile(isPydubPlaying)
+                            subprocess.Popen(f"""{sys.executable} util/PydubUtil.py {config.mediaSpeed} {config.speedUpFilterFrequency} {audioFile}""", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                            while os.path.isfile(isPydubPlaying):
+                                pass
+                        else:
+                            # on macOS, pydub does not print output on terminal while playing, so we play the audio directly
+                            play(PydubUtil.audioChangeSpeed(audioFile, config.mediaSpeed, config.speedUpFilterFrequency))
                 except:
                     pass
                 self.closeMediaPlayer()
@@ -288,11 +301,7 @@ class RemoteCliMainWindow(CrossPlatform):
                 config.mainWindow.removeAudioPlayingFile()
 
     def closeMediaPlayer(self):
-        #if removeAudio_playing_file and os.path.isfile(config.audio_playing_file):
-        #    os.remove(config.audio_playing_file)
-
         if WebtopUtil.isPackageInstalled("pkill"):
-
             # close Android media player
             try:
                 if WebtopUtil.isPackageInstalled("termux-media-player"):

@@ -76,6 +76,7 @@ from util.MacroParser import MacroParser
 from util.NoteService import NoteService
 from util.ShortcutUtil import ShortcutUtil
 from util.TextUtil import TextUtil
+from util.PydubUtil import PydubUtil
 import shortcut as sc
 from util.UpdateUtil import UpdateUtil
 from util.DateUtil import DateUtil
@@ -416,36 +417,6 @@ class MainWindow(QMainWindow):
                 self.audioPlayer.setVideoOutput(self.videoView)
             self.videoView.show()
 
-    # play audio file with vlc without gui
-    def playAudioFileCVLC(self, filePath):
-        try:
-            # vlc on macOS
-            if config.macVlc:
-                os.system(f'''{config.macVlc} --intf rc --play-and-exit --rate {config.vlcSpeed} "{filePath}" &> /dev/null''')
-            # vlc on windows
-            elif config.windowsVlc:
-                os.system(f'''"{config.windowsVlc}" --play-and-exit --rate {config.vlcSpeed} "{filePath}"''')
-            # vlc on other platforms
-            elif WebtopUtil.isPackageInstalled("cvlc"):
-                os.system(f'''cvlc --intf rc --play-and-exit --rate {config.vlcSpeed} "{filePath}" &> /dev/null''')
-        except:
-            pass
-
-    # play video file with vlc with gui
-    def playMediaFileVLC(self, filePath):
-        try:
-            # vlc on macOS
-            if config.macVlc:
-                os.system(f'''{config.macVlc} --play-and-exit --rate {config.vlcSpeed} "{filePath}" &> /dev/null''')
-            # vlc on windows
-            elif config.windowsVlc:
-                os.system(f'''"{config.windowsVlc}" --play-and-exit --rate {config.vlcSpeed} "{filePath}"''')
-            # vlc on other platforms
-            elif WebtopUtil.isPackageInstalled("vlc"):
-                os.system(f'''vlc --play-and-exit --rate {config.vlcSpeed} "{filePath}" &> /dev/null''')
-        except:
-            pass
-
     def syncAudioWithText(self, filePath):
         basename = os.path.basename(filePath)
         if config.audioTextSync and not basename in ("gtts.mp3",):
@@ -478,35 +449,40 @@ class MainWindow(QMainWindow):
             # full path is required for PySide2 QMediaPlayer to work
             config.currentAudioFile = os.path.abspath(QDir.toNativeSeparators(filePath))
 
-            if config.useThirdPartyVLCplayer:
-                VLC(self).workOnVlcFile()
+            #if config.useThirdPartyVLCplayer:
+            #    VLC(self).workOnVlcFile()
+            #else:
+            # check if it is a supported video file
+            if re.search("(.mp4|.avi)$", filePath.lower()[-4:]):
+                self.openVideoView()
+                if not self.videoView.isVisible():
+                    self.bringToForeground(self.videoView)
+            if re.search("(.mp3|.wav)$", filePath.lower()[-4:]) and config.usePydubToChangeAudioSpeed:
+                self.audioPlayer.setPlaybackRate(1.0)
+                config.currentAudioFile = PydubUtil.exportAudioFile(config.currentAudioFile, config.mediaSpeed, config.speedUpFilterFrequency)
             else:
-                # check if it is a supported video file
-                if re.search("(.mp4|.avi)$", filePath.lower()[-4:]):
-                    self.openVideoView()
-                    if not self.videoView.isVisible():
-                        self.bringToForeground(self.videoView)
-                # play audio file with builtin media player
-                if config.qtLibrary == "pyside6":
-                    # remarks: tested on Ubuntu
-                    # for unknown reasons, the following three lines do not work when they are executed directly without puting into a string first
-                    # work as expected when the string is executed with exec() method
-                    codes = f"""
+                self.audioPlayer.setPlaybackRate(config.mediaSpeed)
+            # play audio file with builtin media player
+            if config.qtLibrary == "pyside6":
+                # remarks: tested on Ubuntu
+                # for unknown reasons, the following three lines do not work when they are executed directly without puting into a string first
+                # work as expected when the string is executed with exec() method
+                codes = f"""
 config.audioOutput = QAudioOutput()
 config.audioOutput.setVolume(config.audioVolume)
 config.audioOutput.setMuted(config.audioMuted)
 config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)
 config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(""))
 config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(config.currentAudioFile))"""
-                    exec(codes, globals())
-                else:
-                    dummy_media_content = QMediaContent(QUrl.fromLocalFile(""))
-                    media_content = QMediaContent(QUrl.fromLocalFile(config.currentAudioFile))
-                    # reset media is needed to repeatedly play files having the same filepaths but of different content
-                    self.audioPlayer.setMedia(dummy_media_content)
-                    self.audioPlayer.setMedia(media_content)
-                self.audioPlayer.play()
-                self.selectAudioPlaylistUIItem()
+                exec(codes, globals())
+            else:
+                dummy_media_content = QMediaContent(QUrl.fromLocalFile(""))
+                media_content = QMediaContent(QUrl.fromLocalFile(config.currentAudioFile))
+                # reset media is needed to repeatedly play files having the same filepaths but of different content
+                self.audioPlayer.setMedia(dummy_media_content)
+                self.audioPlayer.setMedia(media_content)
+            self.audioPlayer.play()
+            self.selectAudioPlaylistUIItem()
 
     def selectAudioPlaylistUIItem(self):
         if hasattr(self, "audioPlayListUI") and self.audioPlayListUI and self.audioPlayListUI.isVisible() and (self.audioPlayListUI.model.rowCount() > self.audioPlayListIndex >= 0):
@@ -527,7 +503,9 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
 
     def on_media_status_changed(self, status):
         if status == QMediaPlayer.BufferedMedia:
-            self.audioPlayer.setPlaybackRate(config.mediaSpeed)
+            #self.audioPlayer.setPlaybackRate(config.mediaSpeed)
+            #self.audioPlayer.play()
+            pass
 
     def on_duration_changed(self, duration):
         # Set the range of the slider to the duration of the video when it is known

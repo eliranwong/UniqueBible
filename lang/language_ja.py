@@ -1017,4 +1017,6 @@ translation = {
     "qtLibrary": "Qt ライブラリー",
     "terminalMode": "端末モード",
     "terminal": "ターミナル",
+    "usePydubToChangeAudioSpeed": "オーディオ・スピードを変更するにはピダブを",
+    "terminalForceVlc": "端末モードでの VLC メディア・プレイヤーの使用を UBA に強制する",
 }

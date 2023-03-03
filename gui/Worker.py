@@ -5,6 +5,7 @@ else:
     from qtpy.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool
 from pydub import AudioSegment
 from pydub.playback import play
+from util.VlcUtil import VlcUtil
 
 
 class WorkerSignals(QObject):
@@ -87,7 +88,7 @@ class VLC:
     def vlcFile(self):
         # vlc gui for video only
         config.isMediaPlaying = True
-        self.parent.playMediaFileVLC(config.currentAudioFile) if re.search("(.mp4|.avi)$", config.currentAudioFile.lower()[-4:]) else self.parent.playAudioFileCVLC(config.currentAudioFile)
+        VlcUtil.playMediaFile(config.currentAudioFile, config.vlcSpeed)
         self.parent.selectAudioPlaylistUIItem()
         config.isMediaPlaying = False
         self.thread_complete()

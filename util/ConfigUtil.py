@@ -2,6 +2,7 @@ import codecs
 import logging
 import os, pprint, config, platform, sys
 from util.DateUtil import DateUtil
+from util.WebtopUtil import WebtopUtil
 from lang import language_en_GB
 
 class ConfigUtil:
@@ -221,6 +222,9 @@ class ConfigUtil:
         # minimum of 2 records is required
         if config.terminalEditorMaxTextChangeRecords < 2:
             config.terminalEditorMaxTextChangeRecords = 2
+        setConfig("terminalForceVlc", """
+        # To use third-party VLC media player on terminal mode even config.useThirdPartyVLCplayer is set to False for general cases.""",
+        True)
         setConfig("terminalBibleComparison", """
         # To display bible chapter in comparison mode when users enter a reference in terminal mode.""",
         False)
@@ -632,7 +636,7 @@ class ConfigUtil:
         # Changing this value may change the quality of audio with increased speed.
         # Read low_pass_filter and high_pass_filter at:
         # https://github.com/jiaaro/pydub/blob/master/pydub/effects.py#L221""",
-        1000)
+        500)
         setConfig("vlcSpeed", """
         # VLC player playback speed""",
         1.0)
@@ -902,6 +906,10 @@ class ConfigUtil:
         setConfig("showVerseReference", """
         # Options to display verse reference: True / False""",
         True)
+        setConfig("usePydubToChangeAudioSpeed", """
+        # Options to use pydub library to change audio speed: True / False
+        # This applies only to mp3 and wav audio files playing with built-in media player.""",
+        False)
         setConfig("useThirdPartyVLCplayer", """
         # Options to use third-party VLC player: True / False""",
         False)

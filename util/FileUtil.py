@@ -25,6 +25,11 @@ class FileUtil:
             return -1
 
     @staticmethod
+    def touchFile(filePath):
+        if not os.path.isfile(filePath):
+            open(filePath, "a", encoding="utf-8").close()
+
+    @staticmethod
     def createCustomFiles():
         # Create files for user customisation
         # "config.py" is essential for running module "config".

@@ -799,6 +799,8 @@ config.windowsVlc = windowsVlc if platform.system() == "Windows" and os.path.isf
 config.isVlcAvailable = False if not macVlc and not windowsVlc and (not platform.system() == "Windows" and not WebtopUtil.isPackageInstalled("vlc")) else True
 if config.useThirdPartyVLCplayer and not config.isVlcAvailable:
     config.useThirdPartyVLCplayer = False
+if config.terminalForceVlc and not config.isVlcAvailable:
+            config.terminalForceVlc = False
 
 # Check if system tray is enabled
 config.enableSystemTray = True if config.enableSystemTrayOnLinux or not platform.system() == "Linux" else False

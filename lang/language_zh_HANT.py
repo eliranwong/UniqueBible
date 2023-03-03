@@ -1017,4 +1017,6 @@ translation = {
     "qtLibrary": "Qt 檔案庫",
     "terminalMode": "終端機模式",
     "terminal": "終端",
+    "usePydubToChangeAudioSpeed": "使用 Pydub 來變更音訊速度",
+    "terminalForceVlc": "強制 UBA 在終端機模式下使用 VLC 媒體播放程式",
 }

@@ -1017,4 +1017,6 @@ translation = {
     "qtLibrary": "Qt 라이브러리",
     "terminalMode": "터미널 모드",
     "terminal": "터미널",
+    "usePydubToChangeAudioSpeed": "Pydub를 사용하여 오디오 속도 변경",
+    "terminalForceVlc": "UBA, 터미널 모드에서 VLC 미디어 플레이어 사용하기",
 }

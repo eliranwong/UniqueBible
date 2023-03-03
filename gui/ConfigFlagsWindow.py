@@ -134,7 +134,9 @@ class ConfigFlagsWindow(QDialog):
             ("disableLoadLastOpenFilesOnStartup", config.disableLoadLastOpenFilesOnStartup, self.disableLoadLastOpenFilesOnStartupChanged, False, config.thisTranslation["disableLoadLastOpenFilesOnStartup"]),
             ("disableOpenPopupWindowOnStartup", config.disableOpenPopupWindowOnStartup, self.disableOpenPopupWindowOnStartupChanged, True, config.thisTranslation["disableOpenPopupWindowOnStartup"]),
             ("showMiniKeyboardInMiniControl", config.showMiniKeyboardInMiniControl, self.showMiniKeyboardInMiniControlChanged, False, config.thisTranslation["showMiniKeyboardInMiniControl"]),
+            ("usePydubToChangeAudioSpeed", config.usePydubToChangeAudioSpeed, self.usePydubToChangeAudioSpeedChanged, False, config.thisTranslation["usePydubToChangeAudioSpeed"]),
             ("useThirdPartyVLCplayer", config.useThirdPartyVLCplayer, self.useThirdPartyVLCplayerChanged, False, config.thisTranslation["useThirdPartyVLCplayer"]),
+            ("terminalForceVlc", config.terminalForceVlc, self.terminalForceVlcChanged, True, config.thisTranslation["terminalForceVlc"]),
             ("hideVlcInterfaceReadingSingleVerse", config.hideVlcInterfaceReadingSingleVerse, self.hideVlcInterfaceReadingSingleVerseChanged, True, config.thisTranslation["hideVlcInterfaceReadingSingleVerse"]),
             ("doNotStop3rdPartyMediaPlayerOnExit", config.doNotStop3rdPartyMediaPlayerOnExit, self.doNotStop3rdPartyMediaPlayerOnExitChanged, False, config.thisTranslation["doNotStop3rdPartyMediaPlayerOnExit"]),
             ("refreshWindowsAfterSavingNote", config.refreshWindowsAfterSavingNote, self.refreshWindowsAfterSavingNoteChanged, True, config.thisTranslation["refreshWindowsAfterSavingNote"]),
@@ -281,6 +283,14 @@ class ConfigFlagsWindow(QDialog):
         config.ttsChineseAlwaysMandarin = not config.ttsChineseAlwaysMandarin
         if config.ttsChineseAlwaysMandarin and config.ttsChineseAlwaysCantonese:
             config.ttsChineseAlwaysCantonese = not config.ttsChineseAlwaysCantonese
+
+    def usePydubToChangeAudioSpeedChanged(self):
+        config.usePydubToChangeAudioSpeed = not config.usePydubToChangeAudioSpeed
+
+    def terminalForceVlcChanged(self):
+        config.terminalForceVlc = not config.terminalForceVlc
+        if config.terminalForceVlc and not config.isVlcAvailable:
+            config.terminalForceVlc = False
 
     def useThirdPartyVLCplayerChanged(self):
         config.useThirdPartyVLCplayer = not config.useThirdPartyVLCplayer

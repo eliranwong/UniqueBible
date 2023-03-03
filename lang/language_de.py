@@ -1017,4 +1017,6 @@ translation = {
     "qtLibrary": "Qt-Bibliothek",
     "terminalMode": "Terminalmodus",
     "terminal": "Terminal",
+    "usePydubToChangeAudioSpeed": "Verwenden Sie Pydub, um die Audiogeschwindigkeit zu ändern",
+    "terminalForceVlc": "UBA zur Verwendung von VLC-Media-Player im Terminal-Modus erzwingen",
 }
