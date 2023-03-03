@@ -432,6 +432,8 @@ class MainWindow(QMainWindow):
             if isVerse:
                 text, b, c, v = isVerse.groups()
                 instantInfo = self.textCommandParser.getInstantMainVerseInfo(f"{b}.{c}.{v}", text) if text in self.textList else getDefaultInfo()
+                if config.scrollBibleTextWithAudioPlayback:
+                    self.mainPage.runJavaScript(self.getScrollVerseJS(b, c, v, underline=True))
             elif isWord:
                 _, book, wordId = isWord.groups()
                 instantInfo = self.textCommandParser.getInstantWordInfo(f"{book}:::{wordId}")
@@ -3925,11 +3927,15 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
                 b, c, v = config.studyB, config.studyC, config.studyV
             else:
                 b, c, v = config.mainB, config.mainC, config.mainV
+        return self.getScrollVerseJS(b, c, v)
+    
+    def getScrollVerseJS(self, b, c, v, underline=False):
         activeVerseNoColour = config.darkThemeActiveVerseColor if config.theme in ("dark", "night") else config.lightThemeActiveVerseColor
         js = """
             var activeVerse = document.getElementById('v{0}.{1}.{2}');
             if (typeof(activeVerse) != 'undefined' && activeVerse != null) {3}
                 activeVerse.scrollIntoView(); activeVerse.style.color = '{5}';
+                {6}
             {4} else if (document.getElementById('v0.0.0') != null) {3}
                 document.getElementById('v0.0.0').scrollIntoView();
             {4}
@@ -3940,6 +3946,7 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
             "{",
             "}",
             activeVerseNoColour,
+            "activeVerse.style.textDecoration = 'underline';" if underline else "",
         )
         #print("studyView", studyView)
         #print(js)
@@ -4153,6 +4160,24 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
         self.loopMediaButton.setStyleSheet(icon)
         self.loopMediaButton.setToolTip(self.getLoopMediaButtonToolTip())
 
+    # Actions - enable or disable bible text scrolling synchronisation with audio 
+    def getAudioTextScrollSyncDisplay(self):
+        if config.scrollBibleTextWithAudioPlayback:
+            return self.getCrossplatformPath("material/communication/import_export/materialiconsoutlined/48dp/2x/outline_import_export_black_48dp.png")
+        else:
+            return self.getCrossplatformPath("material/device/mobiledata_off/materialiconsoutlined/48dp/2x/outline_mobiledata_off_black_48dp.png")
+
+    def getAudioTextScrollSyncToolTip(self):
+        return "{0}: {1}".format(config.thisTranslation["scrollBibleTextWithAudioPlayback"], config.thisTranslation["on" if config.scrollBibleTextWithAudioPlayback else "off"])
+
+    def audioTextScrollSyncButtonClicked(self):
+        config.scrollBibleTextWithAudioPlayback = not config.scrollBibleTextWithAudioPlayback
+        if config.scrollBibleTextWithAudioPlayback and not config.audioTextSync:
+            self.audioTextSyncButtonClicked()
+        icon = self.getQIcon(self.getAudioTextScrollSyncDisplay())
+        self.audioTextScrollSyncButton.setStyleSheet(icon)
+        self.audioTextScrollSyncButton.setToolTip(self.getAudioTextScrollSyncToolTip())
+
     # Actions - enable or disable text synchronisation with audio 
     def getAudioTextSyncDisplay(self):
         if config.audioTextSync:
@@ -4168,6 +4193,8 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
 
     def audioTextSyncButtonClicked(self):
         config.audioTextSync = not config.audioTextSync
+        if not config.audioTextSync and config.scrollBibleTextWithAudioPlayback:
+            self.audioTextScrollSyncButtonClicked()
         icon = self.getQIcon(self.getAudioTextSyncDisplay())
         self.audioTextSyncButton.setStyleSheet(icon)
         self.audioTextSyncButton.setToolTip(self.getAudioTextSyncToolTip())

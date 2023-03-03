@@ -1019,4 +1019,5 @@ translation = {
     "terminal": "टर्मिनल",
     "usePydubToChangeAudioSpeed": "ऑडियो गति बदलने के लिए Pydub का प्रयोग करें",
     "terminalForceVlc": "टर्मिनल मोड में VLC मीडिया प्लेयर का उपयोग करने के लिए UBA को बाध्य करें",
+    "scrollBibleTextWithAudioPlayback": "ऑडियो बजाने के साथ पाठ स्क्रॉलिंग सिंक्रोनाइज",
 }

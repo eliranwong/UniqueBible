@@ -1019,4 +1019,5 @@ translation = {
     "terminal": "터미널",
     "usePydubToChangeAudioSpeed": "Pydub를 사용하여 오디오 속도 변경",
     "terminalForceVlc": "UBA, 터미널 모드에서 VLC 미디어 플레이어 사용하기",
+    "scrollBibleTextWithAudioPlayback": "오디오 재생과 함께 텍스트 스크롤링 동기화",
 }

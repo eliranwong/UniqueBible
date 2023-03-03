@@ -863,6 +863,9 @@ class ConfigUtil:
         setConfig("audioTextSync", """
         # Options to enable text synchronisation with audio playing: True / False""",
         True)
+        setConfig("scrollBibleTextWithAudioPlayback", """
+        # Options to scroll bible text with audio synchronisation: True / False""",
+        False)
         setConfig("loopMediaPlaylist", """
         # Options to loop media player playlist: True / False""",
         False)

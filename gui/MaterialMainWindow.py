@@ -1234,6 +1234,8 @@ class MaterialMainWindow:
             self.addMaterialIconButton(self.getLoopMediaButtonToolTip(), self.getLoopMediaButtonDisplay(), self.loopMediaButtonClicked, self.thirdToolBar, self.loopMediaButton, False)
             self.audioTextSyncButton = QPushButton()
             self.addMaterialIconButton(self.getAudioTextSyncToolTip(), self.getAudioTextSyncDisplay(), self.audioTextSyncButtonClicked, self.thirdToolBar, self.audioTextSyncButton, False)
+            self.audioTextScrollSyncButton = QPushButton()
+            self.addMaterialIconButton(self.getAudioTextScrollSyncToolTip(), self.getAudioTextScrollSyncDisplay(), self.audioTextScrollSyncButtonClicked, self.thirdToolBar, self.audioTextScrollSyncButton, False)
             icon = "material/action/open_in_full/materialiconsoutlined/48dp/2x/outline_open_in_full_black_48dp.png"
             self.addMaterialIconButton("menu1_resize", icon, self.resizeAudioPlayer, self.thirdToolBar)
 

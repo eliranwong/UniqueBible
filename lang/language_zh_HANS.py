@@ -1019,4 +1019,5 @@ translation = {
     "terminal": "终端",
     "usePydubToChangeAudioSpeed": "使用 Pydub 更改音频速度",
     "terminalForceVlc": "强制 UBA 以终端方式使用 VLC 媒体播放器",
+    "scrollBibleTextWithAudioPlayback": "与音频播放同步的文本滚动同步",
 }

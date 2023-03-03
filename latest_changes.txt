@@ -1,3 +1,6 @@
+Changes in 34.16:
+* Added option to scroll bible text with audio playback in material menu layout.
+
 Changes in 34.15:
 * improved .readsync running on terminal mode.
 
