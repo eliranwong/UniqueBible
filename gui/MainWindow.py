@@ -5948,8 +5948,10 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
 
     def closeMediaPlayer(self):
         # stop terminal mode .readsync loop
-        if os.path.isfile(config.audio_playing_file):
-            os.remove(config.audio_playing_file)
+        isPydubPlaying = os.path.join("temp", "isPydubPlaying")
+        for file_to_be_deleted in (config.audio_playing_file, isPydubPlaying):
+            if os.path.isfile(file_to_be_deleted):
+                os.remove(file_to_be_deleted)
         if self.audioPlayer is not None:
             self.stopAudioPlaying()
         if not platform.system() == "Windows" and WebtopUtil.isPackageInstalled("pkill"):
