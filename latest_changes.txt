@@ -1,3 +1,6 @@
+Changes in 34.17:
+* Improved menu plugin "Terminal Mode".  It now opens the same verse reference, as the desktop version, when it is launched.
+
 Changes in 34.16:
 * Added option to scroll bible text with audio playback in material menu layout.
 
