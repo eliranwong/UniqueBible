@@ -9,6 +9,7 @@ else:
 class PlaylistUI(QWidget):
     def __init__(self, parent):
         super().__init__()
+        self.justLaunched = True
         self.parent = parent
         self.setWindowTitle(config.thisTranslation["media"])
 
@@ -77,7 +78,10 @@ class PlaylistUI(QWidget):
             if not config.currentAudioFile == os.path.abspath(self.model.item(row).toolTip()):
                 self.parent.stopAudioPlaying()
             self.parent.audioPlayListIndex = row
-            self.parent.playAudioPlaying()
+            if self.justLaunched:
+                self.justLaunched = False
+            elif not config.isVlcPlayingInQThread:
+                self.parent.playAudioPlaying()
 
     def updateMediaList(self):
         fileList = []

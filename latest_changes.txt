@@ -1,3 +1,6 @@
+Changes in 34.20:
+* fixed media playback
+
 Changes in 34.19:
 * added config.useThirdPartyVLCplayerForVideoOnly
 

@@ -78,47 +78,6 @@ class Worker(QRunnable):
             self.signals.finished.emit()  # Done
 
 
-class VLC:
-
-    def __init__(self, parent):
-        super().__init__()
-        self.parent = parent
-        self.threadpool = QThreadPool()
-
-    def vlcFile(self):
-        # vlc gui for video only
-        config.isMediaPlaying = True
-        VlcUtil.playMediaFile(config.currentAudioFile, config.vlcSpeed)
-        self.parent.selectAudioPlaylistUIItem()
-        config.isMediaPlaying = False
-        self.thread_complete()
-        return "Finished Playing!"
-
-    def print_output(self, s):
-        print(s)
-
-    def thread_complete(self):
-        if self.parent.audioPlayListIndex == -2: # stopped by users
-            self.parent.resetAudioPlaylist()
-        else:
-            if self.parent.audioPlayListIndex == len(self.parent.audioPlayList) - 1:
-                self.parent.resetAudioPlaylist()
-                if config.loopMediaPlaylist:
-                    self.parent.playAudioPlayList()
-            else:
-                self.parent.audioPlayListIndex += 1
-                self.parent.playAudioPlayList()
-        #print("THREAD COMPLETE!")
-
-    def workOnVlcFile(self):
-        # Pass the function to execute
-        worker = Worker(self.vlcFile) # Any other args, kwargs are passed to the run function
-        #worker.signals.result.connect(self.print_output)
-        #worker.signals.finished.connect(self.thread_complete)
-        # Execute
-        self.threadpool.start(worker)
-
-
 class VLCVideo:
 
     def __init__(self, parent):
@@ -132,7 +91,6 @@ class VLCVideo:
 
     def print_output(self, s):
         print(s)
-        self.parent.workOnPlaylistIndex()
 
     def thread_complete(self):
         print("THREAD COMPLETE!")
@@ -140,7 +98,8 @@ class VLCVideo:
     def workOnPlayVideo(self, videoFilePath, speed):
         # Pass the function to execute
         worker = Worker(self.playVideo, videoFilePath, speed) # Any other args, kwargs are passed to the run function
-        worker.signals.result.connect(self.print_output)
+        worker.signals.finished.connect(self.parent.workOnPlaylistIndex)
+        #worker.signals.result.connect(self.print_output)
         #worker.signals.finished.connect(self.thread_complete)
         # Execute
         self.threadpool.start(worker)
@@ -169,14 +128,13 @@ class YouTubeDownloader:
         print(s)
 
     def thread_complete(self):
-        self.parent.reloadResources()
         print("THREAD COMPLETE!")
 
     def workOnDownloadYouTubeFile(self, downloadCommand, youTubeLink, outputFolder):
         # Pass the function to execute
         worker = Worker(self.downloadYouTubeFile, downloadCommand, youTubeLink, outputFolder) # Any other args, kwargs are passed to the run function
         worker.signals.result.connect(self.print_output)
-        worker.signals.finished.connect(self.thread_complete)
+        worker.signals.finished.connect(self.parent.reloadResources)
         # Execute
         self.threadpool.start(worker)
 
@@ -200,24 +158,13 @@ class PydubAudio:
         config.playback = play(louder_audio)
 
         config.isMediaPlaying = False
-        #self.thread_complete()
         return "Finished Playing!"
 
     def print_output(self, s):
         print(s)
 
     def thread_complete(self):
-        if self.parent.audioPlayListIndex == -2: # stopped by users
-            self.parent.resetAudioPlaylist()
-        else:
-            if self.parent.audioPlayListIndex == len(self.parent.audioPlayList) - 1:
-                self.parent.resetAudioPlaylist()
-                if config.loopMediaPlaylist:
-                    self.parent.playAudioPlayList()
-            else:
-                self.parent.audioPlayListIndex += 1
-                self.parent.playAudioPlayList()
-        #print("THREAD COMPLETE!")
+        print("THREAD COMPLETE!")
 
     def workOnPydubFile(self):
         # Pass the function to execute

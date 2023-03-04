@@ -309,6 +309,7 @@ class MainWindow(QMainWindow):
                 self.playAudioPlayList()
 
     def setupAudioPlayer(self):
+        config.isVlcPlayingInQThread = False
         if config.qtLibrary == "pyside6":
             config.audioVolume = 1.0
             config.audioOutput = QAudioOutput()
@@ -455,11 +456,13 @@ class MainWindow(QMainWindow):
             self.syncAudioWithText(filePath)
             # full path is required for PySide2 QMediaPlayer to work
             config.currentAudioFile = os.path.abspath(QDir.toNativeSeparators(filePath))
-            # update playlist gui
-            self.selectAudioPlaylistUIItem()
-            if config.useThirdPartyVLCplayerForVideoOnly:
+            if isVideo and config.useThirdPartyVLCplayerForVideoOnly:
+                # update playlist gui
+                self.selectAudioPlaylistUIItem()
                 try:
+                    config.isVlcPlayingInQThread = True
                     VLCVideo(self).workOnPlayVideo(config.currentAudioFile, config.mediaSpeed)
+                    config.isVlcPlayingInQThread = False
                 except:
                     self.audioPlayListIndex = -2
                     # possbily users close VLC player manually
@@ -494,12 +497,12 @@ class MainWindow(QMainWindow):
                     # for unknown reasons, the following three lines do not work when they are executed directly without puting into a string first
                     # work as expected when the string is executed with exec() method
                     codes = f"""
-    config.audioOutput = QAudioOutput()
-    config.audioOutput.setVolume(config.audioVolume)
-    config.audioOutput.setMuted(config.audioMuted)
-    config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)
-    config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(""))
-    config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(config.currentAudioFile))"""
+config.audioOutput = QAudioOutput()
+config.audioOutput.setVolume(config.audioVolume)
+config.audioOutput.setMuted(config.audioMuted)
+config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)
+config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(""))
+config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(config.currentAudioFile))"""
                     exec(codes, globals())
                 else:
                     dummy_media_content = QMediaContent(QUrl.fromLocalFile(""))
@@ -508,6 +511,8 @@ class MainWindow(QMainWindow):
                     self.audioPlayer.setMedia(dummy_media_content)
                     self.audioPlayer.setMedia(media_content)
                 self.audioPlayer.play()
+                # update playlist gui
+                self.selectAudioPlaylistUIItem()
 
     def selectAudioPlaylistUIItem(self):
         if hasattr(self, "audioPlayListUI") and self.audioPlayListUI and self.audioPlayListUI.isVisible() and (self.audioPlayListUI.model.rowCount() > self.audioPlayListIndex >= 0):
