@@ -459,11 +459,20 @@ class MainWindow(QMainWindow):
                 self.openVideoView()
                 if not self.videoView.isVisible():
                     self.bringToForeground(self.videoView)
-            if re.search("(.mp3|.wav)$", filePath.lower()[-4:]) and config.usePydubToChangeAudioSpeed:
-                self.audioPlayer.setPlaybackRate(1.0)
-                config.currentAudioFile = PydubUtil.exportAudioFile(config.currentAudioFile, config.mediaSpeed, config.speedUpFilterFrequency)
-            else:
-                self.audioPlayer.setPlaybackRate(config.mediaSpeed)
+            if not (config.mediaSpeed == 1.0):
+                isAudio = re.search("(.mp3|.wav)$", filePath.lower()[-4:])
+                if isAudio and config.useFfmpegToChangeAudioSpeed:
+                    self.audioPlayer.setPlaybackRate(1.0)
+                    newAudiofile = os.path.join(os.getcwd(), "temp", "ffmpeg.wav")
+                    if os.path.isfile(newAudiofile):
+                        os.remove(newAudiofile)
+                    os.system(f'''ffmpeg -i {config.currentAudioFile} -filter:a "atempo={config.mediaSpeed}" {newAudiofile}''')
+                    config.currentAudioFile = newAudiofile
+                elif isAudio and config.usePydubToChangeAudioSpeed:
+                    self.audioPlayer.setPlaybackRate(1.0)
+                    config.currentAudioFile = PydubUtil.exportAudioFile(config.currentAudioFile, config.mediaSpeed, config.speedUpFilterFrequency)
+                else:
+                    self.audioPlayer.setPlaybackRate(config.mediaSpeed)
             # play audio file with builtin media player
             if config.qtLibrary == "pyside6":
                 # remarks: tested on Ubuntu

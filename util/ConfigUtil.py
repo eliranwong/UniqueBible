@@ -909,6 +909,10 @@ class ConfigUtil:
         setConfig("showVerseReference", """
         # Options to display verse reference: True / False""",
         True)
+        setConfig("useFfmpegToChangeAudioSpeed", """
+        # Options to use ffmpeg library to change audio speed: True / False
+        # This applies only to mp3 and wav audio files playing with built-in media player.""",
+        False)
         setConfig("usePydubToChangeAudioSpeed", """
         # Options to use pydub library to change audio speed: True / False
         # This applies only to mp3 and wav audio files playing with built-in media player.""",

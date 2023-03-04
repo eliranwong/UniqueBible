@@ -1020,4 +1020,5 @@ translation = {
     "usePydubToChangeAudioSpeed": "Verwenden Sie Pydub, um die Audiogeschwindigkeit zu ändern",
     "terminalForceVlc": "UBA zur Verwendung von VLC-Media-Player im Terminal-Modus erzwingen",
     "scrollBibleTextWithAudioPlayback": "Text-Scrolling-Synchronisation mit Audio-Wiedergabe",
+    "useFfmpegToChangeAudioSpeed": "FFMPEG zum Ändern der Audiogeschwindigkeit verwenden",
 }

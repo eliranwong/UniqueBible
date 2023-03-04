@@ -7,6 +7,7 @@ else:
     from qtpy.QtCore import Qt
     from qtpy.QtGui import QStandardItemModel, QStandardItem
     from qtpy.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QPushButton, QMessageBox
+from util.WebtopUtil import WebtopUtil
 
 
 class ConfigFlagsWindow(QDialog):
@@ -134,6 +135,7 @@ class ConfigFlagsWindow(QDialog):
             ("disableLoadLastOpenFilesOnStartup", config.disableLoadLastOpenFilesOnStartup, self.disableLoadLastOpenFilesOnStartupChanged, False, config.thisTranslation["disableLoadLastOpenFilesOnStartup"]),
             ("disableOpenPopupWindowOnStartup", config.disableOpenPopupWindowOnStartup, self.disableOpenPopupWindowOnStartupChanged, True, config.thisTranslation["disableOpenPopupWindowOnStartup"]),
             ("showMiniKeyboardInMiniControl", config.showMiniKeyboardInMiniControl, self.showMiniKeyboardInMiniControlChanged, False, config.thisTranslation["showMiniKeyboardInMiniControl"]),
+            ("useFfmpegToChangeAudioSpeed", config.useFfmpegToChangeAudioSpeed, self.useFfmpegToChangeAudioSpeedChanged, False, config.thisTranslation["useFfmpegToChangeAudioSpeed"]),
             ("usePydubToChangeAudioSpeed", config.usePydubToChangeAudioSpeed, self.usePydubToChangeAudioSpeedChanged, False, config.thisTranslation["usePydubToChangeAudioSpeed"]),
             ("useThirdPartyVLCplayer", config.useThirdPartyVLCplayer, self.useThirdPartyVLCplayerChanged, False, config.thisTranslation["useThirdPartyVLCplayer"]),
             ("terminalForceVlc", config.terminalForceVlc, self.terminalForceVlcChanged, True, config.thisTranslation["terminalForceVlc"]),
@@ -284,8 +286,20 @@ class ConfigFlagsWindow(QDialog):
         if config.ttsChineseAlwaysMandarin and config.ttsChineseAlwaysCantonese:
             config.ttsChineseAlwaysCantonese = not config.ttsChineseAlwaysCantonese
 
+    def useFfmpegToChangeAudioSpeedChanged(self):
+        config.useFfmpegToChangeAudioSpeed = not config.useFfmpegToChangeAudioSpeed
+        if config.useFfmpegToChangeAudioSpeed and not WebtopUtil.isPackageInstalled("ffmpeg"):
+            config.useFfmpegToChangeAudioSpeed = False
+        if config.usePydubToChangeAudioSpeed and config.useFfmpegToChangeAudioSpeed:
+            config.usePydubToChangeAudioSpeed = False
+
     def usePydubToChangeAudioSpeedChanged(self):
         config.usePydubToChangeAudioSpeed = not config.usePydubToChangeAudioSpeed
+        if config.usePydubToChangeAudioSpeed and not WebtopUtil.isPackageInstalled("ffmpeg"):
+            config.usePydubToChangeAudioSpeed = False
+        if config.usePydubToChangeAudioSpeed and config.useFfmpegToChangeAudioSpeed:
+            config.useFfmpegToChangeAudioSpeed = False
+
 
     def terminalForceVlcChanged(self):
         config.terminalForceVlc = not config.terminalForceVlc

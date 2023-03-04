@@ -1020,4 +1020,5 @@ translation = {
     "usePydubToChangeAudioSpeed": "Use Pydub to change audio speed",
     "terminalForceVlc": "Force UBA to use VLC media player in terminal mode",
     "scrollBibleTextWithAudioPlayback": "Text Scrolling Synchronisation with Audio Playing",
+    "useFfmpegToChangeAudioSpeed": "Use FFMPEG to change audio speed",
 }

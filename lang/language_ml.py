@@ -1020,4 +1020,5 @@ translation = {
     "usePydubToChangeAudioSpeed": "ഓഡിയോ വേഗത മാറ്റാന് Pydub ഉപയോഗിക്കുക",
     "terminalForceVlc": "ടെര്മിനല് രീതിയില് VLC മീഡിയ കളിക്കാരനെ ഉപയോഗിക്കുവാന് UBA നിര്ബന്ധിയ്ക്കുക",
     "scrollBibleTextWithAudioPlayback": "ഓഡിയോ കളിക്കുളളുള്ള സിന്ക്രൊണിപ്പിങ്ങിനു് പദാവലി Scrolling",
+    "useFfmpegToChangeAudioSpeed": "ഓഡിയോ വേഗത മാറ്റാന് FFMPEG ഉപയോഗിക്കുക",
 }

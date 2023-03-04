@@ -1,3 +1,7 @@
+Changes in 34.18:
+* added config.useFfmpegToChangeAudioSpeed.
+    This improves sound quality on Linux.
+
 Changes in 34.17:
 * Improved menu plugin "Terminal Mode".  It now opens the same verse reference, as the desktop version, when it is launched.
 
