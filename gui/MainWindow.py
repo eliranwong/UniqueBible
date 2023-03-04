@@ -466,7 +466,9 @@ class MainWindow(QMainWindow):
                     newAudiofile = os.path.join(os.getcwd(), "temp", "ffmpeg.wav")
                     if os.path.isfile(newAudiofile):
                         os.remove(newAudiofile)
-                    os.system(f'''ffmpeg -i {config.currentAudioFile} -filter:a "atempo={config.mediaSpeed}" {newAudiofile}''')
+                    #os.system(f'''ffmpeg -i {config.currentAudioFile} -filter:a "atempo={config.mediaSpeed}" {newAudiofile}''')
+                    # use subprocess instead of os.system, to hide terminal output
+                    subprocess.Popen(f'''ffmpeg -i {config.currentAudioFile} -filter:a "atempo={config.mediaSpeed}" {newAudiofile}''', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
                     config.currentAudioFile = newAudiofile
                 elif isAudio and config.usePydubToChangeAudioSpeed:
                     self.audioPlayer.setPlaybackRate(1.0)
