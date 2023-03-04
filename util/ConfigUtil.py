@@ -920,6 +920,9 @@ class ConfigUtil:
         setConfig("useThirdPartyVLCplayer", """
         # Options to use third-party VLC player: True / False""",
         False)
+        setConfig("useThirdPartyVLCplayerForVideoOnly", """
+        # Options to use third-party VLC player for video playback only: True / False""",
+        False)
         setConfig("doNotStop3rdPartyMediaPlayerOnExit", """
         # Options to not stop 3rd-party media player on exit: True / False""",
         False)

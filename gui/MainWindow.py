@@ -6,7 +6,7 @@ from pathlib import Path
 
 from util.ConfigUtil import ConfigUtil
 from util.SystemUtil import SystemUtil
-from gui.Worker import YouTubeDownloader, VLC
+from gui.Worker import YouTubeDownloader, VLCVideo
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer
     from PySide6.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor, QAction, QShortcut
@@ -296,6 +296,18 @@ class MainWindow(QMainWindow):
             # PySide 2 volume range (int): 0-100
             self.audioPlayer.setVolume(value)
 
+    def workOnPlaylistIndex(self):
+        if self.audioPlayListIndex == -2: # stopped by users
+            self.resetAudioPlaylist()
+        else:
+            if self.audioPlayListIndex == len(self.audioPlayList) - 1:
+                self.resetAudioPlaylist()
+                if config.loopMediaPlaylist:
+                    self.playAudioPlayList()
+            else:
+                self.audioPlayListIndex += 1
+                self.playAudioPlayList()
+
     def setupAudioPlayer(self):
         if config.qtLibrary == "pyside6":
             config.audioVolume = 1.0
@@ -307,16 +319,7 @@ class MainWindow(QMainWindow):
                 self.audioPlayer.setPlaybackRate(config.mediaSpeed)
             elif state == QMediaPlayer.StoppedState:"""
             if state == QMediaPlayer.StoppedState:
-                if self.audioPlayListIndex == -2: # stopped by users
-                    self.resetAudioPlaylist()
-                else:
-                    if self.audioPlayListIndex == len(self.audioPlayList) - 1:
-                        self.resetAudioPlaylist()
-                        if config.loopMediaPlaylist:
-                            self.playAudioPlayList()
-                    else:
-                        self.audioPlayListIndex += 1
-                        self.playAudioPlayList()
+                self.workOnPlaylistIndex()
 
         self.audioPlayer = QMediaPlayer(self)
         if not config.qtLibrary == "pyside6":
@@ -446,56 +449,65 @@ class MainWindow(QMainWindow):
 
     def playAudioFile(self, filePath):
         if filePath and os.path.isfile(filePath):
+            # check if it is a video file
+            isVideo = re.search("(.mp4|.avi)$", filePath.lower()[-4:])
             # text synchronisation with audio playback
             self.syncAudioWithText(filePath)
             # full path is required for PySide2 QMediaPlayer to work
             config.currentAudioFile = os.path.abspath(QDir.toNativeSeparators(filePath))
-
-            #if config.useThirdPartyVLCplayer:
-            #    VLC(self).workOnVlcFile()
-            #else:
-            # check if it is a supported video file
-            if re.search("(.mp4|.avi)$", filePath.lower()[-4:]):
-                self.openVideoView()
-                if not self.videoView.isVisible():
-                    self.bringToForeground(self.videoView)
-            if not (config.mediaSpeed == 1.0):
-                isAudio = re.search("(.mp3|.wav)$", filePath.lower()[-4:])
-                if isAudio and config.useFfmpegToChangeAudioSpeed:
-                    self.audioPlayer.setPlaybackRate(1.0)
-                    newAudiofile = os.path.join(os.getcwd(), "temp", "ffmpeg.wav")
-                    if os.path.isfile(newAudiofile):
-                        os.remove(newAudiofile)
-                    #os.system(f'''ffmpeg -i {config.currentAudioFile} -filter:a "atempo={config.mediaSpeed}" {newAudiofile}''')
-                    # use subprocess instead of os.system, to hide terminal output
-                    subprocess.Popen(f'''ffmpeg -i {config.currentAudioFile} -filter:a "atempo={config.mediaSpeed}" {newAudiofile}''', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
-                    config.currentAudioFile = newAudiofile
-                elif isAudio and config.usePydubToChangeAudioSpeed:
-                    self.audioPlayer.setPlaybackRate(1.0)
-                    config.currentAudioFile = PydubUtil.exportAudioFile(config.currentAudioFile, config.mediaSpeed, config.speedUpFilterFrequency)
-                else:
-                    self.audioPlayer.setPlaybackRate(config.mediaSpeed)
-            # play audio file with builtin media player
-            if config.qtLibrary == "pyside6":
-                # remarks: tested on Ubuntu
-                # for unknown reasons, the following three lines do not work when they are executed directly without puting into a string first
-                # work as expected when the string is executed with exec() method
-                codes = f"""
-config.audioOutput = QAudioOutput()
-config.audioOutput.setVolume(config.audioVolume)
-config.audioOutput.setMuted(config.audioMuted)
-config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)
-config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(""))
-config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(config.currentAudioFile))"""
-                exec(codes, globals())
-            else:
-                dummy_media_content = QMediaContent(QUrl.fromLocalFile(""))
-                media_content = QMediaContent(QUrl.fromLocalFile(config.currentAudioFile))
-                # reset media is needed to repeatedly play files having the same filepaths but of different content
-                self.audioPlayer.setMedia(dummy_media_content)
-                self.audioPlayer.setMedia(media_content)
-            self.audioPlayer.play()
+            # update playlist gui
             self.selectAudioPlaylistUIItem()
+            if config.useThirdPartyVLCplayerForVideoOnly:
+                try:
+                    VLCVideo(self).workOnPlayVideo(config.currentAudioFile, config.mediaSpeed)
+                except:
+                    self.audioPlayListIndex = -2
+                    # possbily users close VLC player manually
+                    pass
+            # use built-in media player
+            else:
+                # in case it is a video file
+                if isVideo:
+                    self.openVideoView()
+                    if not self.videoView.isVisible():
+                        self.bringToForeground(self.videoView)
+                # handle audio
+                if not (config.mediaSpeed == 1.0):
+                    isAudio = re.search("(.mp3|.wav)$", filePath.lower()[-4:])
+                    if isAudio and config.useFfmpegToChangeAudioSpeed:
+                        self.audioPlayer.setPlaybackRate(1.0)
+                        newAudiofile = os.path.join(os.getcwd(), "temp", "ffmpeg.wav")
+                        if os.path.isfile(newAudiofile):
+                            os.remove(newAudiofile)
+                        #os.system(f'''ffmpeg -i {config.currentAudioFile} -filter:a "atempo={config.mediaSpeed}" {newAudiofile}''')
+                        # use subprocess instead of os.system, to hide terminal output
+                        subprocess.Popen(f'''ffmpeg -i {config.currentAudioFile} -filter:a "atempo={config.mediaSpeed}" "{newAudiofile}"''', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+                        config.currentAudioFile = newAudiofile
+                    elif isAudio and config.usePydubToChangeAudioSpeed:
+                        self.audioPlayer.setPlaybackRate(1.0)
+                        config.currentAudioFile = PydubUtil.exportAudioFile(config.currentAudioFile, config.mediaSpeed, config.speedUpFilterFrequency)
+                    else:
+                        self.audioPlayer.setPlaybackRate(config.mediaSpeed)
+                # play audio file with builtin media player
+                if config.qtLibrary == "pyside6":
+                    # remarks: tested on Ubuntu
+                    # for unknown reasons, the following three lines do not work when they are executed directly without puting into a string first
+                    # work as expected when the string is executed with exec() method
+                    codes = f"""
+    config.audioOutput = QAudioOutput()
+    config.audioOutput.setVolume(config.audioVolume)
+    config.audioOutput.setMuted(config.audioMuted)
+    config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)
+    config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(""))
+    config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(config.currentAudioFile))"""
+                    exec(codes, globals())
+                else:
+                    dummy_media_content = QMediaContent(QUrl.fromLocalFile(""))
+                    media_content = QMediaContent(QUrl.fromLocalFile(config.currentAudioFile))
+                    # reset media is needed to repeatedly play files having the same filepaths but of different content
+                    self.audioPlayer.setMedia(dummy_media_content)
+                    self.audioPlayer.setMedia(media_content)
+                self.audioPlayer.play()
 
     def selectAudioPlaylistUIItem(self):
         if hasattr(self, "audioPlayListUI") and self.audioPlayListUI and self.audioPlayListUI.isVisible() and (self.audioPlayListUI.model.rowCount() > self.audioPlayListIndex >= 0):

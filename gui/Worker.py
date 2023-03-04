@@ -119,6 +119,33 @@ class VLC:
         self.threadpool.start(worker)
 
 
+class VLCVideo:
+
+    def __init__(self, parent):
+        super().__init__()
+        self.parent = parent
+        self.threadpool = QThreadPool()
+
+    def playVideo(self, videoFilePath, speed):
+        VlcUtil.playMediaFile(videoFilePath, speed)
+        return "Next ..."
+
+    def print_output(self, s):
+        print(s)
+        self.parent.workOnPlaylistIndex()
+
+    def thread_complete(self):
+        print("THREAD COMPLETE!")
+
+    def workOnPlayVideo(self, videoFilePath, speed):
+        # Pass the function to execute
+        worker = Worker(self.playVideo, videoFilePath, speed) # Any other args, kwargs are passed to the run function
+        worker.signals.result.connect(self.print_output)
+        #worker.signals.finished.connect(self.thread_complete)
+        # Execute
+        self.threadpool.start(worker)
+
+
 class YouTubeDownloader:
 
     def __init__(self, parent):

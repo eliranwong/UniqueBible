@@ -1,3 +1,6 @@
+Changes in 34.19:
+* added config.useThirdPartyVLCplayerForVideoOnly
+
 Changes in 34.18:
 * added config.useFfmpegToChangeAudioSpeed.
     This improves sound quality on Linux.
