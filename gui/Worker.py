@@ -1,8 +1,8 @@
 import config, sys, traceback, os, platform, re
 if config.qtLibrary == "pyside6":
-    from PySide6.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool
+    from PySide6.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool, QThread
 else:
-    from qtpy.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool
+    from qtpy.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool, QThread
 from pydub import AudioSegment
 from pydub.playback import play
 from util.VlcUtil import VlcUtil
@@ -64,6 +64,9 @@ class Worker(QRunnable):
         '''
         Initialise the runner function with passed args, kwargs.
         '''
+
+        # assign a reference to this current thread
+        config.workerThread = QThread.currentThread()
 
         # Retrieve args/kwargs here; and fire processing using them
         try:

@@ -172,8 +172,6 @@ class MainWindow(QMainWindow):
         self.resetAudioPlaylist()
         if config.useThirdPartyVLCplayer:
             self.audioPlayer = None
-            #self.audioPlayer = "vlc"
-            #config.isMediaPlaying = False
         else:
             self.setupAudioPlayer()
         # VLC Player
@@ -369,10 +367,7 @@ class MainWindow(QMainWindow):
             self.playAudioPlayList()
 
     def stopAudioPlaying(self):
-        if self.audioPlayer == "vlc":
-            if config.isMediaPlaying:
-                self.audioPlayListIndex = -2
-        elif not self.getAudioPlayerState() == QMediaPlayer.StoppedState:
+        if not self.getAudioPlayerState() == QMediaPlayer.StoppedState:
             self.audioPlayListIndex = -2
             self.audioPlayer.stop()
 
@@ -5990,18 +5985,12 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
                     self.playAudioBibleFilePlayList([filename])
                 else:
                     WebtopUtil.run("vlc")
-            """
-            elif ("Pythonvlc" in config.enabled):
-                from gui.VlcPlayer import VlcPlayer
-                if self.vlcPlayer is not None:
-                    self.vlcPlayer.close()
-                self.vlcPlayer = VlcPlayer(self, filename)
-                self.vlcPlayer.show()
-            """
         except:
             self.displayMessage(config.thisTranslation["noMediaPlayer"])
 
     def closeMediaPlayer(self):
+        #if hasattr(config, "workerThread") and config.workerThread is not None:
+        #    config.workerThread.quit()
         # stop terminal mode .readsync loop
         isPydubPlaying = os.path.join("temp", "isPydubPlaying")
         for file_to_be_deleted in (config.audio_playing_file, isPydubPlaying):
@@ -6016,8 +6005,6 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
                 os.system("pkill vlc")
             if WebtopUtil.isPackageInstalled("espeak"):
                 os.system("pkill espeak")
-        if self.vlcPlayer is not None:
-            self.vlcPlayer.close()
         # stop individual offline TTS audio
         if self.textCommandParser.cliTtsProcess is not None:
             #print(self.cliTtsProcess)
@@ -6058,18 +6045,6 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             audioFiles = '"{0}"'.format(audioFiles)
             vlcCmd = "vlc" if gui else "cvlc"
             WebtopUtil.run(f"{vlcCmd} --rate {config.vlcSpeed} {audioFiles}")
-        """
-        elif playlist and ("Pythonvlc" in config.enabled):
-            from gui.VlcPlayer import VlcPlayer
-            if self.vlcPlayer is not None:
-                self.vlcPlayer.close()
-            self.vlcPlayer = VlcPlayer(self)
-            for file in playlist:
-                self.vlcPlayer.addToPlaylist(file)
-            if gui:
-                self.vlcPlayer.show()
-            self.vlcPlayer.playNextInPlaylist()
-        """
 
     def playBibleMP3Playlist(self, playlist):
         self.closeMediaPlayer()
@@ -6090,20 +6065,6 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             elif WebtopUtil.isPackageInstalled("vlc"):
                 audioFiles = ' '.join(getFilelist())
                 WebtopUtil.run(f"vlc --rate {config.vlcSpeed} {audioFiles}")
-            """
-            elif ("Pythonvlc" in config.enabled):
-                from gui.VlcPlayer import VlcPlayer
-                if self.vlcPlayer is not None:
-                    self.vlcPlayer.close()
-                self.vlcPlayer = VlcPlayer(self)
-                for listItem in playlist:
-                    (text, book, chapter, verse, folder) = listItem
-                    file = FileUtil.getBibleMP3File(text, book, folder, chapter, verse)
-                    if file:
-                        self.vlcPlayer.addToPlaylist(file)
-                self.vlcPlayer.show()
-                self.vlcPlayer.playNextInPlaylist()
-            """
 
     def playBibleMP3File(self, text, book, chapter, folder=config.defaultMP3BibleFolder):
         playlist = []

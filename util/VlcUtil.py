@@ -21,7 +21,8 @@ class VlcUtil:
         if not hasattr(config, "windowsVlc"):
             windowsVlc = r'C:\Program(filePath, vlcSpeed): Files\VideoLAN\VLC\vlc.exe'
             config.windowsVlc = windowsVlc if platform.system() == "Windows" and os.path.isfile(windowsVlc) else ""
-        filePath = os.path.abspath(filePath)
+        # get full path and escape double quote
+        filePath = os.path.abspath(filePath).replace('"', '\\"')
         VlcUtil.playMediaFileVlcGui(filePath, vlcSpeed) if re.search("(.mp4|.avi)$", filePath.lower()[-4:]) or audioGui else VlcUtil.playMediaFileVlcNoGui(filePath, vlcSpeed)
 
     # play audio file with vlc without gui
