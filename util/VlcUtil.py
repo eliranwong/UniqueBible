@@ -1,5 +1,6 @@
 import config, os, sys, re, platform, subprocess
 
+
 class VlcUtil:
 
     @staticmethod
@@ -10,6 +11,17 @@ class VlcUtil:
             return True if isInstalled else False
         except:
             return False
+
+    @staticmethod
+    def closeVlcPlayer():
+        try:
+            if platform.system() == "Windows":
+                os.system("taskkill /IM vlc.exe /F")
+            else:
+                os.system("pkill VLC")
+                os.system("pkill vlc")
+        except:
+            pass
 
     @staticmethod
     def playMediaFile(filePath, vlcSpeed, audioGui=False):

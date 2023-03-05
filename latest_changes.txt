@@ -1,3 +1,6 @@
+Changes in 34.22:
+* stop button can now stop vlc player
+
 Changes in 34.21:
 * escape double quote in filepath
 

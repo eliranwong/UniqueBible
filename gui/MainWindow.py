@@ -35,6 +35,7 @@ from util.BibleBooks import BibleBooks
 from util.HtmlColorCodes import HtmlColorCodes
 from util.CatalogUtil import CatalogUtil
 from util.FileUtil import FileUtil
+from util.VlcUtil import VlcUtil
 from util.themes import Themes
 from util.GitHubRepoInfo import GitHubRepoInfo
 from util.TextCommandParser import TextCommandParser
@@ -295,6 +296,7 @@ class MainWindow(QMainWindow):
             self.audioPlayer.setVolume(value)
 
     def workOnPlaylistIndex(self):
+        config.isVlcPlayingInQThread = False
         if self.audioPlayListIndex == -2: # stopped by users
             self.resetAudioPlaylist()
         else:
@@ -314,9 +316,6 @@ class MainWindow(QMainWindow):
             config.audioMuted = config.audioOutput.isMuted()
 
         def playbackStateChanged(state):
-            """if state == QMediaPlayer.PlayingState:
-                self.audioPlayer.setPlaybackRate(config.mediaSpeed)
-            elif state == QMediaPlayer.StoppedState:"""
             if state == QMediaPlayer.StoppedState:
                 self.workOnPlaylistIndex()
 
@@ -367,6 +366,11 @@ class MainWindow(QMainWindow):
             self.playAudioPlayList()
 
     def stopAudioPlaying(self):
+        if config.isVlcPlayingInQThread:
+            self.audioPlayListIndex == -2
+            VlcUtil.closeVlcPlayer()
+            self.resetAudioPlaylist()
+            config.isVlcPlayingInQThread = False
         if not self.getAudioPlayerState() == QMediaPlayer.StoppedState:
             self.audioPlayListIndex = -2
             self.audioPlayer.stop()
@@ -457,7 +461,6 @@ class MainWindow(QMainWindow):
                 try:
                     config.isVlcPlayingInQThread = True
                     VLCVideo(self).workOnPlayVideo(config.currentAudioFile, config.mediaSpeed)
-                    config.isVlcPlayingInQThread = False
                 except:
                     self.audioPlayListIndex = -2
                     # possbily users close VLC player manually
@@ -5998,11 +6001,8 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
                 os.remove(file_to_be_deleted)
         if self.audioPlayer is not None:
             self.stopAudioPlaying()
+        VlcUtil.closeVlcPlayer()
         if not platform.system() == "Windows" and WebtopUtil.isPackageInstalled("pkill"):
-            if config.macVlc:
-                os.system("pkill VLC")
-            if WebtopUtil.isPackageInstalled("vlc"):
-                os.system("pkill vlc")
             if WebtopUtil.isPackageInstalled("espeak"):
                 os.system("pkill espeak")
         # stop individual offline TTS audio
