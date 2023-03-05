@@ -13,6 +13,22 @@ class VlcUtil:
             return False
 
     @staticmethod
+    def openVlcPlayer(self):
+        def run(command):
+            os.system("{0}{1} > /dev/null 2>&1 &".format("nohup " if VlcUtil.isPackageInstalled("nohup") else "", command))
+        VlcUtil.closeVlcPlayer()
+        try:
+            if config.windowsVlc:
+                os.system(config.windowsVlc)
+            elif config.macVlc:
+                run(config.macVlc)
+            elif VlcUtil.isPackageInstalled("vlc"):
+                run("vlc")
+        except:
+            if hasattr(config, "mainWindow"):
+                config.mainWindow.displayMessage(config.thisTranslation["noMediaPlayer"])
+
+    @staticmethod
     def closeVlcPlayer():
         try:
             if platform.system() == "Windows":
@@ -31,10 +47,15 @@ class VlcUtil:
             config.macVlc = macVlc if platform.system() == "Darwin" and os.path.isfile(macVlc) else ""
         # on Windows
         if not hasattr(config, "windowsVlc"):
-            windowsVlc = r'C:\Program(filePath, vlcSpeed): Files\VideoLAN\VLC\vlc.exe'
+            windowsVlc = r'C:\Program Files\VideoLAN\VLC\vlc.exe'
             config.windowsVlc = windowsVlc if platform.system() == "Windows" and os.path.isfile(windowsVlc) else ""
         # get full path and escape double quote
-        filePath = os.path.abspath(filePath).replace('"', '\\"')
+        if isinstance(filePath, str):
+            filePath = os.path.abspath(filePath).replace('"', '\\"')
+        else:
+            # when filePath is a list
+            filePath = [os.path.abspath(i).replace('"', '\\"') for i in filePath]
+            filePath = '" "'.join(filePath)
         VlcUtil.playMediaFileVlcGui(filePath, vlcSpeed) if re.search("(.mp4|.avi)$", filePath.lower()[-4:]) or audioGui else VlcUtil.playMediaFileVlcNoGui(filePath, vlcSpeed)
 
     # play audio file with vlc without gui

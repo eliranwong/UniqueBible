@@ -1021,4 +1021,5 @@ translation = {
     "terminalForceVlc": "टर्मिनल मोड में VLC मीडिया प्लेयर का उपयोग करने के लिए UBA को बाध्य करें",
     "scrollBibleTextWithAudioPlayback": "ऑडियो बजाने के साथ पाठ स्क्रॉलिंग सिंक्रोनाइज",
     "useFfmpegToChangeAudioSpeed": "ऑडियो गति बदलने के लिए FFMPEG का प्रयोग करें",
+    "useThirdPartyVLCplayerForVideoOnly": "वीडियो प्लेबैक onlly के लिए तृतीय-पार्टी वीएलसी खिलाड़ी का उपयोग करें",
 }

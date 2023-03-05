@@ -648,7 +648,7 @@ class FocusMainWindow:
             self.addStandardIconButton("menu11_youtube", "youtube.png", self.openYouTube, self.secondToolBar)
             self.secondToolBar.addSeparator()
         if ("Pythonvlc" in config.enabled):
-            self.addStandardIconButton("mediaPlayer", "buttons/media_player.png", lambda: self.openVlcPlayer(""), self.secondToolBar)
+            self.addStandardIconButton("mediaPlayer", "buttons/media_player.png", self.openVlcPlayer, self.secondToolBar)
             self.secondToolBar.addSeparator()
         self.addStandardIconButton("menu1_reload", "reload.png", lambda: self.reloadCurrentRecord(True), self.secondToolBar)
         self.addStandardIconButton("menu1_fullScreen", "expand.png", self.fullsizeWindow, self.secondToolBar)
@@ -872,7 +872,7 @@ class FocusMainWindow:
 
         if ("Pythonvlc" in config.enabled):
             iconFile = os.path.join("htmlResources", "buttons", "media_player.png")
-            self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["mediaPlayer"], lambda: self.openVlcPlayer(""))
+            self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["mediaPlayer"], self.openVlcPlayer)
             self.secondToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "reload.png")

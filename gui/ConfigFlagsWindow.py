@@ -137,6 +137,7 @@ class ConfigFlagsWindow(QDialog):
             ("showMiniKeyboardInMiniControl", config.showMiniKeyboardInMiniControl, self.showMiniKeyboardInMiniControlChanged, False, config.thisTranslation["showMiniKeyboardInMiniControl"]),
             ("useFfmpegToChangeAudioSpeed", config.useFfmpegToChangeAudioSpeed, self.useFfmpegToChangeAudioSpeedChanged, False, config.thisTranslation["useFfmpegToChangeAudioSpeed"]),
             ("usePydubToChangeAudioSpeed", config.usePydubToChangeAudioSpeed, self.usePydubToChangeAudioSpeedChanged, False, config.thisTranslation["usePydubToChangeAudioSpeed"]),
+            ("useThirdPartyVLCplayerForVideoOnly", config.useThirdPartyVLCplayerForVideoOnly, self.useThirdPartyVLCplayerForVideoOnlyChanged, False, config.thisTranslation["useThirdPartyVLCplayerForVideoOnly"]),
             ("useThirdPartyVLCplayer", config.useThirdPartyVLCplayer, self.useThirdPartyVLCplayerChanged, False, config.thisTranslation["useThirdPartyVLCplayer"]),
             ("terminalForceVlc", config.terminalForceVlc, self.terminalForceVlcChanged, True, config.thisTranslation["terminalForceVlc"]),
             ("hideVlcInterfaceReadingSingleVerse", config.hideVlcInterfaceReadingSingleVerse, self.hideVlcInterfaceReadingSingleVerseChanged, True, config.thisTranslation["hideVlcInterfaceReadingSingleVerse"]),
@@ -300,11 +301,15 @@ class ConfigFlagsWindow(QDialog):
         if config.usePydubToChangeAudioSpeed and config.useFfmpegToChangeAudioSpeed:
             config.useFfmpegToChangeAudioSpeed = False
 
-
     def terminalForceVlcChanged(self):
         config.terminalForceVlc = not config.terminalForceVlc
         if config.terminalForceVlc and not config.isVlcAvailable:
             config.terminalForceVlc = False
+
+    def useThirdPartyVLCplayerForVideoOnlyChanged(self):
+        config.useThirdPartyVLCplayerForVideoOnly = not config.useThirdPartyVLCplayerForVideoOnly
+        if config.useThirdPartyVLCplayerForVideoOnly and not config.isVlcAvailable:
+            config.useThirdPartyVLCplayerForVideoOnly = False
 
     def useThirdPartyVLCplayerChanged(self):
         config.useThirdPartyVLCplayer = not config.useThirdPartyVLCplayer

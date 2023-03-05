@@ -672,7 +672,7 @@ class ClassicMainWindow:
             self.addStandardIconButton("menu11_youtube", "youtube.png", self.openYouTube, self.secondToolBar)
             self.secondToolBar.addSeparator()
         if ("Pythonvlc" in config.enabled):
-            self.addStandardIconButton("mediaPlayer", "buttons/media_player.png", lambda: self.openVlcPlayer(""), self.secondToolBar)
+            self.addStandardIconButton("mediaPlayer", "buttons/media_player.png", self.openVlcPlayer, self.secondToolBar)
             self.secondToolBar.addSeparator()
         self.addStandardIconButton("menu1_reload", "reload.png", self.reloadCurrentRecord, self.secondToolBar)
         self.addStandardIconButton("menu1_fullScreen", "expand.png", self.fullsizeWindow, self.secondToolBar)

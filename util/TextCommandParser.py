@@ -1,8 +1,9 @@
 # coding=utf-8
 import glob, pprint
 import pydoc
-import os, re, webbrowser, platform, multiprocessing, zipfile, subprocess, config
+import os, re, webbrowser, platform, zipfile, subprocess, config
 from datetime import date
+from util.VlcUtil import VlcUtil
 from util.exlbl import allLocations, tc_location_names, sc_location_names
 from util.PluginEventHandler import PluginEventHandler
 from util.WebtopUtil import WebtopUtil
@@ -1833,16 +1834,12 @@ class TextCommandParser:
                 return ("study", content, {})
             else:
                 try:
-                    player = "cvlc" if config.hideVlcInterfaceReadingSingleVerse else "vlc"
                     if config.mainWindow.audioPlayer is not None:
                         config.mainWindow.addToAudioPlayList(audioFile, True)
-                    elif config.macVlc:
-                        WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFile}")
-                    elif WebtopUtil.isPackageInstalled(player):
-                        #os.system("pkill vlc")
-                        WebtopUtil.run(f"{player} {audioFile}")
+                    elif config.isVlcAvailable:
+                        VlcUtil.playMediaFile(audioFile, config.vlcSpeed, (not config.hideVlcInterfaceReadingSingleVerse))
                     else:
-                        self.openMediaPlayer(audioFile, "main", (player == "vlc"))
+                        self.parent.displayMessage(config.thisTranslation["noMediaPlayer"])
                     return ("", "", {})
                 except:
                     return self.invalidCommand()
@@ -1866,13 +1863,10 @@ class TextCommandParser:
                 try:
                     if config.mainWindow.audioPlayer is not None:
                         config.mainWindow.addToAudioPlayList(audioFile, True)
-                    elif config.macVlc:
-                        WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFile}")
-                    elif WebtopUtil.isPackageInstalled("cvlc"):
-                        #os.system("pkill vlc")
-                        WebtopUtil.run(f"cvlc --rate {config.vlcSpeed} {audioFile}")
+                    elif config.isVlcAvailable:
+                        VlcUtil.playMediaFile(audioFile, config.vlcSpeed, False)
                     else:
-                        self.openMediaPlayer(audioFile, "main", False)
+                        self.parent.displayMessage(config.thisTranslation["noMediaPlayer"])
                     return ("", "", {})
                 except:
                     return self.invalidCommand()
@@ -1900,13 +1894,10 @@ class TextCommandParser:
                 try:
                     if config.mainWindow.audioPlayer is not None:
                         config.mainWindow.addToAudioPlayList(audioFile, True)
-                    elif config.macVlc:
-                        WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFile}")
-                    elif WebtopUtil.isPackageInstalled("cvlc"):
-                        #os.system("pkill vlc")
-                        WebtopUtil.run(f"cvlc --rate {config.vlcSpeed} {audioFile}")
+                    elif config.isVlcAvailable:
+                        VlcUtil.playMediaFile(audioFile, config.vlcSpeed, False)
                     else:
-                        self.openMediaPlayer(audioFile, "main", False)
+                        self.parent.displayMessage(config.thisTranslation["noMediaPlayer"])
                     return ("", "", {})
                 except:
                     return self.invalidCommand()
@@ -1927,33 +1918,13 @@ class TextCommandParser:
         try:
             if config.mainWindow.audioPlayer is not None:
                 config.mainWindow.addToAudioPlayList(command, True)
-            elif config.macVlc:
-                WebtopUtil.run(f'{config.macVlc} --rate {config.vlcSpeed} "{command}"')
-            elif WebtopUtil.isPackageInstalled("vlc") and (config.runMode == "terminal"):
-                vlcCmd = "vlc" if gui else "cvlc"
-                if config.runMode == "terminal":
-                    vlcCmd = "cvlc"
-                if '"' in command:
-                    self.openBuiltinPlayer(command, gui)
-                else:
-                    WebtopUtil.run('{0} --rate {2} "{1}"'.format(vlcCmd, command, config.vlcSpeed))
+            elif config.isVlcAvailable:
+                VlcUtil.playMediaFile(command, config.vlcSpeed, gui)
             else:
-                self.openBuiltinPlayer(command, gui)
+                self.parent.displayMessage(config.thisTranslation["noMediaPlayer"])
         except:
             WebtopUtil.openFile(command)
         return ("", "", {})
-
-    # old vlc player
-    def openBuiltinPlayer(self, command, gui):
-        from gui.VlcPlayer import VlcPlayer
-        if self.parent.vlcPlayer is not None:
-            # Fix issue: https://github.com/eliranwong/UniqueBible/issues/947
-            #self.parent.vlcPlayer.stop()
-            #self.parent.vlcPlayer.loadAndPlayFile(filename)
-            self.parent.vlcPlayer.close()
-        self.parent.vlcPlayer = VlcPlayer(self.parent, command)
-        if gui:
-            self.parent.vlcPlayer.show()
 
     # READBIBLE:::
     def readBible(self, command, source):

@@ -364,7 +364,7 @@ class AlephMainWindow:
         library_menu.addAction(QAction(config.thisTranslation["menu4_tdw"], self, shortcut=sc.runCOMBO, triggered=self.runCOMBO))
         library_menu.addSeparator()
         library_menu.addAction(
-            QAction(config.thisTranslation["mediaPlayer"], self, shortcut=sc.mediaPlayer, triggered=lambda: self.openVlcPlayer("")))
+            QAction(config.thisTranslation["mediaPlayer"], self, shortcut=sc.mediaPlayer, triggered=self.openVlcPlayer))
         library_menu.addAction(
             QAction(config.thisTranslation["pdfDocument"], self, triggered=self.openPdfFileDialog))
         library_menu.addSeparator()
@@ -833,7 +833,7 @@ class AlephMainWindow:
             button.setToolTip(config.thisTranslation["mediaPlayer"])
             buttonFile = os.path.join("htmlResources", "buttons", "media_player.png")
             button.setIcon(QIcon(buttonFile))
-            button.clicked.connect(lambda: self.openVlcPlayer(""))
+            button.clicked.connect(self.openVlcPlayer)
             self.secondToolBar.addWidget(button)
             self.secondToolBar.addSeparator()
 
@@ -1325,7 +1325,7 @@ class AlephMainWindow:
 
         if ("Pythonvlc" in config.enabled):
             iconFile = os.path.join("htmlResources", "buttons", "media_player.png")
-            self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["mediaPlayer"], lambda: self.openVlcPlayer(""))
+            self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["mediaPlayer"], self.openVlcPlayer)
             self.secondToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "reload.png")

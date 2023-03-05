@@ -366,7 +366,7 @@ class MainWindow(QMainWindow):
             self.playAudioPlayList()
 
     def stopAudioPlaying(self):
-        if config.isVlcPlayingInQThread:
+        if hasattr(config, "isVlcPlayingInQThread") and config.isVlcPlayingInQThread:
             self.audioPlayListIndex == -2
             VlcUtil.closeVlcPlayer()
             self.resetAudioPlaylist()
@@ -5975,21 +5975,8 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             # offline tts
             self.mainView.currentWidget().textToSpeechLanguage(config.ttsDefaultLangauge3, True)            
 
-    def openVlcPlayer(self, filename=""):
-        try:
-            if config.macVlc:
-                os.system("pkill VLC")
-                if filename:
-                    WebtopUtil.run(f'{config.macVlc} --rate {config.vlcSpeed} "{filename}"')
-                else:
-                    WebtopUtil.run(config.macVlc)
-            elif WebtopUtil.isPackageInstalled("vlc"):
-                if filename:
-                    self.playAudioBibleFilePlayList([filename])
-                else:
-                    WebtopUtil.run("vlc")
-        except:
-            self.displayMessage(config.thisTranslation["noMediaPlayer"])
+    def openVlcPlayer(self):
+        VlcUtil.openVlcPlayer()
 
     def closeMediaPlayer(self):
         #if hasattr(config, "workerThread") and config.workerThread is not None:
@@ -6036,15 +6023,10 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         self.closeMediaPlayer()
         if self.audioPlayer is not None:
             self.addToAudioPlayList(playlist, True)
-        elif config.macVlc:
-            audioFiles = '" "'.join(playlist)
-            audioFiles = '"{0}"'.format(audioFiles)
-            WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFiles}")
-        elif playlist and WebtopUtil.isPackageInstalled("vlc"):
-            audioFiles = '" "'.join(playlist)
-            audioFiles = '"{0}"'.format(audioFiles)
-            vlcCmd = "vlc" if gui else "cvlc"
-            WebtopUtil.run(f"{vlcCmd} --rate {config.vlcSpeed} {audioFiles}")
+        elif config.isVlcAvailable:
+            VlcUtil.playMediaFile(playlist, config.vlcSpeed, gui)
+        else:
+            self.displayMessage(config.thisTranslation["noMediaPlayer"])
 
     def playBibleMP3Playlist(self, playlist):
         self.closeMediaPlayer()
@@ -6059,12 +6041,10 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
                 return fileList
             if self.audioPlayer is not None:
                 self.addToAudioPlayList(getFilelist(), True)
-            elif config.macVlc:
-                audioFiles = ' '.join(getFilelist())
-                WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFiles}")
-            elif WebtopUtil.isPackageInstalled("vlc"):
-                audioFiles = ' '.join(getFilelist())
-                WebtopUtil.run(f"vlc --rate {config.vlcSpeed} {audioFiles}")
+            elif config.isVlcAvailable:
+                VlcUtil.playMediaFile(getFilelist(), config.vlcSpeed, True)
+        else:
+            self.displayMessage(config.thisTranslation["noMediaPlayer"])
 
     def playBibleMP3File(self, text, book, chapter, folder=config.defaultMP3BibleFolder):
         playlist = []

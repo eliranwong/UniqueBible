@@ -7,6 +7,7 @@ from util.get_path_prompt import GetPath
 from util.HebrewTransliteration import HebrewTransliteration
 from util.WebtopUtil import WebtopUtil
 from util.PromptValidator import NumberValidator
+from util.VlcUtil import VlcUtil
 from install.module import *
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.completion import WordCompleter
@@ -229,18 +230,10 @@ class TextEditorUtility:
         try:
             if config.mainWindow.audioPlayer is not None:
                 config.mainWindow.addToAudioPlayList(command, True)
-            elif config.macVlc:
-                WebtopUtil.run(f'{config.macVlc} --rate {config.vlcSpeed} "{command}"')
-            elif WebtopUtil.isPackageInstalled("vlc") and (config.runMode == "terminal"):
-                vlcCmd = "vlc" if gui else "cvlc"
-                if config.runMode == "terminal":
-                    vlcCmd = "cvlc"
-                if '"' in command:
-                    config.mainWindow.textCommandParser.openBuiltinPlayer(command, gui)
-                else:
-                    WebtopUtil.run('{0} --rate {2} "{1}"'.format(vlcCmd, command, config.vlcSpeed))
+            elif config.isVlcAvailable:
+                VlcUtil.playMediaFile(command, config.vlcSpeed, (gui and not (config.runMode == "terminal")))
             else:
-                config.mainWindow.textCommandParser.openBuiltinPlayer(command, gui)
+                self.displayMessage(config.thisTranslation["noMediaPlayer"])
         except:
             WebtopUtil.openFile(command)
         return ("", "", {})
@@ -486,12 +479,8 @@ class TextEditorUtility:
             # close macOS text-to-speak voice
             if WebtopUtil.isPackageInstalled("say"):
                 os.system("pkill say")
-            # close vlc on macOS
-            if config.macVlc:
-                os.system("pkill VLC")
-            # close vlc on other platforms
-            if WebtopUtil.isPackageInstalled("vlc"):
-                os.system("pkill vlc")
+            # close vlc
+            VlcUtil.closeVlcPlayer()
             # close espeak on Linux
             if WebtopUtil.isPackageInstalled("espeak"):
                 os.system("pkill espeak")

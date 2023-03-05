@@ -665,7 +665,7 @@ class MaterialMainWindow:
                     addCheckableMenuItem(subMenuMediaSpeed, option, self, partial(self.setMediaSpeed, option), str(config.mediaSpeed), option, translation=False)
             self.setSubMenuMediaSpeed = setSubMenuMediaSpeed
             self.setSubMenuMediaSpeed()
-        elif WebtopUtil.isPackageInstalled("vlc") or config.macVlc or config.windowsVlc:
+        elif config.isVlcAvailable:
             subMenu = addSubMenu(menu, "mediaPlayer")
             items = (
                 ("launch", self.openVlcPlayer, sc.launchMediaPlayer),

@@ -1021,4 +1021,5 @@ translation = {
     "terminalForceVlc": "Force UBA à utiliser un lecteur de support VLC en mode terminal",
     "scrollBibleTextWithAudioPlayback": "Synchronisation du défilement de texte avec le jeu audio",
     "useFfmpegToChangeAudioSpeed": "Utiliser FFMPEG pour modifier la vitesse audio",
+    "useThirdPartyVLCplayerForVideoOnly": "Utiliser un lecteur VLC tiers pour la lecture vidéo onlly",
 }

@@ -1021,4 +1021,5 @@ translation = {
     "terminalForceVlc": "Force UBA pentru a utiliza VLC media player în modul terminal",
     "scrollBibleTextWithAudioPlayback": "Text Scrolling Sincronizare cu redare audio",
     "useFfmpegToChangeAudioSpeed": "Utilizați FFMPEG pentru a schimba viteza audio",
+    "useThirdPartyVLCplayerForVideoOnly": "Utilizați terț player VLC pentru redare video onlly",
 }

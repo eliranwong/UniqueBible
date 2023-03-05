@@ -1021,4 +1021,5 @@ translation = {
     "terminalForceVlc": "端末モードでの VLC メディア・プレイヤーの使用を UBA に強制する",
     "scrollBibleTextWithAudioPlayback": "オーディオ・プレイングを使用したテキスト・スクロールの同期",
     "useFfmpegToChangeAudioSpeed": "FFMPEG を使用したオーディオ速度の変更",
+    "useThirdPartyVLCplayerForVideoOnly": "サード・パーティーの VLC プレイヤーを使用してビデオ再生を onlly",
 }

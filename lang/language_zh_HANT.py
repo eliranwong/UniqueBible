@@ -1021,4 +1021,5 @@ translation = {
     "terminalForceVlc": "強制 UBA 在終端機模式下使用 VLC 媒體播放程式",
     "scrollBibleTextWithAudioPlayback": "具有音訊播放的文字捲動同步化",
     "useFfmpegToChangeAudioSpeed": "使用 FFMPEG 來變更音訊速度",
+    "useThirdPartyVLCplayerForVideoOnly": "使用第三方 VLC 播放器進行視訊播放",
 }

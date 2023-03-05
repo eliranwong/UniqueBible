@@ -241,27 +241,12 @@ class RemoteCliMainWindow(CrossPlatform):
         # do not remove the dummy gui argument for this method
         self.closeMediaPlayer()
         if playlist:
-            print("Playing audio now ...")
-            print("To stop it, run '.stopaudio' or '.sa' in UBA command prompt.")
-            # vlc on macOS
-            if config.macVlc:
-                audioFiles = '" "'.join(playlist)
-                audioFiles = '"{0}"'.format(audioFiles)
-                WebtopUtil.run(f"{config.macVlc} --rate {config.vlcSpeed} {audioFiles}")
-            # vlc on Windows
-            elif config.windowsVlc:
-                audioFiles = '" "'.join(playlist)
-                audioFiles = '"{0}"'.format(audioFiles)
-                WebtopUtil.run(f"'{config.windowsVlc}' --rate {config.vlcSpeed} {audioFiles}")
-            # vlc on other platforms
-            elif WebtopUtil.isPackageInstalled("vlc"):
-                audioFiles = '" "'.join(playlist)
-                audioFiles = '"{0}"'.format(audioFiles)
-                #vlcCmd = "vlc" if gui else "cvlc"
-                # always use cvlc
-                vlcCmd = "cvlc"
-                #os.system("pkill vlc")
-                WebtopUtil.run(f"{vlcCmd} --rate {config.vlcSpeed} {audioFiles}")
+            if config.isVlcAvailable:
+                print("Playing audio now ...")
+                print("To stop it, run '.stopaudio' or '.sa' in UBA command prompt.")
+                VlcUtil.playMediaFile(playlist, config.vlcSpeed, gui)
+            else:
+                print("No VLC player is found!")
 
     def playAudioBibleFilePlayListPlusDisplayText(self, playlist, textList, gui=False):
         # do not remove the dummy gui argument for this method
@@ -312,12 +297,7 @@ class RemoteCliMainWindow(CrossPlatform):
             # close macOS text-to-speak voice
             if WebtopUtil.isPackageInstalled("say"):
                 os.system("pkill say")
-            # close vlc on macOS
-            if config.macVlc:
-                os.system("pkill VLC")
-            # close vlc on other platforms
-            if WebtopUtil.isPackageInstalled("vlc"):
-                os.system("pkill vlc")
+            VlcUtil.closeVlcPlayer()
             # close espeak on Linux
             if WebtopUtil.isPackageInstalled("espeak"):
                 os.system("pkill espeak")

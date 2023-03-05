@@ -1021,4 +1021,5 @@ translation = {
     "terminalForceVlc": "Принудительное использование UBA для использования проигрывателя VLC в режиме терминала",
     "scrollBibleTextWithAudioPlayback": "Синхронизация текста с аудиоплатой",
     "useFfmpegToChangeAudioSpeed": "Использовать FFMPEG для изменения скорости звука",
+    "useThirdPartyVLCplayerForVideoOnly": "Использовать сторонний проигрыватель VLC для воспроизведения видео",
 }
