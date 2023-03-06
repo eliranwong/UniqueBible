@@ -522,6 +522,20 @@ class ConfigUtil:
                 config.alwaysDisplayStaticMaps = False
             else:
                 config.alwaysDisplayStaticMaps = True
+        setConfig("openaiApiKey", """
+        # OpenAI api key""",
+        "")
+        setConfig("openaiApiOrganization", """
+        # OpenAI api organization""",
+        "")
+        setConfig("chatGPTApiNoOfChoices", """
+        # ChatGPT API number of choices in response
+        # How many chat completion choices to generate for each input message.""",
+        1)
+        setConfig("chatGPTApiTemperature", """
+        # ChatGPT API temperature
+        # What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.""",
+        1.0)
         setConfig("myIBMWatsonApikey", """
         # IBM Watson service api key""",
         "")

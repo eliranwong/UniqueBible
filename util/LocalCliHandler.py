@@ -546,7 +546,8 @@ class LocalCliHandler:
             ".apply": ("apply ...", self.apply),
             ".customise": ("customise ...", self.customise),
             ".google": ("google ...", self.google),
-            ".google": ("google ...", self.watson),
+            ".watson": ("watson ...", self.watson),
+            ".chatgpt": ("Chat GPT", self.chatGPT),
         }
 
     def calculate(self):
@@ -2144,6 +2145,41 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def printToolNotFound(self, tool):
         self.print(f"Tool '{tool}' is not found on your system!")
+
+    def chatGPT(self):
+        import openai
+        # required
+        openai.api_key = os.environ["OPENAI_API_KEY"] = config.openaiApiKey
+        # optional
+        if config.openaiApiOrganization:
+            openai.organization = config.openaiApiOrganization
+        messages = [
+            {"role": "system", "content" : "You’re a kind helpful assistant"}
+        ]
+        if openai.api_key:
+            try:
+                while True:
+                    userInput = self.simplePrompt()
+                    if userInput.lower() == config.terminal_cancel_action:
+                        return self.cancelAction()
+                    messages.append({"role": "user", "content": userInput})
+                    completion = openai.ChatCompletion.create(
+                        model="gpt-3.5-turbo",
+                        messages=messages,
+                        n=config.chatGPTApiNoOfChoices,
+                        temperature=config.chatGPTApiTemperature,
+                    )
+                    for index, choice in enumerate(completion.choices):
+                        chat_response = choice.message.content
+                        self.print(f"### Response {(index+1)}:")
+                        self.print(chat_response)
+                        if index == 0:
+                            messages.append({"role": "assistant", "content": chat_response})
+            except:
+                self.print("Errors!")
+        else:
+            self.print("OpenAI API key not found!")
+        return ""
 
     def names(self):
         with open(os.path.join("plugins", "menu", "Bible Data", "Bible Names.txt"), "r", encoding="utf-8") as input_file:

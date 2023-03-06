@@ -1,3 +1,8 @@
+Changes in 34.24:
+* Integrated ChatGPT API into terminal mode:
+    1) enter your personal openai api key in config.py "openaiApiKey"
+    2) run .chatgpt command in terminal mode
+
 Changes in 34.23:
 * added config.useThirdPartyVLCplayerForVideoOnly in Config Flags Window.
 
