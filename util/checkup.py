@@ -510,6 +510,13 @@ def isValidatorsInstalled():
     except:
         return False
 
+def isOpenaiInstalled():
+    try:
+        import openai
+        return True
+    except:
+        return False
+
 def isPydubInstalled():
     try:
         from pydub import AudioSegment
@@ -693,6 +700,7 @@ optional = [
     ("bcrypt", "Modern password hashing for your software and your servers", isBcryptInstalled),
     ("validators", "Python Data Validation for Humans", isValidatorsInstalled),
     ("pydub", "Manipulate audio", isPydubInstalled),
+    ("openai", "Python client library for the OpenAI API", isOpenaiInstalled),
 ] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -738,6 +746,7 @@ optional = [
     ("bcrypt", "Modern password hashing for your software and your servers", isBcryptInstalled),
     ("validators", "Python Data Validation for Humans", isValidatorsInstalled),
     ("pydub", "Manipulate audio", isPydubInstalled),
+    ("openai", "Python client library for the OpenAI API", isOpenaiInstalled),
 ]
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))

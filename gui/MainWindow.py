@@ -287,10 +287,10 @@ class MainWindow(QMainWindow):
             self.audioPlayer.setMuted(config.audioMuted)
 
     def setAudioVolume(self, value):
+        config.audioVolume = value
         if config.qtLibrary == "pyside6":
             # PySide 6 volume range (float): 0.0-1.0
-            config.audioVolume = float(value/100)
-            config.audioOutput.setVolume(config.audioVolume)
+            config.audioOutput.setVolume(float(value/100))
         else:
             # PySide 2 volume range (int): 0-100
             self.audioPlayer.setVolume(value)
@@ -311,7 +311,6 @@ class MainWindow(QMainWindow):
     def setupAudioPlayer(self):
         config.isVlcPlayingInQThread = False
         if config.qtLibrary == "pyside6":
-            config.audioVolume = 1.0
             config.audioOutput = QAudioOutput()
             config.audioMuted = config.audioOutput.isMuted()
 
@@ -403,7 +402,9 @@ class MainWindow(QMainWindow):
             self.bringToForeground(self.videoView)
 
     def openVideoView(self):
-        if config.qtLibrary == "pyside6":
+        if config.useThirdPartyVLCplayerForVideoOnly:
+            VlcUtil.openVlcPlayer()
+        elif config.qtLibrary == "pyside6":
             self.videoView = QVideoWidget()
             self.videoView.setWindowTitle(config.thisTranslation["menu11_video"])
             self.videoView.show()
@@ -422,7 +423,7 @@ class MainWindow(QMainWindow):
 
     def syncAudioWithText(self, filePath):
         basename = os.path.basename(filePath)
-        if config.audioTextSync and not basename in ("gtts.mp3",):
+        if config.audioTextSync and not basename in ("gtts.mp3",) and not basename.startswith("gtts_"):
             # verse pattern, e.g. CSB_1_1_1.mp3
             versePattern = re.compile("^([^_]+?)_([0-9]+?)_([0-9]+?)_([0-9]+?).mp3")
             isVerse = versePattern.search(basename)
@@ -496,7 +497,7 @@ class MainWindow(QMainWindow):
                     # work as expected when the string is executed with exec() method
                     codes = f"""
 config.audioOutput = QAudioOutput()
-config.audioOutput.setVolume(config.audioVolume)
+config.audioOutput.setVolume(float(config.audioVolume/100))
 config.audioOutput.setMuted(config.audioMuted)
 config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)
 config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(""))
@@ -524,7 +525,7 @@ config.mainWindow.audioPlayer.setSource(QUrl.fromLocalFile(config.currentAudioFi
         if config.qtLibrary == "pyside6":
             codes = f"""
 config.audioOutput = QAudioOutput()
-config.audioOutput.setVolume(config.audioVolume)
+config.audioOutput.setVolume(float(config.audioVolume/100))
 config.audioOutput.setMuted(config.audioMuted)
 config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
             exec(codes, globals())

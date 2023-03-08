@@ -547,7 +547,7 @@ class LocalCliHandler:
             ".customise": ("customise ...", self.customise),
             ".google": ("google ...", self.google),
             ".watson": ("watson ...", self.watson),
-            ".chatgpt": ("Chat GPT", self.chatGPT),
+            ".biblechat": ("Chat GPT", self.bibleChat),
         }
 
     def calculate(self):
@@ -2146,7 +2146,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
     def printToolNotFound(self, tool):
         self.print(f"Tool '{tool}' is not found on your system!")
 
-    def chatGPT(self):
+    def bibleChat(self):
         import openai
         # required
         openai.api_key = os.environ["OPENAI_API_KEY"] = config.openaiApiKey
@@ -2156,6 +2156,8 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         messages = [
             {"role": "system", "content" : "You’re a kind helpful assistant"}
         ]
+        if config.chatGPTApiContext:
+            messages.append({"role": "assistant", "content" : config.chatGPTApiContext})
         if openai.api_key:
             try:
                 while True:
@@ -2171,12 +2173,21 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     )
                     for index, choice in enumerate(completion.choices):
                         chat_response = choice.message.content
-                        self.print(f"### Response {(index+1)}:")
+                        if len(completion.choices) > 1:
+                            self.print(f"### Response {(index+1)}:")
                         self.print(chat_response)
                         if index == 0:
                             messages.append({"role": "assistant", "content": chat_response})
-            except:
-                self.print("Errors!")
+            # error codes: https://platform.openai.com/docs/guides/error-codes/python-library-error-types
+            except openai.error.APIError as e:
+                #Handle API error here, e.g. retry or log
+                print(f"OpenAI API returned an API Error: {e}")
+            except openai.error.APIConnectionError as e:
+                #Handle connection error here
+                print(f"Failed to connect to OpenAI API: {e}")
+            except openai.error.RateLimitError as e:
+                #Handle rate limit error (we recommend using exponential backoff)
+                print(f"OpenAI API request exceeded rate limit: {e}")
         else:
             self.print("OpenAI API key not found!")
         return ""
@@ -3849,7 +3860,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def tools(self):
         heading = "Tools"
-        features = (".web", ".share", ".extract", ".filters", ".read", ".readsync", ".system", ".python")
+        features = (".web", ".share", ".extract", ".filters", ".chatgpt", ".read", ".readsync", ".system", ".python")
         return self.displayFeatureMenu(heading, features)
 
     def speak(self):

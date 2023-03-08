@@ -1216,7 +1216,7 @@ class MaterialMainWindow:
             #self.volumeSlider.setTickPosition(QSlider.TicksBelow)
             self.volumeSlider.setToolTip(config.thisTranslation["volume"])
             self.volumeSlider.valueChanged.connect(self.setAudioVolume)
-            self.volumeSlider.setValue(100)
+            self.volumeSlider.setValue(config.audioVolume)
             self.thirdToolBar.addWidget(self.volumeSlider)
 
             #self.thirdToolBar.addSeparator()

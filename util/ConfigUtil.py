@@ -536,6 +536,15 @@ class ConfigUtil:
         # ChatGPT API temperature
         # What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.""",
         1.0)
+        setConfig("chatGPTApiContext", """
+        # Set a context for chatGPT conversations""",
+        "about the bible")
+        setConfig("chatGPTApiAudio", """
+        # ChatGPT API Response Audio Playback.""",
+        False)
+        setConfig("chatGPTApiAudioLanguage", """
+        # Language for ChatGPT API Response Audio Playback.""",
+        "en")
         setConfig("myIBMWatsonApikey", """
         # IBM Watson service api key""",
         "")
@@ -645,6 +654,9 @@ class ConfigUtil:
         setConfig("mediaSpeed", """
         # Built-in media player playback speed""",
         1.0)
+        setConfig("audioVolume", """
+        # Built-in media player playback audio volume""",
+        100)
         setConfig("speedUpFilterFrequency", """
         # Cutoff frequency used for low_pass_filter and high_pass_filter when audio file speed is increased with pydub.
         # Changing this value may change the quality of audio with increased speed.
