@@ -15,26 +15,7 @@ def findText(html):
             if os.path.isfile(audioFile):
                 playlist.append(audioFile)
         if playlist:
-
-            macVlc = '/Applications/VLC.app/Contents/MacOS/VLC'
-            if platform.system() == "Darwin" and os.path.isfile(macVlc):
-                audioFiles = ' '.join(playlist)
-                WebtopUtil.runNohup(f"{macVlc} --rate {config.vlcSpeed} {audioFiles}")
-            elif playlist and WebtopUtil.isPackageInstalled("vlc"):
-                audioFiles = ' '.join(playlist)
-                os.system("pkill vlc")
-                WebtopUtil.runNohup(f"vlc --rate {config.vlcSpeed} {audioFiles}")
-            elif playlist and ("Pythonvlc" in config.enabled):
-                from gui.VlcPlayer import VlcPlayer
-                self = config.mainWindow
-                if self.vlcPlayer is not None:
-                    self.vlcPlayer.close()
-                self.vlcPlayer = VlcPlayer(self)
-                for file in playlist:
-                    self.vlcPlayer.addToPlaylist(file)
-                self.vlcPlayer.show()
-                self.vlcPlayer.playNextInPlaylist()
-
+            config.mainWindow.playAudioBibleFilePlayList(playlist)
         else:
             config.mainWindow.displayMessage("No single verse audio found!")
     else:

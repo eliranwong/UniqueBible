@@ -136,8 +136,8 @@ class YouTubeDownloader:
     def workOnDownloadYouTubeFile(self, downloadCommand, youTubeLink, outputFolder):
         # Pass the function to execute
         worker = Worker(self.downloadYouTubeFile, downloadCommand, youTubeLink, outputFolder) # Any other args, kwargs are passed to the run function
-        worker.signals.result.connect(self.print_output)
-        worker.signals.finished.connect(self.parent.reloadResources)
+        worker.signals.result.connect(lambda: self.parent.reloadResources())
+        #worker.signals.finished.connect(self.parent.reloadResources)
         # Execute
         self.threadpool.start(worker)
 

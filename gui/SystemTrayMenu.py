@@ -204,7 +204,7 @@ trayMenu.addAction(systemTrayWiki)
 # Add a separator
 trayMenu.addSeparator()
 # Restart UBA on macOS
-if platform.system() == "Darwin":
+if hasattr(config, "cli"):
     restartApp = QAction(config.thisTranslation["restart"])
     restartApp.triggered.connect(config.mainWindow.restartApp)
     trayMenu.addAction(restartApp)

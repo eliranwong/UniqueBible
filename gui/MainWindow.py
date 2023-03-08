@@ -769,29 +769,6 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
             config.miniControl = True
 
     def closeEvent(self, event):
-#        if self.noteEditor:
-#            if self.noteEditor.close():
-#                if config.enableSystemTray:
-#                    event.ignore()
-#                    self.hide()
-#                    config.mainWindowHidden = True
-#                else:
-#                    event.accept()
-#                    QGuiApplication.instance().quit()
-#            else:
-#                event.ignore()
-#                # Bring forward the note editor.
-#                # qt.qpa.wayland: Wayland does not support QWindow::requestActivate()
-#                self.noteEditor.hide()
-#                self.noteEditor.show()
-#        else:
-#            if config.enableSystemTray:
-#                event.ignore()
-#                self.hide()
-#                config.mainWindowHidden = True
-#            else:
-#                event.accept()
-#                QGuiApplication.instance().quit()
         if config.enableSystemTray:
             event.ignore()
             self.hide()
