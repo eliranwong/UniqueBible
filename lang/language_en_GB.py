@@ -1036,4 +1036,6 @@ translation = {
     "required": "required",
     "optional": "optional",
     "areyousure": "Are you sure?",
+    "voice": "voice",
+    "voiceTyping": "voice typing",
 }

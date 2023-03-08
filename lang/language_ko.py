@@ -1036,4 +1036,6 @@ translation = {
     "required": "요구되는",
     "optional": "선택 사항",
     "areyousure": "확실해요?",
+    "voice": "목소리",
+    "voiceTyping": "음성 입력",
 }

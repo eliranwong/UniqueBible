@@ -1036,4 +1036,6 @@ translation = {
     "required": "απαιτούμενη.",
     "optional": "προαιρετικά.",
     "areyousure": "-Σίγουρα;",
+    "voice": "φωνή!",
+    "voiceTyping": "πληκτρολόγηση φωνής",
 }

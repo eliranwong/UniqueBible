@@ -1036,4 +1036,6 @@ translation = {
     "required": "richiesto",
     "optional": "opzionale",
     "areyousure": "Sei sicuro?",
+    "voice": "voce",
+    "voiceTyping": "digitazione vocale",
 }

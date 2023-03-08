@@ -1036,4 +1036,6 @@ translation = {
     "required": "必需",
     "optional": "可选",
     "areyousure": "你确定吗",
+    "voice": "声音",
+    "voiceTyping": "语音输入",
 }

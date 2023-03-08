@@ -1036,4 +1036,6 @@ translation = {
     "required": "Обязательный",
     "optional": "необязательные",
     "areyousure": "Вы уверены?",
+    "voice": "голос",
+    "voiceTyping": "голосовой ввод",
 }

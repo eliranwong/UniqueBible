@@ -175,6 +175,7 @@ class LocalCliHandler:
             ("class:indicator", self.inputIndicator),
         ]
 
+        bible_chat_history = os.path.join(os.getcwd(), "terminal_history", "bible_chat")
         find_history = os.path.join(os.getcwd(), "terminal_history", "find")
         module_history_concordance = os.path.join(os.getcwd(), "terminal_history", "concordance")
         module_history_books = os.path.join(os.getcwd(), "terminal_history", "books")
@@ -200,6 +201,7 @@ class LocalCliHandler:
         python_file_history = os.path.join(os.getcwd(), "terminal_history", "python_file")
         #system_command_history = os.path.join(os.getcwd(), "terminal_history", "system_command")
 
+        self.terminal_bible_chat_session = PromptSession(history=FileHistory(bible_chat_history))
         self.terminal_live_filter_session = PromptSession(history=FileHistory(live_filter))
         self.terminal_concordance_selection_session = PromptSession(history=FileHistory(module_history_concordance))
         self.terminal_books_selection_session = PromptSession(history=FileHistory(module_history_books))
@@ -547,7 +549,7 @@ class LocalCliHandler:
             ".customise": ("customise ...", self.customise),
             ".google": ("google ...", self.google),
             ".watson": ("watson ...", self.watson),
-            ".biblechat": ("Chat GPT", self.bibleChat),
+            ".biblechat": ("bible chat", self.bibleChat),
         }
 
     def calculate(self):
@@ -2161,7 +2163,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         if openai.api_key:
             try:
                 while True:
-                    userInput = self.simplePrompt()
+                    userInput = self.simplePrompt(promptSession=self.terminal_bible_chat_session)
                     if userInput.lower() == config.terminal_cancel_action:
                         return self.cancelAction()
                     messages.append({"role": "user", "content": userInput})

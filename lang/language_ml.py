@@ -1036,4 +1036,6 @@ translation = {
     "required": "ആവശ്യമുണ്ടു്",
     "optional": "ഐച്ഛികം",
     "areyousure": "ഉറപ്പാണോ?",
+    "voice": "ശബ്ദം",
+    "voiceTyping": "ശബ്ദം ടൈപ്പ് ചെയ്യുക",
 }

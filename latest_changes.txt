@@ -1,3 +1,13 @@
+Changes in 34.26:
+* added support of voice-typing in plugin "Bible Chat"
+    install portaudio to use this feature:
+    - on macOS, run "brew install portaudio"
+    - on Debian-based Linux, run "sudo apt install libportaudio2"
+* fixed and improved audio language selection in plugin "Bible Chat"
+* fixed terminal mode tools menu
+* added history session to .biblechat command in terminal mode
+* fixed updating pip tool on Windows
+
 Changes in 34.25:
 * added plugin menu "Bible Chat"
     - This plugin uses ChatGPT API key

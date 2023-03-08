@@ -554,6 +554,15 @@ class ConfigUtil:
         setConfig("myIBMWatsonVersion", """
         # IBM Watson service api version""",
         "2018-05-01")
+        setConfig("pocketsphinxModelPath", """
+        # Model path of pocketsphinx""",
+        "")
+        setConfig("pocketsphinxModelPathBin", """
+        # Model path of pocketsphinx bin""",
+        "")
+        setConfig("pocketsphinxModelPathDict", """
+        # Model path of pocketsphinx dict""",
+        "")
         setConfig("updateDependenciesOnStartup", """
         # Update Dependencies on Startup: True / False""",
         False)

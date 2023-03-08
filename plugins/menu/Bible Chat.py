@@ -1,14 +1,47 @@
 import config, os, re, openai, sqlite3, webbrowser
 from gtts import gTTS
+from pocketsphinx import LiveSpeech, get_model_path
 from datetime import datetime
+from util.Languages import Languages
 if config.qtLibrary == "pyside6":
-    from PySide6.QtCore import Qt
+    from PySide6.QtCore import Qt, QThread, Signal
     from PySide6.QtGui import QStandardItemModel, QStandardItem, QGuiApplication
     from PySide6.QtWidgets import QWidget, QDialog, QDialogButtonBox, QFormLayout, QLabel, QMessageBox, QCheckBox, QPlainTextEdit, QProgressBar, QPushButton, QListView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
 else:
-    from qtpy.QtCore import Qt
+    from qtpy.QtCore import Qt, QThread, Signal
     from qtpy.QtGui import QStandardItemModel, QStandardItem, QGuiApplication
     from qtpy.QtWidgets import QWidget, QDialog, QDialogButtonBox, QFormLayout, QLabel, QMessageBox, QCheckBox, QPlainTextEdit, QProgressBar, QPushButton, QListView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
+
+
+class SpeechRecognitionThread(QThread):
+    phrase_recognized = Signal(str)
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.is_running = False
+
+    def run(self):
+        self.is_running = True
+        if config.pocketsphinxModelPath:
+            # download English dictionary at: http://www.speech.cs.cmu.edu/cgi-bin/cmudict
+            # download voice models at https://sourceforge.net/projects/cmusphinx/files/Acoustic%20and%20Language%20Models/
+            speech = LiveSpeech(
+                #sampling_rate=16000,  # optional
+                hmm=get_model_path(config.pocketsphinxModelPath),
+                lm=get_model_path(config.pocketsphinxModelPathBin),
+                dic=get_model_path(config.pocketsphinxModelPathDict),
+            )
+        else:
+            speech = LiveSpeech()
+
+        for phrase in speech:
+            if not self.is_running:
+                break
+            recognized_text = str(phrase)
+            self.phrase_recognized.emit(recognized_text)
+
+    def stop(self):
+        self.is_running = False
 
 
 class ApiDialog(QDialog):
@@ -19,7 +52,17 @@ class ApiDialog(QDialog):
         self.apiKeyEdit = QLineEdit(config.openaiApiKey)
         self.orgEdit = QLineEdit(config.openaiApiOrganization)
         self.contextEdit = QLineEdit(config.chatGPTApiContext)
-        self.languageEdit = QLineEdit(config.chatGPTApiAudioLanguage)
+        #self.languageEdit = QLineEdit(config.chatGPTApiAudioLanguage)
+        self.languageBox = QComboBox()
+        initialIndex = 0
+        index = 0
+        for key, value in Languages.gTTSLanguageCodes.items():
+            self.languageBox.addItem(key)
+            self.languageBox.setItemData(self.languageBox.count()-1, value, role=Qt.ToolTipRole)
+            if value == config.chatGPTApiAudioLanguage:
+                initialIndex = index
+            index += 1
+        self.languageBox.setCurrentIndex(initialIndex)
         buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         buttonBox.accepted.connect(self.accept)
         buttonBox.rejected.connect(self.reject)
@@ -33,7 +76,7 @@ class ApiDialog(QDialog):
         layout.addRow(f"OpenAI API Key [{required}]:", self.apiKeyEdit)
         layout.addRow(f"Organization ID [{optional}]:", self.orgEdit)
         layout.addRow(f"{context} [{optional}]:", self.contextEdit)
-        layout.addRow(f"{language} [{optional}]:", self.languageEdit)
+        layout.addRow(f"{language} [{optional}]:", self.languageBox)
         layout.addWidget(buttonBox)
 
         self.setLayout(layout)
@@ -48,7 +91,9 @@ class ApiDialog(QDialog):
         return self.contextEdit.text().strip()
     
     def language(self):
-        return self.languageEdit.text().strip()
+        #return self.languageEdit.text().strip()
+        #return self.languageBox.currentText()
+        return self.languageBox.currentData(Qt.ToolTipRole)
 
 
 class Database:
@@ -112,6 +157,8 @@ class ChatGPTAPI(QWidget):
         self.contentID = ""
         self.database = Database()
         self.data_list = []
+        self.recognition_thread = SpeechRecognitionThread(self)
+        self.recognition_thread.phrase_recognized.connect(self.onPhraseRecognized)
 
     def setupUI(self):
         layout000 = QHBoxLayout()
@@ -133,6 +180,9 @@ class ChatGPTAPI(QWidget):
         self.userInput.setPlaceholderText(config.thisTranslation["messageHere"])
         self.userInput.mousePressEvent = lambda _ : self.userInput.selectAll()
         self.userInput.setClearButtonEnabled(True)
+        self.voiceCheckbox = QCheckBox(config.thisTranslation["voice"])
+        self.voiceCheckbox.setToolTip(config.thisTranslation["voiceTyping"])
+        self.voiceCheckbox.setCheckState(Qt.Unchecked)
         self.contentView = QPlainTextEdit()
         self.contentView.setReadOnly(True)
         apiKeyButton = QPushButton(config.thisTranslation["settings"])
@@ -151,10 +201,13 @@ class ChatGPTAPI(QWidget):
         self.temperature.setCurrentIndex(config.chatGPTApiTemperature * 10)
         temperatureLabel = QLabel(config.thisTranslation["temperature"])
         temperatureLabel.setAlignment(Qt.AlignRight)
+        temperatureLabel.setToolTip("What sampling temperature to use, between 0 and 2. \nHigher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.")
         choicesLabel = QLabel(config.thisTranslation["choices"])
         choicesLabel.setAlignment(Qt.AlignRight)
+        choicesLabel.setToolTip("How many chat completion choices to generate for each input message.")
         promptLayout = QHBoxLayout()
         promptLayout.addWidget(self.userInput)
+        promptLayout.addWidget(self.voiceCheckbox)
         promptLayout.addWidget(sendButton)
         layout000Rt.addLayout(promptLayout)
         layout000Rt.addWidget(self.contentView)
@@ -216,6 +269,7 @@ class ChatGPTAPI(QWidget):
         removeButton.clicked.connect(self.removeData)
         self.editableCheckbox.stateChanged.connect(self.toggleEditable)
         self.audioCheckbox.stateChanged.connect(self.toggleChatGPTApiAudio)
+        self.voiceCheckbox.stateChanged.connect(self.toggleVoiceTyping)
         self.choiceNumber.currentIndexChanged.connect(self.updateChoiceNumber)
         self.temperature.currentIndexChanged.connect(self.updateTemperature)
 
@@ -226,12 +280,19 @@ class ChatGPTAPI(QWidget):
             config.openaiApiKey = dialog.api_key()
             config.openaiApiOrganization = dialog.org()
             config.chatGPTApiContext = dialog.context()
+            config.chatGPTApiAudioLanguage = dialog.language()
 
     def updateTemperature(self, index):
         config.chatGPTApiTemperature = float(index / 10)
 
     def updateChoiceNumber(self, index):
         config.chatGPTApiNoOfChoices = index + 1
+
+    def onPhraseRecognized(self, phrase):
+        self.userInput.setText(f"{self.userInput.text()} {phrase}")
+
+    def toggleVoiceTyping(self, state):
+        self.recognition_thread.start() if state else self.recognition_thread.stop()
 
     def toggleEditable(self, state):
         self.contentView.setReadOnly(not state)

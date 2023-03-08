@@ -1036,4 +1036,6 @@ translation = {
     "required": "आवश्यक",
     "optional": "वैकल्पिक",
     "areyousure": "क्या आप सुनिश्चित हैं?",
+    "voice": "वाणी",
+    "voiceTyping": "ध्वनि टाइपिंग",
 }
