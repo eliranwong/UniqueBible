@@ -1,3 +1,6 @@
+Changes in 34.29:
+* fixed fresh installation
+
 Changes in 34.28:
 * fixed crash after youtube audio or video is downloaded
 * added "Restart" option on system tray for non-macOS users

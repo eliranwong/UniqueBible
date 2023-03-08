@@ -106,7 +106,8 @@ def isPyQt5Installed():
 
 def isQtpyInstalled():
     try:
-        from qtpy import QtGui
+        if not config.qtLibrary == "pyside6":
+            from qtpy import QtGui
         return True
     except:
         return False
@@ -595,7 +596,6 @@ required = [
 ]
 # Add Qt Library module
 if not config.noQt:
-    required.append(("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled))
     if config.qtLibrary == "pyside6":
         required.append(("PySide6", "Qt Graphical Interface Library", isPySide6Installed))
     else:
@@ -603,6 +603,7 @@ if not config.noQt:
             required.append(("PySide2", "Qt Graphical Interface Library", isPySide2Installed))
         else:
             required.append(("PyQt5", "Qt Graphical Interface Library", isPyQt5Installed))
+    required.append(("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled))
 
 if not config.enabled:
     for module, feature, isInstalled in required or config.updateDependenciesOnStartup:
