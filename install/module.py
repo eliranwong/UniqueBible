@@ -1,4 +1,4 @@
-import subprocess
+import subprocess, platform
 
 def installmodule(module, update=True):
     #executablePath = os.path.dirname(sys.executable)
@@ -17,7 +17,7 @@ def installmodule(module, update=True):
                 pipFailedUpdated = "pip tool failed to be updated!"
                 try:
                     # Update pip tool in case it is too old
-                    updatePip = subprocess.Popen("pip3 install --upgrade pip", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    updatePip = subprocess.Popen("python -m pip install --upgrade pip" if platform.system() == "Windows" else "pip3 install --upgrade pip", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                     *_, stderr = updatePip.communicate()
                     if not stderr:
                         print("pip tool updated!")

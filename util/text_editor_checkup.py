@@ -1,6 +1,4 @@
-import config, subprocess, os, zipfile, platform, sys, re
-from shutil import copyfile
-from util.WebtopUtil import WebtopUtil
+import config, subprocess, os, platform, sys, re, platform
 
 
 config.pipIsUpdated = False
@@ -18,7 +16,7 @@ def pip3InstallModule(module):
     if not config.pipIsUpdated:
         try:
             # Automatic setup does not start on some device because pip tool is too old
-            updatePip = subprocess.Popen("pip3 install --upgrade pip", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            updatePip = subprocess.Popen("python -m pip install --upgrade pip" if platform.system() == "Windows" else "pip3 install --upgrade pip", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             *_, stderr = updatePip.communicate()
             if not stderr:
                 print("pip tool updated!")

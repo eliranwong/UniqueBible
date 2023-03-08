@@ -3860,7 +3860,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def tools(self):
         heading = "Tools"
-        features = (".web", ".share", ".extract", ".filters", ".chatgpt", ".read", ".readsync", ".system", ".python")
+        features = (".web", ".share", ".extract", ".filters", ".biblechat", ".read", ".readsync", ".system", ".python")
         return self.displayFeatureMenu(heading, features)
 
     def speak(self):
