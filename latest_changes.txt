@@ -1,3 +1,6 @@
+Changes in 34.27:
+* added "Bible Chat" to material menu layout if users has a openai api key.
+
 Changes in 34.26:
 * added support of voice-typing in plugin "Bible Chat"
     install portaudio to use this feature:
