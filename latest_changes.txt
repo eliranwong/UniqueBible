@@ -1,3 +1,6 @@
+Changes in 34.33:
+* fixed openai api key entry in "Bible Chat"
+
 Changes in 34.32:
 * fixed font size
 

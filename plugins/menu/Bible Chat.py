@@ -346,9 +346,12 @@ class ChatGPTAPI(QWidget):
 
     def showApiDialog(self):
         dialog = ApiDialog(self)
-        result = dialog.exec_()
+        result = dialog.exec() if config.qtLibrary == "pyside6" else dialog.exec_()
         if result == QDialog.Accepted:
             config.openaiApiKey = dialog.api_key()
+            if not openai.api_key:
+                openai.api_key = os.environ["OPENAI_API_KEY"] = config.openaiApiKey
+                self.newData()
             config.openaiApiOrganization = dialog.org()
             config.chatGPTApiContext = dialog.context()
             config.chatGPTApiAudioLanguage = dialog.language()
@@ -506,3 +509,4 @@ Follow the following steps:
 config.mainWindow.chatGPTapi = ChatGPTAPI(config.mainWindow)
 config.mainWindow.chatGPTapi.show()
 config.mainWindow.bringToForeground(config.mainWindow.chatGPTapi)
+config.mainWindow.chatGPTapi.setFontSize()
