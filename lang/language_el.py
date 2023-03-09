@@ -1038,4 +1038,6 @@ translation = {
     "areyousure": "-Σίγουρα;",
     "voice": "φωνή!",
     "voiceTyping": "πληκτρολόγηση φωνής",
+    "font": "Font.",
+    "fontSize": "Μέγεθος Γραμματοσειράς",
 }

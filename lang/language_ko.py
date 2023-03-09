@@ -1038,4 +1038,6 @@ translation = {
     "areyousure": "확실해요?",
     "voice": "목소리",
     "voiceTyping": "음성 입력",
+    "font": "폰트",
+    "fontSize": "폰트 크기",
 }

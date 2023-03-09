@@ -11,7 +11,7 @@ else:
     from qtpy.QtCore import Qt, QThread, Signal, QThreadPool
     from qtpy.QtGui import QStandardItemModel, QStandardItem, QGuiApplication
     from qtpy.QtWidgets import QWidget, QDialog, QDialogButtonBox, QFormLayout, QLabel, QMessageBox, QCheckBox, QPlainTextEdit, QProgressBar, QPushButton, QListView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
-from gui.Worker import Worker, WorkerSignals
+from gui.Worker import Worker
 
 
 class ChatGPTResponse:
@@ -242,6 +242,9 @@ class ChatGPTAPI(QWidget):
         self.choiceNumber = QComboBox()
         self.choiceNumber.addItems([str(i) for i in range(1, 11)])
         self.choiceNumber.setCurrentIndex((config.chatGPTApiNoOfChoices - 1))
+        self.fontSize = QComboBox()
+        self.fontSize.addItems([str(i) for i in range(1, 51)])
+        self.fontSize.setCurrentIndex((config.fontSize - 1))
         self.temperature = QComboBox()
         self.temperature.addItems([str(i/10) for i in range(0, 21)])
         self.temperature.setCurrentIndex(config.chatGPTApiTemperature * 10)
@@ -251,6 +254,9 @@ class ChatGPTAPI(QWidget):
         choicesLabel = QLabel(config.thisTranslation["choices"])
         choicesLabel.setAlignment(Qt.AlignRight)
         choicesLabel.setToolTip("How many chat completion choices to generate for each input message.")
+        fontLabel = QLabel(config.thisTranslation["font"])
+        fontLabel.setAlignment(Qt.AlignRight)
+        fontLabel.setToolTip(config.thisTranslation["fontSize"])
         promptLayout = QHBoxLayout()
         promptLayout.addWidget(self.userInput)
         promptLayout.addWidget(self.voiceCheckbox)
@@ -265,8 +271,10 @@ class ChatGPTAPI(QWidget):
         rtControlLayout.addWidget(self.temperature)
         rtControlLayout.addWidget(choicesLabel)
         rtControlLayout.addWidget(self.choiceNumber)
-        rtControlLayout.addWidget(self.audioCheckbox)
+        rtControlLayout.addWidget(fontLabel)
+        rtControlLayout.addWidget(self.fontSize)
         rtControlLayout.addWidget(self.editableCheckbox)
+        rtControlLayout.addWidget(self.audioCheckbox)
         rtButtonLayout = QHBoxLayout()
         rtButtonLayout.addWidget(newButton)
         rtButtonLayout.addWidget(saveButton)
@@ -319,7 +327,22 @@ class ChatGPTAPI(QWidget):
         self.audioCheckbox.stateChanged.connect(self.toggleChatGPTApiAudio)
         self.voiceCheckbox.stateChanged.connect(self.toggleVoiceTyping)
         self.choiceNumber.currentIndexChanged.connect(self.updateChoiceNumber)
+        self.fontSize.currentIndexChanged.connect(self.setFontSize)
         self.temperature.currentIndexChanged.connect(self.updateTemperature)
+
+        self.setFontSize()
+
+    def setFontSize(self, index=None):
+        if index is not None:
+            config.fontSize = index + 1
+        # content view
+        font = self.contentView.font()
+        font.setPointSize(config.chatGPTFontSize)
+        self.contentView.setFont(font)
+        # list view
+        font = self.listView.font()
+        font.setPointSize(config.chatGPTFontSize)
+        self.listView.setFont(font)
 
     def showApiDialog(self):
         dialog = ApiDialog(self)
@@ -373,7 +396,7 @@ class ChatGPTAPI(QWidget):
             lines = text.split("\n")
             if not self.contentID:
                 self.contentID = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-            title = re.sub("^>>> ", "", lines[0][:30])
+            title = re.sub("^>>> ", "", lines[0][:50])
             content = text
             self.database.insert(self.contentID, title, content)
             self.loadData()

@@ -107,6 +107,12 @@ QListView::item:hover {0}
     color: {4};
 {1}
 
+QPlainTextEdit {0}
+    font-size: {12}px;
+    selection-background-color: {4};
+    selection-color: {5};
+{1}
+
 QTableView {0}
     font-size: {9}px;
     selection-background-color: {4};
@@ -256,7 +262,8 @@ QSlider::sub-page {0}
         config.iconButtonSize,
         (int(config.iconButtonSize * 2/3)),
         (int(config.iconButtonSize / 2)),
-        (int(config.iconButtonSize * 5))
+        (int(config.iconButtonSize * 5)),
+        (int(config.iconButtonSize * 2/3)+5),
         )
 
 # Get a color variant

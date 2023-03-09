@@ -1038,4 +1038,6 @@ translation = {
     "areyousure": "क्या आप सुनिश्चित हैं?",
     "voice": "वाणी",
     "voiceTyping": "ध्वनि टाइपिंग",
+    "font": "फ़ॉन्ट",
+    "fontSize": "फ़ॉन्ट आकार",
 }

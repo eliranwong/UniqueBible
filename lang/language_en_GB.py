@@ -1038,4 +1038,6 @@ translation = {
     "areyousure": "Are you sure?",
     "voice": "voice",
     "voiceTyping": "voice typing",
+    "font": "Font",
+    "fontSize": "Font Size",
 }

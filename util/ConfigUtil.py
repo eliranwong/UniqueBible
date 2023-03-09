@@ -539,6 +539,9 @@ class ConfigUtil:
         setConfig("chatGPTApiContext", """
         # Set a context for chatGPT conversations""",
         "about the bible")
+        setConfig("chatGPTFontSize", """
+        # Set chatGPT conversation font size""",
+        14)
         setConfig("chatGPTApiAudio", """
         # ChatGPT API Response Audio Playback.""",
         False)

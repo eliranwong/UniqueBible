@@ -1,4 +1,4 @@
-import config, sys, traceback, os, platform, re
+import config, sys, traceback, os, platform, openai
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool
 else:
@@ -79,6 +79,51 @@ class Worker(QRunnable):
             self.signals.result.emit(result)  # Return the result of the processing
         finally:
             self.signals.finished.emit()  # Done
+
+
+class ChatGPTResponse:
+
+    def __init__(self, parent):
+        super().__init__()
+        self.parent = parent
+        self.threadpool = QThreadPool()
+
+    def getResponse(self, messages):
+        responses = ""
+        try:
+            completion = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=messages,
+                n=config.chatGPTApiNoOfChoices,
+                temperature=config.chatGPTApiTemperature,
+            )
+            for index, choice in enumerate(completion.choices):
+                chat_response = choice.message.content
+                if len(completion.choices) > 1:
+                    if index > 0:
+                        responses += "\n"
+                    responses += f"### Response {(index+1)}:\n"
+                responses += f"{chat_response}\n\n"
+        # error codes: https://platform.openai.com/docs/guides/error-codes/python-library-error-types
+        except openai.error.APIError as e:
+            #Handle API error here, e.g. retry or log
+            return f"OpenAI API returned an API Error: {e}"
+        except openai.error.APIConnectionError as e:
+            #Handle connection error here
+            return f"Failed to connect to OpenAI API: {e}"
+        except openai.error.RateLimitError as e:
+            #Handle rate limit error (we recommend using exponential backoff)
+            return f"OpenAI API request exceeded rate limit: {e}"
+        return responses
+
+    def workOnGetResponse(self, messages):
+        # Pass the function to execute
+        worker = Worker(self.getResponse, messages) # Any other args, kwargs are passed to the run function
+        worker.signals.result.connect(self.parent.processResponse)
+        # Connection
+        #worker.signals.finished.connect(None)
+        # Execute
+        self.threadpool.start(worker)
 
 
 class VLCVideo:
