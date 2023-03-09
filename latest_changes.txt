@@ -1,3 +1,6 @@
+Changes in 34.32:
+* fixed font size
+
 Changes in 34.31:
 * added font size adjustment in "Bible Chat" plugin.
 

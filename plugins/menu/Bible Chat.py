@@ -244,7 +244,7 @@ class ChatGPTAPI(QWidget):
         self.choiceNumber.setCurrentIndex((config.chatGPTApiNoOfChoices - 1))
         self.fontSize = QComboBox()
         self.fontSize.addItems([str(i) for i in range(1, 51)])
-        self.fontSize.setCurrentIndex((config.fontSize - 1))
+        self.fontSize.setCurrentIndex((config.chatGPTFontSize - 1))
         self.temperature = QComboBox()
         self.temperature.addItems([str(i/10) for i in range(0, 21)])
         self.temperature.setCurrentIndex(config.chatGPTApiTemperature * 10)
@@ -334,7 +334,7 @@ class ChatGPTAPI(QWidget):
 
     def setFontSize(self, index=None):
         if index is not None:
-            config.fontSize = index + 1
+            config.chatGPTFontSize = index + 1
         # content view
         font = self.contentView.font()
         font.setPointSize(config.chatGPTFontSize)
