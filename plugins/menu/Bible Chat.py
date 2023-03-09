@@ -4,13 +4,59 @@ from pocketsphinx import LiveSpeech, get_model_path
 from datetime import datetime
 from util.Languages import Languages
 if config.qtLibrary == "pyside6":
-    from PySide6.QtCore import Qt, QThread, Signal
+    from PySide6.QtCore import Qt, QThread, Signal, QThreadPool
     from PySide6.QtGui import QStandardItemModel, QStandardItem, QGuiApplication
     from PySide6.QtWidgets import QWidget, QDialog, QDialogButtonBox, QFormLayout, QLabel, QMessageBox, QCheckBox, QPlainTextEdit, QProgressBar, QPushButton, QListView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
 else:
-    from qtpy.QtCore import Qt, QThread, Signal
+    from qtpy.QtCore import Qt, QThread, Signal, QThreadPool
     from qtpy.QtGui import QStandardItemModel, QStandardItem, QGuiApplication
     from qtpy.QtWidgets import QWidget, QDialog, QDialogButtonBox, QFormLayout, QLabel, QMessageBox, QCheckBox, QPlainTextEdit, QProgressBar, QPushButton, QListView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
+from gui.Worker import Worker, WorkerSignals
+
+
+class ChatGPTResponse:
+
+    def __init__(self, parent):
+        super().__init__()
+        self.parent = parent
+        self.threadpool = QThreadPool()
+
+    def getResponse(self, messages):
+        responses = ""
+        try:
+            completion = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=messages,
+                n=config.chatGPTApiNoOfChoices,
+                temperature=config.chatGPTApiTemperature,
+            )
+            for index, choice in enumerate(completion.choices):
+                chat_response = choice.message.content
+                if len(completion.choices) > 1:
+                    if index > 0:
+                        responses += "\n"
+                    responses += f"### Response {(index+1)}:\n"
+                responses += f"{chat_response}\n\n"
+        # error codes: https://platform.openai.com/docs/guides/error-codes/python-library-error-types
+        except openai.error.APIError as e:
+            #Handle API error here, e.g. retry or log
+            return f"OpenAI API returned an API Error: {e}"
+        except openai.error.APIConnectionError as e:
+            #Handle connection error here
+            return f"Failed to connect to OpenAI API: {e}"
+        except openai.error.RateLimitError as e:
+            #Handle rate limit error (we recommend using exponential backoff)
+            return f"OpenAI API request exceeded rate limit: {e}"
+        return responses
+
+    def workOnGetResponse(self, messages):
+        # Pass the function to execute
+        worker = Worker(self.getResponse, messages) # Any other args, kwargs are passed to the run function
+        worker.signals.result.connect(self.parent.processResponse)
+        # Connection
+        #worker.signals.finished.connect(None)
+        # Execute
+        self.threadpool.start(worker)
 
 
 class SpeechRecognitionThread(QThread):
@@ -47,12 +93,11 @@ class SpeechRecognitionThread(QThread):
 class ApiDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle('API Configuration')
+        self.setWindowTitle(config.thisTranslation["settings"])
 
         self.apiKeyEdit = QLineEdit(config.openaiApiKey)
         self.orgEdit = QLineEdit(config.openaiApiOrganization)
         self.contextEdit = QLineEdit(config.chatGPTApiContext)
-        #self.languageEdit = QLineEdit(config.chatGPTApiAudioLanguage)
         self.languageBox = QComboBox()
         initialIndex = 0
         index = 0
@@ -91,7 +136,6 @@ class ApiDialog(QDialog):
         return self.contextEdit.text().strip()
     
     def language(self):
-        #return self.languageEdit.text().strip()
         #return self.languageBox.currentText()
         return self.languageBox.currentData(Qt.ToolTipRole)
 
@@ -157,8 +201,8 @@ class ChatGPTAPI(QWidget):
         self.contentID = ""
         self.database = Database()
         self.data_list = []
-        self.recognition_thread = SpeechRecognitionThread(self)
-        self.recognition_thread.phrase_recognized.connect(self.onPhraseRecognized)
+        self.recognitionThread = SpeechRecognitionThread(self)
+        self.recognitionThread.phrase_recognized.connect(self.onPhraseRecognized)
 
     def setupUI(self):
         layout000 = QHBoxLayout()
@@ -185,6 +229,8 @@ class ChatGPTAPI(QWidget):
         self.voiceCheckbox.setCheckState(Qt.Unchecked)
         self.contentView = QPlainTextEdit()
         self.contentView.setReadOnly(True)
+        self.progressBar = QProgressBar()
+        self.progressBar.setRange(0, 0) # Set the progress bar to use an indeterminate progress indicator
         apiKeyButton = QPushButton(config.thisTranslation["settings"])
         sendButton = QPushButton(config.thisTranslation["send"])
         newButton = QPushButton(config.thisTranslation["new"])
@@ -211,6 +257,8 @@ class ChatGPTAPI(QWidget):
         promptLayout.addWidget(sendButton)
         layout000Rt.addLayout(promptLayout)
         layout000Rt.addWidget(self.contentView)
+        layout000Rt.addWidget(self.progressBar)
+        self.progressBar.hide()
         rtControlLayout = QHBoxLayout()
         rtControlLayout.addWidget(apiKeyButton)
         rtControlLayout.addWidget(temperatureLabel)
@@ -292,7 +340,7 @@ class ChatGPTAPI(QWidget):
         self.userInput.setText(f"{self.userInput.text()} {phrase}")
 
     def toggleVoiceTyping(self, state):
-        self.recognition_thread.start() if state else self.recognition_thread.stop()
+        self.recognitionThread.start() if state else self.recognitionThread.stop()
 
     def toggleEditable(self, state):
         self.contentView.setReadOnly(not state)
@@ -301,16 +349,6 @@ class ChatGPTAPI(QWidget):
         config.chatGPTApiAudio = state
         if not config.chatGPTApiAudio:
             config.mainWindow.closeMediaPlayer()
-
-    def showInProgress(self):
-        progress_bar = QProgressBar()
-        # Set the progress bar to use an indeterminate progress indicator
-        progress_bar.setRange(0, 0)
-        layout = QVBoxLayout()
-        layout.addWidget(progress_bar)
-        widget = QWidget(self)
-        widget.setLayout(layout)
-        return widget
 
     def removeData(self):
         index = self.listView.selectedIndexes()
@@ -341,7 +379,10 @@ class ChatGPTAPI(QWidget):
             self.loadData()
 
     def loadData(self):
+        # reverse the list, so that the latest is on the top
         self.data_list = self.database.search("", "")
+        if self.data_list:
+            self.data_list.reverse()
         self.listModel.clear()
         for data in self.data_list:
             item = QStandardItem(data[1])
@@ -372,6 +413,9 @@ Follow the following steps:
         data = index.data(Qt.UserRole)
         self.contentID = data[0]
         content = data[2]
+        self.resetContent(content)
+
+    def resetContent(self, content):
         self.contentView.setPlainText(content)
         # update context
         self.resetMessages()
@@ -384,20 +428,41 @@ Follow the following steps:
         if config.chatGPTApiContext:
             self.messages.append({"role": "assistant", "content" : config.chatGPTApiContext})
 
+    def print(self, text):
+        self.contentView.appendPlainText(f"\n{text}" if self.contentView.toPlainText() else text)
+        self.contentView.setPlainText(re.sub("\n\n[\n]+?([^\n])", r"\n\n\1", self.contentView.toPlainText()))
+
     def displayResponse(self):
         userInput = self.userInput.text().strip()
         if userInput:
-            #inProgress = self.showInProgress()
-            #inProgress.show()
-            responses = self.getResponse(userInput)
-            self.contentView.appendPlainText(responses)
-            if not (responses.startswith("OpenAI API re") or responses.startswith("Failed to connect to OpenAI API:")):
-                self.userInput.setText("")
-                if config.chatGPTApiAudio:
-                    self.playAudio(responses)
-            #inProgress.close()
-            # auto-save
+            self.userInput.setDisabled(True)
+            self.print(f">>> {userInput}")
             self.saveData()
+            self.currentLoadingID = self.contentID
+            self.currentLoadingContent = self.contentView.toPlainText().strip()
+            self.progressBar.show() # show progress bar
+            self.messages.append({"role": "user", "content": userInput}) # update messages
+            ChatGPTResponse(self).workOnGetResponse(self.messages) # get chatGPT response in a separate thread
+
+    def processResponse(self, responses):
+        # reload the working content in case users change it during waiting for response
+        self.contentID = self.currentLoadingID
+        self.resetContent(self.currentLoadingContent)
+        self.currentLoadingID = self.currentLoadingContent = ""
+        # update new reponses
+        self.print(responses)
+        # scroll to the bottom
+        contentScrollBar = self.contentView.verticalScrollBar()
+        contentScrollBar.setValue(contentScrollBar.maximum())
+        if not (responses.startswith("OpenAI API re") or responses.startswith("Failed to connect to OpenAI API:")):
+            self.userInput.setText("")
+            if config.chatGPTApiAudio:
+                self.playAudio(responses)
+        # auto-save
+        self.saveData()
+        # hide progress bar
+        self.userInput.setEnabled(True)
+        self.progressBar.hide()
 
     def playAudio(self, responses):
         textList = [i.replace(">>>", "").strip() for i in responses.split("\n") if i.strip()]
@@ -413,37 +478,6 @@ Follow the following steps:
                 pass
         if audioFiles:
             config.mainWindow.playAudioBibleFilePlayList(audioFiles)
-
-    def getResponse(self, userInput):
-        responses = f">>> {userInput}\n\n"
-        try:
-            self.messages.append({"role": "user", "content": userInput})
-            completion = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=self.messages,
-                n=config.chatGPTApiNoOfChoices,
-                temperature=config.chatGPTApiTemperature,
-            )
-            for index, choice in enumerate(completion.choices):
-                chat_response = choice.message.content
-                if len(completion.choices) > 1:
-                    if index > 0:
-                        responses += "\n"
-                    responses += f"### Response {(index+1)}:\n"
-                responses += f"{chat_response}\n\n"
-                if index == 0:
-                    self.messages.append({"role": "assistant", "content": chat_response})
-        # error codes: https://platform.openai.com/docs/guides/error-codes/python-library-error-types
-        except openai.error.APIError as e:
-            #Handle API error here, e.g. retry or log
-            return f"OpenAI API returned an API Error: {e}"
-        except openai.error.APIConnectionError as e:
-            #Handle connection error here
-            return f"Failed to connect to OpenAI API: {e}"
-        except openai.error.RateLimitError as e:
-            #Handle rate limit error (we recommend using exponential backoff)
-            return f"OpenAI API request exceeded rate limit: {e}"
-        return responses
 
 
 config.mainWindow.chatGPTapi = ChatGPTAPI(config.mainWindow)
