@@ -126,6 +126,43 @@ class ChatGPTResponse:
         self.threadpool.start(worker)
 
 
+class OpenAIImage:
+
+    def __init__(self, parent):
+        super().__init__()
+        self.parent = parent
+        self.threadpool = QThreadPool()
+
+    def getResponse(self, prompt):
+        try:
+            #https://platform.openai.com/docs/guides/images/introduction
+            response = openai.Image.create(
+                prompt=prompt,
+                n=1,
+                size="1024x1024",
+            )
+        # error codes: https://platform.openai.com/docs/guides/error-codes/python-library-error-types
+        except openai.error.APIError as e:
+            #Handle API error here, e.g. retry or log
+            return f"OpenAI API returned an API Error: {e}"
+        except openai.error.APIConnectionError as e:
+            #Handle connection error here
+            return f"Failed to connect to OpenAI API: {e}"
+        except openai.error.RateLimitError as e:
+            #Handle rate limit error (we recommend using exponential backoff)
+            return f"OpenAI API request exceeded rate limit: {e}"
+        return response['data'][0]['url']
+
+    def workOnGetResponse(self, prompt):
+        # Pass the function to execute
+        worker = Worker(self.getResponse, prompt) # Any other args, kwargs are passed to the run function
+        worker.signals.result.connect(self.parent.displayImage)
+        # Connection
+        #worker.signals.finished.connect(None)
+        # Execute
+        self.threadpool.start(worker)
+
+
 class VLCVideo:
 
     def __init__(self, parent):

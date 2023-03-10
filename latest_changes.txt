@@ -1,3 +1,7 @@
+Changes in 34.34:
+* support OpenAI image model to generate images
+* added a spinning to .biblechat command in terminal mode
+
 Changes in 34.33:
 * fixed openai api key entry in "Bible Chat"
 

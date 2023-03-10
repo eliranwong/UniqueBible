@@ -11,52 +11,7 @@ else:
     from qtpy.QtCore import Qt, QThread, Signal, QThreadPool
     from qtpy.QtGui import QStandardItemModel, QStandardItem, QGuiApplication
     from qtpy.QtWidgets import QWidget, QDialog, QDialogButtonBox, QFormLayout, QLabel, QMessageBox, QCheckBox, QPlainTextEdit, QProgressBar, QPushButton, QListView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
-from gui.Worker import Worker
-
-
-class ChatGPTResponse:
-
-    def __init__(self, parent):
-        super().__init__()
-        self.parent = parent
-        self.threadpool = QThreadPool()
-
-    def getResponse(self, messages):
-        responses = ""
-        try:
-            completion = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=messages,
-                n=config.chatGPTApiNoOfChoices,
-                temperature=config.chatGPTApiTemperature,
-            )
-            for index, choice in enumerate(completion.choices):
-                chat_response = choice.message.content
-                if len(completion.choices) > 1:
-                    if index > 0:
-                        responses += "\n"
-                    responses += f"### Response {(index+1)}:\n"
-                responses += f"{chat_response}\n\n"
-        # error codes: https://platform.openai.com/docs/guides/error-codes/python-library-error-types
-        except openai.error.APIError as e:
-            #Handle API error here, e.g. retry or log
-            return f"OpenAI API returned an API Error: {e}"
-        except openai.error.APIConnectionError as e:
-            #Handle connection error here
-            return f"Failed to connect to OpenAI API: {e}"
-        except openai.error.RateLimitError as e:
-            #Handle rate limit error (we recommend using exponential backoff)
-            return f"OpenAI API request exceeded rate limit: {e}"
-        return responses
-
-    def workOnGetResponse(self, messages):
-        # Pass the function to execute
-        worker = Worker(self.getResponse, messages) # Any other args, kwargs are passed to the run function
-        worker.signals.result.connect(self.parent.processResponse)
-        # Connection
-        #worker.signals.finished.connect(None)
-        # Execute
-        self.threadpool.start(worker)
+from gui.Worker import ChatGPTResponse, OpenAIImage
 
 
 class SpeechRecognitionThread(QThread):
@@ -233,6 +188,10 @@ class ChatGPTAPI(QWidget):
         self.progressBar.setRange(0, 0) # Set the progress bar to use an indeterminate progress indicator
         apiKeyButton = QPushButton(config.thisTranslation["settings"])
         sendButton = QPushButton(config.thisTranslation["send"])
+        self.apiModels = QComboBox()
+        self.apiModels.addItems([config.thisTranslation["chat"], config.thisTranslation["image"]])
+        self.apiModels.setCurrentIndex(0)
+        self.apiModel = 0
         newButton = QPushButton(config.thisTranslation["new"])
         saveButton = QPushButton(config.thisTranslation["save"])
         self.editableCheckbox = QCheckBox(config.thisTranslation["editable"])
@@ -261,6 +220,7 @@ class ChatGPTAPI(QWidget):
         promptLayout.addWidget(self.userInput)
         promptLayout.addWidget(self.voiceCheckbox)
         promptLayout.addWidget(sendButton)
+        promptLayout.addWidget(self.apiModels)
         layout000Rt.addLayout(promptLayout)
         layout000Rt.addWidget(self.contentView)
         layout000Rt.addWidget(self.progressBar)
@@ -310,10 +270,10 @@ class ChatGPTAPI(QWidget):
         layout000Lt.addWidget(helpButton)
         
         # Connections
-        self.userInput.returnPressed.connect(self.displayResponse)
+        self.userInput.returnPressed.connect(self.sendMessage)
         helpButton.clicked.connect(lambda: webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/Bible-Chat-with-ChatGPT-API"))
         apiKeyButton.clicked.connect(self.showApiDialog)
-        sendButton.clicked.connect(self.displayResponse)
+        sendButton.clicked.connect(self.sendMessage)
         saveButton.clicked.connect(self.saveData)
         newButton.clicked.connect(self.newData)
         searchTitleButton.clicked.connect(self.searchData)
@@ -327,6 +287,7 @@ class ChatGPTAPI(QWidget):
         self.audioCheckbox.stateChanged.connect(self.toggleChatGPTApiAudio)
         self.voiceCheckbox.stateChanged.connect(self.toggleVoiceTyping)
         self.choiceNumber.currentIndexChanged.connect(self.updateChoiceNumber)
+        self.apiModels.currentIndexChanged.connect(self.updateApiModel)
         self.fontSize.currentIndexChanged.connect(self.setFontSize)
         self.temperature.currentIndexChanged.connect(self.updateTemperature)
 
@@ -351,10 +312,13 @@ class ChatGPTAPI(QWidget):
             config.openaiApiKey = dialog.api_key()
             if not openai.api_key:
                 openai.api_key = os.environ["OPENAI_API_KEY"] = config.openaiApiKey
-                self.newData()
             config.openaiApiOrganization = dialog.org()
             config.chatGPTApiContext = dialog.context()
             config.chatGPTApiAudioLanguage = dialog.language()
+            self.newData()
+
+    def updateApiModel(self, index):
+        self.apiModel = index
 
     def updateTemperature(self, index):
         config.chatGPTApiTemperature = float(index / 10)
@@ -458,7 +422,25 @@ Follow the following steps:
         self.contentView.appendPlainText(f"\n{text}" if self.contentView.toPlainText() else text)
         self.contentView.setPlainText(re.sub("\n\n[\n]+?([^\n])", r"\n\n\1", self.contentView.toPlainText()))
 
-    def displayResponse(self):
+    def sendMessage(self):
+        if self.apiModel == 0:
+            self.getResponse()
+        else:
+            self.getImage()
+
+    def getImage(self):
+        userInput = self.userInput.text().strip()
+        if userInput:
+            self.userInput.setDisabled(True)
+            self.progressBar.show() # show progress bar
+            OpenAIImage(self).workOnGetResponse(userInput)
+
+    def displayImage(self, imageUrl):
+        webbrowser.open(imageUrl)
+        self.userInput.setEnabled(True)
+        self.progressBar.hide()
+
+    def getResponse(self):
         userInput = self.userInput.text().strip()
         if userInput:
             self.userInput.setDisabled(True)

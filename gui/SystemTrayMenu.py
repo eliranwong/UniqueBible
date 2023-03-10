@@ -1,4 +1,4 @@
-import config, platform, os, webbrowser
+import config, os, webbrowser
 from util.FileUtil import FileUtil
 from functools import partial
 from util.Languages import Languages

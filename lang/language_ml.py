@@ -1040,4 +1040,6 @@ translation = {
     "voiceTyping": "ശബ്ദം ടൈപ്പ് ചെയ്യുക",
     "font": "അക്ഷരസഞ്ചയം",
     "fontSize": "അക്ഷരത്തിന്റെ വലിപ്പം",
+    "chat": "ചുണ്ട്Constellation name (optional)",
+    "image": "ചിത്രം",
 }

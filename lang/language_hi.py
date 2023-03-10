@@ -1040,4 +1040,6 @@ translation = {
     "voiceTyping": "ध्वनि टाइपिंग",
     "font": "फ़ॉन्ट",
     "fontSize": "फ़ॉन्ट आकार",
+    "chat": "गपशप",
+    "image": "छवि",
 }

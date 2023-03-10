@@ -1040,4 +1040,6 @@ translation = {
     "voiceTyping": "音声入力",
     "font": "フォント",
     "fontSize": "フォント・サイズ",
+    "chat": "チャット",
+    "image": "画像",
 }

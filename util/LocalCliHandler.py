@@ -1,4 +1,5 @@
 import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json, shutil, webbrowser
+import openai, threading, time
 from functools import partial
 from datetime import date
 from pathlib import Path
@@ -2148,8 +2149,13 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
     def printToolNotFound(self, tool):
         self.print(f"Tool '{tool}' is not found on your system!")
 
+    def spinning_animation(self, stop_event):
+        while not stop_event.is_set():
+            for symbol in '|/-\\':
+                print(symbol, end='\r')
+                time.sleep(0.1)
+
     def bibleChat(self):
-        import openai
         # required
         openai.api_key = os.environ["OPENAI_API_KEY"] = config.openaiApiKey
         # optional
@@ -2166,6 +2172,11 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     userInput = self.simplePrompt(promptSession=self.terminal_bible_chat_session)
                     if userInput.lower() == config.terminal_cancel_action:
                         return self.cancelAction()
+                    # start spinning
+                    stop_event = threading.Event()
+                    spinner_thread = threading.Thread(target=self.spinning_animation, args=(stop_event,))
+                    spinner_thread.start()
+                    # get responses
                     messages.append({"role": "user", "content": userInput})
                     completion = openai.ChatCompletion.create(
                         model="gpt-3.5-turbo",
@@ -2173,6 +2184,9 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         n=config.chatGPTApiNoOfChoices,
                         temperature=config.chatGPTApiTemperature,
                     )
+                    # stop spinning
+                    stop_event.set()
+                    spinner_thread.join()
                     for index, choice in enumerate(completion.choices):
                         chat_response = choice.message.content
                         if len(completion.choices) > 1:
@@ -2180,6 +2194,9 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         self.print(chat_response)
                         if index == 0:
                             messages.append({"role": "assistant", "content": chat_response})
+                    #stop_event.set()
+                    #spinner_thread.join()
+                    #print('Code execution completed!')
             # error codes: https://platform.openai.com/docs/guides/error-codes/python-library-error-types
             except openai.error.APIError as e:
                 #Handle API error here, e.g. retry or log

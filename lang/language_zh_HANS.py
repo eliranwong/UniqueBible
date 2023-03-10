@@ -1040,4 +1040,6 @@ translation = {
     "voiceTyping": "语音输入",
     "font": "字体",
     "fontSize": "字体大小",
+    "chat": "聊天",
+    "image": "图像",
 }
