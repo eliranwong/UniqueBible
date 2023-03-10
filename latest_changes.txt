@@ -1,3 +1,7 @@
+Changes in 34.35:
+* added ".image" command in terminal mode to generate image
+* change ".biblechat" command to ".chat" command in terminal mode
+
 Changes in 34.34:
 * support OpenAI image model to generate images
 * added a spinning to .biblechat command in terminal mode

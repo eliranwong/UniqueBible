@@ -550,7 +550,8 @@ class LocalCliHandler:
             ".customise": ("customise ...", self.customise),
             ".google": ("google ...", self.google),
             ".watson": ("watson ...", self.watson),
-            ".biblechat": ("bible chat", self.bibleChat),
+            ".chat": ("bible chat", self.bibleChat),
+            ".image": ("bible chat", self.generateImage),
         }
 
     def calculate(self):
@@ -2197,6 +2198,52 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     #stop_event.set()
                     #spinner_thread.join()
                     #print('Code execution completed!')
+            # error codes: https://platform.openai.com/docs/guides/error-codes/python-library-error-types
+            except openai.error.APIError as e:
+                #Handle API error here, e.g. retry or log
+                print(f"OpenAI API returned an API Error: {e}")
+            except openai.error.APIConnectionError as e:
+                #Handle connection error here
+                print(f"Failed to connect to OpenAI API: {e}")
+            except openai.error.RateLimitError as e:
+                #Handle rate limit error (we recommend using exponential backoff)
+                print(f"OpenAI API request exceeded rate limit: {e}")
+        else:
+            self.print("OpenAI API key not found!")
+        return ""
+
+    def generateImage(self):
+        # required
+        openai.api_key = os.environ["OPENAI_API_KEY"] = config.openaiApiKey
+        # optional
+        if config.openaiApiOrganization:
+            openai.organization = config.openaiApiOrganization
+        if openai.api_key:
+            try:
+                while True:
+                    userInput = self.simplePrompt(promptSession=self.terminal_bible_chat_session)
+                    if userInput.lower() == config.terminal_cancel_action:
+                        return self.cancelAction()
+                    # start spinning
+                    stop_event = threading.Event()
+                    spinner_thread = threading.Thread(target=self.spinning_animation, args=(stop_event,))
+                    spinner_thread.start()
+                    # get responses
+                    #https://platform.openai.com/docs/guides/images/introduction
+                    response = openai.Image.create(
+                        prompt=userInput,
+                        n=1,
+                        size="1024x1024",
+                    )
+                    # stop spinning
+                    stop_event.set()
+                    spinner_thread.join()
+                    # open url
+                    imageUrl = response['data'][0]['url']
+                    if config.terminalEnableTermuxAPI:
+                        os.system(f"termux-open {imageUrl}")
+                    else:
+                        webbrowser.open(imageUrl)
             # error codes: https://platform.openai.com/docs/guides/error-codes/python-library-error-types
             except openai.error.APIError as e:
                 #Handle API error here, e.g. retry or log
@@ -3879,7 +3926,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def tools(self):
         heading = "Tools"
-        features = (".web", ".share", ".extract", ".filters", ".biblechat", ".read", ".readsync", ".system", ".python")
+        features = (".web", ".share", ".extract", ".filters", ".chat", ".image", ".read", ".readsync", ".system", ".python")
         return self.displayFeatureMenu(heading, features)
 
     def speak(self):
