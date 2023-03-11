@@ -55,7 +55,7 @@ class ConfigUtil:
         # Check current version
         with open("UniqueBibleAppVersion.txt", "r", encoding="utf-8") as fileObject:
             text = fileObject.read()
-            current_version = float(text)
+            current_version = float(text.replace("\n", ""))
 
         # update current version in config"""
         if not hasattr(config, "version") or current_version > config.version:

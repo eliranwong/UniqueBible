@@ -3,6 +3,7 @@ import openai, threading, time
 from functools import partial
 from datetime import date
 from pathlib import Path
+from base64 import b64decode
 #import urllib.request
 from ast import literal_eval
 from db.BiblesSqlite import Bible
@@ -556,6 +557,7 @@ class LocalCliHandler:
 
     def calculate(self):
         userInput = ""
+        self.print("Calculate:")
         while not userInput == config.terminal_cancel_action:
             userInput = self.simplePrompt(validator=NoAlphaValidator())
             try:
@@ -2170,6 +2172,8 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         if openai.api_key:
             try:
                 while True:
+                    chat = config.thisTranslation["chat"]
+                    self.print(f"{chat}: {config.chatGPTApiContext}")
                     userInput = self.simplePrompt(promptSession=self.terminal_bible_chat_session)
                     if userInput.lower() == config.terminal_cancel_action:
                         return self.cancelAction()
@@ -2221,6 +2225,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         if openai.api_key:
             try:
                 while True:
+                    self.print("Discribe your image:")
                     userInput = self.simplePrompt(promptSession=self.terminal_bible_chat_session)
                     if userInput.lower() == config.terminal_cancel_action:
                         return self.cancelAction()
@@ -2234,16 +2239,26 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         prompt=userInput,
                         n=1,
                         size="1024x1024",
+                        response_format="b64_json",
                     )
                     # stop spinning
                     stop_event.set()
                     spinner_thread.join()
-                    # open url
-                    imageUrl = response['data'][0]['url']
+                    # open image
+                    #imageUrl = response['data'][0]['url']
+                    jsonFile = os.path.join("temp", "openai_image.json")
+                    with open(jsonFile, mode="w", encoding="utf-8") as fileObj:
+                        json.dump(response, fileObj)
+                    imageFile = os.path.join("temp", "openai_image.png")
+                    with open(jsonFile, mode="r", encoding="utf-8") as fileObj:
+                        jsonContent = json.load(fileObj)
+                        image_data = b64decode(jsonContent["data"][0]["b64_json"])
+                        with open(imageFile, mode="wb") as pngObj:
+                            pngObj.write(image_data)
                     if config.terminalEnableTermuxAPI:
-                        os.system(f"termux-open {imageUrl}")
+                        config.mainWindow.getCliOutput(f"termux-share {imageFile}")
                     else:
-                        webbrowser.open(imageUrl)
+                        os.system(f"{config.open} {imageFile}")
             # error codes: https://platform.openai.com/docs/guides/error-codes/python-library-error-types
             except openai.error.APIError as e:
                 #Handle API error here, e.g. retry or log

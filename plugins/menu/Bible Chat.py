@@ -1,14 +1,15 @@
 import config, os, re, openai, sqlite3, webbrowser
 from gtts import gTTS
-from pocketsphinx import LiveSpeech, get_model_path
+if "Pocketsphinx" in config.enabled:
+    from pocketsphinx import LiveSpeech, get_model_path
 from datetime import datetime
 from util.Languages import Languages
 if config.qtLibrary == "pyside6":
-    from PySide6.QtCore import Qt, QThread, Signal, QThreadPool
+    from PySide6.QtCore import Qt, QThread, Signal
     from PySide6.QtGui import QStandardItemModel, QStandardItem, QGuiApplication
     from PySide6.QtWidgets import QWidget, QDialog, QDialogButtonBox, QFormLayout, QLabel, QMessageBox, QCheckBox, QPlainTextEdit, QProgressBar, QPushButton, QListView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
 else:
-    from qtpy.QtCore import Qt, QThread, Signal, QThreadPool
+    from qtpy.QtCore import Qt, QThread, Signal
     from qtpy.QtGui import QStandardItemModel, QStandardItem, QGuiApplication
     from qtpy.QtWidgets import QWidget, QDialog, QDialogButtonBox, QFormLayout, QLabel, QMessageBox, QCheckBox, QPlainTextEdit, QProgressBar, QPushButton, QListView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
 from gui.Worker import ChatGPTResponse, OpenAIImage
@@ -218,7 +219,8 @@ class ChatGPTAPI(QWidget):
         fontLabel.setToolTip(config.thisTranslation["fontSize"])
         promptLayout = QHBoxLayout()
         promptLayout.addWidget(self.userInput)
-        promptLayout.addWidget(self.voiceCheckbox)
+        if "Pocketsphinx" in config.enabled:
+            promptLayout.addWidget(self.voiceCheckbox)
         promptLayout.addWidget(sendButton)
         promptLayout.addWidget(self.apiModels)
         layout000Rt.addLayout(promptLayout)

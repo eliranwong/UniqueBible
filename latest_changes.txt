@@ -1,3 +1,6 @@
+Changes in 34.36:
+* fixed loading OpenAI image on Android
+
 Changes in 34.35:
 * added ".image" command in terminal mode to generate image
 * change ".biblechat" command to ".chat" command in terminal mode
