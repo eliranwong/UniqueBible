@@ -2171,45 +2171,78 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             messages.append({"role": "assistant", "content" : config.chatGPTApiContext})
         if openai.api_key:
             try:
+                chat = config.thisTranslation["chat"]
+                self.print(f"{chat}: {config.chatGPTApiContext}")
                 while True:
-                    chat = config.thisTranslation["chat"]
-                    self.print(f"{chat}: {config.chatGPTApiContext}")
                     userInput = self.simplePrompt(promptSession=self.terminal_bible_chat_session)
-                    if userInput.lower() == config.terminal_cancel_action:
+                    if userInput.strip().lower() == config.terminal_cancel_action:
                         return self.cancelAction()
-                    # start spinning
-                    stop_event = threading.Event()
-                    spinner_thread = threading.Thread(target=self.spinning_animation, args=(stop_event,))
-                    spinner_thread.start()
-                    # get responses
-                    messages.append({"role": "user", "content": userInput})
-                    completion = openai.ChatCompletion.create(
-                        model="gpt-3.5-turbo",
-                        messages=messages,
-                        n=config.chatGPTApiNoOfChoices,
-                        temperature=config.chatGPTApiTemperature,
-                    )
-                    # stop spinning
-                    stop_event.set()
-                    spinner_thread.join()
-                    for index, choice in enumerate(completion.choices):
-                        chat_response = choice.message.content
-                        if len(completion.choices) > 1:
-                            self.print(f"### Response {(index+1)}:")
-                        self.print(chat_response)
-                        if index == 0:
-                            messages.append({"role": "assistant", "content": chat_response})
-                    #stop_event.set()
-                    #spinner_thread.join()
-                    #print('Code execution completed!')
+                    elif userInput.strip().lower() in (".share", ".save"):
+                        plainText = ""
+                        for i in messages:
+                            if i["role"] == "user":
+                                content = i["content"]
+                                plainText += f">>> {content}"
+                            elif i["role"] == "assistant":
+                                content = i["content"]
+                                plainText += f"\n\n{content}\n\n"
+                        if config.terminalEnableTermuxAPI:
+                            pydoc.pipepager(plainText, cmd="termux-share -a send")
+                        else:
+                            chatFile = os.path.join("temp", "chat.txt")
+                            with open(chatFile, "w", encoding="utf-8") as fileObj:
+                                fileObj.write(plainText)
+                            if os.path.isfile(chatFile):
+                                os.system(f"{config.open} {chatFile}")
+                    else:
+                        # start spinning
+                        stop_event = threading.Event()
+                        spinner_thread = threading.Thread(target=self.spinning_animation, args=(stop_event,))
+                        spinner_thread.start()
+                        # get responses
+                        messages.append({"role": "user", "content": userInput})
+                        completion = openai.ChatCompletion.create(
+                            model="gpt-3.5-turbo",
+                            messages=messages,
+                            n=config.chatGPTApiNoOfChoices,
+                            temperature=config.chatGPTApiTemperature,
+                        )
+                        # stop spinning
+                        stop_event.set()
+                        spinner_thread.join()
+                        for index, choice in enumerate(completion.choices):
+                            chat_response = choice.message.content
+                            if len(completion.choices) > 1:
+                                self.print(f"### Response {(index+1)}:")
+                            self.print(chat_response)
+                            if index == 0:
+                                messages.append({"role": "assistant", "content": chat_response})
+                        #stop_event.set()
+                        #spinner_thread.join()
+                        #self.print("##########")
             # error codes: https://platform.openai.com/docs/guides/error-codes/python-library-error-types
             except openai.error.APIError as e:
+                try:
+                    stop_event.set()
+                    spinner_thread.join()
+                except:
+                    pass
                 #Handle API error here, e.g. retry or log
                 print(f"OpenAI API returned an API Error: {e}")
             except openai.error.APIConnectionError as e:
+                try:
+                    stop_event.set()
+                    spinner_thread.join()
+                except:
+                    pass
                 #Handle connection error here
                 print(f"Failed to connect to OpenAI API: {e}")
             except openai.error.RateLimitError as e:
+                try:
+                    stop_event.set()
+                    spinner_thread.join()
+                except:
+                    pass
                 #Handle rate limit error (we recommend using exponential backoff)
                 print(f"OpenAI API request exceeded rate limit: {e}")
         else:
@@ -2261,12 +2294,27 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         os.system(f"{config.open} {imageFile}")
             # error codes: https://platform.openai.com/docs/guides/error-codes/python-library-error-types
             except openai.error.APIError as e:
+                try:
+                    stop_event.set()
+                    spinner_thread.join()
+                except:
+                    pass
                 #Handle API error here, e.g. retry or log
                 print(f"OpenAI API returned an API Error: {e}")
             except openai.error.APIConnectionError as e:
+                try:
+                    stop_event.set()
+                    spinner_thread.join()
+                except:
+                    pass
                 #Handle connection error here
                 print(f"Failed to connect to OpenAI API: {e}")
             except openai.error.RateLimitError as e:
+                try:
+                    stop_event.set()
+                    spinner_thread.join()
+                except:
+                    pass
                 #Handle rate limit error (we recommend using exponential backoff)
                 print(f"OpenAI API request exceeded rate limit: {e}")
         else:

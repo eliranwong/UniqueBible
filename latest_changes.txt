@@ -1,3 +1,7 @@
+Changes in 34.37:
+* added ".save" and ".share" command under ".chat" feature in terminal mode.
+    This helps users to share or save the chat content.
+
 Changes in 34.36:
 * fixed loading OpenAI image on Android
 
