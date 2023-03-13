@@ -1,3 +1,9 @@
+Changes in 34.39:
+* added "chatGPT" plugin folders:
+    - users can write customised python script to process chatGPT response before it is displayed
+* added '.new' command under '.chat' feature in terminal mode
+* fixed saving chat in terminal mode
+
 Changes in 34.38:
 * Added option to toggle verse audio icons.
 * Improved Bible Chat plugin:

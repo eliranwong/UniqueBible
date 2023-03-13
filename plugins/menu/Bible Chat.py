@@ -146,6 +146,8 @@ class ChatGPTAPI(QWidget):
         #self.setMinimumSize(830, 500)
         # set variables
         self.setupVariables()
+        # run plugins
+        self.runPlugins()
         # setup interface
         self.setupUI()
         # load database
@@ -161,6 +163,13 @@ class ChatGPTAPI(QWidget):
         self.data_list = []
         self.recognitionThread = SpeechRecognitionThread(self)
         self.recognitionThread.phrase_recognized.connect(self.onPhraseRecognized)
+
+    def runPlugins(self):
+        config.chatGPTTransformers = []
+        pluginFolder = os.path.join(os.getcwd(), "plugins", "chatGPT")
+        for plugin in FileUtil.fileNamesWithoutExtension(pluginFolder, "py"):
+            script = os.path.join(pluginFolder, "{0}.py".format(plugin))
+            config.mainWindow.execPythonFile(script)
 
     def setupUI(self):
         layout000 = QHBoxLayout()
@@ -467,6 +476,8 @@ Follow the following steps:
         self.contentView.setPlainText(re.sub("\n\n[\n]+?([^\n])", r"\n\n\1", self.contentView.toPlainText()))
 
     def sendMessage(self):
+        if self.userInputMultiline.isVisible():
+            self.multilineButtonClicked()
         if self.apiModel == 0:
             self.getResponse()
         else:
@@ -501,6 +512,9 @@ Follow the following steps:
         self.contentID = self.currentLoadingID
         self.resetContent(self.currentLoadingContent)
         self.currentLoadingID = self.currentLoadingContent = ""
+        # transform responses
+        for t in config.chatGPTTransformers:
+            responses = t(responses)
         # update new reponses
         self.print(responses)
         # scroll to the bottom

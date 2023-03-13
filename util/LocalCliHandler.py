@@ -2159,24 +2159,39 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 time.sleep(0.1)
 
     def bibleChat(self):
+        def resetMessages():
+            messages = [
+                {"role": "system", "content" : "You’re a kind helpful assistant"}
+            ]
+            if config.chatGPTApiContext:
+                messages.append({"role": "assistant", "content" : config.chatGPTApiContext})
+            return messages
         # required
         openai.api_key = os.environ["OPENAI_API_KEY"] = config.openaiApiKey
         # optional
         if config.openaiApiOrganization:
             openai.organization = config.openaiApiOrganization
-        messages = [
-            {"role": "system", "content" : "You’re a kind helpful assistant"}
-        ]
-        if config.chatGPTApiContext:
-            messages.append({"role": "assistant", "content" : config.chatGPTApiContext})
+        messages = resetMessages()
         if openai.api_key:
+            # setup response transformers
+            config.chatGPTTransformers = []
+            pluginFolder = os.path.join(os.getcwd(), "plugins", "chatGPT")
+            for plugin in FileUtil.fileNamesWithoutExtension(pluginFolder, "py"):
+                script = os.path.join(pluginFolder, "{0}.py".format(plugin))
+                self.execPythonFile(script)
             try:
-                chat = config.thisTranslation["chat"]
-                self.print(f"{chat}: {config.chatGPTApiContext}")
+                def startChat():
+                    chat = config.thisTranslation["chat"]
+                    self.print(f"{chat}: {config.chatGPTApiContext}")
+                    self.print("('.new' to start a new chat; {0})".format("'.share' to share content" if config.terminalEnableTermuxAPI else "'.save' to save content"))
+                startChat()
                 while True:
                     userInput = self.simplePrompt(promptSession=self.terminal_bible_chat_session)
                     if userInput.strip().lower() == config.terminal_cancel_action:
                         return self.cancelAction()
+                    elif userInput.strip().lower() == ".new":
+                        messages = resetMessages()
+                        startChat()
                     elif userInput.strip().lower() in (".share", ".save"):
                         plainText = ""
                         for i in messages:
@@ -2192,12 +2207,16 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         if config.terminalEnableTermuxAPI:
                             pydoc.pipepager(plainText, cmd="termux-share -a send")
                         else:
-                            filename = re.sub('[\\\/\:\*\?\"\<\>\|]', "", plainText.split("\n")[0])[:40]
-                            chatFile = os.path.join(config.marvelData, "chats", filename)
-                            with open(chatFile, "w", encoding="utf-8") as fileObj:
-                                fileObj.write(plainText)
-                            if os.path.isfile(chatFile):
-                                os.system(f'''{config.open} "{chatFile}"''')
+                            try:
+                                filename = re.sub('[\\\/\:\*\?\"\<\>\|]', "", messages[2 if config.chatGPTApiContext.strip() else 1]["content"])[:40].strip()
+                                if filename:
+                                    chatFile = os.path.join(config.marvelData, "chats", f"{filename}.txt")
+                                    with open(chatFile, "w", encoding="utf-8") as fileObj:
+                                        fileObj.write(plainText)
+                                    if os.path.isfile(chatFile):
+                                        os.system(f'''{config.open} "{chatFile}"''')
+                            except:
+                                self.print("Failed to save a file!")
                     else:
                         # start spinning
                         stop_event = threading.Event()
@@ -2216,6 +2235,9 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         spinner_thread.join()
                         for index, choice in enumerate(completion.choices):
                             chat_response = choice.message.content
+                            # transform response with plugins
+                            for t in config.chatGPTTransformers:
+                                chat_response = t(chat_response)
                             if len(completion.choices) > 1:
                                 self.print(f"### Response {(index+1)}:")
                             self.print(chat_response)
