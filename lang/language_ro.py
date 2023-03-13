@@ -1042,4 +1042,8 @@ translation = {
     "fontSize": "Mărime font",
     "chat": "Chat",
     "image": "Imagine",
+    "print": "Tipărire",
+    "configure": "Configurează",
+    "exit": "Ieșire",
+    "displayVerseAudioIcons": "Afișează pictogramele audio Verset",
 }

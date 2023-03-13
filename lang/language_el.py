@@ -1042,4 +1042,8 @@ translation = {
     "fontSize": "Μέγεθος Γραμματοσειράς",
     "chat": "Συνομιλία",
     "image": "Εικόνα:",
+    "print": "Εκτύπωση:",
+    "configure": "Ρύθμιση:",
+    "exit": "Έξοδος:",
+    "displayVerseAudioIcons": "Εμφάνιση Εικονίδια ήχου Verse",
 }

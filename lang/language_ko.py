@@ -1042,4 +1042,8 @@ translation = {
     "fontSize": "폰트 크기",
     "chat": "대화",
     "image": "이미지",
+    "print": "인쇄",
+    "configure": "구성",
+    "exit": "종료",
+    "displayVerseAudioIcons": "Verse 오디오 아이콘 표시",
 }

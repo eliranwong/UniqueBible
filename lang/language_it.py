@@ -1042,4 +1042,8 @@ translation = {
     "fontSize": "Dimensione del carattere",
     "chat": "Conversazione",
     "image": "Immagine",
+    "print": "Stampa",
+    "configure": "Configura",
+    "exit": "Uscita",
+    "displayVerseAudioIcons": "Visualizza Icone Audio Verse",
 }

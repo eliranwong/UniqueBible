@@ -1042,4 +1042,8 @@ translation = {
     "fontSize": "字型大小",
     "chat": "聊天",
     "image": "影像",
+    "print": "列印",
+    "configure": "配置",
+    "exit": "出口",
+    "displayVerseAudioIcons": "顯示 Verse 音訊圖示",
 }

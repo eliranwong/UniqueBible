@@ -1042,4 +1042,8 @@ translation = {
     "fontSize": "അക്ഷരത്തിന്റെ വലിപ്പം",
     "chat": "ചുണ്ട്Constellation name (optional)",
     "image": "ചിത്രം",
+    "print": "പ്രിന്റ് ചെയ്യുക",
+    "configure": "ക്രമീകരിക്കുക",
+    "exit": "പ്രദര്ശിപ്പിക്കുക",
+    "displayVerseAudioIcons": "വെഴ്സ് ഓഡിയോ ചിന്ത കാണിക്കുക",
 }

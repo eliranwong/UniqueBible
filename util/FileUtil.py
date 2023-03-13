@@ -134,6 +134,8 @@ class FileUtil:
     @staticmethod
     def getVerseAudioTag(text, b, c, v):
         import config
+        if not config.displayVerseAudioBibleIcon:
+            return ""
         text = FileUtil.getMP3TextFile(text)
         audioFile = os.path.join(config.audioFolder, "bibles", text, "default", f"{b}_{c}", f"{text}_{b}_{c}_{v}.mp3")
         if os.path.isfile(audioFile):

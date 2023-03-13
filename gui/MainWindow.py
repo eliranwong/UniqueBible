@@ -3481,6 +3481,13 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
         if config.menuLayout == "material":
             self.setupMenuLayout("material")
 
+    def toggleDisplayVerseAudioBibleIcon(self):
+        config.displayVerseAudioBibleIcon = not config.displayVerseAudioBibleIcon
+        self.newTabException = True
+        self.reloadCurrentRecord(True)
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
+
     def toggleShowVerseReference(self):
         config.showVerseReference = not config.showVerseReference
         self.newTabException = True

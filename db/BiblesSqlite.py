@@ -707,10 +707,11 @@ input.addEventListener('keyup', function(event) {0}
         noteVerseList = []
         highlightDict = {}
         # add tts indicator
-        mp3text = FileUtil.getMP3TextFile(text)
-        audioFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", mp3text, "default", "{0}_{1}".format(b, c))
-        if os.path.isdir(audioFolder):
-            chapter += """ <ref onclick="rC('{0}')">{1}</ref>""".format(mp3text, config.audioBibleIcon)
+        if config.displayVerseAudioBibleIcon:
+            mp3text = FileUtil.getMP3TextFile(text)
+            audioFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", mp3text, "default", "{0}_{1}".format(b, c))
+            if os.path.isdir(audioFolder):
+                chapter += """ <ref onclick="rC('{0}')">{1}</ref>""".format(mp3text, config.audioBibleIcon)
         # add note indicator
         if config.showUserNoteIndicator and not config.enableHttpServer:
             noteVerseList = NoteService.getChapterVerseList(b, c)
@@ -1228,7 +1229,7 @@ class Bible:
     def insertReadBibleLink(text, b, c, v=None):
         text = FileUtil.getMP3TextFile(text)
         data = ""
-        if config.runMode in ("", "gui", "cli") or config.enableHttpServer:
+        if config.displayVerseAudioBibleIcon and (config.runMode in ("", "gui", "cli") or config.enableHttpServer):
             directory = os.path.join(config.audioFolder, "bibles", text)
             if os.path.isdir(directory):
                 directories = [d for d in sorted(os.listdir(directory)) if
@@ -1256,13 +1257,14 @@ class Bible:
         verseTag = '<vid id="v{2}.{3}.{0}" onclick="luV({0})" onmouseover="qV({0})" ondblclick="mV({0})"{1}'.format(v, tagEnding, b, c)
         v = int(v)
         # add tts indicator
-        audioFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", mp3Text, "default", "{0}_{1}".format(b, c))
-        audioFilename = os.path.join(audioFolder, "{0}_{1}_{2}_{3}.mp3".format(mp3Text, b, c, v))
-        if os.path.isfile(audioFilename):
-            if config.readTillChapterEnd:
-                verseTag += """ <ref onclick="rC('{0}', {1})">{2}</ref>""".format(mp3Text, v, config.audioBibleIcon2)
-            else:
-                verseTag += """ <ref onclick="rV('{0}', {1})">{2}</ref>""".format(mp3Text, v, config.audioBibleIcon)
+        if config.displayVerseAudioBibleIcon:
+            audioFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", mp3Text, "default", "{0}_{1}".format(b, c))
+            audioFilename = os.path.join(audioFolder, "{0}_{1}_{2}_{3}.mp3".format(mp3Text, b, c, v))
+            if os.path.isfile(audioFilename):
+                if config.readTillChapterEnd:
+                    verseTag += """ <ref onclick="rC('{0}', {1})">{2}</ref>""".format(mp3Text, v, config.audioBibleIcon2)
+                else:
+                    verseTag += """ <ref onclick="rV('{0}', {1})">{2}</ref>""".format(mp3Text, v, config.audioBibleIcon)
         # add note indicator
         if v in self.thisVerseNoteList:
             verseTag += ' <ref onclick="nV({0})">&#9998;</ref>'.format(v)

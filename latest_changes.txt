@@ -1,3 +1,10 @@
+Changes in 34.38:
+* Added option to toggle verse audio icons.
+* Improved Bible Chat plugin:
+    - added print ability
+    - added multiline user input
+    - added auto-focus
+
 Changes in 34.37:
 * added ".save" and ".share" command under ".chat" feature in terminal mode.
     This helps users to share or save the chat content.

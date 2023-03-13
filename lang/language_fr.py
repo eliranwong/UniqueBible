@@ -1042,4 +1042,8 @@ translation = {
     "fontSize": "Taille de la police",
     "chat": "Discuter",
     "image": "Image",
+    "print": "Imprimer",
+    "configure": "Configurer",
+    "exit": "Quitter",
+    "displayVerseAudioIcons": "Afficher les icônes audio Verse",
 }

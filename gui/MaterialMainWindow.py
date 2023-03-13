@@ -598,6 +598,7 @@ class MaterialMainWindow:
             ("menu2_subHeadings", self.enableSubheadingButtonClicked2, sc.enableSubheadingButtonClicked, config.addTitleToPlainChapter),
             ("toggleFavouriteVersionIntoMultiRef", self.toggleFavouriteVersionIntoMultiRef, sc.toggleFavouriteVersionIntoMultiRef, config.addFavouriteToMultiRef),
             ("displayVerseReference", self.toggleShowVerseReference, sc.toggleShowVerseReference, config.showVerseReference),
+            ("displayVerseAudioIcons", self.toggleDisplayVerseAudioBibleIcon, None, config.displayVerseAudioBibleIcon),
             ("displayUserNoteIndicator", self.toggleShowUserNoteIndicator, sc.toggleShowUserNoteIndicator, config.showUserNoteIndicator),
             ("displayBibleNoteIndicator", self.toggleShowBibleNoteIndicator, sc.toggleShowBibleNoteIndicator, config.showBibleNoteIndicator),
             ("displayLexicalEntry", self.toggleHideLexicalEntryInBible, sc.toggleHideLexicalEntryInBible, (not config.hideLexicalEntryInBible)),

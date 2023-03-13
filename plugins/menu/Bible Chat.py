@@ -6,12 +6,14 @@ from datetime import datetime
 from util.Languages import Languages
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt, QThread, Signal
-    from PySide6.QtGui import QStandardItemModel, QStandardItem, QGuiApplication
-    from PySide6.QtWidgets import QWidget, QDialog, QDialogButtonBox, QFormLayout, QLabel, QMessageBox, QCheckBox, QPlainTextEdit, QProgressBar, QPushButton, QListView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
+    from PySide6.QtPrintSupport import QPrinter, QPrintDialog
+    from PySide6.QtGui import QStandardItemModel, QStandardItem, QGuiApplication, QFontMetrics, QAction, QTextDocument
+    from PySide6.QtWidgets import QMainWindow, QWidget, QDialog, QDialogButtonBox, QFormLayout, QLabel, QMessageBox, QCheckBox, QPlainTextEdit, QProgressBar, QPushButton, QListView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
 else:
     from qtpy.QtCore import Qt, QThread, Signal
-    from qtpy.QtGui import QStandardItemModel, QStandardItem, QGuiApplication
-    from qtpy.QtWidgets import QWidget, QDialog, QDialogButtonBox, QFormLayout, QLabel, QMessageBox, QCheckBox, QPlainTextEdit, QProgressBar, QPushButton, QListView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
+    from qtpy.QtPrintSupport import QPrinter, QPrintDialog
+    from qtpy.QtGui import QStandardItemModel, QStandardItem, QGuiApplication, QFontMetrics, QTextDocument
+    from qtpy.QtWidgets import QAction, QMainWindow, QWidget, QDialog, QDialogButtonBox, QFormLayout, QLabel, QMessageBox, QCheckBox, QPlainTextEdit, QProgressBar, QPushButton, QListView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
 from gui.Worker import ChatGPTResponse, OpenAIImage
 
 
@@ -151,7 +153,7 @@ class ChatGPTAPI(QWidget):
         # new entry at launch
         self.newData()
         # set initial window size
-        self.resize(QGuiApplication.primaryScreen().availableSize() * 3 / 4)
+        #self.resize(QGuiApplication.primaryScreen().availableSize() * 3 / 4)
 
     def setupVariables(self):
         self.contentID = ""
@@ -180,6 +182,8 @@ class ChatGPTAPI(QWidget):
         self.userInput.setPlaceholderText(config.thisTranslation["messageHere"])
         self.userInput.mousePressEvent = lambda _ : self.userInput.selectAll()
         self.userInput.setClearButtonEnabled(True)
+        self.userInputMultiline = QPlainTextEdit()
+        self.userInputMultiline.setPlaceholderText(config.thisTranslation["messageHere"])
         self.voiceCheckbox = QCheckBox(config.thisTranslation["voice"])
         self.voiceCheckbox.setToolTip(config.thisTranslation["voiceTyping"])
         self.voiceCheckbox.setCheckState(Qt.Unchecked)
@@ -188,6 +192,12 @@ class ChatGPTAPI(QWidget):
         self.progressBar = QProgressBar()
         self.progressBar.setRange(0, 0) # Set the progress bar to use an indeterminate progress indicator
         apiKeyButton = QPushButton(config.thisTranslation["settings"])
+        self.multilineButton = QPushButton("+")
+        font_metrics = QFontMetrics(self.multilineButton.font())
+        text_rect = font_metrics.boundingRect(self.multilineButton.text())
+        button_width = text_rect.width() + 20
+        button_height = text_rect.height() + 10
+        self.multilineButton.setFixedSize(button_width, button_height)
         sendButton = QPushButton(config.thisTranslation["send"])
         self.apiModels = QComboBox()
         self.apiModels.addItems([config.thisTranslation["chat"], config.thisTranslation["image"]])
@@ -218,9 +228,14 @@ class ChatGPTAPI(QWidget):
         fontLabel.setAlignment(Qt.AlignRight)
         fontLabel.setToolTip(config.thisTranslation["fontSize"])
         promptLayout = QHBoxLayout()
-        promptLayout.addWidget(self.userInput)
+        userInputLayout = QVBoxLayout()
+        userInputLayout.addWidget(self.userInput)
+        userInputLayout.addWidget(self.userInputMultiline)
+        self.userInputMultiline.hide()
+        promptLayout.addLayout(userInputLayout)
         if "Pocketsphinx" in config.enabled:
             promptLayout.addWidget(self.voiceCheckbox)
+        promptLayout.addWidget(self.multilineButton)
         promptLayout.addWidget(sendButton)
         promptLayout.addWidget(self.apiModels)
         layout000Rt.addLayout(promptLayout)
@@ -275,6 +290,7 @@ class ChatGPTAPI(QWidget):
         self.userInput.returnPressed.connect(self.sendMessage)
         helpButton.clicked.connect(lambda: webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/Bible-Chat-with-ChatGPT-API"))
         apiKeyButton.clicked.connect(self.showApiDialog)
+        self.multilineButton.clicked.connect(self.multilineButtonClicked)
         sendButton.clicked.connect(self.sendMessage)
         saveButton.clicked.connect(self.saveData)
         newButton.clicked.connect(self.newData)
@@ -294,6 +310,18 @@ class ChatGPTAPI(QWidget):
         self.temperature.currentIndexChanged.connect(self.updateTemperature)
 
         self.setFontSize()
+
+    def multilineButtonClicked(self):
+        if self.userInput.isVisible():
+            self.userInput.hide()
+            self.userInputMultiline.setPlainText(self.userInput.text())
+            self.userInputMultiline.show()
+            self.multilineButton.setText("-")
+        else:
+            self.userInputMultiline.hide()
+            self.userInput.setText(self.userInputMultiline.toPlainText())
+            self.userInput.show()
+            self.multilineButton.setText("+")
 
     def setFontSize(self, index=None):
         if index is not None:
@@ -400,12 +428,26 @@ Follow the following steps:
 1) Register and get your OpenAI Key at https://platform.openai.com/account/api-keys
 2) Click the "Settings" button below and enter your own OpenAI API key""")
         self.resetMessages()
+        self.userInput.setFocus()
 
     def selectData(self, index):
         data = index.data(Qt.UserRole)
         self.contentID = data[0]
         content = data[2]
         self.resetContent(content)
+        self.userInput.setFocus()
+
+    def printData(self):
+        # Get the printer and print dialog
+        printer = QPrinter()
+        dialog = QPrintDialog(printer, self)
+
+        # If the user clicked "OK" in the print dialog, print the text
+        if dialog.exec() == QPrintDialog.Accepted:
+            document = QTextDocument()
+            document.setPlainText(self.contentView.toPlainText())
+            document.print_(printer)
+
 
     def resetContent(self, content):
         self.contentView.setPlainText(content)
@@ -473,6 +515,7 @@ Follow the following steps:
         # hide progress bar
         self.userInput.setEnabled(True)
         self.progressBar.hide()
+        self.userInput.setFocus()
 
     def playAudio(self, responses):
         textList = [i.replace(">>>", "").strip() for i in responses.split("\n") if i.strip()]
@@ -490,7 +533,63 @@ Follow the following steps:
             config.mainWindow.playAudioBibleFilePlayList(audioFiles)
 
 
-config.mainWindow.chatGPTapi = ChatGPTAPI(config.mainWindow)
-config.mainWindow.chatGPTapi.show()
-config.mainWindow.bringToForeground(config.mainWindow.chatGPTapi)
-config.mainWindow.chatGPTapi.setFontSize()
+class MainWindow(QMainWindow):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.initUI()
+
+    def initUI(self):
+        # Set a central widget
+        self.chatGPT = ChatGPTAPI(self)
+        self.setCentralWidget(self.chatGPT)
+
+        # Create a menu bar
+        menubar = self.menuBar()
+
+        # Create a File menu and add it to the menu bar
+        file_menu = menubar.addMenu(config.thisTranslation["chat"])
+
+        new_action = QAction(config.thisTranslation["new"], self)
+        new_action.setShortcut("Ctrl+N")
+        new_action.triggered.connect(self.chatGPT.newData)
+        file_menu.addAction(new_action)
+
+        new_action = QAction(config.thisTranslation["save"], self)
+        new_action.setShortcut("Ctrl+S")
+        new_action.triggered.connect(self.chatGPT.saveData)
+        file_menu.addAction(new_action)
+
+        file_menu.addSeparator()
+
+        new_action = QAction(config.thisTranslation["print"], self)
+        new_action.setShortcut("Ctrl+P")
+        new_action.triggered.connect(self.chatGPT.printData)
+        file_menu.addAction(new_action)
+
+        file_menu.addSeparator()
+
+        openSettings = QAction(config.thisTranslation["configure"], self)
+        openSettings.triggered.connect(self.chatGPT.showApiDialog)
+        file_menu.addAction(openSettings)
+
+        file_menu.addSeparator()
+
+        # Create a Exit action and add it to the File menu
+        exit_action = QAction(config.thisTranslation["exit"], self)
+        exit_action.setShortcut("Ctrl+Q")
+        exit_action.triggered.connect(self.close)
+        file_menu.addAction(exit_action)
+
+        # set initial window size
+        self.setWindowTitle("Bible Chat")
+        self.resize(QGuiApplication.primaryScreen().availableSize() * 3 / 4)
+        self.show()
+        self.chatGPT.setFontSize()
+
+#config.mainWindow.chatGPTapi = ChatGPTAPI(config.mainWindow)
+#config.mainWindow.chatGPTapi.show()
+#config.mainWindow.bringToForeground(config.mainWindow.chatGPTapi)
+#config.mainWindow.chatGPTapi.setFontSize()
+
+bibleChat = MainWindow(config.mainWindow)
+bibleChat.show()

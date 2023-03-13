@@ -1042,4 +1042,8 @@ translation = {
     "fontSize": "फ़ॉन्ट आकार",
     "chat": "गपशप",
     "image": "छवि",
+    "print": "छापें",
+    "configure": "कॉन्फ़िगर करें",
+    "exit": "बाहर निकलें",
+    "displayVerseAudioIcons": "दृश्य ऑडियो प्रतीक दिखाएँ",
 }

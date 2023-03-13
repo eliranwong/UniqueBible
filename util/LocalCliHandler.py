@@ -2185,15 +2185,19 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                                 plainText += f">>> {content}"
                             elif i["role"] == "assistant":
                                 content = i["content"]
-                                plainText += f"\n\n{content}\n\n"
+                                if plainText:
+                                    plainText += "\n\n"
+                                plainText += f"{content}\n\n"
+                        plainText = plainText.strip()
                         if config.terminalEnableTermuxAPI:
                             pydoc.pipepager(plainText, cmd="termux-share -a send")
                         else:
-                            chatFile = os.path.join("temp", "chat.txt")
+                            filename = re.sub('[\\\/\:\*\?\"\<\>\|]', "", plainText.split("\n")[0])[:40]
+                            chatFile = os.path.join(config.marvelData, "chats", filename)
                             with open(chatFile, "w", encoding="utf-8") as fileObj:
                                 fileObj.write(plainText)
                             if os.path.isfile(chatFile):
-                                os.system(f"{config.open} {chatFile}")
+                                os.system(f'''{config.open} "{chatFile}"''')
                     else:
                         # start spinning
                         stop_event = threading.Event()

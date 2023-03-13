@@ -1042,4 +1042,8 @@ translation = {
     "fontSize": "フォント・サイズ",
     "chat": "チャット",
     "image": "画像",
+    "print": "印刷",
+    "configure": "構成",
+    "exit": "出口",
+    "displayVerseAudioIcons": "Verse オーディオ・アイコンの表示",
 }

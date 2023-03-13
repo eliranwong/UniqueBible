@@ -769,6 +769,9 @@ class ConfigUtil:
         '<span class="material-icons">audiotrack</span>&nbsp;')
         if not config.audioBibleIcon2.endswith("&nbsp;"):
             config.audioBibleIcon2 = f"{config.audioBibleIcon2.strip()}&nbsp;"
+        setConfig("displayVerseAudioBibleIcon", """
+        # Display verse audio bible icon""",
+        True)
         setConfig("videoFolder", """
         # Specify the folder path of video files""",
         "video")
