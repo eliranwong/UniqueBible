@@ -607,3 +607,10 @@ class MainWindow(QMainWindow):
 
 bibleChat = MainWindow(config.mainWindow)
 bibleChat.show()
+
+# load selected text, if any, to user input
+selectedText = config.mainWindow.mainView.currentWidget().selectedText().strip()
+if not selectedText:
+    selectedText = config.mainWindow.studyView.currentWidget().selectedText().strip()
+if selectedText:
+    bibleChat.chatGPT.userInput.setText(selectedText)

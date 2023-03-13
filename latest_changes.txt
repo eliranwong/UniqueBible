@@ -1,3 +1,6 @@
+Changes in 34.40:
+* Bible Chat plugin now pick up selected text on the main/study window when it is launched.
+
 Changes in 34.39:
 * added "chatGPT" plugin folders:
     - users can write customised python script to process chatGPT response before it is displayed

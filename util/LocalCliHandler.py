@@ -178,6 +178,7 @@ class LocalCliHandler:
         ]
 
         bible_chat_history = os.path.join(os.getcwd(), "terminal_history", "bible_chat")
+        openai_image_history = os.path.join(os.getcwd(), "terminal_history", "openai_image")
         find_history = os.path.join(os.getcwd(), "terminal_history", "find")
         module_history_concordance = os.path.join(os.getcwd(), "terminal_history", "concordance")
         module_history_books = os.path.join(os.getcwd(), "terminal_history", "books")
@@ -204,6 +205,7 @@ class LocalCliHandler:
         #system_command_history = os.path.join(os.getcwd(), "terminal_history", "system_command")
 
         self.terminal_bible_chat_session = PromptSession(history=FileHistory(bible_chat_history))
+        self.terminal_openai_image_session = PromptSession(history=FileHistory(openai_image_history))
         self.terminal_live_filter_session = PromptSession(history=FileHistory(live_filter))
         self.terminal_concordance_selection_session = PromptSession(history=FileHistory(module_history_concordance))
         self.terminal_books_selection_session = PromptSession(history=FileHistory(module_history_books))
@@ -2180,19 +2182,22 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 script = os.path.join(pluginFolder, "{0}.py".format(plugin))
                 self.execPythonFile(script)
             try:
+                started = False
                 def startChat():
                     chat = config.thisTranslation["chat"]
                     self.print(f"{chat}: {config.chatGPTApiContext}")
-                    self.print("('.new' to start a new chat; {0})".format("'.share' to share content" if config.terminalEnableTermuxAPI else "'.save' to save content"))
+                    self.print("['.new' to start a new chat]")
+                    self.print("['.share' to share content]" if config.terminalEnableTermuxAPI else "['.save' to save content]")
+                    started = False
                 startChat()
                 while True:
                     userInput = self.simplePrompt(promptSession=self.terminal_bible_chat_session)
                     if userInput.strip().lower() == config.terminal_cancel_action:
                         return self.cancelAction()
-                    elif userInput.strip().lower() == ".new":
+                    elif userInput.strip().lower() == ".new" and started:
                         messages = resetMessages()
                         startChat()
-                    elif userInput.strip().lower() in (".share", ".save"):
+                    elif userInput.strip().lower() in (".share", ".save") and started:
                         plainText = ""
                         for i in messages:
                             if i["role"] == "user":
@@ -2217,7 +2222,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                                         os.system(f'''{config.open} "{chatFile}"''')
                             except:
                                 self.print("Failed to save a file!")
-                    else:
+                    elif userInput.strip() and not userInput.strip().lower() in (".share", ".save", ".new"):
                         # start spinning
                         stop_event = threading.Event()
                         spinner_thread = threading.Thread(target=self.spinning_animation, args=(stop_event,))
@@ -2243,6 +2248,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                             self.print(chat_response)
                             if index == 0:
                                 messages.append({"role": "assistant", "content": chat_response})
+                        started = True
                         #stop_event.set()
                         #spinner_thread.join()
                         #self.print("##########")
@@ -2285,7 +2291,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             try:
                 while True:
                     self.print("Discribe your image:")
-                    userInput = self.simplePrompt(promptSession=self.terminal_bible_chat_session)
+                    userInput = self.simplePrompt(promptSession=self.terminal_openai_image_session)
                     if userInput.lower() == config.terminal_cancel_action:
                         return self.cancelAction()
                     # start spinning
