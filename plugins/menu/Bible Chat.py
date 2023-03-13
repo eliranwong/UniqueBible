@@ -4,6 +4,7 @@ if "Pocketsphinx" in config.enabled:
     from pocketsphinx import LiveSpeech, get_model_path
 from datetime import datetime
 from util.Languages import Languages
+from util.FileUtil import FileUtil
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt, QThread, Signal
     from PySide6.QtPrintSupport import QPrinter, QPrintDialog
@@ -456,7 +457,6 @@ Follow the following steps:
             document = QTextDocument()
             document.setPlainText(self.contentView.toPlainText())
             document.print_(printer)
-
 
     def resetContent(self, content):
         self.contentView.setPlainText(content)
