@@ -114,16 +114,14 @@ if thisOS == "macOS":
             f.write("#!/bin/bash\n")
             f.write(f"cd {wd}\n")
             f.write(f"{python} {appFile} gui\n")
-        commands = (
-            f"pbcopy < {icon_path}",
-            f"sips -i {icon_path}",
-            f"DeRez -only icns {icon_path} > tmpicns.rsrc",
-            f"Rez -append tmpicns.rsrc -o iconfile.icns",
-            f"SetFile -a C {shortcut_file}",
-            f"SetFile -a C iconfile.icns",
-        )
-        for command in commands:
-            os.system(command)
+        """ # This method does not work with *.command file
+        # icon needs to be manually added by dragging an icon to file info
+        icon_path = os.path.abspath(os.path.join("icons", f"{appName}.icns"))
+        def set_icon(file_path, icon_path):
+            import subprocess
+            subprocess.call(['sips', '-i', icon_path, '--out', f'{file_path}/Icon\r'])
+            subprocess.call(['/usr/bin/SetFile', '-a', 'C', file_path])
+        set_icon(shortcut_file, icon_path)"""
         os.chmod(shortcut_file, 0o755)
 # desktop shortcuts on Linux
 elif thisOS == "Linux":

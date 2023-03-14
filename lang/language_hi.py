@@ -1056,4 +1056,5 @@ translation = {
     "replaceWith": "के साथ बदलें",
     "replaceAll": "सभी बदलें",
     "searchFor": "ढूंढें के लिए",
+    "bibleChat": "बाइबल चैट",
 }

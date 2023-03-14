@@ -1,3 +1,6 @@
+Changes in 34.44:
+* Added text selection support to menu plugins "Google", "Gmail", "Microsoft Outlook"
+
 Changes in 34.43:
 * added Windows and macOS desktop shortcuts
 

@@ -1056,4 +1056,5 @@ translation = {
     "replaceWith": "替换为",
     "replaceAll": "替换所有",
     "searchFor": "搜索",
+    "bibleChat": "圣经交谈",
 }

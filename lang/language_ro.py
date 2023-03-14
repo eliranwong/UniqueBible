@@ -1056,4 +1056,5 @@ translation = {
     "replaceWith": "Înlocuiește cu",
     "replaceAll": "Înlocuiește TOATE",
     "searchFor": "Caută după",
+    "bibleChat": "Chat cu Biblia",
 }

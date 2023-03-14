@@ -57,7 +57,7 @@ class MiscellaneousLauncher(QWidget):
         if ("Ytdlp" in config.enabled):
             button = QPushButton(config.thisTranslation["youtube_utility"])
             button.setToolTip(config.thisTranslation["youtube_utility"])
-            button.clicked.connect(self.parent.parent.openYouTube)
+            button.clicked.connect(self.parent.parent.openMiniBrowser)
         subLayout.addWidget(button)
         box.setLayout(subLayout)
         return box

@@ -170,18 +170,22 @@ toDo = QAction(config.thisTranslation["todo"])
 toDo.triggered.connect(partial(config.mainWindow.runPlugin, "ToDo"))
 trayMenu.addAction(toDo)
 if config.openaiApiKey:
-    chatgptapi = QAction("Bible Chat")
+    chatgptapi = QAction(config.thisTranslation["bibleChat"])
     chatgptapi.triggered.connect(partial(config.mainWindow.runPlugin, "Bible Chat"))
     trayMenu.addAction(chatgptapi)
-chatgpt = QAction("ChatGPT")
-chatgpt.triggered.connect(partial(config.mainWindow.runPlugin, "ChatGPT"))
-trayMenu.addAction(chatgpt)
+else:
+    chatgpt = QAction("ChatGPT")
+    chatgpt.triggered.connect(partial(config.mainWindow.runPlugin, "ChatGPT"))
+    trayMenu.addAction(chatgpt)
+terminalMode = QAction(config.thisTranslation["terminalMode"])
+terminalMode.triggered.connect(partial(config.mainWindow.runPlugin, "Terminal Mode"))
+trayMenu.addAction(terminalMode)
 # Add a separator
 trayMenu.addSeparator()
 # Media
 youtubeDownloader = QAction(config.thisTranslation["youtube_utility"])
 #youtubeDownloader.triggered.connect(config.mainWindow.showFromTray)
-youtubeDownloader.triggered.connect(config.mainWindow.openYouTube)
+youtubeDownloader.triggered.connect(config.mainWindow.openMiniBrowser)
 trayMenu.addAction(youtubeDownloader)
 if config.mainWindow.audioPlayer is not None:
     mediaPlaylist = QAction(config.thisTranslation["playlist"])

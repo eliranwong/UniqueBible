@@ -1056,4 +1056,5 @@ translation = {
     "replaceWith": "Заменить на",
     "replaceAll": "Заменить ALL",
     "searchFor": "Поиск",
+    "bibleChat": "Библия",
 }

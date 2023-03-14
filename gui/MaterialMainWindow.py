@@ -1102,18 +1102,19 @@ class MaterialMainWindow:
                 self.instantTtsButton3 = QPushButton()
                 self.addMaterialIconButton("{0} - {1}".format(config.thisTranslation["context1_speak"], config.ttsDefaultLangauge3), icon, self.instantTTS3, self.secondToolBar, self.instantTtsButton3, False)
 
-        if config.openaiApiKey:
-            icon = "material/action/question_answer/materialiconsoutlined/48dp/2x/outline_question_answer_black_48dp.png"
-            self.addMenuPluginButton("Bible Chat", "Bible Chat", icon, self.secondToolBar, translation=False)
         icon = "material/hardware/smart_toy/materialiconsoutlined/48dp/2x/outline_smart_toy_black_48dp.png"
-        self.addMenuPluginButton("ChatGPT", "ChatGPT", icon, self.secondToolBar, translation=False)
+        if config.openaiApiKey:
+            #icon = "material/action/question_answer/materialiconsoutlined/48dp/2x/outline_question_answer_black_48dp.png"
+            self.addMenuPluginButton("Bible Chat", "Bible Chat", icon, self.secondToolBar, translation=False)
+        else:
+            self.addMenuPluginButton("ChatGPT", "ChatGPT", icon, self.secondToolBar, translation=False)
         self.secondToolBar.addSeparator()
 
         icon = "material/social/travel_explore/materialiconsoutlined/48dp/2x/outline_travel_explore_black_48dp.png"
         self.addMenuPluginButton("Google", "Google", icon, self.secondToolBar, translation=False)
         if ("Ytdlp" in config.enabled):
             icon = "material/hardware/browser_updated/materialiconsoutlined/48dp/2x/outline_browser_updated_black_48dp.png"
-            self.addMaterialIconButton("menu11_youtube", icon, self.openYouTube, self.secondToolBar)
+            self.addMaterialIconButton("menu11_youtube", icon, self.openMiniBrowser, self.secondToolBar)
         icon = "material/communication/email/materialiconsoutlined/48dp/2x/outline_email_black_48dp.png"
         self.addMenuPluginButton("Gmail", "Gmail", icon, self.secondToolBar, translation=False)
 

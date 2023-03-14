@@ -2632,10 +2632,13 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
         if ok and text and QUrl.fromUserInput(text).isValid():
             self.runTextCommand("mp4:::{0}".format(text))
 
-    def openYouTube(self):
-        self.openMiniBrowser()
-
     def openMiniBrowser(self, initialUrl=None):
+        selectedText = config.mainWindow.selectedText()
+        if selectedText:
+            content = TextUtil.plainTextToUrl(selectedText)
+            initialUrl = f"https://youtube.com/results?search_query={content}"
+        else:
+            initialUrl = "https://youtube.com"
         self.youTubeView = MiniBrowser(self, initialUrl)
         self.youTubeView.show()
 

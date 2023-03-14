@@ -448,7 +448,7 @@ class ClassicMainWindow:
         menu11.addSeparator()
         if ("Ytdlp" in config.enabled):
             menu11.addAction(QAction(config.thisTranslation["menu11_setupDownload"], self, triggered=self.setupYouTube))
-            menu11.addAction(QAction(config.thisTranslation["menu11_youtube"], self, triggered=self.openYouTube))
+            menu11.addAction(QAction(config.thisTranslation["menu11_youtube"], self, triggered=self.openMiniBrowser))
             menu11.addSeparator()
         menu11.addAction(QAction("YouTube -> mp3", self, triggered=self.downloadMp3Dialog))
         menu11.addAction(QAction("YouTube -> mp4", self, triggered=self.downloadMp4Dialog))
@@ -669,7 +669,7 @@ class ClassicMainWindow:
         self.addStandardIconButton("menu2_larger", "fontPlus.png", self.largerFont, self.secondToolBar)
         self.secondToolBar.addSeparator()
         if ("Ytdlp" in config.enabled):
-            self.addStandardIconButton("menu11_youtube", "youtube.png", self.openYouTube, self.secondToolBar)
+            self.addStandardIconButton("menu11_youtube", "youtube.png", self.openMiniBrowser, self.secondToolBar)
             self.secondToolBar.addSeparator()
         if ("Pythonvlc" in config.enabled):
             self.addStandardIconButton("mediaPlayer", "buttons/media_player.png", self.openVlcPlayer, self.secondToolBar)
@@ -885,7 +885,7 @@ class ClassicMainWindow:
 
         if ("Ytdlp" in config.enabled):
             iconFile = os.path.join("htmlResources", "youtube.png")
-            self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu11_youtube"], self.openYouTube)
+            self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu11_youtube"], self.openMiniBrowser)
             self.secondToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "reload.png")

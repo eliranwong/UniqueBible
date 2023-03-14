@@ -1,4 +1,5 @@
 import config
+from util.TextUtil import TextUtil
 from gui.SimpleBrowser import SimpleBrowser
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import QUrl
@@ -20,6 +21,13 @@ https://onedrive.live.com/about/en-gb/signin
 
 """
 
+selectedText = config.mainWindow.selectedText()
+if selectedText:
+    content = TextUtil.plainTextToUrl(selectedText)
+    url = f"https://outlook.office.com/mail/deeplink/compose?subject=UniqueBible.app&body={content}"
+else:
+    url = "https://outlook.office.com/mail"
+
 config.mainWindow.msoutlook = SimpleBrowser(config.mainWindow, "Microsoft Outlook")
-config.mainWindow.msoutlook.setUrl(QUrl("https://outlook.office.com/mail"))
+config.mainWindow.msoutlook.setUrl(QUrl(url))
 config.mainWindow.msoutlook.show()

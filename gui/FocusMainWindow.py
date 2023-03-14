@@ -645,7 +645,7 @@ class FocusMainWindow:
         self.addStandardIconButton("menu2_larger", "fontPlus.png", self.largerFont, self.secondToolBar)
         self.secondToolBar.addSeparator()
         if ("Ytdlp" in config.enabled):
-            self.addStandardIconButton("menu11_youtube", "youtube.png", self.openYouTube, self.secondToolBar)
+            self.addStandardIconButton("menu11_youtube", "youtube.png", self.openMiniBrowser, self.secondToolBar)
             self.secondToolBar.addSeparator()
         if ("Pythonvlc" in config.enabled):
             self.addStandardIconButton("mediaPlayer", "buttons/media_player.png", self.openVlcPlayer, self.secondToolBar)
@@ -867,7 +867,7 @@ class FocusMainWindow:
 
         if ("Ytdlp" in config.enabled):
             iconFile = os.path.join("htmlResources", "youtube.png")
-            self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu11_youtube"], self.openYouTube)
+            self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu11_youtube"], self.openMiniBrowser)
             self.secondToolBar.addSeparator()
 
         if ("Pythonvlc" in config.enabled):

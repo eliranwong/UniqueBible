@@ -824,7 +824,7 @@ class AlephMainWindow:
             button.setToolTip(config.thisTranslation["menu11_youtube"])
             buttonFile = os.path.join("htmlResources", "youtube.png")
             button.setIcon(QIcon(buttonFile))
-            button.clicked.connect(self.openYouTube)
+            button.clicked.connect(self.openMiniBrowser)
             self.secondToolBar.addWidget(button)
             self.secondToolBar.addSeparator()
 
@@ -1320,7 +1320,7 @@ class AlephMainWindow:
 
         if ("Ytdlp" in config.enabled):
             iconFile = os.path.join("htmlResources", "youtube.png")
-            self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu11_youtube"], self.openYouTube)
+            self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu11_youtube"], self.openMiniBrowser)
             self.secondToolBar.addSeparator()
 
         if ("Pythonvlc" in config.enabled):

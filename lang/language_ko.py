@@ -1056,4 +1056,5 @@ translation = {
     "replaceWith": "로 바꾸기",
     "replaceAll": "모두 바꾸기",
     "searchFor": "검색",
+    "bibleChat": "성경 대화",
 }
