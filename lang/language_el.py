@@ -1052,4 +1052,8 @@ translation = {
     "newChat": "Νέα συνομιλία",
     "saveChat": "Αποθήκευση συνομιλίας",
     "printChat": "Εκτύπωση συνομιλίας",
+    "replace": "Αντικατάσταση '",
+    "replaceWith": "Αντικατάσταση με:",
+    "replaceAll": "Αντικατάσταση ALL",
+    "searchFor": "Αναζήτηση για:",
 }

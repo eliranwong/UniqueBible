@@ -1052,4 +1052,8 @@ translation = {
     "newChat": "Nuova Chat",
     "saveChat": "Salva Chat",
     "printChat": "Conversazione Stampa",
+    "replace": "Sostituire",
+    "replaceWith": "Sostituire con",
+    "replaceAll": "Sostituire ALL",
+    "searchFor": "Ricerca per",
 }

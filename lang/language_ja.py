@@ -1052,4 +1052,8 @@ translation = {
     "newChat": "新規チャット",
     "saveChat": "チャットの保存",
     "printChat": "チャットの印刷",
+    "replace": "置換",
+    "replaceWith": "置換",
+    "replaceAll": "すべて置換",
+    "searchFor": "検索対象",
 }

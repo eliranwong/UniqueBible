@@ -1052,4 +1052,8 @@ translation = {
     "newChat": "नया चैट",
     "saveChat": "चैट सहेजें",
     "printChat": "प्रिंट चैट",
+    "replace": "बदलें",
+    "replaceWith": "के साथ बदलें",
+    "replaceAll": "सभी बदलें",
+    "searchFor": "ढूंढें के लिए",
 }

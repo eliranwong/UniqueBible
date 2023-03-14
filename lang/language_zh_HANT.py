@@ -1052,4 +1052,8 @@ translation = {
     "newChat": "新建會談",
     "saveChat": "儲存會談",
     "printChat": "列印會談",
+    "replace": "取代",
+    "replaceWith": "取代為",
+    "replaceAll": "取代全部",
+    "searchFor": "搜尋",
 }

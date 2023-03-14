@@ -1,3 +1,6 @@
+Changes in 34.42:
+* added search and search to "Bible Chat" gui
+
 Changes in 34.41:
 * Improved "Bible Chat" plugin:
     * support open, create and save as database files

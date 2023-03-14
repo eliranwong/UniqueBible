@@ -1052,4 +1052,8 @@ translation = {
     "newChat": "새 대화",
     "saveChat": "대화 저장",
     "printChat": "인쇄 대화",
+    "replace": "바꾸기",
+    "replaceWith": "로 바꾸기",
+    "replaceAll": "모두 바꾸기",
+    "searchFor": "검색",
 }

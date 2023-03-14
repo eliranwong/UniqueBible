@@ -249,6 +249,11 @@ class ChatGPTAPI(QWidget):
         layout000.addWidget(splitter)
 
         #widgets on the right
+        self.searchInput = QLineEdit()
+        self.searchInput.setToolTip("Note: regular expression is enabled")
+        self.searchInput.setClearButtonEnabled(True)
+        self.replaceInput = QLineEdit()
+        self.replaceInput.setClearButtonEnabled(True)
         self.userInput = QLineEdit()
         self.userInput.setPlaceholderText(config.thisTranslation["messageHere"])
         self.userInput.mousePressEvent = lambda _ : self.userInput.selectAll()
@@ -270,6 +275,9 @@ class ChatGPTAPI(QWidget):
         button_height = text_rect.height() + 10
         self.multilineButton.setFixedSize(button_width, button_height)
         sendButton = QPushButton(config.thisTranslation["send"])
+        searchLabel = QLabel(config.thisTranslation["searchFor"])
+        replaceLabel = QLabel(config.thisTranslation["replaceWith"])
+        searchReplaceButton = QPushButton(config.thisTranslation["replace"])
         self.apiModels = QComboBox()
         self.apiModels.addItems([config.thisTranslation["chat"], config.thisTranslation["image"]])
         self.apiModels.setCurrentIndex(0)
@@ -313,6 +321,13 @@ class ChatGPTAPI(QWidget):
         layout000Rt.addWidget(self.contentView)
         layout000Rt.addWidget(self.progressBar)
         self.progressBar.hide()
+        searchReplaceLayout = QHBoxLayout()
+        searchReplaceLayout.addWidget(searchLabel)
+        searchReplaceLayout.addWidget(self.searchInput)
+        searchReplaceLayout.addWidget(replaceLabel)
+        searchReplaceLayout.addWidget(self.replaceInput)
+        searchReplaceLayout.addWidget(searchReplaceButton)
+        layout000Rt.addLayout(searchReplaceLayout)
         rtControlLayout = QHBoxLayout()
         rtControlLayout.addWidget(apiKeyButton)
         rtControlLayout.addWidget(temperatureLabel)
@@ -379,8 +394,18 @@ class ChatGPTAPI(QWidget):
         self.apiModels.currentIndexChanged.connect(self.updateApiModel)
         self.fontSize.currentIndexChanged.connect(self.setFontSize)
         self.temperature.currentIndexChanged.connect(self.updateTemperature)
+        searchReplaceButton.clicked.connect(self.searchReplace)
+        self.replaceInput.returnPressed.connect(self.searchReplace)
 
         self.setFontSize()
+
+    def searchReplace(self):
+        search = self.searchInput.text()
+        if search:
+            replace = self.replaceInput.text()
+            content = self.contentView.toPlainText()
+            newContent = re.sub(search, replace, content, flags=re.M)
+            self.contentView.setPlainText(newContent)
 
     def multilineButtonClicked(self):
         if self.userInput.isVisible():

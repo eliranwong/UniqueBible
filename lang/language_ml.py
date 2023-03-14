@@ -1052,4 +1052,8 @@ translation = {
     "newChat": "പുതിയ ചതുരം",
     "saveChat": "Chat സൂക്ഷിക്കുക",
     "printChat": "Chat അച്ചടിയ്ക്കുക",
+    "replace": "മാറ്റുക",
+    "replaceWith": "പകരം മാറ്റുക",
+    "replaceAll": "ALL മാറ്റുക",
+    "searchFor": "തെരയുക",
 }
