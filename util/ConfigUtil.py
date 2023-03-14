@@ -528,6 +528,10 @@ class ConfigUtil:
         setConfig("openaiApiOrganization", """
         # OpenAI api organization""",
         "")
+        setConfig("chatGPTApiMaxTokens", """
+        # The maximum number of tokens to generate in the completion.
+        # The token count of your prompt plus max_tokens cannot exceed the model's context length. Most models have a context length of 2048 tokens (except for the newest models, which support 4096).""",
+        1024)
         setConfig("chatGPTApiNoOfChoices", """
         # ChatGPT API number of choices in response
         # How many chat completion choices to generate for each input message.""",
@@ -536,6 +540,9 @@ class ConfigUtil:
         # ChatGPT API temperature
         # What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.""",
         1.0)
+        setConfig("chatGPTApiLastChatDatabase", """
+        # The latest chat database file that was opened.""",
+        "")
         setConfig("chatGPTApiContext", """
         # Set a context for chatGPT conversations""",
         "about the bible")

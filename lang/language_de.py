@@ -1046,4 +1046,10 @@ translation = {
     "configure": "Konfigurieren",
     "exit": "Beenden",
     "displayVerseAudioIcons": "Verse-Audio-Symbole anzeigen",
+    "newDatabase": "Neue Datenbank",
+    "openDatabase": "Datenbank öffnen",
+    "saveDatabaseAs": "Datenbank speichern unter ...",
+    "newChat": "Neuer Chat",
+    "saveChat": "Chat speichern",
+    "printChat": "Chat drucken",
 }

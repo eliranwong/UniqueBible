@@ -1046,4 +1046,10 @@ translation = {
     "configure": "ക്രമീകരിക്കുക",
     "exit": "പ്രദര്ശിപ്പിക്കുക",
     "displayVerseAudioIcons": "വെഴ്സ് ഓഡിയോ ചിന്ത കാണിക്കുക",
+    "newDatabase": "പുതിയ ഡാറ്റാബേസ്",
+    "openDatabase": "ഡാറ്റാബേസ് തുറക്ക്",
+    "saveDatabaseAs": "ഡാറ്റാബേസ് സംരക്ഷിക്കുക ...",
+    "newChat": "പുതിയ ചതുരം",
+    "saveChat": "Chat സൂക്ഷിക്കുക",
+    "printChat": "Chat അച്ചടിയ്ക്കുക",
 }

@@ -1046,4 +1046,10 @@ translation = {
     "configure": "構成",
     "exit": "出口",
     "displayVerseAudioIcons": "Verse オーディオ・アイコンの表示",
+    "newDatabase": "新規データベース",
+    "openDatabase": "オープン・データベース",
+    "saveDatabaseAs": "データベースの別名保存 ...",
+    "newChat": "新規チャット",
+    "saveChat": "チャットの保存",
+    "printChat": "チャットの印刷",
 }

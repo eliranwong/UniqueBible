@@ -1046,4 +1046,10 @@ translation = {
     "configure": "配置",
     "exit": "退出",
     "displayVerseAudioIcons": "显示 Verse 音频图标",
+    "newDatabase": "新建数据库",
+    "openDatabase": "打开数据库",
+    "saveDatabaseAs": "将数据库另存为 ...",
+    "newChat": "新建交谈",
+    "saveChat": "保存交谈",
+    "printChat": "打印交谈",
 }

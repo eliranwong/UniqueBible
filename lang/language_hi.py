@@ -1046,4 +1046,10 @@ translation = {
     "configure": "कॉन्फ़िगर करें",
     "exit": "बाहर निकलें",
     "displayVerseAudioIcons": "दृश्य ऑडियो प्रतीक दिखाएँ",
+    "newDatabase": "नया डाटाबेस",
+    "openDatabase": "डाटाबेस खोलें",
+    "saveDatabaseAs": "डाटाबेस सहेजें के रूप में ...",
+    "newChat": "नया चैट",
+    "saveChat": "चैट सहेजें",
+    "printChat": "प्रिंट चैट",
 }

@@ -1046,4 +1046,10 @@ translation = {
     "configure": "Configurează",
     "exit": "Ieșire",
     "displayVerseAudioIcons": "Afișează pictogramele audio Verset",
+    "newDatabase": "Noua baza de date",
+    "openDatabase": "Deschide baza de date",
+    "saveDatabaseAs": "Salvează baza de date ca ...",
+    "newChat": "Nou Chat",
+    "saveChat": "Salvează Chat",
+    "printChat": "Print Chat",
 }

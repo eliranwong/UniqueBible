@@ -94,8 +94,9 @@ class ChatGPTResponse:
             completion = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=messages,
-                n=config.chatGPTApiNoOfChoices,
+                max_tokens=config.chatGPTApiMaxTokens,
                 temperature=config.chatGPTApiTemperature,
+                n=config.chatGPTApiNoOfChoices,
             )
             for index, choice in enumerate(completion.choices):
                 chat_response = choice.message.content

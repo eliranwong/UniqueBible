@@ -1,3 +1,9 @@
+Changes in 34.41:
+* Improved "Bible Chat" plugin:
+    * support open, create and save as database files
+    * load the latest database that was opened when it is launched
+    * added option of maxium token.
+
 Changes in 34.40:
 * Bible Chat plugin now pick up selected text on the main/study window when it is launched.
 
