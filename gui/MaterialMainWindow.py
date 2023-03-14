@@ -974,8 +974,8 @@ class MaterialMainWindow:
 
         self.firstToolBar.addSeparator()
 
-        icon = "material/action/terminal/materialiconsoutlined/48dp/2x/outline_terminal_black_48dp.png"
-        self.addMenuPluginButton("Terminal", "terminal", icon, self.firstToolBar)
+        #icon = "material/action/terminal/materialiconsoutlined/48dp/2x/outline_terminal_black_48dp.png"
+        #self.addMenuPluginButton("Terminal", "terminal", icon, self.firstToolBar)
         icon = "material/action/terminal/materialiconsoutlined/48dp/2x/outline_terminal_black_48dp.png"
         self.addMenuPluginButton("Terminal Mode", "terminalMode", icon, self.firstToolBar)
 
