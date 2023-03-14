@@ -69,10 +69,11 @@ if sys.prefix == sys.base_prefix:
 # create shortcut files
 # On Windows
 if thisOS == "Windows":
-    shortcutBat1 = os.path.join(wd, "UniqueBibleApp.bat")
+    desktopPath = os.path.join(os.path.expanduser('~'), 'Desktop')
+    shortcutBat1 = os.path.join(desktopPath, "UniqueBibleApp.bat")
     shortcutCommand1 = f'''powershell.exe -NoExit -Command "python '{thisFile}'"'''
 
-    shortcutBat2 = os.path.join(wd, "UniqueBibleAppTerminal.bat")
+    shortcutBat2 = os.path.join(desktopPath, "UniqueBibleAppTerminal.bat")
     shortcutCommand2 = f'''powershell.exe -NoExit -Command "python '{thisFile}' terminal"'''
 
     windowsShortcuts = {
@@ -93,15 +94,39 @@ else:
     if not os.path.exists(shortcutSh):
         # Create .sh shortcut
         with open(shortcutSh, "w") as fileObj:
-            fileObj.write("#!{0}\n{1} {2}".format(os.environ["SHELL"], sys.executable, thisFile))
+            fileObj.write("#!{0}\n{1} {2} gui".format(os.environ["SHELL"], sys.executable, thisFile))
         # Set permission
         for file in (thisFile, "main.py", "util/BibleVerseParser.py", "util/RegexSearch.py", shortcutSh):
             try:
                 os.chmod(file, 0o755)
             except:
                 pass
-# Additional shortcuts on Linux
-if thisOS == "Linux":
+# desktop shortcut on macOS
+if thisOS == "macOS":
+    app = "UniqueBibleApp"
+    shortcut_file = os.path.expanduser(f"~/Desktop/{app}.command")
+    if not os.path.isfile(shortcut_file):
+        thisFile = os.path.realpath(__file__)
+        wd = os.path.dirname(thisFile)
+        appFile = "uba.py"
+        icon_path = os.path.abspath(os.path.join("htmlResources", f"{app}.icns"))
+        with open(shortcut_file, "w") as f:
+            f.write("#!/bin/bash\n")
+            f.write(f"cd {wd}\n")
+            f.write(f"{python} {appFile} gui\n")
+        commands = (
+            f"pbcopy < {icon_path}",
+            f"sips -i {icon_path}",
+            f"DeRez -only icns {icon_path} > tmpicns.rsrc",
+            f"Rez -append tmpicns.rsrc -o iconfile.icns",
+            f"SetFile -a C {shortcut_file}",
+            f"SetFile -a C iconfile.icns",
+        )
+        for command in commands:
+            os.system(command)
+        os.chmod(shortcut_file, 0o755)
+# desktop shortcuts on Linux
+elif thisOS == "Linux":
     def desktopFileContent():
         iconPath = os.path.join(wd, "htmlResources", "UniqueBibleApp.png")
         return """#!/usr/bin/env xdg-open

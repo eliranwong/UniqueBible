@@ -1,3 +1,6 @@
+Changes in 34.43:
+* added Windows and macOS desktop shortcuts
+
 Changes in 34.42:
 * added search and search to "Bible Chat" gui
 
