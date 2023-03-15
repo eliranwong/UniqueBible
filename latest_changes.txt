@@ -1,3 +1,6 @@
+Changes in 34.47:
+* updated Windows shortcut directory
+
 Changes in 34.46:
 * fixed startup for some Windows users
 

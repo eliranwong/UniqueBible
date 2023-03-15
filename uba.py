@@ -70,25 +70,25 @@ if sys.prefix == sys.base_prefix:
 # On Windows
 if thisOS == "Windows":
     desktopPath = os.path.join(os.path.expanduser('~'), 'Desktop')
-    if os.path.isdir(desktopPath):
-        # gui mode shortcut
-        shortcutBat1 = os.path.join(desktopPath, "UniqueBibleApp.bat")
-        shortcutCommand1 = f'''powershell.exe -NoExit -Command "python '{thisFile}'"'''
-        # terminal mode shortcut
-        shortcutBat2 = os.path.join(desktopPath, "UniqueBibleAppTerminal.bat")
-        shortcutCommand2 = f'''powershell.exe -NoExit -Command "python '{thisFile}' terminal"'''
-        windowsShortcuts = {
-            shortcutBat1: shortcutCommand1,
-            shortcutBat2: shortcutCommand2,
-        }
-        # Create .bat for application shortcuts
-        for shortcutBat, shortcutCommand in windowsShortcuts.items():
-            if not os.path.isfile(shortcutBat):
-                try:
-                    with open(shortcutBat, "w") as fileObj:
-                        fileObj.write(shortcutCommand)
-                except:
-                    pass
+    shortcutDir = desktopPath if os.path.isdir(desktopPath) else wd
+    # gui mode shortcut
+    shortcutBat1 = os.path.join(shortcutDir, "UniqueBibleApp.bat")
+    shortcutCommand1 = f'''powershell.exe -NoExit -Command "python '{thisFile}'"'''
+    # terminal mode shortcut
+    shortcutBat2 = os.path.join(shortcutDir, "UniqueBibleAppTerminal.bat")
+    shortcutCommand2 = f'''powershell.exe -NoExit -Command "python '{thisFile}' terminal"'''
+    windowsShortcuts = {
+        shortcutBat1: shortcutCommand1,
+        shortcutBat2: shortcutCommand2,
+    }
+    # Create .bat for application shortcuts
+    for shortcutBat, shortcutCommand in windowsShortcuts.items():
+        if not os.path.isfile(shortcutBat):
+            try:
+                with open(shortcutBat, "w") as fileObj:
+                    fileObj.write(shortcutCommand)
+            except:
+                pass
 # On non-Windows platforms
 else:
     # Create application shortcuts and set file permission
