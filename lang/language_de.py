@@ -1057,4 +1057,6 @@ translation = {
     "replaceAll": "Alle ersetzen",
     "searchFor": "Suchen nach",
     "bibleChat": "Bibel Chat",
+    "replaceSelectedText": "Ausgewählten Text ersetzen",
+    "matchingRegularExpression": "Übereinstimmenden regulären Ausdruck",
 }

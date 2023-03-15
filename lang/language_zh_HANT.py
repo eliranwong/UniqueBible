@@ -1057,4 +1057,6 @@ translation = {
     "replaceAll": "取代全部",
     "searchFor": "搜尋",
     "bibleChat": "聖經會談",
+    "replaceSelectedText": "取代選取的文字",
+    "matchingRegularExpression": "符合正規表示式",
 }

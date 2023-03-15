@@ -1,3 +1,9 @@
+Changes in 34.45:
+* Improved "Bible Chat" search & replace features
+    - database search now matches regular expression
+    - highlight search result in chat content
+    - added ability to replace selected text
+
 Changes in 34.44:
 * Added text selection support to menu plugins "Google", "Gmail", "Microsoft Outlook"
 

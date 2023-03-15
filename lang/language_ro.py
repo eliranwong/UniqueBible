@@ -1057,4 +1057,6 @@ translation = {
     "replaceAll": "Înlocuiește TOATE",
     "searchFor": "Caută după",
     "bibleChat": "Chat cu Biblia",
+    "replaceSelectedText": "Înlocuiește textul selectat",
+    "matchingRegularExpression": "potrivire regulată de expresie",
 }

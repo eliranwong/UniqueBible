@@ -1057,4 +1057,6 @@ translation = {
     "replaceAll": "すべて置換",
     "searchFor": "検索対象",
     "bibleChat": "バイブルチャット",
+    "replaceSelectedText": "選択したテキストを",
+    "matchingRegularExpression": "一致する正規表現",
 }

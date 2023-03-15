@@ -1057,4 +1057,6 @@ translation = {
     "replaceAll": "ALL മാറ്റുക",
     "searchFor": "തെരയുക",
     "bibleChat": "ബൈബിള് ചട്ട്",
+    "replaceSelectedText": "തെരഞ്ഞെടുത്ത പദാവലി മാറ്റുക",
+    "matchingRegularExpression": "സാധാരണ എക്സ്പ്രഷന് ചേര്ക്കുക",
 }

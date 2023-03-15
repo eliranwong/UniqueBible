@@ -1057,4 +1057,6 @@ translation = {
     "replaceAll": "Αντικατάσταση ALL",
     "searchFor": "Αναζήτηση για:",
     "bibleChat": "Συνομιλία",
+    "replaceSelectedText": "Αντικατάσταση επιλεγμένου κειμένου",
+    "matchingRegularExpression": "αντιστοίχιση κανονικής έκφρασης",
 }

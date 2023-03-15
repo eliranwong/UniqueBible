@@ -6,12 +6,12 @@ from datetime import datetime
 from util.Languages import Languages
 from util.FileUtil import FileUtil
 if config.qtLibrary == "pyside6":
-    from PySide6.QtCore import Qt, QThread, Signal
+    from PySide6.QtCore import Qt, QThread, Signal, QRegularExpression
     from PySide6.QtPrintSupport import QPrinter, QPrintDialog
     from PySide6.QtGui import QStandardItemModel, QStandardItem, QGuiApplication, QFontMetrics, QAction, QTextDocument
     from PySide6.QtWidgets import QMainWindow, QWidget, QDialog, QFileDialog, QDialogButtonBox, QFormLayout, QLabel, QMessageBox, QCheckBox, QPlainTextEdit, QProgressBar, QPushButton, QListView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
 else:
-    from qtpy.QtCore import Qt, QThread, Signal
+    from qtpy.QtCore import Qt, QThread, Signal, QRegularExpression
     from qtpy.QtPrintSupport import QPrinter, QPrintDialog
     from qtpy.QtGui import QStandardItemModel, QStandardItem, QGuiApplication, QFontMetrics, QTextDocument
     from qtpy.QtWidgets import QAction, QMainWindow, QWidget, QDialog, QFileDialog, QDialogButtonBox, QFormLayout, QLabel, QMessageBox, QCheckBox, QPlainTextEdit, QProgressBar, QPushButton, QListView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
@@ -107,9 +107,13 @@ class ApiDialog(QDialog):
 
 class Database:
     def __init__(self, filePath=""):
+        def regexp(expr, item):
+            reg = re.compile(expr, flags=re.IGNORECASE)
+            return reg.search(item) is not None
         defaultFilePath = config.chatGPTApiLastChatDatabase if config.chatGPTApiLastChatDatabase and os.path.isfile(config.chatGPTApiLastChatDatabase) else os.path.join(config.marvelData, "chats", "default.chat")
         self.filePath = filePath if filePath else defaultFilePath
         self.connection = sqlite3.connect(self.filePath)
+        self.connection.create_function("REGEXP", 2, regexp)
         self.cursor = self.connection.cursor()
         self.cursor.execute('CREATE TABLE IF NOT EXISTS data (id TEXT PRIMARY KEY, title TEXT, content TEXT)')
         self.connection.commit()
@@ -128,7 +132,10 @@ class Database:
             self.connection.commit()
 
     def search(self, title, content):
-        self.cursor.execute('SELECT * FROM data WHERE title LIKE ? AND content LIKE ?', ('%{}%'.format(title), '%{}%'.format(content)))
+        # with regular expression
+        self.cursor.execute('SELECT * FROM data WHERE title REGEXP ? AND content REGEXP ?', (title, content))
+        # without regular expression
+        #self.cursor.execute('SELECT * FROM data WHERE title LIKE ? AND content LIKE ?', ('%{}%'.format(title), '%{}%'.format(content)))
         return self.cursor.fetchall()
 
     def delete(self, id):
@@ -250,7 +257,7 @@ class ChatGPTAPI(QWidget):
 
         #widgets on the right
         self.searchInput = QLineEdit()
-        self.searchInput.setToolTip("Note: regular expression is enabled")
+        self.searchInput.setToolTip(config.thisTranslation["matchingRegularExpression"])
         self.searchInput.setClearButtonEnabled(True)
         self.replaceInput = QLineEdit()
         self.replaceInput.setClearButtonEnabled(True)
@@ -278,6 +285,9 @@ class ChatGPTAPI(QWidget):
         searchLabel = QLabel(config.thisTranslation["searchFor"])
         replaceLabel = QLabel(config.thisTranslation["replaceWith"])
         searchReplaceButton = QPushButton(config.thisTranslation["replace"])
+        searchReplaceButton.setToolTip(config.thisTranslation["replaceSelectedText"])
+        searchReplaceButtonAll = QPushButton(config.thisTranslation["all"])
+        searchReplaceButtonAll.setToolTip(config.thisTranslation["replaceAll"])
         self.apiModels = QComboBox()
         self.apiModels.addItems([config.thisTranslation["chat"], config.thisTranslation["image"]])
         self.apiModels.setCurrentIndex(0)
@@ -327,6 +337,7 @@ class ChatGPTAPI(QWidget):
         searchReplaceLayout.addWidget(replaceLabel)
         searchReplaceLayout.addWidget(self.replaceInput)
         searchReplaceLayout.addWidget(searchReplaceButton)
+        searchReplaceLayout.addWidget(searchReplaceButtonAll)
         layout000Rt.addLayout(searchReplaceLayout)
         rtControlLayout = QHBoxLayout()
         rtControlLayout.addWidget(apiKeyButton)
@@ -349,8 +360,10 @@ class ChatGPTAPI(QWidget):
         searchTitleButton = QPushButton(config.thisTranslation["searchTitle"])
         searchContentButton = QPushButton(config.thisTranslation["searchContent"])
         self.searchTitle = QLineEdit()
+        self.searchTitle.setToolTip(config.thisTranslation["matchingRegularExpression"])
         self.searchTitle.setPlaceholderText(config.thisTranslation["searchTitleHere"])
         self.searchContent = QLineEdit()
+        self.searchContent.setToolTip(config.thisTranslation["matchingRegularExpression"])
         self.searchContent.setPlaceholderText(config.thisTranslation["searchContentHere"])
         self.listView = QListView()
         self.listModel = QStandardItemModel()
@@ -394,12 +407,24 @@ class ChatGPTAPI(QWidget):
         self.apiModels.currentIndexChanged.connect(self.updateApiModel)
         self.fontSize.currentIndexChanged.connect(self.setFontSize)
         self.temperature.currentIndexChanged.connect(self.updateTemperature)
-        searchReplaceButton.clicked.connect(self.searchReplace)
-        self.replaceInput.returnPressed.connect(self.searchReplace)
+        searchReplaceButton.clicked.connect(self.replaceSelectedText)
+        searchReplaceButtonAll.clicked.connect(self.searchReplaceAll)
+        self.searchInput.returnPressed.connect(self.searchChatContent)
+        self.replaceInput.returnPressed.connect(self.replaceSelectedText)
 
         self.setFontSize()
 
-    def searchReplace(self):
+    def searchChatContent(self):
+        search = QRegularExpression(self.searchInput.text())
+        self.contentView.find(search)
+
+    def replaceSelectedText(self):
+        currentSelectedText = self.contentView.textCursor().selectedText()
+        if not currentSelectedText == "":
+            replace = self.replaceInput.text()
+            self.contentView.insertPlainText(replace)
+
+    def searchReplaceAll(self):
         search = self.searchInput.text()
         if search:
             replace = self.replaceInput.text()
