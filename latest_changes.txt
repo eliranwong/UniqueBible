@@ -1,3 +1,6 @@
+Changes in 34.46:
+* fixed startup for some Windows users
+
 Changes in 34.45:
 * Improved "Bible Chat" search & replace features
     - database search now matches regular expression
