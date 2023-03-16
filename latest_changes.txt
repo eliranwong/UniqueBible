@@ -1,3 +1,6 @@
+Changes in 34.48:
+* added option to toggle regular expression search in "Bible Chat".
+
 Changes in 34.47:
 * updated Windows shortcut directory
 

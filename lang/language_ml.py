@@ -1059,4 +1059,6 @@ translation = {
     "bibleChat": "ബൈബിള് ചട്ട്",
     "replaceSelectedText": "തെരഞ്ഞെടുത്ത പദാവലി മാറ്റുക",
     "matchingRegularExpression": "സാധാരണ എക്സ്പ്രഷന് ചേര്ക്കുക",
+    "chatSettings": "Chat സജ്ജീകരണങ്ങള്",
+    "toggleRegexp": "സാധാരണ എക്സ്പ്രഷന് ടോഗിള് ചെയ്യുക",
 }

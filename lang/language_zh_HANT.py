@@ -1059,4 +1059,6 @@ translation = {
     "bibleChat": "聖經會談",
     "replaceSelectedText": "取代選取的文字",
     "matchingRegularExpression": "符合正規表示式",
+    "chatSettings": "會談設定",
+    "toggleRegexp": "切換正規表示式",
 }

@@ -555,6 +555,9 @@ class ConfigUtil:
         setConfig("chatGPTApiAudioLanguage", """
         # Language for ChatGPT API Response Audio Playback.""",
         "en")
+        setConfig("chatGPTApiSearchRegexp", """
+        # Option to search chat content or database with regular expression.""",
+        True)
         setConfig("myIBMWatsonApikey", """
         # IBM Watson service api key""",
         "")

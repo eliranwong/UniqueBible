@@ -1059,4 +1059,6 @@ translation = {
     "bibleChat": "バイブルチャット",
     "replaceSelectedText": "選択したテキストを",
     "matchingRegularExpression": "一致する正規表現",
+    "chatSettings": "チャット設定",
+    "toggleRegexp": "正規表現のトグル",
 }

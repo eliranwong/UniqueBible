@@ -1059,4 +1059,6 @@ translation = {
     "bibleChat": "Библия",
     "replaceSelectedText": "Заменить выбранный текст",
     "matchingRegularExpression": "сопоставление регулярного выражения",
+    "chatSettings": "Параметры чата",
+    "toggleRegexp": "Переключить регулярное выражение",
 }

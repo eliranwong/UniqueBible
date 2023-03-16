@@ -1059,4 +1059,6 @@ translation = {
     "bibleChat": "성경 대화",
     "replaceSelectedText": "선택한 텍스트 바꾸기",
     "matchingRegularExpression": "일반 표현식 일치",
+    "chatSettings": "대화 설정",
+    "toggleRegexp": "정규식 토글",
 }

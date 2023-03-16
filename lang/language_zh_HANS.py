@@ -1059,4 +1059,6 @@ translation = {
     "bibleChat": "圣经交谈",
     "replaceSelectedText": "替换所选文本",
     "matchingRegularExpression": "匹配正则表达式",
+    "chatSettings": "交谈设置",
+    "toggleRegexp": "切换正则表达式",
 }

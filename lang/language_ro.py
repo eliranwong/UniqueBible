@@ -1059,4 +1059,6 @@ translation = {
     "bibleChat": "Chat cu Biblia",
     "replaceSelectedText": "Înlocuiește textul selectat",
     "matchingRegularExpression": "potrivire regulată de expresie",
+    "chatSettings": "Setări de chat",
+    "toggleRegexp": "Comută expresia regulată",
 }

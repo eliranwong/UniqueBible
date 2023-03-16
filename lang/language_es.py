@@ -1059,4 +1059,6 @@ translation = {
     "bibleChat": "Chat Bíblico",
     "replaceSelectedText": "Sustituir texto seleccionado",
     "matchingRegularExpression": "expresión regular coincidente",
+    "chatSettings": "Configuración de chat",
+    "toggleRegexp": "Conmutar expresión regular",
 }

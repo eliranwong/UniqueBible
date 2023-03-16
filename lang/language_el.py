@@ -1059,4 +1059,6 @@ translation = {
     "bibleChat": "Συνομιλία",
     "replaceSelectedText": "Αντικατάσταση επιλεγμένου κειμένου",
     "matchingRegularExpression": "αντιστοίχιση κανονικής έκφρασης",
+    "chatSettings": "Ρυθμίσεις συνομιλίας",
+    "toggleRegexp": "Εναλλαγή κανονικής έκφρασης",
 }

@@ -132,10 +132,12 @@ class Database:
             self.connection.commit()
 
     def search(self, title, content):
-        # with regular expression
-        self.cursor.execute('SELECT * FROM data WHERE title REGEXP ? AND content REGEXP ?', (title, content))
-        # without regular expression
-        #self.cursor.execute('SELECT * FROM data WHERE title LIKE ? AND content LIKE ?', ('%{}%'.format(title), '%{}%'.format(content)))
+        if config.chatGPTApiSearchRegexp:
+            # with regular expression
+            self.cursor.execute('SELECT * FROM data WHERE title REGEXP ? AND content REGEXP ?', (title, content))
+        else:
+            # without regular expression
+            self.cursor.execute('SELECT * FROM data WHERE title LIKE ? AND content LIKE ?', ('%{}%'.format(title), '%{}%'.format(content)))
         return self.cursor.fetchall()
 
     def delete(self, id):
@@ -257,7 +259,6 @@ class ChatGPTAPI(QWidget):
 
         #widgets on the right
         self.searchInput = QLineEdit()
-        self.searchInput.setToolTip(config.thisTranslation["matchingRegularExpression"])
         self.searchInput.setClearButtonEnabled(True)
         self.replaceInput = QLineEdit()
         self.replaceInput.setClearButtonEnabled(True)
@@ -360,10 +361,10 @@ class ChatGPTAPI(QWidget):
         searchTitleButton = QPushButton(config.thisTranslation["searchTitle"])
         searchContentButton = QPushButton(config.thisTranslation["searchContent"])
         self.searchTitle = QLineEdit()
-        self.searchTitle.setToolTip(config.thisTranslation["matchingRegularExpression"])
+        self.searchTitle.setClearButtonEnabled(True)
         self.searchTitle.setPlaceholderText(config.thisTranslation["searchTitleHere"])
         self.searchContent = QLineEdit()
-        self.searchContent.setToolTip(config.thisTranslation["matchingRegularExpression"])
+        self.searchContent.setClearButtonEnabled(True)
         self.searchContent.setPlaceholderText(config.thisTranslation["searchContentHere"])
         self.listView = QListView()
         self.listModel = QStandardItemModel()
@@ -412,16 +413,44 @@ class ChatGPTAPI(QWidget):
         self.searchInput.returnPressed.connect(self.searchChatContent)
         self.replaceInput.returnPressed.connect(self.replaceSelectedText)
 
-        self.setFontSize()
+        self.updateSearchToolTips()
+
+    def setFontSize(self, index=None):
+        if index is not None:
+            config.chatGPTFontSize = index + 1
+        # content view
+        font = self.contentView.font()
+        font.setPointSize(config.chatGPTFontSize)
+        self.contentView.setFont(font)
+        # list view
+        font = self.listView.font()
+        font.setPointSize(config.chatGPTFontSize)
+        self.listView.setFont(font)
+
+    def updateSearchToolTips(self):
+        if config.chatGPTApiSearchRegexp:
+            self.searchTitle.setToolTip(config.thisTranslation["matchingRegularExpression"])
+            self.searchContent.setToolTip(config.thisTranslation["matchingRegularExpression"])
+            self.searchInput.setToolTip(config.thisTranslation["matchingRegularExpression"])
+        else:
+            self.searchTitle.setToolTip("")
+            self.searchContent.setToolTip("")
+            self.searchInput.setToolTip("")
 
     def searchChatContent(self):
-        search = QRegularExpression(self.searchInput.text())
+        searchInput = self.searchInput.text()
+        search = QRegularExpression(searchInput) if config.chatGPTApiSearchRegexp else searchInput
         self.contentView.find(search)
 
     def replaceSelectedText(self):
         currentSelectedText = self.contentView.textCursor().selectedText()
         if not currentSelectedText == "":
-            replace = self.replaceInput.text()
+            searchInput = self.searchInput.text()
+            replaceInput = self.replaceInput.text()
+            if searchInput:
+                replace = re.sub(searchInput, replaceInput, currentSelectedText) if config.chatGPTApiSearchRegexp else currentSelectedText.replace(searchInput, replaceInput)
+            else:
+                replace = self.replaceInput.text()
             self.contentView.insertPlainText(replace)
 
     def searchReplaceAll(self):
@@ -429,7 +458,7 @@ class ChatGPTAPI(QWidget):
         if search:
             replace = self.replaceInput.text()
             content = self.contentView.toPlainText()
-            newContent = re.sub(search, replace, content, flags=re.M)
+            newContent = re.sub(search, replace, content, flags=re.M) if config.chatGPTApiSearchRegexp else content.replace(search, replace)
             self.contentView.setPlainText(newContent)
 
     def multilineButtonClicked(self):
@@ -443,18 +472,6 @@ class ChatGPTAPI(QWidget):
             self.userInput.setText(self.userInputMultiline.toPlainText())
             self.userInput.show()
             self.multilineButton.setText("+")
-
-    def setFontSize(self, index=None):
-        if index is not None:
-            config.chatGPTFontSize = index + 1
-        # content view
-        font = self.contentView.font()
-        font.setPointSize(config.chatGPTFontSize)
-        self.contentView.setFont(font)
-        # list view
-        font = self.listView.font()
-        font.setPointSize(config.chatGPTFontSize)
-        self.listView.setFont(font)
 
     def showApiDialog(self):
         dialog = ApiDialog(self)
@@ -714,9 +731,13 @@ class MainWindow(QMainWindow):
 
         file_menu.addSeparator()
 
-        openSettings = QAction(config.thisTranslation["configure"], self)
+        openSettings = QAction(config.thisTranslation["chatSettings"], self)
         openSettings.triggered.connect(self.chatGPT.showApiDialog)
         file_menu.addAction(openSettings)
+
+        new_action = QAction(config.thisTranslation["toggleRegexp"], self)
+        new_action.triggered.connect(self.toggleRegexp)
+        file_menu.addAction(new_action)
 
         file_menu.addSeparator()
 
@@ -731,6 +752,11 @@ class MainWindow(QMainWindow):
         self.resize(QGuiApplication.primaryScreen().availableSize() * 3 / 4)
         self.show()
         self.chatGPT.setFontSize()
+
+    def toggleRegexp(self):
+        config.chatGPTApiSearchRegexp = not config.chatGPTApiSearchRegexp
+        self.chatGPT.updateSearchToolTips()
+        QMessageBox.information(self, "ChatGPT-GUI", f"Regular expression for search and replace is {'enabled' if config.chatGPTApiSearchRegexp else 'disabled'}!")
 
 #config.mainWindow.chatGPTapi = ChatGPTAPI(config.mainWindow)
 #config.mainWindow.chatGPTapi.show()
