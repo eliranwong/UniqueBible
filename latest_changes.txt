@@ -1,3 +1,6 @@
+Changes in 34.49:
+* fixed "Bible Chat" file dialog
+
 Changes in 34.48:
 * added option to toggle regular expression search in "Bible Chat".
 
