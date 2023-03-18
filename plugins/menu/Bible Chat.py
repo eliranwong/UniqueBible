@@ -1,4 +1,4 @@
-import config, os, re, openai, sqlite3, webbrowser, shutil
+import config, os, re, openai, sqlite3, webbrowser, shutil, platform
 from gtts import gTTS
 if "Pocketsphinx" in config.enabled:
     from pocketsphinx import LiveSpeech, get_model_path
