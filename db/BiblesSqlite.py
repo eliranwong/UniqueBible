@@ -707,7 +707,7 @@ input.addEventListener('keyup', function(event) {0}
         noteVerseList = []
         highlightDict = {}
         # add tts indicator
-        if config.displayVerseAudioBibleIcon:
+        if config.displayVerseAudioBibleIcon and source == "main":
             mp3text = FileUtil.getMP3TextFile(text)
             audioFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", mp3text, "default", "{0}_{1}".format(b, c))
             if os.path.isdir(audioFolder):
@@ -750,9 +750,10 @@ input.addEventListener('keyup', function(event) {0}
                 chapter += '<ref onclick="hiV({0},{1},{2},\'ul1\')" class="oul1">&#9683;</ref>'.format(b, c, v)
             chapter += '<vid id="v{0}.{1}.{2}" onclick="luV({2})" onmouseover="qV({2})" ondblclick="mV({2})">{2}</vid> '.format(b, c, v)
             # add read verse icon
-            readVerse = Bible.insertReadBibleLink(text, b, c, v)
-            if readVerse:
-                chapter += readVerse
+            if source == "main":
+                readVerse = Bible.insertReadBibleLink(text, b, c, v)
+                if readVerse:
+                    chapter += readVerse
             # add note indicator
             if v in noteVerseList:
                 chapter += '<ref onclick="nV({0})">&#9998;</ref> '.format(v)
@@ -1186,7 +1187,7 @@ class Bible:
             print("Verse table does not exist")
             return (b, c, v, "")
 
-    def readFormattedChapter(self, verse):
+    def readFormattedChapter(self, verse, source):
         b, c, v, *_ = verse
         biblesSqlite = BiblesSqlite()
         chapter = "<h2>"
@@ -1198,7 +1199,7 @@ class Bible:
         # add tts indicator
         mp3text = FileUtil.getMP3TextFile(self.text)
         audioFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", mp3text, "default", "{0}_{1}".format(b, c))
-        if os.path.isdir(audioFolder):
+        if source == "main" and config.displayVerseAudioBibleIcon and os.path.isdir(audioFolder):
             chapter += """ <ref onclick="rC('{0}')">{1}</ref>""".format(mp3text, config.audioBibleIcon)
         # add note indicator
         if config.showUserNoteIndicator and not config.enableHttpServer:
@@ -1206,7 +1207,8 @@ class Bible:
             self.thisVerseNoteList = noteSqlite.getChapterVerseList(b, c)
             if noteSqlite.isChapterNote(b, c):
                 chapter += ' <ref onclick="nC()">&#9998;</ref>'
-        chapter += Bible.insertReadBibleLink(self.text, b, c)
+        if source == "main":
+            chapter += Bible.insertReadBibleLink(self.text, b, c)
         chapter += "</h2>"
         query = "SELECT Scripture FROM Bible WHERE Book=? AND Chapter=?"
         self.cursor.execute(query, verse[0:2])

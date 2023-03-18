@@ -1373,7 +1373,7 @@ class TextCommandParser:
         #    b, c, v, content = bibleSqlite.readTextVerse(b, c, v)
         bibleSqlite = Bible(text)
         if text in formattedBibles and text not in ("OHGB", "OHGBi", "LXX") and config.readFormattedBibles:
-            content = bibleSqlite.readFormattedChapter(verse)
+            content = bibleSqlite.readFormattedChapter(verse, source)
         else:
             # use plain bibles database when corresponding formatted version is not available
             language = bibleSqlite.getLanguage()
