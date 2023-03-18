@@ -1061,4 +1061,5 @@ translation = {
     "matchingRegularExpression": "匹配正则表达式",
     "chatSettings": "交谈设置",
     "toggleRegexp": "切换正则表达式",
+    "databaseDirectory": "数据库目录",
 }

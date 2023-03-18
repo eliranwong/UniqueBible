@@ -1061,4 +1061,5 @@ translation = {
     "matchingRegularExpression": "matching regular expression",
     "chatSettings": "Chat Settings",
     "toggleRegexp": "Toggle Regular Expression",
+    "databaseDirectory": "Database Directory",
 }

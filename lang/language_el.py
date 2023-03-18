@@ -1061,4 +1061,5 @@ translation = {
     "matchingRegularExpression": "αντιστοίχιση κανονικής έκφρασης",
     "chatSettings": "Ρυθμίσεις συνομιλίας",
     "toggleRegexp": "Εναλλαγή κανονικής έκφρασης",
+    "databaseDirectory": "Κατάλογος βάσης δεδομένων",
 }

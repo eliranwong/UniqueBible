@@ -1061,4 +1061,5 @@ translation = {
     "matchingRegularExpression": "一致する正規表現",
     "chatSettings": "チャット設定",
     "toggleRegexp": "正規表現のトグル",
+    "databaseDirectory": "データベース・ディレクトリー",
 }

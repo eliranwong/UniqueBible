@@ -1061,4 +1061,5 @@ translation = {
     "matchingRegularExpression": "Übereinstimmenden regulären Ausdruck",
     "chatSettings": "Chateinstellungen",
     "toggleRegexp": "Regulären Ausdruck umschalten",
+    "databaseDirectory": "Datenbankverzeichnis",
 }

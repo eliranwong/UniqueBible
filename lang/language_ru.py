@@ -1061,4 +1061,5 @@ translation = {
     "matchingRegularExpression": "сопоставление регулярного выражения",
     "chatSettings": "Параметры чата",
     "toggleRegexp": "Переключить регулярное выражение",
+    "databaseDirectory": "Каталог базы данных",
 }

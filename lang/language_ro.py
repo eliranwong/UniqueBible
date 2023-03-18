@@ -1061,4 +1061,5 @@ translation = {
     "matchingRegularExpression": "potrivire regulată de expresie",
     "chatSettings": "Setări de chat",
     "toggleRegexp": "Comută expresia regulată",
+    "databaseDirectory": "Director de baze",
 }

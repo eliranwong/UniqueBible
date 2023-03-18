@@ -1061,4 +1061,5 @@ translation = {
     "matchingRegularExpression": "സാധാരണ എക്സ്പ്രഷന് ചേര്ക്കുക",
     "chatSettings": "Chat സജ്ജീകരണങ്ങള്",
     "toggleRegexp": "സാധാരണ എക്സ്പ്രഷന് ടോഗിള് ചെയ്യുക",
+    "databaseDirectory": "ഡാറ്റാബേസ് തട്ട്",
 }

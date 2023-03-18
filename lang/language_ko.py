@@ -1061,4 +1061,5 @@ translation = {
     "matchingRegularExpression": "일반 표현식 일치",
     "chatSettings": "대화 설정",
     "toggleRegexp": "정규식 토글",
+    "databaseDirectory": "데이터베이스 디렉토리",
 }
