@@ -185,6 +185,7 @@ class ChatGPTAPI(QWidget):
         self.database = Database(filePath)
         self.loadData()
         self.updateTitle(filePath)
+        self.newData()
 
     def newDatabase(self, copyExistingDatabase=False):
         # Show a file dialog to get the file path to save
@@ -219,6 +220,7 @@ class ChatGPTAPI(QWidget):
             self.database = Database(filePath)
             self.loadData()
             self.updateTitle(filePath)
+            self.newData()
 
     def updateTitle(self, filePath=""):
         if not filePath:

@@ -1,3 +1,7 @@
+Changes in 34.52:
+* Improved "Bible Chat":
+    - now open new chat after database file is changed.
+
 Changes in 34.51:
 * Changed audio icon display
 
