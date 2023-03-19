@@ -1,5 +1,12 @@
-Changes in 34.51:
+Changes in 34.53:
 * Support multiple predefined contexts in "Bible Chat"
+
+Changes in 34.52:
+* Improved "Bible Chat":
+    - now open new chat after database file is changed.
+
+Changes in 34.51:
+* Changed audio icon display
 
 Changes in 34.50:
 * Improved "Bible Chat"

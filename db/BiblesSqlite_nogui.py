@@ -1052,7 +1052,7 @@ class Bible:
             print("Verse table does not exist")
             return (b, c, v, "")
 
-    def readFormattedChapter(self, verse):
+    def readFormattedChapter(self, verse, source):
         b, c, v, *_ = verse
         biblesSqlite = BiblesSqlite()
         chapter = "<h2>"
