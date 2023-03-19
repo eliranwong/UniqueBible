@@ -108,6 +108,6 @@ UniqueBibleApp.bat
 UniqueBibleAppTerminal.bat
 new.mp3
 config.py_init
-plugins/chatGPT/to_traditional_Chinese.py
+plugins/chatGPT*
 iconfile.icns
 tmpicns.rsrc

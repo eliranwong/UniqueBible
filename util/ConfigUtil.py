@@ -528,6 +528,9 @@ class ConfigUtil:
         setConfig("openaiApiOrganization", """
         # OpenAI api organization""",
         "")
+        setConfig("chatGPTApiModel", """
+        # Chat GPT API model""",
+        "gpt-3.5-turbo")
         setConfig("chatGPTApiMaxTokens", """
         # The maximum number of tokens to generate in the completion.
         # The token count of your prompt plus max_tokens cannot exceed the model's context length. Most models have a context length of 2048 tokens (except for the newest models, which support 4096).""",
@@ -543,6 +546,9 @@ class ConfigUtil:
         setConfig("chatGPTApiLastChatDatabase", """
         # The latest chat database file that was opened.""",
         "")
+        setConfig("chatGPTApiPredefinedContext", """
+        # Set a predefined context""",
+        "[none]")
         setConfig("chatGPTApiContext", """
         # Set a context for chatGPT conversations""",
         "about the bible")

@@ -1062,4 +1062,5 @@ translation = {
     "chatSettings": "대화 설정",
     "toggleRegexp": "정규식 토글",
     "databaseDirectory": "데이터베이스 디렉토리",
+    "predefinedContext": "사전 정의된 컨텍스트",
 }

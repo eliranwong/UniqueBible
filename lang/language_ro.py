@@ -1062,4 +1062,5 @@ translation = {
     "chatSettings": "Setări de chat",
     "toggleRegexp": "Comută expresia regulată",
     "databaseDirectory": "Director de baze",
+    "predefinedContext": "Context predefinit",
 }

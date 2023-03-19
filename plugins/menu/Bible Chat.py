@@ -56,9 +56,29 @@ class ApiDialog(QDialog):
 
         self.apiKeyEdit = QLineEdit(config.openaiApiKey)
         self.orgEdit = QLineEdit(config.openaiApiOrganization)
+        self.apiModelBox = QComboBox()
+        initialIndex = 0
+        index = 0
+        for key in ("gpt-3.5-turbo", "gpt-4"):
+            self.apiModelBox.addItem(key)
+            if key == config.chatGPTApiModel:
+                initialIndex = index
+            index += 1
+        self.apiModelBox.setCurrentIndex(initialIndex)
         self.maxTokenEdit = QLineEdit(str(config.chatGPTApiMaxTokens))
         self.maxTokenEdit.setToolTip("The maximum number of tokens to generate in the completion.\nThe token count of your prompt plus max_tokens cannot exceed the model's context length. Most models have a context length of 2048 tokens (except for the newest models, which support 4096).")
         self.contextEdit = QLineEdit(config.chatGPTApiContext)
+        self.predefinedContextBox = QComboBox()
+        initialIndex = 0
+        index = 0
+        for key, value in config.predefinedContexts.items():
+            self.predefinedContextBox.addItem(key)
+            self.predefinedContextBox.setItemData(self.predefinedContextBox.count()-1, value, role=Qt.ToolTipRole)
+            if key == config.chatGPTApiPredefinedContext:
+                initialIndex = index
+            index += 1
+        self.predefinedContextBox.currentIndexChanged.connect(self.predefinedContextBoxChanged)
+        self.predefinedContextBox.setCurrentIndex(initialIndex)
         self.languageBox = QComboBox()
         initialIndex = 0
         index = 0
@@ -75,13 +95,16 @@ class ApiDialog(QDialog):
 
         layout = QFormLayout()
         # https://platform.openai.com/account/api-keys
+        predefinedContext = config.thisTranslation["predefinedContext"]
         context = config.thisTranslation["chatContext"]
         language = config.thisTranslation["menu_language"]
         required = config.thisTranslation["required"]
         optional = config.thisTranslation["optional"]
         layout.addRow(f"OpenAI API Key [{required}]:", self.apiKeyEdit)
         layout.addRow(f"Organization ID [{optional}]:", self.orgEdit)
+        #layout.addRow(f"API Model [{required}]:", self.apiModelBox)
         layout.addRow(f"Max Token [{required}]:", self.maxTokenEdit)
+        layout.addRow(f"{predefinedContext} [{optional}]:", self.predefinedContextBox)
         layout.addRow(f"{context} [{optional}]:", self.contextEdit)
         layout.addRow(f"{language} [{optional}]:", self.languageBox)
         layout.addWidget(buttonBox)
@@ -93,6 +116,17 @@ class ApiDialog(QDialog):
 
     def org(self):
         return self.orgEdit.text().strip()
+
+    def predefinedContextBoxChanged(self, index):
+        self.contextEdit.setDisabled(True) if index else self.contextEdit.setEnabled(True)
+
+    def predefinedContext(self):
+        return self.predefinedContextBox.currentText()
+        #return self.predefinedContextBox.currentData(Qt.ToolTipRole)
+
+    def apiModel(self):
+        #return self.apiModelBox.currentText()
+        return "gpt-3.5-turbo"
 
     def max_token(self):
         return self.maxTokenEdit.text().strip()
@@ -236,6 +270,10 @@ class ChatGPTAPI(QWidget):
         self.recognitionThread.phrase_recognized.connect(self.onPhraseRecognized)
 
     def runPlugins(self):
+        # modify config.predefinedContexts and config.chatGPTTransformers via plugins
+        config.predefinedContexts = {
+            "[none]": "",
+        }
         config.chatGPTTransformers = []
         pluginFolder = os.path.join(os.getcwd(), "plugins", "chatGPT")
         for plugin in FileUtil.fileNamesWithoutExtension(pluginFolder, "py"):
@@ -485,6 +523,8 @@ class ChatGPTAPI(QWidget):
                 config.chatGPTApiMaxTokens = int(dialog.max_token())
             except:
                 pass
+            config.chatGPTApiModel = dialog.apiModel()
+            config.chatGPTApiPredefinedContext = dialog.predefinedContext()
             config.chatGPTApiContext = dialog.context()
             config.chatGPTApiAudioLanguage = dialog.language()
             self.newData()
@@ -601,8 +641,9 @@ Follow the following steps:
         self.messages = [
             {"role": "system", "content" : "You’re a kind helpful assistant"}
         ]
-        if config.chatGPTApiContext:
-            self.messages.append({"role": "assistant", "content" : config.chatGPTApiContext})
+        context = config.chatGPTApiContext if config.chatGPTApiPredefinedContext == "[none]" else config.predefinedContexts[config.chatGPTApiPredefinedContext]
+        if context:
+            self.messages.append({"role": "assistant", "content": context})
 
     def print(self, text):
         self.contentView.appendPlainText(f"\n{text}" if self.contentView.toPlainText() else text)

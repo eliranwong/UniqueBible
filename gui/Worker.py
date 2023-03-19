@@ -92,7 +92,7 @@ class ChatGPTResponse:
         responses = ""
         try:
             completion = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
+                model=config.chatGPTApiModel,
                 messages=messages,
                 max_tokens=config.chatGPTApiMaxTokens,
                 temperature=config.chatGPTApiTemperature,

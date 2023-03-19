@@ -1062,4 +1062,5 @@ translation = {
     "chatSettings": "Параметры чата",
     "toggleRegexp": "Переключить регулярное выражение",
     "databaseDirectory": "Каталог базы данных",
+    "predefinedContext": "Предопределенный контекст",
 }

@@ -1062,4 +1062,5 @@ translation = {
     "chatSettings": "會談設定",
     "toggleRegexp": "切換正規表示式",
     "databaseDirectory": "資料庫目錄",
+    "predefinedContext": "預設環境定義",
 }

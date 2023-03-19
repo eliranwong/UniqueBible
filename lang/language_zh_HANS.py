@@ -1062,4 +1062,5 @@ translation = {
     "chatSettings": "交谈设置",
     "toggleRegexp": "切换正则表达式",
     "databaseDirectory": "数据库目录",
+    "predefinedContext": "预定义的上下文",
 }

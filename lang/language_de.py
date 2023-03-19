@@ -1062,4 +1062,5 @@ translation = {
     "chatSettings": "Chateinstellungen",
     "toggleRegexp": "Regulären Ausdruck umschalten",
     "databaseDirectory": "Datenbankverzeichnis",
+    "predefinedContext": "Vordefinierter Kontext",
 }

@@ -1062,4 +1062,5 @@ translation = {
     "chatSettings": "チャット設定",
     "toggleRegexp": "正規表現のトグル",
     "databaseDirectory": "データベース・ディレクトリー",
+    "predefinedContext": "事前定義コンテキスト",
 }

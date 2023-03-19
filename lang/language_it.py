@@ -1062,4 +1062,5 @@ translation = {
     "chatSettings": "Impostazioni di chat",
     "toggleRegexp": "Espressione Regolare Toggle",
     "databaseDirectory": "Directory del database",
+    "predefinedContext": "Contesto Predefinito",
 }
