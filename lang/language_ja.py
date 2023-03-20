@@ -1045,7 +1045,7 @@ translation = {
     "print": "印刷",
     "configure": "構成",
     "exit": "出口",
-    "displayVerseAudioIcons": "Verse オーディオ・アイコンの表示",
+    "displayChapterVerseAudioIcons": "章 Verse オーディオ・アイコンの表示",
     "newDatabase": "新規データベース",
     "openDatabase": "オープン・データベース",
     "saveDatabaseAs": "データベースの別名保存 ...",

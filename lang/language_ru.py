@@ -1045,7 +1045,7 @@ translation = {
     "print": "Печать",
     "configure": "Конфигурировать",
     "exit": "Выход",
-    "displayVerseAudioIcons": "Показать звуковые значки Verse",
+    "displayChapterVerseAudioIcons": "Показать звуковые значки глава Verse",
     "newDatabase": "Создать базу данных",
     "openDatabase": "Открыть базу данных",
     "saveDatabaseAs": "Сохранить базу данных как ...",

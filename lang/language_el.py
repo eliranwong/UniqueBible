@@ -1045,7 +1045,7 @@ translation = {
     "print": "Εκτύπωση:",
     "configure": "Ρύθμιση:",
     "exit": "Έξοδος:",
-    "displayVerseAudioIcons": "Εμφάνιση Εικονίδια ήχου Verse",
+    "displayChapterVerseAudioIcons": "Εμφάνιση Εικονίδια ήχου κεφάλαιο Verse",
     "newDatabase": "Νέα βάση δεδομένων",
     "openDatabase": "Άνοιγμα βάσης δεδομένων",
     "saveDatabaseAs": "Αποθήκευση βάσης δεδομένων ως ...",

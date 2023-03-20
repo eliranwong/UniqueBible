@@ -1045,7 +1045,7 @@ translation = {
     "print": "Imprimir",
     "configure": "Configurar",
     "exit": "Salida",
-    "displayVerseAudioIcons": "Mostrar iconos de audio de verso",
+    "displayChapterVerseAudioIcons": "Mostrar iconos de audio de capítulo verso",
     "newDatabase": "Base de datos",
     "openDatabase": "Open Database",
     "saveDatabaseAs": "Guardar base de datos como ...",

@@ -1045,7 +1045,7 @@ translation = {
     "print": "인쇄",
     "configure": "구성",
     "exit": "종료",
-    "displayVerseAudioIcons": "Verse 오디오 아이콘 표시",
+    "displayChapterVerseAudioIcons": "장 Verse 오디오 아이콘 표시",
     "newDatabase": "새 데이터베이스",
     "openDatabase": "데이터베이스 열기",
     "saveDatabaseAs": "데이터베이스 저장 ...",
