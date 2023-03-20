@@ -9,12 +9,12 @@ if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt, QThread, Signal, QRegularExpression
     from PySide6.QtPrintSupport import QPrinter, QPrintDialog
     from PySide6.QtGui import QStandardItemModel, QStandardItem, QGuiApplication, QFontMetrics, QAction, QTextDocument
-    from PySide6.QtWidgets import QMainWindow, QWidget, QDialog, QFileDialog, QDialogButtonBox, QFormLayout, QLabel, QMessageBox, QCheckBox, QPlainTextEdit, QProgressBar, QPushButton, QListView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
+    from PySide6.QtWidgets import QCompleter, QMainWindow, QWidget, QDialog, QFileDialog, QDialogButtonBox, QFormLayout, QLabel, QMessageBox, QCheckBox, QPlainTextEdit, QProgressBar, QPushButton, QListView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
 else:
     from qtpy.QtCore import Qt, QThread, Signal, QRegularExpression
     from qtpy.QtPrintSupport import QPrinter, QPrintDialog
     from qtpy.QtGui import QStandardItemModel, QStandardItem, QGuiApplication, QFontMetrics, QTextDocument
-    from qtpy.QtWidgets import QAction, QMainWindow, QWidget, QDialog, QFileDialog, QDialogButtonBox, QFormLayout, QLabel, QMessageBox, QCheckBox, QPlainTextEdit, QProgressBar, QPushButton, QListView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
+    from qtpy.QtWidgets import QCompleter, QAction, QMainWindow, QWidget, QDialog, QFileDialog, QDialogButtonBox, QFormLayout, QLabel, QMessageBox, QCheckBox, QPlainTextEdit, QProgressBar, QPushButton, QListView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
 from gui.Worker import ChatGPTResponse, OpenAIImage
 
 
@@ -272,10 +272,11 @@ class ChatGPTAPI(QWidget):
         self.recognitionThread.phrase_recognized.connect(self.onPhraseRecognized)
 
     def runPlugins(self):
-        # modify config.predefinedContexts and config.chatGPTTransformers via plugins
+        # users can modify config.predefinedContexts, config.inputSuggestions and config.chatGPTTransformers via plugins
         config.predefinedContexts = {
             "[none]": "",
         }
+        config.inputSuggestions = []
         config.chatGPTTransformers = []
         pluginFolder = os.path.join(os.getcwd(), "plugins", "chatGPT")
         for plugin in FileUtil.fileNamesWithoutExtension(pluginFolder, "py"):
@@ -303,6 +304,9 @@ class ChatGPTAPI(QWidget):
         self.replaceInput = QLineEdit()
         self.replaceInput.setClearButtonEnabled(True)
         self.userInput = QLineEdit()
+        completer = QCompleter(config.inputSuggestions)
+        completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        self.userInput.setCompleter(completer)
         self.userInput.setPlaceholderText(config.thisTranslation["messageHere"])
         self.userInput.mousePressEvent = lambda _ : self.userInput.selectAll()
         self.userInput.setClearButtonEnabled(True)
