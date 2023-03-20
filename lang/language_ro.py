@@ -1045,7 +1045,7 @@ translation = {
     "print": "Tipărire",
     "configure": "Configurează",
     "exit": "Ieșire",
-    "displayVerseAudioIcons": "Afișează pictogramele audio Verset",
+    "displayChapterVerseAudioIcons": "Afișează pictogramele audio capitol verset",
     "newDatabase": "Noua baza de date",
     "openDatabase": "Deschide baza de date",
     "saveDatabaseAs": "Salvează baza de date ca ...",

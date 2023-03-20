@@ -1045,7 +1045,7 @@ translation = {
     "print": "Imprimer",
     "configure": "Configurer",
     "exit": "Quitter",
-    "displayVerseAudioIcons": "Afficher les icônes audio Verse",
+    "displayChapterVerseAudioIcons": "Afficher les icônes audio chapitre verse",
     "newDatabase": "Nouvelle base de données",
     "openDatabase": "Ouvrir base de données",
     "saveDatabaseAs": "Enregistrer la base de données sous ...",

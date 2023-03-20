@@ -1045,7 +1045,7 @@ translation = {
     "print": "列印",
     "configure": "配置",
     "exit": "出口",
-    "displayVerseAudioIcons": "顯示 Verse 音訊圖示",
+    "displayChapterVerseAudioIcons": "顯示 Chapter Verse 音訊圖示",
     "newDatabase": "新建資料庫",
     "openDatabase": "開啟資料庫",
     "saveDatabaseAs": "將資料庫另存為 ...",

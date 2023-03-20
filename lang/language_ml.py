@@ -1045,7 +1045,7 @@ translation = {
     "print": "പ്രിന്റ് ചെയ്യുക",
     "configure": "ക്രമീകരിക്കുക",
     "exit": "പ്രദര്ശിപ്പിക്കുക",
-    "displayVerseAudioIcons": "വെഴ്സ് ഓഡിയോ ചിന്ത കാണിക്കുക",
+    "displayChapterVerseAudioIcons": "അദ്ധ്യായം വെഴ്സ് ഓഡിയോ ചിന്ത കാണിക്കുക",
     "newDatabase": "പുതിയ ഡാറ്റാബേസ്",
     "openDatabase": "ഡാറ്റാബേസ് തുറക്ക്",
     "saveDatabaseAs": "ഡാറ്റാബേസ് സംരക്ഷിക്കുക ...",
