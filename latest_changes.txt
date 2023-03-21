@@ -1,3 +1,6 @@
+Changes in 34.56:
+* Enhanced automation via Bible Chat plugins.
+
 Changes in 34.55:
 * Change displayVerseAudioIcons text to displayChapterVerseAudioIcons
 

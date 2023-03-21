@@ -187,6 +187,7 @@ class ChatGPTAPI(QWidget):
 
     def __init__(self, parent):
         super().__init__()
+        config.chatGPTApi = self
         self.parent = parent
         # required
         openai.api_key = os.environ["OPENAI_API_KEY"] = config.openaiApiKey
