@@ -1063,4 +1063,5 @@ translation = {
     "toggleRegexp": "സാധാരണ എക്സ്പ്രഷന് ടോഗിള് ചെയ്യുക",
     "databaseDirectory": "ഡാറ്റാബേസ് തട്ട്",
     "predefinedContext": "à '- à' - à 'à' - à '",
+    "toggleMultilineInput": "മള്ള് വരി ഉപയോക്താവിന്റെ ഇന്പുട്ട് ടോഗിള് ചെയ്യുക",
 }

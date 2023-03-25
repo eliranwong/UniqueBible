@@ -1063,4 +1063,5 @@ translation = {
     "toggleRegexp": "Basculement de l'expression régulière",
     "databaseDirectory": "Répertoire base de données",
     "predefinedContext": "Contexte prédéfini",
+    "toggleMultilineInput": "Basculement de l'entrée utilisateur multiligne",
 }

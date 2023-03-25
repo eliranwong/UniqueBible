@@ -1063,4 +1063,5 @@ translation = {
     "toggleRegexp": "Переключить регулярное выражение",
     "databaseDirectory": "Каталог базы данных",
     "predefinedContext": "Предопределенный контекст",
+    "toggleMultilineInput": "Включить/выключить многострочный ввод пользователя",
 }

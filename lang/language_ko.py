@@ -1063,4 +1063,5 @@ translation = {
     "toggleRegexp": "정규식 토글",
     "databaseDirectory": "데이터베이스 디렉토리",
     "predefinedContext": "사전 정의된 컨텍스트",
+    "toggleMultilineInput": "다중 행 사용자 입력 토글",
 }

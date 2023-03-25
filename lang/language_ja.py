@@ -1063,4 +1063,5 @@ translation = {
     "toggleRegexp": "正規表現のトグル",
     "databaseDirectory": "データベース・ディレクトリー",
     "predefinedContext": "事前定義コンテキスト",
+    "toggleMultilineInput": "複数行ユーザー入力の切り替え",
 }

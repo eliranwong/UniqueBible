@@ -1063,4 +1063,5 @@ translation = {
     "toggleRegexp": "Comută expresia regulată",
     "databaseDirectory": "Director de baze",
     "predefinedContext": "Context predefinit",
+    "toggleMultilineInput": "Comutare de intrare utilizator multilin",
 }

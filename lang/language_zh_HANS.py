@@ -1063,4 +1063,5 @@ translation = {
     "toggleRegexp": "切换正则表达式",
     "databaseDirectory": "数据库目录",
     "predefinedContext": "预定义的上下文",
+    "toggleMultilineInput": "切换多行用户输入",
 }

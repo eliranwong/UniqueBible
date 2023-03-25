@@ -1063,4 +1063,5 @@ translation = {
     "toggleRegexp": "Regulären Ausdruck umschalten",
     "databaseDirectory": "Datenbankverzeichnis",
     "predefinedContext": "Vordefinierter Kontext",
+    "toggleMultilineInput": "Mehrzeilige Benutzereingabe umschalten",
 }

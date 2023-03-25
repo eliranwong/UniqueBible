@@ -1063,4 +1063,5 @@ translation = {
     "toggleRegexp": "नियमित एक्सप्रेशन टॉगल करें",
     "databaseDirectory": "डाटाबेस डिरेक्ट्री",
     "predefinedContext": "पूर्वपरिभाषित संदर्भ",
+    "toggleMultilineInput": "मल्टीलाइन उपयोक्ता इनपुट टॉगल करें",
 }

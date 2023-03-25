@@ -1,4 +1,4 @@
-import config, os, re, openai, sqlite3, webbrowser, shutil, platform
+import config, os, re, openai, sqlite3, webbrowser, shutil, platform, time
 from gtts import gTTS
 if "Pocketsphinx" in config.enabled:
     from pocketsphinx import LiveSpeech, get_model_path
@@ -338,7 +338,7 @@ class ChatGPTAPI(QWidget):
         self.apiModels.addItems([config.thisTranslation["chat"], config.thisTranslation["image"]])
         self.apiModels.setCurrentIndex(0)
         self.apiModel = 0
-        newButton = QPushButton(config.thisTranslation["new"])
+        self.newButton = QPushButton(config.thisTranslation["new"])
         saveButton = QPushButton(config.thisTranslation["save"])
         self.editableCheckbox = QCheckBox(config.thisTranslation["editable"])
         self.editableCheckbox.setCheckState(Qt.Unchecked)
@@ -395,8 +395,10 @@ class ChatGPTAPI(QWidget):
         rtControlLayout.addWidget(self.fontSize)
         rtControlLayout.addWidget(self.editableCheckbox)
         rtControlLayout.addWidget(self.audioCheckbox)
+        if config.chatGPTApiNoOfChoices == 1:
+            self.audioCheckbox.hide()
         rtButtonLayout = QHBoxLayout()
-        rtButtonLayout.addWidget(newButton)
+        rtButtonLayout.addWidget(self.newButton)
         rtButtonLayout.addWidget(saveButton)
         layout000Rt.addLayout(rtControlLayout)
         layout000Rt.addLayout(rtButtonLayout)
@@ -438,7 +440,7 @@ class ChatGPTAPI(QWidget):
         self.multilineButton.clicked.connect(self.multilineButtonClicked)
         sendButton.clicked.connect(self.sendMessage)
         saveButton.clicked.connect(self.saveData)
-        newButton.clicked.connect(self.newData)
+        self.newButton.clicked.connect(self.newData)
         searchTitleButton.clicked.connect(self.searchData)
         searchContentButton.clicked.connect(self.searchData)
         self.searchTitle.textChanged.connect(self.searchData)
@@ -517,6 +519,10 @@ class ChatGPTAPI(QWidget):
             self.userInput.setText(self.userInputMultiline.toPlainText())
             self.userInput.show()
             self.multilineButton.setText("+")
+        self.setUserInputFocus()
+
+    def setUserInputFocus(self):
+        self.userInput.setFocus() if self.userInput.isVisible() else self.userInputMultiline.setFocus()
 
     def showApiDialog(self):
         dialog = ApiDialog(self)
@@ -544,6 +550,7 @@ class ChatGPTAPI(QWidget):
 
     def updateChoiceNumber(self, index):
         config.chatGPTApiNoOfChoices = index + 1
+        self.audioCheckbox.hide() if config.chatGPTApiNoOfChoices == 1 else self.audioCheckbox.show()
 
     def onPhraseRecognized(self, phrase):
         self.userInput.setText(f"{self.userInput.text()} {phrase}")
@@ -618,14 +625,14 @@ Follow the following steps:
 1) Register and get your OpenAI Key at https://platform.openai.com/account/api-keys
 2) Click the "Settings" button below and enter your own OpenAI API key""")
         self.resetMessages()
-        self.userInput.setFocus()
+        self.setUserInputFocus()
 
     def selectData(self, index):
         data = index.data(Qt.UserRole)
         self.contentID = data[0]
         content = data[2]
         self.resetContent(content)
-        self.userInput.setFocus()
+        self.setUserInputFocus()
 
     def printData(self):
         # Get the printer and print dialog
@@ -648,6 +655,8 @@ Follow the following steps:
         self.messages = [
             {"role": "system", "content" : "You’re a kind helpful assistant"}
         ]
+        if not config.chatGPTApiPredefinedContext in config.predefinedContexts:
+            config.chatGPTApiPredefinedContext = "[none]"
         context = config.chatGPTApiContext if config.chatGPTApiPredefinedContext == "[none]" else config.predefinedContexts[config.chatGPTApiPredefinedContext]
         if context:
             self.messages.append({"role": "assistant", "content": context})
@@ -655,6 +664,18 @@ Follow the following steps:
     def print(self, text):
         self.contentView.appendPlainText(f"\n{text}" if self.contentView.toPlainText() else text)
         self.contentView.setPlainText(re.sub("\n\n[\n]+?([^\n])", r"\n\n\1", self.contentView.toPlainText()))
+
+    def printStream(self, text):
+        # transform responses
+        for t in config.chatGPTTransformers:
+            text = t(text)
+        self.contentView.setPlainText(self.contentView.toPlainText() + text)
+        # no audio for streaming tokens
+        #if config.chatGPTApiAudio:
+        #    self.playAudio(text)
+        # scroll to the bottom
+        contentScrollBar = self.contentView.verticalScrollBar()
+        contentScrollBar.setValue(contentScrollBar.maximum())
 
     def sendMessage(self):
         if self.userInputMultiline.isVisible():
@@ -680,6 +701,8 @@ Follow the following steps:
         userInput = self.userInput.text().strip()
         if userInput:
             self.userInput.setDisabled(True)
+            self.listView.setDisabled(True)
+            self.newButton.setDisabled(True)
             self.print(f">>> {userInput}")
             self.saveData()
             self.currentLoadingID = self.contentID
@@ -689,28 +712,32 @@ Follow the following steps:
             ChatGPTResponse(self).workOnGetResponse(self.messages) # get chatGPT response in a separate thread
 
     def processResponse(self, responses):
-        # reload the working content in case users change it during waiting for response
-        self.contentID = self.currentLoadingID
-        self.resetContent(self.currentLoadingContent)
-        self.currentLoadingID = self.currentLoadingContent = ""
-        # transform responses
-        for t in config.chatGPTTransformers:
-            responses = t(responses)
-        # update new reponses
-        self.print(responses)
-        # scroll to the bottom
-        contentScrollBar = self.contentView.verticalScrollBar()
-        contentScrollBar.setValue(contentScrollBar.maximum())
-        if not (responses.startswith("OpenAI API re") or responses.startswith("Failed to connect to OpenAI API:")):
-            self.userInput.setText("")
-            if config.chatGPTApiAudio:
-                self.playAudio(responses)
+        if responses:
+            # reload the working content in case users change it during waiting for response
+            self.contentID = self.currentLoadingID
+            self.resetContent(self.currentLoadingContent)
+            self.currentLoadingID = self.currentLoadingContent = ""
+            # transform responses
+            for t in config.chatGPTTransformers:
+                responses = t(responses)
+            # update new reponses
+            self.print(responses)
+            # scroll to the bottom
+            contentScrollBar = self.contentView.verticalScrollBar()
+            contentScrollBar.setValue(contentScrollBar.maximum())
+            if not (responses.startswith("OpenAI API re") or responses.startswith("Failed to connect to OpenAI API:")):
+                if config.chatGPTApiAudio:
+                    self.playAudio(responses)
+        # empty user input
+        self.userInput.setText("")
         # auto-save
         self.saveData()
         # hide progress bar
         self.userInput.setEnabled(True)
+        self.listView.setEnabled(True)
+        self.newButton.setEnabled(True)
         self.progressBar.hide()
-        self.userInput.setFocus()
+        self.setUserInputFocus()
 
     def playAudio(self, responses):
         textList = [i.replace(">>>", "").strip() for i in responses.split("\n") if i.strip()]
@@ -789,7 +816,13 @@ class MainWindow(QMainWindow):
         openSettings.triggered.connect(self.chatGPT.showApiDialog)
         file_menu.addAction(openSettings)
 
+        new_action = QAction(config.thisTranslation["toggleMultilineInput"], self)
+        new_action.setShortcut("Ctrl+L")
+        new_action.triggered.connect(self.chatGPT.multilineButtonClicked)
+        file_menu.addAction(new_action)
+
         new_action = QAction(config.thisTranslation["toggleRegexp"], self)
+        new_action.setShortcut("Ctrl+E")
         new_action.triggered.connect(self.toggleRegexp)
         file_menu.addAction(new_action)
 
@@ -817,7 +850,6 @@ class MainWindow(QMainWindow):
         elif thisOS == "Linux":
             openCommand = "xdg-open"
         os.system(f"{openCommand} {databaseDirectory}")
-
 
     def toggleRegexp(self):
         config.chatGPTApiSearchRegexp = not config.chatGPTApiSearchRegexp

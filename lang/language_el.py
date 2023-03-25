@@ -1063,4 +1063,5 @@ translation = {
     "toggleRegexp": "Εναλλαγή κανονικής έκφρασης",
     "databaseDirectory": "Κατάλογος βάσης δεδομένων",
     "predefinedContext": "Προκαθορισμένο περιβάλλον.",
+    "toggleMultilineInput": "Εναλλαγή εισόδου πολλαπλών γραμμών χρήστη",
 }

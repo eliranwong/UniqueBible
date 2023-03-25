@@ -2161,12 +2161,22 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 time.sleep(0.1)
 
     def bibleChat(self):
+        # users can modify config.predefinedContexts, config.inputSuggestions and config.chatGPTTransformers via plugins
+        config.predefinedContexts = {
+            "[none]": "",
+        }
+        config.inputSuggestions = []
+        config.chatGPTTransformers = []
+        # reset message when a new chart is started or context is changed
         def resetMessages():
             messages = [
                 {"role": "system", "content" : "You’re a kind helpful assistant"}
             ]
-            if config.chatGPTApiContext:
-                messages.append({"role": "assistant", "content" : config.chatGPTApiContext})
+            if not config.chatGPTApiPredefinedContext in config.predefinedContexts:
+                config.chatGPTApiPredefinedContext = "[none]"
+            context = config.chatGPTApiContext if config.chatGPTApiPredefinedContext == "[none]" else config.predefinedContexts[config.chatGPTApiPredefinedContext]
+            if context:
+                messages.append({"role": "assistant", "content": context})
             return messages
         # required
         openai.api_key = os.environ["OPENAI_API_KEY"] = config.openaiApiKey
@@ -2175,8 +2185,6 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             openai.organization = config.openaiApiOrganization
         messages = resetMessages()
         if openai.api_key:
-            # setup response transformers
-            config.chatGPTTransformers = []
             pluginFolder = os.path.join(os.getcwd(), "plugins", "chatGPT")
             for plugin in FileUtil.fileNamesWithoutExtension(pluginFolder, "py"):
                 script = os.path.join(pluginFolder, "{0}.py".format(plugin))
@@ -2187,6 +2195,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     chat = config.thisTranslation["chat"]
                     self.print(f"{chat}: {config.chatGPTApiContext}")
                     self.print("['.new' to start a new chat]")
+                    self.print("['.context' to change chat context]")
                     self.print("['.share' to share content]" if config.terminalEnableTermuxAPI else "['.save' to save content]")
                     started = False
                 startChat()
@@ -2194,6 +2203,12 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     userInput = self.simplePrompt(promptSession=self.terminal_bible_chat_session)
                     if userInput.strip().lower() == config.terminal_cancel_action:
                         return self.cancelAction()
+                    elif userInput.strip().lower() == ".context":
+                        contexts = list(config.predefinedContexts.keys())
+                        config.chatGPTApiPredefinedContext = self.dialogs.getValidOptions(options=contexts, title="Bible Data", default=config.chatGPTApiPredefinedContext)
+                        print("Context updated! Starting a new chart ...")
+                        messages = resetMessages()
+                        startChat()
                     elif userInput.strip().lower() == ".new" and started:
                         messages = resetMessages()
                         startChat()
@@ -2222,32 +2237,54 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                                         os.system(f'''{config.open} "{chatFile}"''')
                             except:
                                 self.print("Failed to save a file!")
-                    elif userInput.strip() and not userInput.strip().lower() in (".share", ".save", ".new"):
+                    elif userInput.strip() and not userInput.strip().lower() in (".share", ".save", ".new", ".context"):
                         # start spinning
                         stop_event = threading.Event()
                         spinner_thread = threading.Thread(target=self.spinning_animation, args=(stop_event,))
                         spinner_thread.start()
                         # get responses
                         messages.append({"role": "user", "content": userInput})
-                        completion = openai.ChatCompletion.create(
-                            model="gpt-3.5-turbo",
-                            messages=messages,
-                            n=config.chatGPTApiNoOfChoices,
-                            temperature=config.chatGPTApiTemperature,
-                        )
-                        # stop spinning
-                        stop_event.set()
-                        spinner_thread.join()
-                        for index, choice in enumerate(completion.choices):
-                            chat_response = choice.message.content
-                            # transform response with plugins
-                            for t in config.chatGPTTransformers:
-                                chat_response = t(chat_response)
-                            if len(completion.choices) > 1:
-                                self.print(f"### Response {(index+1)}:")
-                            self.print(chat_response)
-                            if index == 0:
-                                messages.append({"role": "assistant", "content": chat_response})
+                        if config.chatGPTApiNoOfChoices == 1:
+                            completion = openai.ChatCompletion.create(
+                                model=config.chatGPTApiModel,
+                                messages=messages,
+                                n=config.chatGPTApiNoOfChoices,
+                                temperature=config.chatGPTApiTemperature,
+                                max_tokens=config.chatGPTApiMaxTokens,
+                                stream=True,
+                            )
+                            # stop spinning
+                            stop_event.set()
+                            spinner_thread.join()
+                            for event in completion:                                 
+                                # RETRIEVE THE TEXT FROM THE RESPONSE
+                                event_text = event["choices"][0]["delta"] # EVENT DELTA RESPONSE
+                                answer = event_text.get("content", "") # RETRIEVE CONTENT
+                                time.sleep(0.01)
+                                # STREAM THE ANSWER
+                                print(answer, end='', flush=True) # Print the response
+                            print("\n")
+                        else:
+                            completion = openai.ChatCompletion.create(
+                                model=config.chatGPTApiModel,
+                                messages=messages,
+                                n=config.chatGPTApiNoOfChoices,
+                                temperature=config.chatGPTApiTemperature,
+                                max_tokens=config.chatGPTApiMaxTokens,
+                            )
+                            # stop spinning
+                            stop_event.set()
+                            spinner_thread.join()
+                            for index, choice in enumerate(completion.choices):
+                                chat_response = choice.message.content
+                                # transform response with plugins
+                                for t in config.chatGPTTransformers:
+                                    chat_response = t(chat_response)
+                                if len(completion.choices) > 1:
+                                    self.print(f"### Response {(index+1)}:")
+                                self.print(chat_response)
+                                if index == 0:
+                                    messages.append({"role": "assistant", "content": chat_response})
                         started = True
                         #stop_event.set()
                         #spinner_thread.join()
