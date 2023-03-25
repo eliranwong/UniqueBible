@@ -2205,7 +2205,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         return self.cancelAction()
                     elif userInput.strip().lower() == ".context":
                         contexts = list(config.predefinedContexts.keys())
-                        config.chatGPTApiPredefinedContext = self.dialogs.getValidOptions(options=contexts, title="Bible Data", default=config.chatGPTApiPredefinedContext)
+                        config.chatGPTApiPredefinedContext = self.dialogs.getValidOptions(options=contexts, title="Bible Chat Predefined Contexts", default=config.chatGPTApiPredefinedContext)
                         print("Context updated! Starting a new chart ...")
                         messages = resetMessages()
                         startChat()

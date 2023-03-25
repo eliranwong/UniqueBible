@@ -1,3 +1,6 @@
+Changes in 34.58:
+* updated Bible Chat context option title
+
 Changes in 34.57:
 * Improved gui mode Bible Chat:
     - support streaming ChatGPT responses when config.chatGPTApiNoOfChoices is set to 1
