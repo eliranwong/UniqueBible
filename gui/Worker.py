@@ -1,4 +1,4 @@
-import config, sys, traceback, os, platform, openai, time
+import config, sys, traceback, os, platform, openai
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool
 else:
@@ -105,7 +105,6 @@ class ChatGPTResponse:
                     # RETRIEVE THE TEXT FROM THE RESPONSE
                     event_text = event["choices"][0]["delta"] # EVENT DELTA RESPONSE
                     progress = event_text.get("content", "") # RETRIEVE CONTENT
-                    time.sleep(0.001)
                     # STREAM THE ANSWER
                     progress_callback.emit(progress)
             else:
@@ -133,6 +132,8 @@ class ChatGPTResponse:
         except openai.error.RateLimitError as e:
             #Handle rate limit error (we recommend using exponential backoff)
             return f"OpenAI API request exceeded rate limit: {e}"
+        except:
+            traceback.print_exc()
         return responses
 
     def workOnGetResponse(self, messages):
