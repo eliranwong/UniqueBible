@@ -701,8 +701,9 @@ Follow the following steps:
         userInput = self.userInput.text().strip()
         if userInput:
             self.userInput.setDisabled(True)
-            self.listView.setDisabled(True)
-            self.newButton.setDisabled(True)
+            if config.chatGPTApiNoOfChoices == 1:
+                self.listView.setDisabled(True)
+                self.newButton.setDisabled(True)
             self.print(f">>> {userInput}")
             self.saveData()
             self.currentLoadingID = self.contentID
@@ -734,8 +735,9 @@ Follow the following steps:
         self.saveData()
         # hide progress bar
         self.userInput.setEnabled(True)
-        self.listView.setEnabled(True)
-        self.newButton.setEnabled(True)
+        if config.chatGPTApiNoOfChoices == 1:
+            self.listView.setEnabled(True)
+            self.newButton.setEnabled(True)
         self.progressBar.hide()
         self.setUserInputFocus()
 

@@ -1,3 +1,6 @@
+Changes in 34.59:
+* improved terminal mode bible chat
+
 Changes in 34.58:
 * updated Bible Chat context option title
 

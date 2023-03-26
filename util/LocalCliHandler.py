@@ -2256,14 +2256,16 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                             # stop spinning
                             stop_event.set()
                             spinner_thread.join()
+                            chat_response = ""
                             for event in completion:                                 
                                 # RETRIEVE THE TEXT FROM THE RESPONSE
                                 event_text = event["choices"][0]["delta"] # EVENT DELTA RESPONSE
                                 answer = event_text.get("content", "") # RETRIEVE CONTENT
-                                time.sleep(0.01)
                                 # STREAM THE ANSWER
+                                chat_response += answer
                                 print(answer, end='', flush=True) # Print the response
                             print("\n")
+                            messages.append({"role": "assistant", "content": chat_response})
                         else:
                             completion = openai.ChatCompletion.create(
                                 model=config.chatGPTApiModel,
