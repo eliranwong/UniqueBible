@@ -1,3 +1,15 @@
+Changes in 34.61:
+* Support ChatGPT-4 in "Bible Chat"
+    - First, make sure you have access to "gpt-4" or "gpt-4-32k" models
+    - In GUI "Bible Chat", select "gpt-4" as API model in "Chat Settings" enter BOTH OpenAI API Key AND Organization ID
+    - In terminal mode, set "chatGPTApiModel = 'gpt-4'", enter correct information of "openaiApiKey" AND "openaiApiOrganization" in config.py
+* Improved Bible Chat features in terminal mode:
+    - support latest online search results in ChatGPT responses
+    - added '.options' dialog
+    - added option of multi-line user input
+    - added option to apply context in either the first input or all inputs
+    - auto-completion via config.inputSuggestions
+
 Changes in 34.60:
 * Improved plugin "Bible Chat":
     - support latest internet search results in ChatGPT responses

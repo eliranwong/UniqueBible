@@ -1,5 +1,6 @@
 import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json, shutil, webbrowser
 import openai, threading, time
+from duckduckgo_search import ddg
 from functools import partial
 from datetime import date
 from pathlib import Path
@@ -2164,6 +2165,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         # users can modify config.predefinedContexts, config.inputSuggestions and config.chatGPTTransformers via plugins
         config.predefinedContexts = {
             "[none]": "",
+            "[custom]": "",
         }
         config.inputSuggestions = []
         config.chatGPTTransformers = []
@@ -2172,12 +2174,37 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             messages = [
                 {"role": "system", "content" : "You’re a kind helpful assistant"}
             ]
+            return messages
+        def getCurrentContext():
             if not config.chatGPTApiPredefinedContext in config.predefinedContexts:
                 config.chatGPTApiPredefinedContext = "[none]"
-            context = config.chatGPTApiContext if config.chatGPTApiPredefinedContext == "[none]" else config.predefinedContexts[config.chatGPTApiPredefinedContext]
-            if context:
-                messages.append({"role": "assistant", "content": context})
-            return messages
+            if config.chatGPTApiPredefinedContext == "[none]":
+                # no context
+                context = ""
+            elif config.chatGPTApiPredefinedContext == "[custom]":
+                # custom input in the settings dialog
+                context = config.chatGPTApiContext
+            else:
+                # users can modify config.predefinedContexts via plugins
+                context = config.predefinedContexts[config.chatGPTApiPredefinedContext]
+            return context
+        def fineTuneUserInput(userInput, conversationStarted):
+            # customise chat context
+            context = getCurrentContext()
+            if context and (not conversationStarted or (conversationStarted and config.chatGPTApiContextInAllInputs)):
+                #messages.append({"role": "assistant", "content": context})
+                userInput = f"{context}\n{userInput}"
+            # user input
+            if config.chatGPTApiIncludeDuckDuckGoSearchResults:
+                results = ddg(userInput, time='y', max_results=config.chatGPTApiMaximumDuckDuckGoSearchResults)
+                news = ""
+                for r in results:
+                    if "title" in r and "body" in r:
+                        title = r["title"]
+                        body = r["body"]
+                        news += f"{title}. {body} "
+                userInput = f"{userInput}. Include the following information that you don't know in your response to my input: {news}"
+            return userInput
         # required
         openai.api_key = os.environ["OPENAI_API_KEY"] = config.openaiApiKey
         # optional
@@ -2193,22 +2220,69 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 started = False
                 def startChat():
                     chat = config.thisTranslation["chat"]
-                    self.print(f"{chat}: {config.chatGPTApiContext}")
-                    self.print("['.new' to start a new chat]")
-                    self.print("['.context' to change chat context]")
-                    self.print("['.share' to share content]" if config.terminalEnableTermuxAPI else "['.save' to save content]")
+                    context = getCurrentContext()
+                    self.print(f"{chat}: {context if context else ''}")
+                    self.print("['.options' for options]")
                     started = False
                 startChat()
+                multilineInput = False
+                completer = WordCompleter(config.inputSuggestions, ignore_case=True) if config.inputSuggestions else None
                 while True:
-                    userInput = self.simplePrompt(promptSession=self.terminal_bible_chat_session)
+                    userInput = self.simplePrompt(promptSession=self.terminal_bible_chat_session, multiline=multilineInput, completer=completer)
+                    # display options when empty string is entered
+                    if not userInput.strip() or userInput.strip().lower() == ".options":
+                        features = (
+                            ".new",
+                            ".singleLineInput",
+                            ".multiLineInput",
+                            ".context",
+                            ".contextInFirstInputOnly",
+                            ".contextInAllInputs",
+                            ".latestSearches",
+                            ".noLatestSearches",
+                            ".share" if config.terminalEnableTermuxAPI else ".save",
+                        )
+                        descriptions = (
+                            "start a new chat",
+                            "single-line user input",
+                            "multi-line user input",
+                            "change chat context",
+                            "apply context in first input ONLY",
+                            "apply context in ALL inputs",
+                            "include latest online search result",
+                            "exclude latest online search result",
+                            "share content" if config.terminalEnableTermuxAPI else "save content",
+                        )
+                        feature = self.dialogs.getValidOptions(options=features, descriptions=descriptions, title="Bible Chat Options", default=".new")
+                        if feature:
+                            if feature == ".singleLineInput":
+                                multilineInput = False
+                                self.print("Multi-line user input disabled!")
+                            elif feature == ".multiLineInput":
+                                multilineInput = True
+                                self.print("Multi-line user input enabled!")
+                            elif feature == ".latestSearches":
+                                config.chatGPTApiIncludeDuckDuckGoSearchResults = True
+                                self.print("Latest online search results enabled!")
+                            elif feature == ".noLatestSearches":
+                                config.chatGPTApiIncludeDuckDuckGoSearchResults = False
+                                self.print("Latest online search results disabled!")
+                            elif feature == ".contextInFirstInputOnly":
+                                config.chatGPTApiContextInAllInputs = False
+                                self.print("Predefined context is now applied in the first input only!")
+                            elif feature == ".contextInAllInputs":
+                                config.chatGPTApiContextInAllInputs = True
+                                self.print("Predefined context is now applied in all inputs!")
+                            else:
+                                userInput = feature
                     if userInput.strip().lower() == config.terminal_cancel_action:
                         return self.cancelAction()
                     elif userInput.strip().lower() == ".context":
                         contexts = list(config.predefinedContexts.keys())
-                        config.chatGPTApiPredefinedContext = self.dialogs.getValidOptions(options=contexts, title="Bible Chat Predefined Contexts", default=config.chatGPTApiPredefinedContext)
-                        print("Context updated! Starting a new chart ...")
-                        messages = resetMessages()
-                        startChat()
+                        predefinedContext = self.dialogs.getValidOptions(options=contexts, title="Bible Chat Predefined Contexts", default=config.chatGPTApiPredefinedContext)
+                        if predefinedContext:
+                            config.chatGPTApiPredefinedContext = predefinedContext
+                            print(f"Context updated to '{config.chatGPTApiPredefinedContext}'!")
                     elif userInput.strip().lower() == ".new" and started:
                         messages = resetMessages()
                         startChat()
@@ -2237,13 +2311,14 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                                         os.system(f'''{config.open} "{chatFile}"''')
                             except:
                                 self.print("Failed to save a file!")
-                    elif userInput.strip() and not userInput.strip().lower() in (".share", ".save", ".new", ".context"):
+                    elif userInput.strip() and not userInput.strip().lower() in (".share", ".save", ".new", ".context", ".latestSearches", ".noLatestSearches", ".contextInFirstInputOnly", ".contextInAllInputs", ".singleLineInput", ".multiLineInput"):
                         # start spinning
                         stop_event = threading.Event()
                         spinner_thread = threading.Thread(target=self.spinning_animation, args=(stop_event,))
                         spinner_thread.start()
                         # get responses
-                        messages.append({"role": "user", "content": userInput})
+                        fineTunedUserInput = fineTuneUserInput(userInput, started)
+                        messages.append({"role": "user", "content": fineTunedUserInput})
                         if config.chatGPTApiNoOfChoices == 1:
                             completion = openai.ChatCompletion.create(
                                 model=config.chatGPTApiModel,
@@ -2265,6 +2340,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                                 chat_response += answer
                                 print(answer, end='', flush=True) # Print the response
                             print("\n")
+                            messages[-1] = {"role": "user", "content": userInput}
                             messages.append({"role": "assistant", "content": chat_response})
                         else:
                             completion = openai.ChatCompletion.create(
@@ -2286,6 +2362,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                                     self.print(f"### Response {(index+1)}:")
                                 self.print(chat_response)
                                 if index == 0:
+                                    messages[-1] = {"role": "user", "content": userInput}
                                     messages.append({"role": "assistant", "content": chat_response})
                         started = True
                         #stop_event.set()

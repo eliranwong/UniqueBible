@@ -60,7 +60,7 @@ class ApiDialog(QDialog):
         self.apiModelBox = QComboBox()
         initialIndex = 0
         index = 0
-        for key in ("gpt-3.5-turbo", "gpt-4"):
+        for key in ("gpt-3.5-turbo", "gpt-4", "gpt-4-32k"):
             self.apiModelBox.addItem(key)
             if key == config.chatGPTApiModel:
                 initialIndex = index
@@ -119,7 +119,7 @@ class ApiDialog(QDialog):
         optional = config.thisTranslation["optional"]
         layout.addRow(f"OpenAI API Key [{required}]:", self.apiKeyEdit)
         layout.addRow(f"Organization ID [{optional}]:", self.orgEdit)
-        #layout.addRow(f"API Model [{required}]:", self.apiModelBox)
+        layout.addRow(f"API Model [{required}]:", self.apiModelBox)
         layout.addRow(f"Max Token [{required}]:", self.maxTokenEdit)
         layout.addRow(f"{predefinedContext} [{optional}]:", self.predefinedContextBox)
         layout.addRow(f"{context} [{optional}]:", self.contextEdit)
@@ -149,8 +149,8 @@ class ApiDialog(QDialog):
         #return self.predefinedContextBox.currentData(Qt.ToolTipRole)
 
     def apiModel(self):
-        #return self.apiModelBox.currentText()
-        return "gpt-3.5-turbo"
+        #return "gpt-3.5-turbo"
+        return self.apiModelBox.currentText()
 
     def max_token(self):
         return self.maxTokenEdit.text().strip()
@@ -717,7 +717,7 @@ Follow the following steps:
             context = config.chatGPTApiContext
         else:
             # users can modify config.predefinedContexts via plugins
-            config.predefinedContexts[config.chatGPTApiPredefinedContext]
+            context = config.predefinedContexts[config.chatGPTApiPredefinedContext]
         if context and (not history or (history and config.chatGPTApiContextInAllInputs)):
             #messages.append({"role": "assistant", "content": context})
             userInput = f"{context}\n{userInput}"
