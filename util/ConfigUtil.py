@@ -534,7 +534,7 @@ class ConfigUtil:
         setConfig("chatGPTApiMaxTokens", """
         # The maximum number of tokens to generate in the completion.
         # The token count of your prompt plus max_tokens cannot exceed the model's context length. Most models have a context length of 2048 tokens (except for the newest models, which support 4096).""",
-        1024)
+        512)
         setConfig("chatGPTApiNoOfChoices", """
         # ChatGPT API number of choices in response
         # How many chat completion choices to generate for each input message.""",
@@ -552,6 +552,15 @@ class ConfigUtil:
         setConfig("chatGPTApiContext", """
         # Set a context for chatGPT conversations""",
         "about the bible")
+        setConfig("chatGPTApiContextInAllInputs", """
+        # ChatGP API - predefined context in all inputs.""",
+        False)
+        setConfig("chatGPTApiIncludeDuckDuckGoSearchResults", """
+        # ChatGPT API - include DuckDuckGo search results.""",
+        False)
+        setConfig("chatGPTApiMaximumDuckDuckGoSearchResults", """
+        # ChatGPT API - maximum number of DuckDuckGo search results to be included.""",
+        5)
         setConfig("chatGPTFontSize", """
         # Set chatGPT conversation font size""",
         14)

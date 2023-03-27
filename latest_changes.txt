@@ -1,3 +1,10 @@
+Changes in 34.60:
+* Improved plugin "Bible Chat":
+    - support latest internet search results in ChatGPT responses
+    - improved message handling
+    - option to apply context in the first input only or all inputs
+    - removed audio on reading new responses
+
 Changes in 34.59:
 * improved terminal mode bible chat
 

@@ -1064,4 +1064,10 @@ translation = {
     "databaseDirectory": "데이터베이스 디렉토리",
     "predefinedContext": "사전 정의된 컨텍스트",
     "toggleMultilineInput": "다중 행 사용자 입력 토글",
+    "latestOnlineSearchResults": "최신 온라인 검색 결과",
+    "maximumOnlineSearchResults": "최대 온라인 검색 결과",
+    "include": "포함",
+    "applyContext": "다음에 컨텍스트 적용",
+    "firstInputOnly": "첫 번째 입력 전용",
+    "allInputs": "모든 입력",
 }

@@ -1,4 +1,5 @@
-import config, os, re, openai, sqlite3, webbrowser, shutil, platform, time
+import config, os, re, openai, sqlite3, webbrowser, shutil, platform
+from duckduckgo_search import ddg
 from gtts import gTTS
 if "Pocketsphinx" in config.enabled:
     from pocketsphinx import LiveSpeech, get_model_path
@@ -67,7 +68,18 @@ class ApiDialog(QDialog):
         self.apiModelBox.setCurrentIndex(initialIndex)
         self.maxTokenEdit = QLineEdit(str(config.chatGPTApiMaxTokens))
         self.maxTokenEdit.setToolTip("The maximum number of tokens to generate in the completion.\nThe token count of your prompt plus max_tokens cannot exceed the model's context length. Most models have a context length of 2048 tokens (except for the newest models, which support 4096).")
+        self.maxInternetSearchResults = QLineEdit(str(config.chatGPTApiMaximumDuckDuckGoSearchResults))
+        self.maxInternetSearchResults.setToolTip("The maximum number of internet search response to be included.")
+        self.includeInternetSearches = QCheckBox(config.thisTranslation["include"])
+        self.includeInternetSearches.setToolTip("Include latest internet search results")
+        self.includeInternetSearches.setCheckState(Qt.Checked if config.chatGPTApiIncludeDuckDuckGoSearchResults else Qt.Unchecked)
+        self.includeDuckDuckGoSearchResults = config.chatGPTApiIncludeDuckDuckGoSearchResults
         self.contextEdit = QLineEdit(config.chatGPTApiContext)
+        firstInputOnly = config.thisTranslation["firstInputOnly"]
+        allInputs = config.thisTranslation["allInputs"]
+        self.applyContextIn = QComboBox()
+        self.applyContextIn.addItems([firstInputOnly, allInputs])
+        self.applyContextIn.setCurrentIndex(1 if config.chatGPTApiContextInAllInputs else 0)
         self.predefinedContextBox = QComboBox()
         initialIndex = 0
         index = 0
@@ -79,7 +91,9 @@ class ApiDialog(QDialog):
             index += 1
         self.predefinedContextBox.currentIndexChanged.connect(self.predefinedContextBoxChanged)
         self.predefinedContextBox.setCurrentIndex(initialIndex)
-        self.languageBox = QComboBox()
+        # set availability of self.contextEdit in case there is no index changed
+        self.contextEdit.setDisabled(True) if not initialIndex == 1 else self.contextEdit.setEnabled(True)
+        """self.languageBox = QComboBox()
         initialIndex = 0
         index = 0
         for key, value in Languages.gTTSLanguageCodes.items():
@@ -88,7 +102,7 @@ class ApiDialog(QDialog):
             if value == config.chatGPTApiAudioLanguage:
                 initialIndex = index
             index += 1
-        self.languageBox.setCurrentIndex(initialIndex)
+        self.languageBox.setCurrentIndex(initialIndex)"""
         buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         buttonBox.accepted.connect(self.accept)
         buttonBox.rejected.connect(self.reject)
@@ -97,7 +111,10 @@ class ApiDialog(QDialog):
         # https://platform.openai.com/account/api-keys
         predefinedContext = config.thisTranslation["predefinedContext"]
         context = config.thisTranslation["chatContext"]
-        language = config.thisTranslation["menu_language"]
+        applyContext = config.thisTranslation["applyContext"]
+        latestOnlineSearchResults = config.thisTranslation["latestOnlineSearchResults"]
+        maximumOnlineSearchResults = config.thisTranslation["maximumOnlineSearchResults"]
+        #language = config.thisTranslation["menu_language"]
         required = config.thisTranslation["required"]
         optional = config.thisTranslation["optional"]
         layout.addRow(f"OpenAI API Key [{required}]:", self.apiKeyEdit)
@@ -106,8 +123,12 @@ class ApiDialog(QDialog):
         layout.addRow(f"Max Token [{required}]:", self.maxTokenEdit)
         layout.addRow(f"{predefinedContext} [{optional}]:", self.predefinedContextBox)
         layout.addRow(f"{context} [{optional}]:", self.contextEdit)
-        layout.addRow(f"{language} [{optional}]:", self.languageBox)
+        layout.addRow(f"{applyContext} [{optional}]:", self.applyContextIn)
+        layout.addRow(f"{latestOnlineSearchResults} [{optional}]:", self.includeInternetSearches)
+        layout.addRow(f"{maximumOnlineSearchResults} [{optional}]:", self.maxInternetSearchResults)
+        #layout.addRow(f"{language} [{optional}]:", self.languageBox)
         layout.addWidget(buttonBox)
+        self.includeInternetSearches.stateChanged.connect(self.toggleIncludeDuckDuckGoSearchResults)
 
         self.setLayout(layout)
 
@@ -117,8 +138,11 @@ class ApiDialog(QDialog):
     def org(self):
         return self.orgEdit.text().strip()
 
+    def contextInAllInputs(self):
+        return True if self.applyContextIn.currentIndex() == 1 else False
+
     def predefinedContextBoxChanged(self, index):
-        self.contextEdit.setDisabled(True) if index else self.contextEdit.setEnabled(True)
+        self.contextEdit.setDisabled(True) if not index == 1 else self.contextEdit.setEnabled(True)
 
     def predefinedContext(self):
         return self.predefinedContextBox.currentText()
@@ -131,12 +155,21 @@ class ApiDialog(QDialog):
     def max_token(self):
         return self.maxTokenEdit.text().strip()
 
+    def include_internet_searches(self):
+        return self.includeDuckDuckGoSearchResults
+
+    def toggleIncludeDuckDuckGoSearchResults(self, state):
+        self.includeDuckDuckGoSearchResults = True if state else False
+
+    def max_internet_search_results(self):
+        return self.maxInternetSearchResults.text().strip()
+
     def context(self):
         return self.contextEdit.text().strip()
     
-    def language(self):
+    """def language(self):
         #return self.languageBox.currentText()
-        return self.languageBox.currentData(Qt.ToolTipRole)
+        return self.languageBox.currentData(Qt.ToolTipRole)"""
 
 
 class Database:
@@ -276,6 +309,7 @@ class ChatGPTAPI(QWidget):
         # users can modify config.predefinedContexts, config.inputSuggestions and config.chatGPTTransformers via plugins
         config.predefinedContexts = {
             "[none]": "",
+            "[custom]": "",
         }
         config.inputSuggestions = []
         config.chatGPTTransformers = []
@@ -534,12 +568,22 @@ class ChatGPTAPI(QWidget):
             config.openaiApiOrganization = dialog.org()
             try:
                 config.chatGPTApiMaxTokens = int(dialog.max_token())
+                if config.chatGPTApiMaxTokens < 20:
+                    config.chatGPTApiMaxTokens = 20
             except:
                 pass
+            try:
+                config.chatGPTApiMaximumDuckDuckGoSearchResults = int(dialog.max_internet_search_results())
+                if config.chatGPTApiMaximumDuckDuckGoSearchResults <= 0:
+                    config.chatGPTApiMaximumDuckDuckGoSearchResults = 1
+            except:
+                pass
+            config.chatGPTApiIncludeDuckDuckGoSearchResults = dialog.include_internet_searches()
             config.chatGPTApiModel = dialog.apiModel()
             config.chatGPTApiPredefinedContext = dialog.predefinedContext()
+            config.chatGPTApiContextInAllInputs = dialog.contextInAllInputs()
             config.chatGPTApiContext = dialog.context()
-            config.chatGPTApiAudioLanguage = dialog.language()
+            #config.chatGPTApiAudioLanguage = dialog.language()
             self.newData()
 
     def updateApiModel(self, index):
@@ -624,14 +668,13 @@ class ChatGPTAPI(QWidget):
 Follow the following steps:
 1) Register and get your OpenAI Key at https://platform.openai.com/account/api-keys
 2) Click the "Settings" button below and enter your own OpenAI API key""")
-        self.resetMessages()
         self.setUserInputFocus()
 
     def selectData(self, index):
         data = index.data(Qt.UserRole)
         self.contentID = data[0]
         content = data[2]
-        self.resetContent(content)
+        self.contentView.setPlainText(content)
         self.setUserInputFocus()
 
     def printData(self):
@@ -645,21 +688,52 @@ Follow the following steps:
             document.setPlainText(self.contentView.toPlainText())
             document.print_(printer)
 
-    def resetContent(self, content):
-        self.contentView.setPlainText(content)
-        # update context
-        self.resetMessages()
-        self.messages.append({"role": "assistant", "content": content})
-
-    def resetMessages(self):
-        self.messages = [
-            {"role": "system", "content" : "You’re a kind helpful assistant"}
+    def getMessages(self, userInput):
+        # system message
+        messages = [
+            {"role": "system", "content": "You’re a kind helpful assistant"}
         ]
+        # chat history
+        history = self.contentView.toPlainText().strip()
+        if history:
+            if history.startswith(">>> "):
+                history = history[4:]
+            exchanges = [exchange for exchange in history.split("\n>>> ") if exchange.strip()]
+            for exchange in exchanges:
+                qa = exchange.split("\n~~~ ")
+                for i, content in enumerate(qa):
+                    if i == 0:
+                        messages.append({"role": "user", "content": content.strip()})
+                    else:
+                        messages.append({"role": "assistant", "content": content.strip()})
+        # customise chat context
         if not config.chatGPTApiPredefinedContext in config.predefinedContexts:
             config.chatGPTApiPredefinedContext = "[none]"
-        context = config.chatGPTApiContext if config.chatGPTApiPredefinedContext == "[none]" else config.predefinedContexts[config.chatGPTApiPredefinedContext]
-        if context:
-            self.messages.append({"role": "assistant", "content": context})
+        if config.chatGPTApiPredefinedContext == "[none]":
+            # no context
+            context = ""
+        elif config.chatGPTApiPredefinedContext == "[custom]":
+            # custom input in the settings dialog
+            context = config.chatGPTApiContext
+        else:
+            # users can modify config.predefinedContexts via plugins
+            config.predefinedContexts[config.chatGPTApiPredefinedContext]
+        if context and (not history or (history and config.chatGPTApiContextInAllInputs)):
+            #messages.append({"role": "assistant", "content": context})
+            userInput = f"{context}\n{userInput}"
+        # user input
+        if config.chatGPTApiIncludeDuckDuckGoSearchResults:
+            results = ddg(userInput, time='y', max_results=config.chatGPTApiMaximumDuckDuckGoSearchResults)
+            news = ""
+            for r in results:
+                if "title" in r and "body" in r:
+                    title = r["title"]
+                    body = r["body"]
+                    news += f"{title}. {body} "
+            messages.append({"role": "user", "content": f"{userInput}. Include the following information that you don't know in your response to my input: {news}"})
+        else:
+            messages.append({"role": "user", "content": userInput})
+        return messages
 
     def print(self, text):
         self.contentView.appendPlainText(f"\n{text}" if self.contentView.toPlainText() else text)
@@ -693,9 +767,10 @@ Follow the following steps:
             OpenAIImage(self).workOnGetResponse(userInput)
 
     def displayImage(self, imageUrl):
-        webbrowser.open(imageUrl)
-        self.userInput.setEnabled(True)
-        self.progressBar.hide()
+        if imageUrl:
+            webbrowser.open(imageUrl)
+            self.userInput.setEnabled(True)
+            self.progressBar.hide()
 
     def getResponse(self):
         userInput = self.userInput.text().strip()
@@ -704,19 +779,19 @@ Follow the following steps:
             if config.chatGPTApiNoOfChoices == 1:
                 self.listView.setDisabled(True)
                 self.newButton.setDisabled(True)
+            messages = self.getMessages(userInput)
             self.print(f">>> {userInput}")
             self.saveData()
             self.currentLoadingID = self.contentID
             self.currentLoadingContent = self.contentView.toPlainText().strip()
             self.progressBar.show() # show progress bar
-            self.messages.append({"role": "user", "content": userInput}) # update messages
-            ChatGPTResponse(self).workOnGetResponse(self.messages) # get chatGPT response in a separate thread
+            ChatGPTResponse(self).workOnGetResponse(messages) # get chatGPT response in a separate thread
 
     def processResponse(self, responses):
         if responses:
             # reload the working content in case users change it during waiting for response
             self.contentID = self.currentLoadingID
-            self.resetContent(self.currentLoadingContent)
+            self.contentView.setPlainText(self.currentLoadingContent)
             self.currentLoadingID = self.currentLoadingContent = ""
             # transform responses
             for t in config.chatGPTTransformers:
@@ -726,9 +801,8 @@ Follow the following steps:
             # scroll to the bottom
             contentScrollBar = self.contentView.verticalScrollBar()
             contentScrollBar.setValue(contentScrollBar.maximum())
-            if not (responses.startswith("OpenAI API re") or responses.startswith("Failed to connect to OpenAI API:")):
-                if config.chatGPTApiAudio:
-                    self.playAudio(responses)
+            """if not (responses.startswith("OpenAI API re") or responses.startswith("Failed to connect to OpenAI API:")) and config.chatGPTApiAudio:
+                self.playAudio(responses)"""
         # empty user input
         self.userInput.setText("")
         # auto-save

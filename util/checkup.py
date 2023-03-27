@@ -372,6 +372,13 @@ def isTabulateInstalled():
     except:
         return False
 
+def isDuckduckgoSearchInstalled():
+    try:
+        from duckduckgo_search import ddg
+        return True
+    except:
+        return False
+
 def isMarkdownInstalled():
     try:
         import markdown
@@ -718,6 +725,7 @@ optional = [
     ("openai", "Python client library for the OpenAI API", isOpenaiInstalled),
     ("SpeechRecognition", "Library for performing speech recognition", isSpeechRecognitionInstalled),
     ("pocketsphinx", "Python bindings for PocketSphinx", isPocketSphinxInstalled),
+    ("duckduckgo-search", "DuckDuckGo.com search", isDuckduckgoSearchInstalled),
 ] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -766,6 +774,7 @@ optional = [
     ("openai", "Python client library for the OpenAI API", isOpenaiInstalled),
     ("SpeechRecognition", "Library for performing speech recognition", isSpeechRecognitionInstalled),
     ("pocketsphinx", "Python bindings for PocketSphinx", isPocketSphinxInstalled),
+    ("duckduckgo-search", "DuckDuckGo.com search", isDuckduckgoSearchInstalled),
 ]
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))

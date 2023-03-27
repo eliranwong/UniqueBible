@@ -1064,4 +1064,10 @@ translation = {
     "databaseDirectory": "Datenbankverzeichnis",
     "predefinedContext": "Vordefinierter Kontext",
     "toggleMultilineInput": "Mehrzeilige Benutzereingabe umschalten",
+    "latestOnlineSearchResults": "Aktuelle Ergebnisse der Online-Suche",
+    "maximumOnlineSearchResults": "Maximale Suchergebnisse für Online-Suche",
+    "include": "Einschließen",
+    "applyContext": "Kontext anwenden in",
+    "firstInputOnly": "Nur erste Eingabe",
+    "allInputs": "Alle Eingaben",
 }

@@ -1064,4 +1064,10 @@ translation = {
     "databaseDirectory": "Base de datos",
     "predefinedContext": "Contexto predefinido",
     "toggleMultilineInput": "Conmutar entrada de usuario de multilínea",
+    "latestOnlineSearchResults": "Últimos resultados de búsqueda en línea",
+    "maximumOnlineSearchResults": "Resultados de búsqueda en línea máximos",
+    "include": "Incluir:",
+    "applyContext": "Aplicar contexto en",
+    "firstInputOnly": "Primera entrada sólo",
+    "allInputs": "Todas las entradas",
 }

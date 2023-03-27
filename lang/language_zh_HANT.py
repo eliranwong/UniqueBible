@@ -1064,4 +1064,10 @@ translation = {
     "databaseDirectory": "資料庫目錄",
     "predefinedContext": "預設環境定義",
     "toggleMultilineInput": "切換多行使用者輸入",
+    "latestOnlineSearchResults": "最新線上搜尋結果",
+    "maximumOnlineSearchResults": "線上搜尋結果上限",
+    "include": "包括",
+    "applyContext": "套用環境定義",
+    "firstInputOnly": "僅第一個輸入",
+    "allInputs": "所有輸入",
 }

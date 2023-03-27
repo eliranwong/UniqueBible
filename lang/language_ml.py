@@ -1064,4 +1064,10 @@ translation = {
     "databaseDirectory": "ഡാറ്റാബേസ് തട്ട്",
     "predefinedContext": "à '- à' - à 'à' - à '",
     "toggleMultilineInput": "മള്ള് വരി ഉപയോക്താവിന്റെ ഇന്പുട്ട് ടോഗിള് ചെയ്യുക",
+    "latestOnlineSearchResults": "ലാസ്റ്റ് ഓണ്ലൈന് തെരച്ചില് ഫലങ്ങള്",
+    "maximumOnlineSearchResults": "ഏറ്റവും കൂടിയ ഓണ്ലൈന് തെരച്ചില് ഫലങ്ങള്",
+    "include": "ഉള്പ്പെടുത്തുക",
+    "applyContext": "à '- à', à ', à' - à ' à '",
+    "firstInputOnly": "ആദ്യത്തെ ഇന്പുട്ട് മാത്രം",
+    "allInputs": "എല്ലാ ഇന്പുട്ടുകള്",
 }

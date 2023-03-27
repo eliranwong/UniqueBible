@@ -1064,4 +1064,10 @@ translation = {
     "databaseDirectory": "Κατάλογος βάσης δεδομένων",
     "predefinedContext": "Προκαθορισμένο περιβάλλον.",
     "toggleMultilineInput": "Εναλλαγή εισόδου πολλαπλών γραμμών χρήστη",
+    "latestOnlineSearchResults": "Τελευταία αποτελέσματα αναζήτησης σε απευθείας σύνδεση",
+    "maximumOnlineSearchResults": "Μέγιστος αριθμός αποτελεσμάτων αναζήτησης",
+    "include": "Συμπερίληψη:",
+    "applyContext": "Εφαρμογή περιβάλλοντος σε",
+    "firstInputOnly": "Μόνο Πρώτη Είσοδος",
+    "allInputs": "Όλες οι εισροές",
 }

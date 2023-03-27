@@ -1064,4 +1064,10 @@ translation = {
     "databaseDirectory": "Director de baze",
     "predefinedContext": "Context predefinit",
     "toggleMultilineInput": "Comutare de intrare utilizator multilin",
+    "latestOnlineSearchResults": "Cele mai recente rezultate căutare online",
+    "maximumOnlineSearchResults": "Rezultate maxime de căutare online",
+    "include": "Include",
+    "applyContext": "Aplicați contextul în",
+    "firstInputOnly": "Prima Intrare Numai",
+    "allInputs": "Toate intrările",
 }

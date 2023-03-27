@@ -1064,4 +1064,10 @@ translation = {
     "databaseDirectory": "データベース・ディレクトリー",
     "predefinedContext": "事前定義コンテキスト",
     "toggleMultilineInput": "複数行ユーザー入力の切り替え",
+    "latestOnlineSearchResults": "最新のオンライン検索結果",
+    "maximumOnlineSearchResults": "最大オンライン検索結果",
+    "include": "インクルード",
+    "applyContext": "コンテキストの適用",
+    "firstInputOnly": "最初の入力のみ",
+    "allInputs": "すべての入力",
 }

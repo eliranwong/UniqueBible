@@ -1064,4 +1064,10 @@ translation = {
     "databaseDirectory": "डाटाबेस डिरेक्ट्री",
     "predefinedContext": "पूर्वपरिभाषित संदर्भ",
     "toggleMultilineInput": "मल्टीलाइन उपयोक्ता इनपुट टॉगल करें",
+    "latestOnlineSearchResults": "नवीनतम ऑनलाइन खोज परिणाम",
+    "maximumOnlineSearchResults": "अधिकतम ऑनलाइन खोज परिणाम",
+    "include": "शामिल करें",
+    "applyContext": "संदर्भ लागू करें",
+    "firstInputOnly": "सिर्फ पहले इनपुट",
+    "allInputs": "सभी इनपुट",
 }

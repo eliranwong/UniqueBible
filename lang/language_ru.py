@@ -1064,4 +1064,10 @@ translation = {
     "databaseDirectory": "Каталог базы данных",
     "predefinedContext": "Предопределенный контекст",
     "toggleMultilineInput": "Включить/выключить многострочный ввод пользователя",
+    "latestOnlineSearchResults": "Последние результаты поиска в Интернете",
+    "maximumOnlineSearchResults": "Максимальное число результатов поиска в сети",
+    "include": "Включить",
+    "applyContext": "Применить контекст в",
+    "firstInputOnly": "Только первый ввод",
+    "allInputs": "Все входные данные",
 }

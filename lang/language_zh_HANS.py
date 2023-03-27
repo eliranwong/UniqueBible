@@ -1064,4 +1064,10 @@ translation = {
     "databaseDirectory": "数据库目录",
     "predefinedContext": "预定义的上下文",
     "toggleMultilineInput": "切换多行用户输入",
+    "latestOnlineSearchResults": "最新联机搜索结果",
+    "maximumOnlineSearchResults": "最大联机搜索结果数",
+    "include": "包括",
+    "applyContext": "应用上下文",
+    "firstInputOnly": "仅第一个输入",
+    "allInputs": "所有输入",
 }

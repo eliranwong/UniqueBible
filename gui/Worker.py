@@ -100,7 +100,7 @@ class ChatGPTResponse:
                     n=config.chatGPTApiNoOfChoices,
                     stream=True,
                 )
-                progress_callback.emit("\n")
+                progress_callback.emit("\n\n~~~ ")
                 for event in completion:                                 
                     # RETRIEVE THE TEXT FROM THE RESPONSE
                     event_text = event["choices"][0]["delta"] # EVENT DELTA RESPONSE
@@ -120,20 +120,20 @@ class ChatGPTResponse:
                     if len(completion.choices) > 1:
                         if index > 0:
                             responses += "\n"
-                        responses += f"### Response {(index+1)}:\n"
+                        responses += f"~~~ Response {(index+1)}:\n"
                     responses += f"{chat_response}\n\n"
         # error codes: https://platform.openai.com/docs/guides/error-codes/python-library-error-types
         except openai.error.APIError as e:
             #Handle API error here, e.g. retry or log
-            return f"OpenAI API returned an API Error: {e}"
+            responses = f"OpenAI API returned an API Error: {e}"
         except openai.error.APIConnectionError as e:
             #Handle connection error here
-            return f"Failed to connect to OpenAI API: {e}"
+            responses = f"Failed to connect to OpenAI API: {e}"
         except openai.error.RateLimitError as e:
             #Handle rate limit error (we recommend using exponential backoff)
-            return f"OpenAI API request exceeded rate limit: {e}"
+            responses = f"OpenAI API request exceeded rate limit: {e}"
         except:
-            traceback.print_exc()
+            responses = traceback.format_exc()
         return responses
 
     def workOnGetResponse(self, messages):
@@ -165,13 +165,15 @@ class OpenAIImage:
         # error codes: https://platform.openai.com/docs/guides/error-codes/python-library-error-types
         except openai.error.APIError as e:
             #Handle API error here, e.g. retry or log
-            return f"OpenAI API returned an API Error: {e}"
+            print(f"OpenAI API returned an API Error: {e}")
         except openai.error.APIConnectionError as e:
             #Handle connection error here
-            return f"Failed to connect to OpenAI API: {e}"
+            print(f"Failed to connect to OpenAI API: {e}")
         except openai.error.RateLimitError as e:
             #Handle rate limit error (we recommend using exponential backoff)
-            return f"OpenAI API request exceeded rate limit: {e}"
+            print(f"OpenAI API request exceeded rate limit: {e}")
+        except:
+            traceback.print_exc()
         return response['data'][0]['url']
 
     def workOnGetResponse(self, prompt):
