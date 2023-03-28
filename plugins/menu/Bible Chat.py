@@ -949,7 +949,13 @@ class MainWindow(QMainWindow):
 bibleChat = MainWindow(config.mainWindow)
 bibleChat.show()
 
-# load selected text, if any, to user input
-selectedText = config.mainWindow.selectedText()
-if selectedText:
-    bibleChat.chatGPT.userInput.setText(selectedText)
+if config.openaiApiKey:
+    if config.bibleChatEntry:
+        bibleChat.chatGPT.userInput.setText(config.bibleChatEntry)
+        bibleChat.chatGPT.sendMessage()
+        config.bibleChatEntry = ""
+    else:
+        # load selected text, if any, to user input
+        selectedText = config.mainWindow.selectedText()
+        if selectedText:
+            bibleChat.chatGPT.userInput.setText(selectedText)

@@ -1,3 +1,10 @@
+Changes in 34.65:
+* Integrated "Bible Chat", powered by ChatGPT, to:
+    - Introduce a bible book
+    - Give an overview of a bible chapter
+    - Interpret a bible verse
+* Access the newly added features via material menu layout book, chapter, verse selection menu
+
 Changes in 34.64:
 * Improved message flow in Bible Chat
 

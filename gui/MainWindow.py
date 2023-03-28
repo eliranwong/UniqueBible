@@ -178,6 +178,9 @@ class MainWindow(QMainWindow):
         # VLC Player
         self.vlcPlayer = None
 
+        # bible chat
+        config.bibleChatEntry = ""
+
         # Setup menu layout
         self.refreshing = False
         self.versionCombo = None
@@ -5571,6 +5574,8 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         for description, triggered in features:
             action = subMenu.addAction(config.thisTranslation[description])
             action.triggered.connect(triggered)
+        action = menu.addAction(config.thisTranslation["bibleChat"])
+        action.triggered.connect(partial(self.bibleChat, "book"))
         menu.addSeparator()
         for b in bible.getBookList():
             if str(b) in abbreviations:
@@ -5603,6 +5608,8 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         for description, triggered in features:
             action = subMenu.addAction(config.thisTranslation[description])
             action.triggered.connect(triggered)
+        action = menu.addAction(config.thisTranslation["bibleChat"])
+        action.triggered.connect(partial(self.bibleChat, "chapter"))
         menu.addSeparator()
         for c in bible.getChapterList(config.mainB):
             action = menu.addAction(str(c))
@@ -5639,6 +5646,8 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             action.triggered.connect(triggered)
         action = subMenu.addAction(config.thisTranslation["interlinearData"])
         action.triggered.connect(partial(self.runPlugin, "Interlinear Data"))
+        action = menu.addAction(config.thisTranslation["bibleChat"])
+        action.triggered.connect(partial(self.bibleChat, "verse"))
         menu.addSeparator()
         for v in bible.getVerseList(config.mainB, config.mainC):
             action = menu.addAction(str(v))
@@ -5646,6 +5655,24 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             action.setCheckable(True)
             action.setChecked(True if v == config.mainV else False)
         self.mainV.setMenu(menu)
+
+    def bibleChat(self, mode):
+        config.chatGPTApiIncludeDuckDuckGoSearchResults = False
+        config.chatGPTApiContextInAllInputs = False
+        standardAbbreviation = config.standardAbbreviation
+        config.standardAbbreviation = "ENG"
+        reference = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+        config.standardAbbreviation = standardAbbreviation
+        if mode == "verse":
+            config.chatGPTApiPredefinedContext = "Interpret OT Verse" if config.mainC < 40 else "Interpret NT Verse"
+            config.bibleChatEntry = reference
+        elif mode == "chapter":
+            config.chatGPTApiPredefinedContext = "Summarize a Chapter"
+            config.bibleChatEntry = reference.split(":")[0]
+        elif mode == "book":
+            config.chatGPTApiPredefinedContext = "Introduce a Book"
+            config.bibleChatEntry = BibleBooks().abbrev["eng"][str(config.mainB)][1]
+        self.runPlugin("Bible Chat")
 
     def mainRefMenuSelected(self, bcvValue):
         bible, bcv, value = bcvValue
