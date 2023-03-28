@@ -690,25 +690,7 @@ Follow the following steps:
             document.setPlainText(self.contentView.toPlainText())
             document.print_(printer)
 
-    def getMessages(self, userInput):
-        # system message
-        messages = [
-            {"role": "system", "content": "You’re a kind helpful assistant"}
-        ]
-        # chat history
-        history = self.contentView.toPlainText().strip()
-        if history:
-            if history.startswith(">>> "):
-                history = history[4:]
-            exchanges = [exchange for exchange in history.split("\n>>> ") if exchange.strip()]
-            for exchange in exchanges:
-                qa = exchange.split("\n~~~ ")
-                for i, content in enumerate(qa):
-                    if i == 0:
-                        messages.append({"role": "user", "content": content.strip()})
-                    else:
-                        messages.append({"role": "assistant", "content": content.strip()})
-        # customise chat context
+    def getContext(self):
         if not config.chatGPTApiPredefinedContext in config.predefinedContexts:
             config.chatGPTApiPredefinedContext = "[none]"
         if config.chatGPTApiPredefinedContext == "[none]":
@@ -720,6 +702,31 @@ Follow the following steps:
         else:
             # users can modify config.predefinedContexts via plugins
             context = config.predefinedContexts[config.chatGPTApiPredefinedContext]
+        return context
+
+    def getMessages(self, userInput):
+        # system message
+        messages = [
+            {"role": "system", "content": "You’re a kind helpful assistant"}
+        ]
+        # predefined context
+        context = self.getContext()
+        # chat history
+        history = self.contentView.toPlainText().strip()
+        if history:
+            if context and not config.chatGPTApiContextInAllInputs:
+                messages.append({"role": "assistant", "content": context})
+            if history.startswith(">>> "):
+                history = history[4:]
+            exchanges = [exchange for exchange in history.split("\n>>> ") if exchange.strip()]
+            for exchange in exchanges:
+                qa = exchange.split("\n~~~ ")
+                for i, content in enumerate(qa):
+                    if i == 0:
+                        messages.append({"role": "user", "content": content.strip()})
+                    else:
+                        messages.append({"role": "assistant", "content": content.strip()})
+        # customise chat context
         if context and (not history or (history and config.chatGPTApiContextInAllInputs)):
             #messages.append({"role": "assistant", "content": context})
             userInput = f"{context}\n{userInput}"
