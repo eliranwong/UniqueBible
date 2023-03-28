@@ -56,7 +56,9 @@ class ApiDialog(QDialog):
         self.setWindowTitle(config.thisTranslation["settings"])
 
         self.apiKeyEdit = QLineEdit(config.openaiApiKey)
+        self.apiKeyEdit.setEchoMode(QLineEdit.Password)
         self.orgEdit = QLineEdit(config.openaiApiOrganization)
+        self.orgEdit.setEchoMode(QLineEdit.Password)
         self.apiModelBox = QComboBox()
         initialIndex = 0
         index = 0

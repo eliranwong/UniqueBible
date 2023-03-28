@@ -1,3 +1,6 @@
+Changes in 34.63:
+* Added input mask for api key in Bible Chat
+
 Changes in 34.62:
 * Improved terminal mode ".chat" feature"
     - blank entry for options
