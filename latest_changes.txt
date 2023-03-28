@@ -1,3 +1,8 @@
+Changes in 34.62:
+* Improved terminal mode ".chat" feature"
+    - blank entry for options
+    - added options to enter OpenAI API key, switch between ChatGPT models, change maximum tokens
+
 Changes in 34.61:
 * Support ChatGPT-4 in "Bible Chat"
     - First, make sure you have access to "gpt-4" or "gpt-4-32k" models
