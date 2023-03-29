@@ -1105,7 +1105,10 @@ class MaterialMainWindow:
         icon = "material/hardware/smart_toy/materialiconsoutlined/48dp/2x/outline_smart_toy_black_48dp.png"
         if config.openaiApiKey:
             #icon = "material/action/question_answer/materialiconsoutlined/48dp/2x/outline_question_answer_black_48dp.png"
-            self.addMenuPluginButton("Bible Chat", "Bible Chat", icon, self.secondToolBar, translation=False)
+            #self.addMenuPluginButton("Bible Chat", "Bible Chat", icon, self.secondToolBar, translation=False)
+            self.bibleChatButton = QToolButton()
+            self.setBibleChatButton()
+            self.secondToolBar.addWidget(self.bibleChatButton)
         else:
             self.addMenuPluginButton("ChatGPT", "ChatGPT", icon, self.secondToolBar, translation=False)
         self.secondToolBar.addSeparator()

@@ -5659,20 +5659,56 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     def bibleChat(self, mode):
         config.chatGPTApiIncludeDuckDuckGoSearchResults = False
         config.chatGPTApiContextInAllInputs = False
-        standardAbbreviation = config.standardAbbreviation
-        config.standardAbbreviation = "ENG"
-        reference = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
-        config.standardAbbreviation = standardAbbreviation
+        fullBookName = BibleBooks().abbrev["eng"][str(config.mainB)][1]
         if mode == "verse":
             config.chatGPTApiPredefinedContext = "Interpret OT Verse" if config.mainC < 40 else "Interpret NT Verse"
-            config.bibleChatEntry = reference
+            config.bibleChatEntry = f"{fullBookName} {config.mainC}:{config.mainV}"
         elif mode == "chapter":
             config.chatGPTApiPredefinedContext = "Summarize a Chapter"
-            config.bibleChatEntry = reference.split(":")[0]
+            config.bibleChatEntry = f"{fullBookName} {config.mainC}"
         elif mode == "book":
             config.chatGPTApiPredefinedContext = "Introduce a Book"
-            config.bibleChatEntry = BibleBooks().abbrev["eng"][str(config.mainB)][1]
+            config.bibleChatEntry = fullBookName
         self.runPlugin("Bible Chat")
+
+    def runBibleChatPlugins(self):
+        # users can modify config.predefinedContexts, config.inputSuggestions and config.chatGPTTransformers via plugins
+        config.predefinedContexts = {
+            "[none]": "",
+            "[custom]": "",
+        }
+        config.inputSuggestions = []
+        config.chatGPTTransformers = []
+        pluginFolder = os.path.join(os.getcwd(), "plugins", "chatGPT")
+        for plugin in FileUtil.fileNamesWithoutExtension(pluginFolder, "py"):
+            script = os.path.join(pluginFolder, "{0}.py".format(plugin))
+            self.execPythonFile(script)
+
+    def bibleChatAction(self, context=""):
+        if context:
+            config.chatGPTApiIncludeDuckDuckGoSearchResults = False
+            config.chatGPTApiContextInAllInputs = False
+            config.chatGPTApiPredefinedContext = context
+            config.bibleChatEntry = self.selectedText().replace("audiotrack ", "")
+        self.runPlugin("Bible Chat")
+
+    def setBibleChatButton(self):
+        self.runBibleChatPlugins()
+        qIcon = self.getQIcon(self.getCrossplatformPath("material/hardware/smart_toy/materialiconsoutlined/48dp/2x/outline_smart_toy_black_48dp.png"))
+        self.bibleChatButton.setStyleSheet(qIcon)
+        self.bibleChatButton.setPopupMode(QToolButton.InstantPopup)
+        self.bibleChatButton.setArrowType(Qt.NoArrow)
+        self.bibleChatButton.setCursor(QCursor(Qt.PointingHandCursor))
+        self.bibleChatButton.setToolTip(config.thisTranslation["bibleChat"])
+        menu = QMenu(self.bibleChatButton)
+        action = menu.addAction(config.thisTranslation["bibleChat"])
+        action.triggered.connect(self.bibleChatAction)
+        menu.addSeparator()
+        for context in config.predefinedContexts:
+            action = menu.addAction(context)
+            action.triggered.connect(partial(self.bibleChatAction, context))
+            action.setToolTip(config.predefinedContexts[context])
+        self.bibleChatButton.setMenu(menu)
 
     def mainRefMenuSelected(self, bcvValue):
         bible, bcv, value = bcvValue

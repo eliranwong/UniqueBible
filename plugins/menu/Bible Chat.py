@@ -959,3 +959,5 @@ if config.openaiApiKey:
         selectedText = config.mainWindow.selectedText()
         if selectedText:
             bibleChat.chatGPT.userInput.setText(selectedText)
+            if "\n" in selectedText:
+                bibleChat.chatGPT.multilineButtonClicked()
