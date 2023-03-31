@@ -5684,12 +5684,12 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             script = os.path.join(pluginFolder, "{0}.py".format(plugin))
             self.execPythonFile(script)
 
-    def bibleChatAction(self, context=""):
+    def bibleChatAction(self, context="", copiedText=False):
         if context:
             config.chatGPTApiIncludeDuckDuckGoSearchResults = False
             config.chatGPTApiContextInAllInputs = False
             config.chatGPTApiPredefinedContext = context
-            config.bibleChatEntry = self.selectedText().replace("audiotrack ", "")
+            config.bibleChatEntry = self.getClipboardText() if copiedText else self.selectedText().replace("audiotrack ", "").strip()
         self.runPlugin("Bible Chat")
 
     def setBibleChatButton(self):

@@ -2233,31 +2233,33 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 started = False
                 def startChat():
                     chat = config.thisTranslation["chat"]
-                    context = getCurrentContext()
-                    self.print(f"{chat}: {context if context else ''}")
-                    self.print("(blank entry for options)")
+                    self.print(f"{chat}: {config.chatGPTApiPredefinedContext if not config.chatGPTApiPredefinedContext == '[none]' else ''}")
+                    self.print("(blank entry to change context)")
+                    self.print("(enter '.options' for options)")
                     started = False
                 startChat()
                 multilineInput = False
                 completer = WordCompleter(config.inputSuggestions, ignore_case=True) if config.inputSuggestions else None
                 while True:
+                    features = (
+                        ".new",
+                        ".singleLineInput",
+                        ".multiLineInput",
+                        ".changeapikey",
+                        ".chatgptmodel",
+                        ".maxtokens",
+                        ".context",
+                        ".contextInFirstInputOnly",
+                        ".contextInAllInputs",
+                        ".latestSearches",
+                        ".noLatestSearches",
+                        ".share" if config.terminalEnableTermuxAPI else ".save",
+                    )
                     userInput = self.simplePrompt(promptSession=self.terminal_bible_chat_session, multiline=multilineInput, completer=completer)
                     # display options when empty string is entered
                     if not userInput.strip():
-                        features = (
-                            ".new",
-                            ".singleLineInput",
-                            ".multiLineInput",
-                            ".changeapikey",
-                            ".chatgptmodel",
-                            ".maxtokens",
-                            ".context",
-                            ".contextInFirstInputOnly",
-                            ".contextInAllInputs",
-                            ".latestSearches",
-                            ".noLatestSearches",
-                            ".share" if config.terminalEnableTermuxAPI else ".save",
-                        )
+                        userInput = ".context"
+                    if userInput.lower().strip() == ".options":
                         descriptions = (
                             "start a new chat",
                             "single-line user input",
@@ -2314,6 +2316,10 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         predefinedContext = self.dialogs.getValidOptions(options=contexts, title="Bible Chat Predefined Contexts", default=config.chatGPTApiPredefinedContext)
                         if predefinedContext:
                             config.chatGPTApiPredefinedContext = predefinedContext
+                            if config.chatGPTApiPredefinedContext == "[custom]":
+                                customContext = self.simplePrompt(default=config.chatGPTApiContext)
+                                if customContext and not customContext.strip().lower() == config.terminal_cancel_action:
+                                    config.chatGPTApiContext = customContext
                             print(f"Context selected: {config.chatGPTApiPredefinedContext}")
                     elif userInput.strip().lower() == ".new" and started:
                         messages = resetMessages()
@@ -2343,7 +2349,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                                         os.system(f'''{config.open} "{chatFile}"''')
                             except:
                                 self.print("Failed to save a file!")
-                    elif userInput.strip() and not userInput.strip().lower() in (".options", ".share", ".save", ".new", ".context", ".latestsearches", ".nolatestsearches", ".contextinfirstinputonly", ".contextinallinputs", ".singlelineinput", ".multilineinput", ".chatgptmodel", ".maxtokens", ".changeapikey"):
+                    elif userInput.strip() and not userInput.strip().lower() in (".options", ".share", ".save") and not userInput.strip().lower() in [i.lower() for i in features]:
                         # start spinning
                         stop_event = threading.Event()
                         spinner_thread = threading.Thread(target=self.spinning_animation, args=(stop_event,))

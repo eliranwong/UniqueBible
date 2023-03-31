@@ -165,18 +165,30 @@ if config.enablePlugins:
     trayMenu.addAction(contextPlugins)
 # Add a separator
 trayMenu.addSeparator()
-# selected plugins
-toDo = QAction(config.thisTranslation["todo"])
-toDo.triggered.connect(partial(config.mainWindow.runPlugin, "ToDo"))
-trayMenu.addAction(toDo)
+
 if config.openaiApiKey:
     chatgptapi = QAction(config.thisTranslation["bibleChat"])
     chatgptapi.triggered.connect(partial(config.mainWindow.runPlugin, "Bible Chat"))
     trayMenu.addAction(chatgptapi)
+
+    bibleChatSubMenu = QMenu()
+    for index, context in enumerate(config.predefinedContexts):
+        exec("context{0} = QAction(context)".format(index))
+        exec("context{0}.triggered.connect(partial(config.mainWindow.bibleChatAction, context, True))".format(index))
+        exec("bibleChatSubMenu.addAction(context{0})".format(index))
+    bibleChatContexts = QAction(config.thisTranslation["bibleChat"])
+    bibleChatContexts.setMenu(bibleChatSubMenu)
+    trayMenu.addAction(bibleChatContexts)
 else:
     chatgpt = QAction("ChatGPT")
     chatgpt.triggered.connect(partial(config.mainWindow.runPlugin, "ChatGPT"))
     trayMenu.addAction(chatgpt)
+# Add a separator
+trayMenu.addSeparator()
+# selected plugins
+toDo = QAction(config.thisTranslation["todo"])
+toDo.triggered.connect(partial(config.mainWindow.runPlugin, "ToDo"))
+trayMenu.addAction(toDo)
 terminalMode = QAction(config.thisTranslation["terminalMode"])
 terminalMode.triggered.connect(partial(config.mainWindow.runPlugin, "Terminal Mode"))
 trayMenu.addAction(terminalMode)

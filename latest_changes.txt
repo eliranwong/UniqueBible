@@ -1,3 +1,10 @@
+Changes in 34.67:
+* Added Bible Chat predefined contexts to system tray
+* Added predefined contexts to Bible Chat menu
+* Improved terminal mode Bible Chat features:
+    - blank entry to change context
+    - enter '.options' to launch option menu
+
 Changes in 34.66:
 * More integration of "Bible Chat", powered by ChatGPT, for bible studies:
     You can now select text content from the Bible / Study window and click the "Bible Chat" button for various options for bible studies:
