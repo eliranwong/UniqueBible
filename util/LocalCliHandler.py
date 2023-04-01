@@ -2235,31 +2235,32 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     chat = config.thisTranslation["chat"]
                     self.print(f"{chat}: {config.chatGPTApiPredefinedContext if not config.chatGPTApiPredefinedContext == '[none]' else ''}")
                     self.print("(blank entry to change context)")
-                    self.print("(enter '.options' for options)")
+                    self.print("(enter '...' for options)")
                     started = False
                 startChat()
                 multilineInput = False
                 completer = WordCompleter(config.inputSuggestions, ignore_case=True) if config.inputSuggestions else None
+                features = (
+                    ".new",
+                    ".singleLineInput",
+                    ".multiLineInput",
+                    ".changeapikey",
+                    ".chatgptmodel",
+                    ".maxtokens",
+                    ".context",
+                    ".contextInFirstInputOnly",
+                    ".contextInAllInputs",
+                    ".latestSearches",
+                    ".noLatestSearches",
+                    ".share" if config.terminalEnableTermuxAPI else ".save",
+                )
+                featuresLower = [i.lower() for i in features] + ["...", ".save", ".share"]
                 while True:
-                    features = (
-                        ".new",
-                        ".singleLineInput",
-                        ".multiLineInput",
-                        ".changeapikey",
-                        ".chatgptmodel",
-                        ".maxtokens",
-                        ".context",
-                        ".contextInFirstInputOnly",
-                        ".contextInAllInputs",
-                        ".latestSearches",
-                        ".noLatestSearches",
-                        ".share" if config.terminalEnableTermuxAPI else ".save",
-                    )
                     userInput = self.simplePrompt(promptSession=self.terminal_bible_chat_session, multiline=multilineInput, completer=completer)
                     # display options when empty string is entered
                     if not userInput.strip():
                         userInput = ".context"
-                    if userInput.lower().strip() == ".options":
+                    if userInput.lower().strip() == "...":
                         descriptions = (
                             "start a new chat",
                             "single-line user input",
@@ -2349,7 +2350,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                                         os.system(f'''{config.open} "{chatFile}"''')
                             except:
                                 self.print("Failed to save a file!")
-                    elif userInput.strip() and not userInput.strip().lower() in (".options", ".share", ".save") and not userInput.strip().lower() in [i.lower() for i in features]:
+                    elif userInput.strip() and not userInput.strip().lower() in featuresLower:
                         # start spinning
                         stop_event = threading.Event()
                         spinner_thread = threading.Thread(target=self.spinning_animation, args=(stop_event,))

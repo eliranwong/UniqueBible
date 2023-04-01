@@ -1,3 +1,7 @@
+Changes in 34.68:
+* Bible Chat in terminal mode:
+    "..." instead of ".options" to launch option menu.
+
 Changes in 34.67:
 * Added Bible Chat predefined contexts to system tray
 * Added predefined contexts to Bible Chat menu
