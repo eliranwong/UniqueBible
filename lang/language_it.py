@@ -1070,4 +1070,5 @@ translation = {
     "applyContext": "Applicare Contesto in",
     "firstInputOnly": "Solo primo input",
     "allInputs": "Tutti Gli Input",
+    "autoScroll": "Scorrimento Automatico",
 }

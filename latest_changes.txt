@@ -1,3 +1,6 @@
+Changes in 34.69:
+* Added option to auto-scroll ChatGPT responses are they are received.
+
 Changes in 34.68:
 * Bible Chat in terminal mode:
     "..." instead of ".options" to launch option menu.

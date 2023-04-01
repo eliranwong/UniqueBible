@@ -1070,4 +1070,5 @@ translation = {
     "applyContext": "Εφαρμογή περιβάλλοντος σε",
     "firstInputOnly": "Μόνο Πρώτη Είσοδος",
     "allInputs": "Όλες οι εισροές",
+    "autoScroll": "Αυτόματη Scroll",
 }

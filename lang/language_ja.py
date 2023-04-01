@@ -1070,4 +1070,5 @@ translation = {
     "applyContext": "コンテキストの適用",
     "firstInputOnly": "最初の入力のみ",
     "allInputs": "すべての入力",
+    "autoScroll": "自動スクロール",
 }

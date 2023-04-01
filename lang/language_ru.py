@@ -1070,4 +1070,5 @@ translation = {
     "applyContext": "Применить контекст в",
     "firstInputOnly": "Только первый ввод",
     "allInputs": "Все входные данные",
+    "autoScroll": "Автопрокрутка",
 }

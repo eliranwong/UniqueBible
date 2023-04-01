@@ -561,6 +561,9 @@ class ConfigUtil:
         setConfig("chatGPTApiMaximumDuckDuckGoSearchResults", """
         # ChatGPT API - maximum number of DuckDuckGo search results to be included.""",
         5)
+        setConfig("chatGPTApiAutoScrolling", """
+        # Auto-scroll display as response is received""",
+        True)
         setConfig("chatGPTFontSize", """
         # Set chatGPT conversation font size""",
         14)

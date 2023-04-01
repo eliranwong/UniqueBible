@@ -1070,4 +1070,5 @@ translation = {
     "applyContext": "Aplicați contextul în",
     "firstInputOnly": "Prima Intrare Numai",
     "allInputs": "Toate intrările",
+    "autoScroll": "Derulare automată",
 }

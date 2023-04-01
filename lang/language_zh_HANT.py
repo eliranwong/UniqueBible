@@ -1070,4 +1070,5 @@ translation = {
     "applyContext": "套用環境定義",
     "firstInputOnly": "僅第一個輸入",
     "allInputs": "所有輸入",
+    "autoScroll": "自動捲動",
 }

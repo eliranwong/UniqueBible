@@ -1070,4 +1070,5 @@ translation = {
     "applyContext": "应用上下文",
     "firstInputOnly": "仅第一个输入",
     "allInputs": "所有输入",
+    "autoScroll": "自动滚动",
 }

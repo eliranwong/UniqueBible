@@ -2320,7 +2320,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                             if config.chatGPTApiPredefinedContext == "[custom]":
                                 customContext = self.simplePrompt(default=config.chatGPTApiContext)
                                 if customContext and not customContext.strip().lower() == config.terminal_cancel_action:
-                                    config.chatGPTApiContext = customContext
+                                    config.chatGPTApiContext = customContext.strip()
                             print(f"Context selected: {config.chatGPTApiPredefinedContext}")
                     elif userInput.strip().lower() == ".new" and started:
                         messages = resetMessages()

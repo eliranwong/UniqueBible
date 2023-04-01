@@ -1070,4 +1070,5 @@ translation = {
     "applyContext": "संदर्भ लागू करें",
     "firstInputOnly": "सिर्फ पहले इनपुट",
     "allInputs": "सभी इनपुट",
+    "autoScroll": "स्वतः स्क्रॉल करें",
 }

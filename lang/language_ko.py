@@ -1070,4 +1070,5 @@ translation = {
     "applyContext": "다음에 컨텍스트 적용",
     "firstInputOnly": "첫 번째 입력 전용",
     "allInputs": "모든 입력",
+    "autoScroll": "자동 스크롤",
 }

@@ -1070,4 +1070,5 @@ translation = {
     "applyContext": "à '- à', à ', à' - à ' à '",
     "firstInputOnly": "ആദ്യത്തെ ഇന്പുട്ട് മാത്രം",
     "allInputs": "എല്ലാ ഇന്പുട്ടുകള്",
+    "autoScroll": "ഓട്ടോ സ്ക്രോള്",
 }
