@@ -1,3 +1,6 @@
+Changes in 34.70:
+* Added ASV paragraphs to aid in bible translation process.
+
 Changes in 34.69:
 * Added option to auto-scroll ChatGPT responses are they are received.
 
