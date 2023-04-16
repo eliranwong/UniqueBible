@@ -1,3 +1,7 @@
+Changes in 34.71:
+* Released paragraph division data for Amazing Grace Bible Translation Series
+    Read more at: https://github.com/eliranwong/AmazingGraceBibleTranslationSeries
+
 Changes in 34.70:
 * Added ASV paragraphs to aid in bible translation process.
 
