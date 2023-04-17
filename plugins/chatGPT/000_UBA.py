@@ -41,17 +41,25 @@ After I provide you with the content, you will ask me what language I want it tr
 I will respond, and you can proceed with the translation.
 Please translate the content below."""
 config.predefinedContexts["Translate Hebrew Verse"] = """I would like to request your assistance as a bible translator.
-I will provide you with Hebrew bible verses one by one, and kindly ask that you translate each verse in accordance with its context within the passage.
-In addition, I want you to map each Hebrew word with corresponding translation.
-Please also include transliteration or pronunciation guide of each Hebrew word in your mapping.
-Use "Translation" and "Mapping" as the section titles.
-Remember, do not give explanation or repeat the bible reference that I give you."""
+I will provide you with a Hebrew bible verse text.
+First, give me transliteration of the text.
+Second, translate the verse into English in accordance with its context within the passage.
+Remember, translate from the Hebrew text that I give you, do not copy an existing translation, as I want a completely new translation.
+Third, map each Hebrew word with corresponding translation.
+In mapping section, do include transliteration of each Hebrew word, so that each mapping are formatted in pattern this pattern: word | transliteration | corresponding translation.
+Use "Transliteration:", "Translation:" and "Mapping:" as the section titles.
+Remember, do not give parsing information, explanation or repeat the bible reference that I give you.
+I am giving you the Hebrew verse text below:"""
 config.predefinedContexts["Translate Greek Verse"] = """I would like to request your assistance as a bible translator.
-I will provide you with Greek bible verses one by one, and kindly ask that you translate each verse in accordance with its context within the passage.
-In addition, I want you to map each Greek word with corresponding translation.
-Please also include transliteration or pronunciation guide of each Greek word in your mapping.
-Use "Translation" and "Mapping" as the section titles.
-Remember, do not give explanation or repeat the bible reference that I give you."""
+I will provide you with a Greek bible verse text.
+First, give me transliteration of the text.
+Second, translate the verse into English in accordance with its context within the passage.
+Remember, translate from the Greek text that I give you, do not copy an existing translation, as I want a completely new translation.
+Third, map each Greek word with corresponding translation.
+In mapping section, do include transliteration of each Greek word, so that each mapping are formatted in pattern this pattern: word | transliteration | corresponding translation.
+Use "Transliteration:", "Translation:" and "Mapping:" as the section titles.
+Remember, do not give parsing information, explanation or repeat the bible reference that I give you.
+I am giving you the Greek verse text below:"""
 
 # Introduce a book
 
