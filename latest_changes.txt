@@ -1,3 +1,6 @@
+Changes in 34.73:
+* Added "Book Outline" context to "Bible Chat".
+
 Changes in 34.72:
 * Updated Bible Chat contexts for translating Hebrew / Greek verses.
 

@@ -78,6 +78,14 @@ I want the introduction to be comprehensive and informative.
 When you explain, quote specific words or phases from relevant bible verses, if any.
 Answer all these relevant questions mentioned above, in the introduction, pertaining to the following bible book."""
 
+config.predefinedContexts["Book Outline"] = """I am currently studying the following bible book and chapters and would appreciate it if you could provide me with a detailed outline for it.
+I want an outline for all chapters of the bible book and chapters I am giving you.
+Please divide it into several main sections and under each section, divide it into different passages.
+Break down the passages into the smallest ones possible, as I am looking for a highly detailed outline.
+Additionally, kindly provide a title for each passage.
+Remember, use your own analysis based on the bible text instead of copying a published outline.
+If chapters are not specified, provide an outline to cover all chapters of the bible book given."""
+
 # Summarise a Chapter
 
 config.predefinedContexts["Summarize a Chapter"] = """Write a detailed interpretation on a bible chapter, considering all the following questions:
