@@ -112,3 +112,4 @@ config.py_init
 plugins/chatGPT*
 iconfile.icns
 tmpicns.rsrc
+.stop_chatgpt

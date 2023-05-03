@@ -378,7 +378,7 @@ class ChatGPTAPI(QWidget):
         button_width = text_rect.width() + 20
         button_height = text_rect.height() + 10
         self.multilineButton.setFixedSize(button_width, button_height)
-        sendButton = QPushButton(config.thisTranslation["send"])
+        self.sendButton = QPushButton(config.thisTranslation["send"])
         searchLabel = QLabel(config.thisTranslation["searchFor"])
         replaceLabel = QLabel(config.thisTranslation["replaceWith"])
         searchReplaceButton = QPushButton(config.thisTranslation["replace"])
@@ -422,7 +422,7 @@ class ChatGPTAPI(QWidget):
         if "Pocketsphinx" in config.enabled:
             promptLayout.addWidget(self.voiceCheckbox)
         promptLayout.addWidget(self.multilineButton)
-        promptLayout.addWidget(sendButton)
+        promptLayout.addWidget(self.sendButton)
         promptLayout.addWidget(self.apiModels)
         layout000Rt.addLayout(promptLayout)
         layout000Rt.addWidget(self.contentView)
@@ -489,7 +489,7 @@ class ChatGPTAPI(QWidget):
         helpButton.clicked.connect(lambda: webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/Bible-Chat-with-ChatGPT-API"))
         apiKeyButton.clicked.connect(self.showApiDialog)
         self.multilineButton.clicked.connect(self.multilineButtonClicked)
-        sendButton.clicked.connect(self.sendMessage)
+        self.sendButton.clicked.connect(self.sendMessage)
         saveButton.clicked.connect(self.saveData)
         self.newButton.clicked.connect(self.newData)
         searchTitleButton.clicked.connect(self.searchData)
@@ -797,11 +797,12 @@ Follow the following steps:
             self.getImage()
 
     def getImage(self):
-        userInput = self.userInput.text().strip()
-        if userInput:
-            self.userInput.setDisabled(True)
-            self.progressBar.show() # show progress bar
-            OpenAIImage(self).workOnGetResponse(userInput)
+        if not self.progressBar.isVisible():
+            userInput = self.userInput.text().strip()
+            if userInput:
+                self.userInput.setDisabled(True)
+                self.progressBar.show() # show progress bar
+                OpenAIImage(self).workOnGetResponse(userInput)
 
     def displayImage(self, imageUrl):
         if imageUrl:
@@ -810,20 +811,27 @@ Follow the following steps:
             self.progressBar.hide()
 
     def getResponse(self):
-        userInput = self.userInput.text().strip()
-        if userInput:
-            self.userInput.setDisabled(True)
-            if config.chatGPTApiNoOfChoices == 1:
-                self.busyLoading = True
-                self.listView.setDisabled(True)
-                self.newButton.setDisabled(True)
-            messages = self.getMessages(userInput)
-            self.print(f">>> {userInput}")
-            self.saveData()
-            self.currentLoadingID = self.contentID
-            self.currentLoadingContent = self.contentView.toPlainText().strip()
-            self.progressBar.show() # show progress bar
-            ChatGPTResponse(self).workOnGetResponse(messages) # get chatGPT response in a separate thread
+        if self.progressBar.isVisible() and config.chatGPTApiNoOfChoices == 1:
+            stop_file = ".stop_chatgpt"
+            if not os.path.isfile(stop_file):
+                open(stop_file, "a", encoding="utf-8").close()
+        elif not self.progressBar.isVisible():
+            userInput = self.userInput.text().strip()
+            if userInput:
+                self.sendButton.setText(config.thisTranslation["stop"])
+
+                self.userInput.setDisabled(True)
+                if config.chatGPTApiNoOfChoices == 1:
+                    self.busyLoading = True
+                    self.listView.setDisabled(True)
+                    self.newButton.setDisabled(True)
+                messages = self.getMessages(userInput)
+                self.print(f">>> {userInput}")
+                self.saveData()
+                self.currentLoadingID = self.contentID
+                self.currentLoadingContent = self.contentView.toPlainText().strip()
+                self.progressBar.show() # show progress bar
+                ChatGPTResponse(self).workOnGetResponse(messages) # get chatGPT response in a separate thread
 
     def processResponse(self, responses):
         if responses:
@@ -850,6 +858,7 @@ Follow the following steps:
             self.listView.setEnabled(True)
             self.newButton.setEnabled(True)
             self.busyLoading = False
+        self.sendButton.setText(config.thisTranslation["send"])
         self.progressBar.hide()
         self.setUserInputFocus()
 
