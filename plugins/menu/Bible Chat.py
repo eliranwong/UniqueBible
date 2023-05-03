@@ -818,10 +818,9 @@ Follow the following steps:
         elif not self.progressBar.isVisible():
             userInput = self.userInput.text().strip()
             if userInput:
-                self.sendButton.setText(config.thisTranslation["stop"])
-
                 self.userInput.setDisabled(True)
                 if config.chatGPTApiNoOfChoices == 1:
+                    self.sendButton.setText(config.thisTranslation["stop"])
                     self.busyLoading = True
                     self.listView.setDisabled(True)
                     self.newButton.setDisabled(True)
