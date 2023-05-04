@@ -998,8 +998,8 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 """.format(
                     self.passageSelectionButton(),
                     self.openSideNav(),
-                    #self.submitButton(),
-                    self.chapterSelectionButton(),
+                    self.submitButton(),
+                    #self.chapterSelectionButton(),
                     self.qrButton(),
                     config.webHomePage,
                     self.newWindowButton(),
