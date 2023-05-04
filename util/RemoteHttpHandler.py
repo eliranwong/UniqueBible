@@ -1640,7 +1640,8 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
         if playlist:
             content = HtmlGeneratorUtil().getAudioPlayer(playlist)
         else:
-            content = config.thisTranslation["noBibleAudioLink"]
+            #content = config.thisTranslation["noBibleAudioLink"]
+            content = self.audioContent()
         return content
 
     def audioContent(self):

@@ -1,3 +1,6 @@
+Changes in 34.76:
+* http-server audio page
+
 Changes in 34.75:
 * automatically scroll to currently opened book when html chapter menu is loaded.
 
