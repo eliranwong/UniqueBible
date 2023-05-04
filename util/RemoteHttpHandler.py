@@ -145,8 +145,31 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 self.setMainVerse()
             return config.mainVerseData[self.session]
 
+    def refineCommand(self, command, mainVerse):
+        try:
+            # match a bible version
+            if command in self.textCommandParser.parent.textList:
+                command = f"TEXT:::{command}"
+            # match a bible reference
+            bc = command.split(":", 1)
+            bci = [int(i) for i in bc if i]
+            if len(bc) == 2 and len(bci) == 1:
+                # Users specify a verse number, e.g. :16
+                if command.startswith(":"):
+                    command = self.textCommandParser.bcvToVerseReference(mainVerse["b"], mainVerse["c"], bci[0])
+                # Users specify a chapter number, e.g. 3:
+                elif command.endswith(":"):
+                    command = self.textCommandParser.bcvToVerseReference(mainVerse["b"], bci[0], 1)
+            # Users specify both a chapter number and a verse number, e.g. 3:16
+            elif len(bc) == 2 and len(bci) == 2:
+                command = self.textCommandParser.bcvToVerseReference(mainVerse["b"], bci[0], bci[1])
+        except:
+            pass
+        return command
+
     def getShortcuts(self):
-        mainVerse = self.getMainVerse()
+        mainVerse = self.getMainVerse() # e.g. {'text': 'KJV', 'bAbb': 'John', 'bFullEnglishName': 'John', 'b': 43, 'c': 3, 'v': 16, 'reference': 'John 3:16', 'commentary': 'BI'}
+        self.command = self.refineCommand(self.command, mainVerse)
         return {
             ".chapters": "_chapters:::{0}".format(mainVerse["text"]),
             ".bible": "BIBLE:::{0}:::{1}".format(mainVerse["text"], mainVerse["reference"]),
@@ -975,7 +998,8 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 """.format(
                     self.passageSelectionButton(),
                     self.openSideNav(),
-                    self.submitButton(),
+                    #self.submitButton(),
+                    self.chapterSelectionButton(),
                     self.qrButton(),
                     config.webHomePage,
                     self.newWindowButton(),

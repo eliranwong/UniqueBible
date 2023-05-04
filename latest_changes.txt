@@ -1,3 +1,8 @@
+Changes in 34.77:
+* Improved http-server
+    - mini layout: replace submit button with chapter navigation button
+    - added command shortcuts for changing bible version / chapter / verse as in desktop version.
+
 Changes in 34.76:
 * http-server audio page
 
