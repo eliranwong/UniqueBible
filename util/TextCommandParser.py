@@ -2122,6 +2122,8 @@ class TextCommandParser:
             bookList = bible.getBookList()
             html = """<h2 style='text-align: center;'>{0} <button title='{1}' type='button' class='ubaButton' onclick='document.title="_menu:::"'><span class="material-icons-outlined">more_vert</span></button></h2>""".format(info, config.thisTranslation["menu_more"])
             for bNo in bookList:
+                if bNo == config.mainB:
+                    html += f'<span id="v{config.mainB}.{config.mainC}.{config.mainV}"></span>'
                 bkNoStr = str(bNo)
                 if bkNoStr in books:
                     abb = books[bkNoStr][0]

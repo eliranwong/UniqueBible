@@ -1,3 +1,6 @@
+Changes in 34.75:
+* automatically scroll to currently opened book when html chapter menu is loaded.
+
 Changes in 34.74:
 * Added ability to stop ChatGPT response in the middle of streaming.
 
