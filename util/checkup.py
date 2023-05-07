@@ -525,6 +525,13 @@ def isOpenaiInstalled():
     except:
         return False
 
+def isLlamaIndexInstalled():
+    try:
+        from llama_index import GPTVectorStoreIndex
+        return True
+    except:
+        return False
+
 def isSpeechRecognitionInstalled():
     try:
         import speech_recognition
@@ -723,6 +730,7 @@ optional = [
     ("validators", "Python Data Validation for Humans", isValidatorsInstalled),
     ("pydub", "Manipulate audio", isPydubInstalled),
     ("openai", "Python client library for the OpenAI API", isOpenaiInstalled),
+    ("llama-index", "Lama Index (GPT Index)", isLlamaIndexInstalled),
     ("SpeechRecognition", "Library for performing speech recognition", isSpeechRecognitionInstalled),
     ("pocketsphinx", "Python bindings for PocketSphinx", isPocketSphinxInstalled),
     ("duckduckgo-search", "DuckDuckGo.com search", isDuckduckgoSearchInstalled),
@@ -772,6 +780,7 @@ optional = [
     ("validators", "Python Data Validation for Humans", isValidatorsInstalled),
     ("pydub", "Manipulate audio", isPydubInstalled),
     ("openai", "Python client library for the OpenAI API", isOpenaiInstalled),
+    ("llama-index", "Lama Index (GPT Index)", isLlamaIndexInstalled),
     ("SpeechRecognition", "Library for performing speech recognition", isSpeechRecognitionInstalled),
     ("pocketsphinx", "Python bindings for PocketSphinx", isPocketSphinxInstalled),
     ("duckduckgo-search", "DuckDuckGo.com search", isDuckduckgoSearchInstalled),

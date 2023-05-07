@@ -1,3 +1,10 @@
+Changes in 34.78:
+* Added semantic search on installed bible modules
+    - e.g. semantic:::quote verses on "God created the earth"
+    - e.g. semantic:::write a summary on Exodus 13
+    - e.g. semantic:::compare Mark 1 and John 1
+    - This feature requires OpenAI API Key, configured via file 'config.py' or 'Bible Chat' plugin.
+
 Changes in 34.77:
 * Improved http-server
     - mini layout: replace submit button with chapter navigation button

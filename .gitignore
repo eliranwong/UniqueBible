@@ -3,6 +3,7 @@
 /venv*
 /venv_*
 /GospelChurchUK
+/llama_index
 /marvelData
 /marvelData_*
 /build

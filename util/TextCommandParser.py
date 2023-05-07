@@ -1,6 +1,9 @@
 # coding=utf-8
 import glob, pprint
 import pydoc
+import openai, traceback, shutil
+from llama_index import SimpleDirectoryReader, GPTVectorStoreIndex, StorageContext, load_index_from_storage
+from pathlib import Path
 import os, re, webbrowser, platform, zipfile, subprocess, config
 from datetime import date
 from util.VlcUtil import VlcUtil
@@ -210,6 +213,15 @@ class TextCommandParser:
             # To search specific books of bible
             # e.g. COUNT:::KJV:::love:::Matt-John, 1Cor, Rev
             # e.g. COUNT:::KJV:::temple:::OT
+            """),
+            # semantic search requires OpenAI API key
+            "semantic": (self.textSemanticSearch, """
+            # [KEYWORD] SEMANTIC
+            # Feature - Bible Query via OpenAI API and Llama Index.
+            # Usage - SEMANTIC:::[BIBLE_VERSION]:::[QUERY]
+            # e.g. SEMANTIC:::KJV:::quote verses on "God created the earth"
+            # e.g. SEMANTIC:::KJV:::write a summary on Exodus 14
+            # e.g. SEMANTIC:::KJV:::compare Mark 1 and John 1
             """),
             "search": (self.textSearchBasic, """
             # [KEYWORD] SEARCH
@@ -1022,6 +1034,7 @@ class TextCommandParser:
             "difference": self.getCoreBiblesInfo(),
             "count": self.getCoreBiblesInfo(),
             "search": self.getCoreBiblesInfo(),
+            "semantic": self.getCoreBiblesInfo(),
             "advancedsearch": self.getCoreBiblesInfo(),
             "andsearch": self.getCoreBiblesInfo(),
             "orsearch": self.getCoreBiblesInfo(),
@@ -3246,6 +3259,61 @@ class TextCommandParser:
                 return self.invalidCommand()
         except:
             return self.invalidCommand()
+
+    # SEMANTIC:::
+    def textSemanticSearch(self, command, source):
+        try:
+            openai.api_key = os.environ["OPENAI_API_KEY"] = config.openaiApiKey
+            openai.organization = config.openaiApiOrganization
+
+            if command.count(":::") == 0:
+                command = "{0}:::{1}".format(config.mainText, command)
+            commandList = self.splitCommand(command)
+            text, query = commandList
+            if not text in self.parent.textList:
+                return self.invalidCommand()
+
+            persist_dir = os.path.join("llama_index", f"{text}_md_index")
+            bible_dir = os.path.join("temp", text)
+            def removeTempDir():
+                if os.path.isdir(bible_dir):
+                    shutil.rmtree(bible_dir)
+            # build index if it does not exist
+            if not os.path.isdir(persist_dir):
+                bibleBooks = BibleBooks()
+                # export bible text in markdown format
+                removeTempDir()
+                bible = Bible(text)
+                for b in bible.getBookList():
+                    bookFolder = os.path.join("temp", text, "0"+str(b) if b < 10 else str(b))
+                    Path(bookFolder).mkdir(parents=True, exist_ok=True)
+                    for c in bible.getChapterList(b):
+                        bookFullName = bibleBooks.getStandardBookFullName(b)
+                        chatperText = f"# {bookFullName} {c}\n\n"
+                        standardBookAbbreviation = bibleBooks.getStandardBookAbbreviation(b)
+                        for v in bible.getVerseList(b, c):
+                            verseText = bible.readTextVerse(b, c, v, True)[-1]
+                            chatperText += f"[{standardBookAbbreviation} {c}:{v}] {verseText}\n"
+                        chapterFile = os.path.join(bookFolder, "{:03}.md".format(c))
+                        with open(chapterFile, "w", encoding="utf-8") as fileObj:
+                            fileObj.write(chatperText)
+                # create index
+                documents = SimpleDirectoryReader(bible_dir, recursive=True, required_exts=[".md"]).load_data()
+                index = GPTVectorStoreIndex.from_documents(documents)
+                index.storage_context.persist(persist_dir=persist_dir)
+                # remove exported bible text after indexes are created
+                removeTempDir()
+            # load index
+            storage_context = StorageContext.from_defaults(persist_dir=persist_dir)
+            index = load_index_from_storage(storage_context)
+            # run query
+            query_engine = index.as_query_engine()
+            response = query_engine.query(query).response
+            # parse bible reference
+            response = self.parent.htmlWrapper(response, parsing=True, view="study", linebreak=True, html=False)
+        except:
+            response = "Semantic search requires OpenAI API Key\n\n" + traceback.format_exc()
+        return ("study", response, {})
 
     # COUNT:::
     def textCountSearch(self, command, source):

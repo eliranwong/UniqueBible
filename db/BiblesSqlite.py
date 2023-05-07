@@ -1165,7 +1165,7 @@ class Bible:
         else:
             return ""
 
-    def readTextVerse(self, b, c, v):
+    def readTextVerse(self, b, c, v, noAudioTag=False):
         if self.checkTableExists("Verses"):
             query = "SELECT Book, Chapter, Verse, Scripture FROM Verses WHERE Book=? AND Chapter=? AND Verse=?"
             self.cursor.execute(query, (b, c, v))
@@ -1179,7 +1179,7 @@ class Bible:
                     textVerse = re.sub("""(<heb onclick="w\([0-9]+?,)([0-9]+?)(\)".*?</heb>[ ]*)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::BHS5.{0}.{1}.{2}.\2'">{3}</ref>""".format(b, c, v, config.audioBibleIcon), textVerse)
                 else:
                     textVerse = re.sub("""(<grk onclick="w\([0-9]+?,)([0-9]+?)(\)".*?</grk>[ ]*)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::OGNT.{0}.{1}.{2}.\2'">{3}</ref>""".format(b, c, v, config.audioBibleIcon), textVerse)
-            if config.runMode == "api-server":
+            if config.runMode == "api-server" or noAudioTag:
                 return (b, c, v, textVerse)
             else:
                 return (b, c, v, f"{FileUtil.getVerseAudioTag(self.text, b, c, v)}{textVerse}")
