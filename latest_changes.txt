@@ -1,8 +1,16 @@
+Changes in 34.80:
+* Added command keyword GPTSEARCH::: to search bible modules with natural language:
+    https://github.com/eliranwong/UniqueBible/wiki/Search-Bible-with-Natural-Language-via-ChatGPT
+* Added support of semantic search in non-qt modes.
+* Created a wiki page on semantic search:
+    https://github.com/eliranwong/UniqueBible/wiki/Semantic-Search
+
 Changes in 34.79:
 * Added GPT indexes on NET and KJV bibles for running with semantic search features.
 
 Changes in 34.78:
 * Added semantic search on installed bible modules
+    - e.g. semantic:::slow to speak
     - e.g. semantic:::quote verses on "God created the earth"
     - e.g. semantic:::write a summary on Exodus 13
     - e.g. semantic:::compare Mark 1 and John 1

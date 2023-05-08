@@ -220,6 +220,16 @@ class TextCommandParser:
             # e.g. SEMANTIC:::KJV:::write a summary on Exodus 14
             # e.g. SEMANTIC:::KJV:::compare Mark 1 and John 1
             """),
+            # gpt index search requires OpenAI API key
+            "gptsearch": (self.textGPTSEARCHSearch, """
+            # [KEYWORD] GPTSEARCH
+            # Feature - Use natural language to search bible modules.
+            # Usage - GPTSEARCH:::[BIBLE_VERSION]:::[QUERY]
+            # e.g. GPTSEARCH:::NET:::slow to speak
+            # e.g. GPTSEARCH:::NET:::verses contain both Jesus and love
+            # e.g. GPTSEARCH:::NET:::verses contain spirit but not holy
+            # e.g. GPTSEARCH:::NET:::faith in chapter 3
+            """),
             "search": (self.textSearchBasic, """
             # [KEYWORD] SEARCH
             # Feature - Search bible / bibles for a string
@@ -1032,6 +1042,7 @@ class TextCommandParser:
             "count": self.getCoreBiblesInfo(),
             "search": self.getCoreBiblesInfo(),
             "semantic": self.getCoreBiblesInfo(),
+            "gptsearch": self.getCoreBiblesInfo(),
             "advancedsearch": self.getCoreBiblesInfo(),
             "andsearch": self.getCoreBiblesInfo(),
             "orsearch": self.getCoreBiblesInfo(),
@@ -3257,6 +3268,49 @@ class TextCommandParser:
         except:
             return self.invalidCommand()
 
+    # GPTSEARCH:::
+    def textGPTSEARCHSearch(self, command, source):
+        import openai, traceback
+        try:
+            openai.api_key = os.environ["OPENAI_API_KEY"] = config.openaiApiKey
+            openai.organization = config.openaiApiOrganization
+
+            
+            if command.count(":::") == 0:
+                texts = ""
+                query = command
+            else:
+                commandList = self.splitCommand(command)
+                texts, query = commandList
+
+            prompt = f"""Formulate a sql query over a table created with statement "CREATE TABLE Verses (Book INT, Chapter INT, Verse INT, Scripture TEXT)".
+I am providing you below with WHERE condition described in natural language.
+Give me only the sql query statement, starting with "SELECT * FROM Verses WHERE " without any extra explanation or comment.
+The WHERE condition is described as: {query}"""
+
+            # run ChatGPT to get a standard sql query
+            messages = [
+                {"role": "system", "content" : "You’re a kind helpful assistant"},
+                {"role": "user", "content" : prompt}
+            ]
+            completion = openai.ChatCompletion.create(
+                model=config.chatGPTApiModel,
+                messages=messages,
+                n=1,
+                temperature=0.0,
+                max_tokens=2048,
+            )
+            sqlQuery = completion.choices[0].message.content
+            # check
+            #print(sqlQuery)
+
+            sqlQuery = re.sub("^SELECT . FROM Verses WHERE ", "", sqlQuery)
+            command = f"{texts}:::{sqlQuery}" if texts else sqlQuery
+            return self.textSearch(command, source, "ADVANCED", config.addFavouriteToMultiRef)
+        except:
+            response = "GPT search feature requires an OpenAI API Key; read https://github.com/eliranwong/UniqueBible/wiki/Search-Bible-with-Natural-Language-via-ChatGPT ; " + traceback.format_exc()
+        return ("study", response, {})
+
     # SEMANTIC:::
     def textSemanticSearch(self, command, source):
         import openai, traceback, shutil
@@ -3270,7 +3324,7 @@ class TextCommandParser:
                 command = "{0}:::{1}".format(config.mainText, command)
             commandList = self.splitCommand(command)
             text, query = commandList
-            if not text in self.parent.textList:
+            if not text in BiblesSqlite().getBibleList():
                 return self.invalidCommand()
 
             persist_dir = os.path.join("llama_index", f"{text}_md_index")
@@ -3281,14 +3335,15 @@ class TextCommandParser:
             # build index if it does not exist
             if not os.path.isdir(persist_dir):
                 # notify users
-                self.parent.displayMessage("Create indexes now ...")
+                message = "Create indexes now ..."
+                print(message) if config.noQt else self.parent.displayMessage(message)
                 # load book information
                 bibleBooks = BibleBooks()
                 # export bible text in markdown format
                 removeTempDir()
                 bible = Bible(text)
                 for b in bible.getBookList():
-                    bookFolder = os.path.join("temp", text, "0"+str(b) if b < 10 else str(b))
+                    bookFolder = os.path.join("temp", text, "{:02}".format(b))
                     Path(bookFolder).mkdir(parents=True, exist_ok=True)
                     for c in bible.getChapterList(b):
                         bookFullName = bibleBooks.getStandardBookFullName(b)
@@ -3313,9 +3368,10 @@ class TextCommandParser:
             query_engine = index.as_query_engine()
             response = query_engine.query(query).response
             # parse bible reference
-            response = self.parent.htmlWrapper(response, parsing=True, view="study", linebreak=True, html=False)
+            if not config.runMode in ("terminal", "telnet-server"):
+                response = self.parent.htmlWrapper(response, parsing=True, view="study", linebreak=True, html=False)
         except:
-            response = "Semantic search requires OpenAI API Key\n\n" + traceback.format_exc()
+            response = "Semantic search feature requires an OpenAI API Key; read https://github.com/eliranwong/UniqueBible/wiki/Semantic-Search ; " + traceback.format_exc()
         return ("study", response, {})
 
     # COUNT:::
