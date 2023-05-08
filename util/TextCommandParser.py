@@ -1,9 +1,6 @@
 # coding=utf-8
 import glob, pprint
 import pydoc
-import openai, traceback, shutil
-from llama_index import SimpleDirectoryReader, GPTVectorStoreIndex, StorageContext, load_index_from_storage
-from pathlib import Path
 import os, re, webbrowser, platform, zipfile, subprocess, config
 from datetime import date
 from util.VlcUtil import VlcUtil
@@ -3262,6 +3259,9 @@ class TextCommandParser:
 
     # SEMANTIC:::
     def textSemanticSearch(self, command, source):
+        import openai, traceback, shutil
+        from llama_index import SimpleDirectoryReader, GPTVectorStoreIndex, StorageContext, load_index_from_storage
+        from pathlib import Path
         try:
             openai.api_key = os.environ["OPENAI_API_KEY"] = config.openaiApiKey
             openai.organization = config.openaiApiOrganization
@@ -3280,6 +3280,9 @@ class TextCommandParser:
                     shutil.rmtree(bible_dir)
             # build index if it does not exist
             if not os.path.isdir(persist_dir):
+                # notify users
+                self.parent.displayMessage("Create indexes now ...")
+                # load book information
                 bibleBooks = BibleBooks()
                 # export bible text in markdown format
                 removeTempDir()

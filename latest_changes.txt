@@ -1,3 +1,6 @@
+Changes in 34.79:
+* Added GPT indexes on NET and KJV bibles for running with semantic search features.
+
 Changes in 34.78:
 * Added semantic search on installed bible modules
     - e.g. semantic:::quote verses on "God created the earth"
