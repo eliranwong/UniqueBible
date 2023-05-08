@@ -1,4 +1,4 @@
-# News - Study the Bible with ChatGPT
+# New - Study the Bible with ChatGPT
 
 Read more at https://github.com/eliranwong/UniqueBible/wiki/Bible-Chat-with-ChatGPT-API
 
