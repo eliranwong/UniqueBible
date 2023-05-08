@@ -6,6 +6,7 @@ Changes in 34.78:
     - e.g. semantic:::quote verses on "God created the earth"
     - e.g. semantic:::write a summary on Exodus 13
     - e.g. semantic:::compare Mark 1 and John 1
+    - e.g. semantic:::similar verses to Genesis 1:1 in Hebrews
     - This feature requires OpenAI API Key, configured via file 'config.py' or 'Bible Chat' plugin.
 
 Changes in 34.77:
