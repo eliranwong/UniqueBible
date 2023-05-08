@@ -1071,4 +1071,6 @@ translation = {
     "firstInputOnly": "仅第一个输入",
     "allInputs": "所有输入",
     "autoScroll": "自动滚动",
+    "searchRB6": "使用自然语言透过GPT搜索圣经文字 \n （需要OpenAI API金刚才能执行此功能。） \n 例如： slow to speak \n 例如： verses contain Jesus and love \n 例如： verses contain spirt bun not holy \n 例如： faith in chapter 3",
+    "searchRB7": "透过GPT执行圣经文字上的语言意思搜索\n（需要OpenAI API 金锭才能执行此功能。）\n 例如：慢说话\n ，例如：关于上帝国造了地球\n例如：耶诞遇到尼古拉\n 例如：在希伯来人中与 Genesis 1:1 类似 \n 例如：摘写出埃及记 13 的摘要\n 例如：比较 Mark 1 和 John 1 。",
 }

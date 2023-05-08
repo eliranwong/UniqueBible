@@ -1071,4 +1071,6 @@ translation = {
     "firstInputOnly": "First Input Only",
     "allInputs": "All Inputs",
     "autoScroll": "Auto Scroll",
+    "searchRB6": "Use natural language to search bible text via GPT \n (OpenAI API key is required to run this feature.) \n e.g. slow to speak \n e.g. verses contain both Jesus and love \n e.g. verses contain spirit but not holy \n e.g. faith in chapter 3",
+    "searchRB7": "Perform a semantic search on bible text via GPT \n (OpenAI API key is required to run this feature.) \n e.g. slow to speak \n e.g. quote verses about God created the earth \n e.g. Jesus met Nicodemus \n e.g. similar verses to Genesis 1:1 in Hebrews \n e.g. write a summary on Exodus 13 \n e.g. compare Mark 1 and John 1",
 }

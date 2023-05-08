@@ -1269,7 +1269,7 @@ class TextCommandParser:
         # Use the latest search mode for bible search.
         # Qt library users can change bible search mode via master control
         # Terminal mode users can change default search mode via ".changebiblesearchmode"
-        searchModes = ("COUNT", "SEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
+        searchModes = ("COUNT", "SEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH", "GPTSEARCH", "SEMANTIC")
         if config.useLiteVerseParsing:
             verseList = self.extractAllVersesFast(command)
             if verseList[0][0] == 0:
@@ -3351,6 +3351,7 @@ The WHERE condition is described as: {query}"""
                         standardBookAbbreviation = bibleBooks.getStandardBookAbbreviation(b)
                         for v in bible.getVerseList(b, c):
                             verseText = bible.readTextVerse(b, c, v, True)[-1]
+                            verseText = re.sub("<[^<>]*?>", "", verseText)
                             chatperText += f"[{standardBookAbbreviation} {c}:{v}] {verseText}\n"
                         chapterFile = os.path.join(bookFolder, "{:03}.md".format(c))
                         with open(chapterFile, "w", encoding="utf-8") as fileObj:

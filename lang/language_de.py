@@ -1071,4 +1071,6 @@ translation = {
     "firstInputOnly": "Nur erste Eingabe",
     "allInputs": "Alle Eingaben",
     "autoScroll": "Automatisch blättern",
+    "searchRB6": "Verwenden Sie die natürliche Sprache, um Bibeltext über GPT \n zu durchsuchen (OpenAI-API-Schlüssel ist erforderlich, um diese Funktion auszuführen.) \n z.B. langsam zu sprechen \n z.B. Verse enthalten sowohl Jesus als auch Liebe \n z.B. Versen enthalten Geist, aber nicht heilig \n z.B. Glaube in Kapitel 3",
+    "searchRB7": "Führen Sie eine semantische Suche im Bibeltext über GPT \n aus (für die Ausführung dieses Features ist der OpenAI-API-Schlüssel erforderlich.) \n z.B. langsames Sprechen \n z.B. Zitat Verse über Gott schuf die Erde \n z.B. Jesus traf Nicodemus \n z.B. ähnliche Verse zu Genesis 1: 1 in Hebräer \n z.B. schreiben eine Zusammenfassung zu Exodus 13 \n z.B. vergleichen Mark 1 und John 1",
 }

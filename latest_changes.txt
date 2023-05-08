@@ -1,3 +1,8 @@
+Changes in 34.81:
+* Integrated GPTSEARCH::: and SEMANTIC::: searches in gui Master Control Search tab.
+* Improved index creation for semantic search.
+* Added command keyword description to command entry tooltip as users type a command keyword.
+
 Changes in 34.80:
 * Added command keyword GPTSEARCH::: to search bible modules with natural language:
     https://github.com/eliranwong/UniqueBible/wiki/Search-Bible-with-Natural-Language-via-ChatGPT

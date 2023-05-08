@@ -4246,8 +4246,18 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
 
     # Run instant highlight
     def runInstantHighlight(self):
+        text = self.textCommandLineEdit.text().strip()
+        if text.endswith(":::"):
+            keyword = text[:-3].lower()
+            if keyword and keyword in self.textCommandParser.interpreters:
+                tooltip = self.textCommandParser.interpreters[keyword][-1]
+                tooltip = re.sub("^            ", "", tooltip, flags=re.M)
+                self.textCommandLineEdit.setToolTip(tooltip)
+            else:
+                self.textCommandLineEdit.setToolTip(config.thisTranslation["bar1_command"])
+        else:
+            self.textCommandLineEdit.setToolTip(config.thisTranslation["bar1_command"])
         if config.enableInstantHighlight:
-            text = self.textCommandLineEdit.text().strip()
             self.mainView.currentWidget().findText(text, QWebEnginePage.FindFlags())
             self.studyView.currentWidget().findText(text, QWebEnginePage.FindFlags())
 

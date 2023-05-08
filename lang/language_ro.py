@@ -1071,4 +1071,6 @@ translation = {
     "firstInputOnly": "Prima Intrare Numai",
     "allInputs": "Toate intrările",
     "autoScroll": "Derulare automată",
+    "searchRB6": "Utilizați limba naturală pentru a căuta text biblic prin GPT \n (OpenAI cheie API este necesar pentru a rula această caracteristică.) \n de exemplu, lent pentru a vorbi \n de exemplu, versetele conțin atât Isus și dragoste \n de exemplu, versetele conțin spirit, dar nu sfânt \n de exemplu, credința în capitolul 3",
+    "searchRB7": "Efectuați o căutare semantică pe text biblic prin GPT \n (OpenAI cheie API este necesar pentru a rula această caracteristică.) De exemplu, lent pentru a vorbi \n de exemplu, citat versete despre Dumnezeu a creat pământul \n de exemplu, Isus sa întâlnit Nicodim \n de exemplu, versete similare cu Geneza 1: 1 în Evrei \n de exemplu, scrie un rezumat pe Exod 13 \n de exemplu, compara Mark 1 și Ioan 1",
 }
