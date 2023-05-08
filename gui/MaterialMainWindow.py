@@ -464,6 +464,7 @@ class MaterialMainWindow:
             )
             for feature, action in items:
                 addMenuItem(subMenu0, feature, self, action)
+        addMenuItem(subMenu0, config.thisTranslation["enter"]+" OpenAI API Key", self, self.setMyOpenAiApiKey, translation=False)
         addMenuItem(subMenu0, "setGoogleApiKey", self, self.setMyGoogleApiKey)
         # Shortcuts
         subMenu = addSubMenu(subMenu0, "menu_shortcuts")

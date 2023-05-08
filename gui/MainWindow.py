@@ -1004,6 +1004,14 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
             self.focusCommandLineField()
             self.textCommandLineEdit.setText(prefix)
 
+    # Interface to add config.openaiApiKey
+    def setMyOpenAiApiKey(self):
+        text, ok = QInputDialog.getText(self, "Unique Bible App",
+                "OpenAI API Key", QLineEdit.Normal,
+                config.openaiApiKey)
+        if ok:
+            config.openaiApiKey = text
+
     # Interface to add config.myGoogleApiKey
     def setMyGoogleApiKey(self):
         text, ok = QInputDialog.getText(self, "Unique Bible App",
@@ -5563,6 +5571,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         bible = Bible(config.mainText)
         # Book menu
         abbreviations = BibleVerseParser(config.parserStandarisation).standardAbbreviation
+        standardFullBookName = BibleVerseParser(config.parserStandarisation).standardFullBookName
         self.mainB.setText(abbreviations[str(config.mainB)])
         self.mainB.setToolTip(config.thisTranslation["menu_book"])
         self.mainB.setPopupMode(QToolButton.InstantPopup)
@@ -5589,7 +5598,9 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         menu.addSeparator()
         for b in bible.getBookList():
             if str(b) in abbreviations:
-                action = menu.addAction(abbreviations[str(b)])
+                abb = abbreviations[str(b)]
+                fullName = standardFullBookName[str(b)]
+                action = menu.addAction(f"[{b}] {fullName} ({abb})")
                 action.triggered.connect(partial(self.mainRefMenuSelected, (bible, "b", b)))
                 action.setCheckable(True)
                 action.setChecked(True if b == config.mainB else False)

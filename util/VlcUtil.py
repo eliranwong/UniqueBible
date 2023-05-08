@@ -13,7 +13,7 @@ class VlcUtil:
             return False
 
     @staticmethod
-    def openVlcPlayer(self):
+    def openVlcPlayer():
         def run(command):
             os.system("{0}{1} > /dev/null 2>&1 &".format("nohup " if VlcUtil.isPackageInstalled("nohup") else "", command))
         VlcUtil.closeVlcPlayer()
