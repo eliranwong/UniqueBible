@@ -1,3 +1,9 @@
+Changes in 34.85:
+* Integrated Amazing Grace Bible Translation Series data for subheadings and paragraphs
+    Read information about Amazing Grace Bible Translation Series at:
+    https://github.com/eliranwong/AmazingGraceBibleTranslationSeries
+* Improved plugin to generate chapter summary via Chat GPT
+
 Changes in 34.84:
 * Fixed loading subheadings for new installation.
 

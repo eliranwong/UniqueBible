@@ -18,6 +18,7 @@ if __name__ == "__main__":
     config.noQt = True
 
 from util.BibleVerseParser import BibleVerseParser
+from db.AGBTSData import AGBTSData
 from db.NoteSqlite import NoteSqlite
 from db.Highlight import Highlight
 from util.ConfigUtil import ConfigUtil
@@ -724,7 +725,12 @@ input.addEventListener('keyup', function(event) {0}
             readChapter = Bible.insertReadBibleLink(text, b, c)
             chapter += readChapter
         chapter += "</h2>"
-        titleList = self.getVerseList(b, c, "title")
+        #titleList = self.getVerseList(b, c, "title")
+        agbtsData = AGBTSData()
+        chapterParagraphs = [i[2] for i in agbtsData.getchapterParagraphs(b, c)]
+        chapterSubheadings = agbtsData.getchapterSubheadings(b, c)
+        subheadingTexts = {i[:-1]: i[-1] for i in chapterSubheadings}
+        subheadingVerses = [i[2] for i in chapterSubheadings]
         verseList = self.readTextChapter(text, b, c)
         for verseTuple in verseList:
             b, c, v, verseText = verseTuple
@@ -738,11 +744,12 @@ input.addEventListener('keyup', function(event) {0}
             divTag = "<div>"
             if b < 40 and text in config.rtlTexts:
                 divTag = "<div style='direction: rtl;'>"
-            if v in titleList and config.addTitleToPlainChapter:
-                #if not v == 1:
-                #    chapter += "<br>"
-                #chapter += "{0}<br>".format(self.readTextVerse("title", b, c, v)[3])
-                chapter += self.readTextVerse("title", b, c, v)[3]
+            # add subheading and paragraph
+            if v in subheadingVerses and config.addTitleToPlainChapter:
+                if v in chapterParagraphs and not v == 1:
+                    chapter += "<br>"
+                subheadingText = subheadingTexts[(b, c, v)]
+                chapter += f"<u><b>{subheadingText}</b></u><br>"
             chapter += divTag
             if config.enableVerseHighlighting and config.showHighlightMarkers:
                 chapter += '<ref onclick="hiV({0},{1},{2},\'hl1\')" class="ohl1">&#9678;</ref>'.format(b, c, v)

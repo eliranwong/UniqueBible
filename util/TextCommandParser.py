@@ -17,6 +17,7 @@ from util.readings import allDays
 from functools import partial
 from util.BibleVerseParser import BibleVerseParser
 from util.BibleBooks import BibleBooks
+from db.AGBTSData import AGBTSData
 from db.BiblesSqlite import BiblesSqlite, Bible, ClauseData
 from db.ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, \
     DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, \
@@ -2012,7 +2013,8 @@ class TextCommandParser:
             bookName = BibleBooks.abbrev["eng"][str(b)][-1]
             content = f"<h2>{bookName}</h2>"
             for c in Bible(config.mainText).getChapterList(b):
-                subheadings = BiblesSqlite().getChapterSubheadings(b, c)
+                #subheadings = BiblesSqlite().getChapterSubheadings(b, c)
+                subheadings = AGBTSData().getChapterFormattedSubheadings(b, c)
                 content += f"<p>{subheadings}</p>"
             return ("study", content, {})
 
@@ -2025,7 +2027,8 @@ class TextCommandParser:
             content = ""
             for b, c, *_ in verseList:
                 chapterReference = self.bcvToVerseReference(b, c, 1)[:-2]
-                subheadings = BiblesSqlite().getChapterSubheadings(b, c)
+                #subheadings = BiblesSqlite().getChapterSubheadings(b, c)
+                subheadings = AGBTSData().getChapterFormattedSubheadings(b, c)
                 if subheadings:
                     subheadings = "<p>{0}</p>".format(subheadings)
                 parallels = CollectionsSqlite().getChapterParallels(b, c)
