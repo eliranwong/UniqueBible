@@ -297,6 +297,11 @@ input.addEventListener('keyup', function(event) {0}
         self.cursor.execute(query, (b, c))
         return "<br>".join(['<ref onclick="bcv({0},{1},{2})">[{1}:{2}]</ref> {3}'.format(b, c, v, re.sub("<br>|<u>|</u>", " ", text)) for b, c, v, text in self.cursor.fetchall()])
 
+    def getAGBChapterSubheadings(self, b, c):
+        query = "SELECT * FROM AGBsubheadings WHERE Book=? AND Chapter=? ORDER BY Verse"
+        self.cursor.execute(query, (b, c))
+        return self.cursor.fetchall()
+
     def getVerseList(self, b, c, text=config.mainText, language=""):
         plainBibleList, formattedBibleList = self.getTwoBibleLists()
         if not text in plainBibleList and not text in formattedBibleList:

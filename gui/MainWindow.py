@@ -5683,10 +5683,21 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         fullBookName = BibleBooks().abbrev["eng"][str(config.mainB)][1]
         if mode == "verse":
             config.chatGPTApiPredefinedContext = "Interpret OT Verse" if config.mainC < 40 else "Interpret NT Verse"
-            config.bibleChatEntry = f"{fullBookName} {config.mainC}:{config.mainV}"
+            verseText = Bible(config.mainText).readTextVerse(config.mainB, config.mainC, config.mainV, True)[-1]
+            verseText = re.sub("<[^<>]*?>", "", verseText)
+            config.bibleChatEntry = f"[{fullBookName} {config.mainC}:{config.mainV}] {verseText}"
         elif mode == "chapter":
+            subheadings = BiblesSqlite().getAGBChapterSubheadings(config.mainB, config.mainC)
+            extraInfo = ""
+            if subheadings:
+                verse1 = Bible(config.mainText).readTextVerse(config.mainB, config.mainC, 1, True)[-1]
+                extraInfo = f'''The first verse of the chapter is "{verse1}".\n'''
+                extraInfo += """I am also providing you with subheadings of the chapter below, to assist your writing:\n"""
+                for item in subheadings:
+                    *_, v, subheading = item
+                    extraInfo += f"From verse {v} - {subheading}\n"
             config.chatGPTApiPredefinedContext = "Summarize a Chapter"
-            config.bibleChatEntry = f"{fullBookName} {config.mainC}"
+            config.bibleChatEntry = f"The chapter is {fullBookName} {config.mainC}.\n{extraInfo}"
         elif mode == "book":
             config.chatGPTApiPredefinedContext = "Introduce a Book"
             config.bibleChatEntry = fullBookName
