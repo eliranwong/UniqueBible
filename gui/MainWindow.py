@@ -41,6 +41,7 @@ from util.GitHubRepoInfo import GitHubRepoInfo
 from util.TextCommandParser import TextCommandParser
 from util.BibleVerseParser import BibleVerseParser
 from db.BiblesSqlite import BiblesSqlite, Bible
+from db.AGBTSData import AGBTSData
 from util.TextFileReader import TextFileReader
 from util.Translator import Translator
 from util.ThirdParty import Converter, ThirdPartyDictionary
@@ -5687,7 +5688,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             verseText = re.sub("<[^<>]*?>", "", verseText)
             config.bibleChatEntry = f"[{fullBookName} {config.mainC}:{config.mainV}] {verseText}"
         elif mode == "chapter":
-            subheadings = BiblesSqlite().getAGBChapterSubheadings(config.mainB, config.mainC)
+            subheadings = AGBTSData().getchapterSubheadings(config.mainB, config.mainC)
             extraInfo = ""
             if subheadings:
                 verse1 = Bible(config.mainText).readTextVerse(config.mainB, config.mainC, 1, True)[-1]
