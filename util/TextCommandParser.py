@@ -3343,22 +3343,7 @@ The WHERE condition is described as: {query}"""
                 # load book information
                 bibleBooks = BibleBooks()
                 # export bible text in markdown format
-                removeTempDir()
-                bible = Bible(text)
-                for b in bible.getBookList():
-                    bookFolder = os.path.join("temp", text, "{:02}".format(b))
-                    Path(bookFolder).mkdir(parents=True, exist_ok=True)
-                    for c in bible.getChapterList(b):
-                        bookFullName = bibleBooks.getStandardBookFullName(b)
-                        chatperText = f"# {bookFullName} {c}\n\n"
-                        standardBookAbbreviation = bibleBooks.getStandardBookAbbreviation(b)
-                        for v in bible.getVerseList(b, c):
-                            verseText = bible.readTextVerse(b, c, v, True)[-1]
-                            verseText = re.sub("<[^<>]*?>", "", verseText)
-                            chatperText += f"[{standardBookAbbreviation} {c}:{v}] {verseText}\n"
-                        chapterFile = os.path.join(bookFolder, "{:03}.md".format(c))
-                        with open(chapterFile, "w", encoding="utf-8") as fileObj:
-                            fileObj.write(chatperText)
+                Bible(text).exportToMarkdown(standardReference=True)
                 # create index
                 documents = SimpleDirectoryReader(bible_dir, recursive=True, required_exts=[".md"]).load_data()
                 index = GPTVectorStoreIndex.from_documents(documents)

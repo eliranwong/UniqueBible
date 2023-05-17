@@ -3,7 +3,7 @@ Reading data from bibles.sqlite
 """
 import glob
 import os, apsw, config, re, logging
-import sys
+import sys, shutil
 from datetime import datetime
 from pathlib import Path
 from functools import partial
@@ -28,6 +28,8 @@ from util.NoteService import NoteService
 from util.TextUtil import TextUtil
 from util.WebtopUtil import WebtopUtil
 from util.LexicalData import LexicalData
+from util.BibleBooks import BibleBooks
+
 
 class BiblesSqlite:
 
@@ -926,6 +928,52 @@ class Bible:
         self.cursor.execute(query, (book,))
         info = self.cursor.fetchone()
         return self.getBookList()[-1] if info is None else info[0]
+
+    def exportToMarkdown(self, agbParagraphs=False, agbSubheadings=False, standardReference=False):
+        if agbParagraphs or agbSubheadings:
+            agbtsData = AGBTSData()
+        # load book information
+        if standardReference:
+            bibleBooks = BibleBooks()
+        # export content to be placed in folder "temp"
+        bible_dir = os.path.join("temp", self.text)
+        # remove old export if exists
+        if os.path.isdir(bible_dir):
+            shutil.rmtree(bible_dir)
+        # export bible text in markdown format
+        for b in self.getBookList():
+            bookFolder = os.path.join(bible_dir, "{:02}".format(b))
+            Path(bookFolder).mkdir(parents=True, exist_ok=True)
+            for c in self.getChapterList(b):
+                if agbParagraphs:
+                    newParagraphFromVerses = [i[2] for i in agbtsData.getchapterParagraphs(b, c)]
+                if agbSubheadings:
+                    subheadings = {i[2]:i[3] for i in agbtsData.getchapterSubheadings(b, c)}
+                if standardReference:
+                    bookFullName = bibleBooks.getStandardBookFullName(b)
+                    standardBookAbbreviation = bibleBooks.getStandardBookAbbreviation(b)
+                chatperText = f"# {bookFullName} {c}\n\n" if standardReference else ""
+                for v in self.getVerseList(b, c):
+                    verseText = self.readTextVerse(b, c, v, True)[-1]
+                    verseText = re.sub("<[^<>]*?>", "", verseText)
+                    reference = f"[{standardBookAbbreviation} {c}:{v}]" if standardReference else f"[{b}.{c}.{v}]"
+                    if agbParagraphs and v in newParagraphFromVerses and not v == 1:
+                        chatperText += "\n"
+                    if agbSubheadings and v in subheadings:
+                        chatperText += "## " + subheadings[v] + "\n"
+                    paragraph = "¶" if agbParagraphs and v in newParagraphFromVerses else ""
+                    chatperText += f"{paragraph}{reference} {verseText}\n"
+                chapterFile = os.path.join(bookFolder, "{:03}.md".format(c))
+                with open(chapterFile, "w", encoding="utf-8") as fileObj:
+                    fileObj.write(chatperText)
+
+    def updateVerse(self, b, c, v, verseText):
+        self.cursor.execute("UPDATE Verses SET Scripture = ? WHERE Book = ? AND Chapter = ? AND Verse = ?", (verseText, b, c, v))
+
+    def getAllVerses(self):
+        query = "SELECT DISTINCT Book, Chapter, Verse FROM Verses ORDER BY Book, Chapter, Verse"
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
 
     def getBookList(self):
         query = "SELECT DISTINCT Book FROM Verses ORDER BY Book"

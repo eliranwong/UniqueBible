@@ -1,3 +1,6 @@
+Changes in 34.86:
+* Added support of exporting bible text into markdown format
+
 Changes in 34.85:
 * Integrated Amazing Grace Bible Translation Series data for subheadings and paragraphs
     Read information about Amazing Grace Bible Translation Series at:
