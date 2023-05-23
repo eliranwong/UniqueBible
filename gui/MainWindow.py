@@ -4382,19 +4382,24 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
             # match a bible version
             if command in self.crossPlatform.textList:
                 command = f"TEXT:::{command}"
-            # match a bible reference
-            bc = command.split(":", 1)
-            bci = [int(i) for i in bc if i]
-            if len(bc) == 2 and len(bci) == 1:
-                # Users specify a verse number, e.g. :16
-                if command.startswith(":"):
-                    command = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, bci[0])
-                # Users specify a chapter number, e.g. 3:
-                elif command.endswith(":"):
-                    command = self.textCommandParser.bcvToVerseReference(config.mainB, bci[0], 1)
-            # Users specify both a chapter number and a verse number, e.g. 3:16
-            elif len(bc) == 2 and len(bci) == 2:
-                command = self.textCommandParser.bcvToVerseReference(config.mainB, bci[0], bci[1])
+            # match a bible reference, started with book number, e.g. 43.3.16
+            elif re.search("^[0-9]+?\.[0-9]+?\.[0-9]+?$", command):
+                b, c, v = [int(i) for i in command.split(".")]
+                command = self.textCommandParser.bcvToVerseReference(b, c, v)
+            else:
+                # match a bible reference
+                bc = command.split(":", 1)
+                bci = [int(i) for i in bc if i]
+                if len(bc) == 2 and len(bci) == 1:
+                    # Users specify a verse number, e.g. :16
+                    if command.startswith(":"):
+                        command = self.textCommandParser.bcvToVerseReference(config.mainB, config.mainC, bci[0])
+                    # Users specify a chapter number, e.g. 3:
+                    elif command.endswith(":"):
+                        command = self.textCommandParser.bcvToVerseReference(config.mainB, bci[0], 1)
+                # Users specify both a chapter number and a verse number, e.g. 3:16
+                elif len(bc) == 2 and len(bci) == 2:
+                    command = self.textCommandParser.bcvToVerseReference(config.mainB, bci[0], bci[1])
         except:
             pass
         return command

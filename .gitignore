@@ -114,3 +114,4 @@ plugins/chatGPT*
 iconfile.icns
 tmpicns.rsrc
 .stop_chatgpt
+log.txt
