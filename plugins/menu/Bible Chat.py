@@ -403,7 +403,7 @@ class ChatGPTAPI(QWidget):
         self.fontSize.setCurrentIndex((config.chatGPTFontSize - 1))
         self.temperature = QComboBox()
         self.temperature.addItems([str(i/10) for i in range(0, 21)])
-        self.temperature.setCurrentIndex(config.chatGPTApiTemperature * 10)
+        self.temperature.setCurrentIndex(int(config.chatGPTApiTemperature * 10))
         temperatureLabel = QLabel(config.thisTranslation["temperature"])
         temperatureLabel.setAlignment(Qt.AlignRight)
         temperatureLabel.setToolTip("What sampling temperature to use, between 0 and 2. \nHigher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.")

@@ -1,3 +1,8 @@
+Changes in 34.87:
+* Added package microsoft/guidance
+* Fixed AGB subheadings
+* Fixed Bible Chat type error
+
 Changes in 34.86:
 * Added support of exporting bible text into markdown format
 

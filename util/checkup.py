@@ -379,6 +379,13 @@ def isDuckduckgoSearchInstalled():
     except:
         return False
 
+def isGuidanceInstalled():
+    try:
+        import guidance
+        return True
+    except:
+        return False
+
 def isMarkdownInstalled():
     try:
         import markdown
@@ -734,6 +741,7 @@ optional = [
     ("SpeechRecognition", "Library for performing speech recognition", isSpeechRecognitionInstalled),
     ("pocketsphinx", "Python bindings for PocketSphinx", isPocketSphinxInstalled),
     ("duckduckgo-search", "DuckDuckGo.com search", isDuckduckgoSearchInstalled),
+    ("guidance", "A guidance language for controlling large language models", isGuidanceInstalled),
 ] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -784,6 +792,7 @@ optional = [
     ("SpeechRecognition", "Library for performing speech recognition", isSpeechRecognitionInstalled),
     ("pocketsphinx", "Python bindings for PocketSphinx", isPocketSphinxInstalled),
     ("duckduckgo-search", "DuckDuckGo.com search", isDuckduckgoSearchInstalled),
+    ("guidance", "A guidance language for controlling large language models", isGuidanceInstalled),
 ]
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))

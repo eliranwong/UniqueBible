@@ -975,6 +975,11 @@ class Bible:
         self.cursor.execute(query)
         return self.cursor.fetchall()
 
+    def getBookVerses(self, b):
+        query = "SELECT DISTINCT Book, Chapter, Verse FROM Verses WHERE Book = ? ORDER BY Book, Chapter, Verse"
+        self.cursor.execute(query, (b,))
+        return self.cursor.fetchall()
+
     def getBookList(self):
         query = "SELECT DISTINCT Book FROM Verses ORDER BY Book"
         self.cursor.execute(query)
