@@ -955,7 +955,7 @@ class Bible:
                 chatperText = f"# {bookFullName} {c}\n\n" if standardReference else ""
                 for v in self.getVerseList(b, c):
                     verseText = self.readTextVerse(b, c, v, True)[-1]
-                    verseText = re.sub("<[^<>]*?>", "", verseText)
+                    verseText = re.sub("<[^<>]*?>", "", verseText).strip()
                     reference = f"[{standardBookAbbreviation} {c}:{v}]" if standardReference else f"[{b}.{c}.{v}]"
                     if agbParagraphs and v in newParagraphFromVerses and not v == 1:
                         chatperText += "\n"
