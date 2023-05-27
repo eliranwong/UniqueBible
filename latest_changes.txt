@@ -1,3 +1,6 @@
+Changes in 34.89:
+* updated AGB paragraphs
+
 Changes in 34.88:
 * support command entry of bible reference, started with a book number, e.g. 43.3.16
 
