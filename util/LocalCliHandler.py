@@ -2278,7 +2278,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         feature = self.dialogs.getValidOptions(options=features, descriptions=descriptions, title="Bible Chat Options", default=".new")
                         if feature:
                             if feature == ".chatgptmodel":
-                                models = ("gpt-3.5-turbo", "gpt-4", "gpt-4-32k")
+                                models = ("gpt-3.5-turbo", "gpt-3.5-turbo-16k", "gpt-4", "gpt-4-32k")
                                 model = self.dialogs.getValidOptions(options=models, title="ChatGPT model", default=config.chatGPTApiModel)
                                 if model:
                                     config.chatGPTApiModel = model
