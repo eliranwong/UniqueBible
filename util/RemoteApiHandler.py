@@ -124,6 +124,8 @@ class RemoteApiHandler(ApiRequestHandler):
                 self.processCommentaryCommand(cmd)
             elif command == "lexicon":
                 self.processLexiconCommand(cmd)
+            elif command == "lexiconreverse":
+                self.processLexiconReverseCommand(cmd)
             elif command == "devotional":
                 self.processDevotionalCommand(cmd)
             elif command == "dictionary":
@@ -271,6 +273,19 @@ class RemoteApiHandler(ApiRequestHandler):
             self.sendError("Invalid Lexicon command")
             return
         data = Lexicon(cmd[1]).getRawContent(cmd[2])
+        self.jsonData['data'] = data if data else ("[Not found]",)
+
+    # /lexiconreverse
+    # /lexiconreverse/TRLIT/love
+    def processLexiconReverseCommand(self, cmd):
+        CatalogUtil.reloadLocalCatalog()
+        if len(cmd) == 1:
+            self.jsonData['data'] = [lexicon for lexicon in LexiconData().lexiconList]
+            return
+        elif len(cmd) < 3:
+            self.sendError("Invalid Lexicon command")
+            return
+        data = Lexicon(cmd[1]).getRawReverseContent(cmd[2])
         self.jsonData['data'] = data if data else ("[Not found]",)
 
     # /devotional
