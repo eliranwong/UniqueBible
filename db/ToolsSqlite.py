@@ -958,6 +958,16 @@ class Lexicon:
             contentText = re.sub("(" + entry + ")", r"<z>\1</z>", contentText, flags=re.IGNORECASE)
         return contentText
 
+    def getRawReverseContent(self, entry):
+        try:
+            search = "%{0}%".format(entry)
+            query = "SELECT Topic, Definition FROM Lexicon WHERE Definition LIKE ?"
+            self.cursor.execute(query, (search,))
+            return self.cursor.fetchall()
+        except Exception as ex:
+            return ""
+
+
 class BookData:
 
     def __init__(self):
