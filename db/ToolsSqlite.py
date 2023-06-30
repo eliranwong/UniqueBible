@@ -961,7 +961,7 @@ class Lexicon:
     def getRawReverseContent(self, entry):
         try:
             search = "%{0}%".format(entry)
-            query = "SELECT Topic, Definition FROM Lexicon WHERE Definition LIKE ?"
+            query = "SELECT Topic, Definition FROM Lexicon WHERE Definition LIKE ? ORDER BY Topic"
             self.cursor.execute(query, (search,))
             return self.cursor.fetchall()
         except Exception as ex:
