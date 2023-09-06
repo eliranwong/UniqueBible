@@ -159,7 +159,7 @@ class OpenAIImage:
         self.parent = parent
         self.threadpool = QThreadPool()
 
-    def getResponse(self, prompt):
+    def getResponse(self, prompt, progress_callback=None):
         try:
             #https://platform.openai.com/docs/guides/images/introduction
             response = openai.Image.create(
@@ -198,7 +198,7 @@ class VLCVideo:
         self.parent = parent
         self.threadpool = QThreadPool()
 
-    def playVideo(self, videoFilePath, speed):
+    def playVideo(self, videoFilePath, speed, progress_callback=None):
         VlcUtil.playMediaFile(videoFilePath, speed)
         return "Next ..."
 
@@ -225,7 +225,7 @@ class YouTubeDownloader:
         self.parent = parent
         self.threadpool = QThreadPool()
 
-    def downloadYouTubeFile(self, downloadCommand, youTubeLink, outputFolder):
+    def downloadYouTubeFile(self, downloadCommand, youTubeLink, outputFolder, progress_callback=None):
         try:
             if platform.system() == "Windows":
                 os.system(r"cd .\{2}\ & {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
@@ -258,7 +258,7 @@ class PydubAudio:
         self.parent = parent
         self.threadpool = QThreadPool()
 
-    def pydubFile(self):
+    def pydubFile(self, progress_callback=None):
         # vlc gui for video only
         config.isMediaPlaying = True
         # Load audio file
