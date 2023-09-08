@@ -1,4 +1,4 @@
-import config, os, re, openai, sqlite3, webbrowser, shutil, platform
+import config, os, re, openai, tiktoken, sqlite3, webbrowser, shutil, platform
 from duckduckgo_search import ddg
 from functools import partial
 from gtts import gTTS
@@ -69,6 +69,15 @@ class ApiDialog(QDialog):
                 initialIndex = index
             index += 1
         self.apiModelBox.setCurrentIndex(initialIndex)
+        self.functionCallingBox = QComboBox()
+        initialIndex = 0
+        index = 0
+        for key in ("auto", "none"):
+            self.functionCallingBox.addItem(key)
+            if key == config.chatGPTApiFunctionCall:
+                initialIndex = index
+            index += 1
+        self.functionCallingBox.setCurrentIndex(initialIndex)
         self.maxTokenEdit = QLineEdit(str(config.chatGPTApiMaxTokens))
         self.maxTokenEdit.setToolTip("The maximum number of tokens to generate in the completion.\nThe token count of your prompt plus max_tokens cannot exceed the model's context length. Most models have a context length of 2048 tokens (except for the newest models, which support 4096).")
         self.maxInternetSearchResults = QLineEdit(str(config.chatGPTApiMaximumDuckDuckGoSearchResults))
@@ -129,6 +138,7 @@ class ApiDialog(QDialog):
         layout.addRow(f"Organization ID [{optional}]:", self.orgEdit)
         layout.addRow(f"API Model [{required}]:", self.apiModelBox)
         layout.addRow(f"Max Token [{required}]:", self.maxTokenEdit)
+        layout.addRow(f"Function Calling [{optional}]:", self.functionCallingBox)
         layout.addRow(f"{predefinedContext} [{optional}]:", self.predefinedContextBox)
         layout.addRow(f"{context} [{optional}]:", self.contextEdit)
         layout.addRow(f"{applyContext} [{optional}]:", self.applyContextIn)
@@ -161,6 +171,9 @@ class ApiDialog(QDialog):
     def apiModel(self):
         #return "gpt-3.5-turbo"
         return self.apiModelBox.currentText()
+
+    def functionCalling(self):
+        return self.functionCallingBox.currentText()
 
     def max_token(self):
         return self.maxTokenEdit.text().strip()
@@ -249,7 +262,8 @@ class ChatGPTAPI(QWidget):
         # set variables
         self.setupVariables()
         # run plugins
-        self.runPlugins()
+        #self.runPlugins()
+        config.mainWindow.runBibleChatPlugins()
         # setup interface
         self.setupUI()
         # load database
@@ -322,18 +336,21 @@ class ChatGPTAPI(QWidget):
         self.recognitionThread = SpeechRecognitionThread(self)
         self.recognitionThread.phrase_recognized.connect(self.onPhraseRecognized)
 
-    def runPlugins(self):
-        # users can modify config.predefinedContexts, config.inputSuggestions and config.chatGPTTransformers via plugins
+    """def runPlugins(self):
+        # The following config values can be modified with plugins, to extend functionalities
         config.predefinedContexts = {
             "[none]": "",
             "[custom]": "",
         }
         config.inputSuggestions = []
         config.chatGPTTransformers = []
+        config.chatGPTApiFunctionSignatures = []
+        config.chatGPTApiAvailableFunctions = {}
+
         pluginFolder = os.path.join(os.getcwd(), "plugins", "chatGPT")
         for plugin in FileUtil.fileNamesWithoutExtension(pluginFolder, "py"):
             script = os.path.join(pluginFolder, "{0}.py".format(plugin))
-            config.mainWindow.execPythonFile(script)
+            config.mainWindow.execPythonFile(script)"""
 
     def setupUI(self):
         layout000 = QHBoxLayout()
@@ -598,6 +615,7 @@ class ChatGPTAPI(QWidget):
             config.chatGPTApiIncludeDuckDuckGoSearchResults = dialog.include_internet_searches()
             config.chatGPTApiAutoScrolling = dialog.enable_auto_scrolling()
             config.chatGPTApiModel = dialog.apiModel()
+            config.chatGPTApiFunctionCall = dialog.functionCalling()
             config.chatGPTApiPredefinedContext = dialog.predefinedContext()
             config.chatGPTApiContextInAllInputs = dialog.contextInAllInputs()
             config.chatGPTApiContext = dialog.context()
@@ -717,6 +735,73 @@ Follow the following steps:
             document.setPlainText(self.contentView.toPlainText())
             document.print_(printer)
 
+    def exportData(self):
+        # Show a file dialog to get the file path to save
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        filePath, _ = QFileDialog.getSaveFileName(self, "Export Chat Content", os.path.join(os.path.abspath(config.marvelData), "chats", "chat.txt"), "Text Files (*.txt);;Python Files (*.py);;All Files (*)", options=options)
+
+        # If the user selects a file path, save the file
+        if filePath:
+            with open(filePath, "w", encoding="utf-8") as fileObj:
+                fileObj.write(self.contentView.toPlainText().strip())
+
+    def displayMessage(self, message="", title="ChatGPT-GUI"):
+        QMessageBox.information(self, title, message)
+
+    # The following method was modified from source:
+    # https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb
+    def num_tokens_from_messages(self, model=""):
+        if not model:
+            model = config.chatGPTApiModel
+        userInput = self.userInput.text().strip()
+        messages = self.getMessages(userInput)
+
+        """Return the number of tokens used by a list of messages."""
+        try:
+            encoding = tiktoken.encoding_for_model(model)
+        except KeyError:
+            print("Warning: model not found. Using cl100k_base encoding.")
+            encoding = tiktoken.get_encoding("cl100k_base")
+        #encoding = tiktoken.get_encoding("cl100k_base")
+        if model in {
+            "gpt-3.5-turbo",
+            "gpt-3.5-turbo-0613",
+            "gpt-3.5-turbo-16k",
+            "gpt-3.5-turbo-16k-0613",
+            "gpt-4-0314",
+            "gpt-4-32k-0314",
+            "gpt-4",
+            "gpt-4-0613",
+            "gpt-4-32k",
+            "gpt-4-32k-0613",
+            }:
+            tokens_per_message = 3
+            tokens_per_name = 1
+        elif model == "gpt-3.5-turbo-0301":
+            tokens_per_message = 4  # every message follows <|start|>{role/name}\n{content}<|end|>\n
+            tokens_per_name = -1  # if there's a name, the role is omitted
+        elif "gpt-3.5-turbo" in model:
+            #print("Warning: gpt-3.5-turbo may update over time. Returning num tokens assuming gpt-3.5-turbo-0613.")
+            return self.num_tokens_from_messages(messages, model="gpt-3.5-turbo-0613")
+        elif "gpt-4" in model:
+            #print("Warning: gpt-4 may update over time. Returning num tokens assuming gpt-4-0613.")
+            return self.num_tokens_from_messages(messages, model="gpt-4-0613")
+        else:
+            raise NotImplementedError(
+                f"""num_tokens_from_messages() is not implemented for model {model}. See https://github.com/openai/openai-python/blob/main/chatml.md for information on how messages are converted to tokens."""
+            )
+        num_tokens = 0
+        for message in messages:
+            num_tokens += tokens_per_message
+            for key, value in message.items():
+                num_tokens += len(encoding.encode(value))
+                if key == "name":
+                    num_tokens += tokens_per_name
+        num_tokens += 3  # every reply is primed with <|start|>assistant<|message|>
+        #return num_tokens
+        self.displayMessage(message=f"{num_tokens} prompt tokens counted!")
+
     def getContext(self):
         if not config.chatGPTApiPredefinedContext in config.predefinedContexts:
             config.chatGPTApiPredefinedContext = "[none]"
@@ -733,8 +818,9 @@ Follow the following steps:
 
     def getMessages(self, userInput):
         # system message
+        systemMessage = "You’re a kind helpful assistant. Only use the functions you have been provided with." if config.chatGPTApiFunctionCall == "auto" else "You’re a kind helpful assistant."
         messages = [
-            {"role": "system", "content": "You’re a kind helpful assistant"}
+            {"role": "system", "content": systemMessage}
         ]
         # predefined context
         context = self.getContext()
@@ -927,9 +1013,19 @@ class MainWindow(QMainWindow):
         new_action.triggered.connect(self.chatGPT.saveData)
         file_menu.addAction(new_action)
 
+        new_action = QAction(config.thisTranslation["exportChat"], self)
+        new_action.triggered.connect(self.chatGPT.exportData)
+        file_menu.addAction(new_action)
+
         new_action = QAction(config.thisTranslation["printChat"], self)
         new_action.setShortcut("Ctrl+P")
         new_action.triggered.connect(self.chatGPT.printData)
+        file_menu.addAction(new_action)
+
+        file_menu.addSeparator()
+
+        new_action = QAction(config.thisTranslation["countPromptTokens"], self)
+        new_action.triggered.connect(self.chatGPT.num_tokens_from_messages)
         file_menu.addAction(new_action)
 
         file_menu.addSeparator()

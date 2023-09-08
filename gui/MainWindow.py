@@ -5710,13 +5710,16 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         self.runPlugin("Bible Chat")
 
     def runBibleChatPlugins(self):
-        # users can modify config.predefinedContexts, config.inputSuggestions and config.chatGPTTransformers via plugins
+        # The following config values can be modified with plugins, to extend functionalities
         config.predefinedContexts = {
             "[none]": "",
             "[custom]": "",
         }
         config.inputSuggestions = []
         config.chatGPTTransformers = []
+        config.chatGPTApiFunctionSignatures = []
+        config.chatGPTApiAvailableFunctions = {}
+
         pluginFolder = os.path.join(os.getcwd(), "plugins", "chatGPT")
         for plugin in FileUtil.fileNamesWithoutExtension(pluginFolder, "py"):
             script = os.path.join(pluginFolder, "{0}.py".format(plugin))

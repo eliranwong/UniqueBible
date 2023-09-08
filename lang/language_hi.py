@@ -1073,4 +1073,6 @@ translation = {
     "autoScroll": "स्वतः स्क्रॉल करें",
     "searchRB6": "जीपीटी \n के माध्यम से बाईबल पाठ खोजने के लिए प्राकृतिक भाषा का उपयोग करें (OpenI API कुंजी इस सुविधा को चलाने के लिए आवश्यक है.) \n e.g. slow to speak \n e.g. verses contain both Jesus and love \n e.g. verses contain spirit but not holy \n e.g. faith in chapter 3",
     "searchRB7": "जीपीटी \n के माध्यम से बाईबल पाठ पर एक semantic खोज करें (OpenI API कुंजी इस सुविधा को चलाने के लिए आवश्यक है.) \n e.g. slow to speak \n e.g. quote verses about God created the earth \n e.g. Jesus met Nicodemus \n e.g. similar verses to Genesis 1:1 in Hebrews \n e.g. write a summary on Exodus 13 \n e.g. compare Mark 1 and John 1",
+    "exportChat": "चैट निर्यात करें",
+    "countPromptTokens": "संकेत संकेत गिनती",
 }

@@ -543,6 +543,10 @@ class ConfigUtil:
         # ChatGPT API temperature
         # What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.""",
         1.0)
+        setConfig("chatGPTApiFunctionCall", """
+        # Enable / Disable ChatGPT function calling
+        # Select 'auto' to enable; 'none' to disable""",
+        "none")
         setConfig("chatGPTApiLastChatDatabase", """
         # The latest chat database file that was opened.""",
         "")

@@ -2175,17 +2175,57 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         if not config.openaiApiKey:
             changeAPIkey()
 
-        # users can modify config.predefinedContexts, config.inputSuggestions and config.chatGPTTransformers via plugins
+        # The following config values can be modified with plugins, to extend functionalities
         config.predefinedContexts = {
             "[none]": "",
             "[custom]": "",
         }
         config.inputSuggestions = []
         config.chatGPTTransformers = []
+        config.chatGPTApiFunctionSignatures = []
+        config.chatGPTApiAvailableFunctions = {}
+
+        def runCompletion(thisMessage):
+            def runThisCompletion(thisThisMessage):
+                return openai.ChatCompletion.create(
+                    model=config.chatGPTApiModel,
+                    messages=thisThisMessage,
+                    n=config.chatGPTApiNoOfChoices,
+                    temperature=config.chatGPTApiTemperature,
+                    max_tokens=config.chatGPTApiMaxTokens,
+                    functions=config.chatGPTApiFunctionSignatures,
+                    function_call=config.chatGPTApiFunctionCall,
+                )
+
+            while True:
+                completion = runThisCompletion(thisMessage)
+                response_message = completion["choices"][0]["message"]
+                if response_message.get("function_call"):
+                    function_name = response_message["function_call"]["name"]
+                    fuction_to_call = config.chatGPTApiAvailableFunctions[function_name]
+                    function_args = json.loads(response_message["function_call"]["arguments"])
+                    function_response = fuction_to_call(function_args)
+
+                    # process function response
+                    # send the info on the function call and function response to GPT
+                    thisMessage.append(response_message) # extend conversation with assistant's reply
+                    thisMessage.append(
+                        {
+                            "role": "function",
+                            "name": function_name,
+                            "content": function_response,
+                        }
+                    )  # extend conversation with function response
+                else:
+                    break
+
+            return completion
+
         # reset message when a new chart is started or context is changed
         def resetMessages():
+            systemMessage = "You’re a kind helpful assistant. Only use the functions you have been provided with." if config.chatGPTApiFunctionCall == "auto" else "You’re a kind helpful assistant."
             messages = [
-                {"role": "system", "content" : "You’re a kind helpful assistant"}
+                {"role": "system", "content" : systemMessage}
             ]
             return messages
         def getCurrentContext():
@@ -2247,6 +2287,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     ".changeapikey",
                     ".chatgptmodel",
                     ".maxtokens",
+                    ".functioncall",
                     ".context",
                     ".contextInFirstInputOnly",
                     ".contextInAllInputs",
@@ -2268,6 +2309,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                             "change API key",
                             "change ChatGPT model",
                             "change maximum tokens",
+                            "change function call",
                             "change chat context",
                             "apply context in first input ONLY",
                             "apply context in ALL inputs",
@@ -2283,6 +2325,12 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                                 if model:
                                     config.chatGPTApiModel = model
                                     self.print(f"ChatGPT model selected: {model}")
+                            elif feature == ".functioncall":
+                                calls = ("auto", "none")
+                                call = self.dialogs.getValidOptions(options=calls, title="ChatGPT Function Call", default=config.chatGPTApiFunctionCall)
+                                if call:
+                                    config.chatGPTApiFunctionCall = call
+                                    self.print(f"ChaptGPT function call: {'enabled' if config.chatGPTApiFunctionCall == 'auto' else 'disabled'}!")
                             elif feature == ".maxtokens":
                                 maxtokens = self.simplePrompt(numberOnly=True, default=str(config.chatGPTApiMaxTokens))
                                 if maxtokens and not maxtokens.strip().lower() == config.terminal_cancel_action and int(maxtokens) > 0:
@@ -2358,7 +2406,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         # get responses
                         fineTunedUserInput = fineTuneUserInput(userInput, started)
                         messages.append({"role": "user", "content": fineTunedUserInput})
-                        if config.chatGPTApiNoOfChoices == 1:
+                        if config.chatGPTApiNoOfChoices == 1 and config.chatGPTApiFunctionCall == "none":
                             completion = openai.ChatCompletion.create(
                                 model=config.chatGPTApiModel,
                                 messages=messages,
@@ -2382,13 +2430,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                             messages[-1] = {"role": "user", "content": userInput}
                             messages.append({"role": "assistant", "content": chat_response})
                         else:
-                            completion = openai.ChatCompletion.create(
-                                model=config.chatGPTApiModel,
-                                messages=messages,
-                                n=config.chatGPTApiNoOfChoices,
-                                temperature=config.chatGPTApiTemperature,
-                                max_tokens=config.chatGPTApiMaxTokens,
-                            )
+                            completion = runCompletion(messages)
                             # stop spinning
                             stop_event.set()
                             spinner_thread.join()

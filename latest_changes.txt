@@ -1,3 +1,9 @@
+Changes in 34.94:
+Improved plugin "Bible Chat"
+* added "Export Data"
+* added "Count Prompt Tokens"
+* added support of ChatGPT function calling
+
 Changes in 34.93:
 * fixed Youtube-downloader gui
 

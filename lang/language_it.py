@@ -1073,4 +1073,6 @@ translation = {
     "autoScroll": "Scorrimento Automatico",
     "searchRB6": "Utilizzare il linguaggio naturale per cercare il testo bibbia via GPT \n (è necessaria la chiave API OpenAI per eseguire questa funzione.) \n ad esempio lento a parlare \n ad esempio i versi contengono sia Gesù che l'amore \n e.g. versi contengono spirito ma non santo \n ad esempio la fede nel capitolo 3",
     "searchRB7": "Eseguire una ricerca semantica sul testo bibbia tramite GPT \n (è necessaria la chiave API OpenAI per eseguire questa funzione.) \n ad esempio lento a parlare \n ad esempio, citare versi su Dio ha creato la terra \n e.g. Gesù ha incontrato Nicodemus \n e.g. versi simili a Genesis 1: 1 in Hebrews \n e.g. scrivere un riepilogo su Exodus 13 \n ad esempio confrontare Segnala 1 e Giovanni 1",
+    "exportChat": "Export Chat",
+    "countPromptTokens": "Conteggio Prompt Token",
 }

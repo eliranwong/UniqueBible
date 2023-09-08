@@ -1,4 +1,4 @@
-import config, sys, traceback, os, platform, openai
+import config, sys, traceback, os, platform, openai, json
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool
 else:
@@ -91,7 +91,7 @@ class ChatGPTResponse:
     def getResponse(self, messages, progress_callback):
         responses = ""
         try:
-            if config.chatGPTApiNoOfChoices == 1:
+            if config.chatGPTApiNoOfChoices == 1 and config.chatGPTApiFunctionCall == "none":
                 completion = openai.ChatCompletion.create(
                     model=config.chatGPTApiModel,
                     messages=messages,
@@ -119,7 +119,32 @@ class ChatGPTResponse:
                     max_tokens=config.chatGPTApiMaxTokens,
                     temperature=config.chatGPTApiTemperature,
                     n=config.chatGPTApiNoOfChoices,
+                    functions=config.chatGPTApiFunctionSignatures,
+                    function_call=config.chatGPTApiFunctionCall,
                 )
+
+                response_message = completion["choices"][0]["message"]
+                if response_message.get("function_call"):
+                    function_name = response_message["function_call"]["name"]
+                    fuction_to_call = config.chatGPTApiAvailableFunctions[function_name]
+                    function_args = json.loads(response_message["function_call"]["arguments"])
+                    function_response = fuction_to_call(function_args)
+
+                    # check function response
+                    # print("Got this function response:", function_response)
+
+                    # process function response
+                    # send the info on the function call and function response to GPT
+                    messages.append(response_message) # extend conversation with assistant's reply
+                    messages.append(
+                        {
+                            "role": "function",
+                            "name": function_name,
+                            "content": function_response,
+                        }
+                    )  # extend conversation with function response
+                    return self.getResponse(messages, progress_callback)
+
                 for index, choice in enumerate(completion.choices):
                     chat_response = choice.message.content
                     if len(completion.choices) > 1:

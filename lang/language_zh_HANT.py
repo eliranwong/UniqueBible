@@ -1073,4 +1073,6 @@ translation = {
     "autoScroll": "自動捲動",
     "searchRB6": "使用自然語言透過 GPT \n 搜尋 bible 文字（需要 OpenAI API 金鑰才能執行此功能。） \n 例如： slow to speak \n 例如： verses contain Jesus and love \n 例如： verses contain spirt bun not holy \n 例如： faith in chapter 3",
     "searchRB7": "透過 GPT 執行聖經文字上的語意搜尋 \n （需要 OpenAI API 金鑰才能執行此功能。） \n 例如：慢慢說話 \n ，例如：關於上帝創造了地球 \n 例如：耶穌遇到尼古拉 \n 例如：在希伯來人中與 Genesis 1：1 相類似 \n 例如：撰寫出埃及記 13 的摘要\n 例如：比較 Mark 1 和 John 1 。",
+    "exportChat": "匯出會談",
+    "countPromptTokens": "計數提示記號",
 }
