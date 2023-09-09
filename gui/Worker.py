@@ -91,7 +91,7 @@ class ChatGPTResponse:
     def getResponse(self, messages, progress_callback):
         responses = ""
         try:
-            if config.chatGPTApiNoOfChoices == 1 and config.chatGPTApiFunctionCall == "none":
+            if config.chatGPTApiNoOfChoices == 1 and (config.chatGPTApiFunctionCall == "none" or not config.chatGPTApiFunctionSignatures):
                 completion = openai.ChatCompletion.create(
                     model=config.chatGPTApiModel,
                     messages=messages,
@@ -113,15 +113,24 @@ class ChatGPTResponse:
                     # STREAM THE ANSWER
                     progress_callback.emit(progress)
             else:
-                completion = openai.ChatCompletion.create(
-                    model=config.chatGPTApiModel,
-                    messages=messages,
-                    max_tokens=config.chatGPTApiMaxTokens,
-                    temperature=config.chatGPTApiTemperature,
-                    n=config.chatGPTApiNoOfChoices,
-                    functions=config.chatGPTApiFunctionSignatures,
-                    function_call=config.chatGPTApiFunctionCall,
-                )
+                if config.chatGPTApiFunctionSignatures:
+                    completion = openai.ChatCompletion.create(
+                        model=config.chatGPTApiModel,
+                        messages=messages,
+                        max_tokens=config.chatGPTApiMaxTokens,
+                        temperature=config.chatGPTApiTemperature,
+                        n=config.chatGPTApiNoOfChoices,
+                        functions=config.chatGPTApiFunctionSignatures,
+                        function_call=config.chatGPTApiFunctionCall,
+                    )
+                else:
+                    completion = openai.ChatCompletion.create(
+                        model=config.chatGPTApiModel,
+                        messages=messages,
+                        max_tokens=config.chatGPTApiMaxTokens,
+                        temperature=config.chatGPTApiTemperature,
+                        n=config.chatGPTApiNoOfChoices,
+                    )
 
                 response_message = completion["choices"][0]["message"]
                 if response_message.get("function_call"):
@@ -143,15 +152,19 @@ class ChatGPTResponse:
                             "content": function_response,
                         }
                     )  # extend conversation with function response
-                    return self.getResponse(messages, progress_callback)
+                    if config.chatAfterFunctionCalled:
+                        return self.getResponse(messages, progress_callback)
+                    else:
+                        responses += f"{function_response}\n\n"
 
                 for index, choice in enumerate(completion.choices):
                     chat_response = choice.message.content
-                    if len(completion.choices) > 1:
-                        if index > 0:
-                            responses += "\n"
-                        responses += f"~~~ Response {(index+1)}:\n"
-                    responses += f"{chat_response}\n\n"
+                    if chat_response:
+                        if len(completion.choices) > 1:
+                            if index > 0:
+                                responses += "\n"
+                            responses += f"~~~ Response {(index+1)}:\n"
+                        responses += f"{chat_response}\n\n"
         # error codes: https://platform.openai.com/docs/guides/error-codes/python-library-error-types
         except openai.error.APIError as e:
             #Handle API error here, e.g. retry or log

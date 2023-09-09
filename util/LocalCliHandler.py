@@ -2187,14 +2187,22 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
         def runCompletion(thisMessage):
             def runThisCompletion(thisThisMessage):
+                if config.chatGPTApiFunctionSignatures:
+                    return openai.ChatCompletion.create(
+                        model=config.chatGPTApiModel,
+                        messages=thisThisMessage,
+                        n=config.chatGPTApiNoOfChoices,
+                        temperature=config.chatGPTApiTemperature,
+                        max_tokens=config.chatGPTApiMaxTokens,
+                        functions=config.chatGPTApiFunctionSignatures,
+                        function_call="none" if not config.chatGPTApiFunctionSignatures else config.chatGPTApiFunctionCall,
+                    )
                 return openai.ChatCompletion.create(
                     model=config.chatGPTApiModel,
                     messages=thisThisMessage,
                     n=config.chatGPTApiNoOfChoices,
                     temperature=config.chatGPTApiTemperature,
                     max_tokens=config.chatGPTApiMaxTokens,
-                    functions=config.chatGPTApiFunctionSignatures,
-                    function_call=config.chatGPTApiFunctionCall,
                 )
 
             while True:
@@ -2216,6 +2224,9 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                             "content": function_response,
                         }
                     )  # extend conversation with function response
+                    if not config.chatAfterFunctionCalled:
+                        self.print(function_response)
+                        break
                 else:
                     break
 
@@ -2223,7 +2234,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
         # reset message when a new chart is started or context is changed
         def resetMessages():
-            systemMessage = "You’re a kind helpful assistant. Only use the functions you have been provided with." if config.chatGPTApiFunctionCall == "auto" else "You’re a kind helpful assistant."
+            systemMessage = "You’re a kind helpful assistant. Only use the functions you have been provided with." if config.chatGPTApiFunctionCall == "auto" and config.chatGPTApiFunctionSignatures else "You’re a kind helpful assistant."
             messages = [
                 {"role": "system", "content" : systemMessage}
             ]
@@ -2267,8 +2278,9 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         if openai.api_key:
             pluginFolder = os.path.join(os.getcwd(), "plugins", "chatGPT")
             for plugin in FileUtil.fileNamesWithoutExtension(pluginFolder, "py"):
-                script = os.path.join(pluginFolder, "{0}.py".format(plugin))
-                self.execPythonFile(script)
+                if not plugin in config.chatGPTPluginExcludeList:
+                    script = os.path.join(pluginFolder, "{0}.py".format(plugin))
+                    self.execPythonFile(script)
             try:
                 started = False
                 def startChat():
@@ -2288,6 +2300,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     ".chatgptmodel",
                     ".maxtokens",
                     ".functioncall",
+                    ".functionresponse",
                     ".context",
                     ".contextInFirstInputOnly",
                     ".contextInAllInputs",
@@ -2310,6 +2323,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                             "change ChatGPT model",
                             "change maximum tokens",
                             "change function call",
+                            "change function response",
                             "change chat context",
                             "apply context in first input ONLY",
                             "apply context in ALL inputs",
@@ -2331,6 +2345,12 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                                 if call:
                                     config.chatGPTApiFunctionCall = call
                                     self.print(f"ChaptGPT function call: {'enabled' if config.chatGPTApiFunctionCall == 'auto' else 'disabled'}!")
+                            elif feature == ".functionresponse":
+                                calls = ("enable", "disable")
+                                call = self.dialogs.getValidOptions(options=calls, title="Automatic Chat Generation with Function Response", default="enable" if config.chatAfterFunctionCalled else "disable")
+                                if call:
+                                    config.chatAfterFunctionCalled = (call == "enable")
+                                    self.print(f"Automatic Chat Generation with Function Response: {'enabled' if config.chatAfterFunctionCalled else 'disabled'}!")
                             elif feature == ".maxtokens":
                                 maxtokens = self.simplePrompt(numberOnly=True, default=str(config.chatGPTApiMaxTokens))
                                 if maxtokens and not maxtokens.strip().lower() == config.terminal_cancel_action and int(maxtokens) > 0:
@@ -2406,7 +2426,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         # get responses
                         fineTunedUserInput = fineTuneUserInput(userInput, started)
                         messages.append({"role": "user", "content": fineTunedUserInput})
-                        if config.chatGPTApiNoOfChoices == 1 and config.chatGPTApiFunctionCall == "none":
+                        if config.chatGPTApiNoOfChoices == 1 and (config.chatGPTApiFunctionCall == "none" or not config.chatGPTApiFunctionSignatures):
                             completion = openai.ChatCompletion.create(
                                 model=config.chatGPTApiModel,
                                 messages=messages,
@@ -2436,15 +2456,16 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                             spinner_thread.join()
                             for index, choice in enumerate(completion.choices):
                                 chat_response = choice.message.content
-                                # transform response with plugins
-                                for t in config.chatGPTTransformers:
-                                    chat_response = t(chat_response)
-                                if len(completion.choices) > 1:
-                                    self.print(f"### Response {(index+1)}:")
-                                self.print(chat_response)
-                                if index == 0:
-                                    messages[-1] = {"role": "user", "content": userInput}
-                                    messages.append({"role": "assistant", "content": chat_response})
+                                if chat_response:
+                                    # transform response with plugins
+                                    for t in config.chatGPTTransformers:
+                                        chat_response = t(chat_response)
+                                    if len(completion.choices) > 1:
+                                        self.print(f"### Response {(index+1)}:")
+                                    self.print(chat_response)
+                                    if index == 0:
+                                        messages[-1] = {"role": "user", "content": userInput}
+                                        messages.append({"role": "assistant", "content": chat_response})
                         started = True
                         #stop_event.set()
                         #spinner_thread.join()

@@ -1,4 +1,7 @@
 import config, os, re, openai, tiktoken, sqlite3, webbrowser, shutil, platform
+import subprocess, traceback, sys
+import urllib.parse
+from io import StringIO
 from duckduckgo_search import ddg
 from functools import partial
 from gtts import gTTS
@@ -90,6 +93,14 @@ class ApiDialog(QDialog):
         self.autoScrollingCheckBox.setToolTip("Auto-scroll display as responses are received")
         self.autoScrollingCheckBox.setCheckState(Qt.Checked if config.chatGPTApiAutoScrolling else Qt.Unchecked)
         self.chatGPTApiAutoScrolling = config.chatGPTApiAutoScrolling
+        self.chatAfterFunctionCalledCheckBox = QCheckBox(config.thisTranslation["enable"])
+        self.chatAfterFunctionCalledCheckBox.setToolTip("Automatically generate next chat response after a function is called")
+        self.chatAfterFunctionCalledCheckBox.setCheckState(Qt.Checked if config.chatAfterFunctionCalled else Qt.Unchecked)
+        self.chatAfterFunctionCalled = config.chatAfterFunctionCalled
+        self.runPythonScriptGloballyCheckBox = QCheckBox(config.thisTranslation["enable"])
+        self.runPythonScriptGloballyCheckBox.setToolTip("Run user python script in global scope")
+        self.runPythonScriptGloballyCheckBox.setCheckState(Qt.Checked if config.runPythonScriptGlobally else Qt.Unchecked)
+        self.runPythonScriptGlobally = config.runPythonScriptGlobally
         self.contextEdit = QLineEdit(config.chatGPTApiContext)
         firstInputOnly = config.thisTranslation["firstInputOnly"]
         allInputs = config.thisTranslation["allInputs"]
@@ -125,6 +136,8 @@ class ApiDialog(QDialog):
 
         layout = QFormLayout()
         # https://platform.openai.com/account/api-keys
+        chatAfterFunctionCalled = config.thisTranslation["chatAfterFunctionCalled"]
+        runPythonScriptGlobally = config.thisTranslation["runPythonScriptGlobally"]
         autoScroll = config.thisTranslation["autoScroll"]
         predefinedContext = config.thisTranslation["predefinedContext"]
         context = config.thisTranslation["chatContext"]
@@ -139,16 +152,20 @@ class ApiDialog(QDialog):
         layout.addRow(f"API Model [{required}]:", self.apiModelBox)
         layout.addRow(f"Max Token [{required}]:", self.maxTokenEdit)
         layout.addRow(f"Function Calling [{optional}]:", self.functionCallingBox)
+        layout.addRow(f"{chatAfterFunctionCalled} [{optional}]:", self.chatAfterFunctionCalledCheckBox)
         layout.addRow(f"{predefinedContext} [{optional}]:", self.predefinedContextBox)
         layout.addRow(f"{context} [{optional}]:", self.contextEdit)
         layout.addRow(f"{applyContext} [{optional}]:", self.applyContextIn)
         layout.addRow(f"{latestOnlineSearchResults} [{optional}]:", self.includeInternetSearches)
         layout.addRow(f"{maximumOnlineSearchResults} [{optional}]:", self.maxInternetSearchResults)
         layout.addRow(f"{autoScroll} [{optional}]:", self.autoScrollingCheckBox)
+        layout.addRow(f"{runPythonScriptGlobally} [{optional}]:", self.runPythonScriptGloballyCheckBox)
         #layout.addRow(f"{language} [{optional}]:", self.languageBox)
         layout.addWidget(buttonBox)
         self.includeInternetSearches.stateChanged.connect(self.toggleIncludeDuckDuckGoSearchResults)
         self.autoScrollingCheckBox.stateChanged.connect(self.toggleAutoScrollingCheckBox)
+        self.chatAfterFunctionCalledCheckBox.stateChanged.connect(self.toggleChatAfterFunctionCalled)
+        self.runPythonScriptGloballyCheckBox.stateChanged.connect(self.toggleRunPythonScriptGlobally)
 
         self.setLayout(layout)
 
@@ -189,6 +206,18 @@ class ApiDialog(QDialog):
 
     def toggleAutoScrollingCheckBox(self, state):
         self.chatGPTApiAutoScrolling = True if state else False
+
+    def enable_chatAfterFunctionCalled(self):
+        return self.chatAfterFunctionCalled
+
+    def toggleChatAfterFunctionCalled(self, state):
+        self.chatAfterFunctionCalled = True if state else False
+
+    def enable_runPythonScriptGlobally(self):
+        return self.runPythonScriptGlobally
+
+    def toggleRunPythonScriptGlobally(self, state):
+        self.runPythonScriptGlobally = True if state else False
 
     def max_internet_search_results(self):
         return self.maxInternetSearchResults.text().strip()
@@ -403,7 +432,7 @@ class ChatGPTAPI(QWidget):
         searchReplaceButtonAll = QPushButton(config.thisTranslation["all"])
         searchReplaceButtonAll.setToolTip(config.thisTranslation["replaceAll"])
         self.apiModels = QComboBox()
-        self.apiModels.addItems([config.thisTranslation["chat"], config.thisTranslation["image"]])
+        self.apiModels.addItems([config.thisTranslation["chat"], config.thisTranslation["image"], "browser", "python", "system"])
         self.apiModels.setCurrentIndex(0)
         self.apiModel = 0
         self.newButton = QPushButton(config.thisTranslation["new"])
@@ -614,6 +643,8 @@ class ChatGPTAPI(QWidget):
                 pass
             config.chatGPTApiIncludeDuckDuckGoSearchResults = dialog.include_internet_searches()
             config.chatGPTApiAutoScrolling = dialog.enable_auto_scrolling()
+            config.runPythonScriptGlobally = dialog.enable_runPythonScriptGlobally()
+            config.chatAfterFunctionCalled = dialog.enable_chatAfterFunctionCalled()
             config.chatGPTApiModel = dialog.apiModel()
             config.chatGPTApiFunctionCall = dialog.functionCalling()
             config.chatGPTApiPredefinedContext = dialog.predefinedContext()
@@ -645,6 +676,84 @@ class ChatGPTAPI(QWidget):
         config.chatGPTApiAudio = state
         if not config.chatGPTApiAudio:
             config.mainWindow.closeMediaPlayer()
+
+    def noTextSelection(self):
+        self.displayMessage("This feature works on text selection. Select text first!")
+
+    def validate_url(self, url):
+        try:
+            result = urllib.parse.urlparse(url)
+            return all([result.scheme, result.netloc])
+        except ValueError:
+            return False
+
+    def webBrowse(self, userInput=""):
+        if not userInput:
+            userInput = self.contentView.textCursor().selectedText().strip()
+        if not userInput:
+            self.noTextSelection()
+            return
+        if not self.validate_url(userInput):
+            userInput = urllib.parse.quote(userInput)
+            url = f"https://www.google.com/search?q={userInput}"
+        webbrowser.open(url)
+
+    def displayText(self, text):
+        self.saveData()
+        self.newData()
+        self.contentView.setPlainText(text)
+
+    def runSystemCommand(self, command=""):
+        if not command:
+            command = self.contentView.textCursor().selectedText().strip()
+        if not command:
+            self.noTextSelection()
+            return
+
+        # display output only, without error
+        #output = subprocess.check_output(command, shell=True, text=True)
+        #self.displayText(output)
+
+        # display both output and error
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        output = result.stdout  # Captured standard output
+        error = result.stderr  # Captured standard error
+        self.displayText(f"> {command}")
+        self.contentView.appendPlainText(f"\n{output}")
+        if error.strip():
+            self.contentView.appendPlainText("\n# Error\n")
+            self.contentView.appendPlainText(error)
+
+    def runPythonCommand(self, command=""):
+        if not command:
+            command = self.contentView.textCursor().selectedText().strip()
+        if not command:
+            self.noTextSelection()
+            return
+
+        # Store the original standard output
+        original_stdout = sys.stdout
+        # Create a StringIO object to capture the output
+        output = StringIO()
+        try:
+            # Redirect the standard output to the StringIO object
+            sys.stdout = output
+            # Execute the Python string in global namespace
+            try:
+                exec(command, globals()) if config.runPythonScriptGlobally else exec(command)
+                captured_output = output.getvalue()
+            except:
+                captured_output = traceback.format_exc()
+            # Get the captured output
+        finally:
+            # Restore the original standard output
+            sys.stdout = original_stdout
+
+        # Display the captured output
+        if captured_output.strip():
+            self.displayText(captured_output)
+        else:
+            self.displayMessage("Done!")
 
     def removeData(self):
         index = self.listView.selectedIndexes()
@@ -746,6 +855,17 @@ Follow the following steps:
             with open(filePath, "w", encoding="utf-8") as fileObj:
                 fileObj.write(self.contentView.toPlainText().strip())
 
+    def openTextFileDialog(self):
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getOpenFileName(self,
+                                                      "Open Text File",
+                                                      "Text File",
+                                                      "Plain Text Files (*.txt);;Python Scripts (*.py);;All Files (*)",
+                                                      "", options)
+        if fileName:
+            with open(fileName, "r", encoding="utf-8") as fileObj:
+                self.displayText(fileObj.read())
+
     def displayMessage(self, message="", title="ChatGPT-GUI"):
         QMessageBox.information(self, title, message)
 
@@ -818,7 +938,7 @@ Follow the following steps:
 
     def getMessages(self, userInput):
         # system message
-        systemMessage = "You’re a kind helpful assistant. Only use the functions you have been provided with." if config.chatGPTApiFunctionCall == "auto" else "You’re a kind helpful assistant."
+        systemMessage = "You’re a kind helpful assistant. Only use the functions you have been provided with." if config.chatGPTApiFunctionCall == "auto" and config.chatGPTApiFunctionSignatures else "You’re a kind helpful assistant."
         messages = [
             {"role": "system", "content": systemMessage}
         ]
@@ -879,8 +999,20 @@ Follow the following steps:
             self.multilineButtonClicked()
         if self.apiModel == 0:
             self.getResponse()
-        else:
+        elif self.apiModel == 0:
             self.getImage()
+        elif self.apiModel == 2:
+            userInput = self.userInput.text().strip()
+            if userInput:
+                self.webBrowse(userInput)
+        elif self.apiModel == 3:
+            userInput = self.userInput.text().strip()
+            if userInput:
+                self.runPythonCommand(userInput)
+        elif self.apiModel == 4:
+            userInput = self.userInput.text().strip()
+            if userInput:
+                self.runSystemCommand(userInput)
 
     def getImage(self):
         if not self.progressBar.isVisible():
@@ -997,8 +1129,11 @@ class MainWindow(QMainWindow):
         file_menu.addSeparator()
 
         new_action = QAction(config.thisTranslation["databaseDirectory"], self)
-        new_action.setShortcut("Ctrl+O")
         new_action.triggered.connect(self.openDatabaseDirectory)
+        file_menu.addAction(new_action)
+
+        new_action = QAction(config.thisTranslation["pluginDirectory"], self)
+        new_action.triggered.connect(self.openPluginsDirectory)
         file_menu.addAction(new_action)
 
         file_menu.addSeparator()
@@ -1024,24 +1159,14 @@ class MainWindow(QMainWindow):
 
         file_menu.addSeparator()
 
-        new_action = QAction(config.thisTranslation["countPromptTokens"], self)
-        new_action.triggered.connect(self.chatGPT.num_tokens_from_messages)
+        new_action = QAction(config.thisTranslation["readTextFile"], self)
+        new_action.triggered.connect(self.chatGPT.openTextFileDialog)
         file_menu.addAction(new_action)
 
         file_menu.addSeparator()
 
-        openSettings = QAction(config.thisTranslation["chatSettings"], self)
-        openSettings.triggered.connect(self.chatGPT.showApiDialog)
-        file_menu.addAction(openSettings)
-
-        new_action = QAction(config.thisTranslation["toggleMultilineInput"], self)
-        new_action.setShortcut("Ctrl+L")
-        new_action.triggered.connect(self.chatGPT.multilineButtonClicked)
-        file_menu.addAction(new_action)
-
-        new_action = QAction(config.thisTranslation["toggleRegexp"], self)
-        new_action.setShortcut("Ctrl+E")
-        new_action.triggered.connect(self.toggleRegexp)
+        new_action = QAction(config.thisTranslation["countPromptTokens"], self)
+        new_action.triggered.connect(self.chatGPT.num_tokens_from_messages)
         file_menu.addAction(new_action)
 
         file_menu.addSeparator()
@@ -1052,6 +1177,23 @@ class MainWindow(QMainWindow):
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
 
+        # Create customise menu
+        customise_menu = menubar.addMenu(config.thisTranslation["customise"])
+
+        openSettings = QAction(config.thisTranslation["chatSettings"], self)
+        openSettings.triggered.connect(self.chatGPT.showApiDialog)
+        customise_menu.addAction(openSettings)
+
+        new_action = QAction(config.thisTranslation["toggleMultilineInput"], self)
+        new_action.setShortcut("Ctrl+L")
+        new_action.triggered.connect(self.chatGPT.multilineButtonClicked)
+        customise_menu.addAction(new_action)
+
+        new_action = QAction(config.thisTranslation["toggleRegexp"], self)
+        new_action.setShortcut("Ctrl+E")
+        new_action.triggered.connect(self.toggleRegexp)
+        customise_menu.addAction(new_action)
+
         # Create predefined context menu
         context_menu = menubar.addMenu(config.thisTranslation["predefinedContext"])
         for index, context in enumerate(config.predefinedContexts):
@@ -1061,14 +1203,67 @@ class MainWindow(QMainWindow):
             contextAction.triggered.connect(partial(self.chatGPT.bibleChatAction, context))
             context_menu.addAction(contextAction)
 
+        # Create a plugin menu
+        plugin_menu = menubar.addMenu(config.thisTranslation["plugins"])
+
+        pluginFolder = os.path.join(os.getcwd(), "plugins", "chatGPT")
+        for index, plugin in enumerate(FileUtil.fileNamesWithoutExtension(pluginFolder, "py")):
+            new_action = QAction(plugin, self)
+            new_action.setCheckable(True)
+            new_action.setChecked(False if plugin in config.chatGPTPluginExcludeList else True)
+            new_action.triggered.connect(partial(self.updateExcludePluginList, plugin))
+            plugin_menu.addAction(new_action)
+
+        # Create a text selection menu
+        text_selection_menu = menubar.addMenu(config.thisTranslation["textSelection"])
+
+        new_action = QAction(config.thisTranslation["webBrowser"], self)
+        new_action.triggered.connect(self.chatGPT.webBrowse)
+        text_selection_menu.addAction(new_action)
+
+        new_action = QAction(config.thisTranslation["runAsPythonCommand"], self)
+        new_action.triggered.connect(self.chatGPT.runPythonCommand)
+        text_selection_menu.addAction(new_action)
+
+        new_action = QAction(config.thisTranslation["runAsSystemCommand"], self)
+        new_action.triggered.connect(self.chatGPT.runSystemCommand)
+        text_selection_menu.addAction(new_action)
+
+
+        # Create a about menu
+        about_menu = menubar.addMenu(config.thisTranslation["about"])
+
+        openSettings = QAction(config.thisTranslation["repository"], self)
+        openSettings.triggered.connect(lambda: webbrowser.open("https://github.com/eliranwong/ChatGPT-GUI"))
+        about_menu.addAction(openSettings)
+
+        about_menu.addSeparator()
+
+        new_action = QAction(config.thisTranslation["help"], self)
+        new_action.triggered.connect(lambda: webbrowser.open("https://github.com/eliranwong/ChatGPT-GUI/wiki"))
+        about_menu.addAction(new_action)
+
+        about_menu.addSeparator()
+
+        new_action = QAction(config.thisTranslation["donate"], self)
+        new_action.triggered.connect(lambda: webbrowser.open("https://www.paypal.com/paypalme/MarvelBible"))
+        about_menu.addAction(new_action)
+
         # set initial window size
         #self.setWindowTitle("Bible Chat")
         self.resize(QGuiApplication.primaryScreen().availableSize() * 3 / 4)
         self.show()
         self.chatGPT.setFontSize()
 
-    def openDatabaseDirectory(self):
-        databaseDirectory = os.path.dirname(os.path.abspath(config.chatGPTApiLastChatDatabase))
+    def updateExcludePluginList(self, plugin):
+        if plugin in config.chatGPTPluginExcludeList:
+            config.chatGPTPluginExcludeList.remove(plugin)
+        else:
+            config.chatGPTPluginExcludeList.append(plugin)
+        # reload plugins
+        config.mainWindow.runBibleChatPlugins()
+
+    def getOpenCommand(self):
         thisOS = platform.system()
         if thisOS == "Windows":
             openCommand = "start"
@@ -1076,7 +1271,16 @@ class MainWindow(QMainWindow):
             openCommand = "open"
         elif thisOS == "Linux":
             openCommand = "xdg-open"
+        return openCommand
+
+    def openDatabaseDirectory(self):
+        databaseDirectory = os.path.dirname(os.path.abspath(config.chatGPTApiLastChatDatabase))
+        openCommand = self.getOpenCommand()
         os.system(f"{openCommand} {databaseDirectory}")
+
+    def openPluginsDirectory(self):
+        openCommand = self.getOpenCommand()
+        os.system(f"{openCommand} plugins")
 
     def toggleRegexp(self):
         config.chatGPTApiSearchRegexp = not config.chatGPTApiSearchRegexp

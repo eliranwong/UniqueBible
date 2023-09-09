@@ -5722,8 +5722,9 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
 
         pluginFolder = os.path.join(os.getcwd(), "plugins", "chatGPT")
         for plugin in FileUtil.fileNamesWithoutExtension(pluginFolder, "py"):
-            script = os.path.join(pluginFolder, "{0}.py".format(plugin))
-            self.execPythonFile(script)
+            if not plugin in config.chatGPTPluginExcludeList:
+                script = os.path.join(pluginFolder, "{0}.py".format(plugin))
+                self.execPythonFile(script)
 
     def bibleChatAction(self, context="", copiedText=False):
         if context:

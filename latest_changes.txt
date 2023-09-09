@@ -1,3 +1,11 @@
+Changes in 34.95:
+Improved plugin "Bible Chat"
+* added option to generate chat or not after a function is called
+* added ability to run system command
+* added ability to execute a python script locally or globally
+* added ability to open text in a web browser
+* added ability to enable / disable individual ChatGPT plugins
+
 Changes in 34.94:
 Improved plugin "Bible Chat"
 * added "Export Data"

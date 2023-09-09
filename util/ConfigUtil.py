@@ -580,6 +580,15 @@ class ConfigUtil:
         setConfig("chatGPTApiSearchRegexp", """
         # Option to search chat content or database with regular expression.""",
         True)
+        setConfig("chatGPTPluginExcludeList", """
+        # Option to exclude ChatGPT plugins from running.""",
+        [])
+        setConfig("chatAfterFunctionCalled", """
+        # Option to automatically generate next chat response after a function is called.""",
+        True)
+        setConfig("runPythonScriptGlobally", """
+        # Option to execute Python Script Globally via plugin Bible Chat.""",
+        False)
         setConfig("myIBMWatsonApikey", """
         # IBM Watson service api key""",
         "")
