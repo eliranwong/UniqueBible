@@ -372,6 +372,13 @@ def isTabulateInstalled():
     except:
         return False
 
+def isGoogleSearchPythonInstalled():
+    try:
+        import googlesearch
+        return True
+    except:
+        return False
+
 def isDuckduckgoSearchInstalled():
     try:
         from duckduckgo_search import ddg
@@ -748,6 +755,7 @@ optional = [
     ("SpeechRecognition", "Library for performing speech recognition", isSpeechRecognitionInstalled),
     ("pocketsphinx", "Python bindings for PocketSphinx", isPocketSphinxInstalled),
     ("duckduckgo-search", "DuckDuckGo.com search", isDuckduckgoSearchInstalled),
+    ("googlesearch-python", "A Python library for scraping the Google search engine", isGoogleSearchPythonInstalled),
     ("guidance", "A guidance language for controlling large language models", isGuidanceInstalled),
     ("tiktoken", "tokeniser for use with OpenAI's models.", isTiktokenInstalled),
 ] if config.noQt else [
@@ -800,6 +808,7 @@ optional = [
     ("SpeechRecognition", "Library for performing speech recognition", isSpeechRecognitionInstalled),
     ("pocketsphinx", "Python bindings for PocketSphinx", isPocketSphinxInstalled),
     ("duckduckgo-search", "DuckDuckGo.com search", isDuckduckgoSearchInstalled),
+    ("googlesearch-python", "A Python library for scraping the Google search engine", isGoogleSearchPythonInstalled),
     ("guidance", "A guidance language for controlling large language models", isGuidanceInstalled),
     ("tiktoken", "tokeniser for use with OpenAI's models.", isTiktokenInstalled),
 ]

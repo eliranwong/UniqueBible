@@ -559,11 +559,8 @@ class ConfigUtil:
         setConfig("chatGPTApiContextInAllInputs", """
         # ChatGP API - predefined context in all inputs.""",
         False)
-        setConfig("chatGPTApiIncludeDuckDuckGoSearchResults", """
-        # ChatGPT API - include DuckDuckGo search results.""",
-        False)
-        setConfig("chatGPTApiMaximumDuckDuckGoSearchResults", """
-        # ChatGPT API - maximum number of DuckDuckGo search results to be included.""",
+        setConfig("chatGPTApiMaximumInternetSearchResults", """
+        # ChatGPT API - maximum number of internet search results to be integrated.""",
         5)
         setConfig("chatGPTApiAutoScrolling", """
         # Auto-scroll display as response is received""",

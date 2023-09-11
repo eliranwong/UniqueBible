@@ -2259,6 +2259,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 #messages.append({"role": "assistant", "content": context})
                 userInput = f"{context}\n{userInput}"
             # user input
+            """
             if config.chatGPTApiIncludeDuckDuckGoSearchResults:
                 results = ddg(userInput, time='y', max_results=config.chatGPTApiMaximumDuckDuckGoSearchResults)
                 news = ""
@@ -2268,6 +2269,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         body = r["body"]
                         news += f"{title}. {body} "
                 userInput = f"{userInput}. Include the following information that you don't know in your response to my input: {news}"
+            """
             return userInput
         # required
         openai.api_key = os.environ["OPENAI_API_KEY"] = config.openaiApiKey

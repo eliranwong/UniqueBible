@@ -1,3 +1,6 @@
+Changes in 34.96:
+* Add a plugin to integrate Google searches into ChatGPT responses.
+
 Changes in 34.95:
 Improved plugin "Bible Chat"
 * added option to generate chat or not after a function is called
