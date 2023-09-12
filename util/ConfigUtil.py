@@ -562,7 +562,7 @@ class ConfigUtil:
         setConfig("chatGPTApiLoadingInternetSearches", """
         # ChatGPT API - always loading internet searches.
         # options - 'always', 'auto', 'none'.""",
-        "auto")
+        "none")
         setConfig("chatGPTApiMaximumInternetSearchResults", """
         # ChatGPT API - maximum number of internet search results to be integrated.""",
         5)
