@@ -5684,7 +5684,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         self.mainV.setMenu(menu)
 
     def bibleChat(self, mode):
-        config.chatGPTApiIncludeDuckDuckGoSearchResults = False
+        #config.chatGPTApiIncludeDuckDuckGoSearchResults = False
         config.chatGPTApiContextInAllInputs = False
         fullBookName = BibleBooks().abbrev["eng"][str(config.mainB)][1]
         if mode == "verse":
@@ -5721,14 +5721,21 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         config.chatGPTApiAvailableFunctions = {}
 
         pluginFolder = os.path.join(os.getcwd(), "plugins", "chatGPT")
+        # always run 'integrate google searches'
+        internetSeraches = "integrate google searches"
+        script = os.path.join(pluginFolder, "{0}.py".format(internetSeraches))
+        self.execPythonFile(script)
         for plugin in FileUtil.fileNamesWithoutExtension(pluginFolder, "py"):
-            if not plugin in config.chatGPTPluginExcludeList:
+            if not plugin == internetSeraches and not plugin in config.chatGPTPluginExcludeList:
                 script = os.path.join(pluginFolder, "{0}.py".format(plugin))
                 self.execPythonFile(script)
+        if internetSeraches in config.chatGPTPluginExcludeList:
+            del config.chatGPTApiFunctionSignatures[0]
+
 
     def bibleChatAction(self, context="", copiedText=False):
         if context:
-            config.chatGPTApiIncludeDuckDuckGoSearchResults = False
+            #config.chatGPTApiIncludeDuckDuckGoSearchResults = False
             config.chatGPTApiContextInAllInputs = False
             config.chatGPTApiPredefinedContext = context
             config.bibleChatEntry = self.getClipboardText() if copiedText else self.selectedText().replace("audiotrack ", "").strip()

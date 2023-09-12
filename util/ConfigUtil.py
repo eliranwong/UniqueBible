@@ -559,6 +559,10 @@ class ConfigUtil:
         setConfig("chatGPTApiContextInAllInputs", """
         # ChatGP API - predefined context in all inputs.""",
         False)
+        setConfig("chatGPTApiLoadingInternetSearches", """
+        # ChatGPT API - always loading internet searches.
+        # options - 'always', 'auto', 'none'.""",
+        "auto")
         setConfig("chatGPTApiMaximumInternetSearchResults", """
         # ChatGPT API - maximum number of internet search results to be integrated.""",
         5)

@@ -2307,6 +2307,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     ".contextInFirstInputOnly",
                     ".contextInAllInputs",
                     ".latestSearches",
+                    ".autolatestSearches",
                     ".noLatestSearches",
                     ".share" if config.terminalEnableTermuxAPI else ".save",
                 )
@@ -2367,10 +2368,13 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                                 multilineInput = True
                                 self.print("Multi-line user input enabled!")
                             elif feature == ".latestSearches":
-                                config.chatGPTApiIncludeDuckDuckGoSearchResults = True
-                                self.print("Latest online search results enabled!")
+                                config.chatGPTApiLoadingInternetSearches = "always"
+                                self.print("Latest online search results always enabled!")
+                            elif feature == ".autolatestSearches":
+                                config.chatGPTApiLoadingInternetSearches = "auto"
+                                self.print("Latest online search results enabled, if necessary!")
                             elif feature == ".noLatestSearches":
-                                config.chatGPTApiIncludeDuckDuckGoSearchResults = False
+                                config.chatGPTApiLoadingInternetSearches = "none"
                                 self.print("Latest online search results disabled!")
                             elif feature == ".contextInFirstInputOnly":
                                 config.chatGPTApiContextInAllInputs = False

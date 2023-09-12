@@ -1,3 +1,9 @@
+Changes in 34.97:
+Improved plugin "Bible Chat"
+* added options to integrate internet searches: "always", "auto", "none"
+* support calling "python" function
+* fixed opening url
+
 Changes in 34.96:
 * Add a plugin to integrate Google searches into ChatGPT responses.
 

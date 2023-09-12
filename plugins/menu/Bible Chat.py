@@ -81,6 +81,15 @@ class ApiDialog(QDialog):
                 initialIndex = index
             index += 1
         self.functionCallingBox.setCurrentIndex(initialIndex)
+        self.loadingInternetSearchesBox = QComboBox()
+        initialIndex = 0
+        index = 0
+        for key in ("always", "auto", "none"):
+            self.loadingInternetSearchesBox.addItem(key)
+            if key == config.chatGPTApiLoadingInternetSearches:
+                initialIndex = index
+            index += 1
+        self.loadingInternetSearchesBox.setCurrentIndex(initialIndex)
         self.maxTokenEdit = QLineEdit(str(config.chatGPTApiMaxTokens))
         self.maxTokenEdit.setToolTip("The maximum number of tokens to generate in the completion.\nThe token count of your prompt plus max_tokens cannot exceed the model's context length. Most models have a context length of 2048 tokens (except for the newest models, which support 4096).")
         self.maxInternetSearchResults = QLineEdit(str(config.chatGPTApiMaximumInternetSearchResults))
@@ -156,16 +165,17 @@ class ApiDialog(QDialog):
         layout.addRow(f"{predefinedContext} [{optional}]:", self.predefinedContextBox)
         layout.addRow(f"{context} [{optional}]:", self.contextEdit)
         layout.addRow(f"{applyContext} [{optional}]:", self.applyContextIn)
-        #layout.addRow(f"{latestOnlineSearchResults} [{optional}]:", self.includeInternetSearches)
+        layout.addRow(f"{latestOnlineSearchResults} [{optional}]:", self.loadingInternetSearchesBox)
         layout.addRow(f"{maximumOnlineSearchResults} [{optional}]:", self.maxInternetSearchResults)
         layout.addRow(f"{autoScroll} [{optional}]:", self.autoScrollingCheckBox)
         layout.addRow(f"{runPythonScriptGlobally} [{optional}]:", self.runPythonScriptGloballyCheckBox)
         #layout.addRow(f"{language} [{optional}]:", self.languageBox)
         layout.addWidget(buttonBox)
-        #self.includeInternetSearches.stateChanged.connect(self.toggleIncludeDuckDuckGoSearchResults)
         self.autoScrollingCheckBox.stateChanged.connect(self.toggleAutoScrollingCheckBox)
         self.chatAfterFunctionCalledCheckBox.stateChanged.connect(self.toggleChatAfterFunctionCalled)
         self.runPythonScriptGloballyCheckBox.stateChanged.connect(self.toggleRunPythonScriptGlobally)
+        self.functionCallingBox.currentIndexChanged.connect(self.functionCallingBoxChanged)
+        self.loadingInternetSearchesBox.currentIndexChanged.connect(self.loadingInternetSearchesBoxChanged)
 
         self.setLayout(layout)
 
@@ -192,15 +202,19 @@ class ApiDialog(QDialog):
     def functionCalling(self):
         return self.functionCallingBox.currentText()
 
+    def functionCallingBoxChanged(self):
+        if self.functionCallingBox.currentText() == "none" and self.loadingInternetSearchesBox.currentText() == "auto":
+            self.loadingInternetSearchesBox.setCurrentText("none")
+
+    def loadingInternetSearches(self):
+        return self.loadingInternetSearchesBox.currentText()
+
+    def loadingInternetSearchesBoxChanged(self, _):
+        if self.loadingInternetSearchesBox.currentText() == "auto":
+            self.functionCallingBox.setCurrentText("auto")
+
     def max_token(self):
         return self.maxTokenEdit.text().strip()
-
-    """
-    def include_internet_searches(self):
-        return self.includeDuckDuckGoSearchResults
-
-    def toggleIncludeDuckDuckGoSearchResults(self, state):
-        self.includeDuckDuckGoSearchResults = True if state else False"""
 
     def enable_auto_scrolling(self):
         return self.chatGPTApiAutoScrolling
@@ -650,6 +664,7 @@ class ChatGPTAPI(QWidget):
             config.chatAfterFunctionCalled = dialog.enable_chatAfterFunctionCalled()
             config.chatGPTApiModel = dialog.apiModel()
             config.chatGPTApiFunctionCall = dialog.functionCalling()
+            config.chatGPTApiLoadingInternetSearches = dialog.loadingInternetSearches()
             config.chatGPTApiPredefinedContext = dialog.predefinedContext()
             config.chatGPTApiContextInAllInputs = dialog.contextInAllInputs()
             config.chatGPTApiContext = dialog.context()
@@ -696,7 +711,9 @@ class ChatGPTAPI(QWidget):
         if not userInput:
             self.noTextSelection()
             return
-        if not self.validate_url(userInput):
+        if self.validate_url(userInput):
+            url = userInput
+        else:
             userInput = urllib.parse.quote(userInput)
             url = f"https://www.google.com/search?q={userInput}"
         webbrowser.open(url)
