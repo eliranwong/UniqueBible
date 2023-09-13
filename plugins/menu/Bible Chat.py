@@ -2,7 +2,6 @@ import config, os, re, openai, tiktoken, sqlite3, webbrowser, shutil, platform
 import subprocess, traceback, sys
 import urllib.parse
 from io import StringIO
-from duckduckgo_search import ddg
 from functools import partial
 from gtts import gTTS
 if "Pocketsphinx" in config.enabled:
@@ -665,6 +664,14 @@ class ChatGPTAPI(QWidget):
             config.chatGPTApiModel = dialog.apiModel()
             config.chatGPTApiFunctionCall = dialog.functionCalling()
             config.chatGPTApiLoadingInternetSearches = dialog.loadingInternetSearches()
+            internetSeraches = "integrate google searches"
+            if config.chatGPTApiLoadingInternetSearches == "auto" and internetSeraches in config.chatGPTPluginExcludeList:
+                config.chatGPTPluginExcludeList.remove(internetSeraches)
+                self.parent.reloadMenubar()
+            elif config.chatGPTApiLoadingInternetSearches == "none" and not internetSeraches in config.chatGPTPluginExcludeList:
+                config.chatGPTPluginExcludeList.append(internetSeraches)
+                self.parent.reloadMenubar()
+            config.mainWindow.runBibleChatPlugins()
             config.chatGPTApiPredefinedContext = dialog.predefinedContext()
             config.chatGPTApiContextInAllInputs = dialog.contextInAllInputs()
             config.chatGPTApiContext = dialog.context()
@@ -984,20 +991,6 @@ Follow the following steps:
             #messages.append({"role": "assistant", "content": context})
             userInput = f"{context}\n{userInput}"
         # user input
-        """
-        # old way to integrate internet searches; now replaced by plugin 'integrate google searches'
-        if config.chatGPTApiIncludeDuckDuckGoSearchResults:
-            results = ddg(userInput, time='y', max_results=config.chatGPTApiMaximumDuckDuckGoSearchResults)
-            news = ""
-            for r in results:
-                if "title" in r and "body" in r:
-                    title = r["title"]
-                    body = r["body"]
-                    news += f"{title}. {body} "
-            messages.append({"role": "user", "content": f"{userInput}. Include the following information that you don't know in your response to my input: {news}"})
-        else:
-            messages.append({"role": "user", "content": userInput})
-        """
         messages.append({"role": "user", "content": userInput})
         return messages
 
@@ -1124,11 +1117,11 @@ class MainWindow(QMainWindow):
         super().__init__(parent)
         self.initUI()
 
-    def initUI(self):
-        # Set a central widget
-        self.chatGPT = ChatGPTAPI(self)
-        self.setCentralWidget(self.chatGPT)
+    def reloadMenubar(self):
+        self.menuBar().clear()
+        self.createMenubar()
 
+    def createMenubar(self):
         # Create a menu bar
         menubar = self.menuBar()
 
@@ -1273,6 +1266,14 @@ class MainWindow(QMainWindow):
         new_action.triggered.connect(lambda: webbrowser.open("https://www.paypal.com/paypalme/MarvelBible"))
         about_menu.addAction(new_action)
 
+    def initUI(self):
+        # Set a central widget
+        self.chatGPT = ChatGPTAPI(self)
+        self.setCentralWidget(self.chatGPT)
+
+        # create menu bar
+        self.createMenubar()
+
         # set initial window size
         #self.setWindowTitle("Bible Chat")
         self.resize(QGuiApplication.primaryScreen().availableSize() * 3 / 4)
@@ -1284,6 +1285,12 @@ class MainWindow(QMainWindow):
             config.chatGPTPluginExcludeList.remove(plugin)
         else:
             config.chatGPTPluginExcludeList.append(plugin)
+        internetSeraches = "integrate google searches"
+        if internetSeraches in config.chatGPTPluginExcludeList and config.chatGPTApiLoadingInternetSearches == "auto":
+            config.chatGPTApiLoadingInternetSearches = "none"
+        elif not internetSeraches in config.chatGPTPluginExcludeList and config.chatGPTApiLoadingInternetSearches == "none":
+            config.chatGPTApiLoadingInternetSearches = "auto"
+            config.chatGPTApiFunctionCall = "auto"
         # reload plugins
         config.mainWindow.runBibleChatPlugins()
 

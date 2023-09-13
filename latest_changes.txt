@@ -1,3 +1,7 @@
+Changes in 34.98:
+Improved terminal mode
+* added options to integrate internet searches into ChatGPT responses: "always", "auto", "none"
+
 Changes in 34.97:
 Improved plugin "Bible Chat"
 * added options to integrate internet searches: "always", "auto", "none"

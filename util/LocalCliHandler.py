@@ -2279,10 +2279,16 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         messages = resetMessages()
         if openai.api_key:
             pluginFolder = os.path.join(os.getcwd(), "plugins", "chatGPT")
+            # always run 'integrate google searches'
+            internetSeraches = "integrate google searches"
+            script = os.path.join(pluginFolder, "{0}.py".format(internetSeraches))
+            self.execPythonFile(script)
             for plugin in FileUtil.fileNamesWithoutExtension(pluginFolder, "py"):
                 if not plugin in config.chatGPTPluginExcludeList:
                     script = os.path.join(pluginFolder, "{0}.py".format(plugin))
                     self.execPythonFile(script)
+            if internetSeraches in config.chatGPTPluginExcludeList:
+                del config.chatGPTApiFunctionSignatures[0]
             try:
                 started = False
                 def startChat():
@@ -2330,7 +2336,8 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                             "change chat context",
                             "apply context in first input ONLY",
                             "apply context in ALL inputs",
-                            "include latest online search result",
+                            "integrate latest online search result",
+                            "integrate latest online search result when needed",
                             "exclude latest online search result",
                             "share content" if config.terminalEnableTermuxAPI else "save content",
                         )
@@ -2372,9 +2379,14 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                                 self.print("Latest online search results always enabled!")
                             elif feature == ".autolatestSearches":
                                 config.chatGPTApiLoadingInternetSearches = "auto"
+                                config.chatGPTApiFunctionCall = "auto"
+                                if "integrate google searches" in config.chatGPTPluginExcludeList:
+                                    config.chatGPTPluginExcludeList.remove("integrate google searches")
                                 self.print("Latest online search results enabled, if necessary!")
                             elif feature == ".noLatestSearches":
                                 config.chatGPTApiLoadingInternetSearches = "none"
+                                if not "integrate google searches" in config.chatGPTPluginExcludeList:
+                                    config.chatGPTPluginExcludeList.append("integrate google searches")
                                 self.print("Latest online search results disabled!")
                             elif feature == ".contextInFirstInputOnly":
                                 config.chatGPTApiContextInAllInputs = False
@@ -2432,6 +2444,35 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         # get responses
                         fineTunedUserInput = fineTuneUserInput(userInput, started)
                         messages.append({"role": "user", "content": fineTunedUserInput})
+
+                        # force loading internet searches
+                        if config.chatGPTApiLoadingInternetSearches == "always":
+                            try:
+                                completion = openai.ChatCompletion.create(
+                                    model=config.chatGPTApiModel,
+                                    messages=messages,
+                                    max_tokens=config.chatGPTApiMaxTokens,
+                                    temperature=config.chatGPTApiTemperature,
+                                    n=1,
+                                    functions=config.integrate_google_searches_signature,
+                                    function_call={"name": "integrate_google_searches"},
+                                )
+                                response_message = completion["choices"][0]["message"]
+                                if response_message.get("function_call"):
+                                    function_args = json.loads(response_message["function_call"]["arguments"])
+                                    fuction_to_call = config.chatGPTApiAvailableFunctions.get("integrate_google_searches")
+                                    function_response = fuction_to_call(function_args)
+                                    messages.append(response_message) # extend conversation with assistant's reply
+                                    messages.append(
+                                        {
+                                            "role": "function",
+                                            "name": "integrate_google_searches",
+                                            "content": function_response,
+                                        }
+                                    )
+                            except:
+                                print("Unable to load internet resources.")
+
                         if config.chatGPTApiNoOfChoices == 1 and (config.chatGPTApiFunctionCall == "none" or not config.chatGPTApiFunctionSignatures):
                             completion = openai.ChatCompletion.create(
                                 model=config.chatGPTApiModel,

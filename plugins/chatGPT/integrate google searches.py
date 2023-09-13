@@ -7,9 +7,11 @@ def integrate_google_searches(function_args):
     #print(function_args)
     keywords = function_args.get("keywords") # required
 
+    print("loading internet searches ...")
+
     info = {}
     for index, item in enumerate(googlesearch.search(keywords, advanced=True, num_results=config.chatGPTApiMaximumInternetSearchResults)):
-        info[f"result {index}"] = {
+        info[f"information {index}"] = {
             "title": item.title,
             "url": item.url,
             "description": item.description,

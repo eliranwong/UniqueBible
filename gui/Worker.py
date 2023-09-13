@@ -87,14 +87,12 @@ class ChatGPTResponse:
         super().__init__()
         self.parent = parent
         self.threadpool = QThreadPool()
-        self.forceLoadingInternetSearches = True
 
     def getResponse(self, messages, progress_callback):
         responses = ""
-        if config.chatGPTApiLoadingInternetSearches == "always" and self.forceLoadingInternetSearches:
+        if config.chatGPTApiLoadingInternetSearches == "always":
             #print("loading internet searches ...")
             try:
-                self.forceLoadingInternetSearches = False
                 completion = openai.ChatCompletion.create(
                     model=config.chatGPTApiModel,
                     messages=messages,
@@ -117,7 +115,6 @@ class ChatGPTResponse:
                             "content": function_response,
                         }
                     )
-                    return self.getResponse(messages, progress_callback)
             except:
                 print("Unable to load internet resources.")
         try:
