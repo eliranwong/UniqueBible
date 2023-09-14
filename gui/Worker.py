@@ -1,4 +1,4 @@
-import config, sys, traceback, os, platform, openai
+import config, sys, traceback, os, platform, openai, json
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool
 else:
@@ -90,8 +90,35 @@ class ChatGPTResponse:
 
     def getResponse(self, messages, progress_callback):
         responses = ""
+        if config.chatGPTApiLoadingInternetSearches == "always":
+            #print("loading internet searches ...")
+            try:
+                completion = openai.ChatCompletion.create(
+                    model=config.chatGPTApiModel,
+                    messages=messages,
+                    max_tokens=config.chatGPTApiMaxTokens,
+                    temperature=config.chatGPTApiTemperature,
+                    n=1,
+                    functions=config.integrate_google_searches_signature,
+                    function_call={"name": "integrate_google_searches"},
+                )
+                response_message = completion["choices"][0]["message"]
+                if response_message.get("function_call"):
+                    function_args = json.loads(response_message["function_call"]["arguments"])
+                    fuction_to_call = config.chatGPTApiAvailableFunctions.get("integrate_google_searches")
+                    function_response = fuction_to_call(function_args)
+                    messages.append(response_message) # extend conversation with assistant's reply
+                    messages.append(
+                        {
+                            "role": "function",
+                            "name": "integrate_google_searches",
+                            "content": function_response,
+                        }
+                    )
+            except:
+                print("Unable to load internet resources.")
         try:
-            if config.chatGPTApiNoOfChoices == 1:
+            if config.chatGPTApiNoOfChoices == 1 and (config.chatGPTApiFunctionCall == "none" or not config.chatGPTApiFunctionSignatures):
                 completion = openai.ChatCompletion.create(
                     model=config.chatGPTApiModel,
                     messages=messages,
@@ -113,20 +140,82 @@ class ChatGPTResponse:
                     # STREAM THE ANSWER
                     progress_callback.emit(progress)
             else:
-                completion = openai.ChatCompletion.create(
-                    model=config.chatGPTApiModel,
-                    messages=messages,
-                    max_tokens=config.chatGPTApiMaxTokens,
-                    temperature=config.chatGPTApiTemperature,
-                    n=config.chatGPTApiNoOfChoices,
-                )
+                if config.chatGPTApiFunctionSignatures:
+                    completion = openai.ChatCompletion.create(
+                        model=config.chatGPTApiModel,
+                        messages=messages,
+                        max_tokens=config.chatGPTApiMaxTokens,
+                        temperature=config.chatGPTApiTemperature,
+                        n=config.chatGPTApiNoOfChoices,
+                        functions=config.chatGPTApiFunctionSignatures,
+                        function_call=config.chatGPTApiFunctionCall,
+                    )
+                else:
+                    completion = openai.ChatCompletion.create(
+                        model=config.chatGPTApiModel,
+                        messages=messages,
+                        max_tokens=config.chatGPTApiMaxTokens,
+                        temperature=config.chatGPTApiTemperature,
+                        n=config.chatGPTApiNoOfChoices,
+                    )
+
+                response_message = completion["choices"][0]["message"]
+                if response_message.get("function_call"):
+                    function_name = response_message["function_call"]["name"]
+                    if function_name == "python":
+                        config.pythonFunctionResponse = ""
+                        function_args = response_message["function_call"]["arguments"]
+                        insert_string = "import config\nconfig.pythonFunctionResponse = "
+                        if "\n" in function_args:
+                            substrings = function_args.rsplit("\n", 1)
+                            new_function_args = f"{substrings[0]}\n{insert_string}{substrings[-1]}"
+                        else:
+                            new_function_args = f"{insert_string}{function_args}"
+                        try:
+                            exec(new_function_args, globals())
+                            function_response = str(config.pythonFunctionResponse)
+                        except:
+                            function_response = function_args
+                        info = {"information": function_response}
+                        function_response = json.dumps(info)
+                    else:
+                        #if not function_name in config.chatGPTApiAvailableFunctions:
+                        #    print("unexpected function name: ", function_name)
+                        fuction_to_call = config.chatGPTApiAvailableFunctions.get(function_name, "integrate_google_searches")
+                        try:
+                            function_args = json.loads(response_message["function_call"]["arguments"])
+                        except:
+                            function_args = response_message["function_call"]["arguments"]
+                            if function_name == "integrate_google_searches":
+                                function_args = {"keywords": function_args}
+                        function_response = fuction_to_call(function_args)
+
+                    # check function response
+                    # print("Got this function response:", function_response)
+
+                    # process function response
+                    # send the info on the function call and function response to GPT
+                    messages.append(response_message) # extend conversation with assistant's reply
+                    messages.append(
+                        {
+                            "role": "function",
+                            "name": function_name,
+                            "content": function_response,
+                        }
+                    )  # extend conversation with function response
+                    if config.chatAfterFunctionCalled:
+                        return self.getResponse(messages, progress_callback)
+                    else:
+                        responses += f"{function_response}\n\n"
+
                 for index, choice in enumerate(completion.choices):
                     chat_response = choice.message.content
-                    if len(completion.choices) > 1:
-                        if index > 0:
-                            responses += "\n"
-                        responses += f"~~~ Response {(index+1)}:\n"
-                    responses += f"{chat_response}\n\n"
+                    if chat_response:
+                        if len(completion.choices) > 1:
+                            if index > 0:
+                                responses += "\n"
+                            responses += f"~~~ Response {(index+1)}:\n"
+                        responses += f"{chat_response}\n\n"
         # error codes: https://platform.openai.com/docs/guides/error-codes/python-library-error-types
         except openai.error.APIError as e:
             #Handle API error here, e.g. retry or log

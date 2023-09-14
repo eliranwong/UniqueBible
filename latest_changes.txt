@@ -1,3 +1,30 @@
+Changes in 34.98:
+Improved terminal mode
+* added options to integrate internet searches into ChatGPT responses: "always", "auto", "none"
+
+Changes in 34.97:
+Improved plugin "Bible Chat"
+* added options to integrate internet searches: "always", "auto", "none"
+* support calling "python" function
+* fixed opening url
+
+Changes in 34.96:
+* Add a plugin to integrate Google searches into ChatGPT responses.
+
+Changes in 34.95:
+Improved plugin "Bible Chat"
+* added option to generate chat or not after a function is called
+* added ability to run system command
+* added ability to execute a python script locally or globally
+* added ability to open text in a web browser
+* added ability to enable / disable individual ChatGPT plugins
+
+Changes in 34.94:
+Improved plugin "Bible Chat"
+* added "Export Data"
+* added "Count Prompt Tokens"
+* added support of ChatGPT function calling
+
 Changes in 34.93:
 * fixed Youtube-downloader gui
 

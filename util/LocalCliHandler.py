@@ -2175,17 +2175,68 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         if not config.openaiApiKey:
             changeAPIkey()
 
-        # users can modify config.predefinedContexts, config.inputSuggestions and config.chatGPTTransformers via plugins
+        # The following config values can be modified with plugins, to extend functionalities
         config.predefinedContexts = {
             "[none]": "",
             "[custom]": "",
         }
         config.inputSuggestions = []
         config.chatGPTTransformers = []
+        config.chatGPTApiFunctionSignatures = []
+        config.chatGPTApiAvailableFunctions = {}
+
+        def runCompletion(thisMessage):
+            def runThisCompletion(thisThisMessage):
+                if config.chatGPTApiFunctionSignatures:
+                    return openai.ChatCompletion.create(
+                        model=config.chatGPTApiModel,
+                        messages=thisThisMessage,
+                        n=config.chatGPTApiNoOfChoices,
+                        temperature=config.chatGPTApiTemperature,
+                        max_tokens=config.chatGPTApiMaxTokens,
+                        functions=config.chatGPTApiFunctionSignatures,
+                        function_call="none" if not config.chatGPTApiFunctionSignatures else config.chatGPTApiFunctionCall,
+                    )
+                return openai.ChatCompletion.create(
+                    model=config.chatGPTApiModel,
+                    messages=thisThisMessage,
+                    n=config.chatGPTApiNoOfChoices,
+                    temperature=config.chatGPTApiTemperature,
+                    max_tokens=config.chatGPTApiMaxTokens,
+                )
+
+            while True:
+                completion = runThisCompletion(thisMessage)
+                response_message = completion["choices"][0]["message"]
+                if response_message.get("function_call"):
+                    function_name = response_message["function_call"]["name"]
+                    fuction_to_call = config.chatGPTApiAvailableFunctions[function_name]
+                    function_args = json.loads(response_message["function_call"]["arguments"])
+                    function_response = fuction_to_call(function_args)
+
+                    # process function response
+                    # send the info on the function call and function response to GPT
+                    thisMessage.append(response_message) # extend conversation with assistant's reply
+                    thisMessage.append(
+                        {
+                            "role": "function",
+                            "name": function_name,
+                            "content": function_response,
+                        }
+                    )  # extend conversation with function response
+                    if not config.chatAfterFunctionCalled:
+                        self.print(function_response)
+                        break
+                else:
+                    break
+
+            return completion
+
         # reset message when a new chart is started or context is changed
         def resetMessages():
+            systemMessage = "You’re a kind helpful assistant. Only use the functions you have been provided with." if config.chatGPTApiFunctionCall == "auto" and config.chatGPTApiFunctionSignatures else "You’re a kind helpful assistant."
             messages = [
-                {"role": "system", "content" : "You’re a kind helpful assistant"}
+                {"role": "system", "content" : systemMessage}
             ]
             return messages
         def getCurrentContext():
@@ -2208,6 +2259,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 #messages.append({"role": "assistant", "content": context})
                 userInput = f"{context}\n{userInput}"
             # user input
+            """
             if config.chatGPTApiIncludeDuckDuckGoSearchResults:
                 results = ddg(userInput, time='y', max_results=config.chatGPTApiMaximumDuckDuckGoSearchResults)
                 news = ""
@@ -2217,6 +2269,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         body = r["body"]
                         news += f"{title}. {body} "
                 userInput = f"{userInput}. Include the following information that you don't know in your response to my input: {news}"
+            """
             return userInput
         # required
         openai.api_key = os.environ["OPENAI_API_KEY"] = config.openaiApiKey
@@ -2226,9 +2279,16 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         messages = resetMessages()
         if openai.api_key:
             pluginFolder = os.path.join(os.getcwd(), "plugins", "chatGPT")
+            # always run 'integrate google searches'
+            internetSeraches = "integrate google searches"
+            script = os.path.join(pluginFolder, "{0}.py".format(internetSeraches))
+            self.execPythonFile(script)
             for plugin in FileUtil.fileNamesWithoutExtension(pluginFolder, "py"):
-                script = os.path.join(pluginFolder, "{0}.py".format(plugin))
-                self.execPythonFile(script)
+                if not plugin in config.chatGPTPluginExcludeList:
+                    script = os.path.join(pluginFolder, "{0}.py".format(plugin))
+                    self.execPythonFile(script)
+            if internetSeraches in config.chatGPTPluginExcludeList:
+                del config.chatGPTApiFunctionSignatures[0]
             try:
                 started = False
                 def startChat():
@@ -2247,10 +2307,13 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     ".changeapikey",
                     ".chatgptmodel",
                     ".maxtokens",
+                    ".functioncall",
+                    ".functionresponse",
                     ".context",
                     ".contextInFirstInputOnly",
                     ".contextInAllInputs",
                     ".latestSearches",
+                    ".autolatestSearches",
                     ".noLatestSearches",
                     ".share" if config.terminalEnableTermuxAPI else ".save",
                 )
@@ -2268,10 +2331,13 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                             "change API key",
                             "change ChatGPT model",
                             "change maximum tokens",
+                            "change function call",
+                            "change function response",
                             "change chat context",
                             "apply context in first input ONLY",
                             "apply context in ALL inputs",
-                            "include latest online search result",
+                            "integrate latest online search result",
+                            "integrate latest online search result when needed",
                             "exclude latest online search result",
                             "share content" if config.terminalEnableTermuxAPI else "save content",
                         )
@@ -2283,6 +2349,18 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                                 if model:
                                     config.chatGPTApiModel = model
                                     self.print(f"ChatGPT model selected: {model}")
+                            elif feature == ".functioncall":
+                                calls = ("auto", "none")
+                                call = self.dialogs.getValidOptions(options=calls, title="ChatGPT Function Call", default=config.chatGPTApiFunctionCall)
+                                if call:
+                                    config.chatGPTApiFunctionCall = call
+                                    self.print(f"ChaptGPT function call: {'enabled' if config.chatGPTApiFunctionCall == 'auto' else 'disabled'}!")
+                            elif feature == ".functionresponse":
+                                calls = ("enable", "disable")
+                                call = self.dialogs.getValidOptions(options=calls, title="Automatic Chat Generation with Function Response", default="enable" if config.chatAfterFunctionCalled else "disable")
+                                if call:
+                                    config.chatAfterFunctionCalled = (call == "enable")
+                                    self.print(f"Automatic Chat Generation with Function Response: {'enabled' if config.chatAfterFunctionCalled else 'disabled'}!")
                             elif feature == ".maxtokens":
                                 maxtokens = self.simplePrompt(numberOnly=True, default=str(config.chatGPTApiMaxTokens))
                                 if maxtokens and not maxtokens.strip().lower() == config.terminal_cancel_action and int(maxtokens) > 0:
@@ -2297,10 +2375,18 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                                 multilineInput = True
                                 self.print("Multi-line user input enabled!")
                             elif feature == ".latestSearches":
-                                config.chatGPTApiIncludeDuckDuckGoSearchResults = True
-                                self.print("Latest online search results enabled!")
+                                config.chatGPTApiLoadingInternetSearches = "always"
+                                self.print("Latest online search results always enabled!")
+                            elif feature == ".autolatestSearches":
+                                config.chatGPTApiLoadingInternetSearches = "auto"
+                                config.chatGPTApiFunctionCall = "auto"
+                                if "integrate google searches" in config.chatGPTPluginExcludeList:
+                                    config.chatGPTPluginExcludeList.remove("integrate google searches")
+                                self.print("Latest online search results enabled, if necessary!")
                             elif feature == ".noLatestSearches":
-                                config.chatGPTApiIncludeDuckDuckGoSearchResults = False
+                                config.chatGPTApiLoadingInternetSearches = "none"
+                                if not "integrate google searches" in config.chatGPTPluginExcludeList:
+                                    config.chatGPTPluginExcludeList.append("integrate google searches")
                                 self.print("Latest online search results disabled!")
                             elif feature == ".contextInFirstInputOnly":
                                 config.chatGPTApiContextInAllInputs = False
@@ -2358,7 +2444,36 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         # get responses
                         fineTunedUserInput = fineTuneUserInput(userInput, started)
                         messages.append({"role": "user", "content": fineTunedUserInput})
-                        if config.chatGPTApiNoOfChoices == 1:
+
+                        # force loading internet searches
+                        if config.chatGPTApiLoadingInternetSearches == "always":
+                            try:
+                                completion = openai.ChatCompletion.create(
+                                    model=config.chatGPTApiModel,
+                                    messages=messages,
+                                    max_tokens=config.chatGPTApiMaxTokens,
+                                    temperature=config.chatGPTApiTemperature,
+                                    n=1,
+                                    functions=config.integrate_google_searches_signature,
+                                    function_call={"name": "integrate_google_searches"},
+                                )
+                                response_message = completion["choices"][0]["message"]
+                                if response_message.get("function_call"):
+                                    function_args = json.loads(response_message["function_call"]["arguments"])
+                                    fuction_to_call = config.chatGPTApiAvailableFunctions.get("integrate_google_searches")
+                                    function_response = fuction_to_call(function_args)
+                                    messages.append(response_message) # extend conversation with assistant's reply
+                                    messages.append(
+                                        {
+                                            "role": "function",
+                                            "name": "integrate_google_searches",
+                                            "content": function_response,
+                                        }
+                                    )
+                            except:
+                                print("Unable to load internet resources.")
+
+                        if config.chatGPTApiNoOfChoices == 1 and (config.chatGPTApiFunctionCall == "none" or not config.chatGPTApiFunctionSignatures):
                             completion = openai.ChatCompletion.create(
                                 model=config.chatGPTApiModel,
                                 messages=messages,
@@ -2382,27 +2497,22 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                             messages[-1] = {"role": "user", "content": userInput}
                             messages.append({"role": "assistant", "content": chat_response})
                         else:
-                            completion = openai.ChatCompletion.create(
-                                model=config.chatGPTApiModel,
-                                messages=messages,
-                                n=config.chatGPTApiNoOfChoices,
-                                temperature=config.chatGPTApiTemperature,
-                                max_tokens=config.chatGPTApiMaxTokens,
-                            )
+                            completion = runCompletion(messages)
                             # stop spinning
                             stop_event.set()
                             spinner_thread.join()
                             for index, choice in enumerate(completion.choices):
                                 chat_response = choice.message.content
-                                # transform response with plugins
-                                for t in config.chatGPTTransformers:
-                                    chat_response = t(chat_response)
-                                if len(completion.choices) > 1:
-                                    self.print(f"### Response {(index+1)}:")
-                                self.print(chat_response)
-                                if index == 0:
-                                    messages[-1] = {"role": "user", "content": userInput}
-                                    messages.append({"role": "assistant", "content": chat_response})
+                                if chat_response:
+                                    # transform response with plugins
+                                    for t in config.chatGPTTransformers:
+                                        chat_response = t(chat_response)
+                                    if len(completion.choices) > 1:
+                                        self.print(f"### Response {(index+1)}:")
+                                    self.print(chat_response)
+                                    if index == 0:
+                                        messages[-1] = {"role": "user", "content": userInput}
+                                        messages.append({"role": "assistant", "content": chat_response})
                         started = True
                         #stop_event.set()
                         #spinner_thread.join()

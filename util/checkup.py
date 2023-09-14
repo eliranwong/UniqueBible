@@ -372,9 +372,23 @@ def isTabulateInstalled():
     except:
         return False
 
+def isGoogleSearchPythonInstalled():
+    try:
+        import googlesearch
+        return True
+    except:
+        return False
+
 def isDuckduckgoSearchInstalled():
     try:
         from duckduckgo_search import ddg
+        return True
+    except:
+        return False
+
+def isTiktokenInstalled():
+    try:
+        import tiktoken
         return True
     except:
         return False
@@ -741,7 +755,9 @@ optional = [
     ("SpeechRecognition", "Library for performing speech recognition", isSpeechRecognitionInstalled),
     ("pocketsphinx", "Python bindings for PocketSphinx", isPocketSphinxInstalled),
     ("duckduckgo-search", "DuckDuckGo.com search", isDuckduckgoSearchInstalled),
+    ("googlesearch-python", "A Python library for scraping the Google search engine", isGoogleSearchPythonInstalled),
     ("guidance", "A guidance language for controlling large language models", isGuidanceInstalled),
+    ("tiktoken", "tokeniser for use with OpenAI's models.", isTiktokenInstalled),
 ] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -792,7 +808,9 @@ optional = [
     ("SpeechRecognition", "Library for performing speech recognition", isSpeechRecognitionInstalled),
     ("pocketsphinx", "Python bindings for PocketSphinx", isPocketSphinxInstalled),
     ("duckduckgo-search", "DuckDuckGo.com search", isDuckduckgoSearchInstalled),
+    ("googlesearch-python", "A Python library for scraping the Google search engine", isGoogleSearchPythonInstalled),
     ("guidance", "A guidance language for controlling large language models", isGuidanceInstalled),
+    ("tiktoken", "tokeniser for use with OpenAI's models.", isTiktokenInstalled),
 ]
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))

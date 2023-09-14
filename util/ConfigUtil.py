@@ -543,6 +543,10 @@ class ConfigUtil:
         # ChatGPT API temperature
         # What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.""",
         1.0)
+        setConfig("chatGPTApiFunctionCall", """
+        # Enable / Disable ChatGPT function calling
+        # Select 'auto' to enable; 'none' to disable""",
+        "none")
         setConfig("chatGPTApiLastChatDatabase", """
         # The latest chat database file that was opened.""",
         "")
@@ -555,11 +559,12 @@ class ConfigUtil:
         setConfig("chatGPTApiContextInAllInputs", """
         # ChatGP API - predefined context in all inputs.""",
         False)
-        setConfig("chatGPTApiIncludeDuckDuckGoSearchResults", """
-        # ChatGPT API - include DuckDuckGo search results.""",
-        False)
-        setConfig("chatGPTApiMaximumDuckDuckGoSearchResults", """
-        # ChatGPT API - maximum number of DuckDuckGo search results to be included.""",
+        setConfig("chatGPTApiLoadingInternetSearches", """
+        # ChatGPT API - always loading internet searches.
+        # options - 'always', 'auto', 'none'.""",
+        "none")
+        setConfig("chatGPTApiMaximumInternetSearchResults", """
+        # ChatGPT API - maximum number of internet search results to be integrated.""",
         5)
         setConfig("chatGPTApiAutoScrolling", """
         # Auto-scroll display as response is received""",
@@ -576,6 +581,15 @@ class ConfigUtil:
         setConfig("chatGPTApiSearchRegexp", """
         # Option to search chat content or database with regular expression.""",
         True)
+        setConfig("chatGPTPluginExcludeList", """
+        # Option to exclude ChatGPT plugins from running.""",
+        [])
+        setConfig("chatAfterFunctionCalled", """
+        # Option to automatically generate next chat response after a function is called.""",
+        True)
+        setConfig("runPythonScriptGlobally", """
+        # Option to execute Python Script Globally via plugin Bible Chat.""",
+        False)
         setConfig("myIBMWatsonApikey", """
         # IBM Watson service api key""",
         "")
