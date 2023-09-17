@@ -1,6 +1,6 @@
 Changes in 34.99:
 Improved plugin "Bible Chat"
-* Moved the predefined context selection out of settings to the main window so can quickly change the context
+* Moved the predefined context selection out of settings to the main window so can quickly change and view the current context
 * Added tool tip to context selection to see what it will do
 * Added the context selection to the title to see what was run
 * Fixed prayer predefined context
