@@ -838,6 +838,8 @@ class ChatGPTAPI(QWidget):
     def bibleChatAction(self, context=""):
         if context:
             config.chatGPTApiPredefinedContext = context
+            index = list(config.predefinedContexts).index(context)
+            self.predefinedContextBox.setCurrentIndex(index)
         currentSelectedText = self.contentView.textCursor().selectedText().strip()
         if currentSelectedText:
             self.newData()
