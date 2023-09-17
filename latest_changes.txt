@@ -1,3 +1,10 @@
+Changes in 34.99:
+Improved plugin "Bible Chat"
+* Moved the predefined context selection out of settings to the main window so can quickly change the context
+* Added tool tip to context selection to see what it will do
+* Added the context selection to the title to see what was run
+* Fixed prayer predefined context
+
 Changes in 34.98:
 Improved terminal mode
 * added options to integrate internet searches into ChatGPT responses: "always", "auto", "none"
