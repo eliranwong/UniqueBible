@@ -115,18 +115,6 @@ class ApiDialog(QDialog):
         self.applyContextIn = QComboBox()
         self.applyContextIn.addItems([firstInputOnly, allInputs])
         self.applyContextIn.setCurrentIndex(1 if config.chatGPTApiContextInAllInputs else 0)
-        self.predefinedContextBox = QComboBox()
-        initialIndex = 0
-        index = 0
-        for key, value in config.predefinedContexts.items():
-            self.predefinedContextBox.addItem(key)
-            self.predefinedContextBox.setItemData(self.predefinedContextBox.count()-1, value, role=Qt.ToolTipRole)
-            if key == config.chatGPTApiPredefinedContext:
-                initialIndex = index
-            index += 1
-        self.predefinedContextBox.currentIndexChanged.connect(self.predefinedContextBoxChanged)
-        self.predefinedContextBox.setCurrentIndex(initialIndex)
-        # set availability of self.contextEdit in case there is no index changed
         self.contextEdit.setDisabled(True) if not initialIndex == 1 else self.contextEdit.setEnabled(True)
         """self.languageBox = QComboBox()
         initialIndex = 0
@@ -147,7 +135,6 @@ class ApiDialog(QDialog):
         chatAfterFunctionCalled = config.thisTranslation["chatAfterFunctionCalled"]
         runPythonScriptGlobally = config.thisTranslation["runPythonScriptGlobally"]
         autoScroll = config.thisTranslation["autoScroll"]
-        predefinedContext = config.thisTranslation["predefinedContext"]
         context = config.thisTranslation["chatContext"]
         applyContext = config.thisTranslation["applyContext"]
         latestOnlineSearchResults = config.thisTranslation["latestOnlineSearchResults"]
@@ -161,7 +148,6 @@ class ApiDialog(QDialog):
         layout.addRow(f"Max Token [{required}]:", self.maxTokenEdit)
         layout.addRow(f"Function Calling [{optional}]:", self.functionCallingBox)
         layout.addRow(f"{chatAfterFunctionCalled} [{optional}]:", self.chatAfterFunctionCalledCheckBox)
-        layout.addRow(f"{predefinedContext} [{optional}]:", self.predefinedContextBox)
         layout.addRow(f"{context} [{optional}]:", self.contextEdit)
         layout.addRow(f"{applyContext} [{optional}]:", self.applyContextIn)
         layout.addRow(f"{latestOnlineSearchResults} [{optional}]:", self.loadingInternetSearchesBox)
@@ -186,13 +172,6 @@ class ApiDialog(QDialog):
 
     def contextInAllInputs(self):
         return True if self.applyContextIn.currentIndex() == 1 else False
-
-    def predefinedContextBoxChanged(self, index):
-        self.contextEdit.setDisabled(True) if not index == 1 else self.contextEdit.setEnabled(True)
-
-    def predefinedContext(self):
-        return self.predefinedContextBox.currentText()
-        #return self.predefinedContextBox.currentData(Qt.ToolTipRole)
 
     def apiModel(self):
         #return "gpt-3.5-turbo"
@@ -485,6 +464,23 @@ class ChatGPTAPI(QWidget):
         promptLayout.addWidget(self.sendButton)
         promptLayout.addWidget(self.apiModels)
         layout000Rt.addLayout(promptLayout)
+
+        self.predefinedContextBox = QComboBox()
+        initialIndex = 0
+        index = 0
+        for key, value in config.predefinedContexts.items():
+            self.predefinedContextBox.addItem(key)
+            self.predefinedContextBox.setItemData(self.predefinedContextBox.count()-1, value, role=Qt.ToolTipRole)
+            if key == config.chatGPTApiPredefinedContext:
+                initialIndex = index
+            index += 1
+        self.predefinedContextBox.currentIndexChanged.connect(self.predefinedContextBoxChanged)
+        self.predefinedContextBox.setCurrentIndex(initialIndex)
+
+        predefinedSelectionLayout = QHBoxLayout()
+        predefinedSelectionLayout.addWidget(self.predefinedContextBox)
+        layout000Rt.addLayout(predefinedSelectionLayout)
+
         layout000Rt.addWidget(self.contentView)
         layout000Rt.addWidget(self.progressBar)
         self.progressBar.hide()
@@ -572,6 +568,12 @@ class ChatGPTAPI(QWidget):
         self.replaceInput.returnPressed.connect(self.replaceSelectedText)
 
         self.updateSearchToolTips()
+
+    def predefinedContextBoxChanged(self, index):
+        self.setUserInputFocus()
+        config.chatGPTApiPredefinedContext = self.predefinedContextBox.currentText()
+        desc = config.predefinedContexts[self.predefinedContextBox.currentText()]
+        self.predefinedContextBox.setToolTip(desc)
 
     def setFontSize(self, index=None):
         if index is not None:
@@ -836,6 +838,8 @@ class ChatGPTAPI(QWidget):
     def bibleChatAction(self, context=""):
         if context:
             config.chatGPTApiPredefinedContext = context
+            index = list(config.predefinedContexts).index(context)
+            self.predefinedContextBox.setCurrentIndex(index)
         currentSelectedText = self.contentView.textCursor().selectedText().strip()
         if currentSelectedText:
             self.newData()
@@ -995,6 +999,8 @@ Follow the following steps:
         return messages
 
     def print(self, text):
+        if not config.chatGPTApiPredefinedContext == "[none]":
+            text += " (" + config.chatGPTApiPredefinedContext + ")"
         self.contentView.appendPlainText(f"\n{text}" if self.contentView.toPlainText() else text)
         self.contentView.setPlainText(re.sub("\n\n[\n]+?([^\n])", r"\n\n\1", self.contentView.toPlainText()))
 

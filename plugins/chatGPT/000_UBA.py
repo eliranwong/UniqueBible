@@ -4,9 +4,11 @@ import config
 
 config.predefinedContexts["Word Meaning"] = """What is the meaning of the following word or words?"""
 config.predefinedContexts["Meaning in the Bible"] = """What is the meaning of the following content in reference to the Bible?"""
-config.predefinedContexts["Write a Summary"] = """Write a summary on the following content."""
+config.predefinedContexts["Write a Summary"] = """Write a summary on the following content in reference to the Bible."""
 config.predefinedContexts["Write a Sermon"] = """Write a sermon on the following content in reference to the Bible."""
-config.predefinedContexts["Write a Prayer"] = """Write a summary on the following content in reference to the Bible."""
+config.predefinedContexts["Write a Prayer"] = """Write a prayer on the following content in reference to the Bible."""
+config.predefinedContexts["Write a Short Prayer"] = """Write a prayer on the following content in reference to the Bible.
+Keep the prayer short and do not make it longer than a paragraph."""
 config.predefinedContexts["Key Words"] = """Identify key words in the following content.
 Elaborate on their importance in comprehending the context and the bible as a whole.
 I want your elaboration to be comprehensive and informative.
