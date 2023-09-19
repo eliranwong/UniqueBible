@@ -735,7 +735,11 @@ class ChatGPTAPI(QWidget):
     def runSystemCommand(self, command=""):
         if not command:
             command = self.contentView.textCursor().selectedText().strip()
-        if not command:
+        if command:
+            # replace line separator
+            command = repr(command)
+            command = eval(command).replace("\u2029", "\n")
+        else:
             self.noTextSelection()
             return
 
@@ -756,7 +760,11 @@ class ChatGPTAPI(QWidget):
     def runPythonCommand(self, command=""):
         if not command:
             command = self.contentView.textCursor().selectedText().strip()
-        if not command:
+        if command:
+            # replace line separator
+            command = repr(command)
+            command = eval(command).replace("\u2029", "\n")
+        else:
             self.noTextSelection()
             return
 
@@ -965,11 +973,19 @@ Follow the following steps:
         else:
             # users can modify config.predefinedContexts via plugins
             context = config.predefinedContexts[config.chatGPTApiPredefinedContext]
+            # change configs for particular contexts
+            if config.chatGPTApiPredefinedContext == "Execute Python Code":
+                if config.chatGPTApiFunctionCall == "none":
+                    config.chatGPTApiFunctionCall = "auto"
+                if config.chatGPTApiLoadingInternetSearches == "always":
+                    config.chatGPTApiLoadingInternetSearches = "auto"
         return context
 
     def getMessages(self, userInput):
         # system message
-        systemMessage = "You’re a kind helpful assistant. Only use the functions you have been provided with." if config.chatGPTApiFunctionCall == "auto" and config.chatGPTApiFunctionSignatures else "You’re a kind helpful assistant."
+        systemMessage = "You’re a kind helpful assistant."
+        if config.chatGPTApiFunctionCall == "auto" and config.chatGPTApiFunctionSignatures:
+            systemMessage += " Only use the functions you have been provided with."
         messages = [
             {"role": "system", "content": systemMessage}
         ]
@@ -978,7 +994,7 @@ Follow the following steps:
         # chat history
         history = self.contentView.toPlainText().strip()
         if history:
-            if context and not config.chatGPTApiContextInAllInputs:
+            if context and not config.chatGPTApiPredefinedContext == "Execute Python Code" and not config.chatGPTApiContextInAllInputs:
                 messages.append({"role": "assistant", "content": context})
             if history.startswith(">>> "):
                 history = history[4:]
@@ -991,7 +1007,7 @@ Follow the following steps:
                     else:
                         messages.append({"role": "assistant", "content": content.strip()})
         # customise chat context
-        if context and (not history or (history and config.chatGPTApiContextInAllInputs)):
+        if context and (config.chatGPTApiPredefinedContext == "Execute Python Code" or (not history or (history and config.chatGPTApiContextInAllInputs))):
             #messages.append({"role": "assistant", "content": context})
             userInput = f"{context}\n{userInput}"
         # user input

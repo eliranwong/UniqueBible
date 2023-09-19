@@ -1,3 +1,20 @@
+Changes in 35.00:
+Improved plugin "Bible Chat":
+* Fixed running text selection as system command
+* Fixed running text selection as python script
+* Support streaming feature even with function calling enabled
+* Added a new plugin "execute python code":
+    Non-python users can use natural language to instruct ChatGPT to perform whatever tasks which python is capable to do.
+    For examples, users can ask ChatGPT:
+        # Tell me the current time.
+        # Tell me how many files in the current directory.
+        # What is my operating system and version
+        # Open web browser
+        # Open https://github.com/eliranwong/ChatGPT-GUI in a web browser.
+        # Search ChatGPT in a web browser
+        # Open the current directory using the default file manager.
+        # Launch VLC player.
+
 Changes in 34.99:
 Improved plugin "Bible Chat"
 * Moved the predefined context selection out of settings to the main window so can quickly change and view the current context

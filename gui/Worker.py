@@ -88,9 +88,9 @@ class ChatGPTResponse:
         self.parent = parent
         self.threadpool = QThreadPool()
 
-    def getResponse(self, messages, progress_callback):
+    def getResponse(self, messages, progress_callback, functionJustCalled=False):
         responses = ""
-        if config.chatGPTApiLoadingInternetSearches == "always":
+        if config.chatGPTApiLoadingInternetSearches == "always" and not functionJustCalled:
             #print("loading internet searches ...")
             try:
                 completion = openai.ChatCompletion.create(
@@ -118,7 +118,7 @@ class ChatGPTResponse:
             except:
                 print("Unable to load internet resources.")
         try:
-            if config.chatGPTApiNoOfChoices == 1 and (config.chatGPTApiFunctionCall == "none" or not config.chatGPTApiFunctionSignatures):
+            if config.chatGPTApiNoOfChoices == 1 and (config.chatGPTApiFunctionCall == "none" or not config.chatGPTApiFunctionSignatures or functionJustCalled):
                 completion = openai.ChatCompletion.create(
                     model=config.chatGPTApiModel,
                     messages=messages,
@@ -145,10 +145,10 @@ class ChatGPTResponse:
                         model=config.chatGPTApiModel,
                         messages=messages,
                         max_tokens=config.chatGPTApiMaxTokens,
-                        temperature=config.chatGPTApiTemperature,
+                        temperature=0.0 if config.chatGPTApiPredefinedContext == "Execute Python Code" else config.chatGPTApiTemperature,
                         n=config.chatGPTApiNoOfChoices,
                         functions=config.chatGPTApiFunctionSignatures,
-                        function_call=config.chatGPTApiFunctionCall,
+                        function_call={"name": "run_python"} if config.chatGPTApiPredefinedContext == "Execute Python Code" else config.chatGPTApiFunctionCall,
                     )
                 else:
                     completion = openai.ChatCompletion.create(
@@ -204,7 +204,7 @@ class ChatGPTResponse:
                         }
                     )  # extend conversation with function response
                     if config.chatAfterFunctionCalled:
-                        return self.getResponse(messages, progress_callback)
+                        return self.getResponse(messages, progress_callback, functionJustCalled=True)
                     else:
                         responses += f"{function_response}\n\n"
 

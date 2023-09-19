@@ -2186,16 +2186,17 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         config.chatGPTApiAvailableFunctions = {}
 
         def runCompletion(thisMessage):
+            functionJustCalled = False
             def runThisCompletion(thisThisMessage):
-                if config.chatGPTApiFunctionSignatures:
+                if config.chatGPTApiFunctionSignatures and not functionJustCalled:
                     return openai.ChatCompletion.create(
                         model=config.chatGPTApiModel,
                         messages=thisThisMessage,
                         n=config.chatGPTApiNoOfChoices,
-                        temperature=config.chatGPTApiTemperature,
+                        temperature=0.0 if config.chatGPTApiPredefinedContext == "Execute Python Code" else config.chatGPTApiTemperature,
                         max_tokens=config.chatGPTApiMaxTokens,
                         functions=config.chatGPTApiFunctionSignatures,
-                        function_call="none" if not config.chatGPTApiFunctionSignatures else config.chatGPTApiFunctionCall,
+                        function_call={"name": "run_python"} if config.chatGPTApiPredefinedContext == "Execute Python Code" else config.chatGPTApiFunctionCall,
                     )
                 return openai.ChatCompletion.create(
                     model=config.chatGPTApiModel,
@@ -2209,10 +2210,29 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 completion = runThisCompletion(thisMessage)
                 response_message = completion["choices"][0]["message"]
                 if response_message.get("function_call"):
+                    # check function name
                     function_name = response_message["function_call"]["name"]
-                    fuction_to_call = config.chatGPTApiAvailableFunctions[function_name]
-                    function_args = json.loads(response_message["function_call"]["arguments"])
-                    function_response = fuction_to_call(function_args)
+
+                    if function_name == "python":
+                        config.pythonFunctionResponse = ""
+                        function_args = response_message["function_call"]["arguments"]
+                        insert_string = "import config\nconfig.pythonFunctionResponse = "
+                        if "\n" in function_args:
+                            substrings = function_args.rsplit("\n", 1)
+                            new_function_args = f"{substrings[0]}\n{insert_string}{substrings[-1]}"
+                        else:
+                            new_function_args = f"{insert_string}{function_args}"
+                        try:
+                            exec(new_function_args, globals())
+                            function_response = str(config.pythonFunctionResponse)
+                        except:
+                            function_response = function_args
+                        info = {"information": function_response}
+                        function_response = json.dumps(info)
+                    else:
+                        fuction_to_call = config.chatGPTApiAvailableFunctions[function_name]
+                        function_args = json.loads(response_message["function_call"]["arguments"])
+                        function_response = fuction_to_call(function_args)
 
                     # process function response
                     # send the info on the function call and function response to GPT
@@ -2227,6 +2247,8 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     if not config.chatAfterFunctionCalled:
                         self.print(function_response)
                         break
+                    else:
+                        functionJustCalled = True
                 else:
                     break
 
@@ -2234,7 +2256,9 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
         # reset message when a new chart is started or context is changed
         def resetMessages():
-            systemMessage = "You’re a kind helpful assistant. Only use the functions you have been provided with." if config.chatGPTApiFunctionCall == "auto" and config.chatGPTApiFunctionSignatures else "You’re a kind helpful assistant."
+            systemMessage = "You’re a kind helpful assistant."
+            if config.chatGPTApiFunctionCall == "auto" and config.chatGPTApiFunctionSignatures:
+                systemMessage += " Only use the functions you have been provided with."
             messages = [
                 {"role": "system", "content" : systemMessage}
             ]
@@ -2251,25 +2275,18 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             else:
                 # users can modify config.predefinedContexts via plugins
                 context = config.predefinedContexts[config.chatGPTApiPredefinedContext]
+                # change configs for particular contexts
+                if config.chatGPTApiPredefinedContext == "Execute Python Code":
+                    if config.chatGPTApiFunctionCall == "none":
+                        config.chatGPTApiFunctionCall = "auto"
+                    if config.chatGPTApiLoadingInternetSearches == "always":
+                        config.chatGPTApiLoadingInternetSearches = "auto"
             return context
         def fineTuneUserInput(userInput, conversationStarted):
             # customise chat context
             context = getCurrentContext()
-            if context and (not conversationStarted or (conversationStarted and config.chatGPTApiContextInAllInputs)):
-                #messages.append({"role": "assistant", "content": context})
+            if context and (config.chatGPTApiPredefinedContext == "Execute Python Code" or conversationStarted or (not conversationStarted and config.chatGPTApiContextInAllInputs)):
                 userInput = f"{context}\n{userInput}"
-            # user input
-            """
-            if config.chatGPTApiIncludeDuckDuckGoSearchResults:
-                results = ddg(userInput, time='y', max_results=config.chatGPTApiMaximumDuckDuckGoSearchResults)
-                news = ""
-                for r in results:
-                    if "title" in r and "body" in r:
-                        title = r["title"]
-                        body = r["body"]
-                        news += f"{title}. {body} "
-                userInput = f"{userInput}. Include the following information that you don't know in your response to my input: {news}"
-            """
             return userInput
         # required
         openai.api_key = os.environ["OPENAI_API_KEY"] = config.openaiApiKey
