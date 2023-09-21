@@ -1,3 +1,9 @@
+Changes in 35.01:
+Improved plugin "Bible Chat":
+* Added previous entered commands to auto completion
+* Added Bible Passages to context
+* Fixed image generation
+
 Changes in 35.00:
 Improved plugin "Bible Chat":
 * Fixed running text selection as system command
