@@ -135,8 +135,8 @@ class LocalCliHandler:
 
     def getToolBar(self, multiline=False):
         if multiline:
-            return " [ctrl+q] .cancel; 'escape+enter' to complete entry "
-        return " [ctrl+q] .cancel "
+            return f" [ctrl+q] {config.terminal_cancel_action}; 'escape+enter' to complete entry "
+        return f" [ctrl+q] {config.terminal_cancel_action} "
 
     # Set text-to-speech default language
     def getTtsLanguages(self):
