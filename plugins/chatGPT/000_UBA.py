@@ -34,6 +34,7 @@ Give me comprehensive information on this person in the bible.
 If this singular name is used to denote various different characters in the Bible, kindly provide separate descriptions for each one.
 Explain the significance of this person in the bible."""
 config.predefinedContexts["Bible Promises"] = """Please provide me with Bible verses that contain promises and can serve as an encouragement to people, specifically in relation to the given content."""
+config.predefinedContexts["Bible Passages"] = """Quote relevant Bible passages for the given context."""
 
 # Translation
 

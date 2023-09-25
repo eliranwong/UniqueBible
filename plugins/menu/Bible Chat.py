@@ -357,6 +357,7 @@ class ChatGPTAPI(QWidget):
         self.data_list = []
         self.recognitionThread = SpeechRecognitionThread(self)
         self.recognitionThread.phrase_recognized.connect(self.onPhraseRecognized)
+        self.recentCommands = []
 
     """def runPlugins(self):
         # The following config values can be modified with plugins, to extend functionalities
@@ -1034,22 +1035,25 @@ Follow the following steps:
             contentScrollBar.setValue(contentScrollBar.maximum())
 
     def sendMessage(self):
+        userInput = self.userInput.text().strip()
+        if not userInput in self.recentCommands:
+            self.recentCommands.append(userInput)
+            completer = QCompleter(self.recentCommands + config.inputSuggestions)
+            completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+            self.userInput.setCompleter(completer)
         if self.userInputMultiline.isVisible():
             self.multilineButtonClicked()
         if self.apiModel == 0:
             self.getResponse()
-        elif self.apiModel == 0:
+        elif self.apiModel == 1:
             self.getImage()
         elif self.apiModel == 2:
-            userInput = self.userInput.text().strip()
             if userInput:
                 self.webBrowse(userInput)
         elif self.apiModel == 3:
-            userInput = self.userInput.text().strip()
             if userInput:
                 self.runPythonCommand(userInput)
         elif self.apiModel == 4:
-            userInput = self.userInput.text().strip()
             if userInput:
                 self.runSystemCommand(userInput)
 
