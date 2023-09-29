@@ -104,7 +104,8 @@ else:
             except:
                 pass
 # desktop shortcut on macOS
-if thisOS == "macOS":
+# on iOS a-Shell app, ~/Desktop/ is invalid
+if thisOS == "macOS" and os.path.isdir("~/Desktop/"):
     app = "UniqueBibleApp"
     shortcut_file = os.path.expanduser(f"~/Desktop/{app}.command")
     if not os.path.isfile(shortcut_file):
