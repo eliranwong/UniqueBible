@@ -2403,10 +2403,10 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     if config.chatGPTApiLoadingInternetSearches == "always":
                         config.chatGPTApiLoadingInternetSearches = "auto"
             return context
-        def fineTuneUserInput(userInput, conversationStarted):
+        def fineTuneUserInput(userInput):
             # customise chat context
             context = getCurrentContext()
-            if context and (config.chatGPTApiPredefinedContext == "Execute Python Code" or conversationStarted or (not conversationStarted and config.chatGPTApiContextInAllInputs)):
+            if context and (config.chatGPTApiPredefinedContext == "Execute Python Code" or not self.conversationStarted or (self.conversationStarted and config.chatGPTApiContextInAllInputs)):
                 userInput = f"{context}\n{userInput}"
             return userInput
         # required
@@ -2428,13 +2428,12 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             if internetSeraches in config.chatGPTPluginExcludeList:
                 del config.chatGPTApiFunctionSignatures[0]
             try:
-                started = False
+                self.conversationStarted = False
                 def startChat():
                     chat = config.thisTranslation["chat"]
                     self.print(f"{chat}: {config.chatGPTApiPredefinedContext if not config.chatGPTApiPredefinedContext == '[none]' else ''}")
-                    self.print("(blank entry to change context)")
-                    self.print("(enter '...' for options)")
-                    started = False
+                    self.print("(blank entry for options)")
+                    self.conversationStarted = False
                 startChat()
                 multilineInput = False
                 completer = WordCompleter(config.inputSuggestions, ignore_case=True) if config.inputSuggestions else None
@@ -2455,13 +2454,13 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     ".noLatestSearches",
                     ".share" if config.terminalEnableTermuxAPI else ".save",
                 )
-                featuresLower = [i.lower() for i in features] + ["...", ".save", ".share"]
+                featuresLower = [i.lower() for i in features] + [".save", ".share"]
                 while True:
                     userInput = self.simplePrompt(promptSession=self.terminal_bible_chat_session, multiline=multilineInput, completer=completer)
                     # display options when empty string is entered
                     if not userInput.strip():
-                        userInput = ".context"
-                    if userInput.lower().strip() == "...":
+                    #    userInput = ".context"
+                    #if userInput.lower().strip() == "...":
                         descriptions = (
                             "start a new chat",
                             "single-line user input",
@@ -2479,7 +2478,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                             "exclude latest online search result",
                             "share content" if config.terminalEnableTermuxAPI else "save content",
                         )
-                        feature = self.dialogs.getValidOptions(options=features, descriptions=descriptions, title="Bible Chat Options", default=".new")
+                        feature = self.dialogs.getValidOptions(options=features, descriptions=descriptions, title="Bible Chat Options", default=".context")
                         if feature:
                             if feature == ".chatgptmodel":
                                 models = ("gpt-3.5-turbo", "gpt-3.5-turbo-16k", "gpt-4", "gpt-4-32k")
@@ -2546,10 +2545,10 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                                 if customContext and not customContext.strip().lower() == config.terminal_cancel_action:
                                     config.chatGPTApiContext = customContext.strip()
                             print(f"Context selected: {config.chatGPTApiPredefinedContext}")
-                    elif userInput.strip().lower() == ".new" and started:
+                    elif userInput.strip().lower() == ".new" and self.conversationStarted:
                         messages = resetMessages()
                         startChat()
-                    elif userInput.strip().lower() in (".share", ".save") and started:
+                    elif userInput.strip().lower() in (".share", ".save") and self.conversationStarted:
                         plainText = ""
                         for i in messages:
                             if i["role"] == "user":
@@ -2580,7 +2579,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         spinner_thread = threading.Thread(target=self.spinning_animation, args=(stop_event,))
                         spinner_thread.start()
                         # get responses
-                        fineTunedUserInput = fineTuneUserInput(userInput, started)
+                        fineTunedUserInput = fineTuneUserInput(userInput)
                         messages.append({"role": "user", "content": fineTunedUserInput})
 
                         # force loading internet searches
@@ -2646,7 +2645,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                                     if index == 0:
                                         messages[-1] = {"role": "user", "content": userInput}
                                         messages.append({"role": "assistant", "content": chat_response})
-                        started = True
+                        self.conversationStarted = True
                         #stop_event.set()
                         #spinner_thread.join()
                         #self.print("##########")
