@@ -1,3 +1,7 @@
+Changes in 35.02:
+Improved plugin "Bible Chat":
+* support output stream with function calling enabled
+
 Changes in 35.01:
 Improved plugin "Bible Chat":
 * Added previous entered commands to auto completion

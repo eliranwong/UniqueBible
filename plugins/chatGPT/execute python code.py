@@ -21,16 +21,21 @@ import config, json
 # Open VLC player.
 
 def run_python(function_args):
+    def fineTunePythonCode(code):
+        insert_string = "import config\nconfig.pythonFunctionResponse = "
+        code = re.sub("^!(.*?)$", r"import os\nos.system(\1)", code, flags=re.M)
+        if "\n" in code:
+            substrings = code.rsplit("\n", 1)
+            lastLine = re.sub("print\((.*)\)", r"\1", substrings[-1])
+            code = code if lastLine.startswith(" ") else f"{substrings[0]}\n{insert_string}{lastLine}"
+        else:
+            code = f"{insert_string}{code}"
+        return code
+
     # retrieve argument values from a dictionary
     #print(function_args)
     function_args = function_args.get("code") # required
-
-    insert_string = "import config\nconfig.pythonFunctionResponse = "
-    if "\n" in function_args:
-        substrings = function_args.rsplit("\n", 1)
-        new_function_args = f"{substrings[0]}\n{insert_string}{substrings[-1]}"
-    else:
-        new_function_args = f"{insert_string}{function_args}"
+    new_function_args = fineTunePythonCode(function_args)
     try:
         exec(new_function_args, globals())
         function_response = str(config.pythonFunctionResponse)

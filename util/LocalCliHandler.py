@@ -1,4 +1,4 @@
-import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json, shutil, webbrowser
+import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json, shutil, webbrowser, traceback
 import openai, threading, time
 from duckduckgo_search import ddg
 from functools import partial
@@ -2161,6 +2161,132 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 print(symbol, end='\r')
                 time.sleep(0.1)
 
+    def fineTunePythonCode(self, code):
+        insert_string = "import config\nconfig.pythonFunctionResponse = "
+        code = re.sub("^!(.*?)$", r"import os\nos.system(\1)", code, flags=re.M)
+        if "\n" in code:
+            substrings = code.rsplit("\n", 1)
+            lastLine = re.sub("print\((.*)\)", r"\1", substrings[-1])
+            code = code if lastLine.startswith(" ") else f"{substrings[0]}\n{insert_string}{lastLine}"
+        else:
+            code = f"{insert_string}{code}"
+        return code
+
+    def getFunctionResponse(self, response_message, function_name):
+        if function_name == "python":
+            config.pythonFunctionResponse = ""
+            python_code = textwrap.dedent(response_message["function_call"]["arguments"])
+            refinedCode = self.fineTunePythonCode(python_code)
+
+            print("--------------------")
+            print(f"running python code ...")
+            if config.developer or config.codeDisplay:
+                print("```")
+                print(python_code)
+                print("```")
+            print("--------------------")
+
+            try:
+                exec(refinedCode, globals())
+                function_response = str(config.pythonFunctionResponse)
+            except:
+                function_response = python_code
+            info = {"information": function_response}
+            function_response = json.dumps(info)
+        else:
+            fuction_to_call = config.chatGPTApiAvailableFunctions[function_name]
+            function_args = json.loads(response_message["function_call"]["arguments"])
+            function_response = fuction_to_call(function_args)
+        return function_response
+
+    def getStreamFunctionResponseMessage(self, completion, function_name):
+        function_arguments = ""
+        for event in completion:
+            delta = event["choices"][0]["delta"]
+            if delta and delta.get("function_call"):
+                function_arguments += delta["function_call"]["arguments"]
+        return {
+            "role": "assistant",
+            "content": None,
+            "function_call": {
+                "name": function_name,
+                "arguments": function_arguments,
+            }
+        }
+
+    def showErrors(self):
+        if config.developer:
+            print(traceback.format_exc())
+
+    def runCompletion(self, thisMessage):
+        self.functionJustCalled = False
+        def runThisCompletion(thisThisMessage):
+            if config.chatGPTApiFunctionSignatures and not self.functionJustCalled:
+                return openai.ChatCompletion.create(
+                    model=config.chatGPTApiModel,
+                    messages=thisThisMessage,
+                    n=1,
+                    temperature=config.chatGPTApiTemperature,
+                    max_tokens=config.chatGPTApiMaxTokens,
+                    functions=config.chatGPTApiFunctionSignatures,
+                    function_call=config.chatGPTApiFunctionCall,
+                    stream=True,
+                )
+            return openai.ChatCompletion.create(
+                model=config.chatGPTApiModel,
+                messages=thisThisMessage,
+                n=1,
+                temperature=config.chatGPTApiTemperature,
+                max_tokens=config.chatGPTApiMaxTokens,
+                stream=True,
+            )
+
+        while True:
+            completion = runThisCompletion(thisMessage)
+            function_name = ""
+            try:
+                # consume the first delta
+                for event in completion:
+                    delta = event["choices"][0]["delta"]
+                    # Check if a function is called
+                    if not delta.get("function_call"):
+                        self.functionJustCalled = True
+                    elif "name" in delta["function_call"]:
+                        function_name = delta["function_call"]["name"]
+                    # check the first delta is enough
+                    break
+                # Continue only when a function is called
+                if self.functionJustCalled:
+                    break
+
+                # get stream function response message
+                response_message = self.getStreamFunctionResponseMessage(completion, function_name)
+
+                # get function response
+                function_response = self.getFunctionResponse(response_message, function_name)
+
+                # process function response
+                # send the info on the function call and function response to GPT
+                thisMessage.append(response_message) # extend conversation with assistant's reply
+                thisMessage.append(
+                    {
+                        "role": "function",
+                        "name": function_name,
+                        "content": function_response,
+                    }
+                )  # extend conversation with function response
+
+                self.functionJustCalled = True
+
+                if not config.chatAfterFunctionCalled:
+                    self.print(function_response)
+                    return None
+            except:
+                self.showErrors()
+                break
+
+        return completion
+
     def bibleChat(self):
         def changeAPIkey():
             if not config.terminalEnableTermuxAPI or (config.terminalEnableTermuxAPI and self.fingerprint()):
@@ -2216,12 +2342,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     if function_name == "python":
                         config.pythonFunctionResponse = ""
                         function_args = response_message["function_call"]["arguments"]
-                        insert_string = "import config\nconfig.pythonFunctionResponse = "
-                        if "\n" in function_args:
-                            substrings = function_args.rsplit("\n", 1)
-                            new_function_args = f"{substrings[0]}\n{insert_string}{substrings[-1]}"
-                        else:
-                            new_function_args = f"{insert_string}{function_args}"
+                        new_function_args = self.fineTunePythonCode(function_args)
                         try:
                             exec(new_function_args, globals())
                             function_response = str(config.pythonFunctionResponse)
@@ -2490,27 +2611,22 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                             except:
                                 print("Unable to load internet resources.")
 
-                        if config.chatGPTApiNoOfChoices == 1 and (config.chatGPTApiFunctionCall == "none" or not config.chatGPTApiFunctionSignatures):
-                            completion = openai.ChatCompletion.create(
-                                model=config.chatGPTApiModel,
-                                messages=messages,
-                                n=config.chatGPTApiNoOfChoices,
-                                temperature=config.chatGPTApiTemperature,
-                                max_tokens=config.chatGPTApiMaxTokens,
-                                stream=True,
-                            )
+                        # enable output stream if choice is set to 1
+                        if config.chatGPTApiNoOfChoices == 1:
+                            completion = self.runCompletion(messages)
                             # stop spinning
                             stop_event.set()
                             spinner_thread.join()
-                            chat_response = ""
-                            for event in completion:                                 
-                                # RETRIEVE THE TEXT FROM THE RESPONSE
-                                event_text = event["choices"][0]["delta"] # EVENT DELTA RESPONSE
-                                answer = event_text.get("content", "") # RETRIEVE CONTENT
-                                # STREAM THE ANSWER
-                                chat_response += answer
-                                print(answer, end='', flush=True) # Print the response
-                            print("\n")
+                            if completion is not None:
+                                chat_response = ""
+                                for event in completion:                                 
+                                    # RETRIEVE THE TEXT FROM THE RESPONSE
+                                    event_text = event["choices"][0]["delta"] # EVENT DELTA RESPONSE
+                                    answer = event_text.get("content", "") # RETRIEVE CONTENT
+                                    # STREAM THE ANSWER
+                                    chat_response += answer
+                                    print(answer, end='', flush=True) # Print the response
+                                print("\n")
                             messages[-1] = {"role": "user", "content": userInput}
                             messages.append({"role": "assistant", "content": chat_response})
                         else:
