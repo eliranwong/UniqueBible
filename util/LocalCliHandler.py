@@ -1,4 +1,4 @@
-import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json, shutil, webbrowser, traceback
+import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json, shutil, webbrowser, traceback, textwrap
 import openai, threading, time
 from duckduckgo_search import ddg
 from functools import partial

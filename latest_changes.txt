@@ -1,5 +1,5 @@
-Changes in 35.04:
-* fixed worker file
+Changes in 35.04, 35.05:
+* fixed importing packages
 
 Changes in 35.03:
 * fixed chat context inclusion in terminal mode
