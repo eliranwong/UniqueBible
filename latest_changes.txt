@@ -1,3 +1,7 @@
+Changes in 35.07:
+* added support of using book names in bible searches with GPT.
+e.g. GPTSEARCH:::verses that contain both 'God' and 'faith' in the book of Isaiah
+
 Changes in 35.06:
 * upgrade package llama_index when semantic search is used
 * semantic search now use the same model, temperature and max tokens configured with Bible Chat

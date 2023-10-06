@@ -231,6 +231,7 @@ class TextCommandParser:
             # e.g. GPTSEARCH:::NET:::verses contain both Jesus and love
             # e.g. GPTSEARCH:::NET:::verses contain spirit but not holy
             # e.g. GPTSEARCH:::NET:::faith in chapter 3
+            # e.g. GPTSEARCH:::verses that contain both 'God' and 'faith' in the book of Isaiah
             """),
             "search": (self.textSearchBasic, """
             # [KEYWORD] SEARCH
@@ -3288,6 +3289,7 @@ class TextCommandParser:
                 texts, query = commandList
 
             prompt = f"""Formulate a sql query over a table created with statement "CREATE TABLE Verses (Book INT, Chapter INT, Verse INT, Scripture TEXT)".
+The book numbers range from 1 to 66, corresponding to the canonical order from Genesis to Revevlation in the bible.
 I am providing you below with WHERE condition described in natural language.
 Give me only the sql query statement, starting with "SELECT * FROM Verses WHERE " without any extra explanation or comment.
 The WHERE condition is described as: {query}"""
