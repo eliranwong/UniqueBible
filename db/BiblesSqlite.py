@@ -526,7 +526,7 @@ input.addEventListener('keyup', function(event) {0}
     def searchBible(self, text, mode, searchString, interlinear=False, referenceOnly=False, booksRange=""):
         if text in self.marvelBibles and not text in ["LXX1", "LXX1i", "LXX2", "LXX2i"]:
             searchString = TextUtil.removeVowelAccent(searchString)
-        if not mode == "REGEX":
+        if not mode == "REGEX" and not mode == "ADVANCED":
             searchString = TextUtil.removeSpecialCharacters(searchString)
 
         plainBibleList, formattedBibleList = self.getTwoBibleLists()
@@ -599,9 +599,11 @@ input.addEventListener('keyup', function(event) {0}
                 for eachString in searchString.split("%"):
                     formatedText = TextUtil.highlightSearchString(formatedText, eachString)
             elif mode == "ADVANCED":
-                searchWords = [m for m in re.findall("LIKE ['\"]%(.*?)%['\"]", searchString, flags=0 if config.enableCaseSensitiveSearch else re.IGNORECASE)]
-                searchWords = [m.split("%") for m in searchWords]
-                searchWords = [m2 for m1 in searchWords for m2 in m1]
+                searchWords1 = [m for m in re.findall("Scripture REGEXP ['\"](.*?)['\"]", searchString, flags=0 if config.enableCaseSensitiveSearch else re.IGNORECASE)]
+                searchWords2 = [m for m in re.findall("Scripture LIKE ['\"]%(.*?)%['\"]", searchString, flags=0 if config.enableCaseSensitiveSearch else re.IGNORECASE)]
+                searchWords = searchWords1 + searchWords2
+                #searchWords = [m.split("%") for m in searchWords]
+                #searchWords = [m2 for m1 in searchWords for m2 in m1]
                 for eachString in searchWords:
                     formatedText = TextUtil.highlightSearchString(formatedText, eachString)
             # fix highlighting

@@ -1,6 +1,10 @@
+Changes in 35.08:
+* added support of using regular expression in bible searches with GPT.
+    e.g. GPTSEARCH:::verses that contain 'God' and 'Lord' and regular expression 'Jesus.*?love'
+
 Changes in 35.07:
 * added support of using book names in bible searches with GPT.
-e.g. GPTSEARCH:::verses that contain both 'God' and 'faith' in the book of Isaiah
+    e.g. GPTSEARCH:::verses that contain both 'God' and 'faith' in the book of Isaiah
 
 Changes in 35.06:
 * upgrade package llama_index when semantic search is used
