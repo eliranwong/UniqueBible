@@ -675,7 +675,7 @@ class ChatGPTAPI(QWidget):
                 config.chatGPTPluginExcludeList.append(internetSeraches)
                 self.parent.reloadMenubar()
             config.mainWindow.runBibleChatPlugins()
-            config.chatGPTApiPredefinedContext = dialog.predefinedContext()
+            #config.chatGPTApiPredefinedContext = dialog.predefinedContext()
             config.chatGPTApiContextInAllInputs = dialog.contextInAllInputs()
             config.chatGPTApiContext = dialog.context()
             #config.chatGPTApiAudioLanguage = dialog.language()

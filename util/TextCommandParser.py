@@ -63,6 +63,7 @@ class TextCommandParser:
         self.lastKeyword = None
         self.cliTtsProcess = None
         self.qtTtsEngine = None
+        self.llamaIndexUpdated = False
         self.locationMap = {exlbl_entry: (name[0].upper(), name, float(latitude), float(longitude)) for exlbl_entry, name, latitude, longitude in allLocations}
 
         self.interpreters = {
@@ -3316,9 +3317,18 @@ The WHERE condition is described as: {query}"""
 
     # SEMANTIC:::
     def textSemanticSearch(self, command, source):
+        # upgrade package llama_index
+        if not self.llamaIndexUpdated:
+            try:
+                os.system("pip3 install --upgrade llama_index")
+            except:
+                pass
+            self.llamaIndexUpdated = True
+        # import packages
         import openai, traceback, shutil
-        from llama_index import SimpleDirectoryReader, GPTVectorStoreIndex, StorageContext, load_index_from_storage
-        from pathlib import Path
+        from llama_index.llms import OpenAI
+        from llama_index import SimpleDirectoryReader, ServiceContext, GPTVectorStoreIndex, StorageContext, load_index_from_storage
+        #from pathlib import Path
         try:
             openai.api_key = os.environ["OPENAI_API_KEY"] = config.openaiApiKey
             openai.organization = config.openaiApiOrganization
@@ -3341,12 +3351,15 @@ The WHERE condition is described as: {query}"""
                 message = "Create indexes now ..."
                 print(message) if config.noQt else self.parent.displayMessage(message)
                 # load book information
-                bibleBooks = BibleBooks()
+                #bibleBooks = BibleBooks()
                 # export bible text in markdown format
                 Bible(text).exportToMarkdown(standardReference=True)
                 # create index
+                # define LLM
+                llm = OpenAI(temperature=config.chatGPTApiTemperature, model=config.chatGPTApiModel, max_tokens=config.chatGPTApiMaxTokens)
+                service_context = ServiceContext.from_defaults(llm=llm)
                 documents = SimpleDirectoryReader(bible_dir, recursive=True, required_exts=[".md"]).load_data()
-                index = GPTVectorStoreIndex.from_documents(documents)
+                index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context)
                 index.storage_context.persist(persist_dir=persist_dir)
                 # remove exported bible text after indexes are created
                 removeTempDir()

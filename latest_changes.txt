@@ -1,3 +1,7 @@
+Changes in 35.06:
+* upgrade package llama_index when semantic search is used
+* semantic search now use the same model, temperature and max tokens configured with Bible Chat
+
 Changes in 35.04, 35.05:
 * fixed importing packages
 
