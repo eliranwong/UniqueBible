@@ -1,5 +1,8 @@
+Changes in 35.11:
+* added a startup command exception in terminal mode
+
 Changes in 35.10:
-* fixed and improved a few features in terminal mode.
+* fixed and improved a few features in terminal mode
 
 Changes in 35.09:
 * improved bible comparison and parallels

@@ -80,7 +80,7 @@ class LocalCliHandler:
         self.ttsCommandKeyword = self.getDefaultTtsKeyword().lower()
         self.unsupportedCommands.append("gtts" if self.ttsCommandKeyword == "speak" else "speak")
         self.startupException1 = [config.terminal_cancel_action, ".", ".ed", ".sys", ".system", ".quit", ".q", ".restart", ".z", ".togglepager", ".filters", ".toggleclipboardmonitor", ".history", ".update", ".find", ".sa", ".sas", ".read", ".readsync", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".downloadyoutube", ".web", ".gtts", ".portablepython", ".textfile"]
-        self.startupException2 = "^(_setconfig:::|\.edit|\.change|\.toggle|\.stop|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::|download:::|read:::|readsync:::)"
+        self.startupException2 = "^(_setconfig:::|\.edit|\.change|\.toggle|\.stop|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::|download:::|read:::|readsync:::|semantic:::)"
         #config.cliTtsProcess = None
         config.audio_playing_file = os.path.join("temp", "000_audio_playing.txt")
         self.getPath = GetPath(
