@@ -1059,7 +1059,7 @@ class LocalCliHandler:
         return ""
 
     def commandAliases(self):
-        content = "UBA terminal mode command aliases:"
+        content = "UBA terminal mode command aliases:\n"
         content += "\n".join([f"{key} - {value[0]}" for key, value in sorted(self.dotCommands.items()) if value[0].startswith("an alias to ")])
         self.print(self.keepContent(content))
         return ""
