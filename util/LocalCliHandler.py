@@ -3982,6 +3982,8 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         self.print(f"(or enter '{config.terminal_cancel_action}' to cancel)")
 
     def printInvalidOptionEntered(self):
+        if config.developer:
+            print(traceback.format_exc())
         message = "Invalid option entered!"
         self.print(message)
         self.toast(message)
@@ -4438,7 +4440,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def toggle(self):
         heading = "Toggle"
-        features = (".togglepager", "toggleclipboardmonitor", ".togglecomparison", ".togglechapterlayout", ".toggleplainbiblechaptersubheadings", ".togglefavouriteverses", ".toggleversenumber", ".toggleusernoteindicator", ".togglenoteindicator", ".togglelexicalentries")
+        features = (".togglepager", ".toggleclipboardmonitor", ".togglecomparison", ".togglechapterlayout", ".toggleplainbiblechaptersubheadings", ".togglefavouriteverses", ".toggleversenumber", ".toggleusernoteindicator", ".togglenoteindicator", ".togglelexicalentries")
         return self.displayFeatureMenu(heading, features)
 
     def clipboard(self):

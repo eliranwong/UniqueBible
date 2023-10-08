@@ -1,3 +1,6 @@
+Changes in 35.09:
+* improved bible comparison and parallels
+
 Changes in 35.08:
 * added support of using regular expression in bible searches with GPT.
     e.g. GPTSEARCH:::verses that contain 'God' and 'Lord' and regular expression 'Jesus.*?love'
