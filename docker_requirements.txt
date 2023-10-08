@@ -72,7 +72,7 @@ telnetlib3==1.0.4
 toml==0.10.2
 tomli==2.0.0
 tqdm==4.62.3
-urllib3==1.26.8
+urllib3==1.26.17
 webencodings==0.5.1
 websocket-client==1.1.0
 websockets==10.1
