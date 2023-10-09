@@ -1,3 +1,6 @@
+Changes in 35.12:
+* exit w3m without user confirmation
+
 Changes in 35.11:
 * added a startup command exception in terminal mode
 

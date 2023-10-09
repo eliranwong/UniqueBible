@@ -826,7 +826,7 @@ class LocalCliHandler:
     def displayOutputOnTerminal(self, content):
         if content.startswith("[BROWSER]"):
             html = self.fineTuneTextForWebBrowserDisplay()
-            self.cliTool("w3m -T text/html", html)
+            self.cliTool("w3m -T text/html -o confirm_qq=false", html)
         else:
             if config.terminalEnablePager:
                 content = TextUtil.convertHtmlTagToColorama(content)
