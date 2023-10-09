@@ -388,7 +388,7 @@ class LocalCliHandler:
             ".concordancebybook": ("Hebrew / Greek concordance sorted by books", lambda: self.openTools("LEXICON", self.showlexicons, "ConcordanceBook")),
             ".concordancebymorphology": ("Hebrew / Greek concordance sorted by morphology", lambda: self.openTools("LEXICON", self.showlexicons, "ConcordanceMorphology")),
             ".thirdpartydictionaries": ("third-party dictionaries", lambda: self.openTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
-            ".3dict": ("an alias to '.openthirdpartydictionaries'", lambda: self.openTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
+            ".3dict": ("an alias to '.thirdpartydictionaries'", lambda: self.openTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
             ".editbooknote": ("edit bible book note", lambda: self.openbookfeature("EDITBOOKNOTE")),
             ".editchapternote": ("edit bible chapter note", lambda: self.openchapterfeature("EDITCHAPTERNOTE")),
             ".editversenote": ("edit bible verse note", lambda: self.openversefeature("EDITVERSENOTE")),
