@@ -3288,7 +3288,6 @@ class TextCommandParser:
 
             prompt = f"""Formulate a sql query over a table created with statement "CREATE TABLE Verses (Book INT, Chapter INT, Verse INT, Scripture TEXT)".
 The book numbers range from 1 to 66, corresponding to the canonical order from Genesis to Revevlation in the bible.
-Also, in case regular expression is specified, it is expressed as (Scripture REGEXP ?).
 I am providing you below with WHERE condition described in natural language.
 Give me only the sql query statement, starting with "SELECT * FROM Verses WHERE " without any extra explanation or comment.
 The WHERE condition is described as: {query}"""
