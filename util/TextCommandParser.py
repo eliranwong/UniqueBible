@@ -1,6 +1,5 @@
 # coding=utf-8
-import glob, pprint
-import pydoc
+import glob, pprint, traceback, pydoc
 import os, re, webbrowser, platform, zipfile, subprocess, config
 from datetime import date
 from util.VlcUtil import VlcUtil
@@ -1504,7 +1503,10 @@ class TextCommandParser:
                 if os.path.isfile(audioFile):
                     self.openMediaPlayer(audioFile, "main", gui=False)
         except:
-            self.parent.displayMessage(config.thisTranslation["message_fail"])
+            if config.developer:
+                print(traceback.format_exc())
+            else:
+                self.parent.displayMessage(config.thisTranslation["message_fail"])
 
 # Keep the following codes for future reference
 # The following method does not work on Windows

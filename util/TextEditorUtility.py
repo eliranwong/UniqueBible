@@ -290,7 +290,7 @@ class TextEditorUtility:
         # Build the voice request, select the language code (e.g. "yue-HK") and the ssml
         # voice gender ("neutral")
         voice = texttospeech.VoiceSelectionParams(
-            language_code=languageCode, ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
+            language_code=languageCode, ssml_gender=texttospeech.SsmlVoiceGender.SSML_VOICE_GENDER_UNSPECIFIED
         )
 
         # Select the type of audio file you want returned

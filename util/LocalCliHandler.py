@@ -61,6 +61,7 @@ class LocalCliHandler:
         self.html = "<ref >Unique Bible App</ref>"
         self.plainText = "Unique Bible App"
         self.setupDialogs()
+        self.audioPlayer = None
         self.command = command
         self.dotCommands = self.getDotCommands()
         self.addShortcuts()
@@ -2718,7 +2719,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         with open(imageFile, mode="wb") as pngObj:
                             pngObj.write(image_data)
                     if config.terminalEnableTermuxAPI:
-                        config.mainWindow.getCliOutput(f"termux-share {imageFile}")
+                        self.getCliOutput(f"termux-share {imageFile}")
                     else:
                         os.system(f"{config.open} {imageFile}")
             # error codes: https://platform.openai.com/docs/guides/error-codes/python-library-error-types
@@ -4079,7 +4080,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         userInput = prompt(self.inputIndicator, key_bindings=self.prompt_multiline_shared_key_bindings, bottom_toolbar=self.getToolBar(True), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, multiline=True, default=default).strip()
         if userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
-        config.terminalMyMenu = [i.lower().strip() for i in userInput.split("\n") if i.lower().strip() in config.mainWindow.dotCommands]
+        config.terminalMyMenu = [i.lower().strip() for i in userInput.split("\n") if i.lower().strip() in self.dotCommands]
         self.print("config.terminalMyMenu is changed to:")
         self.print(config.terminalMyMenu)
 

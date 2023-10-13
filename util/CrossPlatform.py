@@ -292,7 +292,7 @@ class CrossPlatform:
         if not moduleInstalled:
             installmodule("--upgrade google-cloud-texttospeech")
         os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")
-        # Modified from ource: https://cloud.google.com/text-to-speech/docs/create-audio-text-client-libraries#client-libraries-install-python
+        # Modified from source: https://cloud.google.com/text-to-speech/docs/create-audio-text-client-libraries#client-libraries-install-python
         """Synthesizes speech from the input string of text or ssml.
         Make sure to be working in a virtual environment.
 
@@ -308,8 +308,11 @@ class CrossPlatform:
 
         # Build the voice request, select the language code (e.g. "yue-HK") and the ssml
         # voice gender ("neutral")
+        # Supported language: https://cloud.google.com/speech-to-text/docs/speech-to-text-supported-languages
+        # Voice: https://cloud.google.com/text-to-speech/docs/voices
+        # Gener: https://cloud.google.com/text-to-speech/docs/reference/rest/v1/SsmlVoiceGender
         voice = texttospeech.VoiceSelectionParams(
-            language_code=languageCode, ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
+            language_code=languageCode, ssml_gender=texttospeech.SsmlVoiceGender.SSML_VOICE_GENDER_UNSPECIFIED
         )
 
         # Select the type of audio file you want returned
