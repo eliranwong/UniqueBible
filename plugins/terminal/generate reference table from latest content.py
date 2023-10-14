@@ -59,7 +59,7 @@ def generateCharts(text):
 
 def displayHtml(html):
     if WebtopUtil.isPackageInstalled("w3m"):
-        config.mainWindow.cliTool("w3m -T text/html", config.mainWindow.html)
+        config.mainWindow.cliTool("w3m -T text/html -o confirm_qq=false", config.mainWindow.html)
     else:
         openHtmlFile(html)
 

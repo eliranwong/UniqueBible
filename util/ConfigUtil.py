@@ -347,7 +347,7 @@ class ConfigUtil:
         ".togglecomparison")
         setConfig("terminal_dot_d", """
         # Customise the command to be run with shortcut entry '.d'.""",
-        ".opendata")
+        ".data")
         setConfig("terminal_dot_e", """
         # Customise the command to be run with shortcut entry '.e'.""",
         ".editor")
@@ -374,7 +374,7 @@ class ConfigUtil:
         ".latestbible")
         setConfig("terminal_dot_m", """
         # Customise the command to be run with shortcut entry '.m'.""",
-        ".openmaps")
+        ".maps")
         setConfig("terminal_dot_n", """
         # Customise the command to be run with shortcut entry '.n'.""",
         ".note")
@@ -398,7 +398,7 @@ class ConfigUtil:
         ".downloadyoutube")
         setConfig("terminal_dot_v", """
         # Customise the command to be run with shortcut entry '.v'.""",
-        ".openversefeatures")
+        ".versefeatures")
         setConfig("terminal_dot_w", """
         # Customise the command to be run with shortcut entry '.w'.""",
         ".web")

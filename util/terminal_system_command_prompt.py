@@ -113,12 +113,16 @@ class SystemCommandPrompt:
                 elif userInput and not userInput == config.terminal_cancel_action:
                     self.systemCommandPromptEntry = ""
                     self.systemCommandPromptPosition = 0
+                    if userInput.strip() == "cd":
+                        userInput = "cd ~"
                     userInput = userInput.replace("~", os.path.expanduser("~"))
                     # execute or open file if input is a valid file
                     if os.path.isfile(userInput):
+                        # execute file
                         stdout, stderr = subprocess.Popen(userInput, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
                         if stdout:
                             print(stdout.decode("utf-8"))
+                        # try to open it if it was not executed
                         if stderr:
                             os.system(f'{self.openCommand} "{userInput}"')
                     # open directory if input is a valid directory

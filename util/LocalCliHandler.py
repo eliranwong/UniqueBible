@@ -61,6 +61,7 @@ class LocalCliHandler:
         self.html = "<ref >Unique Bible App</ref>"
         self.plainText = "Unique Bible App"
         self.setupDialogs()
+        self.audioPlayer = None
         self.command = command
         self.dotCommands = self.getDotCommands()
         self.addShortcuts()
@@ -80,7 +81,7 @@ class LocalCliHandler:
         self.ttsCommandKeyword = self.getDefaultTtsKeyword().lower()
         self.unsupportedCommands.append("gtts" if self.ttsCommandKeyword == "speak" else "speak")
         self.startupException1 = [config.terminal_cancel_action, ".", ".ed", ".sys", ".system", ".quit", ".q", ".restart", ".z", ".togglepager", ".filters", ".toggleclipboardmonitor", ".history", ".update", ".find", ".sa", ".sas", ".read", ".readsync", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".downloadyoutube", ".web", ".gtts", ".portablepython", ".textfile"]
-        self.startupException2 = "^(_setconfig:::|\.edit|\.change|\.toggle|\.stop|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::|download:::|read:::|readsync:::)"
+        self.startupException2 = "^(_setconfig:::|\.edit|\.change|\.toggle|\.stop|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::|download:::|read:::|readsync:::|semantic:::)"
         #config.cliTtsProcess = None
         config.audio_playing_file = os.path.join("temp", "000_audio_playing.txt")
         self.getPath = GetPath(
@@ -388,7 +389,7 @@ class LocalCliHandler:
             ".concordancebybook": ("Hebrew / Greek concordance sorted by books", lambda: self.openTools("LEXICON", self.showlexicons, "ConcordanceBook")),
             ".concordancebymorphology": ("Hebrew / Greek concordance sorted by morphology", lambda: self.openTools("LEXICON", self.showlexicons, "ConcordanceMorphology")),
             ".thirdpartydictionaries": ("third-party dictionaries", lambda: self.openTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
-            ".3dict": ("an alias to '.openthirdpartydictionaries'", lambda: self.openTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
+            ".3dict": ("an alias to '.thirdpartydictionaries'", lambda: self.openTools("THIRDDICTIONARY", self.showthirdpartydictionary)),
             ".editbooknote": ("edit bible book note", lambda: self.openbookfeature("EDITBOOKNOTE")),
             ".editchapternote": ("edit bible chapter note", lambda: self.openchapterfeature("EDITCHAPTERNOTE")),
             ".editversenote": ("edit bible verse note", lambda: self.openversefeature("EDITVERSENOTE")),
@@ -826,7 +827,7 @@ class LocalCliHandler:
     def displayOutputOnTerminal(self, content):
         if content.startswith("[BROWSER]"):
             html = self.fineTuneTextForWebBrowserDisplay()
-            self.cliTool("w3m -T text/html", html)
+            self.cliTool("w3m -T text/html -o confirm_qq=false", html)
         else:
             if config.terminalEnablePager:
                 content = TextUtil.convertHtmlTagToColorama(content)
@@ -1059,7 +1060,7 @@ class LocalCliHandler:
         return ""
 
     def commandAliases(self):
-        content = "UBA terminal mode command aliases:"
+        content = "UBA terminal mode command aliases:\n"
         content += "\n".join([f"{key} - {value[0]}" for key, value in sorted(self.dotCommands.items()) if value[0].startswith("an alias to ")])
         self.print(self.keepContent(content))
         return ""
@@ -2718,7 +2719,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         with open(imageFile, mode="wb") as pngObj:
                             pngObj.write(image_data)
                     if config.terminalEnableTermuxAPI:
-                        config.mainWindow.getCliOutput(f"termux-share {imageFile}")
+                        self.getCliOutput(f"termux-share {imageFile}")
                     else:
                         os.system(f"{config.open} {imageFile}")
             # error codes: https://platform.openai.com/docs/guides/error-codes/python-library-error-types
@@ -3982,6 +3983,8 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         self.print(f"(or enter '{config.terminal_cancel_action}' to cancel)")
 
     def printInvalidOptionEntered(self):
+        if config.developer:
+            print(traceback.format_exc())
         message = "Invalid option entered!"
         self.print(message)
         self.toast(message)
@@ -4077,7 +4080,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         userInput = prompt(self.inputIndicator, key_bindings=self.prompt_multiline_shared_key_bindings, bottom_toolbar=self.getToolBar(True), enable_system_prompt=True, swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")), style=self.promptStyle, multiline=True, default=default).strip()
         if userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
-        config.terminalMyMenu = [i.lower().strip() for i in userInput.split("\n") if i.lower().strip() in config.mainWindow.dotCommands]
+        config.terminalMyMenu = [i.lower().strip() for i in userInput.split("\n") if i.lower().strip() in self.dotCommands]
         self.print("config.terminalMyMenu is changed to:")
         self.print(config.terminalMyMenu)
 
@@ -4438,7 +4441,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def toggle(self):
         heading = "Toggle"
-        features = (".togglepager", "toggleclipboardmonitor", ".togglecomparison", ".togglechapterlayout", ".toggleplainbiblechaptersubheadings", ".togglefavouriteverses", ".toggleversenumber", ".toggleusernoteindicator", ".togglenoteindicator", ".togglelexicalentries")
+        features = (".togglepager", ".toggleclipboardmonitor", ".togglecomparison", ".togglechapterlayout", ".toggleplainbiblechaptersubheadings", ".togglefavouriteverses", ".toggleversenumber", ".toggleusernoteindicator", ".togglenoteindicator", ".togglelexicalentries")
         return self.displayFeatureMenu(heading, features)
 
     def clipboard(self):

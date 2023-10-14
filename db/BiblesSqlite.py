@@ -340,6 +340,7 @@ input.addEventListener('keyup', function(event) {0}
         return data
 
     def parallelVerse(self, verseList, texts):
+        texts = self.sortTexts(texts)
         b, c, v, *_ = verseList[0]
         content = """<h2><ref onclick="document.title='{0}'">{0}</ref></h2>""".format(self.bcvToVerseReference(b, c, v))
         content += "<table>"
@@ -358,7 +359,13 @@ input.addEventListener('keyup', function(event) {0}
         else:
             return config.thisTranslation["message_noSupport"]
 
+    def sortTexts(self, texts):
+        if config.mainText in texts:
+            texts.remove(config.mainText)
+        return [config.mainText] + sorted(texts)
+
     def compareVerseChapter(self, b, c, v, texts):
+        texts = self.sortTexts(texts)
         # get a combined verse list without duplication
         combinedVerseList = [self.getVerseList(b, c, text) for text in texts]
         uniqueVerseList = []
@@ -379,14 +386,19 @@ input.addEventListener('keyup', function(event) {0}
                         chapter += "<tr style='background-color: {0};'>".format(Themes.getComparisonBackgroundColor())
                     else:
                         chapter += "<tr style='background-color: {0};'>".format(Themes.getComparisonAlternateBackgroundColor())
-                if row == 1:
+                if row == 1 and config.runMode == "terminal":
+                    chapter += "<td style='vertical-align: text-top;'>[{2}][{1}] ".format(self.formVerseTag(b, c, verse, text), verse, text)
+                elif row == 1:
                     chapter += "<td style='vertical-align: text-top;'><vid>{0}{1}</ref></vid> ".format(self.formVerseTag(b, c, verse, text), verse)
                 else:
                     chapter += "<td>"
                 textTdTag = "<td>"
                 if b < 40 and text in config.rtlTexts:
                     textTdTag = "<td style='direction: rtl;'>"
-                chapter += "</td><td><sup>({0}{1}</ref>)</sup></td>{2}<bibletext class='{1}'>{3}</bibletext></td></tr>".format(self.formVerseTag(b, c, verse, text), text, textTdTag, self.readTextVerse(text, b, c, verse)[3])
+                if row == 1 and config.runMode == "terminal":
+                    chapter += "</td>{2}<bibletext class='{1}'>「{4}」{3}「/{4}」</bibletext></td></tr>".format(self.formVerseTag(b, c, verse, text), text, textTdTag, self.readTextVerse(text, b, c, verse)[3], config.terminalPromptIndicatorColor2)
+                else:
+                    chapter += "</td><td><sup>({0}{1}</ref>)</sup></td>{2}<bibletext class='{1}'>{3}</bibletext></td></tr>".format(self.formVerseTag(b, c, verse, text), text, textTdTag, self.readTextVerse(text, b, c, verse)[3])
         chapter += "</table>"
         return chapter
 

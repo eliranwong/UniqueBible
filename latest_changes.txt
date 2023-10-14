@@ -1,3 +1,18 @@
+Changes in 35.13:
+* Fixed google-cloud text-to-speech integration.
+
+Changes in 35.12:
+* exit w3m without user confirmation
+
+Changes in 35.11:
+* added a startup command exception in terminal mode
+
+Changes in 35.10:
+* fixed and improved a few features in terminal mode
+
+Changes in 35.09:
+* improved bible comparison and parallels
+
 Changes in 35.08:
 * added support of using regular expression in bible searches with GPT.
     e.g. GPTSEARCH:::verses that contain 'God' and 'Lord' and regular expression 'Jesus.*?love'

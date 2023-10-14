@@ -1,6 +1,5 @@
 # coding=utf-8
-import glob, pprint
-import pydoc
+import glob, pprint, traceback, pydoc
 import os, re, webbrowser, platform, zipfile, subprocess, config
 from datetime import date
 from util.VlcUtil import VlcUtil
@@ -1221,7 +1220,11 @@ class TextCommandParser:
         if not confirmedTexts and not returnEmptyList:
             confirmedTexts = [config.favouriteBible]
         #return sorted(list(set(confirmedTexts)))
-        return list(set(confirmedTexts))
+        confirmedTexts = list(set(confirmedTexts))
+        if config.mainText in confirmedTexts:
+            confirmedTexts.remove(config.mainText)
+            confirmedTexts = [config.mainText] + sorted(confirmedTexts)
+        return confirmedTexts
 
     def extractAllVerses(self, text, tagged=False):
         return BibleVerseParser(config.parserStandarisation).extractAllReferences(text, tagged)
@@ -1500,7 +1503,10 @@ class TextCommandParser:
                 if os.path.isfile(audioFile):
                     self.openMediaPlayer(audioFile, "main", gui=False)
         except:
-            self.parent.displayMessage(config.thisTranslation["message_fail"])
+            if config.developer:
+                print(traceback.format_exc())
+            else:
+                self.parent.displayMessage(config.thisTranslation["message_fail"])
 
 # Keep the following codes for future reference
 # The following method does not work on Windows
@@ -2396,10 +2402,7 @@ class TextCommandParser:
                 config.mainCssBibleFontStyle += css
             verses = biblesSqlite.compareVerse(verseList, confirmedTexts)
             updateViewConfig, viewText, *_ = self.getViewConfig(source)
-            if confirmedTexts == ["ALL"]:
-                updateViewConfig(viewText, verseList[-1])
-            else:
-                updateViewConfig(confirmedTexts[0], verseList[-1])
+            updateViewConfig(viewText, verseList[-1])
             return ("study" if config.compareOnStudyWindow else "main", verses, {})
 
     # SIDEBYSIDE:::
@@ -2424,10 +2427,7 @@ class TextCommandParser:
                 config.mainCssBibleFontStyle += css
             verses = biblesSqlite.parallelVerse(verseList, confirmedTexts)
             updateViewConfig, viewText, *_ = self.getViewConfig(source)
-            if confirmedTexts == ["ALL"]:
-                updateViewConfig(viewText, verseList[-1])
-            else:
-                updateViewConfig(confirmedTexts[0], verseList[-1])
+            updateViewConfig(viewText, verseList[-1])
             if config.runMode == "terminal":
                 verses = f"[BROWSER]{verses}"
             return ("study" if config.compareOnStudyWindow else "main", verses, {})
@@ -2448,10 +2448,7 @@ class TextCommandParser:
             biblesSqlite = BiblesSqlite()
             verses = biblesSqlite.diffVerse(verseList, confirmedTexts)
             updateViewConfig, viewText, *_ = self.getViewConfig(source)
-            if confirmedTexts == ["ALL"]:
-                updateViewConfig(viewText, verseList[-1])
-            else:
-                updateViewConfig(confirmedTexts[-1], verseList[-1])
+            updateViewConfig(viewText, verseList[-1])
             return (source, verses, {})
 
     # PARALLEL:::
@@ -2476,15 +2473,18 @@ class TextCommandParser:
                                  for text in confirmedTexts]
                     return("study" if config.compareOnStudyWindow else "main", "<br>".join(tableList), {})
                 else:
+                    mainText = config.mainText
                     tableList = [("<th><ref onclick='document.title=\"TEXT:::{0}\"'>{0}</ref></th>".format(text),
                                   "<td style='vertical-align: text-top;'><bibletext class={1}>{0}</bibletext></td>"
                                   .format(self.textBibleVerseParser(references, text, source, True)[1], text))
                                  for text in confirmedTexts]
                     versions, verses = zip(*tableList)
-                    config.mainCssBibleFontStyle = ""
+                    config.maiupdateViewConfignCssBibleFontStyle = ""
                     for text in confirmedTexts:
                         (fontFile, fontSize, css) = Bible(text).getFontInfo()
                         config.mainCssBibleFontStyle += css
+                    config.mainText = mainText
+                    self.parent.setBibleSelection()
                     return ("study" if config.compareOnStudyWindow else "main", "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)), {})
 
    # PASSAGES:::
@@ -3290,7 +3290,6 @@ class TextCommandParser:
 
             prompt = f"""Formulate a sql query over a table created with statement "CREATE TABLE Verses (Book INT, Chapter INT, Verse INT, Scripture TEXT)".
 The book numbers range from 1 to 66, corresponding to the canonical order from Genesis to Revevlation in the bible.
-Also, regular expression is expressed as (Scripture REGEXP ?).
 I am providing you below with WHERE condition described in natural language.
 Give me only the sql query statement, starting with "SELECT * FROM Verses WHERE " without any extra explanation or comment.
 The WHERE condition is described as: {query}"""
