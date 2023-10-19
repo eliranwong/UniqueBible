@@ -204,7 +204,7 @@ class ConfigUtil:
         False)
         setConfig("terminalNoteEditor", """
         # Default note editor used in terminal mode.
-        # Suggested options: '', 'micro', 'nano --softwrap --atblanks -', 'vi -' and 'vim -'.
+        # Suggested options: '', 'micro -softwrap true -wordwrap true', 'nano --softwrap --atblanks -', 'vi -' and 'vim -'.
         # If empty string is given, UBA uses built-in text editor.""",
         "")
         if config.terminalNoteEditor in ("nano --softwrap --atblanks", "vi", "vim"):
