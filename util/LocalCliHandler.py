@@ -224,9 +224,9 @@ class LocalCliHandler:
     def print(self, content):
         if isinstance(content, str) and content.startswith("[MESSAGE]"):
             content = content[9:]
+        if config.terminalWrapWords:
+            content = self.getWrappedHTMLText(content)
         try:
-            if config.terminalWrapWords:
-                content = self.getWrappedHTMLText(content)
             print_formatted_text(HTML(content))
         except:
             print(TextUtil.convertHtmlTagToColorama(content))
@@ -895,6 +895,8 @@ class LocalCliHandler:
             self.cliTool("w3m -T text/html -o confirm_qq=false", html)
         else:
             if config.terminalEnablePager:
+                if config.terminalWrapWords:
+                    content = self.getWrappedHTMLText(content)
                 content = TextUtil.convertHtmlTagToColorama(content)
                 #print(content)
             divider = self.divider
