@@ -162,6 +162,9 @@ class ConfigUtil:
         False)
 
         # Start of terminal mode setting
+        setConfig("terminalWrapWords", """
+        # Wrap words in terminal mode.""",
+        False)
         setConfig("terminalEnableTermuxAPI", """
         # Option to enable use of Termux:API tools in UBA.
         # Make sure you have both Termux:API app and termux-api package installed if you want to enable it.

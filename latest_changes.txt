@@ -1,3 +1,6 @@
+Changes in 35.14:
+* Wrap words in terminal mode.
+
 Changes in 35.13:
 * Fixed google-cloud text-to-speech integration.
 

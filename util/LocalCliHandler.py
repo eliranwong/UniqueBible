@@ -1,4 +1,4 @@
-import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json, shutil, webbrowser, traceback, textwrap
+import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json, shutil, webbrowser, traceback, textwrap, wcwidth
 import openai, threading, time
 from duckduckgo_search import ddg
 from functools import partial
@@ -158,10 +158,75 @@ class LocalCliHandler:
         elif platform.system() == "Windows":
             config.open = config.openWindows
 
+    # wrap html text at spaces
+    def getWrappedHTMLText(self, text, terminal_width=None):
+        if not " " in text:
+            return text
+        if terminal_width is None:
+            terminal_width = shutil.get_terminal_size().columns
+        self.wrappedText = ""
+        self.lineWidth = 0
+
+        def addWords(words):
+            words = words.split(" ")
+            length = len(words)
+            for index, item in enumerate(words):
+                isLastItem = (length - index == 1)
+                itemWidth = self.getStringWidth(item)
+                if isLastItem:
+                    newLineWidth = self.lineWidth + itemWidth
+                else:
+                    newLineWidth = self.lineWidth + itemWidth + 1
+                if newLineWidth > terminal_width:
+                    self.wrappedText += f"\n{item}" if isLastItem else f"\n{item} "
+                    self.lineWidth = itemWidth if isLastItem else itemWidth + 1
+                else:
+                    self.wrappedText += item if isLastItem else f"{item} "
+                    self.lineWidth += itemWidth if isLastItem else itemWidth + 1
+        
+        def processLine(lineText):
+            if re.search("<[^<>]+?>", lineText):
+                # handle html/xml tags
+                chunks = lineText.split(">")
+                totalChunks = len(chunks)
+                for index, chunk in enumerate(chunks):
+                    isLastChunk = (totalChunks - index == 1)
+                    if isLastChunk:
+                        addWords(chunk)
+                    else:
+                        tag = True if "<" in chunk else False
+                        if tag:
+                            nonTag, tagContent = chunk.rsplit("<", 1)
+                            addWords(nonTag)
+                            self.wrappedText += f"<{tagContent}>"
+                        else:
+                            addWords(f"{chunk}>")
+            else:
+                addWords(lineText)
+
+        lines = text.split("\n")
+        totalLines = len(lines)
+        for index, line in enumerate(lines):
+            isLastLine = (totalLines - index == 1)
+            processLine(line)
+            if not isLastLine:
+                self.wrappedText += "\n"
+                self.lineWidth = 0
+        
+        return self.wrappedText
+
+    def getStringWidth(self, text): 
+        width = 0 
+        for character in text: 
+            width += wcwidth.wcwidth(character) 
+        return width
+
     def print(self, content):
         if isinstance(content, str) and content.startswith("[MESSAGE]"):
             content = content[9:]
         try:
+            if config.terminalWrapWords:
+                content = self.getWrappedHTMLText(content)
             print_formatted_text(HTML(content))
         except:
             print(TextUtil.convertHtmlTagToColorama(content))
