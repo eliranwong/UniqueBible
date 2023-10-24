@@ -894,40 +894,24 @@ class LocalCliHandler:
             html = self.fineTuneTextForWebBrowserDisplay()
             self.cliTool("w3m -T text/html -o confirm_qq=false", html)
         else:
-            if config.terminalEnablePager:
-                if config.terminalWrapWords:
-                    content = self.getWrappedHTMLText(content)
-                content = TextUtil.convertHtmlTagToColorama(content)
-                #print(content)
             divider = self.divider
             if config.terminalEnablePager and not content in ("Command processed!", "INVALID_COMMAND_ENTERED") and not content.endswith("not supported in terminal mode.") and not content.startswith("[MESSAGE]"):
-                if platform.system() == "Windows":
-                    try:
-                        pydoc.pager(content)
-                    except:
-                        config.terminalEnablePager = False
-                        self.print(divider)
-                        self.print(content)
-                    # When you use remote powershell and want to pipe a command on the remote windows server through a pager, piping through out-host -paging works as desired. Piping through more when running the remote command is of no use: the entire text is displayed at once.
-    #                try:
-    #                    pydoc.pipepager(content, cmd='out-host -paging')
-    #                except:
-    #                    try:
-    #                        pydoc.pipepager(content, cmd='more')
-    #                    except:
-    #                        config.terminalEnablePager = False
-    #                        self.print(divider)
-    #                        self.print(content)
-                else:
-                    try:
-                        # paging without colours
-                        #pydoc.pager(content)
-                        # paging with colours
-                        pydoc.pipepager(content, cmd='less -R')
-                    except:
-                        config.terminalEnablePager = False
-                        self.print(divider)
-                        self.print(content)
+                try:
+                    if config.terminalWrapWords:
+                        content = self.getWrappedHTMLText(content)
+                    pagerContent = TextUtil.convertHtmlTagToColorama(content)
+                    pydoc.pipepager(pagerContent, cmd='less -R') if WebtopUtil.isPackageInstalled("less") else pydoc.pager(pagerContent)
+                    # Windows users can install less command with scoop
+                    # read: https://github.com/ScoopInstaller/Scoop
+                    # instll scoop
+                    # > iwr -useb get.scoop.sh | iex
+                    # > scoop install aria2
+                    # instll less
+                    # > scoop install less
+                except:
+                    config.terminalEnablePager = False
+                    self.print(divider)
+                    self.print(content)
             else:
                 if content.startswith("[MESSAGE]"):
                     content = content[9:]
