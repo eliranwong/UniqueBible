@@ -1,3 +1,6 @@
+Changes in 35.17:
+* removed extra spaces in terminal mode display
+
 Changes in 35.16:
 * support Windows users to use "less" & "vlc" command with terminal mode.
 
