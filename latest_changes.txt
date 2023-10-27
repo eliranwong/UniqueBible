@@ -1,3 +1,15 @@
+Changes in 35.17:
+* removed extra spaces in terminal mode display
+
+Changes in 35.16:
+* support Windows users to use "less" & "vlc" command with terminal mode.
+
+Changes in 35.15:
+* Added support wrap words in terminal mode pager is enabled.
+
+Changes in 35.14:
+* Wrap words in terminal mode.
+
 Changes in 35.13:
 * Fixed google-cloud text-to-speech integration.
 

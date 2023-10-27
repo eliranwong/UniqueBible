@@ -87,7 +87,7 @@ class TextUtil:
             searchReplace = (
                 ("</ansi[^<>]+?>", Fore.RESET),
                 ("</tmvs>|</tmsh>", Style.RESET_ALL),
-                ("""<tm[a-z][a-z] fg="([^<>]*?)" bg="([^<>]*?)">""", r"<\1> <BG.\2>"),
+                ("""<tm[a-z][a-z] fg="([^<>]*?)" bg="([^<>]*?)">""", r"<\1><BG.\2>"),
 
                 ("<ansidefault>", Fore.RESET),
 

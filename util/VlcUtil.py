@@ -48,7 +48,22 @@ class VlcUtil:
         # on Windows
         if not hasattr(config, "windowsVlc"):
             windowsVlc = r'C:\Program Files\VideoLAN\VLC\vlc.exe'
-            config.windowsVlc = windowsVlc if platform.system() == "Windows" and os.path.isfile(windowsVlc) else ""
+
+            if platform.system() == "Windows":
+                if os.path.isfile(windowsVlc):
+                    config.windowsVlc = windowsVlc
+                elif VlcUtil.isPackageInstalled("vlc"):
+                    # Windows users can install vlc command with scoop
+                    # read: https://github.com/ScoopInstaller/Scoop
+                    # instll scoop
+                    # > iwr -useb get.scoop.sh | iex
+                    # > scoop install aria2
+                    # install vlc
+                    # > scoop bucket add extras
+                    # > scoop install vlc
+                    config.windowsVlc = "vlc"
+                else:
+                    config.windowsVlc = ""
         # get full path and escape double quote
         if isinstance(filePath, str):
             filePath = os.path.abspath(filePath).replace('"', '\\"')
@@ -67,7 +82,7 @@ class VlcUtil:
                 command = f'''{config.macVlc} --intf rc --play-and-exit --rate {vlcSpeed} "{filePath}" &> /dev/null'''
             # vlc on windows
             elif config.windowsVlc:
-                command = f'''"{config.windowsVlc}" --play-and-exit --rate {vlcSpeed} "{filePath}"'''
+                command = f'''"{config.windowsVlc}" --intf dummy --play-and-exit --rate {vlcSpeed} "{filePath}"'''
             # vlc on other platforms
             elif VlcUtil.isPackageInstalled("cvlc"):
                 command = f'''cvlc --play-and-exit --rate {vlcSpeed} "{filePath}" &> /dev/null'''
