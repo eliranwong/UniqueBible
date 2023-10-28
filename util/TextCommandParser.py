@@ -1162,6 +1162,8 @@ class TextCommandParser:
 
     # return invalid command
     def invalidCommand(self, source="main"):
+        if config.developer:
+            print(traceback.format_exc())
         return (source, "INVALID_COMMAND_ENTERED", {})
 
     # return no audio
@@ -4059,7 +4061,7 @@ The WHERE condition is described as: {query}"""
     def textData(self, command, source):
         config.dataset = command
         filepath = os.path.join("plugins", "menu", "Bible Data", "{0}.txt".format(command))
-        if not os.path.isfile("filepath) or not (Tabulate" in config.enabled):
+        if not os.path.isfile(filepath) or not ("Tabulate" in config.enabled):
             return self.invalidCommand("study")
         with open(filepath, 'r', encoding='utf8') as fileObj:
             dataList = fileObj.read().split("\n")

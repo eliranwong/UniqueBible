@@ -1,3 +1,6 @@
+Changes in 35.18:
+* fixed bible data
+
 Changes in 35.17:
 * removed extra spaces in terminal mode display
 
