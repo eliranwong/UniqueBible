@@ -4276,13 +4276,13 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     # pipe text content into a cli tool
     def cliTool(self, tool="", content=""):
-        if not tool:
+        command = re.sub(" .*?$", "", tool.strip())
+        if not command:
             self.multilineEditor(content)
-        elif tool and WebtopUtil.isPackageInstalled(tool):
+        elif command and WebtopUtil.isPackageInstalled(command):
             pydoc.pipepager(content, cmd=tool)
             if WebtopUtil.isPackageInstalled("pkill"):
-                tool = tool.strip().split(" ")[0]
-                os.system(f"pkill {tool}")
+                os.system(f"pkill {command}")
         return ""
 
     def openNoteEditor(self, noteType, b=None, c=None, v=None, year=None, month=None, day=None, editor=""):
