@@ -1,3 +1,6 @@
+Changes in 35.19:
+* improved wrapping Chinese, Japanese and Korean words in terminal mode
+
 Changes in 35.18:
 * fixed bible data
 
