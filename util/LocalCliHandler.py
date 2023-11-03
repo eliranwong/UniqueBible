@@ -834,6 +834,7 @@ class LocalCliHandler:
     def runTextCommand(self, command):
         return self.getContent(command)
 
+    # the method that runs UBA command
     def getContent(self, command, checkDotCommand=True):
         try:
         #if True:

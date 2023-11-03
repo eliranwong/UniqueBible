@@ -156,7 +156,7 @@ class TextUtil:
             ("(<vid>|<vid .*?>)(.*?)(</vid>)", r"\1「{0}」\2「/{0}」\3".format(config.terminalResourceLinkColor)),
             #("<z>", """「tmsh fg="{1}" bg="{0}"」""".format(config.terminalSearchHighlightBackground, config.terminalSearchHighlightForeground)),
             #("</z>", "「/tmsh」"),
-            ("(<z>)(.*?)(</z>)", r"""\1「tmsh fg="{1}" bg="{0}"」\2「/tmsh」\3""".format(config.terminalSearchHighlightBackground, config.terminalSearchHighlightForeground)),
+            ("(<z>)(.*?)(</z>)", r"""「tmsh fg="{1}" bg="{0}"」\2「/tmsh」""".format(config.terminalSearchHighlightBackground, config.terminalSearchHighlightForeground)),
             # basic html
             ("<(b|u|i)>", r"「\1」"),
             ("</(b|u|i)>", r"「/\1」"),
