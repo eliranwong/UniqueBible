@@ -45,7 +45,7 @@ config.enableCli = True if config.runMode in ("cli", "gui", "docker") else False
 config.enableApiServer = True if config.runMode == "api-server" else False
 config.enableHttpServer = False
 
-# Tweaks for ChromeOS Linux (Debian 10) ONLY:
+# Tweaks for ChromeOS Linux (Debian 11) ONLY:
 if config.isChromeOS:
     # On ChromeOS, there are two major options of QT_QPA_PLATFORM: xcb and wayland
     # If QT_QPA_PLATFORM is set to wayland, UBA does not work with touchscreen and its main window closes and opens unexpectedly.
