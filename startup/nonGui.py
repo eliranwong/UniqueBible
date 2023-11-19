@@ -112,7 +112,7 @@ def run_terminal_mode():
     print(f"Running Unique Bible App {config.version} in terminal mode ...")
     if ("Art" in config.enabled):
         from art import text2art
-        print(text2art("UBA"))
+        print(text2art("UBA")[:-1])
 
     checkMigration()
     needUpdate = checkApplicationUpdateCli()

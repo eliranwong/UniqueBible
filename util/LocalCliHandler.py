@@ -1,4 +1,4 @@
-import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json, shutil, webbrowser, traceback, textwrap, wcwidth
+import re, config, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json, shutil, webbrowser, traceback, textwrap, wcwidth, unicodedata
 import openai, threading, time
 from duckduckgo_search import ddg
 from functools import partial
@@ -158,6 +158,12 @@ class LocalCliHandler:
         elif platform.system() == "Windows":
             config.open = config.openWindows
 
+    def is_CJK(self, text):
+        for char in text:
+            if 'CJK' in unicodedata.name(char):
+                return True
+        return False
+
     # wrap html text at spaces
     def getWrappedHTMLText(self, text, terminal_width=None):
         if not " " in text:
@@ -169,20 +175,35 @@ class LocalCliHandler:
 
         def addWords(words):
             words = words.split(" ")
-            length = len(words)
             for index, item in enumerate(words):
-                isLastItem = (length - index == 1)
-                itemWidth = self.getStringWidth(item)
-                if isLastItem:
-                    newLineWidth = self.lineWidth + itemWidth
+                isLastItem = (len(words) - index == 1)
+
+                if self.is_CJK(item):
+                    for iIndex, i in enumerate(item):
+                        isSpaceItem = (not isLastItem and (len(item) - iIndex == 1))
+                        iWidth = self.getStringWidth(i)
+                        if isSpaceItem:
+                            newLineWidth = self.lineWidth + iWidth + 1
+                        else:
+                            newLineWidth = self.lineWidth + iWidth
+                        if newLineWidth > terminal_width:
+                            self.wrappedText += f"\n{i} " if isSpaceItem else f"\n{i}"
+                            self.lineWidth = iWidth + 1 if isSpaceItem else iWidth
+                        else:
+                            self.wrappedText += f"{i} " if isSpaceItem else i
+                            self.lineWidth += iWidth + 1 if isSpaceItem else iWidth
                 else:
-                    newLineWidth = self.lineWidth + itemWidth + 1
-                if newLineWidth > terminal_width:
-                    self.wrappedText += f"\n{item}" if isLastItem else f"\n{item} "
-                    self.lineWidth = itemWidth if isLastItem else itemWidth + 1
-                else:
-                    self.wrappedText += item if isLastItem else f"{item} "
-                    self.lineWidth += itemWidth if isLastItem else itemWidth + 1
+                    itemWidth = self.getStringWidth(item)
+                    if isLastItem:
+                        newLineWidth = self.lineWidth + itemWidth
+                    else:
+                        newLineWidth = self.lineWidth + itemWidth + 1
+                    if newLineWidth > terminal_width:
+                        self.wrappedText += f"\n{item}" if isLastItem else f"\n{item} "
+                        self.lineWidth = itemWidth if isLastItem else itemWidth + 1
+                    else:
+                        self.wrappedText += item if isLastItem else f"{item} "
+                        self.lineWidth += itemWidth if isLastItem else itemWidth + 1
         
         def processLine(lineText):
             if re.search("<[^<>]+?>", lineText):
@@ -813,6 +834,7 @@ class LocalCliHandler:
     def runTextCommand(self, command):
         return self.getContent(command)
 
+    # the method that runs UBA command
     def getContent(self, command, checkDotCommand=True):
         try:
         #if True:
@@ -4276,13 +4298,13 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     # pipe text content into a cli tool
     def cliTool(self, tool="", content=""):
-        if not tool:
+        command = re.sub(" .*?$", "", tool.strip())
+        if not command:
             self.multilineEditor(content)
-        elif tool and WebtopUtil.isPackageInstalled(tool):
+        elif command and WebtopUtil.isPackageInstalled(command):
             pydoc.pipepager(content, cmd=tool)
             if WebtopUtil.isPackageInstalled("pkill"):
-                tool = tool.strip().split(" ")[0]
-                os.system(f"pkill {tool}")
+                os.system(f"pkill {command}")
         return ""
 
     def openNoteEditor(self, noteType, b=None, c=None, v=None, year=None, month=None, day=None, editor=""):
