@@ -1,3 +1,6 @@
+Changes in 35.21:
+* Added subheadings command to api server
+
 Changes in 35.20:
 * fixed search highlights spacing in terminal mode
 

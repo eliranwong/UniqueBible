@@ -14,6 +14,8 @@ from http import HTTPStatus
 
 from http.server import SimpleHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
+
+from db.AGBTSData import AGBTSData
 from db.BiblesSqlite import BiblesSqlite, Bible, MorphologySqlite
 from db.DevotionalSqlite import DevotionalSqlite
 from db.ToolsSqlite import Commentary, LexiconData, IndexesSqlite, Book, Lexicon, CrossReferenceSqlite, DictionaryData, \
@@ -142,6 +144,8 @@ class RemoteApiHandler(ApiRequestHandler):
                 self.processSearchToolCommand(cmd)
             elif command == "discourse":
                 self.processDiscourseCommand(cmd)
+            elif command == "subheadings":
+                self.processSubheadingsCommand(cmd)
 
     # /data/bible/abbreviations?lang=[eng,sc,tc]
     # /data/bible/book2number?lang=[eng,sc,tc]
@@ -395,3 +399,15 @@ class RemoteApiHandler(ApiRequestHandler):
             self.jsonData['data'] = data
         except Exception as ex:
             self.sendError("Invalid discourse command - " + ex)
+
+    # /subheadings/1/1
+    def processSubheadingsCommand(self, cmd):
+        try:
+            if len(cmd) != 3:
+                self.sendError("Invalid subheadings command")
+                return
+            agbtsData = AGBTSData()
+            data = {str(i[2]): i[3] for i in agbtsData.getchapterSubheadings(cmd[1], cmd[2])}
+            self.jsonData['data'] = data
+        except Exception as ex:
+            self.sendError("Invalid subheadings command - " + ex)
