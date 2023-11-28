@@ -1,6 +1,8 @@
 # coding=utf-8
-import glob, pprint, traceback, pydoc
+import glob, pprint, traceback, pydoc, threading, asyncio
 import os, re, webbrowser, platform, zipfile, subprocess, config
+from prompt_toolkit.input import create_input
+from prompt_toolkit.keys import Keys
 from datetime import date
 from util.VlcUtil import VlcUtil
 from util.exlbl import allLocations, tc_location_names, sc_location_names
@@ -1778,6 +1780,30 @@ class TextCommandParser:
             else:
                 webbrowser.open(wikiPage)
 
+    def keyToStopStreaming(self, playback_event):
+        async def readKeys() -> None:
+            done = False
+            input = create_input()
+
+            def keys_ready():
+                nonlocal done
+                for key_press in input.read_keys():
+                    #print(key_press)
+                    if key_press.key in (Keys.ControlQ, Keys.ControlZ):
+                        print("\nStopping audio playback ...")
+                        self.parent.closeMediaPlayer()
+                        done = True
+                        playback_event.set()
+
+            with input.raw_mode():
+                with input.attach(keys_ready):
+                    while not done:
+                        if config.playback_finished:
+                            break
+                        await asyncio.sleep(0.1)
+
+        asyncio.run(readKeys())
+
     # READSYNC:::
     def textReadSync(self, command, source):
         return self.textRead(command, source, True) if config.runMode == "terminal" else ("study", "Currently, only terminal mode supports running READSYNC::: command.", {})
@@ -1821,7 +1847,24 @@ class TextCommandParser:
                 target = ""
                 content = ""
                 if config.runMode == "terminal":
-                    self.parent.playAudioBibleFilePlayListPlusDisplayText(allPlayList, allTextList) if displayText else self.parent.playAudioBibleFilePlayList(allPlayList)
+                    # Create a new thread for the streaming task
+                    config.playback_finished = False
+                    playback_event = threading.Event()
+                    if displayText:
+                        self.playback_thread = threading.Thread(target=self.parent.playAudioBibleFilePlayListPlusDisplayText, args=(allPlayList, allTextList, False, playback_event))
+                    else:
+                        self.playback_thread = threading.Thread(target=self.parent.playAudioBibleFilePlayList, args=(allPlayList,))
+                    # Start the streaming thread
+                    self.playback_thread.start()
+
+                    # wait while text output is steaming; capture key combo 'ctrl+q' or 'ctrl+z' to stop the streaming
+                    self.keyToStopStreaming(playback_event)
+
+                    # when streaming is done or when user press "ctrl+q"
+                    self.playback_thread.join()
+
+                    # old way
+                    #self.parent.playAudioBibleFilePlayListPlusDisplayText(allPlayList, allTextList) if displayText else self.parent.playAudioBibleFilePlayList(allPlayList)
                 else:
                     self.parent.playAudioBibleFilePlayList(allPlayList)
             return (target, content, {})

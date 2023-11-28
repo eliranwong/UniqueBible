@@ -1,3 +1,6 @@
+Changes in 35.22:
+* 'ctrl+q' or 'ctrl+z' to stop bible audio in terminal mode.
+
 Changes in 35.21:
 * Added subheadings command to api server
 

@@ -1,4 +1,4 @@
-import os, config, zipfile, gdown, shutil, re, platform, subprocess, sys, signal
+import os, config, zipfile, gdown, shutil, re, platform, subprocess, sys, signal, threading
 
 from util.LanguageUtil import LanguageUtil
 from util.TextCommandParser import TextCommandParser
@@ -148,7 +148,24 @@ class RemoteCliMainWindow(CrossPlatform):
                     if os.path.isfile(audioFilePath):
                         playlist.append(audioFilePath)
                 if config.runMode == "terminal":
-                    self.playAudioBibleFilePlayListPlusDisplayText(playlist, textList) if displayText else self.playAudioBibleFilePlayList(playlist)
+                    # Create a new thread for the streaming task
+                    config.playback_finished = False
+                    playback_event = threading.Event()
+                    if displayText:
+                        self.playback_thread = threading.Thread(target=self.playAudioBibleFilePlayListPlusDisplayText, args=(playlist, textList, False, playback_event))
+                    else:
+                        self.playback_thread = threading.Thread(target=self.playAudioBibleFilePlayList, args=(playlist,))
+                    # Start the streaming thread
+                    self.playback_thread.start()
+
+                    # wait while text output is steaming; capture key combo 'ctrl+q' or 'ctrl+z' to stop the streaming
+                    config.mainWindow.textCommandParser.keyToStopStreaming(playback_event)
+
+                    # when streaming is done or when user press "ctrl+q"
+                    self.playback_thread.join()
+
+                    # old way
+                    #self.playAudioBibleFilePlayListPlusDisplayText(playlist, textList) if displayText else self.playAudioBibleFilePlayList(playlist)
                     return []
             else:
                 searchPattern = """[Rr][Ee][Aa][Dd]([Ww][Oo][Rr][Dd]|[Ll][Ee][Xx][Ee][Mm][Ee]):::([A-Za-z0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)["']"""
@@ -232,32 +249,56 @@ class RemoteCliMainWindow(CrossPlatform):
                             textList.append("")
         if config.runMode == "terminal":
             playlist = [filepath for *_, filepath in playlist]
-            self.playAudioBibleFilePlayListPlusDisplayText(playlist, textList) if displayText else self.playAudioBibleFilePlayList(playlist)
+
+            # Create a new thread for the streaming task
+            config.playback_finished = False
+            playback_event = threading.Event()
+            if displayText:
+                self.playback_thread = threading.Thread(target=self.playAudioBibleFilePlayListPlusDisplayText, args=(playlist, textList, False, playback_event))
+            else:
+                self.playback_thread = threading.Thread(target=self.playAudioBibleFilePlayList, args=(playlist,))
+            # Start the streaming thread
+            self.playback_thread.start()
+
+            # wait while text output is steaming; capture key combo 'ctrl+q' or 'ctrl+z' to stop the streaming
+            config.mainWindow.textCommandParser.keyToStopStreaming(playback_event)
+
+            # when streaming is done or when user press "ctrl+q"
+            self.playback_thread.join()
+
+            # old way
+            #self.playAudioBibleFilePlayListPlusDisplayText(playlist, textList) if displayText else self.playAudioBibleFilePlayList(playlist)
             return []
         return playlist
         #return [("NET_1_1_3.mp3", "audio/bibles/NET-UK/default/1_1/NET_1_1_3.mp3"), ("NET_1_1_4.mp3", "audio/bibles/NET-UK/default/1_1/NET_1_1_4.mp3")]
 
-    def playAudioBibleFilePlayList(self, playlist, gui=False):
+    def notifyAudioPlayback(self):
+        print("--------------------")
+        print("Playing audio ...")
+        print("To stop audio playback, press 'ctrl+q' or 'ctrl+z'.")
+        print("--------------------")
+
+    def playAudioBibleFilePlayList(self, playlist, gui=False, playback_event=None):
         # do not remove the dummy gui argument for this method
         self.closeMediaPlayer()
         if playlist:
             if config.isVlcAvailable:
-                print("Playing audio now ...")
-                print("To stop it, run '.stopaudio' or '.sa' in UBA command prompt.")
+                self.notifyAudioPlayback()
                 VlcUtil.playMediaFile(playlist, config.vlcSpeed, gui)
             else:
                 print("No VLC player is found!")
+        config.playback_finished = True
 
-    def playAudioBibleFilePlayListPlusDisplayText(self, playlist, textList, gui=False):
+    def playAudioBibleFilePlayListPlusDisplayText(self, playlist, textList, gui=False, playback_event=None):
         # do not remove the dummy gui argument for this method
         self.closeMediaPlayer()
         if playlist:
-            print("Playing audio now with text synchronisation ...")
-            print("To stop it, run '.stopaudiosync' or '.sas' in UBA command prompt in a separate session.")
-            if config.runMode == "terminal":
-                config.mainWindow.createAudioPlayingFile()
+            self.notifyAudioPlayback()
+            #if config.runMode == "terminal":
+            #    config.mainWindow.createAudioPlayingFile()
             for index, audioFile in enumerate(playlist):
-                if not os.path.isfile(config.audio_playing_file):
+                #if not os.path.isfile(config.audio_playing_file):
+                if playback_event is not None and playback_event.is_set():
                     break
                 try:
                     # display text
@@ -284,8 +325,11 @@ class RemoteCliMainWindow(CrossPlatform):
                 self.closeMediaPlayer()
             if config.runMode == "terminal":
                 config.mainWindow.removeAudioPlayingFile()
+        config.playback_finished = True
 
     def closeMediaPlayer(self):
+        if os.path.isfile(config.audio_playing_file):
+            os.remove(config.audio_playing_file)
         if WebtopUtil.isPackageInstalled("pkill"):
             # close Android media player
             try:
