@@ -1,3 +1,6 @@
+Changes in 35.23:
+* specify openai package version
+
 Changes in 35.22:
 * 'ctrl+q' or 'ctrl+z' to stop bible audio in terminal mode.
 

@@ -750,7 +750,7 @@ optional = [
     ("bcrypt", "Modern password hashing for your software and your servers", isBcryptInstalled),
     ("validators", "Python Data Validation for Humans", isValidatorsInstalled),
     ("pydub", "Manipulate audio", isPydubInstalled),
-    ("openai", "Python client library for the OpenAI API", isOpenaiInstalled),
+    ("openai==0.28.1", "Python client library for the OpenAI API", isOpenaiInstalled),
     ("llama-index", "Lama Index (GPT Index)", isLlamaIndexInstalled),
     ("SpeechRecognition", "Library for performing speech recognition", isSpeechRecognitionInstalled),
     ("pocketsphinx", "Python bindings for PocketSphinx", isPocketSphinxInstalled),
