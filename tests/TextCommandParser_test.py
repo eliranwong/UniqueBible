@@ -26,6 +26,7 @@ config.regexSearchBibleIfCommandNotFound = False
 config.noQt = True
 config.parseClearSpecialCharacters = True
 
+from prompt_toolkit.input import create_input
 from util.TextCommandParser import TextCommandParser
 
 class TextCommandParserTestCase(unittest.TestCase):
