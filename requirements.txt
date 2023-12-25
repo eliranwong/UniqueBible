@@ -21,3 +21,4 @@ python-vlc
 yt-dlp
 apsw
 pydnsbl
+prompt_toolkit

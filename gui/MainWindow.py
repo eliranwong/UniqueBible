@@ -256,6 +256,14 @@ class MainWindow(QMainWindow):
         else:
             self.thirdToolBar.show()
 
+    def hideAudioPlayer(self):
+        if hasattr(self, "thirdToolBar"):
+            self.thirdToolBar.hide()
+
+    def showAudioPlayer(self):
+        if hasattr(self, "thirdToolBar"):
+            self.thirdToolBar.show()
+
     def resizeAudioPlayer(self):
         config.maximiseMediaPlayerUI = not config.maximiseMediaPlayerUI
         self.setupMenuLayout(config.menuLayout)
@@ -994,6 +1002,10 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
 
     # Command Prompt
     def commandPrompt(self, prefix):
+        if prefix.startswith("online:::"):
+            self.focusCommandLineField()
+            self.textCommandLineEdit.setText(prefix)
+            return
         suffix, ok = QInputDialog.getText(self, "Unique Bible App",
                 config.thisTranslation["enter_text_here"], QLineEdit.Normal,
                 "")

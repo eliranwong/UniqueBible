@@ -1,3 +1,6 @@
+Changes in 35.24:
+* Add shortcut to toggle audio toolbar
+
 Changes in 35.23:
 * specify openai package version
 

@@ -132,7 +132,7 @@ class MaterialMainWindow:
             ("menu2_topOnly", self.hideShowAdditionalToolBar, sc.hideShowAdditionalToolBar),
             ("menu2_top", self.hideShowMainToolBar, sc.hideShowMainToolBar),
             ("menu2_second", self.hideShowSecondaryToolBar, sc.hideShowSecondaryToolBar),
-            ("menu11_audio", self.toggleAudioPlayer, None),
+            ("menu11_audio", self.toggleAudioPlayer, sc.hideShowAudioToolBar),
             ("menu2_left", self.hideShowLeftToolBar, sc.hideShowLeftToolBar),
             ("menu2_right", self.hideShowRightToolBar, sc.hideShowRightToolBar),
         )
