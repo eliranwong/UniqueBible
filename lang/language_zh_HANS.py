@@ -1087,4 +1087,5 @@ translation = {
     "customise": "定制",
     "donate": "捐赠",
     "about": "关于",
+    "githubStatistics": "GitHub 统计信息",
 }

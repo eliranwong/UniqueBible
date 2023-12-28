@@ -1087,4 +1087,5 @@ translation = {
     "customise": "കസ്റ്റംസ്",
     "donate": "ഡോണെറ്റ്",
     "about": "ഏകദേശം",
+    "githubStatistics": "ഗിറ്റ്ഹബ് സ്ഥിതിവിവരംName",
 }

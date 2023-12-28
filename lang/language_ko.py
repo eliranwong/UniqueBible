@@ -1087,4 +1087,5 @@ translation = {
     "customise": "사용자 정의",
     "donate": "기부하다",
     "about": "정보",
+    "githubStatistics": "깃허브 통계",
 }

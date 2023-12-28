@@ -881,6 +881,16 @@ class Lexicon:
         self.cursor.execute(query)
         return self.cursor.fetchall()
 
+    def getHebrewTopics(self):
+        query = "SELECT Topic FROM Lexicon WHERE Topic like 'H%'"
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
+
+    def getGreekTopics(self):
+        query = "SELECT Topic FROM Lexicon WHERE Topic like 'G%'"
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
+
     def searchTopic(self, search):
         try:
             searchString = "%{0}%".format(search)

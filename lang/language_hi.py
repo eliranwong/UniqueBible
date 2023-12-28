@@ -1087,4 +1087,5 @@ translation = {
     "customise": "अनुकूलन",
     "donate": "दान",
     "about": "लगभग",
+    "githubStatistics": "Githb सांख्यिकी",
 }
