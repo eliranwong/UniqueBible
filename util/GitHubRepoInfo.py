@@ -6,6 +6,7 @@ class GitHubRepoInfo:
     biblesIndex = ("otseng/UniqueBible_Bibles_Index", "indexes/bible", "githubBiblesIndex", "index")
     commentaries = ("otseng/UniqueBible_Commentaries", "commentaries", "githubCommentaries", "commentary")
     books = ("darrelwright/UniqueBible_Books", "books", "githubBooks", "book")
+    statistics = ("otseng/UniqueBible_Statistics", "statistics", "githubStatistics", "stats")
     hymnLyrics = ("otseng/UniqueBible_Hymn_Lyrics", "books", "githubHymnLyrics", "book")
     maps = ("darrelwright/UniqueBible_Maps-Charts", "books", "githubMaps", "book")
     pdf = ("otseng/UniqueBible_PDF", "pdf", "githubPdf", "pdf")
@@ -18,7 +19,7 @@ class GitHubRepoInfo:
     devotionals = ("otseng/UniqueBible_Devotionals", "devotionals", "gitHubDevotionals", "devotion")
     bibleAbbreviations = ("otseng/UniqueBible_Bible_Abbreviations", "../plugins/language", "gitHubBibleAbbreviations", "biblebooks")
 
-    types = ["bibles", "books", "commentaries", "devotionals", "pdf", "docx", "mp3", "mp4"]
+    types = ["bibles", "books", "commentaries", "statistics", "devotionals", "pdf", "docx", "mp3", "mp4"]
              # "epub", "plugins-context", "plugins-layout", "plugins-menu", "plugins-startup", "plugins-shutdown"]
 
     @staticmethod
@@ -27,6 +28,7 @@ class GitHubRepoInfo:
                    "books": ("books", "githubBooks", "book"),
                    "commentaries": ("commentaries", "githubCommentaries", "commentary"),
                    "devotionals": ("devotionals", "gitHubDevotionals", "devotion"),
+                   "statistics": ("statistics", "githubStatistics", "stats"),
                    "epub": ("epub", "githubEpub", "epub"),
                    "pdf": ("pdf", "githubPdf", "pdf"),
                    "docx": ("docx", "wordDocument", "docx"),
@@ -48,6 +50,7 @@ class GitHubRepoInfo:
                "books": "BOOK",
                "commentaries": "COMM",
                "devotionals": "DEVOTIONAL",
+               "stats": "STATS",
                "pdf": "PDF",
                "docx": "DOCX",
                "epub": "EPUB",

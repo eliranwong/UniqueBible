@@ -230,4 +230,4 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("enableHttpRemoteErrorRedirection", "Go to redirection page if error in http server")
+        addLanguageStringToAllFiles("githubStatistics", "GitHub Statistics")

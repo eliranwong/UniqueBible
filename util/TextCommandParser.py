@@ -4,6 +4,8 @@ import os, re, webbrowser, platform, zipfile, subprocess, config
 from prompt_toolkit.input import create_input
 from prompt_toolkit.keys import Keys
 from datetime import date
+
+from db.StatisticsWordsSqlite import StatisticsWordsSqlite
 from util.VlcUtil import VlcUtil
 from util.exlbl import allLocations, tc_location_names, sc_location_names
 from util.PluginEventHandler import PluginEventHandler
@@ -730,6 +732,13 @@ class TextCommandParser:
             # Feature - Open today's devotional entry
             # e.g. DEVOTIONAL:::Meyer
             """),
+            "displaywordfrequency": (self.displayWordFrequency, """
+            # [KEYWORD] DISPLAYWORDFREQUENCY
+            # Feature - Displays the word frequency for Bibles with Strongs numbers
+            # and highlights with different colors based on frequency
+            # Usage - DISPLAYWORDFREQUENCY:::[BIBLE_VERSION]:::[BIBLE_REFERENCE(S)]
+            # This will only highlight Bibles that contain Strongs numbers
+            """),
             #
             # Keywords starting with "_" are mainly internal commands for GUI operations
             # They are not recorded in history records.
@@ -1005,7 +1014,7 @@ class TextCommandParser:
                     command = command.strip()
                     if not command:
                         currentBibleReference = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
-                        if keyword in ("bible", "study", "compare", "crossreference", "diff", "difference", "tske", "translation", "discourse", "words", "combo", "commentary", "index", "openversenote"):
+                        if keyword in ("bible", "study", "compare", "crossreference", "diff", "difference", "tske", "translation", "discourse", "words", "combo", "commentary", "index", "openversenote", "displaywordfrequency"):
                             command = currentBibleReference
                             print(f"Running '{keyword}:::{command}' ...")
                         elif keyword in ("openbooknote",):
@@ -2131,6 +2140,37 @@ class TextCommandParser:
         if config.runMode == "terminal":
             config.terminalBibleParallels = False
             config.terminalBibleComparison = False
+
+    # DISPLAYWORDFREQUENCY:::KJVx:::Matt 1
+    # DISPLAYWORDFREQUENCY:::KJVx:::Matt 1:::custom
+    def displayWordFrequency(self, command, source):
+        customFile = "custom"
+        if command.count(":::") == 2:
+            texts, references, customFile = command.split(":::")
+        else:
+            texts, references = command.split(":::")
+        config.readFormattedBibles = False
+        statisticsSqlite = StatisticsWordsSqlite()
+
+        data = self.textBible(f"{texts}:::{references}", source)
+
+        text = data[1]
+        matches = re.findall(r" ([GH][0-9]*?) ", text)
+
+        highlightMapping = statisticsSqlite.loadHighlightMappingFile(customFile)
+
+        for strongs in set(matches):
+            frequency = statisticsSqlite.getFrequency(strongs)
+            color = ""
+            for map in highlightMapping:
+                if frequency >= int(map[0]) and frequency <= int(map[1]):
+                    if config.theme in ("dark", "night"):
+                        color = map[3]
+                    else:
+                        color = map[2]
+            if color:
+                text = statisticsSqlite.addHighlightTagToPreviousWord(text, strongs, color, frequency)
+        return (data[0], text, data[2])
 
     # BIBLE:::
     def textBible(self, command, source):

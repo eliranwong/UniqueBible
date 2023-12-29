@@ -1087,4 +1087,5 @@ translation = {
     "customise": "Personalizzazione",
     "donate": "Donato",
     "about": "Informazioni su",
+    "githubStatistics": "Statistiche GitHub",
 }

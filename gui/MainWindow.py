@@ -1237,6 +1237,9 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
     def installGithubBooks(self):
         self.installFromGitHub(GitHubRepoInfo.books)
 
+    def installGithubStatistics(self):
+        self.installFromGitHub(GitHubRepoInfo.statistics)
+
     def installGithubMaps(self):
         self.installFromGitHub(GitHubRepoInfo.maps)
 
