@@ -95,18 +95,18 @@ class BiblesSqlite:
         return list(set(plainBibleList) & set(formattedBibleList))
 
     def proceedMigration(self, biblesWithBothVersions):
-            for bible in biblesWithBothVersions:
-                # retrieve plain verses from bibles.sqlite
-                query = "SELECT Book, Chapter, Verse, Scripture FROM {0} ORDER BY Book, Chapter, Verse".format(bible)
-                self.cursor.execute(query)
-                verses = self.cursor.fetchall()
-                # import into formatted bible database
-                Bible(bible).importPlainFormat(verses)
-                # delete plain verses from bibles.sqlite
-                delete = "DROP TABLE {0}".format(bible)
-                self.cursor.execute(delete)
-#                self.cursor.execute("COMMIT")
-            self.connection.execute("VACUUM")
+        for bible in biblesWithBothVersions:
+            # retrieve plain verses from bibles.sqlite
+            query = "SELECT Book, Chapter, Verse, Scripture FROM {0} ORDER BY Book, Chapter, Verse".format(bible)
+            self.cursor.execute(query)
+            verses = self.cursor.fetchall()
+            # import into formatted bible database
+            Bible(bible).importPlainFormat(verses)
+            # delete plain verses from bibles.sqlite
+            delete = "DROP TABLE {0}".format(bible)
+            self.cursor.execute(delete)
+            #self.cursor.execute("COMMIT")
+        self.connection.execute("VACUUM")
 
     def installKJVversification(self):
         query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
