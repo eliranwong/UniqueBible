@@ -2,7 +2,7 @@ import config
 from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.styles import Style
 from prompt_toolkit.shortcuts import input_dialog, radiolist_dialog, checkboxlist_dialog, message_dialog
-from prompt_toolkit.completion import WordCompleter
+from prompt_toolkit.completion import WordCompleter, FuzzyCompleter
 from util.PromptValidator import NumberValidator
 from db.BiblesSqlite import Bible
 from db.ToolsSqlite import Book
@@ -46,7 +46,7 @@ class TerminalModeDialogs:
     # a wrapper to standard input_dialog; open radiolist_dialog showing available options when user input is not a valid option.
     def searchableInput(self, title="Text Entry", text="Enter / Search:", default="", completer=None, options=[], descriptions=[], validator=None, numberOnly=False, password=False, ok_text="OK", cancel_text="Cancel"):
         if completer is None and options:
-            completer = WordCompleter(options, ignore_case=True)
+            completer = FuzzyCompleter(WordCompleter(options, ignore_case=True))
         if validator is None and numberOnly:
             validator=NumberValidator()
         result = input_dialog(

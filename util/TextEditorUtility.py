@@ -10,7 +10,7 @@ from util.PromptValidator import NumberValidator
 from util.VlcUtil import VlcUtil
 from install.module import *
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
-from prompt_toolkit.completion import WordCompleter
+from prompt_toolkit.completion import WordCompleter, FuzzyCompleter
 from prompt_toolkit.application import run_in_terminal
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit import prompt
@@ -335,7 +335,7 @@ class TextEditorUtility:
                 print("Translate from:")
                 print("(enter a language code)")
                 suggestions = codes
-                completer = WordCompleter(suggestions, ignore_case=True)
+                completer = FuzzyCompleter(WordCompleter(suggestions, ignore_case=True))
                 userInput = self.terminal_google_translate_from_language_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer).strip()
                 if not userInput or userInput.lower() == config.terminal_cancel_action:
                     return self.cancelAction()
@@ -347,7 +347,7 @@ class TextEditorUtility:
                     print("Translate to:")
                     print("(enter a language code)")
                     suggestions = codes
-                    completer = WordCompleter(suggestions, ignore_case=True)
+                    completer = FuzzyCompleter(WordCompleter(suggestions, ignore_case=True))
                     userInput = self.terminal_google_translate_to_language_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer).strip()
                     if not userInput or userInput.lower() == config.terminal_cancel_action:
                         return self.cancelAction()
@@ -426,7 +426,7 @@ class TextEditorUtility:
             print("Enter a language code:")
             suggestions = shortCodes + codes
             suggestions = list(set(suggestions))
-            completer = WordCompleter(suggestions, ignore_case=True)
+            completer = FuzzyCompleter(WordCompleter(suggestions, ignore_case=True))
             default = config.ttsDefaultLangauge if config.ttsDefaultLangauge in suggestions else ""
             userInput = self.terminal_tts_language_session.prompt(self.inputIndicator, style=self.promptStyle, completer=completer, default=default).strip()
             if not userInput or userInput.lower() == config.terminal_cancel_action:
@@ -665,7 +665,7 @@ class TextEditorUtility:
                 indicator = "{0} {1} ".format(os.path.basename(os.getcwd()), "%")
                 inputIndicator = [("class:indicator", indicator)]
                 dirIndicator = "\\" if platform.system() == "Windows" else "/"
-                completer = WordCompleter(sorted(set(systemCommands + [f"{i}{dirIndicator}" if os.path.isdir(i) else i for i in os.listdir()])))
+                completer = FuzzyCompleter(WordCompleter(sorted(set(systemCommands + [f"{i}{dirIndicator}" if os.path.isdir(i) else i for i in os.listdir()]))))
                 auto_suggestion=AutoSuggestFromHistory()
                 userInput = self.terminal_system_command_session.prompt(inputIndicator, style=self.promptStyle, key_bindings=this_key_bindings, auto_suggest=auto_suggestion, completer=completer).strip()
                 if userInput and not userInput == config.terminal_cancel_action:

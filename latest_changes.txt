@@ -1,4 +1,7 @@
 Changes in 35.25:
+* added fuzzy completer in terminal mode
+
+Changes in 35.25:
 * Add display word frequency menu plugin
   - https://github.com/eliranwong/UniqueBible/wiki/Display-Word-Frequency-Menu-Plugin
 

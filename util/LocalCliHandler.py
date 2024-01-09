@@ -42,7 +42,7 @@ from prompt_toolkit.shortcuts import clear, confirm
 from prompt_toolkit.filters import Condition
 #from prompt_toolkit.application import run_in_terminal
 from prompt_toolkit.key_binding import KeyBindings, merge_key_bindings
-from prompt_toolkit.completion import WordCompleter, NestedCompleter, ThreadedCompleter
+from prompt_toolkit.completion import WordCompleter, NestedCompleter, ThreadedCompleter, FuzzyCompleter
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.styles import Style
 #from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
@@ -1088,9 +1088,9 @@ class LocalCliHandler:
         # Remove unexpected item
         suggestions.pop(":::", None)
         if config.terminalUseLighterCompleter:
-            completer = ThreadedCompleter(NestedCompleter.from_nested_dict(suggestions))
+            completer = FuzzyCompleter(ThreadedCompleter(NestedCompleter.from_nested_dict(suggestions)))
         else:
-            completer = ThreadedCompleter(NestedCompleter.from_nested_dict(suggestions))
+            completer = FuzzyCompleter(ThreadedCompleter(NestedCompleter.from_nested_dict(suggestions)))
         return completer
 
     def getTextCommandSuggestion(self, addDotCommandWordOnly=True):
@@ -2065,7 +2065,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         if not inputIndicator:
             inputIndicator = self.inputIndicator
         if completer is None and options:
-            completer = WordCompleter(options, ignore_case=True)
+            completer = FuzzyCompleter(WordCompleter(options, ignore_case=True))
         if validator is None and numberOnly:
             validator=NumberValidator()
         result = inputPrompt(
@@ -2100,7 +2100,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def getBibleVersions(self):
         self.print("(empty entry to select from a list)")
-        completer = WordCompleter(self.crossPlatform.textList, ignore_case=True)
+        completer = FuzzyCompleter(WordCompleter(self.crossPlatform.textList, ignore_case=True))
         userInput = self.simplePrompt(default="_".join(config.compareParallelList), completer=completer, promptSession=self.terminal_multiple_bible_selection_session).strip()
         userInput = userInput.replace(" ", "")
         if not userInput:
@@ -2112,7 +2112,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def getStrongBibleVersions(self):
         self.print("(empty entry to select from a list)")
-        completer = WordCompleter(self.crossPlatform.strongBibles, ignore_case=True)
+        completer = FuzzyCompleter(WordCompleter(self.crossPlatform.strongBibles, ignore_case=True))
         userInput = self.simplePrompt(default=config.concordance, completer=completer, promptSession=self.terminal_concordance_selection_session).strip()
         userInput = userInput.replace(" ", "")
         if not userInput:
@@ -2124,7 +2124,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
 
     def getBibleBookRange(self, options=["ALL"], default_values=["ALL"]):
         self.print("(empty entry to select from a list)")
-        completer = WordCompleter(options, ignore_case=True)
+        completer = FuzzyCompleter(WordCompleter(options, ignore_case=True))
         userInput = self.simplePrompt(default="ALL", completer=completer, promptSession=self.terminal_search_bible_book_range_session).strip()
         userInput = userInput.replace(" ", "")
         if not userInput:
@@ -2510,7 +2510,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     self.conversationStarted = False
                 startChat()
                 multilineInput = False
-                completer = WordCompleter(config.inputSuggestions, ignore_case=True) if config.inputSuggestions else None
+                completer = FuzzyCompleter(WordCompleter(config.inputSuggestions, ignore_case=True)) if config.inputSuggestions else None
                 features = (
                     ".new",
                     ".singleLineInput",
