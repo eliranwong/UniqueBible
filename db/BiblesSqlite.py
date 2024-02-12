@@ -1214,7 +1214,9 @@ class Bible:
         self.cursor.execute(query, (b, c))
         textChapter = self.cursor.fetchall()
         if not textChapter:
-            return [(b, c, 1, "")]
+            textChapter = []
+            for v in range(1, BibleBooks.verses[int(b)][int(c)] + 1):
+                textChapter.append((b, c, v, ""))
         # return a list of tuple
         return textChapter
 

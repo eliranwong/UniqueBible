@@ -1,4 +1,7 @@
-Changes in 35.25:
+Changes in 35.27:
+* Populate verse list if missing chapter in api server
+
+Changes in 35.26:
 * added fuzzy completer in terminal mode
 
 Changes in 35.25:
