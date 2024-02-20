@@ -1167,60 +1167,74 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
 
     # install marvel data
     def installMarvelBibles(self):
-        items = [self.bibleInfo[bible][-1] for bible in self.bibleInfo.keys() if
-                 not os.path.isfile(os.path.join(*self.bibleInfo[bible][0])) or self.isNewerAvailable(
+        installAll = "Install ALL Bibles"
+        bibles = DatafileLocation.marvelBibles
+        items = [bible for bible in bibles.keys() if
+                 not os.path.isfile(os.path.join(os.getcwd(), *bibles[bible][0])) or self.isNewerAvailable(
                      self.bibleInfo[bible][0][-1])]
-        if not items:
+        if items:
+            items.append(installAll)
+        else:
             items = ["[All Installed]"]
         item, ok = QInputDialog.getItem(self, "UniqueBible",
                                         config.thisTranslation["menu8_bibles"], items, 0, False)
-        if ok and item and not item == "[All Installed]":
-            for key, value in self.bibleInfo.items():
-                if item == value[-1]:
-                    self.downloadHelper(self.bibleInfo[key])
-                    break
+        if ok and item and not item in ("[All Installed]", installAll):
+            self.downloadHelper(bibles[item])
+        elif item == installAll:
+            self.installAllMarvelFiles(bibles, installAll)
         self.reloadResources()
 
     def installMarvelCommentaries(self):
+        installAll = "Install ALL Commentaries"
         commentaries = DatafileLocation.marvelCommentaries
         items = [commentary for commentary in commentaries.keys() if
-                 not os.path.isfile(os.path.join(*commentaries[commentary][0]))]
+                 not os.path.isfile(os.path.join(os.getcwd(), *commentaries[commentary][0]))]
         if items:
-            commentaries["Install ALL Commentaries Listed Above"] = ""
-            items.append("Install ALL Commentaries Listed Above")
+            items.append(installAll)
         else:
             items = ["[All Installed]"]
         item, ok = QInputDialog.getItem(self, "UniqueBible",
                                         config.thisTranslation["menu8_commentaries"], items, 0, False)
-        if ok and item and not item in ("[All Installed]", "Install ALL Commentaries Listed Above"):
+        if ok and item and not item in ("[All Installed]", installAll):
             self.downloadHelper(commentaries[item])
-        elif item == "Install ALL Commentaries Listed Above":
-            self.installAllMarvelCommentaries(commentaries)
+            self.reloadResources()
+        elif item == installAll:
+            self.installAllMarvelFiles(commentaries, installAll)
 
-    def installAllMarvelCommentaries(self, commentaries):
+    def installAllMarvelFiles(self, files, installAll):
         if config.isDownloading:
             self.displayMessage(config.thisTranslation["previousDownloadIncomplete"])
         else:
-            toBeInstalled = [commentary for commentary in commentaries.keys() if
-                             not commentary == "Install ALL Commentaries Listed Above" and not os.path.isfile(
-                                 os.path.join(*commentaries[commentary][0]))]
+            toBeInstalled = [file for file in files.keys() if
+                             not file == installAll and not os.path.isfile(
+                                 os.path.join(os.getcwd(), *files[file][0]))]
             self.displayMessage("{0}  {1}".format(config.thisTranslation["message_downloadAllFiles"],
                                                   config.thisTranslation["message_willBeNoticed"]))
-            for commentary in toBeInstalled:
-                databaseInfo = commentaries[commentary]
+            print("Downloading {0} files".format(len(toBeInstalled)))
+            for file in toBeInstalled:
+                databaseInfo = files[file]
                 downloader = Downloader(self, databaseInfo)
+                print("Downloading " + file)
                 downloader.downloadFile(False)
-            # self.displayMessage(config.thisTranslation["message_done"])
+            self.reloadResources()
+            print("Downloading complete")
+            self.displayMessage(config.thisTranslation["message_installed"])
 
     def installMarvelDatasets(self):
+        installAll = "Install ALL Datasets"
         datasets = DatafileLocation.marvelData
-        items = [dataset for dataset in datasets.keys() if not os.path.isfile(os.path.join(*datasets[dataset][0]))]
-        if not items:
+        items = [dataset for dataset in datasets.keys() if not os.path.isfile(os.path.join(os.getcwd(), *datasets[dataset][0]))]
+        if items:
+            items.append(installAll)
+        else:
             items = ["[All Installed]"]
         item, ok = QInputDialog.getItem(self, "UniqueBible",
                                         config.thisTranslation["menu8_datasets"], items, 0, False)
-        if ok and item and not item == "[All Installed]":
+        if ok and item and not item in ("[All Installed]", installAll):
             self.downloadHelper(datasets[item])
+        elif item == installAll:
+            self.installAllMarvelFiles(datasets, installAll)
+        self.reloadResources()
 
     def installGithubBibles(self):
         self.installFromGitHub(GitHubRepoInfo.bibles)
@@ -1285,24 +1299,41 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
             try:
                 from util.GithubUtil import GithubUtil
 
+                installAll = "Install ALL"
                 github = GithubUtil(repo)
                 repoData = github.getRepoData()
                 folder = os.path.join(config.marvelData, directory)
                 items = [item for item in repoData.keys() if not FileUtil.regexFileExists("^{0}.*".format(GithubUtil.getShortname(item).replace(".", "\\.")), folder)]
-                if not items:
+                if items:
+                    items.append(installAll)
+                else:
                     items = ["[All Installed]"]
-                item, ok = QInputDialog.getItem(self, "UniqueBible",
+                selectedItem, ok = QInputDialog.getItem(self, "UniqueBible",
                                                 config.thisTranslation[title], items, 0, False)
-                if ok and item and not item in ("[All Installed]"):
-                    file = os.path.join(folder, item+".zip")
-                    github.downloadFile(file, repoData[item])
-                    with zipfile.ZipFile(file, 'r') as zipped:
-                        zipped.extractall(folder)
-                    os.remove(file)
-                    self.displayMessage(item + " " + config.thisTranslation["message_installed"])
+                if ok and selectedItem:
+                    if selectedItem == installAll:
+                        self.displayMessage("{0}  {1}".format(config.thisTranslation["message_downloadAllFiles"],
+                                                              config.thisTranslation["message_willBeNoticed"]))
+                        items.remove(installAll)
+                        print("Downloading {0} files".format(len(items)))
+                    else:
+                        self.displayMessage(selectedItem + " " + config.thisTranslation["message_installing"])
+                        items = [selectedItem]
+                    for index, item in enumerate(items):
+                        file = os.path.join(folder, item+".zip")
+                        print("Downloading {0}".format(file))
+                        github.downloadFile(file, repoData[item])
+                        with zipfile.ZipFile(file, 'r') as zipped:
+                            zipped.extractall(folder)
+                        os.remove(file)
+                    print("Downloading complete")
                     self.reloadResources()
-                    self.installFromGitHub(gitHubRepoInfo)
-                    return True
+                    if selectedItem == installAll:
+                        self.displayMessage(config.thisTranslation["message_installed"])
+                    else:
+                        self.installFromGitHub(gitHubRepoInfo)
+                return True
+
             except Exception as ex:
                 self.displayMessage(config.thisTranslation["couldNotAccess"] + " " + repo)
                 print(ex)
