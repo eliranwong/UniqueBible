@@ -138,6 +138,8 @@ class RemoteApiHandler(ApiRequestHandler):
                 self.processCrossReferenceCommand(cmd)
             elif command == "search":
                 self.processSearchCommand(cmd, query)
+            elif command == "concordance":
+                self.processConcordanceCommand(cmd, query)
             elif command == "morphology":
                 self.processMorphologyCommand(cmd)
             elif command == "searchtool":
@@ -369,6 +371,31 @@ class RemoteApiHandler(ApiRequestHandler):
                 verses = Bible(text).getSearchVerses(query, t)
 
                 self.jsonData['data'] = verses
+        except Exception as ex:
+            self.sendError("Invalid search command - " + ex)
+
+    # /concordance/KJVx/G1654
+    def processConcordanceCommand(self, cmd, query):
+        try:
+            text = cmd[1]
+            strongs = cmd[2]
+            query = "SELECT Book, Chapter, Verse, Scripture FROM Verses "
+            query += "WHERE "
+            query += "(Scripture LIKE ?) "
+            query += "ORDER BY Book, Chapter, Verse "
+            query += "LIMIT 5000 "
+            t = ("%{0} %".format(strongs),)
+            verses = Bible(text).getSearchVerses(query, t)
+
+            processed = []
+            for data in verses:
+                verse = data[3].replace(strongs + " ", "XXXXX")
+                verse = re.sub(r"[HG][0-9]+? ", "", verse)
+                verse = re.sub(r" ([,.;:])", "\\1", verse)
+                verse = verse.replace("XXXXX", strongs + " ")
+                processed.append((data[0], data[1], data[2], verse))
+
+            self.jsonData['data'] = processed
         except Exception as ex:
             self.sendError("Invalid search command - " + ex)
 
