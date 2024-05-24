@@ -1,4 +1,4 @@
-import config, subprocess, os, platform, sys, re, platform
+import config, subprocess, os, platform, sys, re, platform, shutil
 
 
 config.pipIsUpdated = False
@@ -143,14 +143,12 @@ def isOfflineTtsInstalled():
         for key in sorted(macVoices):
             config.macVoices[key] = macVoices[key]
         return True if config.macVoices else False
-    elif platform.system() == "Linux" and config.espeak:
-        espeakInstalled, _ = subprocess.Popen("which espeak", shell=True, stdout=subprocess.PIPE).communicate()
-        if not espeakInstalled:
+    elif platform.system() == "Linux":
+        if not shutil.which("espeak") and config.espeak:
             config.espeak = False
-            print("'espeak' is not found.  To set up 'espeak', you may read https://github.com/eliranwong/ChromeOSLinux/blob/main/multimedia/espeak.md")
-            return False
-        else:
-            return True
+        if not shutil.which("piper") and config.piper:
+            config.piper = False
+        return True if shutil.which("piper") or shutil.which("espeak") else False
     else:
         if config.qtLibrary == "pyside6":
             try:

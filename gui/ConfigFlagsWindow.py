@@ -166,6 +166,7 @@ class ConfigFlagsWindow(QDialog):
                 ("fcitx", config.fcitx, self.fcitxChanged, False, config.thisTranslation["fcitx"]),
                 ("ibus", config.ibus, self.ibusChanged, False, config.thisTranslation["ibus"]),
                 ("espeak", config.espeak, self.espeakChanged, False, config.thisTranslation["espeak"]),
+                ("piper", config.piper, self.piperChanged, False, "piper text-to-speech feature"),
             ]
         if config.developer:
             options += [
@@ -493,6 +494,10 @@ class ConfigFlagsWindow(QDialog):
 
     def espeakChanged(self):
         config.espeak = not config.espeak
+        self.parent.handleRestart()
+
+    def piperChanged(self):
+        config.piper = not config.piper
         self.parent.handleRestart()
 
     def forceOnlineTtsChanged(self):

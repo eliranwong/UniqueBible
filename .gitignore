@@ -117,3 +117,5 @@ tmpicns.rsrc
 log.txt
 .python-version
 google-cloud-key.json
+audio/*.onnx
+audio/*.json

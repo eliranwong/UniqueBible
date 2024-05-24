@@ -19,6 +19,23 @@ from prompt_toolkit.history import FileHistory
 from prompt_toolkit.styles import Style
 #from util.terminal_system_command_prompt import SystemCommandPrompt
 
+if config.qtLibrary == "pyside6":
+    try:
+        #QtTextToSpeech is currently not in PySide6 pip3 package
+        #ModuleNotFoundError: No module named 'PySide6.QtTextToSpeech'
+        from PySide6.QtTextToSpeech import QTextToSpeech
+    except:
+        pass
+else:
+    try:
+        # Note: qtpy.QtTextToSpeech is not found!
+        from PySide2.QtTextToSpeech import QTextToSpeech
+    except:
+        try:
+            from PyQt5.QtTextToSpeech import QTextToSpeech
+        except:
+            pass
+
 
 # Created for running text editor without UBA
 class TextEditorUtility:

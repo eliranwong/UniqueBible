@@ -687,6 +687,12 @@ class ConfigUtil:
         setConfig("enableSystemTrayOnLinux", """
         # Enable UBA system tray on Linux os""",
         False)
+        setConfig("piper", """
+        # Piper text-to-speech feature on Linux""",
+        False)
+        setConfig("piperVoice", """
+        # Piper text-to-speech voice""",
+        "en_US-lessac-medium")
         setConfig("forceOnlineTts", """
         # This forces default text-to-speech feature uses online service, even if offline tts engine is installed.""",
         False)

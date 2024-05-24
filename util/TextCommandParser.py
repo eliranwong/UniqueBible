@@ -1,5 +1,5 @@
 # coding=utf-8
-import glob, pprint, traceback, pydoc, threading, asyncio
+import glob, pprint, traceback, pydoc, threading, asyncio, shutil
 import os, re, webbrowser, platform, zipfile, subprocess, config
 from prompt_toolkit.input import create_input
 from prompt_toolkit.keys import Keys
@@ -1541,6 +1541,8 @@ class TextCommandParser:
     # speak:::
     # run text to speech feature
     def textToSpeech(self, command, source):
+        def getHideOutputSuffix():
+            return f" > /dev/null 2>&1"
         if config.forceOnlineTts:
             return self.googleTextToSpeech(command, source)
         # Stop current playing first if any:
@@ -1599,7 +1601,23 @@ class TextCommandParser:
                 # Use "grc" to read, becuase it sounds closer to "he" than "en" does.
                 language = "grc"
 
-            if platform.system() == "Linux" and config.espeak:
+            if platform.system() == "Linux" and config.piper and (shutil.which("cvlc") or shutil.which("aplay")):
+                model_dir = os.path.join(os.getcwd(), "audio")
+                model_path = f"""{os.path.join(model_dir, config.piperVoice)}.onnx"""
+                model_config_path = f"""{model_path}.json"""
+                if os.path.isfile(model_path):
+                    if shutil.which("cvlc"):
+                        cmd = f'''"{shutil.which("piper")}" --model "{model_path}" --config "{model_config_path}" --output-raw | cvlc --play-and-exit --rate {config.vlcSpeed} --demux=rawaud --rawaud-channels=1 --rawaud-samplerate=22050 -{getHideOutputSuffix()}'''
+                    elif shutil.which("aplay"):
+                        cmd = f'''"{shutil.which("piper")}" --model "{model_path}" --config "{model_config_path}" --output-raw | aplay -r 22050 -f S16_LE -t raw -{getHideOutputSuffix()}'''
+                else:
+                    print("[Downloading voice ...] ")
+                    if shutil.which("cvlc"):
+                        cmd = f'''"{shutil.which("piper")}" --model {config.piperVoice} --download-dir "{model_dir}" --data-dir "{model_dir}" --output-raw | cvlc --play-and-exit --rate {config.vlcSpeed} --demux=rawaud --rawaud-channels=1 --rawaud-samplerate=22050 -{getHideOutputSuffix()}'''
+                    elif shutil.which("aplay"):
+                        cmd = f'''"{shutil.which("piper")}" --model {config.piperVoice} --download-dir "{model_dir}" --data-dir "{model_dir}" --output-raw | aplay -r 22050 -f S16_LE -t raw -{getHideOutputSuffix()}'''
+                pydoc.pipepager(text, cmd=cmd)
+            elif platform.system() == "Linux" and config.espeak:
                 if WebtopUtil.isPackageInstalled("espeak"):
                     isoLang2epeakLang = TtsLanguages().isoLang2epeakLang
                     languages = isoLang2epeakLang.keys()
