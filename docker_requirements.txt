@@ -77,5 +77,5 @@ webencodings==0.5.1
 websocket-client==1.1.0
 websockets==10.1
 wrapt==1.13.3
-yt-dlp==2024.4.9
+yt-dlp==2024.7.1
 zipp==3.7.0
