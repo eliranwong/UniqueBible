@@ -78,4 +78,4 @@ websocket-client==1.1.0
 websockets==10.1
 wrapt==1.13.3
 yt-dlp==2024.4.9
-zipp==3.7.0
+zipp==3.19.1
