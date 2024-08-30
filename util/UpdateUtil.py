@@ -119,11 +119,12 @@ class UpdateUtil:
         f = open("patches.txt", "r")
         lines = f.readlines()
         for line in lines:
-            try:
-                ver, contentType, filePath = literal_eval(line)
-            except Exception as e:
-                print(f"{e} in '{line}'")
-            patches[filePath] = "{0}".format(ver)
+            if len(line) > 1:
+                try:
+                    ver, contentType, filePath = literal_eval(line)
+                except Exception as e:
+                    print(f"{e} in '{line}'")
+                patches[filePath] = "{0}".format(ver)
         f.close()
         lines = UpdateUtil.getFilesChanged(sha1, sha2)
         patch = open("patches.txt", "a")

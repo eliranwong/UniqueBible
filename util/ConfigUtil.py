@@ -509,6 +509,9 @@ class ConfigUtil:
         setConfig("webAdminPassword", """
          # Web admin password.""",
         "UBA123")
+        setConfig("webSiteTitle", """
+        # Site title for remote http server.""",
+        "UniqueBible.app")
         setConfig("referenceTranslation", """
         # Specify a translation as a reference for making other translations.  This option is created for development purpose.""",
         "en_US")
