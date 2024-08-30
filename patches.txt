@@ -1213,6 +1213,7 @@
 (33.07, "file", "util/uba_command_prompt_key_bindings.py")
 (33.16, "file", "plugins/startup/customise_terminal_mode_commands.py")
 (33.20, "file", "util/PromptValidator.py")
+(33.25, "file", "util/LexicalData.py")
 (33.48, "file", "gui/CentralWidget.py")
 (33.50, "file", "gui/MiniControl.py")
 (33.50, "file", "gui/NoteEditor.py")
