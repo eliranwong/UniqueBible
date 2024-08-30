@@ -1,3 +1,7 @@
+Changes in 35.31:
+* Add webSiteTitle to config
+* Add scripts to start/stop http and api server
+
 Changes in 35.30:
 * Support Piper TTS on Linux
 

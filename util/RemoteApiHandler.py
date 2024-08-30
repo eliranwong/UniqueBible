@@ -109,6 +109,8 @@ class RemoteApiHandler(ApiRequestHandler):
                 lang = query["lang"][0]
                 if os.path.exists('marvelData_' + lang):
                     config.marvelData = 'marvelData_' + lang
+        if request.startswith("/api"):
+            request = request[4:]
         cmd = request[1:].split("/")
         if len(cmd) > 0:
             command = cmd[0].lower()

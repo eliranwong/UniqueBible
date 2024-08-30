@@ -1,6 +1,6 @@
 # coding=utf-8
 import glob, pprint, traceback, pydoc, threading, asyncio, shutil
-import os, re, webbrowser, platform, zipfile, subprocess, config
+import os, re, webbrowser, platform, zipfile, subprocess, config, logging
 from prompt_toolkit.input import create_input
 from prompt_toolkit.keys import Keys
 from datetime import date
@@ -63,6 +63,7 @@ class TextCommandParser:
 
     def __init__(self, parent):
         self.parent = parent
+        self.logger = logging.getLogger('uba')
         self.lastKeyword = None
         self.cliTtsProcess = None
         self.qtTtsEngine = None

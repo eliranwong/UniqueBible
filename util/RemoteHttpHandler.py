@@ -392,7 +392,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
             file.close()
 
     def loadLastVerseHtml(self):
-        return """<!DOCTYPE html><html><head><link rel="icon" href="icons/{0}"><title>UniqueBible.app</title>
+        return """<!DOCTYPE html><html><head><link rel="icon" href="icons/{0}"><title>{4}</title>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -405,7 +405,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 <script>
                 location.assign("{2}?cmd=.bible");
                 </script>
-                </body>""".format(config.webUBAIcon, config.thisTranslation["loading"], config.webHomePage, config.theme)
+                </body>""".format(config.webUBAIcon, config.thisTranslation["loading"], config.webHomePage, config.theme, config.webSiteTitle)
 
     def loadLastVerse(self):
         self.commonHeader()
@@ -566,7 +566,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 self.textCommandParser.parent.addHistoryRecord(view, self.command)
 
         if ('tab_title' in infoDict.keys() and infoDict['tab_title'] == "Map"):
-            content = content.replace("<title>Google Maps - gmplot</title>", """<title>UniqueBible.app</title>
+            content = content.replace("<title>Google Maps - gmplot</title>", """<title>{2}</title>
                 <script src='js/http_server.js?v=1.065'></script>
                 <script>
                 var target = document.querySelector('title');
@@ -579,7 +579,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                     childList: true,
                 {1};
                 observer.observe(target, config);
-                </script>""".format("{", "}"))
+                </script>""".format("{", "}", config.webSiteTitle))
             #print(content)
         else:
             content = self.wrapHtml(content)
@@ -616,7 +616,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
             <html>
             <head>
                 <link rel="icon" href="icons/{20}">
-                <title>UniqueBible.app</title>
+                <title>{21}</title>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -803,14 +803,14 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                   <div class="modal2-content">
                     <div class="modal2-header">
                       <span class="close2">&times;</span>
-                      <span id="myMessageHeader"><h2>UniqueBible.app</h2></span>
+                      <span id="myMessageHeader"><h2>{21}</h2></span>
                     </div>
                     <div class="modal2-body">
-                      <span id="myMessage"><p>UniqueBible.app</p></span>
+                      <span id="myMessage"><p>{21}</p></span>
                     </div>
                 <!--
                     <div class="modal2-footer">
-                      <span id="myMessageFooter"><h3>UniqueBible.app</h3></span>
+                      <span id="myMessageFooter"><h3>{21}</h3></span>
                     </div>
                 -->
                   </div>
@@ -901,6 +901,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
             self.getBibleNavigationMenu(),
             config.webHomePage,
             config.webUBAIcon,
+            config.webSiteTitle
         )
         self.wfile.write(bytes(html, "utf8"))
 
@@ -1099,7 +1100,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                     fontSize = "{0}px".format(config.overwriteBookFontSize)
         bcv = (config.studyText, config.studyB, config.studyC, config.studyV) if view == "study" else (config.mainText, config.mainB, config.mainC, config.mainV)
         activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
-        html = ("""<!DOCTYPE html><html><head><link rel="icon" href="icons/{9}"><title>UniqueBible.app</title>
+        html = ("""<!DOCTYPE html><html><head><link rel="icon" href="icons/{9}"><title>{12}</title>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -1145,6 +1146,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                          config.webUBAIcon,
                          config.widgetBackgroundColor,
                          config.widgetForegroundColor,
+                         config.webSiteTitle
                          )
         return html
 
@@ -1376,10 +1378,10 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
         <html>
             <head>
                 <link rel="icon" href="icons/{1}">
-                <title>UniqueBible.app</title>
+                <title>{2}</title>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        </head><body>{0}</body></html>""".format(message, config.webUBAIcon)
+        </head><body>{0}</body></html>""".format(message, config.webUBAIcon, config.webSiteTitle)
 
     def historyContent(self):
         view, content, *_ = self.textCommandParser.parser("_history:::main", "http")
@@ -1739,7 +1741,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
     def setWebUBAIconContent(self):
         files = glob.glob(os.path.join("htmlResources", "icons", "UniqueBibleApp*.png"))
         files = [file[20:] for file in files]
-        content = "<h2>Select UniqueBible.app Icon:</h2>"
+        content = "<h2>Select {0} Icon:</h2>".format(config.webSiteTitle)
         content += " ".join(["""<ref onclick ="document.title = '_setconfig:::webUBAIcon:::\\'{0}\\''"><img src="icons/{0}"></ref>""".format(file) for file in files])
         return content
 
