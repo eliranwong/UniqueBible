@@ -46,8 +46,8 @@ if not os.path.isfile("config.py"):
 
 # import modules, which are ESSENTIAL for running BibleVerseParser
 import re, glob, sys
-from uniquebible import config
 from ast import literal_eval
+from uniquebible import config
 from uniquebible.util.BibleBooks import BibleBooks
 from uniquebible.util.RegexSearch import RegexSearch
 
@@ -62,12 +62,12 @@ class BibleVerseParser:
     # initialisation
     def __init__(self, standardisation, noOfLinesPerChunkForParsing=None):
         self.logger = logging.getLogger('uba')
-        # noOfLinesPerChunkForParsing
-        self.noOfLinesPerChunkForParsing = config.noOfLinesPerChunkForParsing if noOfLinesPerChunkForParsing is None else noOfLinesPerChunkForParsing
         # set standard abbreviation, displayed in UniqueBible
         self.updateStandardAbbreviation()
+        # noOfLinesPerChunkForParsing
+        self.noOfLinesPerChunkForParsing = config.noOfLinesPerChunkForParsing if noOfLinesPerChunkForParsing is None else noOfLinesPerChunkForParsing
         # set preference of standardisation
-        self.standardisation = standardisation
+        self.standardisation = (standardisation in (True, "YES", "yes", "Yes"))
         self.bibleBooksDict = {}
         self.bibleBooksDictCanonBooksOnly = {}
         pattern = re.compile("[a-zA-Z]")
@@ -125,22 +125,20 @@ class BibleVerseParser:
         if not hasattr(config, "standardAbbreviation"):
             config.standardAbbreviation = "ENG"
             config.convertChapterVerseDotSeparator = True
-            nameValue = (
-                ("standardAbbreviation = ", config.standardAbbreviation),
-                ("convertChapterVerseDotSeparator = ", config.convertChapterVerseDotSeparator),
-            )
-            if not os.path.isfile("config.py"):
-                with open("config.py", "w", encoding="utf-8") as fileObj:
-                    for name, value in nameValue:
-                        fileObj.write(name+pprint.pformat(value))
+            config.useLiteVerseParsing = False
+            config.noOfLinesPerChunkForParsing = 100
+            config.parseBookChapterWithoutSpace = True
+            config.parseBooklessReferences = True
+            config.parseEnglishBooksOnly = False
+            config.parseClearSpecialCharacters = False
 
     # To format of all references by using standard abbreviations.
     def standardReference(self, text):
         for booknumber in self.standardAbbreviation:
             abbreviation = self.standardAbbreviation[booknumber]
             searchReplace = (
-                ('<ref onclick="bcv\('+booknumber+',([0-9]+?),([0-9]+?)\)">.*?</ref>', '<ref onclick="bcv('+booknumber+r',\1,\2)">'+abbreviation+r' \1:\2</ref>'),
-                ('<ref onclick="bcv\('+booknumber+',([0-9]+?),([0-9]+?),([0-9]+?),([0-9]+?)\)">.*?</ref>', '<ref onclick="bcv('+booknumber+r',\1,\2,\3,\4)">'+abbreviation+r' \1:\2-\3:\4</ref>'),
+                (r'<ref onclick="bcv\('+booknumber+r',([0-9]+?),([0-9]+?)\)">.*?</ref>', '<ref onclick="bcv('+booknumber+r',\1,\2)">'+abbreviation+r' \1:\2</ref>'),
+                (r'<ref onclick="bcv\('+booknumber+r',([0-9]+?),([0-9]+?),([0-9]+?),([0-9]+?)\)">.*?</ref>', '<ref onclick="bcv('+booknumber+r',\1,\2,\3,\4)">'+abbreviation+r' \1:\2-\3:\4</ref>'),
                 (r' ([0-9]+?):([0-9]+?)-\1:([0-9]+?)</ref>', r' \1:\2-\3</ref>'),
             )
             text = RegexSearch.replace(text, searchReplace)
@@ -181,7 +179,7 @@ class BibleVerseParser:
         text = text + " "
 
         # remove bcv tags, if any, to avoid duplication of tagging in later steps
-        searchPattern = '<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9][^\(\)]*?\)">(.*?)</ref>'
+        searchPattern = r'<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9][^\(\)]*?\)">(.*?)</ref>'
         searchReplace = (
             (searchPattern, r'\1'),
         )
@@ -194,7 +192,7 @@ class BibleVerseParser:
             # get the string of book name
             bookName = name
             searchReplace = (
-                ('\.', r'[\.]*?'), # make dot "." optional for an abbreviation
+                (r'\.', r'[\.]*?'), # make dot "." optional for an abbreviation
                 ('^([0-9]+?) ', r'\1[ ]*?'), # make space " " optional in some cases
                 ('^([I]+?) ', r'\1[ ]*?'),
                 ('^(IV) ', r'\1[ ]*?'),
@@ -215,16 +213,16 @@ class BibleVerseParser:
 
         # In case a dot sign, instead of a colon sign, is used to separate chapter number and verse number.
         if config.convertChapterVerseDotSeparator:
-            text = RegexSearch.replace(text, (("』 ([0-9]+?)\.([0-9])", r"』 \1:\2"),))
+            text = RegexSearch.replace(text, ((r"』 ([0-9]+?)\.([0-9])", r"』 \1:\2"),))
         searchReplace = (
             # 1st set of taggings
             ('『([0-9]+?)｜([^『』]*?)』 ([0-9]+?):([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\3,\4)">\2 \3:\4</ref｝\5'),
             ('『([0-9]+?)｜([^『』]*?)』 ([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\3,)">\2 \3</ref｝\4'),
             # fix references without verse numbers
             # fix books with one chapter ONLY; oneChapterBook = [31,57,63,64,65,72,73,75,79,85]
-            ('<ref onclick="bcv\((31|57|63|64|65|72|73|75|79|85),([0-9]+?),\)">', r'<ref onclick="bcv(\1,1,\2)">'),
+            (r'<ref onclick="bcv\((31|57|63|64|65|72|73|75|79|85),([0-9]+?),\)">', r'<ref onclick="bcv(\1,1,\2)">'),
             # fix chapter references without verse number; assign verse number 1 in taggings
-            ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),\)">', r'<ref onclick="bcv(\1,\2,1)">＊'),
+            (r'<ref onclick="bcv\(([0-9]+?),([0-9]+?),\)">', r'<ref onclick="bcv(\1,\2,1)">＊'),
         )
         text = RegexSearch.replace(text, searchReplace)
 
@@ -243,11 +241,11 @@ class BibleVerseParser:
             text = RegexSearch.replace(text, searchReplace)
         searchPattern = '</ref｝[,-–;][ ]*?[0-9]'
         searchReplace = (
-            ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,\7)">\6:\7</ref｝\8'),
-            ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^＊][^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?)([^:0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\2,\6)">\6</ref｝\7'),
-            ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^＊][^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\2,\6)">\6</ref｝:\7'),
-            ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">(＊[^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?)([^:0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,1)">＊\6</ref｝\7'),
-            ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">(＊[^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,1)">＊\6</ref｝:\7'),
+            (r'<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,\7)">\6:\7</ref｝\8'),
+            (r'<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^＊][^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?)([^:0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\2,\6)">\6</ref｝\7'),
+            (r'<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^＊][^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\2,\6)">\6</ref｝:\7'),
+            (r'<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">(＊[^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?)([^:0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,1)">＊\6</ref｝\7'),
+            (r'<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">(＊[^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,1)">＊\6</ref｝:\7'),
         )
         text = RegexSearch.deepReplace(text, searchPattern, searchReplace)
 
@@ -258,7 +256,7 @@ class BibleVerseParser:
             text = RegexSearch.replace(text, searchReplace)
 
         searchReplace = (
-            ('(<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9]+?\)">)＊', r'\1'),
+            (r'(<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9]+?\)">)＊', r'\1'),
             ('</ref｝', '</ref>'),
         )
         text = RegexSearch.replace(text, searchReplace)
@@ -267,14 +265,14 @@ class BibleVerseParser:
         # e.g. John 3:16 is tagged as <ref onclick="bcv(43,3,16)">John 3:16</ref>
         # e.g. John 3:14-16 is tagged as <ref onclick="bcv(43,3,14,3,16)">John 3:14-16</ref>
         # e.g. John 3:14-4:3 is tagged as <ref onclick="bcv(43,3,14,4,3)">John 3:14-4:3</ref>
-        searchPattern = '<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^<>]*?)</ref>([-–])<ref onclick="bcv\({0},([0-9]+?),([0-9]+?)\)">'.format(r'\1')
+        searchPattern = r'<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^<>]*?)</ref>([-–])<ref onclick="bcv\({0},([0-9]+?),([0-9]+?)\)">'.format(r'\1')
         searchReplace = (
             (searchPattern, r'<ref onclick="bcv(\1,\2,\3,\6,\7)">\4\5'),
         )
         text = RegexSearch.deepReplace(text, searchPattern, searchReplace)
 
         # final clean up
-        searchPattern = '(<ref onclick="bcv[^>]*?)([\(, ])0([1-9])'
+        searchPattern = r'(<ref onclick="bcv[^>]*?)([\(, ])0([1-9])'
         searchReplace = (
             (searchPattern, r'\1\2\3'),
         )
@@ -294,12 +292,18 @@ class BibleVerseParser:
         else:
             allReferences = self.runExtractAllReferences(text, tagged)
         return allReferences
-    
+
+    def extractAllReferencesReadable(self, text, tagged=False, splitInChunks=True) -> str:
+        allReferences = self.extractAllReferences(text=text, tagged=tagged, splitInChunks=splitInChunks)
+        allReferences = [self.bcvToVerseReference(*i) for i in allReferences]
+        return "; ".join(allReferences)
+
+
     def runExtractAllReferences(self, text, tagged=False):
         if not tagged:
             text = self.parseText(text, False, True)
         # return a list of tuples (b, c, v) or (b, cs, vs, ce, ve)
-        return [literal_eval(m) for m in re.findall('bcv(\([0-9]+?,[ ]*[0-9]+?,[ ]*[0-9, ]*?\))', text)]
+        return [literal_eval(m) for m in re.findall(r'bcv(\([0-9]+?,[ ]*[0-9]+?,[ ]*[0-9, ]*?\))', text)]
 
     def extractAllReferencesFast(self, text, tagged=False):
         if tagged:
@@ -331,13 +335,13 @@ class BibleVerseParser:
             for chunk in chunks:
                 parsedText = self.runParseText("".join(chunk), canonicalOnly)
                 # standardise the format of bible verse references
-                if self.standardisation.lower() == "yes":
+                if self.standardisation:
                     parsedText = self.standardReference(parsedText)
                 newText += parsedText
         else:
             parsedText = self.runParseText(originalText, canonicalOnly)
             # standardise the format of bible verse references
-            if self.standardisation.lower() == "yes":
+            if self.standardisation:
                 parsedText = self.standardReference(parsedText)
             newText += parsedText
         return newText
@@ -363,7 +367,7 @@ class BibleVerseParser:
     def bookNameToNum(self, bookName):
         bookName = bookName.strip()
         for key in self.sortedNames:
-            keyWihtoutDot = re.sub("\.$", "", key)
+            keyWihtoutDot = re.sub(r"\.$", "", key)
             if bookName.startswith(keyWihtoutDot):
                 return self.bibleBooksDict[key]
         return None
@@ -376,7 +380,7 @@ class BibleVerseParser:
                 bible = self.bibleBooksDict[key]
                 break
         reference = text[len(key):]
-        res = re.search('(\s*)(\d*):*(\d*) *-* *(\d*):*(\d*)', reference).groups()
+        res = re.search(r'(\s*)(\d*):*(\d*) *-* *(\d*):*(\d*)', reference).groups()
         if res[1] == '':
             return (bible, 1, 1)
         elif res[2] == '' and res[3] == '':
@@ -476,24 +480,29 @@ def extractFromFile():
 
 def parseImage():
     text = """<html><body>John 1:1, Acts 10:10, <p><img src="data:image/png;base64,iVBOTkSuQmCC" alt="UniqueBibleApp_black" /></p>Rev 22:1</body></html>"""
-    result = BibleVerseParser("YES").parseText(text, False, False)
+    result = BibleVerseParser(True).parseText(text, False, False)
     expectedResult = """<html><body><ref onclick="bcv(43,1,1)">John 1:1</ref>, <ref onclick="bcv(44,10,10)">Acts 10:10</ref>, <p><img src="data:image/png;base64,iVBOTkSuQmCC" alt="UniqueBibleApp_black" /></p><ref onclick="bcv(66,22,1)">Rev 22:1</ref></body></html>"""
     print(result == expectedResult)
 
 if __name__ == '__main__':
-    from uniquebible import config
-    config.marvelData = "/Users/otseng/dev/UniqueBible/marvelData/"
-    from uniquebible.util.ConfigUtil import ConfigUtil
-    from uniquebible.util.LanguageUtil import LanguageUtil
+    import config
 
-    ConfigUtil.setup()
-    config.noQt = False
-    config.useLiteVerseParsing = True
-    config.thisTranslation = LanguageUtil.loadTranslation("en_US")
-
+    config.parserStandarisation = False
     bibleVerseParser = BibleVerseParser(config.parserStandarisation)
-    print(bibleVerseParser.extractBookList("Jude-Rev"))
-    print(bibleVerseParser.extractBookListAsBookNameList("Psa, Matt-John, Rev"))
-    print(bibleVerseParser.extractBookListAsBookNumberList("Psa, Matt-John, Rev"))
-    print(bibleVerseParser.extractBookListAsString("nt"))
-    print(bibleVerseParser.extractBookList("Oadf"))
+
+    print(bibleVerseParser.parseText("I like Jn 3:16-18 and Deu 6:4.")) # I like <ref onclick="bcv(43,3,16,3,18)">Jn 3:16-18</ref> and <ref onclick="bcv(5,6,4)">Deu 6:4</ref>.
+    print(bibleVerseParser.standardReference(bibleVerseParser.parseText("I like Jn 3:16-18 and Deu 6:4."))) # I like <ref onclick="bcv(43,3,16,3,18)">John 3:16-18</ref> and <ref onclick="bcv(5,6,4)">Deut 6:4</ref>.
+    print(bibleVerseParser.extractAllReferences("I like John 3:16-18 and Deut 6:4.")) # [(43, 3, 16, 3, 18), (5, 6, 4)]
+    print(bibleVerseParser.extractAllReferencesReadable("I like John 3:16-18 and Deut 6:4.")) # John 3:16-18; Deut 6:4
+    print(bibleVerseParser.verseReferenceToBCV("John 3:16-18")) # (43, 3, 16, 3, 18)
+    print(bibleVerseParser.bcvToVerseReference(*(43,3,16,3,18))) # John 3:16-18
+
+    print(bibleVerseParser.bookNameToNum("Exodus")) # 2
+    print(bibleVerseParser.extractBookList("1Pe-Rev")) # [60, 61, 62, 63, 64, 65, 66]
+    print(bibleVerseParser.extractBookList("Psa, Matt-John, Rev")) # [60, 61, 62, 63, 64, 65, 66]
+    print(bibleVerseParser.extractBookListAsBookNameList("Psa, Matt-John, Rev")) # ['Ps', 'Matt', 'Mark', 'Luke', 'John', 'Rev']
+    print(bibleVerseParser.extractBookListAsBookNumberList("Psa, Matt-John, Rev")) # [19, 40, 41, 42, 43, 66]
+    print(bibleVerseParser.extractBookListAsString("nt")) # 40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66
+    print(bibleVerseParser.extractBookList("Oadf")) # [None]
+
+    # Note: `extractBookListAsBookNumberList` is pretty much the same as `extractBookList`, except its name is more self-explanatory.
