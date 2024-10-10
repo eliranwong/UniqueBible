@@ -120,3 +120,5 @@ google-cloud-key.json
 audio/*.onnx
 audio/*.json
 *.out
+audio/._.DS_Store
+audio/._Readme.md
