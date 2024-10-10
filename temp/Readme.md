@@ -1,1 +1,0 @@
-Temporary files are placed here.

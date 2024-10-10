@@ -1,1 +1,0 @@
-Bible index files

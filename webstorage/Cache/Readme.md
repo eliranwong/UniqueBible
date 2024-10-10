@@ -1,1 +1,0 @@
-Cache is placed here.

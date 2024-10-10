@@ -1,1 +1,0 @@
-Chats are stored here.

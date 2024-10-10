@@ -1,1 +1,0 @@
-To do plugin content is placed in this folder.
