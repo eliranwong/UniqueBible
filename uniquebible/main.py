@@ -112,6 +112,9 @@ if "Nltk" in config.enabled:
     if os.path.isfile(nltk_data2) and not os.path.isdir(nltk_data2_destination_folder):
         shutil.unpack_archive(nltk_data2, corpora_folder)
 
+# Save changes in config
+ConfigUtil.save()
+
 # exit application if it is run for setup only
 if config.runMode == "setup-only":
     print("UniqueBibleApp installed!")

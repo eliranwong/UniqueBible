@@ -4163,7 +4163,7 @@ The WHERE condition is described as: {query}"""
     # DATA:::
     def textData(self, command, source):
         config.dataset = command
-        filepath = os.path.join("plugins", "menu", "Bible Data", "{0}.txt".format(command))
+        filepath = os.path.join("plugins", "menu", "Bible_Data", "{0}.txt".format(command))
         if not os.path.isfile(filepath) or not ("Tabulate" in config.enabled):
             return self.invalidCommand("study")
         with open(filepath, 'r', encoding='utf8') as fileObj:

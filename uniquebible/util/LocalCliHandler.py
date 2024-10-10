@@ -2826,7 +2826,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         return ""
 
     def names(self):
-        with open(os.path.join("plugins", "menu", "Bible Data", "Bible Names.txt"), "r", encoding="utf-8") as input_file:
+        with open(os.path.join("plugins", "menu", "Bible_Data", "Bible Names.txt"), "r", encoding="utf-8") as input_file:
             names = input_file.read().split("\n")
         self.print("Search for a name:")
         userInput = self.simplePrompt()
@@ -2840,7 +2840,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
     def opendata(self):
         try:
             default = config.dataset if config.dataset in self.crossPlatform.dataList else ""
-            userInput = self.dialogs.getValidOptions(options=self.crossPlatform.dataList, title="Bible Data", default=default)
+            userInput = self.dialogs.getValidOptions(options=self.crossPlatform.dataList, title="Bible_Data", default=default)
             if not userInput or userInput.lower() == config.terminal_cancel_action:
                 return self.cancelAction()
             command = f"DATA:::{userInput}"

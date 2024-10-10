@@ -1726,7 +1726,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
         content += "<br>".join(["""<ref onclick ="document.title = 'EPUB:::{0}'">{0}</ref>""".format(book)
             for book in self.textCommandParser.parent.epubList])
         content += "<h2>{0}</h2>".format(config.thisTranslation["others"])
-        dataList = [item for item in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu", "Bible Data"), "txt")]
+        dataList = [item for item in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu", "Bible_Data"), "txt")]
         content += "<br>".join(["""<ref onclick ="document.title = 'DATA:::{0}'">{0}</ref>""".format(book)
             for book in dataList])
         return content

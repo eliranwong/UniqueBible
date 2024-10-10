@@ -1059,7 +1059,7 @@ class MaterialMainWindow:
         icon = "material/action/view_timeline/materialiconsoutlined/48dp/2x/outline_view_timeline_black_48dp.png"
         self.addMenuPluginButton("Bible Timelines", "bibleTimelines", icon, self.secondToolBar)
         icon = "material/action/token/materialiconsoutlined/48dp/2x/outline_token_black_48dp.png"
-        self.addMenuPluginButton("Bible Data", "bibleData", icon, self.secondToolBar)
+        self.addMenuPluginButton("Bible_Data", "bibleData", icon, self.secondToolBar)
         icon = "material/hardware/gamepad/materialiconsoutlined/48dp/2x/outline_gamepad_black_48dp.png"
         self.addMenuPluginButton("Bible Parallels", "bibleHarmonies", icon, self.secondToolBar)
         icon = "material/action/thumb_up_off_alt/materialicons/48dp/2x/baseline_thumb_up_off_alt_black_48dp.png"

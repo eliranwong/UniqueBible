@@ -1476,7 +1476,7 @@ class WebEngineView(QWebEngineView):
         #self.searchResource("HBN")
         config.dataset = "Bible Names"
         config.pluginContext = self.name
-        self.parent.parent.runPlugin("Bible Data")
+        self.parent.parent.runPlugin("Bible_Data")
         config.pluginContext = ""
 
     def searchPromise(self):

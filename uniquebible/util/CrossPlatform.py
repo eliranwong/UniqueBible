@@ -84,7 +84,7 @@ class CrossPlatform:
         else:
             self.bibleAudioModules = []
         # data list
-        self.dataList = [item for item in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu", "Bible Data"), "txt")]
+        self.dataList = [item for item in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu", "Bible_Data"), "txt")]
         # search tool list
         self.searchToolList = self.dictionaryListAbb + self.encyclopediaListAbb + ["EXLBT", "EXLBP", "EXLBL", "mETCBC"]
 
