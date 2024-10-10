@@ -1,4 +1,5 @@
-import config, os, shutil, re, webbrowser
+from uniquebible import config
+import os, shutil, re, webbrowser
 from db.BiblesSqlite import BiblesSqlite
 from util.BibleVerseParser import BibleVerseParser
 from util.FileUtil import FileUtil

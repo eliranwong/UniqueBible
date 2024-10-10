@@ -1,4 +1,4 @@
-import config
+from uniquebible import config
 
 shortcuts = (
     ("diff", "DIFFERENCE", config.mainWindow.textCommandParser.textDiff),

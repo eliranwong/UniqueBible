@@ -1,4 +1,5 @@
-import config, re
+from uniquebible import config
+import re
 
 def fixHrefLinks(text):
     if config.enableHttpServer:

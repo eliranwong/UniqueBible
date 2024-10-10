@@ -1,4 +1,5 @@
-import os, subprocess, config, platform, sys
+import os, subprocess, platform, sys
+from uniquebible import config
 from util.WebtopUtil import WebtopUtil
 
 cwd = os.getcwd()

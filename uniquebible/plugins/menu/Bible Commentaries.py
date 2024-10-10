@@ -1,4 +1,5 @@
-import config, os, re
+from uniquebible import config
+import os, re
 from gui.WebEngineViewPopover import WebEngineViewPopover
 from db.ToolsSqlite import Commentary
 from db.BiblesSqlite import BiblesSqlite

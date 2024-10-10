@@ -90,7 +90,7 @@ class ChatGPTResponse:
         self.threadpool = QThreadPool()
 
     def fineTunePythonCode(self, code):
-        insert_string = "import config\nconfig.pythonFunctionResponse = "
+        insert_string = "from uniquebible import config\nconfig.pythonFunctionResponse = "
         code = re.sub("^!(.*?)$", r"import os\nos.system(\1)", code, flags=re.M)
         if "\n" in code:
             substrings = code.rsplit("\n", 1)
@@ -287,7 +287,7 @@ class ChatGPTResponse:
                     if function_name == "python":
                         config.pythonFunctionResponse = ""
                         function_args = response_message["function_call"]["arguments"]
-                        insert_string = "import config\nconfig.pythonFunctionResponse = "
+                        insert_string = "from uniquebible import config\nconfig.pythonFunctionResponse = "
                         if "\n" in function_args:
                             substrings = function_args.rsplit("\n", 1)
                             new_function_args = f"{substrings[0]}\n{insert_string}{substrings[-1]}"

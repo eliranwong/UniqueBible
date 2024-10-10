@@ -499,7 +499,8 @@ class DummyParent():
         pass
 
 def main():
-    import sys, config
+    import sys
+    from uniquebible import config
     if config.qtLibrary == "pyside6":
         from PySide6.QtWidgets import QApplication
         from PySide6.QtCore import QCoreApplication

@@ -6,7 +6,8 @@ This plugin does two things:
     e.g. H1234
 """
 
-import config, re
+from uniquebible import config
+import re
 
 
 def tagLexicalEntry(text):

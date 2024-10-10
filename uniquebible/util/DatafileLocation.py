@@ -133,7 +133,8 @@ class DatafileLocation:
     }
 
 #if __name__ == "__main__":
-#    import os, config
+#    import os
+#    from uniquebible import config
 #
 #    def installResources(resources):
 #        count = 0

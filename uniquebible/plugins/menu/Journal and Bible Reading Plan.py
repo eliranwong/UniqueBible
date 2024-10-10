@@ -1,4 +1,4 @@
-import config
+from uniquebible import config
 from util.readings import allDays
 if config.qtLibrary == "pyside6":
     from PySide6.QtWidgets import QWidget

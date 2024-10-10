@@ -1,4 +1,5 @@
-import config, re
+from uniquebible import config
+import re
 
 terminalTextStart = """「tmvs fg="{1}" bg="{0}"」{2}「/tmvs」""".format(config.terminalSearchHighlightBackground, config.terminalSearchHighlightForeground, config.terminalVerseSelectionStart) if config.runMode == "terminal" else ""
 terminalTextEnd = """ 「tmvs fg="{1}" bg="{0}"」{2}「/tmvs」""".format(config.terminalSearchHighlightBackground, config.terminalSearchHighlightForeground, config.terminalVerseSelectionEnd) if config.runMode == "terminal" else ""

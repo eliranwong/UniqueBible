@@ -1,4 +1,5 @@
-import config, re
+from uniquebible import config
+import re
 from util.BibleVerseParser import BibleVerseParser
 from db.BiblesSqlite import BiblesSqlite
 from db.ToolsSqlite import Book

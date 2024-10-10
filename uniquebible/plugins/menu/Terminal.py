@@ -1,4 +1,5 @@
-import platform, subprocess, config
+import platform, subprocess
+from uniquebible import config
 
 thisPlatform = platform.system()
 commands = {

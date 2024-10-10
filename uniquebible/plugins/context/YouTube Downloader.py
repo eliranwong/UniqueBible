@@ -1,4 +1,4 @@
-import config
+from uniquebible import config
 from util.TextUtil import TextUtil
 
 if config.pluginContext:

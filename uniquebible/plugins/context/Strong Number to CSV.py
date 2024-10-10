@@ -1,4 +1,5 @@
-import config, re, os, sys, subprocess, platform
+from uniquebible import config
+import re, os, sys, subprocess, platform
 
 if config.pluginContext:
     if re.match("^[GH][0-9]+?$", config.pluginContext):

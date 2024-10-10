@@ -2237,7 +2237,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 time.sleep(0.1)
 
     def fineTunePythonCode(self, code):
-        insert_string = "import config\nconfig.pythonFunctionResponse = "
+        insert_string = "from uniquebible import config\nconfig.pythonFunctionResponse = "
         code = re.sub("^!(.*?)$", r"import os\nos.system(\1)", code, flags=re.M)
         if "\n" in code:
             substrings = code.rsplit("\n", 1)

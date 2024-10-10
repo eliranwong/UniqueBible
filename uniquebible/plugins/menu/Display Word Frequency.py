@@ -1,5 +1,5 @@
 import os
-import config
+from uniquebible import config
 from util.BibleBooks import BibleBooks
 
 filename = os.path.join(config.marvelData, 'statistics', 'words.stats')

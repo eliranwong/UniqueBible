@@ -21,6 +21,8 @@
 /plugins/menu/**
 /plugins/startup/**
 /plugins/shutdown/**
+/plugins/event/**
+/plugins/chatGPT/**
 /macros/*.ubam
 /macros/save
 /tmp
@@ -83,7 +85,6 @@ uba.sh
 util/GitHubCustomRepoCache.py
 /ip_blacklist.txt
 /ip_whitelist.txt
-plugins/event/*.py
 secrets/github/*.txt
 config.ini
 disabled_modules.txt
@@ -110,7 +111,6 @@ UniqueBibleApp.bat
 UniqueBibleAppTerminal.bat
 new.mp3
 config.py_init
-plugins/chatGPT*
 iconfile.icns
 tmpicns.rsrc
 .stop_chatgpt

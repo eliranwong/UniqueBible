@@ -1,4 +1,5 @@
-import config, gmplot, os, webbrowser, re
+from uniquebible import config
+import gmplot, os, webbrowser, re
 from util.exlbl import allLocations
 from gui.CheckableComboBox import CheckableComboBox
 from gui.WebEngineViewPopover import WebEngineViewPopover

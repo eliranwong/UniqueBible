@@ -1,4 +1,4 @@
-import config
+from uniquebible import config
 
 if config.pluginContext:
     config.mainWindow.showNoteEditor()

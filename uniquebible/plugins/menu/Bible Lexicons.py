@@ -1,4 +1,5 @@
-import config, os
+from uniquebible import config
+import os
 from gui.WebEngineViewPopover import WebEngineViewPopover
 from db.ToolsSqlite import Lexicon
 if config.qtLibrary == "pyside6":

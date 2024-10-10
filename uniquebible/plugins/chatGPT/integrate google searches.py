@@ -1,4 +1,5 @@
-import config, json, googlesearch
+from uniquebible import config
+import json, googlesearch
 
 # Use google https://pypi.org/project/googlesearch-python/ to search internet for information, about which ChatGPT doesn't know.
 

@@ -1,5 +1,5 @@
 import os
-import config
+from uniquebible import config
 from util.NetworkUtil import NetworkUtil
 
 def qrCodeCmd(command, source):

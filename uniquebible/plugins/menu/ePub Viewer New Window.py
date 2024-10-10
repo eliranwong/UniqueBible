@@ -1,4 +1,5 @@
-import config, os, platform
+from uniquebible import config
+import os, platform
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import QUrl
 else:

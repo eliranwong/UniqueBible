@@ -1,4 +1,5 @@
-import config, os, apsw, re
+from uniquebible import config
+import os, apsw, re
 from gui.WebEngineViewPopover import WebEngineViewPopover
 from db.ToolsSqlite import EncyclopediaData
 if config.qtLibrary == "pyside6":

@@ -1,6 +1,7 @@
 # This plugin is written for non-Windows device.  This is not tested on Windows platform.
 
-import config, re, os, platform
+from uniquebible import config
+import re, os, platform
 from util.WebtopUtil import WebtopUtil
 
 def findText(html):

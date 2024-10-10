@@ -1,4 +1,5 @@
-import config, os, apsw, re, webbrowser
+from uniquebible import config
+import os, apsw, re, webbrowser
 from gui.WebEngineViewPopover import WebEngineViewPopover
 from db.ToolsSqlite import ExlbData
 from db.BiblesSqlite import BiblesSqlite

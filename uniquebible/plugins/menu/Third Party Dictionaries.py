@@ -1,4 +1,5 @@
-import config, os, apsw, re
+from uniquebible import config
+import os, apsw, re
 from gui.WebEngineViewPopover import WebEngineViewPopover
 from util.ThirdParty import ThirdPartyDictionary
 if config.qtLibrary == "pyside6":

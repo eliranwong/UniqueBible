@@ -1,4 +1,4 @@
-import config
+from uniquebible import config
 from gui.SimpleBrowser import SimpleBrowser
 from util.TextUtil import TextUtil
 if config.qtLibrary == "pyside6":

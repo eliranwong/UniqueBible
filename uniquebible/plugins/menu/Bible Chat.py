@@ -1,4 +1,5 @@
-import config, os, re, openai, tiktoken, sqlite3, webbrowser, shutil, platform
+from uniquebible import config
+import os, re, openai, tiktoken, sqlite3, webbrowser, shutil, platform
 import subprocess, traceback, sys
 import urllib.parse
 from io import StringIO

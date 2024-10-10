@@ -1,4 +1,4 @@
-import config
+from uniquebible import config
 from util.BibleVerseParser import BibleVerseParser
 from gui.WebEngineViewPopover import WebEngineViewPopover
 if config.qtLibrary == "pyside6":

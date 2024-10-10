@@ -1,4 +1,4 @@
-import config
+from uniquebible import config
 if config.qtLibrary == "pyside6":
     from PySide6.QtWidgets import QWidget
 else:

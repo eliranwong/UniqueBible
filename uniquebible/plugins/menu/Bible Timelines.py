@@ -1,4 +1,5 @@
-import config, os
+from uniquebible import config
+import os
 from gui.ImageViewer import ImageViewer
 from util.BibleBooks import BibleBooks
 

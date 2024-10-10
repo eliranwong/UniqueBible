@@ -1,4 +1,4 @@
-import config
+from uniquebible import config
 
 def fixDisplayColourDarkTheme(text):
     searchReplace = (

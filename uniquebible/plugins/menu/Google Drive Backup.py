@@ -1,4 +1,5 @@
-import subprocess, sys, os, config
+import subprocess, sys, os
+from uniquebible import config
 
 try:
     from plugins.menu.GoogleDriveUtility.install import *

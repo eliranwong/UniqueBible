@@ -1,4 +1,4 @@
-import config
+from uniquebible import config
 
 if config.pluginContext and  hasattr(config, "lemmatizer"):
     lemma = config.lemmatizer.lemmatize(config.pluginContext)

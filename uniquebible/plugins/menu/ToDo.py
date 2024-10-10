@@ -1,4 +1,5 @@
-import config, os, shutil
+from uniquebible import config
+import os, shutil
 from datetime import date
 from db.JournalSqlite import JournalSqlite
 if config.qtLibrary == "pyside6":

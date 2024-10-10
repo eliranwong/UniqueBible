@@ -1,4 +1,4 @@
-import config
+from uniquebible import config
 from gui.SimpleBrowser import SimpleBrowser
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import QUrl

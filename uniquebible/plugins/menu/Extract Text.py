@@ -1,4 +1,5 @@
-import config, sys, os
+from uniquebible import config
+import sys, os
 from install.module import *
 if config.qtLibrary == "pyside6":
     from PySide6.QtWidgets import QFileDialog

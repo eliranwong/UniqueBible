@@ -1,4 +1,5 @@
-import config, re
+from uniquebible import config
+import re
 from util.ThirdParty import Converter
 
 def convertCrLink(match):

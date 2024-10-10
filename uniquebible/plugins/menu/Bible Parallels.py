@@ -1,4 +1,5 @@
-import config, os, apsw, re
+from uniquebible import config
+import os, apsw, re
 from gui.WebEngineViewPopover import WebEngineViewPopover
 from db.BiblesSqlite import BiblesSqlite
 from util.BibleVerseParser import BibleVerseParser
