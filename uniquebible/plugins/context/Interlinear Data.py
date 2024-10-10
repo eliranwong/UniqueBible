@@ -87,7 +87,7 @@ class InterlinearDataWindow(QWidget):
         self.setLayout(mainLayout)
 
     def resetItems(self):
-        from util.BibleVerseParser import BibleVerseParser
+        from uniquebible.util.BibleVerseParser import BibleVerseParser
         if config.qtLibrary == "pyside6":
             from PySide6.QtGui import QStandardItem
         else:
@@ -135,7 +135,7 @@ class InterlinearDataWindow(QWidget):
 
     def exportSpreadsheet(self):
         import sys
-        from install.module import installmodule
+        from uniquebible.install.module import installmodule
 
         module = "openpyxl"
 
@@ -201,7 +201,7 @@ class InterlinearDataWindow(QWidget):
     # Use 'xlsxwriter' to export excel file if 'openpyxl' is not installed.
     def exportSpreadsheet2(self):
         import sys
-        from install.module import installmodule
+        from uniquebible.install.module import installmodule
 
         module = "xlsxwriter"
 

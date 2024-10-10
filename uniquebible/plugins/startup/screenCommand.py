@@ -1,8 +1,8 @@
 from uniquebible import config
 import re
-from util.BibleVerseParser import BibleVerseParser
-from db.BiblesSqlite import BiblesSqlite
-from db.ToolsSqlite import Book
+from uniquebible.util.BibleVerseParser import BibleVerseParser
+from uniquebible.db.BiblesSqlite import BiblesSqlite
+from uniquebible.db.ToolsSqlite import Book
 
 config.presentationParser = True
 

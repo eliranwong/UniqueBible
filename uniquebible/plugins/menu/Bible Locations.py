@@ -1,10 +1,10 @@
 from uniquebible import config
 import gmplot, os, webbrowser, re
-from util.exlbl import allLocations
-from gui.CheckableComboBox import CheckableComboBox
-from gui.WebEngineViewPopover import WebEngineViewPopover
-from util.BibleVerseParser import BibleVerseParser
-from db.ToolsSqlite import IndexesSqlite
+from uniquebible.util.exlbl import allLocations
+from uniquebible.gui.CheckableComboBox import CheckableComboBox
+from uniquebible.gui.WebEngineViewPopover import WebEngineViewPopover
+from uniquebible.util.BibleVerseParser import BibleVerseParser
+from uniquebible.db.ToolsSqlite import IndexesSqlite
 from haversine import haversine
 
 if config.qtLibrary == "pyside6":

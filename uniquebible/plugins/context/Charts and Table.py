@@ -1,11 +1,11 @@
 from uniquebible import config
-from util.BibleVerseParser import BibleVerseParser
-from gui.WebEngineViewPopover import WebEngineViewPopover
+from uniquebible.util.BibleVerseParser import BibleVerseParser
+from uniquebible.gui.WebEngineViewPopover import WebEngineViewPopover
 if config.qtLibrary == "pyside6":
     #from PySide6.QtWebEngineWidgets import QWebEngineView
     from PySide6.QtWidgets import QStackedWidget, QWidget, QVBoxLayout, QHBoxLayout, QRadioButton, QPushButton
-    from gui.PieChart import PieChart
-    from gui.BarChart import BarChart
+    from uniquebible.gui.PieChart import PieChart
+    from uniquebible.gui.BarChart import BarChart
 else:
     #from qtpy.QtWebEngineWidgets import QWebEngineView
     from qtpy.QtWidgets import QStackedWidget, QWidget, QVBoxLayout, QHBoxLayout, QRadioButton, QPushButton

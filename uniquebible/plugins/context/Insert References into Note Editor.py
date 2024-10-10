@@ -1,5 +1,5 @@
 from uniquebible import config
-from util.BibleVerseParser import BibleVerseParser
+from uniquebible.util.BibleVerseParser import BibleVerseParser
 
 if config.pluginContext:
     config.mainWindow.showNoteEditor()

@@ -1,8 +1,8 @@
 from uniquebible import config
 import os, shutil, re, webbrowser
-from db.BiblesSqlite import BiblesSqlite
-from util.BibleVerseParser import BibleVerseParser
-from util.FileUtil import FileUtil
+from uniquebible.db.BiblesSqlite import BiblesSqlite
+from uniquebible.util.BibleVerseParser import BibleVerseParser
+from uniquebible.util.FileUtil import FileUtil
 if config.qtLibrary == "pyside6":
     from PySide6.QtGui import QStandardItemModel, QStandardItem
     from PySide6.QtCore import Qt

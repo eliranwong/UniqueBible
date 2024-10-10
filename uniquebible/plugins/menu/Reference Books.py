@@ -1,8 +1,8 @@
 from uniquebible import config
 import os, apsw, re
-from gui.WebEngineViewPopover import WebEngineViewPopover
-from util.ThirdParty import ThirdPartyDictionary
-from db.ToolsSqlite import Book, BookData
+from uniquebible.gui.WebEngineViewPopover import WebEngineViewPopover
+from uniquebible.util.ThirdParty import ThirdPartyDictionary
+from uniquebible.db.ToolsSqlite import Book, BookData
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt
     from PySide6.QtWebEngineCore import QWebEnginePage

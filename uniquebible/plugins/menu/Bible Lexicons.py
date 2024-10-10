@@ -1,7 +1,7 @@
 from uniquebible import config
 import os
-from gui.WebEngineViewPopover import WebEngineViewPopover
-from db.ToolsSqlite import Lexicon
+from uniquebible.gui.WebEngineViewPopover import WebEngineViewPopover
+from uniquebible.db.ToolsSqlite import Lexicon
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt
     from PySide6.QtWebEngineCore import QWebEnginePage

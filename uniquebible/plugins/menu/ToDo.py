@@ -1,7 +1,7 @@
 from uniquebible import config
 import os, shutil
 from datetime import date
-from db.JournalSqlite import JournalSqlite
+from uniquebible.db.JournalSqlite import JournalSqlite
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt
     from PySide6.QtGui import QStandardItem, QStandardItemModel, QGuiApplication

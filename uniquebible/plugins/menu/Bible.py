@@ -1,9 +1,9 @@
 from uniquebible import config
 import os, re
-from gui.WebEngineViewPopover import WebEngineViewPopover
-from db.BiblesSqlite import BiblesSqlite, Bible
-from util.BibleBooks import BibleBooks
-from util.BibleVerseParser import BibleVerseParser
+from uniquebible.gui.WebEngineViewPopover import WebEngineViewPopover
+from uniquebible.db.BiblesSqlite import BiblesSqlite, Bible
+from uniquebible.util.BibleBooks import BibleBooks
+from uniquebible.util.BibleVerseParser import BibleVerseParser
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt
     from PySide6.QtWebEngineCore import QWebEnginePage

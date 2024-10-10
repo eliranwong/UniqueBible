@@ -1,6 +1,6 @@
 import os, subprocess, platform, sys
 from uniquebible import config
-from util.WebtopUtil import WebtopUtil
+from uniquebible.util.WebtopUtil import WebtopUtil
 
 cwd = os.getcwd()
 thisPlatform = platform.system()

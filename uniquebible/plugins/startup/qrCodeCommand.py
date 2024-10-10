@@ -1,6 +1,6 @@
 import os
 from uniquebible import config
-from util.NetworkUtil import NetworkUtil
+from uniquebible.util.NetworkUtil import NetworkUtil
 
 def qrCodeCmd(command, source):
     if config.enableHttpServer:

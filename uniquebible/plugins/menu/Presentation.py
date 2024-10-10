@@ -5,7 +5,7 @@ if config.qtLibrary == "pyside6":
 else:
     from qtpy.QtWidgets import QApplication, QWidget
 
-from util.BibleBooks import BibleBooks
+from uniquebible.util.BibleBooks import BibleBooks
 
 
 class ConfigurePresentationWindow(QWidget):
@@ -192,7 +192,7 @@ class ConfigurePresentationWindow(QWidget):
                 self.hymnWidget.show()
 
     def selectHymnBook(self, option):
-        from db.ToolsSqlite import Book
+        from uniquebible.db.ToolsSqlite import Book
         if config.qtLibrary == "pyside6":
             from PySide6.QtCore import QStringListModel
         else:
@@ -204,7 +204,7 @@ class ConfigurePresentationWindow(QWidget):
             self.chapterlist.setModel(self.chapterModel)
 
     def selectHymn(self, option):
-        from db.ToolsSqlite import Book
+        from uniquebible.db.ToolsSqlite import Book
         row = option.row()
         self.hymn = self.hymns[row]
         book = Book(self.hymnBook)
@@ -275,10 +275,10 @@ class ConfigurePresentationWindow(QWidget):
 
 
 if __name__ == '__main__':
-    from util.ConfigUtil import ConfigUtil
+    from uniquebible.util.ConfigUtil import ConfigUtil
     ConfigUtil.setup()
     config.activeVerseNoColour = "white"
-    from gui.MainWindow import MainWindow
+    from uniquebible.gui.MainWindow import MainWindow
     app = QApplication(sys.argv)
     config.mainWindow = MainWindow()
     config.presentationParser = True

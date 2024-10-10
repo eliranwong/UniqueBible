@@ -1,6 +1,6 @@
 from uniquebible import config
 import re
-from util.ThirdParty import Converter
+from uniquebible.util.ThirdParty import Converter
 
 def convertCrLink(match):
     *_, b, c, v = match.groups()

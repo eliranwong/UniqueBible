@@ -1,7 +1,7 @@
 from uniquebible import config
 import os
-from gui.ImageViewer import ImageViewer
-from util.BibleBooks import BibleBooks
+from uniquebible.gui.ImageViewer import ImageViewer
+from uniquebible.util.BibleBooks import BibleBooks
 
 imageListViewItems = [
     ("2210-2090 BCE", "books/Timelines/0.png"), #0

@@ -49,7 +49,7 @@ class BibleSearchForEnglishForms(QWidget):
             from PySide6.QtWidgets import QPushButton, QHBoxLayout, QLabel
         else:
             from qtpy.QtWidgets import QPushButton, QHBoxLayout, QLabel
-        from gui.CheckableComboBox import CheckableComboBox
+        from uniquebible.gui.CheckableComboBox import CheckableComboBox
 
         layout = QHBoxLayout()
         wordAudioButton = QPushButton("Audio")

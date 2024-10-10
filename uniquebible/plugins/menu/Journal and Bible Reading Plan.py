@@ -1,5 +1,5 @@
 from uniquebible import config
-from util.readings import allDays
+from uniquebible.util.readings import allDays
 if config.qtLibrary == "pyside6":
     from PySide6.QtWidgets import QWidget
 else:
@@ -50,7 +50,7 @@ class BibleReadingPlan(QWidget):
     def setupVariables(self):
         import copy, os
         from datetime import date
-        from db.JournalSqlite import JournalSqlite
+        from uniquebible.db.JournalSqlite import JournalSqlite
         self.today = date.today()
         self.todayNo = int(format(self.today, '%j'))
         if self.todayNo > 365:
@@ -344,7 +344,7 @@ class BibleReadingPlan(QWidget):
 
     def translateIntoChinese(self):
         import copy, pprint
-        from util.BibleBooks import BibleBooks
+        from uniquebible.util.BibleBooks import BibleBooks
         plan = copy.deepcopy(self.template)
         filePath = "{0}_zh".format(self.progressFile)
         with open(filePath, "w", encoding="utf-8") as fileObj:

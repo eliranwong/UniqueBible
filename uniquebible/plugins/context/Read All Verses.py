@@ -2,7 +2,7 @@
 
 from uniquebible import config
 import re, os, platform
-from util.WebtopUtil import WebtopUtil
+from uniquebible.util.WebtopUtil import WebtopUtil
 
 def findText(html):
     searchPattern = """[Rr][Ee][Aa][Dd][Vv][Ee][Rr][Ss][Ee]:::([A-Za-z0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)["']"""

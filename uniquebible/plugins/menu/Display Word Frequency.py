@@ -1,6 +1,6 @@
 import os
 from uniquebible import config
-from util.BibleBooks import BibleBooks
+from uniquebible.util.BibleBooks import BibleBooks
 
 filename = os.path.join(config.marvelData, 'statistics', 'words.stats')
 if not os.path.exists(filename):

@@ -1,5 +1,5 @@
 from uniquebible import config
-from util.TextUtil import TextUtil
+from uniquebible.util.TextUtil import TextUtil
 
 if config.pluginContext:
     content = TextUtil.plainTextToUrl(config.pluginContext)

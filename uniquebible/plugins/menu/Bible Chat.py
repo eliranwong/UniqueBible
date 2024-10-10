@@ -8,8 +8,8 @@ from gtts import gTTS
 if "Pocketsphinx" in config.enabled:
     from pocketsphinx import LiveSpeech, get_model_path
 from datetime import datetime
-from util.Languages import Languages
-from util.FileUtil import FileUtil
+from uniquebible.util.Languages import Languages
+from uniquebible.util.FileUtil import FileUtil
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt, QThread, Signal, QRegularExpression
     from PySide6.QtPrintSupport import QPrinter, QPrintDialog
@@ -20,7 +20,7 @@ else:
     from qtpy.QtPrintSupport import QPrinter, QPrintDialog
     from qtpy.QtGui import QStandardItemModel, QStandardItem, QGuiApplication, QFontMetrics, QTextDocument
     from qtpy.QtWidgets import QCompleter, QAction, QMainWindow, QWidget, QDialog, QFileDialog, QDialogButtonBox, QFormLayout, QLabel, QMessageBox, QCheckBox, QPlainTextEdit, QProgressBar, QPushButton, QListView, QHBoxLayout, QVBoxLayout, QLineEdit, QSplitter, QComboBox
-from gui.Worker import ChatGPTResponse, OpenAIImage
+from uniquebible.gui.Worker import ChatGPTResponse, OpenAIImage
 
 
 class SpeechRecognitionThread(QThread):

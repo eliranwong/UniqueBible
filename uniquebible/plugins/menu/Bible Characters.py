@@ -1,9 +1,9 @@
 from uniquebible import config
 import os, apsw, re, webbrowser
-from gui.WebEngineViewPopover import WebEngineViewPopover
-from db.ToolsSqlite import ExlbData
-from db.BiblesSqlite import BiblesSqlite
-from util.BibleVerseParser import BibleVerseParser
+from uniquebible.gui.WebEngineViewPopover import WebEngineViewPopover
+from uniquebible.db.ToolsSqlite import ExlbData
+from uniquebible.db.BiblesSqlite import BiblesSqlite
+from uniquebible.util.BibleVerseParser import BibleVerseParser
 if config.qtLibrary == "pyside6":
     from PySide6.QtGui import QStandardItemModel, QStandardItem
     from PySide6.QtWidgets import QWidget, QTextEdit, QRadioButton, QPushButton, QLabel, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit
