@@ -1,0 +1,47 @@
+html {
+  height: 100%;
+}
+
+body {
+  font-family: sans-serif;
+  padding: 0 10px;
+  height: 100%;
+  background: rgb(50, 50, 50);
+  margin: 0;
+}
+
+h1 {
+  color: white;
+  margin: 0;
+  padding: 15px;
+}
+
+#container {
+  text-align: center;
+  margin: 0;
+}
+
+#qr-canvas {
+  margin: auto;
+  width: calc(100% - 20px);
+  max-width: 400px;
+}
+
+#btn-scan-qr {
+  cursor: pointer;
+}
+
+#btn-scan-qr img {
+  height: 10em;
+  padding: 15px;
+  margin: 15px;
+  background: white;
+}
+
+#qr-result {
+  font-size: 1.2em;
+  margin: 20px auto;
+  padding: 20px;
+  max-width: 700px;
+  background-color: white;
+}

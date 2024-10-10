@@ -1,0 +1,9 @@
+# Used for "Display Word Frequency" menu plugin
+# To override this file, create a file named frequency_color_mapping_custom.txt with your mapping data
+# Mapping data:
+# start word frequency, end word frequency, light theme color, dark/night theme color
+
+1, 1, red, red
+2, 5, blue, orange
+6, 10, green, green
+11, 10000, black, white

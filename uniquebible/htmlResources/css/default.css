@@ -1,0 +1,924 @@
+body {
+    margin-left: 5px;
+    margin-right: 20px;
+}
+
+/*
+select:active, select:hover {
+outline-color: none;
+}
+option:checked, option:hover, option:checked: after {
+background: #ffb7b7;
+}
+*/
+
+::selection {
+    background: #ffb7b7;
+    /* WebKit/Blink Browsers */
+}
+
+::-moz-selection {
+    background: #ffb7b7;
+    /* Gecko Browsers */
+}
+
+/* additional button styles */
+.button1 {
+    background-color: #e7e7e7; /* Gray */
+    color: black;
+    border: none;
+    padding: 10px 30px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+    margin: 2px 2px;
+    cursor: pointer;
+}
+
+/* css for Google material icons */
+/* https://developers.google.com/fonts/docs/material_icons#icon_font_for_the_web */
+
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/MaterialIcons-Regular.ttf') format('truetype'); /* For IE6-8 */
+    src: local('Material Icons'),
+      local('MaterialIcons-Regular'),
+      url('../fonts/MaterialIcons-Regular.ttf') format('truetype');
+}
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 18px;  /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+  
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+  
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+  
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
+@font-face {
+    font-family: 'Material Icons Outlined';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/MaterialIconsOutlined-Regular.otf') format('opentype'); /* For IE6-8 */
+    src: local('Material Icons Outlined'),
+      local('MaterialIconsOutlined-Regular'),
+      url('../fonts/MaterialIconsOutlined-Regular.otf') format('opentype');
+}
+
+.material-icons-outlined {
+    font-family: 'Material Icons Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 18px;  /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+  
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+  
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+  
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
+@font-face {
+    font-family: 'Material Icons Round';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/MaterialIconsRound-Regular.otf') format('opentype'); /* For IE6-8 */
+    src: local('Material Icons Round'),
+      local('MaterialIconsRound-Regular'),
+      url('../fonts/MaterialIconsRound-Regular.otf') format('opentype');
+}
+
+.material-icons-round {
+    font-family: 'Material Icons Round';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 18px;  /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+  
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+  
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+  
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
+@font-face {
+    font-family: 'Material Icons Sharp';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/MaterialIconsSharp-Regular.otf') format('opentype'); /* For IE6-8 */
+    src: local('Material Icons Sharp'),
+      local('MaterialIconsSharp-Regular'),
+      url('../fonts/MaterialIconsSharp-Regular.otf') format('opentype');
+}
+
+.material-icons-sharp {
+    font-family: 'Material Icons Sharp';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 18px;  /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+  
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+  
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+  
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
+@font-face {
+    font-family: 'Material Icons Two Tone';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/MaterialIconsTwoTone-Regular.otf') format('opentype'); /* For IE6-8 */
+    src: local('Material Icons Two Tone'),
+      local('MaterialIconsTwoTone-Regular'),
+      url('../fonts/MaterialIconsTwoTone-Regular.otf') format('opentype');
+}
+
+.material-icons-two-tone {
+    font-family: 'Material Icons Two Tone';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 18px;  /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+  
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+  
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+  
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
+/* css for Greek data */
+
+@font-face {
+    font-family: 'KoineGreek';
+    src: url('../fonts/KoineGreek.ttf');
+}
+
+kgrk {
+    font-family: 'KoineGreek';
+}
+
+kgrk, gu, grk {
+    font-size: 110%;
+}
+
+/* css for Hebrew data */
+
+@font-face {
+    font-family: 'Ezra SIL';
+    src: url('../fonts/sileot.ttf');
+}
+
+bdbheb, bdbarc, hu, heb {
+    font-family: 'Ezra SIL';
+    font-size: 130%;
+}
+
+bdbheb, bdbarc {
+    display: inline-block;
+    direction: rtl;
+}
+
+rtl {
+    display: inline-block;
+    direction: rtl;
+    font-family: 'Ezra SIL';
+    font-size: 130%;
+}
+
+external {
+    font-size: 80%;
+}
+
+red, z {
+    color: red;
+}
+
+blu {
+    color: blue;
+    font-size: 80%;
+}
+
+points {
+    color: gray;
+    font-weight: bold;
+    font-size: 80%;
+}
+
+bb {
+    color: brown;
+    font-weight: bold;
+}
+
+hp {
+    color: brown;
+    font-weight: bold;
+    font-size: 80%;
+}
+
+highlight {
+    font-style: italic;
+}
+
+transliteration {
+    color: gray;
+}
+
+div.section, div.point {
+    display: block;
+    border: 1px solid green;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+div.remarks {
+    display: block;
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+div.bhs, div.hebch {
+    direction: rtl;
+}
+
+div.info {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+div.menu {
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+div.vword {
+    border: 1px solid #F5B041;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+div.translation {
+    border: 1px solid #9B59B6;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+div.ew {
+    margin-left: 5%;
+    margin-right: 5%;
+    font-size: 110%;
+    display: inline-block;
+}
+
+div.mr {
+    margin-left: 100;
+}
+
+div.nav {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+div.refList {
+    display: inline;
+}
+
+/* css for linguistic annotations */
+
+div.bhp, div.bhw, div.w, div.int {
+    display: inline-block;
+    text-align: center;
+}
+
+div.int {
+    vertical-align: text-top;
+}
+
+div.bhc {
+    direction: rtl;
+    border: 1px solid #9B59B6;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+div.bhp {
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+div.bhw {
+    border: 1px solid #F5B041;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+clid {
+    color: #641E16;
+    font-weight: bold;
+}
+
+mclid {
+    color: #641E16;
+    font-style: italic;
+}
+
+connector {
+    color: #9B59B6;
+}
+
+ckind, ctyp, crela {
+    color: #00008B;
+    display: inline-block;
+}
+
+ptyp {
+    text-decoration: underline;
+    color: gray;
+}
+
+pfunction {
+    color: #3498DB;
+    font-size: 90%;
+}
+
+det {
+    font-weight: bold;
+}
+
+undet {
+    font-style: italic;
+}
+
+prela {
+    display: none;
+}
+
+hbint, gntint, gloss {
+    direction: ltr;
+    vertical-align: super;
+    display: inline-block;
+    color: #D35400;
+}
+
+gntint, gloss {
+    font-size: 90%;
+}
+
+cllevel {
+    color: #9B59B6;
+}
+
+clinfo {
+    color: #641E16;
+    font-weight: bold;
+}
+
+subclinfo {
+    color: #641E16;
+    font-weight: bold;
+    font-size: 80%;
+}
+
+funcinfo {
+    color: #3498DB;
+    font-size: 90%;
+}
+
+wordid {
+    text-decoration: underline;
+    font-size: 80%;
+    color: gray;
+}
+
+wsbl, wphono {
+    direction: ltr;
+    display: inline-block;
+    color: gray;
+    font-size: 80%;
+}
+
+wmorph, wsn {
+    direction: ltr;
+    display: inline-block;
+    font-size: 70%;
+}
+
+wgloss {
+    direction: ltr;
+    display: inline-block;
+    font-size: 90%;
+    color: #D35400;
+}
+
+wtrans {
+    direction: ltr;
+    display: inline-block;
+    font-size: 90%;
+    color: #641E16;
+}
+
+wlex {
+    direction: ltr;
+    display: inline-block;
+    font-size: 90%;
+    color: #3498DB;
+}
+
+cit, clt, cst, cbhs, cbsb, cleb {
+    display: block;
+}
+
+clt, cbsb {
+    color: #3498DB;
+}
+
+cst, cleb {
+    color: #00008B;
+}
+
+cbsb, cleb {
+    direction: ltr;
+}
+
+div.cltrans {
+    margin-left: 10px;
+    margin-right: 10px;
+    display: block;
+    border: 1px solid #00008B;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+div.wrap {
+    display: inline-block;
+}
+
+cl {
+    display: table;
+}
+
+div.c {
+    vertical-align: top;
+    text-align: left;
+    border: 1px solid #9B59B6;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+div.p {
+    display: inline-block;
+    vertical-align: top;
+    text-align: left;
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+div.w, div.int {
+    border: 1px solid #F5B041;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+/* css for clause segmentation */
+
+div.bhsa {
+    direction: rtl;
+    border-right: 5px solid #F5B041;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 5px 10px 5px 10px;
+}
+
+div.e {
+    border-left: 5px solid #F5B041;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 5px 10px 5px 10px;
+}
+
+/* general text formatting */
+
+ref, entry {
+    color: #515790;
+}
+
+red ref, red entry {
+    color: #e86a6a;
+}
+
+ref:hover, entry:hover {
+    color: red;
+    cursor: pointer;
+}
+
+.alignCenter {
+    text-align: center;
+}
+
+vid:hover, grk:hover, heb:hover, eng:hover {
+    cursor: pointer;
+}
+
+ot {
+    font-weight: bold;
+    font-style: italic;
+}
+
+/* Add Zoom Animation */
+
+.animate {
+    -webkit-animation: animatezoom 0.6s;
+    animation: animatezoom 0.6s
+}
+
+@-webkit-keyframes animatezoom {
+    from {
+        -webkit-transform: scale(0)
+    }
+    to {
+        -webkit-transform: scale(1)
+    }
+}
+
+@keyframes animatezoom {
+    from {
+        transform: scale(0)
+    }
+    to {
+        transform: scale(1)
+    }
+}
+
+/* End of Master Control */
+
+vid {
+    color: #515790;
+    vertical-align: super;
+    font-size: 70%;
+}
+
+/* unvisited link */
+
+a:link {
+    color: #515790;
+    text-decoration: none;
+}
+
+/* visited link */
+
+a:visited {
+    color: #515790;
+    text-decoration: none;
+}
+
+/* mouse over link */
+
+a:hover, vid:hover {
+    color: red;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* selected link */
+
+a:active {
+    color: #515790;
+    text-decoration: none;
+}
+
+/* chapter link */
+
+ch {
+    color: #515790;
+}
+
+/* chapter link - hover */
+
+ch:hover {
+    color: red;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+table {
+    width: 100%;
+    font-size: 90%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    padding-left: 10px;
+    border: 1px solid #D3D3D3;
+}
+
+text {
+    color: #515790;
+}
+
+text:hover {
+    color: red;
+    cursor: pointer;
+}
+
+addon {
+    color: #515790;
+}
+
+addon:hover {
+    color: red;
+    cursor: pointer;
+}
+
+.para1 {
+    width: 50%;
+}
+
+.para2 {
+    width: 50%;
+}
+
+f {
+    color: #4f81b1;
+    vertical-align: super;
+    font-size: 70%;
+}
+
+m {
+    font-size: 90%;
+}
+
+sym {
+    color: #4f81b1;
+}
+
+dic {
+    color: #d1ff92;
+    font-size: 80%;
+}
+
+dic:hover {
+    cursor: pointer;
+    font-size: 80%;
+}
+
+untrans {
+    color: #4f81b1;
+    font-size: 70%;
+}
+
+grkorder {
+    color: #4f81b1;
+    font-size: 70%;
+}
+
+grkorder2 {
+    color: #4f81b1;
+    font-size: 70%;
+}
+
+vb {
+    color: red;
+}
+
+pn {
+    color: teal;
+}
+
+lin {
+    font-style: italic;
+}
+
+qere {
+    font-style: italic;
+}
+
+/* headings */
+
+h1.window {
+    text-align: center;
+    font-size: 130%;
+}
+
+h1, h2, h3, h4 {
+    color: #010740;
+}
+
+h4 {
+    text-align: center;
+}
+
+h4 {
+    text-align: center;
+}
+
+/* words of Jesus */
+
+woj {
+    color: #641E16;
+}
+
+/* css for clause segmentation */
+
+wlexeme {
+    display: block;
+    text-align: center;
+    border: 1px solid #F5B041;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+mlexeme {
+    color: #641E16;
+}
+
+otgloss, ntgloss {
+    display: inline-block;
+    direction: ltr;
+}
+
+mentry {
+    display: block;
+    font-size: 90%;
+    direction: ltr;
+    text-align: left;
+}
+
+wform {
+    color: #3498DB;
+}
+
+morphCode {
+    color: gray;
+}
+
+morphContent {
+    color: #9B59B6;
+}
+
+e {
+    color: #641E16;
+}
+
+hl {
+    color: #9B59B6;
+}
+
+hlb {
+    color: #D35400;
+    direction: ltr;
+    display: inline-block;
+}
+
+hlr {
+    color: #3498DB;
+}
+
+tlit {
+    color: gray;
+    direction: ltr;
+    display: inline-block;
+}
+
+button.feature {
+    font-size: 70%;
+    cursor: pointer;
+    background-color: #151B54;
+    color: white;
+}
+
+button.feature:hover {
+    background-color: #333972;
+}
+
+button.feature:active {
+    background-color: #515790;
+}
+
+tag {
+    cursor: pointer;
+}
+
+esblu {
+    color: #357EC2;
+}
+
+mbe {
+    color: #641E16;
+}
+
+mbn {
+    color: gray;
+}
+
+testColor{
+    color: #4f4c4c;
+}
+
+.ohl1 {
+    color: rgb(211, 211, 17);
+}
+
+.ohl2 {
+    color: rgb(79, 247, 250);
+}
+
+.ul1 {
+    text-decoration: underline;
+}
+.oul1 {
+    color: gray;
+}

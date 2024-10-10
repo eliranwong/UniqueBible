@@ -1,0 +1,3 @@
+marvelData/note.sqlite
+marvelData/journal.sqlite
+marvelData/highlights.bible

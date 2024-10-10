@@ -1,0 +1,929 @@
+body {
+    margin-left: 5px;
+    margin-right: 20px;
+    background-color: rgb(50, 50, 50);
+    color: rgb(210, 210, 210)
+}
+
+/*
+    select:active, select:hover {
+    outline-color: none;
+    }
+    option:checked, option:hover, option:checked: after {
+    background: #ffb7b7;
+    }
+    */
+
+::selection {
+    background: #ffb7b7;
+    /* WebKit/Blink Browsers */
+}
+
+::-moz-selection {
+    background: #ffb7b7;
+    /* Gecko Browsers */
+}
+
+/* additional button styles */
+.button1 {
+    background-color: #e7e7e7; /* Gray */
+    color: black;
+    border: none;
+    padding: 10px 30px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+    margin: 2px 2px;
+    cursor: pointer;
+}
+
+/* css for Google material icons */
+/* https://developers.google.com/fonts/docs/material_icons#icon_font_for_the_web */
+
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/MaterialIcons-Regular.ttf') format('truetype'); /* For IE6-8 */
+    src: local('Material Icons'),
+      local('MaterialIcons-Regular'),
+      url('../fonts/MaterialIcons-Regular.ttf') format('truetype');
+}
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 18px;  /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+  
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+  
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+  
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
+@font-face {
+    font-family: 'Material Icons Outlined';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/MaterialIconsOutlined-Regular.otf') format('opentype'); /* For IE6-8 */
+    src: local('Material Icons Outlined'),
+      local('MaterialIconsOutlined-Regular'),
+      url('../fonts/MaterialIconsOutlined-Regular.otf') format('opentype');
+}
+
+.material-icons-outlined {
+    font-family: 'Material Icons Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 18px;  /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+  
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+  
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+  
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
+@font-face {
+    font-family: 'Material Icons Round';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/MaterialIconsRound-Regular.otf') format('opentype'); /* For IE6-8 */
+    src: local('Material Icons Round'),
+      local('MaterialIconsRound-Regular'),
+      url('../fonts/MaterialIconsRound-Regular.otf') format('opentype');
+}
+
+.material-icons-round {
+    font-family: 'Material Icons Round';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 18px;  /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+  
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+  
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+  
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
+@font-face {
+    font-family: 'Material Icons Sharp';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/MaterialIconsSharp-Regular.otf') format('opentype'); /* For IE6-8 */
+    src: local('Material Icons Sharp'),
+      local('MaterialIconsSharp-Regular'),
+      url('../fonts/MaterialIconsSharp-Regular.otf') format('opentype');
+}
+
+.material-icons-sharp {
+    font-family: 'Material Icons Sharp';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 18px;  /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+  
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+  
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+  
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
+@font-face {
+    font-family: 'Material Icons Two Tone';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/MaterialIconsTwoTone-Regular.otf') format('opentype'); /* For IE6-8 */
+    src: local('Material Icons Two Tone'),
+      local('MaterialIconsTwoTone-Regular'),
+      url('../fonts/MaterialIconsTwoTone-Regular.otf') format('opentype');
+}
+
+.material-icons-two-tone {
+    font-family: 'Material Icons Two Tone';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 18px;  /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+  
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+  
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+  
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
+/* css for Greek data */
+
+@font-face {
+    font-family: 'KoineGreek';
+    src: url('../fonts/KoineGreek.ttf');
+}
+
+kgrk {
+    font-family: 'KoineGreek';
+}
+
+kgrk, gu, grk {
+    font-size: 110%;
+}
+
+/* css for Hebrew data */
+
+@font-face {
+    font-family: 'Ezra SIL';
+    src: url('../fonts/sileot.ttf');
+}
+
+bdbheb, bdbarc, hu, heb {
+    font-family: 'Ezra SIL';
+    font-size: 130%;
+}
+
+bdbheb, bdbarc {
+    display: inline-block;
+    direction: rtl;
+}
+
+rtl {
+    display: inline-block;
+    direction: rtl;
+    font-family: 'Ezra SIL';
+    font-size: 130%;
+}
+
+external {
+    font-size: 80%;
+}
+
+red, z {
+    color: #13e7e7;
+}
+
+blu {
+    color: #9898fb;
+}
+
+points {
+    color: #d0d0d0;
+    font-weight: bold;
+    font-size: 80%;
+}
+
+bb {
+    color: rgb(209, 186, 109);
+    font-weight: bold;
+}
+
+hp {
+    color: rgb(209, 186, 109);
+    font-weight: bold;
+    font-size: 80%;
+}
+
+highlight {
+    font-style: italic;
+}
+
+transliteration {
+    color: #d0d0d0;
+}
+
+div.section, div.point {
+    display: block;
+    border: 1px solid green;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+div.remarks {
+    display: block;
+    border: 1px solid #d0d0d0;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+div.bhs, div.hebch {
+    direction: rtl;
+}
+
+div.info {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+div.menu {
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+div.vword {
+    border: 1px solid #F5B041;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+div.translation {
+    border: 1px solid #9B59B6;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+div.ew {
+    margin-left: 5%;
+    margin-right: 5%;
+    font-size: 110%;
+    display: inline-block;
+}
+
+div.mr {
+    margin-left: 100;
+}
+
+div.nav {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+div.refList {
+    display: inline;
+}
+
+/* css for linguistic annotations */
+
+div.bhp, div.bhw, div.w, div.int {
+    display: inline-block;
+    text-align: center;
+}
+
+div.int {
+    vertical-align: text-top;
+}
+
+div.bhc {
+    direction: rtl;
+    border: 1px solid #9B59B6;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+div.bhp {
+    border: 1px solid #d0d0d0;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+div.bhw {
+    border: 1px solid #F5B041;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+clid {
+    color: #92a045;
+    font-weight: bold;
+}
+
+mclid {
+    color: #a1a33c;
+    font-style: italic;
+}
+
+connector {
+    color: #9B59B6;
+}
+
+ckind, ctyp, crela {
+    color: #9595c9;
+    display: inline-block;
+}
+
+ptyp {
+    text-decoration: underline;
+    color: #d0d0d0;
+}
+
+pfunction {
+    color: #3baaf5;
+    font-size: 90%;
+}
+
+det {
+    font-weight: bold;
+}
+
+undet {
+    font-style: italic;
+}
+
+prela {
+    display: none;
+}
+
+hbint, gntint, gloss {
+    direction: ltr;
+    vertical-align: super;
+    display: inline-block;
+    color: #f37724;
+}
+
+gntint, gloss {
+    font-size: 90%;
+}
+
+cllevel {
+    color: #9B59B6;
+}
+
+clinfo {
+    color: #cfb0ae;
+    font-weight: bold;
+}
+
+subclinfo {
+    color: #d4a6a1;
+    font-weight: bold;
+    font-size: 80%;
+}
+
+funcinfo {
+    color: #3baaf5;
+    font-size: 90%;
+}
+
+wordid {
+    text-decoration: underline;
+    font-size: 80%;
+    color: #d0d0d0;
+}
+
+wsbl, wphono {
+    direction: ltr;
+    display: inline-block;
+    color: #d0d0d0;
+    font-size: 80%;
+}
+
+wmorph, wsn {
+    direction: ltr;
+    display: inline-block;
+    font-size: 70%;
+}
+
+wgloss {
+    direction: ltr;
+    display: inline-block;
+    font-size: 90%;
+    color: #f37724;
+}
+
+wtrans {
+    direction: ltr;
+    display: inline-block;
+    font-size: 90%;
+    color: #c99994;
+}
+
+wlex {
+    direction: ltr;
+    display: inline-block;
+    font-size: 90%;
+    color: #3baaf5;
+}
+
+cit, clt, cst, cbhs, cbsb, cleb {
+    display: block;
+}
+
+clt, cbsb {
+    color: #3baaf5;
+}
+
+cst, cleb {
+    color: #9b9bef;
+}
+
+cbsb, cleb {
+    direction: ltr;
+}
+
+div.cltrans {
+    margin-left: 10px;
+    margin-right: 10px;
+    display: block;
+    border: 1px solid #3baaf5;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+div.wrap {
+    display: inline-block;
+}
+
+cl {
+    display: table;
+}
+
+div.c {
+    vertical-align: top;
+    text-align: left;
+    border: 1px solid #9B59B6;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+div.p {
+    display: inline-block;
+    vertical-align: top;
+    text-align: left;
+    border: 1px solid #d0d0d0;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+div.w, div.int {
+    border: 1px solid #F5B041;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+/* css for clause segmentation */
+
+div.bhsa {
+    direction: rtl;
+    border-right: 5px solid #F5B041;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 5px 10px 5px 10px;
+}
+
+div.e {
+    border-left: 5px solid #F5B041;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 5px 10px 5px 10px;
+}
+
+/* general text formatting */
+
+ref, entry {
+    color: #84bebe;
+}
+
+red ref, red entry {
+    color: #13e7e7;
+}
+
+ref:hover, entry:hover {
+    color: #13e7e7;
+    cursor: pointer;
+}
+
+.alignCenter {
+    text-align: center;
+}
+
+vid:hover, grk:hover, heb:hover, eng:hover {
+    cursor: pointer;
+}
+
+ot {
+    font-weight: bold;
+    font-style: italic;
+}
+
+/* Add Zoom Animation */
+
+.animate {
+    -webkit-animation: animatezoom 0.6s;
+    animation: animatezoom 0.6s
+}
+
+@-webkit-keyframes animatezoom {
+    from {
+        -webkit-transform: scale(0)
+    }
+    to {
+        -webkit-transform: scale(1)
+    }
+}
+
+@keyframes animatezoom {
+    from {
+        transform: scale(0)
+    }
+    to {
+        transform: scale(1)
+    }
+}
+
+/* End of Master Control */
+
+vid {
+    color: #b8bfff;
+    vertical-align: super;
+    font-size: 70%;
+}
+
+/* unvisited link */
+
+a:link {
+    color: #8e8ebf;
+    text-decoration: none;
+}
+
+/* visited link */
+
+a:visited {
+    color: #8e8ebf;
+    text-decoration: none;
+}
+
+/* mouse over link */
+
+a:hover, vid:hover {
+    color: rgb(255, 149, 149);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* selected link */
+
+a:active {
+    color: #515790;
+    text-decoration: none;
+}
+
+/* select dropdown */
+
+select {
+    color: rgb(216, 213, 213);
+    background: rgb(58, 53, 53);
+    font-size: 11pt;
+}
+
+/* chapter link */
+
+ch {
+    color: #515790;
+}
+
+/* chapter link - hover */
+
+ch:hover {
+    color: #13e7e7;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+table {
+    width: 100%;
+    font-size: 90%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    padding-left: 10px;
+    border: 1px solid #D3D3D3;
+}
+
+text {
+    color: #515790;
+}
+
+text:hover {
+    color: #13e7e7;
+    cursor: pointer;
+}
+
+addon {
+    color: #515790;
+}
+
+addon:hover {
+    color: #13e7e7;
+    cursor: pointer;
+}
+
+.para1 {
+    width: 50%;
+}
+
+.para2 {
+    width: 50%;
+}
+
+f {
+    color: #4f81b1;
+    vertical-align: super;
+    font-size: 70%;
+}
+
+m {
+    font-size: 90%;
+}
+
+sym {
+    color: #4f81b1;
+}
+
+dic {
+    color: #d1ff92;
+    font-size: 80%;
+}
+
+dic:hover {
+    cursor: pointer;
+    font-size: 80%;
+}
+
+untrans {
+    color: #4f81b1;
+    font-size: 70%;
+}
+
+grkorder {
+    color: #4f81b1;
+    font-size: 70%;
+}
+
+grkorder2 {
+    color: #4f81b1;
+    font-size: 70%;
+}
+
+vb {
+    color: #13e7e7;
+}
+
+pn {
+    color: teal;
+}
+
+lin {
+    font-style: italic;
+}
+
+qere {
+    font-style: italic;
+}
+
+/* headings */
+
+h1.window {
+    text-align: center;
+    font-size: 130%;
+}
+
+h1, h2, h3, h4 {
+    color: #bababa;
+}
+
+h4 {
+    text-align: center;
+}
+
+h4 {
+    text-align: center;
+}
+
+/* words of Jesus */
+
+woj {
+    color: #ffbbb4;
+}
+
+/* css for clause segmentation */
+
+wlexeme {
+    display: block;
+    text-align: center;
+    border: 1px solid #F5B041;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+mlexeme {
+    color: #5ea7a7;
+}
+
+otgloss, ntgloss {
+    display: inline-block;
+    direction: ltr;
+}
+
+mentry {
+    display: block;
+    font-size: 90%;
+    direction: ltr;
+    text-align: left;
+}
+
+wform {
+    color: #3baaf5;
+}
+
+morphCode {
+    color: #d0d0d0;
+}
+
+morphContent {
+    color: #9B59B6;
+}
+
+e {
+    color: #a2ae53;
+}
+
+hl {
+    color: #9B59B6;
+}
+
+hlb {
+    color: #f37724;
+    direction: ltr;
+    display: inline-block;
+}
+
+hlr {
+    color: #3baaf5;
+}
+
+tlit {
+    color: #d0d0d0;
+    direction: ltr;
+    display: inline-block;
+}
+
+button.feature {
+    font-size: 70%;
+    cursor: pointer;
+    background-color: #151B54;
+    color: white;
+}
+
+button.feature:hover {
+    background-color: #333972;
+}
+
+button.feature:active {
+    background-color: #515790;
+}
+
+tag {
+    cursor: pointer;
+}
+
+esblu {
+    color: #357EC2;
+}
+
+mbe {
+    color: #798835;
+}
+
+mbn {
+    color: #d0d0d0;
+}
+
+.ohl1 {
+    color: rgba(238, 238, 6, 0.728);
+}
+
+.ohl2 {
+    color: rgb(13, 0, 255);
+}
+
+.ul1 {
+    text-decoration: underline;
+}
+.oul1 {
+    color: #d0d0d0;
+}
