@@ -819,6 +819,7 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
 
     # check migration
     def checkMigration(self):
+        return None
         if config.version >= 0.56 and not config.databaseConvertedOnStartup:
             try:
                 biblesSqlite = BiblesSqlite()

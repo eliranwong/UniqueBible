@@ -1,6 +1,7 @@
 import codecs
 import logging
 import os, pprint, platform, sys
+import importlib.resources
 from uniquebible import config
 from uniquebible.util.DateUtil import DateUtil
 from uniquebible.util.WebtopUtil import WebtopUtil
@@ -39,7 +40,17 @@ class ConfigUtil:
         #config.terminalSwapColors = (config.terminalResourceLinkColor.startswith("ansibright"))
 
     @staticmethod
-    def setup():
+    def setup(noQt=None, cli=None, enableCli=None, enableApiServer=None, enableHttpServer=None):
+        if noQt is not None:
+            config.noQt = noQt
+        if cli is not None:
+            config.cli = cli
+        if enableCli is not None:
+            config.enableCli = enableCli
+        if enableApiServer is not None:
+            config.enableApiServer = enableApiServer
+        if enableHttpServer is not None:
+            config.enableHttpServer = enableHttpServer
 
         # check os
         config.thisOS = platform.system()
@@ -54,7 +65,7 @@ class ConfigUtil:
             config.runMode = ""
 
         # Check current version
-        with open("UniqueBibleAppVersion.txt", "r", encoding="utf-8") as fileObject:
+        with open(str(importlib.resources.path(package="uniquebible", resource="UniqueBibleAppVersion.txt")), "r", encoding="utf-8") as fileObject:
             text = fileObject.read()
             current_version = float(text.replace("\n", ""))
 

@@ -860,9 +860,11 @@ class Bible:
 
     CREATE_COMMENTARY_TABLE = "CREATE TABLE Commentary (Book INT, Chapter INT, Scripture TEXT)"
 
-    def __init__(self, text):
+    def __init__(self, text=None):
         # connect [text].bible
         self.logger = logging.getLogger('uba')
+        if text is None:
+            text = config.mainText
         self.text = text
         self.connection = None
         self.cursor = None
@@ -887,7 +889,7 @@ class Bible:
         return True if scripture[-1].strip() else False
 
     # Expand a list of verse range to include individual verses
-    def getEverySingleVerseList(self, verseList):
+    def getEverySingleVerseList(self, verseList) -> list:
         allVerses = []
         for verse in verseList:
             if len(verse) == 3:
