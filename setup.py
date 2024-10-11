@@ -41,7 +41,7 @@ open(os.path.join(package, "config.py"), "w").close()
 # https://packaging.python.org/en/latest/guides/distributing-packages-using-setuptools/
 setup(
     name=package,
-    version="0.0.6",
+    version="0.0.7",
     python_requires=">=3.8, <3.13",
     description=f"UniqueBible App is a cross-platform & offline bible application, integrated with high-quality resources and unique features. Developers: Eliran Wong and Oliver Tseng",
     long_description=long_description,
@@ -554,7 +554,6 @@ setup(
     license="GNU General Public License (GPL)",
     install_requires=install_requires,
     extras_require={
-        'linux': ["flaml[automl]", "piper-tts", "pyautogen[autobuild]==0.3.0"],  # Dependencies for the linux module
         'gui': ["PySide6"],  # Dependencies for the gui module
     },
     entry_points={
