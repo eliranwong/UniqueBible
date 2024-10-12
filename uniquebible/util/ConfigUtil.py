@@ -65,7 +65,7 @@ class ConfigUtil:
             config.runMode = ""
 
         # Check current version
-        with open(str(importlib.resources.path(package="uniquebible", resource="UniqueBibleAppVersion.txt")), "r", encoding="utf-8") as fileObject:
+        with open(os.path.join(str(importlib.resources.files("uniquebible")),"UniqueBibleAppVersion.txt"), "r", encoding="utf-8") as fileObject:
             text = fileObject.read()
             current_version = float(text.replace("\n", ""))
 

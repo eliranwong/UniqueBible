@@ -4,8 +4,8 @@ import re
 def fixHrefLinks(text):
     if config.enableHttpServer:
         searchRelace = (
-            ("""onclick="website(\('.*?')\)""", r"""onclick="window.open\1, '_blank')"""),
-            ("""onclick='website(\(".*?")\)""", r"""onclick='window.open\1, "_blank")"""),
+            (r"""onclick="website(\('.*?')\)""", r"""onclick="window.open\1, '_blank')"""),
+            (r"""onclick='website(\(".*?")\)""", r"""onclick='window.open\1, "_blank")"""),
         )
         for search, replace in searchRelace:
             text = re.sub(search, replace, text)

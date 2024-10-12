@@ -1,7 +1,7 @@
 import os, signal, sys, re, base64, webbrowser, platform, subprocess, requests, update, logging, zipfile, glob
 from uniquebible import config
 import markdown, time
-from distutils import util
+#from distutils import util
 from functools import partial
 from pathlib import Path
 
@@ -1943,7 +1943,7 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
             ("(</table>|</ol>|</ul>)<br>", r"\1"),
             ("<a [^\n<>]*?href=['{0}]([^\n<>]*?)['{0}][^\n<>]*?>".format('"'),
              r"<a href='javascript:void(0)' onclick='website({0}\1{0})'>".format('"')),
-            ("onclick='website\({0}([^\n<>]*?).uba{0}\)'".format('"'), r"onclick='uba({0}\1.uba{0})'".format('"'))
+            (r"onclick='website\({0}([^\n<>]*?).uba{0}\)'".format('"'), r"onclick='uba({0}\1.uba{0})'".format('"'))
         )
         if linebreak:
             for search, replace in searchReplace1:
@@ -4431,7 +4431,7 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
             if command in self.crossPlatform.textList:
                 command = f"TEXT:::{command}"
             # match a bible reference, started with book number, e.g. 43.3.16
-            elif re.search("^[0-9]+?\.[0-9]+?\.[0-9]+?$", command):
+            elif re.search(r"^[0-9]+?\.[0-9]+?\.[0-9]+?$", command):
                 b, c, v = [int(i) for i in command.split(".")]
                 command = self.textCommandParser.bcvToVerseReference(b, c, v)
             else:
@@ -4802,10 +4802,10 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         self.centralWidget.switchLandscapeMode()
         self.resizeCentral()
 
-    def setLandscapeMode(self, mode):
+    """def setLandscapeMode(self, mode):
         config.landscapeMode = bool(util.strtobool(mode))
         self.centralWidget.switchLandscapeMode()
-        self.resizeCentral()
+        self.resizeCentral()"""
 
     def resizeCentral(self):
         self.centralWidget.resizeMe()
