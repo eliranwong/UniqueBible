@@ -2305,6 +2305,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         )
 
     def runCompletion_old(self, thisMessage):
+        import openai
         self.functionJustCalled = False
         def runThisCompletion(thisThisMessage):
             if config.chatGPTApiFunctionSignatures and not self.functionJustCalled:

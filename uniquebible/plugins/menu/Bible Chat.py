@@ -66,7 +66,7 @@ class ApiDialog(QDialog):
         self.apiModelBox = QComboBox()
         initialIndex = 0
         index = 0
-        for key in ("gpt-3.5-turbo", "gpt-3.5-turbo-16k", "gpt-4", "gpt-4-32k"):
+        for key in ("o1-preview", "o1-mini", "gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo"):
             self.apiModelBox.addItem(key)
             if key == config.chatGPTApiModel:
                 initialIndex = index
