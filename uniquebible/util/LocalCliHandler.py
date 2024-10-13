@@ -2769,6 +2769,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         return ""
 
     def generateImage(self):
+        import openai
         # required
         openai.api_key = os.environ["OPENAI_API_KEY"] = config.openaiApiKey
         # optional
