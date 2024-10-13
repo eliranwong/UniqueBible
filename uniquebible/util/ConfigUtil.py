@@ -553,7 +553,7 @@ class ConfigUtil:
         # The maximum number of tokens to generate in the completion.
         # The token count of your prompt plus max_tokens cannot exceed the model's context length. Most models have a context length of 2048 tokens (except for the newest models, which support 4096).""",
         512)
-        setConfig("chatGPTApiNoOfChoices", """
+        setConfig("chatApiNoOfChoices", """
         # ChatGPT API number of choices in response
         # How many chat completion choices to generate for each input message.""",
         1)
@@ -561,7 +561,7 @@ class ConfigUtil:
         # ChatGPT API temperature
         # What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.""",
         1.0)
-        setConfig("chatGPTApiFunctionCall", """
+        setConfig("chatApiFunctionCall", """
         # Enable / Disable ChatGPT function calling
         # Select 'auto' to enable; 'none' to disable""",
         "none")
@@ -577,7 +577,7 @@ class ConfigUtil:
         setConfig("chatGPTApiContextInAllInputs", """
         # ChatGP API - predefined context in all inputs.""",
         False)
-        setConfig("chatGPTApiLoadingInternetSearches", """
+        setConfig("chatApiLoadingInternetSearches", """
         # ChatGPT API - always loading internet searches.
         # options - 'always', 'auto', 'none'.""",
         "none")

@@ -5,6 +5,7 @@ from uniquebible import config
 from prompt_toolkit.input import create_input
 from prompt_toolkit.keys import Keys
 from datetime import date
+from openai import OpenAI
 
 from uniquebible.db.StatisticsWordsSqlite import StatisticsWordsSqlite
 from uniquebible.util.VlcUtil import VlcUtil
@@ -218,6 +219,7 @@ class TextCommandParser:
             # e.g. COUNT:::KJV:::love:::Matt-John, 1Cor, Rev
             # e.g. COUNT:::KJV:::temple:::OT
             """),
+            '''
             # semantic search requires OpenAI API key
             "semantic": (self.textSemanticSearch, """
             # [KEYWORD] SEMANTIC
@@ -226,7 +228,7 @@ class TextCommandParser:
             # e.g. SEMANTIC:::KJV:::quote verses on "God created the earth"
             # e.g. SEMANTIC:::KJV:::write a summary on Exodus 14
             # e.g. SEMANTIC:::KJV:::compare Mark 1 and John 1
-            """),
+            """),'''
             # gpt index search requires OpenAI API key
             "gptsearch": (self.textGPTSEARCHSearch, """
             # [KEYWORD] GPTSEARCH
@@ -3404,7 +3406,7 @@ The WHERE condition is described as: {query}"""
                 {"role": "system", "content" : "You’re a kind helpful assistant"},
                 {"role": "user", "content" : prompt}
             ]
-            completion = openai.ChatCompletion.create(
+            completion = OpenAI().chat.completions.create(
                 model=config.chatGPTApiModel,
                 messages=messages,
                 n=1,

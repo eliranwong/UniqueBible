@@ -5393,7 +5393,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     def isMenuPlugin(self, plugin):
         return os.path.isfile(os.path.join("plugins", "menu", "{0}.py".format(plugin)))
 
-    def runPlugin(self, fileName):
+    def runPlugin(self, fileName, _=None):
         self.crossPlatform.runPlugin(fileName)
 
     def execPythonFile(self, script):

@@ -1,5 +1,9 @@
 PIP package:
 
+0.1.02
+
+* fixed plugin menu
+
 0.1.01
 
 * tested startup with python 3.12
@@ -321,12 +325,12 @@ Changes in 34.58:
 
 Changes in 34.57:
 * Improved gui mode Bible Chat:
-    - support streaming ChatGPT responses when config.chatGPTApiNoOfChoices is set to 1
+    - support streaming ChatGPT responses when config.chatApiNoOfChoices is set to 1
     - added toggle multiline user-input shortcut, Ctrl+L
     - added toggle regular expression shortcut, Ctrl+E
     - improved user input auto-focus
 * Improved terminal mode bible chat:
-    - support streaming ChatGPT responses when config.chatGPTApiNoOfChoices is set to 1
+    - support streaming ChatGPT responses when config.chatApiNoOfChoices is set to 1
     - support predefined customised contexts for bible chat
 
 Changes in 34.56:

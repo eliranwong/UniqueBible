@@ -7,6 +7,7 @@ else:
 from pydub import AudioSegment
 from pydub.playback import play
 from uniquebible.util.VlcUtil import VlcUtil
+from openai import OpenAI
 
 
 class WorkerSignals(QObject):
@@ -143,6 +144,17 @@ class ChatGPTResponse:
         }
 
     def runCompletion(self, thisMessage, progress_callback):
+        self.functionJustCalled = True
+        return OpenAI().chat.completions.create(
+            model=config.chatGPTApiModel,
+            messages=thisMessage,
+            n=1,
+            temperature=config.chatGPTApiTemperature,
+            max_tokens=config.chatGPTApiMaxTokens,
+            stream=True,
+        )
+
+    def runCompletion_old(self, thisMessage, progress_callback):
         self.functionJustCalled = False
         def runThisCompletion(thisThisMessage):
             if config.chatGPTApiFunctionSignatures and not self.functionJustCalled:
@@ -153,7 +165,7 @@ class ChatGPTResponse:
                     temperature=config.chatGPTApiTemperature,
                     max_tokens=config.chatGPTApiMaxTokens,
                     functions=config.chatGPTApiFunctionSignatures,
-                    function_call=config.chatGPTApiFunctionCall,
+                    function_call=config.chatApiFunctionCall,
                     stream=True,
                 )
             return openai.ChatCompletion.create(
@@ -218,7 +230,7 @@ class ChatGPTResponse:
 
     def getResponse(self, messages, progress_callback, functionJustCalled=False):
         responses = ""
-        if config.chatGPTApiLoadingInternetSearches == "always" and not functionJustCalled:
+        if config.chatApiLoadingInternetSearches == "always" and not functionJustCalled:
             #print("loading internet searches ...")
             try:
                 completion = openai.ChatCompletion.create(
@@ -246,7 +258,7 @@ class ChatGPTResponse:
             except:
                 print("Unable to load internet resources.")
         try:
-            if config.chatGPTApiNoOfChoices == 1:
+            if config.chatApiNoOfChoices == 1: ## change: this is the only option the latest code support, to simply the use of ai chat, use toolmate.ai for additional features
                 completion = self.runCompletion(messages, progress_callback)
                 if completion is not None:
                     progress_callback.emit("\n\n~~~ ")
@@ -257,8 +269,7 @@ class ChatGPTResponse:
                             os.remove(stop_file)
                             break                                 
                         # RETRIEVE THE TEXT FROM THE RESPONSE
-                        event_text = event["choices"][0]["delta"] # EVENT DELTA RESPONSE
-                        progress = event_text.get("content", "") # RETRIEVE CONTENT
+                        progress = event if isinstance(event, str) else event.choices[0].delta.content
                         # STREAM THE ANSWER
                         progress_callback.emit(progress)
             else:
@@ -268,9 +279,9 @@ class ChatGPTResponse:
                         messages=messages,
                         max_tokens=config.chatGPTApiMaxTokens,
                         temperature=0.0 if config.chatGPTApiPredefinedContext == "Execute Python Code" else config.chatGPTApiTemperature,
-                        n=config.chatGPTApiNoOfChoices,
+                        n=config.chatApiNoOfChoices,
                         functions=config.chatGPTApiFunctionSignatures,
-                        function_call={"name": "run_python"} if config.chatGPTApiPredefinedContext == "Execute Python Code" else config.chatGPTApiFunctionCall,
+                        function_call={"name": "run_python"} if config.chatGPTApiPredefinedContext == "Execute Python Code" else config.chatApiFunctionCall,
                     )
                 else:
                     completion = openai.ChatCompletion.create(
@@ -278,7 +289,7 @@ class ChatGPTResponse:
                         messages=messages,
                         max_tokens=config.chatGPTApiMaxTokens,
                         temperature=config.chatGPTApiTemperature,
-                        n=config.chatGPTApiNoOfChoices,
+                        n=config.chatApiNoOfChoices,
                     )
 
                 response_message = completion["choices"][0]["message"]

@@ -77,7 +77,7 @@ class ApiDialog(QDialog):
         index = 0
         for key in ("auto", "none"):
             self.functionCallingBox.addItem(key)
-            if key == config.chatGPTApiFunctionCall:
+            if key == config.chatApiFunctionCall:
                 initialIndex = index
             index += 1
         self.functionCallingBox.setCurrentIndex(initialIndex)
@@ -86,7 +86,7 @@ class ApiDialog(QDialog):
         index = 0
         for key in ("always", "auto", "none"):
             self.loadingInternetSearchesBox.addItem(key)
-            if key == config.chatGPTApiLoadingInternetSearches:
+            if key == config.chatApiLoadingInternetSearches:
                 initialIndex = index
             index += 1
         self.loadingInternetSearchesBox.setCurrentIndex(initialIndex)
@@ -147,21 +147,21 @@ class ApiDialog(QDialog):
         layout.addRow(f"Organization ID [{optional}]:", self.orgEdit)
         layout.addRow(f"API Model [{required}]:", self.apiModelBox)
         layout.addRow(f"Max Token [{required}]:", self.maxTokenEdit)
-        layout.addRow(f"Function Calling [{optional}]:", self.functionCallingBox)
-        layout.addRow(f"{chatAfterFunctionCalled} [{optional}]:", self.chatAfterFunctionCalledCheckBox)
+        #layout.addRow(f"Function Calling [{optional}]:", self.functionCallingBox)
+        #layout.addRow(f"{chatAfterFunctionCalled} [{optional}]:", self.chatAfterFunctionCalledCheckBox)
         layout.addRow(f"{context} [{optional}]:", self.contextEdit)
         layout.addRow(f"{applyContext} [{optional}]:", self.applyContextIn)
-        layout.addRow(f"{latestOnlineSearchResults} [{optional}]:", self.loadingInternetSearchesBox)
+        #layout.addRow(f"{latestOnlineSearchResults} [{optional}]:", self.loadingInternetSearchesBox)
         layout.addRow(f"{maximumOnlineSearchResults} [{optional}]:", self.maxInternetSearchResults)
         layout.addRow(f"{autoScroll} [{optional}]:", self.autoScrollingCheckBox)
-        layout.addRow(f"{runPythonScriptGlobally} [{optional}]:", self.runPythonScriptGloballyCheckBox)
+        #layout.addRow(f"{runPythonScriptGlobally} [{optional}]:", self.runPythonScriptGloballyCheckBox)
         #layout.addRow(f"{language} [{optional}]:", self.languageBox)
         layout.addWidget(buttonBox)
         self.autoScrollingCheckBox.stateChanged.connect(self.toggleAutoScrollingCheckBox)
-        self.chatAfterFunctionCalledCheckBox.stateChanged.connect(self.toggleChatAfterFunctionCalled)
-        self.runPythonScriptGloballyCheckBox.stateChanged.connect(self.toggleRunPythonScriptGlobally)
-        self.functionCallingBox.currentIndexChanged.connect(self.functionCallingBoxChanged)
-        self.loadingInternetSearchesBox.currentIndexChanged.connect(self.loadingInternetSearchesBoxChanged)
+        #self.chatAfterFunctionCalledCheckBox.stateChanged.connect(self.toggleChatAfterFunctionCalled)
+        #self.runPythonScriptGloballyCheckBox.stateChanged.connect(self.toggleRunPythonScriptGlobally)
+        #self.functionCallingBox.currentIndexChanged.connect(self.functionCallingBoxChanged)
+        #self.loadingInternetSearchesBox.currentIndexChanged.connect(self.loadingInternetSearchesBoxChanged)
 
         self.setLayout(layout)
 
@@ -438,7 +438,7 @@ class ChatGPTAPI(QWidget):
         self.audioCheckbox.setCheckState(Qt.Checked if config.chatGPTApiAudio else Qt.Unchecked)
         self.choiceNumber = QComboBox()
         self.choiceNumber.addItems([str(i) for i in range(1, 11)])
-        self.choiceNumber.setCurrentIndex((config.chatGPTApiNoOfChoices - 1))
+        self.choiceNumber.setCurrentIndex((config.chatApiNoOfChoices - 1))
         self.fontSize = QComboBox()
         self.fontSize.addItems([str(i) for i in range(1, 51)])
         self.fontSize.setCurrentIndex((config.chatGPTFontSize - 1))
@@ -464,7 +464,7 @@ class ChatGPTAPI(QWidget):
             promptLayout.addWidget(self.voiceCheckbox)
         promptLayout.addWidget(self.multilineButton)
         promptLayout.addWidget(self.sendButton)
-        promptLayout.addWidget(self.apiModels)
+        #promptLayout.addWidget(self.apiModels)
         layout000Rt.addLayout(promptLayout)
 
         self.predefinedContextBox = QComboBox()
@@ -499,12 +499,12 @@ class ChatGPTAPI(QWidget):
         rtControlLayout.addWidget(temperatureLabel)
         rtControlLayout.addWidget(self.temperature)
         rtControlLayout.addWidget(choicesLabel)
-        rtControlLayout.addWidget(self.choiceNumber)
+        #rtControlLayout.addWidget(self.choiceNumber)
         rtControlLayout.addWidget(fontLabel)
         rtControlLayout.addWidget(self.fontSize)
         rtControlLayout.addWidget(self.editableCheckbox)
         rtControlLayout.addWidget(self.audioCheckbox)
-        if config.chatGPTApiNoOfChoices == 1:
+        if config.chatApiNoOfChoices == 1:
             self.audioCheckbox.hide()
         rtButtonLayout = QHBoxLayout()
         rtButtonLayout.addWidget(self.newButton)
@@ -560,7 +560,7 @@ class ChatGPTAPI(QWidget):
         self.editableCheckbox.stateChanged.connect(self.toggleEditable)
         self.audioCheckbox.stateChanged.connect(self.toggleChatGPTApiAudio)
         self.voiceCheckbox.stateChanged.connect(self.toggleVoiceTyping)
-        self.choiceNumber.currentIndexChanged.connect(self.updateChoiceNumber)
+        #self.choiceNumber.currentIndexChanged.connect(self.updateChoiceNumber)
         self.apiModels.currentIndexChanged.connect(self.updateApiModel)
         self.fontSize.currentIndexChanged.connect(self.setFontSize)
         self.temperature.currentIndexChanged.connect(self.updateTemperature)
@@ -666,13 +666,13 @@ class ChatGPTAPI(QWidget):
             config.runPythonScriptGlobally = dialog.enable_runPythonScriptGlobally()
             config.chatAfterFunctionCalled = dialog.enable_chatAfterFunctionCalled()
             config.chatGPTApiModel = dialog.apiModel()
-            config.chatGPTApiFunctionCall = dialog.functionCalling()
-            config.chatGPTApiLoadingInternetSearches = dialog.loadingInternetSearches()
+            config.chatApiFunctionCall = dialog.functionCalling()
+            config.chatApiLoadingInternetSearches = dialog.loadingInternetSearches()
             internetSeraches = "integrate google searches"
-            if config.chatGPTApiLoadingInternetSearches == "auto" and internetSeraches in config.chatGPTPluginExcludeList:
+            if config.chatApiLoadingInternetSearches == "auto" and internetSeraches in config.chatGPTPluginExcludeList:
                 config.chatGPTPluginExcludeList.remove(internetSeraches)
                 self.parent.reloadMenubar()
-            elif config.chatGPTApiLoadingInternetSearches == "none" and not internetSeraches in config.chatGPTPluginExcludeList:
+            elif config.chatApiLoadingInternetSearches == "none" and not internetSeraches in config.chatGPTPluginExcludeList:
                 config.chatGPTPluginExcludeList.append(internetSeraches)
                 self.parent.reloadMenubar()
             config.mainWindow.runBibleChatPlugins()
@@ -689,8 +689,8 @@ class ChatGPTAPI(QWidget):
         config.chatGPTApiTemperature = float(index / 10)
 
     def updateChoiceNumber(self, index):
-        config.chatGPTApiNoOfChoices = index + 1
-        self.audioCheckbox.hide() if config.chatGPTApiNoOfChoices == 1 else self.audioCheckbox.show()
+        config.chatApiNoOfChoices = index + 1
+        self.audioCheckbox.hide() if config.chatApiNoOfChoices == 1 else self.audioCheckbox.show()
 
     def onPhraseRecognized(self, phrase):
         self.userInput.setText(f"{self.userInput.text()} {phrase}")
@@ -977,16 +977,16 @@ Follow the following steps:
             context = config.predefinedContexts[config.chatGPTApiPredefinedContext]
             # change configs for particular contexts
             if config.chatGPTApiPredefinedContext == "Execute Python Code":
-                if config.chatGPTApiFunctionCall == "none":
-                    config.chatGPTApiFunctionCall = "auto"
-                if config.chatGPTApiLoadingInternetSearches == "always":
-                    config.chatGPTApiLoadingInternetSearches = "auto"
+                if config.chatApiFunctionCall == "none":
+                    config.chatApiFunctionCall = "auto"
+                if config.chatApiLoadingInternetSearches == "always":
+                    config.chatApiLoadingInternetSearches = "auto"
         return context
 
     def getMessages(self, userInput):
         # system message
         systemMessage = "You’re a kind helpful assistant."
-        if config.chatGPTApiFunctionCall == "auto" and config.chatGPTApiFunctionSignatures:
+        if config.chatApiFunctionCall == "auto" and config.chatGPTApiFunctionSignatures:
             systemMessage += " Only use the functions you have been provided with."
         messages = [
             {"role": "system", "content": systemMessage}
@@ -1073,7 +1073,7 @@ Follow the following steps:
             self.progressBar.hide()
 
     def getResponse(self):
-        if self.progressBar.isVisible() and config.chatGPTApiNoOfChoices == 1:
+        if self.progressBar.isVisible() and config.chatApiNoOfChoices == 1:
             stop_file = ".stop_chatgpt"
             if not os.path.isfile(stop_file):
                 open(stop_file, "a", encoding="utf-8").close()
@@ -1081,7 +1081,7 @@ Follow the following steps:
             userInput = self.userInput.text().strip()
             if userInput:
                 self.userInput.setDisabled(True)
-                if config.chatGPTApiNoOfChoices == 1:
+                if config.chatApiNoOfChoices == 1:
                     self.sendButton.setText(config.thisTranslation["stop"])
                     self.busyLoading = True
                     self.listView.setDisabled(True)
@@ -1115,7 +1115,7 @@ Follow the following steps:
         self.saveData()
         # hide progress bar
         self.userInput.setEnabled(True)
-        if config.chatGPTApiNoOfChoices == 1:
+        if config.chatApiNoOfChoices == 1:
             self.listView.setEnabled(True)
             self.newButton.setEnabled(True)
             self.busyLoading = False
@@ -1313,11 +1313,11 @@ class MainWindow(QMainWindow):
         else:
             config.chatGPTPluginExcludeList.append(plugin)
         internetSeraches = "integrate google searches"
-        if internetSeraches in config.chatGPTPluginExcludeList and config.chatGPTApiLoadingInternetSearches == "auto":
-            config.chatGPTApiLoadingInternetSearches = "none"
-        elif not internetSeraches in config.chatGPTPluginExcludeList and config.chatGPTApiLoadingInternetSearches == "none":
-            config.chatGPTApiLoadingInternetSearches = "auto"
-            config.chatGPTApiFunctionCall = "auto"
+        if internetSeraches in config.chatGPTPluginExcludeList and config.chatApiLoadingInternetSearches == "auto":
+            config.chatApiLoadingInternetSearches = "none"
+        elif not internetSeraches in config.chatGPTPluginExcludeList and config.chatApiLoadingInternetSearches == "none":
+            config.chatApiLoadingInternetSearches = "auto"
+            config.chatApiFunctionCall = "auto"
         # reload plugins
         config.mainWindow.runBibleChatPlugins()
 

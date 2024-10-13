@@ -1,7 +1,7 @@
 import re, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json, shutil, webbrowser, traceback, textwrap, wcwidth, unicodedata
 from uniquebible import config
-import openai, threading, time
-from duckduckgo_search import ddg
+import threading, time
+#from duckduckgo_search import ddg
 from functools import partial
 from datetime import date
 from pathlib import Path
@@ -643,7 +643,7 @@ class LocalCliHandler:
             ".google": ("google ...", self.google),
             ".watson": ("watson ...", self.watson),
             ".chat": ("bible chat", self.bibleChat),
-            ".image": ("bible chat", self.generateImage),
+            #".image": ("bible chat", self.generateImage),
         }
 
     def calculate(self):
@@ -2294,6 +2294,17 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             print(traceback.format_exc())
 
     def runCompletion(self, thisMessage):
+        from openai import OpenAI
+        return OpenAI().chat.completions.create(
+            model=config.chatGPTApiModel,
+            messages=thisMessage,
+            n=1,
+            temperature=config.chatGPTApiTemperature,
+            max_tokens=config.chatGPTApiMaxTokens,
+            stream=True,
+        )
+
+    def runCompletion_old(self, thisMessage):
         self.functionJustCalled = False
         def runThisCompletion(thisThisMessage):
             if config.chatGPTApiFunctionSignatures and not self.functionJustCalled:
@@ -2304,7 +2315,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     temperature=config.chatGPTApiTemperature,
                     max_tokens=config.chatGPTApiMaxTokens,
                     functions=config.chatGPTApiFunctionSignatures,
-                    function_call=config.chatGPTApiFunctionCall,
+                    function_call=config.chatApiFunctionCall,
                     stream=True,
                 )
             return openai.ChatCompletion.create(
@@ -2363,6 +2374,8 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         return completion
 
     def bibleChat(self):
+        import openai
+        from openai import OpenAI
         def changeAPIkey():
             if not config.terminalEnableTermuxAPI or (config.terminalEnableTermuxAPI and self.fingerprint()):
                 self.print("Enter your OpenAI API Key [required]:")
@@ -2389,20 +2402,21 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         def runCompletion(thisMessage):
             functionJustCalled = False
             def runThisCompletion(thisThisMessage):
+                '''
                 if config.chatGPTApiFunctionSignatures and not functionJustCalled:
                     return openai.ChatCompletion.create(
                         model=config.chatGPTApiModel,
                         messages=thisThisMessage,
-                        n=config.chatGPTApiNoOfChoices,
+                        n=config.chatApiNoOfChoices,
                         temperature=0.0 if config.chatGPTApiPredefinedContext == "Execute Python Code" else config.chatGPTApiTemperature,
                         max_tokens=config.chatGPTApiMaxTokens,
                         functions=config.chatGPTApiFunctionSignatures,
-                        function_call={"name": "run_python"} if config.chatGPTApiPredefinedContext == "Execute Python Code" else config.chatGPTApiFunctionCall,
-                    )
-                return openai.ChatCompletion.create(
+                        function_call={"name": "run_python"} if config.chatGPTApiPredefinedContext == "Execute Python Code" else config.chatApiFunctionCall,
+                    )'''
+                return OpenAI().chat.completions.create(
                     model=config.chatGPTApiModel,
                     messages=thisThisMessage,
-                    n=config.chatGPTApiNoOfChoices,
+                    n=config.chatApiNoOfChoices,
                     temperature=config.chatGPTApiTemperature,
                     max_tokens=config.chatGPTApiMaxTokens,
                 )
@@ -2453,7 +2467,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         # reset message when a new chart is started or context is changed
         def resetMessages():
             systemMessage = "You’re a kind helpful assistant."
-            if config.chatGPTApiFunctionCall == "auto" and config.chatGPTApiFunctionSignatures:
+            if config.chatApiFunctionCall == "auto" and config.chatGPTApiFunctionSignatures:
                 systemMessage += " Only use the functions you have been provided with."
             messages = [
                 {"role": "system", "content" : systemMessage}
@@ -2473,10 +2487,10 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                 context = config.predefinedContexts[config.chatGPTApiPredefinedContext]
                 # change configs for particular contexts
                 if config.chatGPTApiPredefinedContext == "Execute Python Code":
-                    if config.chatGPTApiFunctionCall == "none":
-                        config.chatGPTApiFunctionCall = "auto"
-                    if config.chatGPTApiLoadingInternetSearches == "always":
-                        config.chatGPTApiLoadingInternetSearches = "auto"
+                    if config.chatApiFunctionCall == "none":
+                        config.chatApiFunctionCall = "auto"
+                    if config.chatApiLoadingInternetSearches == "always":
+                        config.chatApiLoadingInternetSearches = "auto"
             return context
         def fineTuneUserInput(userInput):
             # customise chat context
@@ -2563,10 +2577,10 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                                     self.print(f"ChatGPT model selected: {model}")
                             elif feature == ".functioncall":
                                 calls = ("auto", "none")
-                                call = self.dialogs.getValidOptions(options=calls, title="ChatGPT Function Call", default=config.chatGPTApiFunctionCall)
+                                call = self.dialogs.getValidOptions(options=calls, title="ChatGPT Function Call", default=config.chatApiFunctionCall)
                                 if call:
-                                    config.chatGPTApiFunctionCall = call
-                                    self.print(f"ChaptGPT function call: {'enabled' if config.chatGPTApiFunctionCall == 'auto' else 'disabled'}!")
+                                    config.chatApiFunctionCall = call
+                                    self.print(f"ChaptGPT function call: {'enabled' if config.chatApiFunctionCall == 'auto' else 'disabled'}!")
                             elif feature == ".functionresponse":
                                 calls = ("enable", "disable")
                                 call = self.dialogs.getValidOptions(options=calls, title="Automatic Chat Generation with Function Response", default="enable" if config.chatAfterFunctionCalled else "disable")
@@ -2587,16 +2601,16 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                                 multilineInput = True
                                 self.print("Multi-line user input enabled!")
                             elif feature == ".latestSearches":
-                                config.chatGPTApiLoadingInternetSearches = "always"
+                                config.chatApiLoadingInternetSearches = "always"
                                 self.print("Latest online search results always enabled!")
                             elif feature == ".autolatestSearches":
-                                config.chatGPTApiLoadingInternetSearches = "auto"
-                                config.chatGPTApiFunctionCall = "auto"
+                                config.chatApiLoadingInternetSearches = "auto"
+                                config.chatApiFunctionCall = "auto"
                                 if "integrate google searches" in config.chatGPTPluginExcludeList:
                                     config.chatGPTPluginExcludeList.remove("integrate google searches")
                                 self.print("Latest online search results enabled, if necessary!")
                             elif feature == ".noLatestSearches":
-                                config.chatGPTApiLoadingInternetSearches = "none"
+                                config.chatApiLoadingInternetSearches = "none"
                                 if not "integrate google searches" in config.chatGPTPluginExcludeList:
                                     config.chatGPTPluginExcludeList.append("integrate google searches")
                                 self.print("Latest online search results disabled!")
@@ -2658,7 +2672,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                         messages.append({"role": "user", "content": fineTunedUserInput})
 
                         # force loading internet searches
-                        if config.chatGPTApiLoadingInternetSearches == "always":
+                        if config.chatApiLoadingInternetSearches == "always":
                             try:
                                 completion = openai.ChatCompletion.create(
                                     model=config.chatGPTApiModel,
@@ -2686,7 +2700,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                                 print("Unable to load internet resources.")
 
                         # enable output stream if choice is set to 1
-                        if config.chatGPTApiNoOfChoices == 1:
+                        if config.chatApiNoOfChoices == 1:
                             completion = self.runCompletion(messages)
                             # stop spinning
                             stop_event.set()
