@@ -810,8 +810,10 @@ class Bible:
 
     CREATE_COMMENTARY_TABLE = "CREATE TABLE Commentary (Book INT, Chapter INT, Scripture TEXT)"
 
-    def __init__(self, text):
+    def __init__(self, text=None):
         # connect [text].bible
+        if text is None:
+            text = config.mainText
         self.text = text
         self.connection = None
         self.cursor = None
@@ -824,6 +826,46 @@ class Bible:
         if not self.connection is None:
 #            #self.cursor.execute("COMMIT")
             self.connection.close()
+
+    # Check if a verse is empty
+    def isNonEmptyVerse(self, b, c, v):
+        query = "SELECT Scripture FROM Verses WHERE Book=? AND Chapter=? AND Verse=?"
+        self.cursor.execute(query, (b, c, v))
+        scripture = self.cursor.fetchone()
+        if not scripture:
+            return False
+        return True if scripture[-1].strip() else False
+
+    # Expand a list of verse range to include individual verses
+    def getEverySingleVerseList(self, verseList) -> list:
+        allVerses = []
+        for verse in verseList:
+            if len(verse) == 3:
+                allVerses.append(verse)
+            elif len(verse) == 4:
+                b, c, vs, ve = verse
+                for v in self.getVerseList(b, c, vs, ve):
+                    allVerses.append((b, c, v))
+            elif len(verse) == 5:
+                b, cs, vs, ce, ve = verse
+                if (cs > ce):
+                    pass
+                elif (cs == ce):
+                    for v in self.getVerseList(b, cs, vs, ve):
+                        allVerses.append((b, cs, v))
+                else:
+                    c = cs
+                    for v in self.getVerseList(b, c, vs):
+                        allVerses.append((b, c, v))
+                    c += 1
+                    while (c < ce):
+                        for v in self.getVerseList(b, c):
+                            allVerses.append((b, c, v))
+                        c += 1
+                    if (c == ce):
+                        for v in self.getVerseList(b, c, 1, ve):
+                            allVerses.append((b, c, v))
+        return allVerses
 
     def bcvToVerseReference(self, b, c, v):
         return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)

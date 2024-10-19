@@ -9,6 +9,8 @@ from uniquebible.startup.share import *
 
 # manage latest update
 def checkApplicationUpdateCli():
+    # TODO disable for now; update later
+    return False
     try:
         print("Checking the latest version ...")
         checkFile = "{0}UniqueBibleAppVersion.txt".format(UpdateUtil.repository)
