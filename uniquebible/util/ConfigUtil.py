@@ -40,7 +40,9 @@ class ConfigUtil:
         #config.terminalSwapColors = (config.terminalResourceLinkColor.startswith("ansibright"))
 
     @staticmethod
-    def setup(noQt=None, cli=None, enableCli=None, enableApiServer=None, enableHttpServer=None):
+    def setup(noQt=None, cli=None, enableCli=None, enableApiServer=None, enableHttpServer=None, runMode=None):
+        if runMode is not None:
+            config.runMode = runMode
         if noQt is not None:
             config.noQt = noQt
         if cli is not None:
