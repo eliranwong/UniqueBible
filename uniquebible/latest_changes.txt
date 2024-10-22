@@ -1,5 +1,17 @@
 PIP package:
 
+0.1.09-12
+
+* added a 'stream' mode to work with stdin and stdout, e.g.
+
+> uniquebible stream John 3:16-18
+
+> echo 3:16-18 | uniquebible stream John
+
+0.1.03-0.1.08
+
+* integrated with Toolmate AI, read https://github.com/eliranwong/toolmate
+
 0.1.02
 
 * fixed plugin menu

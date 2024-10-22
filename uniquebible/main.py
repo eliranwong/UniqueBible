@@ -39,7 +39,7 @@ for key, value in env:
     os.environ[key] = value
 
 # check runmode and initial command
-config.noQt = True if config.runMode in ("terminal", "ssh-server", "telnet-server", "http-server", "api-server", "execute-macro") else False
+config.noQt = True if config.runMode in ("stream", "terminal", "ssh-server", "telnet-server", "http-server", "api-server", "execute-macro") or os.path.isdir("/data/data/com.termux/files/home") else False
 config.cli = True if config.runMode == "cli" else False
 config.enableCli = True if config.runMode in ("cli", "gui", "docker") else False
 config.enableApiServer = True if config.runMode == "api-server" else False
@@ -121,7 +121,9 @@ if config.runMode == "setup-only":
 # ("terminal", "ssh-server", "telnet-server", "http-server", "api-server", "execute-macro")
 if config.noQt:
     from uniquebible.startup.nonGui import *
-    if config.runMode == "terminal":
+    if config.runMode == "stream":
+        run_stream_mode()
+    elif config.runMode == "terminal":
         run_terminal_mode()
     elif config.runMode == "ssh-server":
         run_ssh_server(host=config.sshServerHost, port=config.sshServerPort, server_host_keys=config.sshServerHostKeys, passphrase=config.sshServerPassphrase)

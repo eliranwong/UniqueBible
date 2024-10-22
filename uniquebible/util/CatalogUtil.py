@@ -2,8 +2,6 @@ import os
 from uniquebible import config
 from uniquebible.util.FileUtil import FileUtil
 from uniquebible.util.GitHubRepoInfo import GitHubRepoInfo
-if not config.noQt:
-    from uniquebible.util.GithubUtil import GithubUtil
 
 
 class CatalogUtil:
@@ -93,6 +91,7 @@ class CatalogUtil:
 
     @staticmethod
     def loadRemoteFiles(type, repo):
+        from uniquebible.util.GithubUtil import GithubUtil
         data = []
         github = GithubUtil(repo[0])
         repoData = github.getRepoData()

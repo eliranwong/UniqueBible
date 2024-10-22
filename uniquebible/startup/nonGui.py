@@ -225,6 +225,23 @@ def run_terminal_mode():
     clear_title()
     sys.exit(0)
 
+# raw mode
+def run_stream_mode():
+    from uniquebible.util.LocalCliHandler import LocalCliHandler
+
+    input_text = sys.stdin.read() if not sys.stdin.isatty() else ""
+
+    # Set initial command
+    command = config.initial_command if config.initial_command else " ".join(sys.argv[2:]).strip()
+    if input_text:
+        command = f"{command} {input_text}"
+    if command.strip():
+        config.mainWindow = LocalCliHandler()
+        output_text = config.mainWindow.getContent(command)
+    else:
+        output_text = "Command not given!"
+    print(output_text, file=sys.stdout)
+
 # ssh-server
 # read setup guide at https://github.com/eliranwong/UniqueBible/wiki/Run-SSH-Server
 def run_ssh_server(host="", port=2222, server_host_keys="", passphrase="the_best_bible_app"):

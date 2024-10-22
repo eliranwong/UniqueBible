@@ -239,7 +239,7 @@ optional = [
     ("pyperclip", "Cross-platform clipboard utilities", isPyperclipInstalled),
     ("Pygments", "Syntax highlighting package", isPygmentsInstalled),
     ("translate", "Google Translate", isTranslateInstalled),
-    ("textract", "Extract text from document", isTextractInstalled),
+    #("textract", "Extract text from document", isTextractInstalled),
 ]
 for module, feature, isInstalled in optional:
     checkModule = re.sub("-|_", "", module)

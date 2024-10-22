@@ -1591,7 +1591,11 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
     def downloadContent(self):
         content = ""
         from uniquebible.util.DatafileLocation import DatafileLocation
-        from uniquebible.util.GithubUtil import GithubUtil
+        try:
+            from uniquebible.util.GithubUtil import GithubUtil
+            githubutilEnabled = True
+        except:
+            githubutilEnabled = False
         resources = (
             ("Marvel Datasets", DatafileLocation.marvelData, "marveldata"),
             ("Marvel Bibles", DatafileLocation.marvelBibles, "marvelbible"),
@@ -1605,21 +1609,22 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 else:
                     content += """<ref onclick="document.title='download:::{0}:::{1}'">{2}</ref><br>"""\
                         .format(keyword, k.replace("'", "\\'"), k)
-        resources = (
-            ("GitHub Bibles", "GitHubBible", GitHubRepoInfo.bibles[0], (config.marvelData, "bibles"), ".bible"),
-            ("GitHub Commentaries", "GitHubCommentary", GitHubRepoInfo.commentaries[0], (config.marvelData, "commentaries"), ".commentary"),
-            ("GitHub Books", "GitHubBook", GitHubRepoInfo.books[0], (config.marvelData, "books"), ".book"),
-            ("GitHub Maps", "GitHubMap", GitHubRepoInfo.maps[0], (config.marvelData, "books"), ".book"),
-            ("GitHub PDF", "GitHubPdf", GitHubRepoInfo.pdf[0], (config.marvelData, "pdf"), ".pdf"),
-            ("GitHub EPUB", "GitHubEpub", GitHubRepoInfo.epub[0], (config.marvelData, "epub"), ".epub"),
-        )
-        for collection, type, repo, location, extension in resources:
-            content += "<h2>{0}</h2>".format(collection)
-            for file in GithubUtil(repo).getRepoData():
-                if os.path.isfile(os.path.join(*location, file)):
-                    content += """{0} [{1}]<br>""".format(file.replace(extension, ""), config.thisTranslation["installed"])
-                else:
-                    content += """<ref onclick="document.title='download:::{1}:::{0}'">{0}</ref><br>""".format(file.replace(extension, ""), type)
+        if githubutilEnabled:
+            resources = (
+                ("GitHub Bibles", "GitHubBible", GitHubRepoInfo.bibles[0], (config.marvelData, "bibles"), ".bible"),
+                ("GitHub Commentaries", "GitHubCommentary", GitHubRepoInfo.commentaries[0], (config.marvelData, "commentaries"), ".commentary"),
+                ("GitHub Books", "GitHubBook", GitHubRepoInfo.books[0], (config.marvelData, "books"), ".book"),
+                ("GitHub Maps", "GitHubMap", GitHubRepoInfo.maps[0], (config.marvelData, "books"), ".book"),
+                ("GitHub PDF", "GitHubPdf", GitHubRepoInfo.pdf[0], (config.marvelData, "pdf"), ".pdf"),
+                ("GitHub EPUB", "GitHubEpub", GitHubRepoInfo.epub[0], (config.marvelData, "epub"), ".epub"),
+            )
+            for collection, kind, repo, location, extension in resources:
+                content += "<h2>{0}</h2>".format(collection)
+                for file in GithubUtil(repo).getRepoData():
+                    if os.path.isfile(os.path.join(*location, file)):
+                        content += """{0} [{1}]<br>""".format(file.replace(extension, ""), config.thisTranslation["installed"])
+                    else:
+                        content += """<ref onclick="document.title='download:::{1}:::{0}'">{0}</ref><br>""".format(file.replace(extension, ""), kind)
         content += "<h2>Third-party Resources</h2><p><a href='https://github.com/eliranwong/UniqueBible/wiki/Third-party-resources' target='_blank'>Click this link to read our wiki page about third-party resources.</a></p>"
         return content
 

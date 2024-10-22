@@ -16,7 +16,7 @@ def main():
 
     # check running mode and initial command
     runMode = sys.argv[1] if len(sys.argv) > 1 else ""
-    enableCli = True if runMode.lower() in ("cli", "cli.py", "gui", "terminal", "docker", "telnet-server", "http-server", "execute-macro", "api-server") else False
+    enableCli = True if runMode.lower() in ("stream", "cli", "cli.py", "gui", "terminal", "docker", "telnet-server", "http-server", "execute-macro", "api-server") else False
     initialCommand = input("Enter command: ").strip() if runMode == "-i" else " ".join(sys.argv[1:]).strip()
     initialCommand = initialCommand.strip()
 

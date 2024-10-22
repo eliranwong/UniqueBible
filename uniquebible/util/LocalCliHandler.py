@@ -8,6 +8,8 @@ from pathlib import Path
 from base64 import b64decode
 #import urllib.request
 from ast import literal_eval
+from haversine import haversine
+
 from uniquebible.db.BiblesSqlite import Bible
 from uniquebible.db.JournalSqlite import JournalSqlite
 from uniquebible.db.ToolsSqlite import Book
@@ -31,23 +33,25 @@ from uniquebible.util.Translator import Translator
 from uniquebible.util.HBN import HBN
 from uniquebible.util.terminal_text_editor import TextEditor
 from uniquebible.util.terminal_system_command_prompt import SystemCommandPrompt
-from uniquebible.util.terminal_mode_dialogs import TerminalModeDialogs
-from uniquebible.util.get_path_prompt import GetPath
+if not config.runMode == "stream":
+    from uniquebible.util.terminal_mode_dialogs import TerminalModeDialogs
+    from uniquebible.util.get_path_prompt import GetPath
 from uniquebible.util.PromptValidator import NumberValidator, NoAlphaValidator
 from uniquebible.util.prompt_shared_key_bindings import prompt_shared_key_bindings
 from uniquebible.util.prompt_multiline_shared_key_bindings import prompt_multiline_shared_key_bindings
 from uniquebible.util.ConfigUtil import ConfigUtil
 from uniquebible.util.exlbl import allLocations
-from prompt_toolkit import PromptSession, prompt, print_formatted_text, HTML
-from prompt_toolkit.shortcuts import clear, confirm
-from prompt_toolkit.filters import Condition
-#from prompt_toolkit.application import run_in_terminal
-from prompt_toolkit.key_binding import KeyBindings, merge_key_bindings
-from prompt_toolkit.completion import WordCompleter, NestedCompleter, ThreadedCompleter, FuzzyCompleter
-from prompt_toolkit.history import FileHistory
-from prompt_toolkit.styles import Style
-#from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
-from haversine import haversine
+
+if not config.runMode == "stream":
+    from prompt_toolkit import PromptSession, prompt, print_formatted_text, HTML
+    from prompt_toolkit.shortcuts import clear, confirm
+    from prompt_toolkit.filters import Condition
+    #from prompt_toolkit.application import run_in_terminal
+    from prompt_toolkit.key_binding import KeyBindings, merge_key_bindings
+    from prompt_toolkit.completion import WordCompleter, NestedCompleter, ThreadedCompleter, FuzzyCompleter
+    from prompt_toolkit.history import FileHistory
+    from prompt_toolkit.styles import Style
+    #from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 
 
 class LocalCliHandler:
@@ -61,12 +65,14 @@ class LocalCliHandler:
         self.crossPlatform.setupResourceLists()
         self.html = "<ref >Unique Bible App</ref>"
         self.plainText = "Unique Bible App"
-        self.setupDialogs()
+        if not config.runMode == "stream":
+            self.setupDialogs()
         self.audioPlayer = None
         self.command = command
-        self.dotCommands = self.getDotCommands()
+        self.dotCommands = {} if config.runMode == "stream" else self.getDotCommands()
         self.addShortcuts()
-        self.initPromptElements()
+        if not config.runMode == "stream":
+            self.initPromptElements()
         self.setOsOpenCmd()
         self.ttsLanguages = self.getTtsLanguages()
         self.ttsLanguageCodes = list(self.ttsLanguages.keys())
@@ -85,14 +91,15 @@ class LocalCliHandler:
         self.startupException2 = "^(_setconfig:::|\.edit|\.change|\.toggle|\.stop|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::|download:::|read:::|readsync:::|semantic:::)"
         #config.cliTtsProcess = None
         config.audio_playing_file = os.path.join("temp", "000_audio_playing.txt")
-        self.getPath = GetPath(
-            cancel_entry=config.terminal_cancel_action,
-            promptIndicatorColor=config.terminalPromptIndicatorColor2,
-            promptEntryColor=config.terminalCommandEntryColor2,
-            subHeadingColor=config.terminalHeadingTextColor,
-            itemColor=config.terminalResourceLinkColor,
-        )
-        self.shareKeyBindings()
+        if not config.runMode == "stream":
+            self.getPath = GetPath(
+                cancel_entry=config.terminal_cancel_action,
+                promptIndicatorColor=config.terminalPromptIndicatorColor2,
+                promptEntryColor=config.terminalCommandEntryColor2,
+                subHeadingColor=config.terminalHeadingTextColor,
+                itemColor=config.terminalResourceLinkColor,
+            )
+            self.shareKeyBindings()
 
     def setupDialogs(self):
         self.dialogs = TerminalModeDialogs(self)
@@ -357,7 +364,7 @@ class LocalCliHandler:
                 self.dotCommands[key] = (f"an alias to '{value}'", partial(self.getContent, value))
 
     def getDotCommands(self):
-        return {
+        return {} if config.runMode == "stream" else {
             config.terminal_cancel_action: ("cancel action in current prompt", self.cancelAction),
             ".togglecolorbrightness": ("toggle color brightness", self.togglecolorbrightness),
             ".togglecolourbrightness": ("an alias to '.togglecolorbrightness'", self.togglecolorbrightness),
@@ -629,7 +636,7 @@ class LocalCliHandler:
             ".portablepython": ("build portable python", self.buildPortablePython),
             ".system": ("system command prompt", SystemCommandPrompt().run),
             ".sys": ("an alias to '.system'", SystemCommandPrompt().run),
-            ".clear": ("clear screen", clear),
+            ".clear": ("clear screen", self.clear_screen),
             ".wordnet": ("wordnet dictionary", self.wordnet),
             ".customize": ("an alias to '.customise'", self.customise),
             ".mp3": ("play mp3 files in music folder", self.mp3),
@@ -645,6 +652,9 @@ class LocalCliHandler:
             ".chat": ("bible chat", self.bibleChat),
             #".image": ("bible chat", self.generateImage),
         }
+
+    def clear_screen(self):
+        clear()
 
     def calculate(self):
         userInput = ""
@@ -1421,7 +1431,11 @@ Escape+W open wordnet"""
     def showdownloads(self):
         content = ""
         from uniquebible.util.DatafileLocation import DatafileLocation
-        from uniquebible.util.GithubUtil import GithubUtil
+        try:
+            from uniquebible.util.GithubUtil import GithubUtil
+            githubutilEnabled = True
+        except:
+            githubutilEnabled = False
         # ["marveldata", "marvelbible", "marvelcommentary", "GitHubBible", "GitHubCommentary", "GitHubBook", "GitHubMap", "GitHubPdf", "GitHubEpub"]
         resources = (
             ("Marvel Datasets", DatafileLocation.marvelData, "marveldata"),
@@ -1435,21 +1449,22 @@ Escape+W open wordnet"""
                     content += """[ {1} ] {0}<br>""".format(k, config.thisTranslation["installed"])
                 else:
                     content += """[<ref>DOWNLOAD:::{0}:::{1}</ref> ]<br>""".format(keyword, k)
-        resources = (
-            ("GitHub Bibles", "GitHubBible", GitHubRepoInfo.bibles[0], (config.marvelData, "bibles"), ".bible"),
-            ("GitHub Commentaries", "GitHubCommentary", GitHubRepoInfo.commentaries[0], (config.marvelData, "commentaries"), ".commentary"),
-            ("GitHub Books", "GitHubBook", GitHubRepoInfo.books[0], (config.marvelData, "books"), ".book"),
-            ("GitHub Maps", "GitHubMap", GitHubRepoInfo.maps[0], (config.marvelData, "books"), ".book"),
-            ("GitHub PDF", "GitHubPdf", GitHubRepoInfo.pdf[0], (config.marvelData, "pdf"), ".pdf"),
-            ("GitHub EPUB", "GitHubEpub", GitHubRepoInfo.epub[0], (config.marvelData, "epub"), ".epub"),
-        )
-        for collection, type, repo, location, extension in resources:
-            content += "<h2>{0}</h2>".format(collection)
-            for file in GithubUtil(repo).getRepoData():
-                if os.path.isfile(os.path.join(*location, file)):
-                    content += """[ {1} ] {0}<br>""".format(file.replace(extension, ""), config.thisTranslation["installed"])
-                else:
-                    content += """[<ref>DOWNLOAD:::{1}:::{0}</ref> ]<br>""".format(file.replace(extension, ""), type)
+        if githubutilEnabled:
+            resources = (
+                ("GitHub Bibles", "GitHubBible", GitHubRepoInfo.bibles[0], (config.marvelData, "bibles"), ".bible"),
+                ("GitHub Commentaries", "GitHubCommentary", GitHubRepoInfo.commentaries[0], (config.marvelData, "commentaries"), ".commentary"),
+                ("GitHub Books", "GitHubBook", GitHubRepoInfo.books[0], (config.marvelData, "books"), ".book"),
+                ("GitHub Maps", "GitHubMap", GitHubRepoInfo.maps[0], (config.marvelData, "books"), ".book"),
+                ("GitHub PDF", "GitHubPdf", GitHubRepoInfo.pdf[0], (config.marvelData, "pdf"), ".pdf"),
+                ("GitHub EPUB", "GitHubEpub", GitHubRepoInfo.epub[0], (config.marvelData, "epub"), ".epub"),
+            )
+            for collection, kind, repo, location, extension in resources:
+                content += "<h2>{0}</h2>".format(collection)
+                for file in GithubUtil(repo).getRepoData():
+                    if os.path.isfile(os.path.join(*location, file)):
+                        content += """[ {1} ] {0}<br>""".format(file.replace(extension, ""), config.thisTranslation["installed"])
+                    else:
+                        content += """[<ref>DOWNLOAD:::{1}:::{0}</ref> ]<br>""".format(file.replace(extension, ""), kind)
         content += "<h2>Third-party Resources</h2><p>Read <ref>https://github.com/eliranwong/UniqueBible/wiki/Third-party-resources</ref> about third-party resources.</a></p>"
         self.html = content
         self.plainText = TextUtil.htmlToPlainText(content).strip()
@@ -1701,8 +1716,8 @@ Escape+W open wordnet"""
 
     def getclipboardtext(self, confirmMessage=True):
         try:
-            if config.terminalEnableTermuxAPI:
-                clipboardText = self.getCliOutput("termux-clipboard-get")
+            if shutil.which("termux-clipboard-get"):
+                clipboardText = subprocess.run("termux-clipboard-get", shell=True, capture_output=True, text=True).stdout
             elif ("Pyperclip" in config.enabled):
                 import pyperclip
                 clipboardText = pyperclip.paste()
@@ -1798,8 +1813,11 @@ Escape+W open wordnet"""
                 pydoc.pipepager(plainText, cmd="termux-share -a send")
                 return ""
             else:
-                import pyperclip
-                pyperclip.copy(weblink)
+                if shutil.which("termux-clipboard-set"):
+                    pydoc.pipepager(weblink, cmd="termux-clipboard-set")
+                else:
+                    import pyperclip
+                    pyperclip.copy(weblink)
             self.print(f"The following link is copied to clipboard:\n")
             self.print(weblink)
             self.print("\nOpen it in a web browser or share with others.")
@@ -1814,8 +1832,11 @@ Escape+W open wordnet"""
             if config.terminalEnableTermuxAPI:
                 pydoc.pipepager(content, cmd="termux-clipboard-set")
             else:
-                import pyperclip
-                pyperclip.copy(content)
+                if shutil.which("termux-clipboard-set"):
+                    pydoc.pipepager(weblink, cmd="termux-clipboard-set")
+                else:
+                    import pyperclip
+                    pyperclip.copy(content)
             if confirmMessage:
                 self.print("Content is copied to clipboard.")
             return ""
@@ -1829,8 +1850,11 @@ Escape+W open wordnet"""
             if config.terminalEnableTermuxAPI:
                 pydoc.pipepager(content, cmd="termux-clipboard-set")
             else:
-                import pyperclip
-                pyperclip.copy(content)
+                if shutil.which("termux-clipboard-set"):
+                    pydoc.pipepager(weblink, cmd="termux-clipboard-set")
+                else:
+                    import pyperclip
+                    pyperclip.copy(content)
             if confirmMessage:
                 self.print("HTML content is copied to clipboard.")
             return ""

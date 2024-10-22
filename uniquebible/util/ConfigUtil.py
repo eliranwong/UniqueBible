@@ -62,8 +62,15 @@ class ConfigUtil:
         config.ubaDir = os.getcwd()
 
         # check running mode
-        config.runMode = sys.argv[1].lower() if len(sys.argv) > 1 else ""
-        if config.runMode and not config.runMode in ("setup-only", "cli", "gui", "terminal", "docker", "telnet-server", "http-server", "execute-macro", "api-server"):
+        config.runMode = sys.argv[1] if len(sys.argv) > 1 else ""
+        if " " in config.runMode:
+            import re
+            config.runMode, config.initial_command = config.runMode.split(" ", 1)
+        else:
+            config.initial_command = ""
+        config.runMode = config.runMode.lower()
+
+        if config.runMode and not config.runMode in ("stream", "setup-only", "cli", "gui", "terminal", "docker", "telnet-server", "http-server", "execute-macro", "api-server"):
             config.runMode = ""
 
         # Check current version
@@ -136,7 +143,7 @@ class ConfigUtil:
         [])
         setConfig("disabled", """
         # Disabled modules""",
-        [])
+        ['Pygithub', 'Textract', 'Pydnsbl', 'Pocketsphinx'] if os.path.isdir("/data/data/com.termux/files/home") else [])
         venvDir = getCurrentVenvDir()
         setConfig("venvDir", """
         # virtual environment directory""",
