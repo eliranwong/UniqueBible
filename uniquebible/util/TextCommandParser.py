@@ -219,27 +219,6 @@ class TextCommandParser:
             # e.g. COUNT:::KJV:::love:::Matt-John, 1Cor, Rev
             # e.g. COUNT:::KJV:::temple:::OT
             """),
-            '''
-            # semantic search requires OpenAI API key
-            "semantic": (self.textSemanticSearch, """
-            # [KEYWORD] SEMANTIC
-            # Feature - Bible Query via OpenAI API and Llama Index.
-            # Usage - SEMANTIC:::[BIBLE_VERSION]:::[QUERY]
-            # e.g. SEMANTIC:::KJV:::quote verses on "God created the earth"
-            # e.g. SEMANTIC:::KJV:::write a summary on Exodus 14
-            # e.g. SEMANTIC:::KJV:::compare Mark 1 and John 1
-            """),'''
-            # gpt index search requires OpenAI API key
-            "gptsearch": (self.textGPTSEARCHSearch, """
-            # [KEYWORD] GPTSEARCH
-            # Feature - Use natural language to search bible modules.
-            # Usage - GPTSEARCH:::[BIBLE_VERSION]:::[QUERY]
-            # e.g. GPTSEARCH:::NET:::slow to speak
-            # e.g. GPTSEARCH:::NET:::verses contain both Jesus and love
-            # e.g. GPTSEARCH:::NET:::verses contain spirit but not holy
-            # e.g. GPTSEARCH:::NET:::faith in chapter 3
-            # e.g. GPTSEARCH:::verses that contain both 'God' and 'faith' in the book of Isaiah
-            """),
             "search": (self.textSearchBasic, """
             # [KEYWORD] SEARCH
             # Feature - Search bible / bibles for a string
@@ -995,6 +974,29 @@ class TextCommandParser:
             # Feature - Search '{0}' ONLY
             # Usage - {0}:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
             # e.g. {0}:::KJV:::love""".format(book))
+
+    ''' old - will make a change
+            # semantic search requires OpenAI API key
+            "semantic": (self.textSemanticSearch, """
+            # [KEYWORD] SEMANTIC
+            # Feature - Bible Query via OpenAI API and Llama Index.
+            # Usage - SEMANTIC:::[BIBLE_VERSION]:::[QUERY]
+            # e.g. SEMANTIC:::KJV:::quote verses on "God created the earth"
+            # e.g. SEMANTIC:::KJV:::write a summary on Exodus 14
+            # e.g. SEMANTIC:::KJV:::compare Mark 1 and John 1
+            """),
+            # gpt index search requires OpenAI API key
+            "gptsearch": (self.textGPTSEARCHSearch, """
+            # [KEYWORD] GPTSEARCH
+            # Feature - Use natural language to search bible modules.
+            # Usage - GPTSEARCH:::[BIBLE_VERSION]:::[QUERY]
+            # e.g. GPTSEARCH:::NET:::slow to speak
+            # e.g. GPTSEARCH:::NET:::verses contain both Jesus and love
+            # e.g. GPTSEARCH:::NET:::verses contain spirit but not holy
+            # e.g. GPTSEARCH:::NET:::faith in chapter 3
+            # e.g. GPTSEARCH:::verses that contain both 'God' and 'faith' in the book of Isaiah
+            """),
+    '''
 
     def parser(self, textCommand, source="main"):
         commandList = self.splitCommand(textCommand)

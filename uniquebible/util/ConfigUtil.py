@@ -205,7 +205,7 @@ class ConfigUtil:
         False)
         setConfig("terminalUseLighterCompleter", """
         # To enable lighter completer to make command completion quicker on slow devices.""",
-        False)
+        True if os.path.isdir("/data/data/com.termux/files/home") else False)
         setConfig("terminalAutoUpdate", """
         # Option to update UBA automatically on startup if newer version is found.""",
         False)

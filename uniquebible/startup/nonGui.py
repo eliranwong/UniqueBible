@@ -237,7 +237,7 @@ def run_stream_mode():
         command = f"{command} {input_text}"
     if command.strip():
         config.mainWindow = LocalCliHandler()
-        output_text = config.mainWindow.getContent(command)
+        output_text = config.mainWindow.getContent(command, False)
     else:
         output_text = "Command not given!"
     print(output_text, file=sys.stdout)

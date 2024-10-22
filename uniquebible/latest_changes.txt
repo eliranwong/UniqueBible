@@ -1,6 +1,10 @@
 PIP package:
 
-0.1.09-12
+0.1.13
+
+* worked with latest ToolMate AI
+
+0.1.09-0.1.12
 
 * added a 'stream' mode to work with stdin and stdout, e.g.
 

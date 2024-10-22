@@ -54,13 +54,14 @@ if not config.runMode == "stream":
     #from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 
 
-class LocalCliHandler:
-
     def __init__(self, command="John 3:16"):
         if config.terminalUseMarvelDataPrivate:
             config.defaultMarvelData = config.marvelData
             config.marvelData = config.marvelDataPrivate
-        self.textCommandParser = TextCommandParser(RemoteCliMainWindow())
+        try:
+            self.textCommandParser = TextCommandParser(RemoteCliMainWindow())
+        except:
+            self.textCommandParser = TextCommandParser(None)
         self.crossPlatform = CrossPlatform()
         self.crossPlatform.setupResourceLists()
         self.html = "<ref >Unique Bible App</ref>"
@@ -74,8 +75,11 @@ class LocalCliHandler:
         if not config.runMode == "stream":
             self.initPromptElements()
         self.setOsOpenCmd()
-        self.ttsLanguages = self.getTtsLanguages()
-        self.ttsLanguageCodes = list(self.ttsLanguages.keys())
+        try:
+            self.ttsLanguages = self.getTtsLanguages()
+            self.ttsLanguageCodes = list(self.ttsLanguages.keys())
+        except:
+            pass
         self.bibleBooks = BibleBooks()
         abbReferences, bcvReferences = self.bibleBooks.getAllKJVreferences()
         self.allKJVreferences = self.getDummyDict(abbReferences, ",")
@@ -85,8 +89,11 @@ class LocalCliHandler:
         if not WebtopUtil.isPackageInstalled("w3m"):
             config.terminalBibleParallels = False
             self.unsupportedCommands.append("sidebyside")
-        self.ttsCommandKeyword = self.getDefaultTtsKeyword().lower()
-        self.unsupportedCommands.append("gtts" if self.ttsCommandKeyword == "speak" else "speak")
+        try:
+            self.ttsCommandKeyword = self.getDefaultTtsKeyword().lower()
+            self.unsupportedCommands.append("gtts" if self.ttsCommandKeyword == "speak" else "speak")
+        except:
+            pass
         self.startupException1 = [config.terminal_cancel_action, ".", ".ed", ".sys", ".system", ".quit", ".q", ".restart", ".z", ".togglepager", ".filters", ".toggleclipboardmonitor", ".history", ".update", ".find", ".sa", ".sas", ".read", ".readsync", ".download", ".paste", ".share", ".copy", ".copyhtml", ".nano", ".vi", ".vim", ".searchbible", ".starthttpserver", ".downloadyoutube", ".web", ".gtts", ".portablepython", ".textfile"]
         self.startupException2 = "^(_setconfig:::|\.edit|\.change|\.toggle|\.stop|\.exec|mp3:::|mp4:::|cmd:::|\.backup|\.restore|gtts:::|speak:::|download:::|read:::|readsync:::|semantic:::)"
         #config.cliTtsProcess = None
@@ -982,10 +989,12 @@ class LocalCliHandler:
         # set is supported in NestedCompleter but not preferred as set is unordered
         return {f"{i}{suffix}": furtherOptions for i in data} if furtherOptions is not None else {f"{i}{suffix}": None for i in data}
 
-    def getCommandCompleter(self):
+    def getCommandCompleterSuggestions(self, textCommandSuggestion=None):
+        if textCommandSuggestion is None:
+            textCommandSuggestion = self.getTextCommandSuggestion()
         suggestions = {}
         days365 = self.getDummyDict([(i + 1) for i in range(365)])
-        for i in self.getTextCommandSuggestion():
+        for i in textCommandSuggestion:
             if re.sub(":::.*?$", "", i) in self.unsupportedCommands:
                 pass
             elif i == ".backup":
@@ -1083,8 +1092,10 @@ class LocalCliHandler:
                 suggestions[i] = self.getDummyDict(self.crossPlatform.thirdPartyDictionaryList, ":::")
             elif i in ("searchtool:::",):
                 suggestions[i] = self.getDummyDict(self.crossPlatform.searchToolList, ":::")
-            elif i in (f"{self.ttsCommandKeyword}:::",):
-                suggestions[i] = self.getDummyDict(self.ttsLanguageCodes, ":::")
+            elif self.textCommandParser.parent is not None:
+                # self.textCommandParser.parent is None when uba is not running as a full app
+                if i in (f"{self.ttsCommandKeyword}:::",):
+                    suggestions[i] = self.getDummyDict(self.ttsLanguageCodes, ":::")
             elif i in ("exlb:::",):
                 suggestions[i] = self.getDummyDict(["exlbt", "exlbp", "exlbl"], ":::")
             elif i in ("day:::", "dayaudio:::", "dayaudioplus:::"):
@@ -1098,11 +1109,11 @@ class LocalCliHandler:
         suggestions = {**suggestions, **self.allKJVreferences}
         # Remove unexpected item
         suggestions.pop(":::", None)
-        if config.terminalUseLighterCompleter:
-            completer = FuzzyCompleter(ThreadedCompleter(NestedCompleter.from_nested_dict(suggestions)))
-        else:
-            completer = FuzzyCompleter(ThreadedCompleter(NestedCompleter.from_nested_dict(suggestions)))
-        return completer
+        return suggestions
+
+    def getCommandCompleter(self):
+        suggestions = self.getCommandCompleterSuggestions()
+        return FuzzyCompleter(ThreadedCompleter(NestedCompleter.from_nested_dict(suggestions)))
 
     def getTextCommandSuggestion(self, addDotCommandWordOnly=True):
         # Text command autocompletion/autosuggest

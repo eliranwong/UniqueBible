@@ -1,0 +1,8 @@
+apsw
+babel
+gdown
+prompt_toolkit
+requests
+
+[gui]
+PySide6
