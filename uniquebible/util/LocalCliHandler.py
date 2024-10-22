@@ -54,6 +54,8 @@ if not config.runMode == "stream":
     #from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 
 
+class LocalCliHandler:
+
     def __init__(self, command="John 3:16"):
         if config.terminalUseMarvelDataPrivate:
             config.defaultMarvelData = config.marvelData
