@@ -1,5 +1,11 @@
 PIP package:
 
+0.1.15
+
+* use `groqchat` for bible chat in terminal mode
+
+* fixed a message when uba is closing on Termux
+
 0.1.13-0.1.14
 
 * worked with latest ToolMate AI

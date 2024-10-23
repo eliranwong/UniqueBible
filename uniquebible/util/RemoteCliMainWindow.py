@@ -340,7 +340,7 @@ class RemoteCliMainWindow(CrossPlatform):
                 pass
 
             # close macOS text-to-speak voice
-            if WebtopUtil.isPackageInstalled("say"):
+            if shutil.which("say"):
                 os.system("pkill say")
             VlcUtil.closeVlcPlayer()
             # close espeak on Linux
