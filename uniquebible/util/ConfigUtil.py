@@ -62,10 +62,6 @@ class ConfigUtil:
         ubaUserDir = os.path.join(os.path.expanduser("~"), "UniqueBible")
         config.ubaUserDir = ubaUserDir if os.path.isdir(ubaUserDir) else os.getcwd()
         config.packageDir = str(importlib.resources.files("uniquebible"))
-        
-        userMarvelData = os.path.join(config.ubaUserDir, "marvelData")
-        if config.marvelData == "marvelData" and os.path.isdir(userMarvelData):
-            config.marvelData = userMarvelData
 
         # check running mode
         config.runMode = sys.argv[1] if len(sys.argv) > 1 else ""
@@ -825,7 +821,11 @@ class ConfigUtil:
         config.help["marvelData"] = """
         # Specify the folder path of resources"""
         if not hasattr(config, "marvelData") or not os.path.isdir(config.marvelData):
-            config.marvelData = "marvelData"
+            userMarvelData = os.path.join(config.ubaUserDir, "marvelData")
+            if os.path.isdir(userMarvelData):
+                config.marvelData = userMarvelData
+            else:
+                config.marvelData = "marvelData"
         config.help["marvelDataPublic"] = """
         # Public marvelData Directory."""
         if not hasattr(config, "marvelDataPublic") or not os.path.isdir(config.marvelData):
