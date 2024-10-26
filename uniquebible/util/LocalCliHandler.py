@@ -923,6 +923,7 @@ class LocalCliHandler:
                 config.mainB, config.mainC, config.mainV, *_ = references[-1]
             return plainText
         except:
+            #print(traceback.format_exc())
             return self.printInvalidOptionEntered()
 
     def fineTuneTextForWebBrowserDisplay(self, text=""):
@@ -3729,12 +3730,13 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             return self.printInvalidOptionEntered()
 
     def editConfig(self, editor):
-        if not os.path.isfile("config.py"):
+        configFile = os.path.join(config.packageDir, "config.py")
+        if not os.path.isfile(configFile):
             return ""
         self.print(self.divider)
         self.print("Caution! Editing 'config.py' incorrectly may stop UBA from working.")
         if not editor:
-            changesMade = self.multilineEditor(filepath="config.py")
+            changesMade = self.multilineEditor(filepath=configFile)
             if changesMade:
                 config.saveConfigOnExit = False
                 self.print(self.divider)
@@ -3746,8 +3748,8 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             userInput = userInput.lower()
             if userInput in ("y", "yes"):
                 self.print("reading config content ...")
-                if os.path.isfile("config.py"):
-                    with open("config.py", "r", encoding="utf-8") as input_file:
+                if os.path.isfile(configFile):
+                    with open(configFile, "r", encoding="utf-8") as input_file:
                         content = input_file.read()
                     self.print("config is ready for editing ...")
                     self.print("To apply changes, save as 'config.py' and replace the existing 'config.py' when you finish editing.")

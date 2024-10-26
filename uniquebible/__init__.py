@@ -50,6 +50,8 @@ def getPackageLatestVersion(package):
 
 thisPackage = "uniquebible"
 
+print(f"Checking '{thisPackage}' version ...")
+
 installed_version = getPackageInstalledVersion(thisPackage)
 if installed_version is None:
     print("Installed version information is not accessible!")

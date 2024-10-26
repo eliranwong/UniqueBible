@@ -23,7 +23,10 @@ class RemoteCliMainWindow(CrossPlatform):
         self.bibleInfo = DatafileLocation.marvelBibles
         if not config.enableHttpServer:
             self.setupResourceLists()
-            config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
+            try:
+                config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
+            except:
+                pass
 
     def importModulesInFolder(self, directory="import"):
         if os.path.isdir(directory):

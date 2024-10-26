@@ -7,6 +7,7 @@ from prompt_toolkit.keys import Keys
 from datetime import date
 from openai import OpenAI
 
+from uniquebible.util.DatafileLocation import DatafileLocation
 from uniquebible.db.StatisticsWordsSqlite import StatisticsWordsSqlite
 from uniquebible.util.VlcUtil import VlcUtil
 from uniquebible.util.exlbl import allLocations, tc_location_names, sc_location_names
@@ -1122,7 +1123,7 @@ class TextCommandParser:
         return ((config.marvelData, "commentaries", "c{0}.commentary".format(config.commentaryText)), self.getCommentaryCloudID(config.commentaryText))
 
     def getMarvelBibles(self):
-        return self.parent.bibleInfo
+        return DatafileLocation.marvelBibles
 
     def getCommentaryCloudID(self, commentary):
         cloudIDs = {
@@ -1174,7 +1175,8 @@ class TextCommandParser:
 
     def databaseNotInstalled(self, keyword):
         databaseInfo = self.databaseInfo()[keyword]
-        self.parent.downloadHelper(databaseInfo)
+        if self.parent is not None:
+            self.parent.downloadHelper(databaseInfo)
         return ("", "", {})
 
     # return invalid command
@@ -1215,21 +1217,26 @@ class TextCommandParser:
         config.mainText = text
         config.mainB, config.mainC, config.mainV, *_ = bcvTuple
         config.setMainVerse = True
-        self.parent.updateMainRefButton()
+        if self.parent is not None:
+            self.parent.updateMainRefButton()
 
     def setStudyVerse(self, text, bcvTuple):
         config.studyText = text
         config.studyB, config.studyC, config.studyV, *_ = bcvTuple
-        self.parent.updateStudyRefButton()
+        if self.parent is not None:
+            self.parent.updateStudyRefButton()
         config.commentaryB, config.commentaryC, config.commentaryV, *_ = bcvTuple
-        self.parent.updateCommentaryRefButton()
+        if self.parent is not None:
+            self.parent.updateCommentaryRefButton()
 
     def setCommentaryVerse(self, text, bcvTuple):
         config.commentaryText = text
         config.commentaryB, config.commentaryC, config.commentaryV, *_ = bcvTuple
-        self.parent.updateCommentaryRefButton()
+        if self.parent is not None:
+            self.parent.updateCommentaryRefButton()
         config.studyB, config.studyC, config.studyV, *_ = bcvTuple
-        self.parent.updateStudyRefButton()
+        if self.parent is not None:
+            self.parent.updateStudyRefButton()
 
     # shared functions about bible text
     def getConfirmedTexts(self, texts, returnEmptyList=False):
@@ -1259,7 +1266,8 @@ class TextCommandParser:
 
     def switchCompareView(self):
         if self.parent.enforceCompareParallelButton:
-            self.parent.enforceCompareParallelButtonClicked()
+            if self.parent is not None:
+                self.parent.enforceCompareParallelButtonClicked()
         else:
             config.enforceCompareParallel = not config.enforceCompareParallel
 
@@ -1311,10 +1319,12 @@ class TextCommandParser:
             formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not re.search(r"^[\._]", f)]
             if text in ("MOB", "MIB", "MTB", "MPB", "MAB", "LXX1i", "LXX2i", "LXX1", "LXX2") and not config.readFormattedBibles:
                 config.readFormattedBibles = True
-                self.parent.enableParagraphButtonAction(False)
+                if self.parent is not None:
+                    self.parent.enableParagraphButtonAction(False)
             elif config.readFormattedBibles and (((text in ("OHGBi", "OHGB") or not text in formattedBibles) and view == "main") or text == "LXX"):
                 config.readFormattedBibles = False
-                self.parent.enableParagraphButtonAction(False)
+                if self.parent is not None:
+                    self.parent.enableParagraphButtonAction(False)
 
             # Custom font styling for Bible
             (fontFile, fontSize, css) = Bible(text).getFontInfo()
@@ -1514,9 +1524,11 @@ class TextCommandParser:
                 return ("", "", {})
             else:
                 if config.isGoogleCloudTTSAvailable:
-                    self.parent.saveCloudTTSAudio(text, language)
+                    if self.parent is not None:
+                        self.parent.saveCloudTTSAudio(text, language)
                 else:
-                    self.parent.saveGTTSAudio(text, language)
+                    if self.parent is not None:
+                        self.parent.saveGTTSAudio(text, language)
 
                 audioFile = self.parent.getGttsFilename()
                 if os.path.isfile(audioFile):
@@ -1525,7 +1537,8 @@ class TextCommandParser:
             if config.developer:
                 print(traceback.format_exc())
             else:
-                self.parent.displayMessage(config.thisTranslation["message_fail"])
+                if self.parent is not None:
+                    self.parent.displayMessage(config.thisTranslation["message_fail"])
 
 # Keep the following codes for future reference
 # The following method does not work on Windows
@@ -1573,7 +1586,8 @@ class TextCommandParser:
                 command = f"say -r {config.macOSttsSpeed} -v {voice} -f temp/temp.txt"
                 self.cliTtsProcess = subprocess.Popen([command], shell=True, preexec_fn=os.setpgrp, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             else:
-                self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
+                if self.parent is not None:
+                    self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
         else:
             # espeak has no support of "ko", "ko" here is used to correct detection of traditional chinese
             # It is not recommended to use "ko" to correct language detection for "zh-tw", if qt built-in tts engine is used.
@@ -1634,14 +1648,16 @@ class TextCommandParser:
                             print(f"'{language}' is not found!")
                             print("Available languages:", languages)
                         else:
-                            self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
+                            if self.parent is not None:
+                                self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
                         language = config.ttsDefaultLangauge
                         print(f"Language changed to '{language}'")
                     language = isoLang2epeakLang[language][0]
                     # subprocess is used
                     WebtopUtil.run("espeak -s {0} -v {1} '{2}'".format(config.espeakSpeed, language, text))
                 else:
-                    self.parent.displayMessage(config.thisTranslation["message_noEspeak"])
+                    if self.parent is not None:
+                        self.parent.displayMessage(config.thisTranslation["message_noEspeak"])
             else:
                 # use qt built-in tts engine
                 engineNames = QTextToSpeech.availableEngines()
@@ -1655,7 +1671,8 @@ class TextCommandParser:
                     if not (config.ttsDefaultLangauge in languages):
                         config.ttsDefaultLangauge = "en"
                     if not (language in languages):
-                        self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
+                        if self.parent is not None:
+                            self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
                         language = config.ttsDefaultLangauge
                     self.qtTtsEngine.setLocale(isoLang2qlocaleLang[language][0])
 
@@ -1669,11 +1686,13 @@ class TextCommandParser:
 
                         self.qtTtsEngine.say(text)
                     else:
-                        self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
+                        if self.parent is not None:
+                            self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
         return ("", "", {})
 
     def stopTtsAudio(self):
-        self.parent.closeMediaPlayer()
+        if self.parent is not None:
+            self.parent.closeMediaPlayer()
 #        if self.cliTtsProcess is not None:
 #            #print(self.cliTtsProcess)
 #            # The following two lines do not work:
@@ -1723,7 +1742,8 @@ class TextCommandParser:
         else:
             # version 2: known issue - only works on Linux, but not macOS or Windows
             multiprocessing.Process(target=self.downloadYouTubeFile, args=(downloadCommand, command, config.musicFolder)).start()
-            self.parent.displayMessage(config.thisTranslation["downloading"])
+            if self.parent is not None:
+                self.parent.displayMessage(config.thisTranslation["downloading"])
         """
         #self.parent.reloadResources()
         return ("", "", {})
@@ -1743,7 +1763,8 @@ class TextCommandParser:
         else:
             # version 2: known issue - only works on Linux, but not macOS or Windows
             multiprocessing.Process(target=self.downloadYouTubeFile, args=(downloadCommand, command, config.videoFolder)).start()
-            self.parent.displayMessage(config.thisTranslation["downloading"])
+            if self.parent is not None:
+                self.parent.displayMessage(config.thisTranslation["downloading"])
         """
         #self.parent.reloadResources()
         return ("", "", {})
@@ -1757,7 +1778,8 @@ class TextCommandParser:
         else:
             # version 2: known issue - only works on Linux, but not macOS or Windows
             multiprocessing.Process(target=self.downloadYouTubeFile, args=(downloadCommand, youTubeLink, config.videoFolder)).start()
-            self.parent.displayMessage(config.thisTranslation["downloading"])
+            if self.parent is not None:
+                self.parent.displayMessage(config.thisTranslation["downloading"])
         """
         #self.parent.reloadResources()
 
@@ -1779,21 +1801,24 @@ class TextCommandParser:
             config.youtubeDlIsUpdated = True
         if self.isFfmpegInstalled() or not noFfmpeg:
             if config.runMode in ("", "cli", "gui"):
-                self.parent.workOnDownloadYouTubeFile(downloadCommand, youTubeLink, outputFolder)
+                if self.parent is not None:
+                    self.parent.workOnDownloadYouTubeFile(downloadCommand, youTubeLink, outputFolder)
             """
             elif platform.system() == "Linux":
                 try:
                     subprocess.run(["cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
                     subprocess.Popen([config.open, outputFolder])
                 except subprocess.CalledProcessError as err:
-                    self.parent.displayMessage(err, title="ERROR:")
+                    if self.parent is not None:
+                        self.parent.displayMessage(err, title="ERROR:")
             # on Windows
             elif platform.system() == "Windows":
                 try:
                     os.system(r"cd .\{2}\ & {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
                     os.system(r"{0} {1}".format(config.open, outputFolder))
                 except:
-                    self.parent.displayMessage(config.thisTranslation["noSupportedUrlFormat"], title="ERROR:")
+                    if self.parent is not None:
+                        self.parent.displayMessage(config.thisTranslation["noSupportedUrlFormat"], title="ERROR:")
             # on Unix-based system, like macOS
             else:
                 try:
@@ -1803,10 +1828,12 @@ class TextCommandParser:
                     else:
                         os.system(r"{0} {1}".format(config.open, outputFolder))
                 except:
-                    self.parent.displayMessage(config.thisTranslation["noSupportedUrlFormat"], title="ERROR:")
+                    if self.parent is not None:
+                        self.parent.displayMessage(config.thisTranslation["noSupportedUrlFormat"], title="ERROR:")
             """
         else:
-            self.parent.displayMessage(config.thisTranslation["ffmpegNotFound"])
+            if self.parent is not None:
+                self.parent.displayMessage(config.thisTranslation["ffmpegNotFound"])
             wikiPage = "https://github.com/eliranwong/UniqueBible/wiki/Install-ffmpeg"
             if config.enableHttpServer:
                 subprocess.Popen("{0} {1}".format(config.open, wikiPage), shell=True)
@@ -1824,7 +1851,8 @@ class TextCommandParser:
                     #print(key_press)
                     if key_press.key in (Keys.ControlQ, Keys.ControlZ):
                         print("\nStopping audio playback ...")
-                        self.parent.closeMediaPlayer()
+                        if self.parent is not None:
+                            self.parent.closeMediaPlayer()
                         done = True
                         playback_event.set()
 
@@ -1899,7 +1927,8 @@ class TextCommandParser:
                     # old way
                     #self.parent.playAudioBibleFilePlayListPlusDisplayText(allPlayList, allTextList) if displayText else self.parent.playAudioBibleFilePlayList(allPlayList)
                 else:
-                    self.parent.playAudioBibleFilePlayList(allPlayList)
+                    if self.parent is not None:
+                        self.parent.playAudioBibleFilePlayList(allPlayList)
             return (target, content, {})
         else:
             return self.invalidCommand()
@@ -1916,21 +1945,24 @@ class TextCommandParser:
                 playlist = self.parent.playAudioBibleChapterVerseByVerse(text, b, c)
                 content = HtmlGeneratorUtil().getAudioPlayer(playlist)
             else:
-                self.parent.playAudioBibleChapterVerseByVerse(text, b, c)
+                if self.parent is not None:
+                    self.parent.playAudioBibleChapterVerseByVerse(text, b, c)
         elif len(items) == 4:
             text, b, c, startVerse = items
             if config.enableHttpServer:
                 playlist = self.parent.playAudioBibleChapterVerseByVerse(text, b, c, int(startVerse))
                 content = HtmlGeneratorUtil().getAudioPlayer(playlist)
             else:
-                self.parent.playAudioBibleChapterVerseByVerse(text, b, c, int(startVerse))
+                if self.parent is not None:
+                    self.parent.playAudioBibleChapterVerseByVerse(text, b, c, int(startVerse))
         return (target, content, {})
         #except:
         #    return self.invalidCommand()
 
     # READVERSE:::
     def readVerse(self, command, source):
-        self.parent.closeMediaPlayer()
+        if self.parent is not None:
+            self.parent.closeMediaPlayer()
         text, b, c, v = command.split(".")
         folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
         filename = "{0}_{1}_{2}_{3}.mp3".format(text, b, c, v)
@@ -1947,7 +1979,8 @@ class TextCommandParser:
                     elif config.isVlcAvailable:
                         VlcUtil.playMediaFile(audioFile, config.vlcSpeed, (not config.hideVlcInterfaceReadingSingleVerse))
                     else:
-                        self.parent.displayMessage(config.thisTranslation["noMediaPlayer"])
+                        if self.parent is not None:
+                            self.parent.displayMessage(config.thisTranslation["noMediaPlayer"])
                     return ("", "", {})
                 except:
                     return self.invalidCommand()
@@ -1957,7 +1990,8 @@ class TextCommandParser:
     # READWORD:::
     def readWord(self, command, source):
         if not source == 'http':
-            self.parent.closeMediaPlayer()
+            if self.parent is not None:
+                self.parent.closeMediaPlayer()
         text, b, c, v, wordID = command.split(".")
         folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
         filename = "{0}_{1}_{2}_{3}_{4}.mp3".format(text, b, c, v, wordID)
@@ -1974,7 +2008,8 @@ class TextCommandParser:
                     elif config.isVlcAvailable:
                         VlcUtil.playMediaFile(audioFile, config.vlcSpeed, False)
                     else:
-                        self.parent.displayMessage(config.thisTranslation["noMediaPlayer"])
+                        if self.parent is not None:
+                            self.parent.displayMessage(config.thisTranslation["noMediaPlayer"])
                     return ("", "", {})
                 except:
                     return self.invalidCommand()
@@ -1988,7 +2023,8 @@ class TextCommandParser:
 
     # READLEXEME:::
     def readLexeme(self, command, source):
-        self.parent.closeMediaPlayer()
+        if self.parent is not None:
+            self.parent.closeMediaPlayer()
         text, b, c, v, wordID = command.split(".")
         folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
         filename = "lex_{0}_{1}_{2}_{3}_{4}.mp3".format(text, b, c, v, wordID)
@@ -2005,7 +2041,8 @@ class TextCommandParser:
                     elif config.isVlcAvailable:
                         VlcUtil.playMediaFile(audioFile, config.vlcSpeed, False)
                     else:
-                        self.parent.displayMessage(config.thisTranslation["noMediaPlayer"])
+                        if self.parent is not None:
+                            self.parent.displayMessage(config.thisTranslation["noMediaPlayer"])
                     return ("", "", {})
                 except:
                     return self.invalidCommand()
@@ -2022,14 +2059,16 @@ class TextCommandParser:
         command = command.strip()
         if not os.path.isfile(command):
             return self.invalidCommand()
-        self.parent.closeMediaPlayer()
+        if self.parent is not None:
+            self.parent.closeMediaPlayer()
         try:
             if config.mainWindow.audioPlayer is not None:
                 config.mainWindow.addToAudioPlayList(command, True)
             elif config.isVlcAvailable:
                 VlcUtil.playMediaFile(command, config.vlcSpeed, gui)
             else:
-                self.parent.displayMessage(config.thisTranslation["noMediaPlayer"])
+                if self.parent is not None:
+                    self.parent.displayMessage(config.thisTranslation["noMediaPlayer"])
         except:
             WebtopUtil.openFile(command)
         return ("", "", {})
@@ -2058,7 +2097,8 @@ class TextCommandParser:
                 playlist = self.getBiblePlaylist(reference, text, folder)
         else:
             playlist.append((text, book, chapter, None, folder))
-        self.parent.playBibleMP3Playlist(playlist)
+        if self.parent is not None:
+            self.parent.playBibleMP3Playlist(playlist)
         return ("", "", {})
 
     def getBiblePlaylist(self, command, text, folder):
@@ -2218,7 +2258,8 @@ class TextCommandParser:
                     return self.textBibleVerseParser(references, text, source)
                 else:
                     databaseInfo = marvelBibles[text]
-                    self.parent.downloadHelper(databaseInfo)
+                    if self.parent is not None:
+                        self.parent.downloadHelper(databaseInfo)
                     return ("", "", {})
             else:
                 return self.textBibleVerseParser(references, text, source)
@@ -2236,16 +2277,19 @@ class TextCommandParser:
                 fileItems = marvelBibles[text][0]
                 if os.path.isfile(os.path.join(*fileItems)):
                     if config.enforceCompareParallel:
-                        self.parent.enforceCompareParallelButtonClicked()
+                        if self.parent is not None:
+                            self.parent.enforceCompareParallelButtonClicked()
                     updateViewConfig, viewText, viewReference, *_ = self.getViewConfig(source)
                     return self.textBibleVerseParser(viewReference, texts[0], source)
                 else:
                     databaseInfo = marvelBibles[text]
-                    self.parent.downloadHelper(databaseInfo)
+                    if self.parent is not None:
+                        self.parent.downloadHelper(databaseInfo)
                     return ("", "", {})
             else:
                 if config.enforceCompareParallel:
-                    self.parent.enforceCompareParallelButtonClicked()
+                    if self.parent is not None:
+                        self.parent.enforceCompareParallelButtonClicked()
                 updateViewConfig, viewText, viewReference, *_ = self.getViewConfig(source)
                 return self.textBibleVerseParser(viewReference, texts[0], source)
 
@@ -2355,7 +2399,8 @@ class TextCommandParser:
     # STUDY:::
     def textStudy(self, command, source):
         if config.openBibleInMainViewOnly and not config.noQt:
-            self.parent.enableStudyBibleButtonClicked()
+            if self.parent is not None:
+                self.parent.enableStudyBibleButtonClicked()
         return self.textAnotherView(command, source, "study")
 
     # STUDYTEXT:::
@@ -2373,7 +2418,8 @@ class TextCommandParser:
             else:
                 from qtpy.QtWidgets import QApplication
             QApplication.clipboard().setText(command)
-            self.parent.displayMessage(config.thisTranslation["copied"])
+            if self.parent is not None:
+                self.parent.displayMessage(config.thisTranslation["copied"])
         except:
             return self.invalidCommand()
         return ("", "", {})
@@ -2403,7 +2449,8 @@ class TextCommandParser:
                 if "zh-TW" in language:
                     language = language.replace("zh-TW", "zh@TW")
                 if language.count("-") != 1:
-                    self.parent.displayMessage(config.thisTranslation["message_invalid"])
+                    if self.parent is not None:
+                        self.parent.displayMessage(config.thisTranslation["message_invalid"])
                 else:
                     fromLanguage, toLanguage = language.split("-")
                     if "@" in fromLanguage:
@@ -2416,7 +2463,8 @@ class TextCommandParser:
                         toLanguage = "en"
             # translate here
             translation = translator.translate(text, fromLanguage, toLanguage)
-            self.parent.displayMessage(translation)
+            if self.parent is not None:
+                self.parent.displayMessage(translation)
             if config.autoCopyTranslateResult and not config.noQt:
                 if config.qtLibrary == "pyside6":
                     from PySide6.QtWidgets import QApplication
@@ -2424,8 +2472,10 @@ class TextCommandParser:
                     from qtpy.QtWidgets import QApplication
                 QApplication.clipboard().setText(translation)
         else:
-            self.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
-            self.parent.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/IBM-Watson-Language-Translator")
+            if self.parent is not None:
+                self.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
+            if self.parent is not None:
+                self.parent.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/IBM-Watson-Language-Translator")
         return ("", "", {})
 
     # This function below is an old way to process TRANSLATE::: command with goolgetrans
@@ -2444,9 +2494,11 @@ class TextCommandParser:
             language, text = self.splitCommand(command)
         # run google translate
         if language in languages.values():
-            self.parent.mainView.translateTextIntoUserLanguage(text, language)
+            if self.parent is not None:
+                self.parent.mainView.translateTextIntoUserLanguage(text, language)
         else:
-            self.parent.mainView.displayMessage(config.thisTranslation["message_invalid"])
+            if self.parent is not None:
+                self.parent.mainView.displayMessage(config.thisTranslation["message_invalid"])
         return ("", "", {})
 
     # called by MAIN::: & STUDY:::
@@ -2468,7 +2520,8 @@ class TextCommandParser:
                     return self.textBibleVerseParser(references, texts[0], target)
                 else:
                     databaseInfo = marvelBibles[text]
-                    self.parent.downloadHelper(databaseInfo)
+                    if self.parent is not None:
+                        self.parent.downloadHelper(databaseInfo)
                     return ("", "", {})
             else:
                 return self.textBibleVerseParser(references, texts[0], target)
@@ -2574,7 +2627,8 @@ class TextCommandParser:
             missingMarvelTexts = [text for text in confirmedTexts if text in marvelBibles and not os.path.isfile(os.path.join(*marvelBibles[text][0]))]
             if missingMarvelTexts:
                 databaseInfo = marvelBibles[missingMarvelTexts[0]]
-                self.parent.downloadHelper(databaseInfo)
+                if self.parent is not None:
+                    self.parent.downloadHelper(databaseInfo)
                 return ("", "", {})
             else:
                 if source in ('cli'):
@@ -2593,7 +2647,8 @@ class TextCommandParser:
                         (fontFile, fontSize, css) = Bible(text).getFontInfo()
                         config.mainCssBibleFontStyle += css
                     config.mainText = mainText
-                    self.parent.setBibleSelection()
+                    if self.parent is not None:
+                        self.parent.setBibleSelection()
                     return ("study" if config.compareOnStudyWindow else "main", "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)), {})
 
    # PASSAGES:::
@@ -2610,7 +2665,8 @@ class TextCommandParser:
             marvelBibles = self.getMarvelBibles()
             if text in marvelBibles and not os.path.isfile(os.path.join(*marvelBibles[text][0])):
                 databaseInfo = marvelBibles[text]
-                self.parent.downloadHelper(databaseInfo)
+                if self.parent is not None:
+                    self.parent.downloadHelper(databaseInfo)
                 return ("", "", {})
             else:
                 bibleVerseParser = BibleVerseParser(config.parserStandarisation)
@@ -2639,7 +2695,8 @@ class TextCommandParser:
             marvelBibles = self.getMarvelBibles()
             if text in marvelBibles and not os.path.isfile(os.path.join(*marvelBibles[text][0])):
                 databaseInfo = marvelBibles[text]
-                self.parent.downloadHelper(databaseInfo)
+                if self.parent is not None:
+                    self.parent.downloadHelper(databaseInfo)
                 return ("", "", {})
             else:
                 bibleVerseParser = BibleVerseParser(config.parserStandarisation)
@@ -2668,7 +2725,8 @@ class TextCommandParser:
             marvelBibles = self.getMarvelBibles()
             if text in marvelBibles and not os.path.isfile(os.path.join(*marvelBibles[text][0])):
                 databaseInfo = marvelBibles[text]
-                self.parent.downloadHelper(databaseInfo)
+                if self.parent is not None:
+                    self.parent.downloadHelper(databaseInfo)
                 return ("", "", {})
             else:
                 bibleVerseParser = BibleVerseParser(config.parserStandarisation)
@@ -2711,7 +2769,8 @@ class TextCommandParser:
                 content = NoteSqlite().getBookNote(b)[0]
                 return ("", content, {})
             else:
-                self.parent.openBookNote(b)
+                if self.parent is not None:
+                    self.parent.openBookNote(b)
             return ("", "", {})
         except:
             return self.invalidCommand()
@@ -2737,7 +2796,8 @@ class TextCommandParser:
                 content = NoteSqlite().getChapterNote(b, c)[0]
                 return ("", content, {})
             else:
-                self.parent.openChapterNote(b, c)
+                if self.parent is not None:
+                    self.parent.openChapterNote(b, c)
             return ("", "", {})
         except:
             return self.invalidCommand()
@@ -2763,7 +2823,8 @@ class TextCommandParser:
                 content = NoteSqlite().getVerseNote(b, c, v)[0]
                 return ("", content, {})
             else:
-                self.parent.openVerseNote(b, c, v)
+                if self.parent is not None:
+                    self.parent.openVerseNote(b, c, v)
             return ("", "", {})
         except:
             return self.invalidCommand()
@@ -2792,7 +2853,8 @@ class TextCommandParser:
                 config.mainWindow.openNoteEditor("book", b=b, c=c, v=v)
                 return ("", "[MESSAGE]Text Editor Closed", {})
             elif self.parent.noteSaved or self.parent.warningNotSaved():
-                self.parent.openNoteEditor("book", b=b, c=c, v=v)
+                if self.parent is not None:
+                    self.parent.openNoteEditor("book", b=b, c=c, v=v)
             return ("", "", {})
         except:
             return self.invalidCommand()
@@ -2818,7 +2880,8 @@ class TextCommandParser:
                 config.mainWindow.openNoteEditor("chapter", b=b, c=c, v=v)
                 return ("", "[MESSAGE]Text Editor Closed", {})
             elif self.parent.noteSaved or self.parent.warningNotSaved():
-                self.parent.openNoteEditor("chapter", b=b, c=c, v=v)
+                if self.parent is not None:
+                    self.parent.openNoteEditor("chapter", b=b, c=c, v=v)
             return ("", "", {})
         except:
             return self.invalidCommand()
@@ -2843,7 +2906,8 @@ class TextCommandParser:
                 config.mainWindow.openNoteEditor("verse", b=b, c=c, v=v)
                 return ("", "[MESSAGE]Text Editor Closed", {})
             elif self.parent.noteSaved or self.parent.warningNotSaved():
-                self.parent.openNoteEditor("verse", b=b, c=c, v=v)
+                if self.parent is not None:
+                    self.parent.openNoteEditor("verse", b=b, c=c, v=v)
             #else:
                 #self.parent.noteEditor.raise_()
             return ("", "", {})
@@ -2877,7 +2941,8 @@ class TextCommandParser:
                 config.mainWindow.openNoteEditor("journal", year=year, month=month, day=day)
                 return ("", "[MESSAGE]Text Editor Closed", {})
             elif self.parent.noteSaved or self.parent.warningNotSaved():
-                self.parent.openNoteEditor("journal", year=year, month=month, day=day)
+                if self.parent is not None:
+                    self.parent.openNoteEditor("journal", year=year, month=month, day=day)
             return ("", "", {})
         except:
             return self.invalidCommand()
@@ -2910,7 +2975,8 @@ class TextCommandParser:
             imageViewer.load_file(filePath)
             return ("", "", {})
         else:
-            self.parent.openExternalFile(filePath)
+            if self.parent is not None:
+                self.parent.openExternalFile(filePath)
             return ("", "", {})
 
     # open:::
@@ -2928,32 +2994,37 @@ class TextCommandParser:
             imageViewer.load_file(filePath)
             return ("", "", {})
         else:
-            self.parent.openExternalFile(filePath)
+            if self.parent is not None:
+                self.parent.openExternalFile(filePath)
             return ("", "", {})
 
     # docx:::
     def openDocxReader(self, command, source):
         if command:
-            self.parent.openTextFile(os.path.join(config.marvelData, "docx", command))
+            if self.parent is not None:
+                self.parent.openTextFile(os.path.join(config.marvelData, "docx", command))
         return ("", "", {})
 
     # opennote:::
     def textOpenNoteFile(self, command, source):
         if command:
-            self.parent.openTextFile(command)
+            if self.parent is not None:
+                self.parent.openTextFile(command)
         return ("", "", {})
 
     # _openfile:::
     def textOpenFile(self, command, source):
         fileName = config.history["external"][int(command)]
         if fileName:
-            self.parent.openTextFile(fileName)
+            if self.parent is not None:
+                self.parent.openTextFile(fileName)
         return ("", "", {})
 
     # _editfile:::
     def textEditFile(self, command, source):
         if command:
-            self.parent.editExternalFileHistoryRecord(int(command))
+            if self.parent is not None:
+                self.parent.editExternalFileHistoryRecord(int(command))
         return ("", "", {})
 
     # _website:::
@@ -2976,7 +3047,8 @@ class TextCommandParser:
             pathItems = command[7:].split("/")
             file = os.path.join(*pathItems)
             config.history["external"].append(file)
-            self.parent.openExternalFileHistoryRecord(-1)
+            if self.parent is not None:
+                self.parent.openExternalFileHistoryRecord(-1)
             return ("", "", {})
         else:
             return self.invalidCommand()
@@ -3117,7 +3189,8 @@ class TextCommandParser:
                 text, b, c, v = command.split(".")
                 config.mainText, config.mainB, config.mainC, config.mainV = text, int(b), int(c), int(v)
                 bibleCommand = "BIBLE:::{0}:::{1} {2}:{3}".format(text, BibleBooks.abbrev["eng"][b][0], config.mainC, config.mainV)
-                self.parent.addHistoryRecord("main", bibleCommand)
+                if self.parent is not None:
+                    self.parent.addHistoryRecord("main", bibleCommand)
             menu = HtmlGeneratorUtil().getMenu(command, source)
             return (source, menu, {})
         except:
@@ -3140,11 +3213,13 @@ class TextCommandParser:
             text, b, c, v = command.split(".")
             config.mainText, config.mainB, config.mainC, config.mainV = text, int(b), int(c), int(v)
             bibleCommand = "BIBLE:::{0}:::{1} {2}:{3}".format(text, BibleBooks.abbrev["eng"][b][0], config.mainC, config.mainV)
-            self.parent.addHistoryRecord("main", bibleCommand)
+            if self.parent is not None:
+                self.parent.addHistoryRecord("main", bibleCommand)
         if dotCount != 3 or config.verseNoDoubleClickAction == "_menu" or (config.enableHttpServer and config.verseNoDoubleClickAction.startswith("_cp")):
             if dotCount == 2 and not config.preferHtmlMenu and not config.enableHttpServer:
                 text, b, c = command.split(".")
-                self.parent.openControlPanelTab(0, int(b), int(c), int(1), text),
+                if self.parent is not None:
+                    self.parent.openControlPanelTab(0, int(b), int(c), int(1), text),
                 return ("", "", {})
             else:
                 menu = HtmlGeneratorUtil().getMenu(command, source)
@@ -3154,13 +3229,15 @@ class TextCommandParser:
         elif config.verseNoDoubleClickAction.startswith("_cp"):
             index = int(config.verseNoDoubleClickAction[-1])
             text, b, c, v = command.split(".")
-            self.parent.openControlPanelTab(index, int(b), int(c), int(v), text),
+            if self.parent is not None:
+                self.parent.openControlPanelTab(index, int(b), int(c), int(v), text),
             return ("", "", {})
         else:
             compareOnMain = (config.verseNoSingleClickAction == "COMPARE" and not config.compareOnStudyWindow)
             *_, b, c, v = command.split(".")
             verseReference = "{0} {1}:{2}".format(BibleBooks().abbrev["eng"][b][0], c, v)
-            self.parent.addHistoryRecord("main" if compareOnMain else "study", "{0}:::{1}".format(config.verseNoDoubleClickAction, verseReference))
+            if self.parent is not None:
+                self.parent.addHistoryRecord("main" if compareOnMain else "study", "{0}:::{1}".format(config.verseNoDoubleClickAction, verseReference))
             return self.mapVerseAction(config.verseNoDoubleClickAction, verseReference, source)
 
     # _vnsc:::
@@ -3174,21 +3251,26 @@ class TextCommandParser:
         bibleCommand = "BIBLE:::{0}:::{1}".format(text, verseReference)
         if config.enableHttpServer:
             config.mainText, config.mainB, config.mainC, config.mainV = text, int(b), int(c), int(v)
-            self.parent.addHistoryRecord("main", bibleCommand)
+            if self.parent is not None:
+                self.parent.addHistoryRecord("main", bibleCommand)
         elif not compareOnMain:
-            self.parent.passRunTextCommand(bibleCommand, True, source)
+            if self.parent is not None:
+                self.parent.passRunTextCommand(bibleCommand, True, source)
         if not config.verseNoSingleClickAction.upper() == config.syncAction.upper():
             if config.verseNoSingleClickAction == "_menu" or (config.enableHttpServer and config.verseNoSingleClickAction.startswith("_cp")):
                 menu = HtmlGeneratorUtil().getMenu("{0}.{1}.{2}.{3}".format(text, b, c, v), source)
                 return (source, menu, {})
             elif config.verseNoSingleClickAction.startswith("_cp"):
                 index = int(config.verseNoSingleClickAction[-1])
-                self.parent.openControlPanelTab(index, int(b), int(c), int(v), text),
+                if self.parent is not None:
+                    self.parent.openControlPanelTab(index, int(b), int(c), int(v), text),
                 return ("", "", {})
             else:
                 if not compareOnMain and config.syncAction == "STUDY":
-                    self.parent.nextStudyWindowTab()
-                self.parent.addHistoryRecord("main" if compareOnMain else "study", "{0}:::{1}".format(config.verseNoSingleClickAction, verseReference))
+                    if self.parent is not None:
+                        self.parent.nextStudyWindowTab()
+                if self.parent is not None:
+                    self.parent.addHistoryRecord("main" if compareOnMain else "study", "{0}:::{1}".format(config.verseNoSingleClickAction, verseReference))
                 return self.mapVerseAction(config.verseNoSingleClickAction, verseReference, source)
         return ("", "", {})
 
@@ -3200,7 +3282,8 @@ class TextCommandParser:
                 index = int(command)
             else:
                 index = 0
-            self.parent.openControlPanelTab(index, config.mainB, config.mainC, config.mainV, config.mainText),
+            if self.parent is not None:
+                self.parent.openControlPanelTab(index, config.mainB, config.mainC, config.mainV, config.mainText),
             return ("", "", {})
         except:
             return self.invalidCommand()
@@ -3219,7 +3302,8 @@ class TextCommandParser:
         bookData = BookData()
         bookMenu = bookData.getMenu(command)
         config.bookChapNum = 0
-        self.parent.updateBookButton()
+        if self.parent is not None:
+            self.parent.updateBookButton()
         return ("study", bookMenu, {'tab_title':command[:20]})
 
     # _history:::
@@ -3254,7 +3338,8 @@ class TextCommandParser:
             content = pyperclip.paste()
             return ("study", content, {})
         else:
-            self.parent.pasteFromClipboard()
+            if self.parent is not None:
+                self.parent.pasteFromClipboard()
         return ("", "", {})
 
     # _whatis:::
@@ -3807,7 +3892,8 @@ The WHERE condition is described as: {query}"""
         lexicalEntry = lexicalEntry.split(",")[0]
         translations = morphologySqlite.distinctMorphology(lexicalEntry)
         items = (lexeme, lexicalEntry, morphologyString, translations)
-        self.parent.openMorphDialog(items)
+        if self.parent is not None:
+            self.parent.openMorphDialog(items)
         return ("", "", {})
 
     # SEARCHMORPHOLOGYBYLEX:::
@@ -3986,7 +4072,8 @@ The WHERE condition is described as: {query}"""
         if command.count(":::") == 0:
         # if command.count(":::") == 0 and command in bookList:
             config.book = command
-            self.parent.updateBookButton()
+            if self.parent is not None:
+                self.parent.updateBookButton()
             return ("study", bookData.getMenu(module=config.book), {'tab_title': command[:20]})
         commandList = self.splitCommand(command)
         if commandList and len(commandList) == 2:
@@ -4007,10 +4094,12 @@ The WHERE condition is described as: {query}"""
                 if not isPDF and config.theme in ("dark", "night"):
                     content = self.adjustDarkThemeColorsForExternalBook(content)
                 if config.openBookInNewWindow:
-                    self.parent.updateBookButton()
+                    if self.parent is not None:
+                        self.parent.updateBookButton()
                     return ("popover.study", content, {'tab_title': module[:20], 'pdf_filename': pdfFilename})
                 else:
-                    self.parent.updateBookButton()
+                    if self.parent is not None:
+                        self.parent.updateBookButton()
                     return ("study", content, {'tab_title': module[:20], 'jump_to': anchor, 'pdf_filename': pdfFilename})
         else:
             return self.invalidCommand("study")
@@ -4041,7 +4130,8 @@ The WHERE condition is described as: {query}"""
                 return ("study", config.thisTranslation["search_notFound"], {})
                 #return self.invalidCommand("study")
             else:
-                self.parent.updateBookButton()
+                if self.parent is not None:
+                    self.parent.updateBookButton()
                 return ("study", content, {})
 
     # SEARCHALLBOOKSPDF:::
@@ -4515,7 +4605,8 @@ The WHERE condition is described as: {query}"""
         if source == "http":
             return self.parent.openPdfReader(pdfFile, page)
         else:
-            self.parent.openPdfReader(pdfFile, page)
+            if self.parent is not None:
+                self.parent.openPdfReader(pdfFile, page)
             return ("", "", {})
 
     # PDFFIND:::
@@ -4524,7 +4615,8 @@ The WHERE condition is described as: {query}"""
         if source == "http":
             return self.parent.openPdfReader(pdfFile, 0, False, False, find)
         else:
-            self.parent.openPdfReader(pdfFile, 0, False, False, find)
+            if self.parent is not None:
+                self.parent.openPdfReader(pdfFile, 0, False, False, find)
             return ("", "", {})
 
     # SEARCHPDF:::
@@ -4548,14 +4640,17 @@ The WHERE condition is described as: {query}"""
         if command.count(":::") == 0:
             command += ":::1"
         pdfFile, page = self.splitCommand(command)
-        self.parent.openPdfReader(pdfFile, page, True)
+        if self.parent is not None:
+            self.parent.openPdfReader(pdfFile, page, True)
         return ("", "", {})
 
     # _SAVEPDFCURRENTPAGE:::
     def savePdfCurrentPage(self, page, source):
         command = "ANYPDF:::{0}:::{1}".format(config.pdfTextPath, page)
-        self.parent.addHistoryRecord("study", command)
-        self.parent.displayMessage(config.thisTranslation["saved"])
+        if self.parent is not None:
+            self.parent.addHistoryRecord("study", command)
+        if self.parent is not None:
+            self.parent.displayMessage(config.thisTranslation["saved"])
         return ("", "", {})
 
     # EPUB:::
@@ -4566,20 +4661,23 @@ The WHERE condition is described as: {query}"""
         if source == "http":
             return self.parent.openEpubReader(pdfFile, page)
         else:
-            self.parent.openEpubReader(pdfFile, page)
+            if self.parent is not None:
+                self.parent.openEpubReader(pdfFile, page)
             return ("", "", {})
 
     # IMPORT:::
     def importResources(self, command, source):
         if not command:
             command = "import"
-        self.parent.importModulesInFolder(command)
+        if self.parent is not None:
+            self.parent.importModulesInFolder(command)
         return ("", "", {})
 
     # DOWNLOAD:::
     def download(self, command, source):
         if config.isDownloading:
-            self.parent.displayMessage(config.thisTranslation["previousDownloadIncomplete"])
+            if self.parent is not None:
+                self.parent.displayMessage(config.thisTranslation["previousDownloadIncomplete"])
             return ("", config.thisTranslation["previousDownloadIncomplete"], {})
         else:
             action, filename = self.splitCommand(command)
@@ -4592,20 +4690,26 @@ The WHERE condition is described as: {query}"""
                 elif action == "marveldata":
                     dataset = DatafileLocation.marvelData
                 else:
-                    self.parent.displayMessage("{0} {1}".format(action, config.thisTranslation["unknown"]))
+                    if self.parent is not None:
+                        self.parent.displayMessage("{0} {1}".format(action, config.thisTranslation["unknown"]))
                     return ("", "", {})
                 if filename in dataset.keys():
                     databaseInfo = dataset[filename]
                     if os.path.isfile(os.path.join(*databaseInfo[0])):
-                        self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["alreadyExists"]))
+                        if self.parent is not None:
+                            self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["alreadyExists"]))
                     else:
                         # self.parent.downloader = Downloader(self.parent, databaseInfo, True)
                         # self.parent.downloader.show()
-                        self.parent.displayMessage("{0} {1}".format(config.thisTranslation["Downloading"], filename))
-                        self.parent.downloadFile(databaseInfo, False)
-                        self.parent.reloadControlPanel(False)
+                        if self.parent is not None:
+                            self.parent.displayMessage("{0} {1}".format(config.thisTranslation["Downloading"], filename))
+                        if self.parent is not None:
+                            self.parent.downloadFile(databaseInfo, False)
+                        if self.parent is not None:
+                            self.parent.reloadControlPanel(False)
                 else:
-                    self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["notFound"]))
+                    if self.parent is not None:
+                        self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["notFound"]))
             elif action.startswith("github"):
                 if not ("Pygithub" in config.enabled):
                     return ("", "", {})
@@ -4623,7 +4727,8 @@ The WHERE condition is described as: {query}"""
                 elif action == "githubepub":
                     repo, directory, text, extension = GitHubRepoInfo.epub
                 else:
-                    self.parent.displayMessage("{0} {1}".format(action, config.thisTranslation["unknown"]))
+                    if self.parent is not None:
+                        self.parent.displayMessage("{0} {1}".format(action, config.thisTranslation["unknown"]))
                     return ("", "", {})
                 from uniquebible.util.GithubUtil import GithubUtil
                 github = GithubUtil(repo)
@@ -4632,7 +4737,8 @@ The WHERE condition is described as: {query}"""
                 shortFilename = GithubUtil.getShortname(filename)
                 shortFilename += "." + extension
                 if os.path.isfile(os.path.join(folder, shortFilename)):
-                    self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["alreadyExists"]))
+                    if self.parent is not None:
+                        self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["alreadyExists"]))
                 else:
                     file = os.path.join(folder, shortFilename+".zip")
                     if filename in repoData.keys():
@@ -4640,16 +4746,20 @@ The WHERE condition is described as: {query}"""
                     elif shortFilename in repoData.keys():
                         github.downloadFile(file, repoData[shortFilename])
                     else:
-                        self.parent.displayMessage(
+                        if self.parent is not None:
+                            self.parent.displayMessage(
                             "{0} {1}".format(filename, config.thisTranslation["notFound"]))
                         return
                     with zipfile.ZipFile(file, 'r') as zipped:
                         zipped.extractall(folder)
                     os.remove(file)
-                    self.parent.reloadControlPanel(False)
-                    self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["message_installed"]))
+                    if self.parent is not None:
+                        self.parent.reloadControlPanel(False)
+                    if self.parent is not None:
+                        self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["message_installed"]))
             else:
-                self.parent.displayMessage("{0} {1}".format(action, config.thisTranslation["unknown"]))
+                if self.parent is not None:
+                    self.parent.displayMessage("{0} {1}".format(action, config.thisTranslation["unknown"]))
 
         return ("study", "Downloaded!", {})
 
@@ -4663,10 +4773,12 @@ The WHERE condition is described as: {query}"""
     def fixLinksInCommentary(self, command, source):
         commentary = Commentary(command)
         if commentary.connection is None:
-            self.parent.displayMessage("{0} {1}".format(command, config.thisTranslation["notFound"]))
+            if self.parent is not None:
+                self.parent.displayMessage("{0} {1}".format(command, config.thisTranslation["notFound"]))
         else:
             commentary.fixLinksInCommentary()
-            self.parent.displayMessage(config.thisTranslation["message_done"])
+            if self.parent is not None:
+                self.parent.displayMessage(config.thisTranslation["message_done"])
         return ("", "", {})
 
     # DEVOTIONAL:::
@@ -4676,7 +4788,8 @@ The WHERE condition is described as: {query}"""
         else:
             devotional = command
             date = ""
-        self.parent.openDevotional(devotional, date)
+        if self.parent is not None:
+            self.parent.openDevotional(devotional, date)
         return ("", "", {})
 
 

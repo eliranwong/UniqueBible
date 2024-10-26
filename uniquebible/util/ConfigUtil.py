@@ -59,8 +59,13 @@ class ConfigUtil:
         config.isChromeOS = True if config.thisOS == "Linux" and os.path.exists("/mnt/chromeos/") else False
 
         # check current directory
-        config.ubaUserDir = os.getcwd()
+        ubaUserDir = os.path.join(os.path.expanduser("~"), "UniqueBible")
+        config.ubaUserDir = ubaUserDir if os.path.isdir(ubaUserDir) else os.getcwd()
         config.packageDir = str(importlib.resources.files("uniquebible"))
+        
+        userMarvelData = os.path.join(config.ubaUserDir, "marvelData")
+        if config.marvelData == "marvelData" and os.path.isdir(userMarvelData):
+            config.marvelData = userMarvelData
 
         # check running mode
         config.runMode = sys.argv[1] if len(sys.argv) > 1 else ""
@@ -1683,7 +1688,8 @@ class ConfigUtil:
             config.bookSearchString = ""
             config.noteSearchString = ""
             #config.instantHighlightString = ""
-        with open("config.py", "w", encoding="utf-8") as fileObj:
+        configFile = os.path.join(config.packageDir, "config.py")
+        with open(configFile, "w", encoding="utf-8") as fileObj:
             for name in config.help.keys():
                 try:
                     value = eval(f"config.{name}")
