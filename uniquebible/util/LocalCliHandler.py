@@ -1098,9 +1098,12 @@ class LocalCliHandler:
             elif i in ("searchtool:::",):
                 suggestions[i] = self.getDummyDict(self.crossPlatform.searchToolList, ":::")
             elif self.textCommandParser.parent is not None:
-                # self.textCommandParser.parent is None when uba is not running as a full app
-                if i in (f"{self.ttsCommandKeyword}:::",):
-                    suggestions[i] = self.getDummyDict(self.ttsLanguageCodes, ":::")
+                try:
+                    # self.textCommandParser.parent is None when uba is not running as a full app
+                    if i in (f"{self.ttsCommandKeyword}:::",):
+                        suggestions[i] = self.getDummyDict(self.ttsLanguageCodes, ":::")
+                except:
+                    pass
             elif i in ("exlb:::",):
                 suggestions[i] = self.getDummyDict(["exlbt", "exlbp", "exlbl"], ":::")
             elif i in ("day:::", "dayaudio:::", "dayaudioplus:::"):
