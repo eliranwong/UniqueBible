@@ -73,7 +73,8 @@ def executeInitialTextCommand(textCommand, addRecord=False, source="main"):
             config.mainWindow.textCommandLineEdit.setText(textCommand)
         config.mainWindow.runTextCommand(textCommand, addRecord, source, True)
     except:
-        print("Failed to execute '{0}' on startup.".format(textCommand))
+        #print("Failed to execute '{0}' on startup.".format(textCommand))
+        pass
 
 def populateTabsOnStartup(source="main"):
     numTabs = config.numberOfTab
@@ -108,9 +109,9 @@ def exitApplication():
         config.mainWindow.closeMediaPlayer()
     # Run shutdown plugins
     if config.enablePlugins:
-        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "shutdown"), "py"):
+        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "shutdown"), "py"):
             if not plugin in config.excludeShutdownPlugins:
-                script = os.path.join(os.getcwd(), "plugins", "shutdown", "{0}.py".format(plugin))
+                script = os.path.join(config.packageDir, "plugins", "shutdown", "{0}.py".format(plugin))
                 config.mainWindow.execPythonFile(script)
     ConfigUtil.save()
     NoteService.close()
@@ -290,9 +291,6 @@ else:
 # Assign mainWindow to config.mainWindow, to make it acessible from user customised user script
 config.studyTextTemp = config.studyText
 config.mainWindow = MainWindow()
-
-# Check if migration is needed for version >= 0.56
-config.mainWindow.checkMigration()
 
 # A container of functions to be run after UBA loaded history records on startup
 # This offers a way for startup plugins to run codes after history records being loaded.

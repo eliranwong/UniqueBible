@@ -52,7 +52,7 @@ class EnableIndividualPlugins(QWidget):
         dataView1.setEditTriggers(QAbstractItemView.NoEditTriggers)
         dataViewModel1 = QStandardItemModel(dataView1)
         dataView1.setModel(dataViewModel1)
-        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "startup"), "py"):
+        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "startup"), "py"):
             item = QStandardItem(plugin)
             item.setToolTip(plugin)
             item.setCheckable(True)
@@ -68,7 +68,7 @@ class EnableIndividualPlugins(QWidget):
         dataView2.setEditTriggers(QAbstractItemView.NoEditTriggers)
         dataViewModel2 = QStandardItemModel(dataView2)
         dataView2.setModel(dataViewModel2)
-        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu"), "py"):
+        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "menu"), "py"):
             item = QStandardItem(plugin)
             item.setToolTip(plugin)
             item.setCheckable(True)
@@ -84,7 +84,7 @@ class EnableIndividualPlugins(QWidget):
         dataView3.setEditTriggers(QAbstractItemView.NoEditTriggers)
         dataViewModel3 = QStandardItemModel(dataView3)
         dataView3.setModel(dataViewModel3)
-        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "context"), "py"):
+        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "context"), "py"):
             item = QStandardItem(plugin)
             item.setToolTip(plugin)
             item.setCheckable(True)
@@ -100,7 +100,7 @@ class EnableIndividualPlugins(QWidget):
         dataView4.setEditTriggers(QAbstractItemView.NoEditTriggers)
         dataViewModel4 = QStandardItemModel(dataView4)
         dataView4.setModel(dataViewModel4)
-        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "shutdown"), "py"):
+        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "shutdown"), "py"):
             item = QStandardItem(plugin)
             item.setToolTip(plugin)
             item.setCheckable(True)

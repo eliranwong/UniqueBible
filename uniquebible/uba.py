@@ -20,12 +20,9 @@ def main():
     initialCommand = input("Enter command: ").strip() if runMode == "-i" else " ".join(sys.argv[1:]).strip()
     initialCommand = initialCommand.strip()
 
-    # define directories
     # set working directory
     thisFile = os.path.realpath(__file__)
     wd = os.path.dirname(thisFile)
-    if os.getcwd() != wd:
-        os.chdir(wd)
 
     thisOS = platform.system()
     if thisOS == "Windows":

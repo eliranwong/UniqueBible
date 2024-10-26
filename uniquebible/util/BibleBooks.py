@@ -2466,7 +2466,7 @@ class BibleBooks:
     def __init__(self):
         import re
         if not BibleBooks.initialized:
-            languageFolder = os.path.join("plugins", "language")
+            languageFolder = os.path.join(config.packageDir, "plugins", "language")
             if os.path.isdir(languageFolder):
                 files = glob.glob(os.path.join(languageFolder, "*.biblebooks"))
                 for file in files:

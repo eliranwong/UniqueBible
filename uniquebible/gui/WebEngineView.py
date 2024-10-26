@@ -941,7 +941,7 @@ class WebEngineView(QWebEngineView):
 
             subMenu = QMenu()
 
-            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "context"), "py"):
+            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "context"), "py"):
                 if not plugin in config.excludeContextPlugins:
                     action = QAction(self)
                     if "_" in plugin:
@@ -1007,7 +1007,7 @@ class WebEngineView(QWebEngineView):
             selectedText = self.selectedTextProcessed(activeSelection)
         config.contextSource = self
         config.pluginContext = selectedText
-        script = os.path.join(os.getcwd(), "plugins", "context", "{0}.py".format(fileName))
+        script = os.path.join(config.packageDir, "plugins", "context", "{0}.py".format(fileName))
         self.parent.parent.execPythonFile(script)
         config.pluginContext = ""
         config.contextSource = None

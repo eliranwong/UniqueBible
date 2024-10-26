@@ -165,7 +165,7 @@ class InterlinearDataWindow(QWidget):
         from openpyxl.styles import Font
 
         # Specify excel file path
-        #filePath = os.path.join(os.getcwd(), "plugins", "menu", "Interlinear_Data.xlsx")
+        #filePath = os.path.join(config.packageDir, "plugins", "menu", "Interlinear_Data.xlsx")
         filePath = self.getFilePath()
         if filePath:
 
@@ -229,7 +229,7 @@ class InterlinearDataWindow(QWidget):
         import xlsxwriter
 
         # Specify excel file path
-        #filePath = os.path.join(os.getcwd(), "plugins", "menu", "Interlinear_Data.xlsx")
+        #filePath = os.path.join(config.packageDir, "plugins", "menu", "Interlinear_Data.xlsx")
         filePath = self.getFilePath()
         if filePath:
 
@@ -262,7 +262,7 @@ class InterlinearDataWindow(QWidget):
     # export to csv when users cannot install either openpyxl or xlsxwriter for some reasons
     def exportSpreadsheet3(self):
         # Define a file path
-        #filePath = os.path.join(os.getcwd(), "plugins", "menu", "Interlinear_Data.csv")
+        #filePath = os.path.join(config.packageDir, "plugins", "menu", "Interlinear_Data.csv")
         filePath = self.getFilePath("csv")
         if filePath:
 

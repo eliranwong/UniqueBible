@@ -29,7 +29,7 @@ class PluginEventHandler:
         config.eventType = eventType
         config.eventCommand = eventCommand
         if PluginEventHandler.eventHandlers is None:
-            filelist = glob.glob(os.path.join("plugins", "event", "*.py"))
+            filelist = glob.glob(os.path.join(config.packageDir, "plugins", "event", "*.py"))
             PluginEventHandler.eventHandlers = filelist
         if len(PluginEventHandler.eventHandlers) == 0:
             return

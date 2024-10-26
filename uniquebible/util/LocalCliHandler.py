@@ -777,7 +777,7 @@ class LocalCliHandler:
         return ""
 
     def plugins(self, default="", accept_default=False):
-        availablePlugins = FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "terminal"), "py")
+        availablePlugins = FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "terminal"), "py")
         if default and accept_default:
             userInput = self.simplePrompt(default=default, accept_default=accept_default)
         else:
@@ -785,8 +785,8 @@ class LocalCliHandler:
         if not userInput or userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
         try:
-            #filepath = os.path.join("plugins", "terminal", f"{availablePlugins[int(userInput)]}.py")
-            filepath = os.path.join("plugins", "terminal", f"{userInput}.py")
+            #filepath = os.path.join(config.packageDir, "plugins", "terminal", f"{availablePlugins[int(userInput)]}.py")
+            filepath = os.path.join(config.packageDir, "plugins", "terminal", f"{userInput}.py")
             self.execPythonFile(filepath)
             return ""
         except:
@@ -833,7 +833,7 @@ class LocalCliHandler:
             return self.printInvalidOptionEntered()
 
     def wordnet(self):
-        filepath = os.path.join("plugins", "terminal", "look up in wordnet.py")
+        filepath = os.path.join(config.packageDir, "plugins", "terminal", "look up in wordnet.py")
         self.execPythonFile(filepath)
         return ""
 
@@ -914,6 +914,7 @@ class LocalCliHandler:
             else:
                 content = "Command processed!"
             # Convert html to plain text
+            content = content.replace("<u><b>", "<u><b># ")
             plainText = TextUtil.htmlToPlainText(content).strip()
             self.plainText = "" if content == "Command processed!" else plainText
             # Update main text, b, c, v
@@ -1974,36 +1975,6 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
             pass
         self.print(f"Created '{filepath}' for running UBA in {mode} mode.")
 
-    def oldWayUpdate(self, debug=False):
-        # Old way to update
-        requestObject = requests.get("{0}patches.txt".format(UpdateUtil.repository))
-        for line in requestObject.text.split("\n"):
-            if line:
-                try:
-                    version, contentType, filePath = literal_eval(line)
-                    if version > config.version:
-                        localPath = os.path.join(*filePath.split("/"))
-                        if debug:
-                            self.print("{0}:{1}".format(version, localPath))
-                        else:
-                            if contentType == "folder":
-                                if not os.path.isdir(localPath):
-                                    os.makedirs(localPath, exist_ok=True)
-                            elif contentType == "file":
-                                requestObject2 = requests.get("{0}{1}".format(UpdateUtil.repository, filePath))
-                                with open(localPath, "wb") as fileObject:
-                                    fileObject.write(requestObject2.content)
-                            elif contentType == "delete":
-                                try:
-                                    if os.path.exists(localPath):
-                                        os.remove(localPath)
-                                except:
-                                    self.print("Could not delete {0}".format(localPath))
-                except Exception as e:
-                    return self.updateFailed()
-
-        return self.finishUpdate()
-
     def update(self, debug=False):
         try:
             try:
@@ -2335,7 +2306,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         os.system('''groqchat -n "Bible Chat" -s "You are an expert on the bible" Hi!''')
 
     def names(self):
-        with open(os.path.join("plugins", "menu", "Bible_Data", "Bible Names.txt"), "r", encoding="utf-8") as input_file:
+        with open(os.path.join(config.packageDir, "plugins", "menu", "Bible_Data", "Bible Names.txt"), "r", encoding="utf-8") as input_file:
             names = input_file.read().split("\n")
         self.print("Search for a name:")
         userInput = self.simplePrompt()

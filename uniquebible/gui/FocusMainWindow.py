@@ -276,8 +276,8 @@ class FocusMainWindow:
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
-        menu.addSeparator()
-        addMenuItem(menu, "menu1_update", self, self.showUpdateAppWindow)
+        #menu.addSeparator()
+        #addMenuItem(menu, "menu1_update", self, self.showUpdateAppWindow)
         menu.addSeparator()
         if hasattr(config, "cli"):
             addMenuItem(menu, "restart", self, self.restartApp)
@@ -426,7 +426,7 @@ class FocusMainWindow:
         # plugins
         if config.enablePlugins:
             menu = addMenu(menuBar, "menu_plugins")
-            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu"), "py"):
+            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "menu"), "py"):
                 if not plugin in config.excludeMenuPlugins:
                     if "_" in plugin:
                         feature, shortcut = plugin.split("_", 1)

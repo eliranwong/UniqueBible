@@ -109,15 +109,14 @@ def run_terminal_mode():
 
 
     # startup
-    set_title(f"Unique Bible App [{config.version}]")
+    set_title("Unique Bible App")
     config.saveConfigOnExit = True
-    print(f"Running Unique Bible App {config.version} in terminal mode ...")
+    print("Running Unique Bible App in terminal mode ...")
     if ("Art" in config.enabled):
         from art import text2art
         print(text2art("UBA")[:-1])
 
-    checkMigration()
-    needUpdate = checkApplicationUpdateCli()
+    #needUpdate = checkApplicationUpdateCli()
     # set up config.mainWindow for terminal mode
     config.mainWindow = LocalCliHandler()
     # command default
@@ -143,9 +142,9 @@ def run_terminal_mode():
             command = records[0]
     config.mainWindow.command = command
 
-    if needUpdate and config.terminalAutoUpdate:
-        command = ".update"
-        print("Updating UBA ...")
+    #if needUpdate and config.terminalAutoUpdate:
+    #    command = ".update"
+    #    print("Updating UBA ...")
 
     if config.terminalStartHttpServerOnStartup:
         config.mainWindow.starthttpserver()
@@ -261,7 +260,7 @@ def run_ssh_server(host="", port=2222, server_host_keys="", passphrase="the_best
         prompt_session = PromptSession()
         print = print_formatted_text
 
-        print(f"Running Unique Bible App [{config.version}] in ssh-server mode ...")
+        print("Running Unique Bible App in ssh-server mode ...")
 
         while True:
             try:

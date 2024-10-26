@@ -55,7 +55,7 @@ class BibleReadingPlan(QWidget):
         self.todayNo = int(format(self.today, '%j'))
         if self.todayNo > 365:
             self.todayNo = 365
-        self.progressFile = os.path.join(os.getcwd(), "plugins", "menu", "{0}.txt".format(self.translation[0]))
+        self.progressFile = os.path.join(config.packageDir, "plugins", "menu", "{0}.txt".format(self.translation[0]))
         if os.path.isfile(self.progressFile):
             from ast import literal_eval
             with open(self.progressFile, "r") as fileObj:

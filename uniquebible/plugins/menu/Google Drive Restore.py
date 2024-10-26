@@ -12,13 +12,13 @@ except:
 def downloadFiles():
     message = ""
     try:
-        filesToBackupFile = os.path.join("plugins", "menu", "GoogleDriveUtility", "files_to_backup.txt")
+        filesToBackupFile = os.path.join(config.packageDir, "plugins", "menu", "GoogleDriveUtility", "files_to_backup.txt")
         filesToBackupList = []
         if os.path.exists(filesToBackupFile):
             with open(filesToBackupFile) as input:
                 filesToBackupList = [line.strip() for line in input.readlines()]
         for file in filesToBackupList:
-            download = subprocess.Popen("{0} {1} download {2}".format(sys.executable, os.path.join("plugins", "menu", "GoogleDriveUtility", "access_google_drive.py"), file), shell=True)
+            download = subprocess.Popen("{0} {1} download {2}".format(sys.executable, os.path.join(config.packageDir, "plugins", "menu", "GoogleDriveUtility", "access_google_drive.py"), file), shell=True)
             *_, stderr = download.communicate()
             if not stderr:
                 message += f"Downloaded {file}\n"

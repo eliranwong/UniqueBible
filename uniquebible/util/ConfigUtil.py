@@ -59,7 +59,8 @@ class ConfigUtil:
         config.isChromeOS = True if config.thisOS == "Linux" and os.path.exists("/mnt/chromeos/") else False
 
         # check current directory
-        config.ubaDir = os.getcwd()
+        config.ubaUserDir = os.getcwd()
+        config.packageDir = str(importlib.resources.files("uniquebible"))
 
         # check running mode
         config.runMode = sys.argv[1] if len(sys.argv) > 1 else ""
@@ -1699,7 +1700,7 @@ class ConfigUtil:
 
     @staticmethod
     def getColorConfigFilename():
-        fileName = os.path.join("plugins", "config", f"{config.menuLayout}_{config.theme}.color")
+        fileName = os.path.join(config.packageDir, "plugins", "config", f"{config.menuLayout}_{config.theme}.color")
         return fileName
 
     @staticmethod

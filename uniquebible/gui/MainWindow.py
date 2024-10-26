@@ -163,7 +163,7 @@ class MainWindow(QMainWindow):
         self.directoryLabel.setFrameStyle(frameStyle)
 
         # setup UI
-        self.setWindowTitle("UniqueBible.app [version {0:.2f}]".format(config.version))
+        self.setWindowTitle("UniqueBible.app")
         appIcon = QIcon(config.desktopUBAIcon)
         QGuiApplication.setWindowIcon(appIcon)
         # setup user menu & toolbars
@@ -217,7 +217,7 @@ class MainWindow(QMainWindow):
         self.resizeCentral()
 
         # check if newer version is available
-        self.checkApplicationUpdate()
+        #self.checkApplicationUpdate()
         # check if newer versions of formatted bibles are available
         self.checkModulesUpdate()
         # Control Panel
@@ -608,7 +608,7 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
                 windowName = layout.capitalize() + "MainWindow"
                 windowClass = getattr(sys.modules[__name__], windowName)
             elif config.enablePlugins:
-                file = os.path.join(os.getcwd(), "plugins", "layout", layout+".py")
+                file = os.path.join(config.packageDir, "plugins", "layout", layout+".py")
                 if os.path.exists(file):
                     mod = __import__('plugins.layout.{0}'.format(layout), fromlist=[layout])
                     windowClass = getattr(mod, layout)
@@ -816,25 +816,6 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
     def restartApp(self):
         config.restartUBA = True
         QGuiApplication.instance().quit()
-
-    # check migration
-    def checkMigration(self):
-        return None
-        if config.version >= 0.56 and not config.databaseConvertedOnStartup:
-            try:
-                biblesSqlite = BiblesSqlite()
-                biblesWithBothVersions = biblesSqlite.migratePlainFormattedBibles()
-                if biblesWithBothVersions:
-                    self.displayMessage("{0}  {1}".format(config.thisTranslation["message_migration"],
-                                                          config.thisTranslation["message_willBeNoticed"]))
-                    biblesSqlite.proceedMigration(biblesWithBothVersions)
-                    self.displayMessage(config.thisTranslation["message_done"])
-                if config.migrateDatabaseBibleNameToDetailsTable:
-                    biblesSqlite.migrateDatabaseContent()
-                del biblesSqlite
-                config.databaseConvertedOnStartup = True
-            except:
-                pass
 
     def displayMessage(self, message="", title="UniqueBible"):
         if hasattr(config, "cli") and config.cli:
@@ -5391,7 +5372,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.addMaterialIconButton(feature, icon, partial(self.runPlugin, plugin), toolbar, translation=translation)
 
     def isMenuPlugin(self, plugin):
-        return os.path.isfile(os.path.join("plugins", "menu", "{0}.py".format(plugin)))
+        return os.path.isfile(os.path.join(config.packageDir, "plugins", "menu", "{0}.py".format(plugin)))
 
     def runPlugin(self, fileName, _=None):
         self.crossPlatform.runPlugin(fileName)
@@ -5768,7 +5749,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         config.chatGPTApiFunctionSignatures = []
         config.chatGPTApiAvailableFunctions = {}
 
-        pluginFolder = os.path.join(os.getcwd(), "plugins", "chatGPT")
+        pluginFolder = os.path.join(config.packageDir, "plugins", "chatGPT")
         # always run 'integrate google searches'
         internetSeraches = "integrate google searches"
         script = os.path.join(pluginFolder, "{0}.py".format(internetSeraches))

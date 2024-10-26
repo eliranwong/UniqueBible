@@ -84,7 +84,7 @@ class CrossPlatform:
         else:
             self.bibleAudioModules = []
         # data list
-        self.dataList = [item for item in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu", "Bible_Data"), "txt")]
+        self.dataList = [item for item in FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "menu", "Bible_Data"), "txt")]
         # search tool list
         self.searchToolList = self.dictionaryListAbb + self.encyclopediaListAbb + ["EXLBT", "EXLBP", "EXLBL", "mETCBC"]
 
@@ -205,7 +205,7 @@ class CrossPlatform:
     # Plugins
 
     def runPlugin(self, fileName):
-        script = os.path.join(os.getcwd(), "plugins", "menu", "{0}.py".format(fileName))
+        script = os.path.join(config.packageDir, "plugins", "menu", "{0}.py".format(fileName))
         self.execPythonFile(script)
 
     def execPythonFile(self, script):

@@ -23,7 +23,7 @@ trayMenu.addAction(showWorkspace)
 # Menu plugins
 if config.enablePlugins:
     subMenu = QMenu()
-    for index, plugin in enumerate(FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu"), "py")):
+    for index, plugin in enumerate(FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "menu"), "py")):
         if not plugin in config.excludeMenuPlugins:
             feature, *_ = plugin.split("_", 1)
             exec("menuPlugin{0} = QAction(feature)".format(index))
@@ -154,7 +154,7 @@ trayMenu.addAction(addToWorkSpace)
 # Context plugins
 if config.enablePlugins:
     subMenu = QMenu()
-    for index, plugin in enumerate(FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "context"), "py")):
+    for index, plugin in enumerate(FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "context"), "py")):
         if not plugin in config.excludeContextPlugins:
             feature, *_ = plugin.split("_", 1)
             exec("contextPlugin{0} = QAction(feature)".format(index))

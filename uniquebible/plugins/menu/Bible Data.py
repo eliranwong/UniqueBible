@@ -50,7 +50,7 @@ class BibleDataEditor(QWidget):
     def saveAction(self):
         filename = self.nameEntry.text()
         content = self.contentEntry.toPlainText()
-        filepath = os.path.join("plugins", "menu", "Bible_Data", "{0}.txt".format(filename))
+        filepath = os.path.join(config.packageDir, "plugins", "menu", "Bible_Data", "{0}.txt".format(filename))
         with open(filepath, 'w', encoding='utf8') as fileObj:
             fileObj.write(content)
         try:
@@ -80,7 +80,7 @@ class BibleData(QWidget):
         self.resetFilenameList()
     
     def resetFilenameList(self):
-        self.filenameList = [item for item in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu", "Bible_Data"), "txt")]
+        self.filenameList = [item for item in FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "menu", "Bible_Data"), "txt")]
 
     def setupUI(self, selectedText):
         layout000 = QGridLayout()
@@ -163,7 +163,7 @@ class BibleData(QWidget):
 
     def editAction(self):
         filename = self.filenameList[self.datasets.currentIndex()]
-        filepath = os.path.join("plugins", "menu", "Bible_Data", "{0}.txt".format(filename))
+        filepath = os.path.join(config.packageDir, "plugins", "menu", "Bible_Data", "{0}.txt".format(filename))
         with open(filepath, 'r', encoding='utf8') as fileObj:
             content = fileObj.read()
 
@@ -186,7 +186,7 @@ class BibleData(QWidget):
         confirm = self.confirmDeleteAction()
         if confirm:
             filename = self.filenameList[self.datasets.currentIndex()]
-            filepath = os.path.join("plugins", "menu", "Bible_Data", "{0}.txt".format(filename))
+            filepath = os.path.join(config.packageDir, "plugins", "menu", "Bible_Data", "{0}.txt".format(filename))
             if os.path.exists(filepath):
                 os.remove(filepath)
         self.refreshData()
@@ -204,7 +204,7 @@ class BibleData(QWidget):
                                                       "", options)
         if source:
             basename = os.path.basename(source)
-            destination = os.path.join("plugins", "menu", "Bible_Data", basename)
+            destination = os.path.join(config.packageDir, "plugins", "menu", "Bible_Data", basename)
             shutil.copyfile(source, destination)
             self.refreshData()
 
@@ -212,7 +212,7 @@ class BibleData(QWidget):
         self.updatingData = True
         self.dataViewModel.clear()
         filename = self.filenameList[self.datasets.currentIndex()]
-        filepath = os.path.join("plugins", "menu", "Bible_Data", "{0}.txt".format(filename))
+        filepath = os.path.join(config.packageDir, "plugins", "menu", "Bible_Data", "{0}.txt".format(filename))
         with open(filepath, 'r', encoding='utf8') as fileObj:
             dataList = fileObj.read().split("\n")
         searchString = self.searchEntry.text().strip()

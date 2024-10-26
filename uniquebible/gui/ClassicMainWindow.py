@@ -181,8 +181,8 @@ class ClassicMainWindow:
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
         menu.addSeparator()
-        addMenuItem(menu, "menu1_update", self, self.showUpdateAppWindow, None)
-        menu.addSeparator()
+        #addMenuItem(menu, "menu1_update", self, self.showUpdateAppWindow, None)
+        #menu.addSeparator()
 
         appIcon = QIcon(os.path.join("htmlResources", "UniqueBibleApp.png"))
         quit_action = QAction(appIcon, config.thisTranslation["menu1_exit"], self, shortcut=sc.quitApp, triggered=self.quitApp)
@@ -492,7 +492,7 @@ class ClassicMainWindow:
         # plugins
         if config.enablePlugins:
             menu = addMenu(self.menuBar(), "menu_plugins")
-            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu"), "py"):
+            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "menu"), "py"):
                 if not plugin in config.excludeMenuPlugins:
                     if "_" in plugin:
                         feature, shortcut = plugin.split("_", 1)

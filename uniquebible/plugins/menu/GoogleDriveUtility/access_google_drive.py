@@ -133,7 +133,7 @@ if __name__ == '__main__':
     if getBackupFolder(service) == 0:
         createBackupFolder(service)
     argument, backupFile = " ".join(sys.argv[1:]).split(" ", 1)
-    cloudIdFile = os.path.join("plugins", "menu", "GoogleDriveUtility", convertFilePath(backupFile))
+    cloudIdFile = os.path.join(config.packageDir, "plugins", "menu", "GoogleDriveUtility", convertFilePath(backupFile))
     options = {
         "upload": uploadFiles,
         "download": downloadFiles,

@@ -43,7 +43,7 @@ def parseArgs(argv):
       
 def generate(sNumList):
 
-    fn = os.path.join("plugins", "context", "Strongs2csv", "av1769s.bib")
+    fn = os.path.join(config.packageDir, "plugins", "context", "Strongs2csv", "av1769s.bib")
     
     #print(snList)
 
@@ -52,7 +52,7 @@ def generate(sNumList):
 
     #fn = os.path.basename(pth)
     basename = '%s.csv' % sNumList[0][1:-1]
-    outputFile = os.path.join("plugins", "context", "Strongs2csv", basename)
+    outputFile = os.path.join(config.packageDir, "plugins", "context", "Strongs2csv", basename)
     csvout = codecs.open(outputFile, 'w', 'utf-8')
 
 

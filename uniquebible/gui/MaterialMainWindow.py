@@ -522,7 +522,7 @@ class MaterialMainWindow:
         if config.enableMacros:
             addMenuItem(menu, "menu_startup_macro", self, self.setStartupMacro)
             menu.addSeparator()
-        addMenuItem(menu, "menu1_update", self, self.showUpdateAppWindow)
+        #addMenuItem(menu, "menu1_update", self, self.showUpdateAppWindow)
         menu.addSeparator()
         if hasattr(config, "cli"):
             addMenuItem(menu, "restart", self, self.restartApp)
@@ -765,7 +765,7 @@ class MaterialMainWindow:
         # plugins
         if config.enablePlugins:
             menu = addMenu(menuBar, "menu_plugins")
-            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu"), "py"):
+            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "menu"), "py"):
                 if not plugin in config.excludeMenuPlugins:
                     if "_" in plugin:
                         feature, shortcut = plugin.split("_", 1)
@@ -1029,14 +1029,14 @@ class MaterialMainWindow:
         icon = "material/maps/local_library/materialiconsoutlined/48dp/2x/outline_local_library_black_48dp.png"
         self.addMaterialIconButton("libraryCatalog", icon, self.showLibraryCatalogDialog, self.secondToolBar)
 
-        if os.path.isfile(os.path.join("plugins", "menu", "Bible Commentaries.py")):
+        if os.path.isfile(os.path.join(config.packageDir, "plugins", "menu", "Bible Commentaries.py")):
             self.commentaryRefButton = QPushButton(self.verseReference("commentary"))
             self.commentaryRefButton = QPushButton(config.commentaryText)
             self.addStandardTextButton("menu4_commentary", partial(self.runPlugin, "Bible Commentaries"), self.secondToolBar, self.commentaryRefButton)
-        if os.path.isfile(os.path.join("plugins", "menu", "Reference Books.py")):
+        if os.path.isfile(os.path.join(config.packageDir, "plugins", "menu", "Reference Books.py")):
             icon = "material/image/auto_stories/materialiconsoutlined/48dp/2x/outline_auto_stories_black_48dp.png"
             self.addMaterialIconButton("installBooks", icon, partial(self.runPlugin, "Reference Books"), self.secondToolBar)
-        if os.path.isfile(os.path.join("plugins", "menu", "ePub Viewer New Window.py")):
+        if os.path.isfile(os.path.join(config.packageDir, "plugins", "menu", "ePub Viewer New Window.py")):
             icon = "material/action/book/materialiconsoutlined/48dp/2x/outline_book_black_48dp.png"
             self.addMaterialIconButton("epubReader", icon, partial(self.runPlugin, "ePub Viewer New Window"), self.secondToolBar)
         icon = "material/action/description/materialiconsoutlined/48dp/2x/outline_description_black_48dp.png"
@@ -1076,7 +1076,7 @@ class MaterialMainWindow:
         self.addMenuPluginButton("Third Party Dictionaries", "menu5_3rdDict", icon, self.secondToolBar)
         icon = "material/action/view_day/materialiconsoutlined/48dp/2x/outline_view_day_black_48dp.png"
         self.addMenuPluginButton("Interlinear Data", "interlinearData", icon, self.secondToolBar)
-        if os.path.isfile(os.path.join("plugins", "context", "Charts and Table.py")):
+        if os.path.isfile(os.path.join(config.packageDir, "plugins", "context", "Charts and Table.py")):
             icon = "material/action/addchart/materialiconsoutlined/48dp/2x/outline_addchart_black_48dp.png"
             self.addMaterialIconButton("chartsAndTable", icon, self.generateChartsAndTable, self.secondToolBar)
         icon = "material/action/space_dashboard/materialiconsoutlined/48dp/2x/outline_space_dashboard_black_48dp.png"
@@ -1088,7 +1088,7 @@ class MaterialMainWindow:
         self.addMaterialIconButton(self.getSelectionMonitoringButtonToolTip(), icon, self.selectionMonitoringButtonClicked, self.secondToolBar, self.selectionMonitoringButton, translation=False)
         self.selectionMonitoringButton.setCheckable(True)
         self.selectionMonitoringButton.setChecked(True if config.enableSelectionMonitoring else False)
-        if os.path.isfile(os.path.join("plugins", "context", "Search Bible for English Word Forms.py")):
+        if os.path.isfile(os.path.join(config.packageDir, "plugins", "context", "Search Bible for English Word Forms.py")):
             icon = "material/action/abc/materialiconsoutlined/48dp/2x/outline_abc_black_48dp.png"
             self.addMaterialIconButton("searchEnglishBible", icon, lambda: self.mainView.currentWidget().runPlugin("Search Bible for English Word Forms", activeSelection=True), self.secondToolBar)
         if not config.noTtsFound:
@@ -1355,7 +1355,7 @@ class MaterialMainWindow:
         #icon = "material/maps/layers/materialiconsoutlined/48dp/2x/outline_layers_black_48dp.png"
         icon = "material/image/auto_awesome/materialiconsoutlined/48dp/2x/outline_auto_awesome_black_48dp.png"
         self.addMaterialIconButton("openFavouriteHebrewGreekBible", icon, self.runMIBStudy, self.rightToolBar)
-        #if os.path.isfile(os.path.join("plugins", "menu", "Interlinear Data.py")) and os.path.isfile(os.path.join("plugins", "context", "Interlinear Data.py")):
+        #if os.path.isfile(os.path.join(config.packageDir, "plugins", "menu", "Interlinear Data.py")) and os.path.isfile(os.path.join(config.packageDir, "plugins", "context", "Interlinear Data.py")):
         #    icon = "material/image/flare/materialiconsoutlined/48dp/2x/outline_flare_black_48dp.png"
         #    self.addMaterialIconButton("interlinearData", icon, self.openInterlinearData, self.rightToolBar)
         icon = "material/action/translate/materialiconsoutlined/48dp/2x/outline_translate_black_48dp.png"

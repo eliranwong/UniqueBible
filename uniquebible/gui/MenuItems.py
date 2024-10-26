@@ -96,7 +96,7 @@ def addMenuLayoutItems(parent, menu):
     )
     for feature, action, thisValue in items:
         addCheckableMenuItem(menu, feature, parent, action, config.menuLayout, thisValue)
-    layouts = FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "layout"), "py")
+    layouts = FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "layout"), "py")
     if layouts:
         menu.addSeparator()
         for pluginLayout in layouts:

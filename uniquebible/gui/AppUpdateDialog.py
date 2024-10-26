@@ -84,6 +84,7 @@ class AppUpdateDialog(QDialog):
                 self.updateNowButton.setFocus()
 
     def updateNow(self):
+        return None # remove old way of update
         debug = False
         self.updateNowButton.setText(config.thisTranslation["Updating"])
         self.updateNowButton.setEnabled(False)

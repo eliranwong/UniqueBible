@@ -16,7 +16,7 @@ class ToDo(QWidget):
         super().__init__()
 
         self.setWindowTitle("To-Do")
-        self.dataFile = os.path.join("plugins", "menu", "ToDo", "ToDo.txt")
+        self.dataFile = os.path.join(config.packageDir, "plugins", "menu", "ToDo", "ToDo.txt")
         if not os.path.isfile(self.dataFile):
             open(self.dataFile, "a", encoding="utf-8").close()
 

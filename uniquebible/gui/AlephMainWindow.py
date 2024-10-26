@@ -236,8 +236,7 @@ class AlephMainWindow:
             menu1.addAction(
                 QAction(config.thisTranslation["menu_startup_macro"], self, triggered=self.setStartupMacro))
 
-        menu1.addAction(
-            QAction(config.thisTranslation["menu1_update"], self, triggered=self.showUpdateAppWindow))
+        #menu1.addAction(QAction(config.thisTranslation["menu1_update"], self, triggered=self.showUpdateAppWindow))
 
         menu1.addAction(
             QAction(config.thisTranslation["menu_quit"], self, shortcut=sc.quitApp, triggered=self.quitApp))
@@ -500,7 +499,7 @@ class AlephMainWindow:
         # plugins
         if config.enablePlugins:
             menu = addMenu(self.menuBar(), "menu_plugins")
-            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu"), "py"):
+            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "menu"), "py"):
                 if not plugin in config.excludeMenuPlugins:
                     if "_" in plugin:
                         feature, shortcut = plugin.split("_", 1)

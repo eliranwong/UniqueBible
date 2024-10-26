@@ -12,28 +12,10 @@ def cleanupTempFiles():
 # Run startup plugins
 def runStartupPlugins():
     if config.enablePlugins:
-        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "startup"), "py"):
+        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "startup"), "py"):
             if not plugin in config.excludeStartupPlugins:
-                script = os.path.join(os.getcwd(), "plugins", "startup", "{0}.py".format(plugin))
+                script = os.path.join(config.packageDir, "plugins", "startup", "{0}.py".format(plugin))
                 config.mainWindow.execPythonFile(script)
-
-# Check if database migration is needed
-def checkMigration():
-    if config.version >= 0.56 and not config.databaseConvertedOnStartup:
-        from uniquebible.db.BiblesSqlite import BiblesSqlite
-        try:
-            print("Updating database ... please wait ...")
-            biblesSqlite = BiblesSqlite()
-            biblesWithBothVersions = biblesSqlite.migratePlainFormattedBibles()
-            if biblesWithBothVersions:
-                biblesSqlite.proceedMigration(biblesWithBothVersions)
-            if config.migrateDatabaseBibleNameToDetailsTable:
-                biblesSqlite.migrateDatabaseContent()
-            del biblesSqlite
-            config.databaseConvertedOnStartup = True
-            print("Updated!")
-        except:
-            pass
 
 def printContentOnConsole(text):
     if not "html-text" in sys.modules:

@@ -47,8 +47,8 @@ class Starter:
         menu = addMenu(menuBar, "menu9_information")
         addMenuItem(menu, "latestChanges", self, self.showInfo)
         menu.addSeparator()
-        addMenuItem(menu, "menu1_update", self, self.showUpdateAppWindow)
-        menu.addSeparator()
+        #addMenuItem(menu, "menu1_update", self, self.showUpdateAppWindow)
+        #menu.addSeparator()
         items = (
             ("menu1_wikiPages", self.openUbaWiki),
             ("menu_discussions", self.openUbaDiscussions),

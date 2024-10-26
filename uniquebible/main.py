@@ -5,23 +5,12 @@ import os, platform, sys, subprocess, shutil, ctypes
 from uniquebible.util.FileUtil import FileUtil
 from uniquebible.util.WebtopUtil import WebtopUtil
 
-# Change working directory to UniqueBible directory
-thisFile = os.path.realpath(__file__)
-wd = thisFile[:-7]
-if os.getcwd() != wd:
-    os.chdir(wd)
-
 thisOS = platform.system()
 if thisOS == "Windows":
     myappid = "uniquebible.app"
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
     icon_path = os.path.abspath(os.path.join(sys.path[0], "htmlResources", "UniqueBibleApp.ico"))
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(icon_path)
-
-# Create custom files
-FileUtil.createCustomFiles()
-if not thisOS == "Windows" and not os.path.isfile("config.py"):
-    os.system("touch config.py")
 
 # Make sure config.py exists before importing config and all other scripts which depends on config
 from uniquebible import config
@@ -130,14 +119,12 @@ if config.noQt:
     elif config.runMode == "telnet-server":
         startTelnetServer()
     elif config.runMode == "http-server":
-        checkMigration()
         startHttpServer()
         ConfigUtil.save()
         if config.restartHttpServer:
             subprocess.Popen("{0} {1} http-server".format(sys.executable, config.httpServerUbaFile), shell=True)
         exit(0)
     elif config.runMode == "api-server":
-        checkMigration()
         startApiServer()
         ConfigUtil.save()
         if config.restartApiServer:

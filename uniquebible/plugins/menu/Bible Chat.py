@@ -371,7 +371,7 @@ class ChatGPTAPI(QWidget):
         config.chatGPTApiFunctionSignatures = []
         config.chatGPTApiAvailableFunctions = {}
 
-        pluginFolder = os.path.join(os.getcwd(), "plugins", "chatGPT")
+        pluginFolder = os.path.join(config.packageDir, "plugins", "chatGPT")
         for plugin in FileUtil.fileNamesWithoutExtension(pluginFolder, "py"):
             script = os.path.join(pluginFolder, "{0}.py".format(plugin))
             config.mainWindow.execPythonFile(script)"""
@@ -1250,7 +1250,7 @@ class MainWindow(QMainWindow):
         # Create a plugin menu
         plugin_menu = menubar.addMenu(config.thisTranslation["plugins"])
 
-        pluginFolder = os.path.join(os.getcwd(), "plugins", "chatGPT")
+        pluginFolder = os.path.join(config.packageDir, "plugins", "chatGPT")
         for index, plugin in enumerate(FileUtil.fileNamesWithoutExtension(pluginFolder, "py")):
             new_action = QAction(plugin, self)
             new_action.setCheckable(True)

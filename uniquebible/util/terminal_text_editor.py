@@ -1,5 +1,6 @@
 from uniquebible import config
 import re, os
+import importlib.resources
 from uniquebible.util.TextUtil import TextUtil
 from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.shortcuts import confirm
@@ -594,13 +595,13 @@ class TextEditor:
         return f"{unsavedNotice}[escape+h] help [ctrl+q] quit [ctrl+b] go up [ctrl+y] go down"
 
     def plugins(self):
-        pluginDir = os.path.join(self.wd, "plugins", "text_editor") if self.wd else os.path.join("plugins", "text_editor")
+        pluginDir = os.path.join(self.wd, "plugins", "text_editor") if self.wd else os.path.join(str(importlib.resources.files("uniquebible")), "plugins", "text_editor")
         availablePlugins = FileUtil.fileNamesWithoutExtension(pluginDir, "py")
         userInput = self.getValidOptions(options=availablePlugins, title="Plugins")
         if not userInput or userInput.lower() == config.terminal_cancel_action:
             return self.parent.cancelAction()
         try:
-            filepath = os.path.join("plugins", "text_editor", f"{userInput}.py")
+            filepath = os.path.join(config.packageDir, "plugins", "text_editor", f"{userInput}.py")
             self.parent.execPythonFile(filepath)
             return ""
         except:
