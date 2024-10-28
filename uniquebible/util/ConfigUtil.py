@@ -1,7 +1,6 @@
 import codecs
 import logging
 import os, pprint, platform, sys
-import importlib.resources
 from uniquebible import config
 from uniquebible.util.DateUtil import DateUtil
 from uniquebible.util.WebtopUtil import WebtopUtil
@@ -61,7 +60,6 @@ class ConfigUtil:
         # check current directory
         ubaUserDir = os.path.join(os.path.expanduser("~"), "UniqueBible")
         config.ubaUserDir = ubaUserDir if os.path.isdir(ubaUserDir) else os.getcwd()
-        config.packageDir = str(importlib.resources.files("uniquebible"))
 
         # check running mode
         config.runMode = sys.argv[1] if len(sys.argv) > 1 else ""
@@ -74,15 +72,6 @@ class ConfigUtil:
 
         if config.runMode and not config.runMode in ("stream", "setup-only", "cli", "gui", "terminal", "docker", "telnet-server", "http-server", "execute-macro", "api-server"):
             config.runMode = ""
-
-        # Check current version
-        with open(os.path.join(str(importlib.resources.files("uniquebible")),"UniqueBibleAppVersion.txt"), "r", encoding="utf-8") as fileObject:
-            text = fileObject.read()
-            current_version = float(text.replace("\n", ""))
-
-        # update current version in config"""
-        if not hasattr(config, "version") or current_version > config.version:
-            config.version = current_version
 
         # Temporary configurations
         # Their values are not saved on exit.
@@ -1703,6 +1692,12 @@ class ConfigUtil:
             if hasattr(config, "pModeSplitterSizes"):
                 fileObj.write("{0} = {1}\n".format("pModeSplitterSizes", pprint.pformat(config.pModeSplitterSizes)))
             # print("A copy of configurations is saved in file 'config.py'!")
+        # backup
+        try:
+            backupFile = os.path.join(config.ubaUserDir, "config.py")
+            copy(configFile, backupFile)
+        except:
+            pass
 
     @staticmethod
     def getColorConfigFilename():

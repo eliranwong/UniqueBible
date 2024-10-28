@@ -3957,38 +3957,41 @@ The WHERE condition is described as: {query}"""
 
     # _setconfig:::
     def textSetConfig(self, command, source):
-        try:
-            # when argument is empty
-            if not command:
-                # key only without value
-                content = "<h2>Configurable Settings</h2>"
-                content += pprint.pformat(list(config.help.keys()))
-                return ("study", content, {})
-            elements = self.splitCommand(command)
-            if len(elements) == 1:
-                key = elements[0]
-                content = f"<h2>{key}</h2>"
-                content += f"<ref>Description:</ref><br>{config.help[key]}<br>"
-                content += f"<ref>Current value</ref>: {(eval('pprint.pformat(config.'+key+')'))}<br>"
-                typeString = type(eval(f"config.{key}")).__name__
-                content += f"<ref>Type</ref>: {typeString}"
-                return ("study", content, {})
-            if config.developer or config.webFullAccess:
-                item, value = self.splitCommand(command)
-                if not item in config.help.keys():
-                    return self.invalidCommand("study")
+        if config.developer:
+            try:
+                # when argument is empty
+                if not command:
+                    # key only without value
+                    content = "<h2>Configurable Settings</h2>"
+                    content += pprint.pformat(list(config.help.keys()))
+                    return ("study", content, {})
+                elements = self.splitCommand(command)
+                if len(elements) == 1:
+                    key = elements[0]
+                    content = f"<h2>{key}</h2>"
+                    content += f"<ref>Description:</ref><br>{config.help[key]}<br>"
+                    content += f"<ref>Current value</ref>: {(eval('pprint.pformat(config.'+key+')'))}<br>"
+                    typeString = type(eval(f"config.{key}")).__name__
+                    content += f"<ref>Type</ref>: {typeString}"
+                    return ("study", content, {})
+                if config.developer or config.webFullAccess:
+                    item, value = self.splitCommand(command)
+                    if not item in config.help.keys():
+                        return self.invalidCommand("study")
+                    else:
+                        # use """ to allow using ' or " for string
+                        newConfig = """{0} = {1}""".format(item, value)
+                        exec("config."+newConfig)
+                        message = f"The value of config.{item} is now changed to {newConfig}."
+                        if config.runMode == "terminal":
+                            print(message)
+                            return ("study", ".restart", {})
+                        return ("study", message, {})
                 else:
-                    # use """ to allow using ' or " for string
-                    newConfig = """{0} = {1}""".format(item, value)
-                    exec("config."+newConfig)
-                    message = f"The value of config.{item} is now changed to {newConfig}."
-                    if config.runMode == "terminal":
-                        print(message)
-                        return ("study", ".restart", {})
-                    return ("study", message, {})
-            else:
+                    return self.invalidCommand("study")
+            except:
                 return self.invalidCommand("study")
-        except:
+        else:
             return self.invalidCommand("study")
 
     # EXLB:::

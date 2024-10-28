@@ -3,7 +3,6 @@ import re
 from itertools import (takewhile, repeat)
 import platform
 from urllib.parse import urlsplit, urlunsplit
-import importlib.resources
 
 
 class FileUtil:
@@ -38,7 +37,7 @@ class FileUtil:
         # "custom.js" is essential for custom javascript feature.
         customCssFile = os.path.join("htmlResources", "css", "custom.css")
         customJsFile = os.path.join("htmlResources", "js", "custom.js")
-        configFile = os.path.join(str(importlib.resources.files("uniquebible")), "config.py")
+        configFile = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), "config.py")
         userFiles = (configFile, customCssFile, customJsFile)
         for userFile in userFiles:
             if not os.path.isfile(userFile):

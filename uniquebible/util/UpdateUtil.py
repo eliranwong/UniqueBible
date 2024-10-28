@@ -55,6 +55,8 @@ class UpdateUtil:
 
     @staticmethod
     def updateUniqueBibleApp(parent=None, debug=False):
+        # TODO: disabled for now
+        return None
         if config.updateWithGitPull and os.path.isdir(".git"):
             subprocess.Popen("git pull", shell=True)
         else:

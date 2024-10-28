@@ -1,5 +1,21 @@
 PIP package:
 
+0.1.28
+
+* install uniquebible map images via a sparate packages
+
+0.1.16-0.1.27
+
+* multiple fixed for pip package
+
+* separate apps scripts from user content
+
+* support config backup
+
+* added api endpoint `/plain` to http-server
+
+* improved integration with ToolMate AI
+
 0.1.15
 
 * use `groqchat` for bible chat in terminal mode

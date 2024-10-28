@@ -28,7 +28,13 @@ with open(package_readme, "r", encoding="utf-8") as fileObj:
     long_description = fileObj.read()
 
 # get required packages
-install_requires = []
+install_requires = [
+    "uniquebible_maps_1==0.0.3",
+    "uniquebible_maps_2==0.0.3",
+    "uniquebible_maps_3==0.0.3",
+    "uniquebible_maps_4==0.0.3",
+    "uniquebible_maps_5==0.0.3",
+]
 with open(os.path.join(package, "requirements.txt"), "r") as fileObj:
     for line in fileObj.readlines():
         mod = line.strip()
@@ -41,7 +47,7 @@ open(os.path.join(package, "config.py"), "w").close()
 # https://packaging.python.org/en/latest/guides/distributing-packages-using-setuptools/
 setup(
     name=package,
-    version="0.1.23",
+    version="0.1.30",
     python_requires=">=3.8, <3.13",
     description=f"UniqueBible App is a cross-platform & offline bible application, integrated with high-quality resources and unique features. Developers: Eliran Wong and Oliver Tseng",
     long_description=long_description,

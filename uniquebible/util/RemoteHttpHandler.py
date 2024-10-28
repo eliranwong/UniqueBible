@@ -18,6 +18,7 @@ from uniquebible.db.BiblesSqlite import BiblesSqlite, Bible
 from uniquebible.util.GitHubRepoInfo import GitHubRepoInfo
 from uniquebible.util.TextCommandParser import TextCommandParser
 from uniquebible.util.RemoteCliMainWindow import RemoteCliMainWindow
+from uniquebible.util.LocalCliHandler import LocalCliHandler
 from urllib.parse import urlparse, parse_qs
 from uniquebible.util.FileUtil import FileUtil
 from uniquebible.util.LanguageUtil import LanguageUtil
@@ -291,7 +292,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
         for cmd in ignoreCommands:
             if cmd in path:
                 return True
-        if path.lower().startswith("/index.html?cmd=bible"):
+        if path.lower().startswith("/index.html?cmd=bible") or path.lower().startswith("/plain?cmd=bible"):
             return False
         if len(path) > 255:
             return True
@@ -334,6 +335,18 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 print(f"Ignoring command: {self.path}")
                 self.blankPage()
                 return
+            elif self.path.startswith("/plain"):
+                query_components = parse_qs(urlparse(self.path).query)
+                cmd = query_components.get("cmd", [])
+                if cmd:
+                    addFavouriteToMultiRef = config.addFavouriteToMultiRef
+                    config.addFavouriteToMultiRef = False
+                    self.commonHeader()
+                    plainOutput = LocalCliHandler().getContent(cmd[0], False).strip()
+                    self.wfile.write(bytes(plainOutput, "utf8"))
+                    config.addFavouriteToMultiRef = addFavouriteToMultiRef
+                else:
+                    self.blankPage()
             elif self.path == "" or self.path == "/" or self.path.startswith("/index.html") or config.displayLanguage != "en_GB":
                 if self.primaryUser or not config.webPresentationMode:
                     query_components = parse_qs(urlparse(self.path).query)
