@@ -56,8 +56,8 @@ if not config.runMode == "stream":
 
 class LocalCliHandler:
 
-    def __init__(self, command="John 3:16"):
-        if config.terminalUseMarvelDataPrivate:
+    def __init__(self, command="John 3:16", allowPrivateData=True):
+        if config.terminalUseMarvelDataPrivate and allowPrivateData:
             config.defaultMarvelData = config.marvelData
             config.marvelData = config.marvelDataPrivate
         try:

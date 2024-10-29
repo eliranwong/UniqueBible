@@ -7,14 +7,12 @@ from uniquebible import config
 
 # go to resource directory
 thisFile = os.path.realpath(__file__)
-config.packageDir = wd = os.path.dirname(thisFile)
-if os.getcwd() != wd:
-    os.chdir(wd)
+config.packageDir = os.path.dirname(thisFile)
 
 ubahome = os.path.expanduser(os.path.join("~", "UniqueBible"))
 
 # restor previous backup
-configFile = os.path.join(wd, "config.py")
+configFile = os.path.join(config.packageDir, "config.py")
 backupFile = os.path.join(ubahome, "config.py")
 if os.path.isfile(backupFile) and not hasattr(config, "mainText"):
     print(f"Configuration backup found: {backupFile}")
@@ -35,15 +33,18 @@ if os.path.isfile(backupFile) and not hasattr(config, "mainText"):
             pass
         print("Failed to restore previous configurations!")
 
+# set up folders for storing user content in ~/UniqueBible
 if not os.path.isdir(ubahome):
     Path(ubahome).mkdir(parents=True, exist_ok=True)
 for i in ("audio", "htmlResources", "import", "macros", "marvelData", "music", "notes", "temp", "terminal_history", "terminal_mode", "thirdParty", "video", "webstorage", "workspace"):
+    sourceFolder = os.path.join(config.packageDir, i)
     targetFolder = os.path.join(ubahome, i)
     if not os.path.isdir(targetFolder):
-        copytree(i, targetFolder, dirs_exist_ok=True)
+        print(f"Setting up user directory '{i}' ...")
+        copytree(sourceFolder, targetFolder, dirs_exist_ok=True)
     #copytree(i, os.path.join(ubahome, i), dirs_exist_ok=True)
 
-# images
+# set up map images
 import uniquebible.htmlResources.images.exlbl
 import uniquebible.htmlResources.images.exlbl_large
 import uniquebible.htmlResources.images.exlbl_largeHD_1
@@ -53,7 +54,7 @@ import uniquebible.htmlResources.images.exlbl_largeHD_3
 # Add folders below for all new folders created after version 0.1.17
 # ...
 
-# change directory
+# change directory to user directory
 if os.getcwd() != ubahome:
     os.chdir(ubahome)
 

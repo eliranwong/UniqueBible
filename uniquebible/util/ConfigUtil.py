@@ -59,7 +59,7 @@ class ConfigUtil:
 
         # check current directory
         ubaUserDir = os.path.join(os.path.expanduser("~"), "UniqueBible")
-        config.ubaUserDir = ubaUserDir if os.path.isdir(ubaUserDir) else os.getcwd()
+        config.ubaUserDir = ubaUserDir if os.path.isdir(ubaUserDir) else os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
         # check running mode
         config.runMode = sys.argv[1] if len(sys.argv) > 1 else ""

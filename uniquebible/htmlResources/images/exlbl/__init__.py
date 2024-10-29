@@ -14,4 +14,5 @@ if not os.path.isdir(imageFolder):
 #for i in ("exlbl", "exlbl_large", "exlbl_largeHD"):
 destFolder = os.path.join(imageFolder, "exlbl")
 if not os.path.isdir(destFolder):
+    print("Setting up map images ...")
     copytree(thisFolder, destFolder, dirs_exist_ok=True)

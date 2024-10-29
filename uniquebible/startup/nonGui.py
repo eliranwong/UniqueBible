@@ -72,7 +72,7 @@ config.runTerminalModeCommand = runTerminalModeCommandWrapper
 
 def closingTerminalMode():
     config.mainWindow.removeAudioPlayingFile()
-    if config.terminalUseMarvelDataPrivate:
+    if hasattr(config, "defaultMarvelData"):
         config.marvelData = config.defaultMarvelData
     if config.saveConfigOnExit:
         ConfigUtil.save()

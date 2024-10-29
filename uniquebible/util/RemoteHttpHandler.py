@@ -338,12 +338,24 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
             elif self.path.startswith("/plain"):
                 query_components = parse_qs(urlparse(self.path).query)
                 cmd = query_components.get("cmd", [])
+                private = query_components.get("private", [])
                 if cmd:
+                    # tweak configs
+                    if private and private[0] == config.webPrivateHomePage:
+                        marvelData = config.marvelData
+                        config.marvelData = config.marvelDataPrivate
+                        allowPrivateData = True
+                    else:
+                        allowPrivateData = False
                     addFavouriteToMultiRef = config.addFavouriteToMultiRef
                     config.addFavouriteToMultiRef = False
+                    # output
                     self.commonHeader()
-                    plainOutput = LocalCliHandler().getContent(cmd[0], False).strip()
+                    plainOutput = LocalCliHandler(allowPrivateData=allowPrivateData).getContent(cmd[0], False).strip()
                     self.wfile.write(bytes(plainOutput, "utf8"))
+                    # restore user config
+                    if allowPrivateData:
+                        config.marvelData = marvelData
                     config.addFavouriteToMultiRef = addFavouriteToMultiRef
                 else:
                     self.blankPage()
