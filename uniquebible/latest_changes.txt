@@ -1,5 +1,13 @@
 PIP package:
 
+0.1.35
+
+* refine commentary output via api endpoint
+
+0.1.34
+
+* fixed plain text output api endpoint
+
 0.1.32-0.1.33
 
 * Limit api endpoint `/plain` to access private data, only when `private=xxxxxxx` where xxxxxxx matches config.webPrivateHomePage

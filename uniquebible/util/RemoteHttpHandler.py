@@ -19,6 +19,7 @@ from uniquebible.util.GitHubRepoInfo import GitHubRepoInfo
 from uniquebible.util.TextCommandParser import TextCommandParser
 from uniquebible.util.RemoteCliMainWindow import RemoteCliMainWindow
 from uniquebible.util.TextUtil import TextUtil
+from uniquebible.util.RegexSearch import RegexSearch
 from urllib.parse import urlparse, parse_qs
 from uniquebible.util.FileUtil import FileUtil
 from uniquebible.util.LanguageUtil import LanguageUtil
@@ -320,6 +321,21 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
         else:
             self.blankPage()
 
+    def getCommentaryContent(self, chapterCommentary, fullVerseList):
+        pattern = '(<vid id="v[0-9]+?.[0-9]+?.[0-9]+?"></vid>)<hr>'
+        searchReplaceItems = ((pattern, r"<hr>\1"),)
+        chapterCommentary = RegexSearch.deepReplace(chapterCommentary, pattern, searchReplaceItems)
+        verseCommentaries = chapterCommentary.split("<hr>")
+
+        fullVerseList = [f'<vid id="v{b}.{c}.{v}"' for b, c, v, *_ in fullVerseList]
+
+        loaded = []
+        for i in verseCommentaries:
+            for ii in fullVerseList:
+                if i.strip() and not i in loaded and ii in i:
+                    loaded.append(i)
+        return "<hr>".join(loaded)
+
     def do_GET(self):
         try:
             self.clientIP = self.client_address[0]
@@ -335,6 +351,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 self.users.append(self.clientIP)
             if self.clientIP == self.users[0]:
                 self.primaryUser = True
+
             # check query
             query_components = parse_qs(urlparse(self.path).query)
             private = query_components.get("private", [])
@@ -356,6 +373,12 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 # output
                 self.commonHeader()
                 _, content, _ = self.textCommandParser.parser(self.command, "http")
+                # refine commentary output
+                if content and self.command.strip().lower().startswith("commentary:::"):
+                    verseList = self.parser.extractAllReferences(self.command)
+                    if verseList:
+                        fullVerseList = Bible(text="KJV").getEverySingleVerseList(verseList[:1])
+                        content = self.getCommentaryContent(content, fullVerseList)
                 content = content.replace("<u><b>", "<u><b># ")
                 plainText = TextUtil.htmlToPlainText(content).strip()
                 self.wfile.write(bytes(plainText, "utf8"))
