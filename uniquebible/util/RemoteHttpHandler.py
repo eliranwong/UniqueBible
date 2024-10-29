@@ -18,7 +18,7 @@ from uniquebible.db.BiblesSqlite import BiblesSqlite, Bible
 from uniquebible.util.GitHubRepoInfo import GitHubRepoInfo
 from uniquebible.util.TextCommandParser import TextCommandParser
 from uniquebible.util.RemoteCliMainWindow import RemoteCliMainWindow
-from uniquebible.util.LocalCliHandler import LocalCliHandler
+from uniquebible.util.TextUtil import TextUtil
 from urllib.parse import urlparse, parse_qs
 from uniquebible.util.FileUtil import FileUtil
 from uniquebible.util.LanguageUtil import LanguageUtil
@@ -244,10 +244,15 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
     def execPythonFile(self, script):
         self.textCommandParser.parent.execPythonFile(script)
 
-    def updateData(self):
+    def updateData(self, plainOutput=False, allowPrivateData=False):
+        if plainOutput:
+            config.displayLanguage = "en_GB"
+            config.standardAbbreviation = "ENG"
+            self.path = re.sub("^/plain", "/index.html", self.path)
+            config.webHomePage = "{0}.html".format(config.webPrivateHomePage) if allowPrivateData else "index.html"
         # Check language
         # Traditional Chinese
-        if config.webPrivateHomePage and self.path.startswith("/{0}.html".format(config.webPrivateHomePage)):
+        elif config.webPrivateHomePage and self.path.startswith("/{0}.html".format(config.webPrivateHomePage)):
             config.displayLanguage = "en_GB"
             config.standardAbbreviation = "ENG"
             config.webHomePage = "{0}.html".format(config.webPrivateHomePage)
@@ -330,38 +335,38 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 self.users.append(self.clientIP)
             if self.clientIP == self.users[0]:
                 self.primaryUser = True
-            self.updateData()
-            if self.ignoreCommand(self.path):
+            # check query
+            query_components = parse_qs(urlparse(self.path).query)
+            private = query_components.get("private", [])
+            allowPrivateData = True if private and private[0].strip() == config.webPrivateHomePage else False
+            plainOutput = True if self.path.startswith("/plain?") else False
+            # update resource path
+            self.updateData(plainOutput=plainOutput, allowPrivateData=allowPrivateData)
+
+            if plainOutput:
+                cmd = query_components.get("cmd", [])
+                if cmd:
+                    self.command = query_components["cmd"][0].strip()
+                    self.command = self.command.replace("+", " ")
+                else:
+                    self.command = "John 3:16-16"
+                # tweak configs
+                addFavouriteToMultiRef = config.addFavouriteToMultiRef
+                config.addFavouriteToMultiRef = False
+                # output
+                self.commonHeader()
+                _, content, _ = self.textCommandParser.parser(self.command, "http")
+                content = content.replace("<u><b>", "<u><b># ")
+                plainText = TextUtil.htmlToPlainText(content).strip()
+                self.wfile.write(bytes(plainText, "utf8"))
+                # restore user config
+                config.addFavouriteToMultiRef = addFavouriteToMultiRef
+            elif self.ignoreCommand(self.path):
                 print(f"Ignoring command: {self.path}")
                 self.blankPage()
                 return
-            elif self.path.startswith("/plain"):
-                query_components = parse_qs(urlparse(self.path).query)
-                cmd = query_components.get("cmd", [])
-                private = query_components.get("private", [])
-                if cmd:
-                    # tweak configs
-                    if private and private[0] == config.webPrivateHomePage:
-                        marvelData = config.marvelData
-                        config.marvelData = config.marvelDataPrivate
-                        allowPrivateData = True
-                    else:
-                        allowPrivateData = False
-                    addFavouriteToMultiRef = config.addFavouriteToMultiRef
-                    config.addFavouriteToMultiRef = False
-                    # output
-                    self.commonHeader()
-                    plainOutput = LocalCliHandler(allowPrivateData=allowPrivateData).getContent(cmd[0], False).strip()
-                    self.wfile.write(bytes(plainOutput, "utf8"))
-                    # restore user config
-                    if allowPrivateData:
-                        config.marvelData = marvelData
-                    config.addFavouriteToMultiRef = addFavouriteToMultiRef
-                else:
-                    self.blankPage()
             elif self.path == "" or self.path == "/" or self.path.startswith("/index.html") or config.displayLanguage != "en_GB":
                 if self.primaryUser or not config.webPresentationMode:
-                    query_components = parse_qs(urlparse(self.path).query)
                     if 'cmd' in query_components:
                         self.command = query_components["cmd"][0].strip()
                         self.command = self.command.replace("+", " ")
