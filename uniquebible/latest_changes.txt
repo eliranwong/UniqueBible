@@ -1,5 +1,9 @@
 PIP package:
 
+0.1.37
+
+* support user plugins, stored in ~/UniqueBible/plugins
+
 0.1.36
 
 * improved commentary output for terminal and stream mode

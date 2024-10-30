@@ -785,6 +785,15 @@ class MaterialMainWindow:
                         # For both PySide2 and PyQt5
                         addMenuItem(menu, plugin, self, partial(self.runPlugin, plugin), translation=False)
             menu.addSeparator()
+            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(config.ubaUserDir, "plugins", "menu"), "py"):
+                if not plugin in config.excludeMenuPlugins:
+                    if "_" in plugin:
+                        feature, shortcut = plugin.split("_", 1)
+                        feature = "{0} | {1}".format(feature, shortcut)
+                        addMenuItem(menu, feature, self, partial(self.runPlugin, plugin), shortcut=shortcut, translation=False)
+                    else:
+                        addMenuItem(menu, plugin, self, partial(self.runPlugin, plugin), translation=False)
+            menu.addSeparator()
             addMenuItem(menu, "enableIndividualPlugins", self, self.enableIndividualPluginsWindow)
 
         # information

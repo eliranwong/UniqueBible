@@ -52,12 +52,13 @@ class EnableIndividualPlugins(QWidget):
         dataView1.setEditTriggers(QAbstractItemView.NoEditTriggers)
         dataViewModel1 = QStandardItemModel(dataView1)
         dataView1.setModel(dataViewModel1)
-        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "startup"), "py"):
-            item = QStandardItem(plugin)
-            item.setToolTip(plugin)
-            item.setCheckable(True)
-            item.setCheckState(Qt.CheckState.Unchecked if plugin in config.excludeStartupPlugins else Qt.CheckState.Checked)
-            dataViewModel1.appendRow(item)
+        for ff in (config.packageDir, config.ubaUserDir):
+            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(ff, "plugins", "startup"), "py"):
+                item = QStandardItem(plugin)
+                item.setToolTip(plugin)
+                item.setCheckable(True)
+                item.setCheckState(Qt.CheckState.Unchecked if plugin in config.excludeStartupPlugins else Qt.CheckState.Checked)
+                dataViewModel1.appendRow(item)
         dataViewModel1.itemChanged.connect(self.itemChanged1)
         layout.addWidget(dataView1)
         subLayout.addLayout(layout)
@@ -68,12 +69,13 @@ class EnableIndividualPlugins(QWidget):
         dataView2.setEditTriggers(QAbstractItemView.NoEditTriggers)
         dataViewModel2 = QStandardItemModel(dataView2)
         dataView2.setModel(dataViewModel2)
-        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "menu"), "py"):
-            item = QStandardItem(plugin)
-            item.setToolTip(plugin)
-            item.setCheckable(True)
-            item.setCheckState(Qt.CheckState.Unchecked if plugin in config.excludeMenuPlugins else Qt.CheckState.Checked)
-            dataViewModel2.appendRow(item)
+        for ff in (config.packageDir, config.ubaUserDir):
+            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(ff, "plugins", "menu"), "py"):
+                item = QStandardItem(plugin)
+                item.setToolTip(plugin)
+                item.setCheckable(True)
+                item.setCheckState(Qt.CheckState.Unchecked if plugin in config.excludeMenuPlugins else Qt.CheckState.Checked)
+                dataViewModel2.appendRow(item)
         dataViewModel2.itemChanged.connect(self.itemChanged2)
         layout.addWidget(dataView2)
         subLayout.addLayout(layout)
@@ -84,12 +86,13 @@ class EnableIndividualPlugins(QWidget):
         dataView3.setEditTriggers(QAbstractItemView.NoEditTriggers)
         dataViewModel3 = QStandardItemModel(dataView3)
         dataView3.setModel(dataViewModel3)
-        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "context"), "py"):
-            item = QStandardItem(plugin)
-            item.setToolTip(plugin)
-            item.setCheckable(True)
-            item.setCheckState(Qt.CheckState.Unchecked if plugin in config.excludeContextPlugins else Qt.CheckState.Checked)
-            dataViewModel3.appendRow(item)
+        for ff in (config.packageDir, config.ubaUserDir):
+            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(ff, "plugins", "context"), "py"):
+                item = QStandardItem(plugin)
+                item.setToolTip(plugin)
+                item.setCheckable(True)
+                item.setCheckState(Qt.CheckState.Unchecked if plugin in config.excludeContextPlugins else Qt.CheckState.Checked)
+                dataViewModel3.appendRow(item)
         dataViewModel3.itemChanged.connect(self.itemChanged3)
         layout.addWidget(dataView3)
         subLayout.addLayout(layout)
@@ -100,12 +103,13 @@ class EnableIndividualPlugins(QWidget):
         dataView4.setEditTriggers(QAbstractItemView.NoEditTriggers)
         dataViewModel4 = QStandardItemModel(dataView4)
         dataView4.setModel(dataViewModel4)
-        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "shutdown"), "py"):
-            item = QStandardItem(plugin)
-            item.setToolTip(plugin)
-            item.setCheckable(True)
-            item.setCheckState(Qt.CheckState.Unchecked if plugin in config.excludeShutdownPlugins else Qt.CheckState.Checked)
-            dataViewModel4.appendRow(item)
+        for ff in (config.packageDir, config.ubaUserDir):
+            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(ff, "plugins", "shutdown"), "py"):
+                item = QStandardItem(plugin)
+                item.setToolTip(plugin)
+                item.setCheckable(True)
+                item.setCheckState(Qt.CheckState.Unchecked if plugin in config.excludeShutdownPlugins else Qt.CheckState.Checked)
+                dataViewModel4.appendRow(item)
         dataViewModel4.itemChanged.connect(self.itemChanged4)
         layout.addWidget(dataView4)
         subLayout.addLayout(layout)

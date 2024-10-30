@@ -23,13 +23,14 @@ trayMenu.addAction(showWorkspace)
 # Menu plugins
 if config.enablePlugins:
     subMenu = QMenu()
-    for index, plugin in enumerate(FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "menu"), "py")):
-        if not plugin in config.excludeMenuPlugins:
-            feature, *_ = plugin.split("_", 1)
-            exec("menuPlugin{0} = QAction(feature)".format(index))
-            #exec("menuPlugin{0}.triggered.connect(config.mainWindow.showFromTray)".format(index))
-            exec("menuPlugin{0}.triggered.connect(partial(config.mainWindow.runPlugin, plugin))".format(index))
-            exec("subMenu.addAction(menuPlugin{0})".format(index))
+    for ff in (config.packageDir, config.ubaUserDir):
+        for index, plugin in enumerate(FileUtil.fileNamesWithoutExtension(os.path.join(ff, "plugins", "menu"), "py")):
+            if not plugin in config.excludeMenuPlugins:
+                feature, *_ = plugin.split("_", 1)
+                exec("menuPlugin{0} = QAction(feature)".format(index))
+                #exec("menuPlugin{0}.triggered.connect(config.mainWindow.showFromTray)".format(index))
+                exec("menuPlugin{0}.triggered.connect(partial(config.mainWindow.runPlugin, plugin))".format(index))
+                exec("subMenu.addAction(menuPlugin{0})".format(index))
     menuPlugins = QAction(config.thisTranslation["menu_plugins"])
     menuPlugins.setMenu(subMenu)
     trayMenu.addAction(menuPlugins)
@@ -154,13 +155,14 @@ trayMenu.addAction(addToWorkSpace)
 # Context plugins
 if config.enablePlugins:
     subMenu = QMenu()
-    for index, plugin in enumerate(FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "context"), "py")):
-        if not plugin in config.excludeContextPlugins:
-            feature, *_ = plugin.split("_", 1)
-            exec("contextPlugin{0} = QAction(feature)".format(index))
-            #exec("contextPlugin{0}.triggered.connect(config.mainWindow.showFromTray)".format(index))
-            exec("contextPlugin{0}.triggered.connect(partial(config.mainWindow.runContextPluginOnClipboardContent, plugin))".format(index))
-            exec("subMenu.addAction(contextPlugin{0})".format(index))
+    for ff in (config.packageDir, config.ubaUserDir):
+        for index, plugin in enumerate(FileUtil.fileNamesWithoutExtension(os.path.join(ff, "plugins", "context"), "py")):
+            if not plugin in config.excludeContextPlugins:
+                feature, *_ = plugin.split("_", 1)
+                exec("contextPlugin{0} = QAction(feature)".format(index))
+                #exec("contextPlugin{0}.triggered.connect(config.mainWindow.showFromTray)".format(index))
+                exec("contextPlugin{0}.triggered.connect(partial(config.mainWindow.runContextPluginOnClipboardContent, plugin))".format(index))
+                exec("subMenu.addAction(contextPlugin{0})".format(index))
     contextPlugins = QAction(config.thisTranslation["runContextPluginOnClipboardContent"])
     contextPlugins.setMenu(subMenu)
     trayMenu.addAction(contextPlugins)

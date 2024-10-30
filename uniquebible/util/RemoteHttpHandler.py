@@ -236,10 +236,11 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
         config.bibleWindowContentTransformers = []
         config.customCommandShortcuts = {}
         if config.enablePlugins:
-            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "startup"), "py"):
-                if not plugin in config.excludeStartupPlugins:
-                    script = os.path.join(config.packageDir, "plugins", "startup", "{0}.py".format(plugin))
-                    config.mainWindow.execPythonFile(script)
+            for ff in (config.packageDir, config.ubaUserDir):
+                for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(ff, "plugins", "startup"), "py"):
+                    if not plugin in config.excludeStartupPlugins:
+                        script = os.path.join(ff, "plugins", "startup", "{0}.py".format(plugin))
+                        config.mainWindow.execPythonFile(script)
 
     def execPythonFile(self, script):
         self.textCommandParser.parent.execPythonFile(script)

@@ -777,7 +777,7 @@ class LocalCliHandler:
         return ""
 
     def plugins(self, default="", accept_default=False):
-        availablePlugins = FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "terminal"), "py")
+        availablePlugins = FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "terminal"), "py") + FileUtil.fileNamesWithoutExtension(os.path.join(config.ubaUserDir, "plugins", "terminal"), "py")
         if default and accept_default:
             userInput = self.simplePrompt(default=default, accept_default=accept_default)
         else:
@@ -785,9 +785,14 @@ class LocalCliHandler:
         if not userInput or userInput.lower() == config.terminal_cancel_action:
             return self.cancelAction()
         try:
-            #filepath = os.path.join(config.packageDir, "plugins", "terminal", f"{availablePlugins[int(userInput)]}.py")
-            filepath = os.path.join(config.packageDir, "plugins", "terminal", f"{userInput}.py")
-            self.execPythonFile(filepath)
+            filepath1 = os.path.join(config.packageDir, "plugins", "terminal", f"{userInput}.py")
+            filepath2 = os.path.join(config.ubaUserDir, "plugins", "terminal", f"{userInput}.py")
+            if os.path.isfile(filepath1):
+                self.execPythonFile(filepath1)
+            elif os.path.isfile(filepath2):
+                self.execPythonFile(filepath2)
+            else:
+                return self.printInvalidOptionEntered()
             return ""
         except:
             return self.printInvalidOptionEntered()

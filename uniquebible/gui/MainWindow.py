@@ -5372,7 +5372,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.addMaterialIconButton(feature, icon, partial(self.runPlugin, plugin), toolbar, translation=translation)
 
     def isMenuPlugin(self, plugin):
-        return os.path.isfile(os.path.join(config.packageDir, "plugins", "menu", "{0}.py".format(plugin)))
+        return os.path.isfile(os.path.join(config.packageDir, "plugins", "menu", "{0}.py".format(plugin))) or os.path.isfile(os.path.join(config.ubaUserDir, "plugins", "menu", "{0}.py".format(plugin)))
 
     def runPlugin(self, fileName, _=None):
         self.crossPlatform.runPlugin(fileName)

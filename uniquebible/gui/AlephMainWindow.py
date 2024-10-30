@@ -507,6 +507,14 @@ class AlephMainWindow:
                     else:
                         addMenuItem(menu, plugin, self, lambda plugin=plugin: self.runPlugin(plugin), translation=False)
             menu.addSeparator()
+            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(config.ubaUserDir, "plugins", "menu"), "py"):
+                if not plugin in config.excludeMenuPlugins:
+                    if "_" in plugin:
+                        feature, shortcut = plugin.split("_", 1)
+                        addMenuItem(menu, feature, self, lambda plugin=plugin: self.runPlugin(plugin), shortcut=shortcut, translation=False)
+                    else:
+                        addMenuItem(menu, plugin, self, lambda plugin=plugin: self.runPlugin(plugin), translation=False)
+            menu.addSeparator()
             addMenuItem(menu, "enableIndividualPlugins", self, self.enableIndividualPluginsWindow)
 
         about_menu = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_about"]))

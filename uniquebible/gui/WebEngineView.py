@@ -940,20 +940,20 @@ class WebEngineView(QWebEngineView):
             self.addAction(separator)
 
             subMenu = QMenu()
-
-            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "context"), "py"):
-                if not plugin in config.excludeContextPlugins:
-                    action = QAction(self)
-                    if "_" in plugin:
-                        feature, shortcut = plugin.split("_", 1)
-                        action.setText("{0} | {1}".format(feature, shortcut) if shortcut else feature)
-                        # The following line does not work
-                        #action.setShortcut(QKeySequence(shortcut))
-                        self.parent.parent.addContextPluginShortcut(plugin, shortcut)
-                    else:
-                        action.setText(plugin)
-                    action.triggered.connect(partial(self.runPlugin, plugin))
-                    subMenu.addAction(action)
+            for ff in (config.packageDir, config.ubaUserDir):
+                for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(ff, "plugins", "context"), "py"):
+                    if not plugin in config.excludeContextPlugins:
+                        action = QAction(self)
+                        if "_" in plugin:
+                            feature, shortcut = plugin.split("_", 1)
+                            action.setText("{0} | {1}".format(feature, shortcut) if shortcut else feature)
+                            # The following line does not work
+                            #action.setShortcut(QKeySequence(shortcut))
+                            self.parent.parent.addContextPluginShortcut(plugin, shortcut)
+                        else:
+                            action.setText(plugin)
+                        action.triggered.connect(partial(self.runPlugin, plugin))
+                        subMenu.addAction(action)
             
             separator = QAction(self)
             separator.setSeparator(True)
@@ -1008,7 +1008,11 @@ class WebEngineView(QWebEngineView):
         config.contextSource = self
         config.pluginContext = selectedText
         script = os.path.join(config.packageDir, "plugins", "context", "{0}.py".format(fileName))
-        self.parent.parent.execPythonFile(script)
+        if os.path.isfile(script):
+            self.parent.parent.execPythonFile(script)
+        script = os.path.join(config.ubaUserDir, "plugins", "context", "{0}.py".format(fileName))
+        if os.path.isfile(script):
+            self.parent.parent.execPythonFile(script)
         config.pluginContext = ""
         config.contextSource = None
 

@@ -600,7 +600,7 @@ class TextEditor:
         if not userInput or userInput.lower() == config.terminal_cancel_action:
             return self.parent.cancelAction()
         try:
-            filepath = os.path.join(config.packageDir, "plugins", "text_editor", f"{userInput}.py")
+            filepath = os.path.join(pluginDir, f"{userInput}.py")
             self.parent.execPythonFile(filepath)
             return ""
         except:

@@ -206,7 +206,11 @@ class CrossPlatform:
 
     def runPlugin(self, fileName):
         script = os.path.join(config.packageDir, "plugins", "menu", "{0}.py".format(fileName))
-        self.execPythonFile(script)
+        if os.path.isfile(script):
+            self.execPythonFile(script)
+        script = os.path.join(config.ubaUserDir, "plugins", "menu", "{0}.py".format(fileName))
+        if os.path.isfile(script):
+            self.execPythonFile(script)
 
     def execPythonFile(self, script):
         if config.developer:

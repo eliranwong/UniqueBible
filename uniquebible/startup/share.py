@@ -12,10 +12,11 @@ def cleanupTempFiles():
 # Run startup plugins
 def runStartupPlugins():
     if config.enablePlugins:
-        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "startup"), "py"):
-            if not plugin in config.excludeStartupPlugins:
-                script = os.path.join(config.packageDir, "plugins", "startup", "{0}.py".format(plugin))
-                config.mainWindow.execPythonFile(script)
+        for ff in (config.packageDir, config.ubaUserDir):
+            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(ff, "plugins", "startup"), "py"):
+                if not plugin in config.excludeStartupPlugins:
+                    script = os.path.join(ff, "plugins", "startup", "{0}.py".format(plugin))
+                    config.mainWindow.execPythonFile(script)
 
 def printContentOnConsole(text):
     if not "html-text" in sys.modules:

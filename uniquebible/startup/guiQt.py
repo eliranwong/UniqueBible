@@ -109,10 +109,11 @@ def exitApplication():
         config.mainWindow.closeMediaPlayer()
     # Run shutdown plugins
     if config.enablePlugins:
-        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(config.packageDir, "plugins", "shutdown"), "py"):
-            if not plugin in config.excludeShutdownPlugins:
-                script = os.path.join(config.packageDir, "plugins", "shutdown", "{0}.py".format(plugin))
-                config.mainWindow.execPythonFile(script)
+        for ff in (config.packageDir, config.ubaUserDir):
+            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join(ff, "plugins", "shutdown"), "py"):
+                if not plugin in config.excludeShutdownPlugins:
+                    script = os.path.join(ff, "plugins", "shutdown", "{0}.py".format(plugin))
+                    config.mainWindow.execPythonFile(script)
     ConfigUtil.save()
     NoteService.close()
     if (config.runMode == "docker") and config.restartUBA:
