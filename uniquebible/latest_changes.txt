@@ -1,5 +1,11 @@
 PIP package:
 
+0.1.38-0.1.41
+
+* improved raw output with API endpoints
+
+* output command suggestions
+
 0.1.37
 
 * support user plugins, stored in ~/UniqueBible/plugins

@@ -1085,11 +1085,11 @@ class LocalCliHandler:
             elif i in ("_commentary:::",):
                 suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList, ".")
             elif i in ("crossreference:::", "difference:::", "diff:::", "passages:::", "overview:::", "summary:::", "index:::", "chapterindex:::", "map:::", "tske:::", "combo:::", "translation:::", "discourse:::", "words:::", "openbooknote:::", "openchapternote:::", "openversenote:::", "editbooknote:::", "editchapternote:::", "editversenote:::", "_imvr:::"):
-                suggestions[i] = self.allKJVreferences
+                suggestions[i] = None if config.terminalUseLighterCompleter else self.allKJVreferences
             elif i in ("_imv:::", "_instantverse:::", "_menu:::", "_openbooknote:::", "_openchapternote:::", "_openversenote:::", "_editbooknote:::", "_editchapternote:::", "_editversenote:::"):
-                suggestions[i] = self.allKJVreferencesBcv1
+                suggestions[i] = None if config.terminalUseLighterCompleter else self.allKJVreferencesBcv1
             elif i in ("clause:::",):
-                suggestions[i] = self.allKJVreferencesBcv2
+                suggestions[i] = None if config.terminalUseLighterCompleter else self.allKJVreferencesBcv2
             elif i in ("dictionary:::",):
                 suggestions[i] = self.getDummyDict(self.crossPlatform.dictionaryListAbb, ":::")
             elif i in ("encyclopedia:::",):

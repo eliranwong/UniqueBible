@@ -18,6 +18,7 @@ from uniquebible.db.BiblesSqlite import BiblesSqlite, Bible
 from uniquebible.util.GitHubRepoInfo import GitHubRepoInfo
 from uniquebible.util.TextCommandParser import TextCommandParser
 from uniquebible.util.RemoteCliMainWindow import RemoteCliMainWindow
+from uniquebible.util.LocalCliHandler import LocalCliHandler
 from uniquebible.util.TextUtil import TextUtil
 from urllib.parse import urlparse, parse_qs
 from uniquebible.util.FileUtil import FileUtil
@@ -153,7 +154,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
             if command in self.textCommandParser.parent.textList:
                 command = f"TEXT:::{command}"
             # match a bible reference, started with book number, e.g. 43.3.16
-            elif re.search("^[0-9]+?\.[0-9]+?\.[0-9]+?$", command):
+            elif re.search(r"^[0-9]+?\.[0-9]+?\.[0-9]+?$", command):
                 b, c, v = [int(i) for i in command.split(".")]
                 command = self.textCommandParser.bcvToVerseReference(b, c, v)
             else:
@@ -351,9 +352,20 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 if cmd:
                     self.command = query_components["cmd"][0].strip()
                     self.command = self.command.replace("+", " ")
+                    if self.command == ".suggestions":
+                        self.commonHeader()
+                        textCommandSuggestion = [key + ":::" for key in self.textCommandParser.interpreters.keys()]
+                        terminalUseLighterCompleter = config.terminalUseLighterCompleter
+                        config.terminalUseLighterCompleter = True
+                        content = LocalCliHandler(allowPrivateData=allowPrivateData).getCommandCompleterSuggestions(textCommandSuggestion=textCommandSuggestion)
+                        config.terminalUseLighterCompleter = terminalUseLighterCompleter
+                        self.wfile.write(bytes(json.dumps(content), "utf8"))
+                        return
                 else:
                     self.command = "John 3:16-16"
                 # tweak configs
+                displayChapterMenuTogetherWithBibleChapter = config.displayChapterMenuTogetherWithBibleChapter
+                config.displayChapterMenuTogetherWithBibleChapter = False
                 addFavouriteToMultiRef = config.addFavouriteToMultiRef
                 config.addFavouriteToMultiRef = False
                 # output
@@ -375,6 +387,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 self.wfile.write(bytes(content, "utf8"))
                 # restore user config
                 config.addFavouriteToMultiRef = addFavouriteToMultiRef
+                config.displayChapterMenuTogetherWithBibleChapter = displayChapterMenuTogetherWithBibleChapter
             elif self.ignoreCommand(self.path):
                 print(f"Ignoring command: {self.path}")
                 self.blankPage()
@@ -1628,7 +1641,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
         <p>"""
         content = "\n".join(
             [re.sub("            #", "#", value[-1]) for value in self.textCommandParser.interpreters.values()])
-        content = re.sub("(\[KEYWORD\] )(.*?)$", r"""\1<ref onclick="displayCommand('\2:::')">\2</ref>""", content, flags=re.M)
+        content = re.sub(r"(\[KEYWORD\] )(.*?)$", r"""\1<ref onclick="displayCommand('\2:::')">\2</ref>""", content, flags=re.M)
         content = dotCommands + re.sub(r"\n", "<br/>", content) + "</p>"
         return content
 
@@ -1684,14 +1697,14 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
     def getPlaylistFromHTML(self, html):
         playlist = []
         #searchPattern = """[Rr][Ee][Aa][Dd][Cc][Hh][Aa][Pp][Tt][Ee][Rr]:::([A-Za-z0-9]+?)\.([0-9]+?)\.([0-9]+?)[\."']"""
-        searchPattern = """_[Cc][Hh][Aa][Pp][Tt][Ee][Rr][Ss]:::([^\.>]+?)_([0-9]+?)\.([0-9]+?)["'].*onclick=["']rC\("""
+        searchPattern = r"""_[Cc][Hh][Aa][Pp][Tt][Ee][Rr][Ss]:::([^\.>]+?)_([0-9]+?)\.([0-9]+?)["'].*onclick=["']rC\("""
         found = re.search(searchPattern, html)
         if found:
             text, b, c = found[1], found[2], found[3]
             text = FileUtil.getMP3TextFile(text)
             playlist = RemoteCliMainWindow().playAudioBibleChapterVerseByVerse(text, b, c)
         else:
-            searchPattern = """[Rr][Ee][Aa][Dd][Vv][Ee][Rr][Ss][Ee]:::([A-Za-z0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)["']"""
+            searchPattern = r"""[Rr][Ee][Aa][Dd][Vv][Ee][Rr][Ss][Ee]:::([A-Za-z0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)["']"""
             found = re.findall(searchPattern, html)
             if found:
                 for entry in found:
@@ -1702,7 +1715,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                     if os.path.isfile(audioFilePath):
                         playlist.append((audioFile, audioFilePath))
             else:
-                searchPattern = """[Rr][Ee][Aa][Dd]([Ww][Oo][Rr][Dd]|[Ll][Ee][Xx][Ee][Mm][Ee]):::([A-Za-z0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)["']"""
+                searchPattern = r"""[Rr][Ee][Aa][Dd]([Ww][Oo][Rr][Dd]|[Ll][Ee][Xx][Ee][Mm][Ee]):::([A-Za-z0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)["']"""
                 found = re.findall(searchPattern, html)
                 if found:
                     for entry in found:
