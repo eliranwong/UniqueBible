@@ -8,11 +8,11 @@ PIP package:
 
 See the differences:
 
-http://bible.gospelchurch.uk/html?cmd=Commentary:::John%202:4-7
+https://bible.gospelchurch.uk/html?cmd=Commentary:::John%202:4-7
 
-http://bible.gospelchurch.uk/json?cmd=Commentary:::John%202:4-7
+https://bible.gospelchurch.uk/json?cmd=Commentary:::John%202:4-7
 
-http://bible.gospelchurch.uk/plain?cmd=Commentary:::John%202:4-7
+https://bible.gospelchurch.uk/plain?cmd=Commentary:::John%202:4-7
 
 0.1.35
 
