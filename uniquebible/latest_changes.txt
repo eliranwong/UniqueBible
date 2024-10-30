@@ -1,5 +1,19 @@
 PIP package:
 
+0.1.36
+
+* improved commentary output for terminal and stream mode
+
+* added API endpoints `/html` and `/json`, in addition to `/plain`
+
+See the differences:
+
+http://bible.gospelchurch.uk/html?cmd=Commentary:::John%202:4-7
+
+http://bible.gospelchurch.uk/json?cmd=Commentary:::John%202:4-7
+
+http://bible.gospelchurch.uk/plain?cmd=Commentary:::John%202:4-7
+
 0.1.35
 
 * refine commentary output via api endpoint

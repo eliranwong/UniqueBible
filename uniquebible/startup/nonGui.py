@@ -177,7 +177,7 @@ def run_terminal_mode():
             command = ".menu"
             config.mainWindow.printRunningCommand(command)
             content = config.mainWindow.getContent(command)
-        if content.strip():
+        if content is not None and content.strip():
             config.mainWindow.displayOutputOnTerminal(content)
         else:
             command = ".latestbible"

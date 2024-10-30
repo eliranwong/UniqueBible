@@ -75,6 +75,7 @@ class ConfigUtil:
 
         # Temporary configurations
         # Their values are not saved on exit.
+        config.rawOutput = True if config.runMode == "stream" else False
         config.controlPanel = False
         config.miniControl = False
         config.tempRecord = ""

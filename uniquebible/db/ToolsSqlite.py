@@ -1,6 +1,7 @@
 from uniquebible import config
 from uniquebible.util.BibleBooks import BibleBooks
 from uniquebible.util.CatalogUtil import CatalogUtil
+from uniquebible.util.RegexSearch import RegexSearch
 
 if __name__ == "__main__":
     from uniquebible.util.ConfigUtil import ConfigUtil
@@ -738,7 +739,7 @@ class Commentary:
         else:
             return "INVALID_COMMAND_ENTERED"
 
-    def getContent(self, verse):
+    def getContent(self, verse, fullVerseList=[]):
         if self.text in self.getCommentaryList():
             b, c, v, *_ = verse
             if c > 0:
@@ -750,9 +751,25 @@ class Commentary:
             scripture = self.cursor.fetchone()
             if scripture:
                 data = scripture[0]
+                if fullVerseList:
+                    fullVerseList = [f'<vid id="v{b}.{c}.{v}"' for b, c, v, *_ in fullVerseList]
+
+                    pattern = '(<vid id="v[0-9]+?.[0-9]+?.[0-9]+?"></vid>)<hr>'
+                    searchReplaceItems = ((pattern, r"<hr>\1"),)
+                    chapterCommentary = RegexSearch.deepReplace(data, pattern, searchReplaceItems)
+                    verseCommentaries = chapterCommentary.split("<hr>")
+
+                    loaded = []
+                    for i in verseCommentaries:
+                        for ii in fullVerseList:
+                            if i.strip() and not i in loaded and ii in i:
+                                loaded.append(i)
+                    data = "<hr>".join(loaded)
                 if c == 0:
                     data = data.replace("<b>0:0</b>", "")
                     data = data.replace("<u><b>0</b></u>", "")
+                if config.rawOutput:
+                    return data
                 if config.theme in ("dark", "night"):
                     data = data.replace('color:#000080;', 'color:gray;')
                 chapter += re.sub(r'onclick="luV\(([0-9]+?)\)"', r'onclick="luV(\1)" onmouseover="qV(\1)" ondblclick="mV(\1)"', data)

@@ -19,7 +19,6 @@ from uniquebible.util.GitHubRepoInfo import GitHubRepoInfo
 from uniquebible.util.TextCommandParser import TextCommandParser
 from uniquebible.util.RemoteCliMainWindow import RemoteCliMainWindow
 from uniquebible.util.TextUtil import TextUtil
-from uniquebible.util.RegexSearch import RegexSearch
 from urllib.parse import urlparse, parse_qs
 from uniquebible.util.FileUtil import FileUtil
 from uniquebible.util.LanguageUtil import LanguageUtil
@@ -245,11 +244,11 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
     def execPythonFile(self, script):
         self.textCommandParser.parent.execPythonFile(script)
 
-    def updateData(self, plainOutput=False, allowPrivateData=False):
-        if plainOutput:
+    def updateData(self, rawOutput=False, allowPrivateData=False):
+        if rawOutput:
             config.displayLanguage = "en_GB"
             config.standardAbbreviation = "ENG"
-            self.path = re.sub("^/plain", "/index.html", self.path)
+            self.path = re.sub("^/(html|json|plain)", "/index.html", self.path)
             config.webHomePage = "{0}.html".format(config.webPrivateHomePage) if allowPrivateData else "index.html"
         # Check language
         # Traditional Chinese
@@ -321,21 +320,6 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
         else:
             self.blankPage()
 
-    def getCommentaryContent(self, chapterCommentary, fullVerseList):
-        pattern = '(<vid id="v[0-9]+?.[0-9]+?.[0-9]+?"></vid>)<hr>'
-        searchReplaceItems = ((pattern, r"<hr>\1"),)
-        chapterCommentary = RegexSearch.deepReplace(chapterCommentary, pattern, searchReplaceItems)
-        verseCommentaries = chapterCommentary.split("<hr>")
-
-        fullVerseList = [f'<vid id="v{b}.{c}.{v}"' for b, c, v, *_ in fullVerseList]
-
-        loaded = []
-        for i in verseCommentaries:
-            for ii in fullVerseList:
-                if i.strip() and not i in loaded and ii in i:
-                    loaded.append(i)
-        return "<hr>".join(loaded)
-
     def do_GET(self):
         try:
             self.clientIP = self.client_address[0]
@@ -356,11 +340,12 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
             query_components = parse_qs(urlparse(self.path).query)
             private = query_components.get("private", [])
             allowPrivateData = True if private and private[0].strip() == config.webPrivateHomePage else False
-            plainOutput = True if self.path.startswith("/plain?") else False
+            config.rawOutput = True if re.search(r"^/(html|json|plain)\?", self.path) else False
+            api = re.sub(r"^/(html|json|plain)\?.*?$", r"\1", self.path) if config.rawOutput else ""
             # update resource path
-            self.updateData(plainOutput=plainOutput, allowPrivateData=allowPrivateData)
+            self.updateData(rawOutput=config.rawOutput, allowPrivateData=allowPrivateData)
 
-            if plainOutput:
+            if config.rawOutput:
                 cmd = query_components.get("cmd", [])
                 if cmd:
                     self.command = query_components["cmd"][0].strip()
@@ -373,15 +358,20 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 # output
                 self.commonHeader()
                 _, content, _ = self.textCommandParser.parser(self.command, "http")
-                # refine commentary output
-                if content and self.command.strip().lower().startswith("commentary:::"):
-                    verseList = self.parser.extractAllReferences(self.command)
-                    if verseList:
-                        fullVerseList = Bible(text="KJV").getEverySingleVerseList(verseList[:1])
-                        content = self.getCommentaryContent(content, fullVerseList)
                 content = content.replace("<u><b>", "<u><b># ")
-                plainText = TextUtil.htmlToPlainText(content).strip()
-                self.wfile.write(bytes(plainText, "utf8"))
+                # convert to plain text for plain endpoint
+                if api in ("json", "plain"):
+                    content = TextUtil.htmlToPlainText(content).strip()
+                if api == "json":
+                    output = {}
+                    for index, item in enumerate(self.command.split(":::")):
+                        if index == 0:
+                            output["keyword"] = item.strip()
+                        else:
+                            output[f"parameter_{index}"] = item.strip()
+                    output["content"] = content
+                    content = json.dumps(output)
+                self.wfile.write(bytes(content, "utf8"))
                 # restore user config
                 config.addFavouriteToMultiRef = addFavouriteToMultiRef
             elif self.ignoreCommand(self.path):

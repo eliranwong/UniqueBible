@@ -1418,6 +1418,8 @@ class TextCommandParser:
         return verses
 
     def textFormattedBible(self, verse, text, source=""):
+        if config.rawOutput:
+            return self.textPlainBible([verse], text)
         formattedBiblesFolder = os.path.join(config.marvelData, "bibles")
         formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not re.search(r"^[\._]", f)]
         #marvelBibles = ("MOB", "MIB", "MAB", "MPB", "MTB", "LXX1", "LXX1i", "LXX2", "LXX2i")
@@ -3403,7 +3405,11 @@ class TextCommandParser:
                     config.mainB, config.mainC, config.mainV, *_ = bcvTuple
                 module = commandList[0]
                 commentary = Commentary(module)
-                content = commentary.getContent(bcvTuple)
+                fullVerseList = Bible("KJV").getEverySingleVerseList((bcvTuple,))
+                if config.runMode == "terminal" or config.rawOutput:
+                    content = commentary.getContent(bcvTuple, fullVerseList=fullVerseList)
+                else:
+                    content = commentary.getContent(bcvTuple)
                 if not content == "INVALID_COMMAND_ENTERED":
                     self.setCommentaryVerse(module, bcvTuple)
                 return ("study", content, {'tab_title':'Com:' + module})

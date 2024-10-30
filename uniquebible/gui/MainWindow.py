@@ -4543,7 +4543,7 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
                 elif view:
                     views[view].setHtml(html, baseUrl)
 
-                if view == "instant" and (config.instantMode == 0 or (config.iModeSplitterSizes[-1] == 0 and not config.instantMode > 0)):
+                if hasattr(config, "iModeSplitterSizes") and view == "instant" and (config.instantMode == 0 or (config.iModeSplitterSizes[-1] == 0 and not config.instantMode > 0)):
                     self.showFlotableInstantView(html)
 
                 if addRecord:
