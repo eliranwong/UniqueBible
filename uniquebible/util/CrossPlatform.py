@@ -115,6 +115,29 @@ class CrossPlatform:
             "WLC (Hebrew; slow; verse-by-verse)": ("WLC", "eliranwong/MP3_WLC_slow", "default"),
         }
 
+        self.resources = {}
+        self.resources["bibleListAbb"] = self.textList
+        self.resources["strongBibleListAbb"] = self.strongBibles
+        self.resources["bibleList"] = self.textFullNameList
+        self.resources["commentaryListAbb"] = self.commentaryList
+        self.resources["commentaryList"] = self.commentaryFullNameList
+        self.resources["referenceBookList"] = self.referenceBookList
+        self.resources["topicListAbb"] = self.topicListAbb
+        self.resources["topicList"] = self.topicList
+        self.resources["lexiconList"] = self.lexiconList
+        self.resources["dictionaryListAbb"] = self.dictionaryListAbb
+        self.resources["dictionaryList"] = self.dictionaryList
+        self.resources["encyclopediaListAbb"] = self.encyclopediaListAbb
+        self.resources["encyclopediaList"] = self.encyclopediaList
+        self.resources["thirdPartyDictionaryList"] = self.thirdPartyDictionaryList
+        self.resources["pdfList"] = self.pdfList
+        self.resources["epubList"] = self.epubList
+        self.resources["docxList"] = self.docxList
+        self.resources["bibleAudioModules"] = self.bibleAudioModules
+        self.resources["dataList"] = self.dataList
+        self.resources["searchToolList"] = self.searchToolList
+        #self.resources["verseByVerseAudio"] = self.verseByVerseAudio
+
     # Check if a third party dictionary exists:
     def isThridPartyDictionary(self, module):
         bibleBentoPlusLexicon = os.path.join("thirdParty", "dictionaries", "{0}{1}".format(module, ".dic.bbp"))

@@ -1,10 +1,18 @@
 PIP package:
 
+0.1.42
+
+* added command `.resources` to web API to retrieve available resources
+
+* Read web api documentation at https://github.com/eliranwong/UniqueBibleAPI
+
 0.1.38-0.1.41
 
 * improved raw output with API endpoints
 
 * output command suggestions
+
+* added command `.suggestions` to web API to retrieve command suggestions
 
 0.1.37
 

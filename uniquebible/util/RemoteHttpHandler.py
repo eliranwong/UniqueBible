@@ -360,7 +360,12 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                         content = LocalCliHandler(allowPrivateData=allowPrivateData).getCommandCompleterSuggestions(textCommandSuggestion=textCommandSuggestion)
                         config.terminalUseLighterCompleter = terminalUseLighterCompleter
                         self.wfile.write(bytes(json.dumps(content), "utf8"))
-                        return
+                        return None
+                    elif self.command == ".resources":
+                        self.commonHeader()
+                        content = self.textCommandParser.parent.resources
+                        self.wfile.write(bytes(json.dumps(content), "utf8"))
+                        return None
                 else:
                     self.command = "John 3:16-16"
                 # tweak configs
@@ -377,12 +382,14 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                     content = TextUtil.htmlToPlainText(content).strip()
                 if api == "json":
                     output = {}
+                    if not ":::" in self.command:
+                        self.command = f"bible:::{self.command}"
                     for index, item in enumerate(self.command.split(":::")):
                         if index == 0:
                             output["keyword"] = item.strip()
                         else:
                             output[f"parameter_{index}"] = item.strip()
-                    output["content"] = content
+                    output["content"] = content.strip()
                     content = json.dumps(output)
                 self.wfile.write(bytes(content, "utf8"))
                 # restore user config
@@ -391,7 +398,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
             elif self.ignoreCommand(self.path):
                 print(f"Ignoring command: {self.path}")
                 self.blankPage()
-                return
+                return None
             elif self.path == "" or self.path == "/" or self.path.startswith("/index.html") or config.displayLanguage != "en_GB":
                 if self.primaryUser or not config.webPresentationMode:
                     if 'cmd' in query_components:

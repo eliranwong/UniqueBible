@@ -1,14 +1,8 @@
-# Migration to pip package in progress
+# Migration to PIP Package
 
-We are migrating the distribution of UniqueBible App via pip package. Something may not work as usual.  Please kindly report issues at https://github.com/eliranwong/UniqueBible/issues
+We've recently published pip packages for distributing UniqueBible App.
 
-To install:
-
-> pip install --upgrade uniquebible
-
-To run:
-
-> uniquebible
+Read latest instructions for installation at: https://github.com/eliranwong/UniqueBible/wiki/installation#latest-updates
 
 # UniqueBible
 
