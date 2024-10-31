@@ -323,7 +323,7 @@ input.addEventListener('keyup', function(event) {0}
         return " ".join(["{0}{1}</ref>".format(self.formVerseTag(b, c, verse, text), verse) for verse in verseList])
 
     def compareVerse(self, verseList, texts=["ALL"]):
-        if len(verseList) == 1 and not texts == ["ALL"]:
+        if len(verseList) == 1 and not texts == ["ALL"] and not config.rawOutput:
             b, c, v, *_ = verseList[0]
             return self.compareVerseChapter(b, c, v, texts)
         else:

@@ -91,6 +91,10 @@ class TextCommandParser:
             # e.g. BIBLE:::Jn 3:16; Rm 5:8; Deu 6:4
             # e.g. BIBLE:::KJV:::John 3:16
             # e.g. BIBLE:::KJV:::Jn 3:16; Rm 5:8; Deu 6:4"""),
+            "chapter": (self.textFormattedChapter, """
+            # [KEYWORD] CHAPTER
+            # Feature - Open bible versions of a single chapter.
+            # Usage - CHAPTER:::[BIBLE_VERSION(S)]:::[BIBLE_CHAPTER]"""),
             "main": (self.textMain, """
             # [KEYWORD] MAIN
             # Feature - Open a bible chapter or multiples verses on main view.
@@ -143,6 +147,10 @@ class TextCommandParser:
             # e.g. COMPARE:::John 3:16
             # e.g. COMPARE:::KJV_NET_CUV:::John 3:16
             # e.g. COMPARE:::KJV_NET_CUV:::John 3:16; Rm 5:8"""),
+            "comparechapter": (self.textCompareChapter, """
+            # [KEYWORD] COMPARECHAPTER
+            # Feature - Compare bible versions of a single chapter.
+            # Usage - COMPARECHAPTER:::[BIBLE_VERSION(S)]:::[BIBLE_CHAPTER]"""),
             "sidebyside": (self.textCompareSideBySide, """
             # [KEYWORD] SIDEBYSIDE
             # Feature - Compare bible versions side by side
@@ -1445,6 +1453,38 @@ class TextCommandParser:
                 content = f"{content}<br>{config.mainWindow.divider}<br>{singleVerse}"
         return content
 
+    def textFormattedChapter(self, command, source):
+        if command.count(":::") == 0:
+            if config.openBibleInMainViewOnly:
+                updateViewConfig, viewText, *_ = self.getViewConfig("main")
+            else:
+                updateViewConfig, viewText, *_ = self.getViewConfig(source)
+            command = "{0}:::{1}".format(viewText, command)
+        texts, references = self.splitCommand(command)
+        verseList = self.extractAllVerses(references)
+        if not verseList:
+            return self.invalidCommand()
+        texts = self.getConfirmedTexts(texts)
+        marvelBibles = self.getMarvelBibles()
+        if not texts:
+            return self.invalidCommand()
+        else:
+            self.cancelBibleParallels()
+            text = texts[0]
+            if text in marvelBibles:
+                fileItems = marvelBibles[text][0]
+                if os.path.isfile(os.path.join(*fileItems)):
+                    content = self.textFormattedBible(verseList[0], text, source)
+                    return ("main", content, {})
+                else:
+                    databaseInfo = marvelBibles[text]
+                    if self.parent is not None:
+                        self.parent.downloadHelper(databaseInfo)
+                    return ("", "", {})
+            else:
+                content = self.textFormattedBible(verseList[0], text, source)
+                return ("main", content, {})
+
     # cmd:::
     # run os command
     def osCommand(self, command, source):
@@ -2540,10 +2580,13 @@ class TextCommandParser:
         display = " | ".join(translations)
         return ("study", display, {})
 
+    def getAllFavouriteBibles(self):
+        return sorted(set([config.mainText, config.favouriteBible, config.favouriteBible2, config.favouriteBible3, config.favouriteBiblePrivate, config.favouriteBiblePrivate2, config.favouriteBiblePrivate3]))
+
     # COMPARE:::
     def textCompare(self, command, source):
         if command.count(":::") == 0:
-            confirmedTexts = ["ALL"]
+            confirmedTexts = self.getAllFavouriteBibles()
             verseList = self.extractAllVerses(command)
         else:
             texts, references = self.splitCommand(command)
@@ -2559,14 +2602,46 @@ class TextCommandParser:
             config.mainCssBibleFontStyle = ""
             texts = confirmedTexts
             if confirmedTexts == ["ALL"]:
-                plainBibleList, formattedBibleList = biblesSqlite.getTwoBibleLists()
-                texts = set(plainBibleList + formattedBibleList)
+                #plainBibleList, formattedBibleList = biblesSqlite.getTwoBibleLists()
+                #texts = set(plainBibleList + formattedBibleList)
+                texts = self.getAllFavouriteBibles()
             for text in texts:
                 (fontFile, fontSize, css) = Bible(text).getFontInfo()
                 config.mainCssBibleFontStyle += css
             verses = biblesSqlite.compareVerse(verseList, confirmedTexts)
             updateViewConfig, viewText, *_ = self.getViewConfig(source)
             updateViewConfig(viewText, verseList[-1])
+            return ("study" if config.compareOnStudyWindow else "main", verses, {})
+
+    # COMPARECHAPTER:::
+    def textCompareChapter(self, command, source):
+        if command.count(":::") == 0:
+            confirmedTexts = self.getAllFavouriteBibles()
+            verseList = self.extractAllVerses(command)
+        else:
+            texts, references = self.splitCommand(command)
+            confirmedTexts = self.getConfirmedTexts(texts)
+            verseList = self.extractAllVerses(references)
+        if not confirmedTexts or not verseList:
+            return self.invalidCommand()
+        else:
+            if config.runMode == "terminal" and not confirmedTexts == ["ALL"]:
+                config.compareParallelList = confirmedTexts
+                config.terminalBibleComparison = True
+            biblesSqlite = BiblesSqlite()
+            config.mainCssBibleFontStyle = ""
+            texts = confirmedTexts
+            if confirmedTexts == ["ALL"]:
+                #plainBibleList, formattedBibleList = biblesSqlite.getTwoBibleLists()
+                texts = self.getAllFavouriteBibles()
+            for text in texts:
+                (fontFile, fontSize, css) = Bible(text).getFontInfo()
+                config.mainCssBibleFontStyle += css
+            #verses = biblesSqlite.compareVerse(verseList, confirmedTexts)
+            b, c, v, *_ = verseList[0]
+            verses = biblesSqlite.compareVerseChapter(b, c, v, confirmedTexts)
+            updateViewConfig, viewText, *_ = self.getViewConfig(source)
+            updateViewConfig(viewText, verseList[0])
             return ("study" if config.compareOnStudyWindow else "main", verses, {})
 
     # SIDEBYSIDE:::
