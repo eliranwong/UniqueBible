@@ -1,3 +1,4 @@
+# flake8: noqa
 import codecs
 import logging
 import os, pprint, platform, sys

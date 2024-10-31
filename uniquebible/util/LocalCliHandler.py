@@ -1,3 +1,4 @@
+# flake8: noqa
 import re, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json, shutil, webbrowser, traceback, textwrap, wcwidth, unicodedata
 from uniquebible import config
 import threading, time
