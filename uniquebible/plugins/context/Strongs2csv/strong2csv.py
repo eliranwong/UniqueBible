@@ -1,3 +1,4 @@
+# flake8: noqa
 '''
 A utility to extract Strongs Numbers data into a CSV fi1e.
 Can enter one or more numbers, i.e. H25 or H356,G217,G875. Saved file will 

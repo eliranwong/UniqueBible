@@ -122,3 +122,10 @@ audio/*.json
 *.out
 audio/._.DS_Store
 audio/._Readme.md
+uniquebible/audio/bibles/
+uniquebible.egg-info/
+uniquebible/htmlResources/images/exlbl_largeHD/
+uniquebible/venv*/
+uniquebible/marvelData/
+uniquebible/marvelData_*/
+uniquebible/macros/
