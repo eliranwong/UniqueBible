@@ -369,9 +369,19 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 else:
                     self.command = "John 3:16-16"
                 # tweak configs
+                showUserNoteIndicator = config.showUserNoteIndicator
+                showBibleNoteIndicator = config.showBibleNoteIndicator
+                displayVerseAudioBibleIcon = config.displayVerseAudioBibleIcon
+                showHebrewGreekWordAudioLinks = config.showHebrewGreekWordAudioLinks
+                showHebrewGreekWordAudioLinksInMIB = config.showHebrewGreekWordAudioLinksInMIB
                 displayChapterMenuTogetherWithBibleChapter = config.displayChapterMenuTogetherWithBibleChapter
-                config.displayChapterMenuTogetherWithBibleChapter = False
                 addFavouriteToMultiRef = config.addFavouriteToMultiRef
+                config.showUserNoteIndicator = False
+                config.showBibleNoteIndicator = False
+                config.displayVerseAudioBibleIcon = False
+                config.showHebrewGreekWordAudioLinks = False
+                config.showHebrewGreekWordAudioLinksInMIB = False
+                config.displayChapterMenuTogetherWithBibleChapter = False
                 config.addFavouriteToMultiRef = False
                 # output
                 self.commonHeader()
@@ -395,6 +405,11 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 # restore user config
                 config.addFavouriteToMultiRef = addFavouriteToMultiRef
                 config.displayChapterMenuTogetherWithBibleChapter = displayChapterMenuTogetherWithBibleChapter
+                config.showUserNoteIndicator = showUserNoteIndicator
+                config.showBibleNoteIndicator = showBibleNoteIndicator
+                config.displayVerseAudioBibleIcon = displayVerseAudioBibleIcon
+                config.showHebrewGreekWordAudioLinks = showHebrewGreekWordAudioLinks
+                config.showHebrewGreekWordAudioLinksInMIB = showHebrewGreekWordAudioLinksInMIB
             elif self.ignoreCommand(self.path):
                 print(f"Ignoring command: {self.path}")
                 self.blankPage()
