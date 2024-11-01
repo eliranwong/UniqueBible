@@ -1,5 +1,11 @@
 PIP package:
 
+0.1.52-0.1.53
+
+* improved web API output
+
+* fixed shortcut issue
+
 0.1.43-0.1.51
 
 * fixed and improved startup
