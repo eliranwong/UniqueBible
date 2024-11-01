@@ -96,7 +96,7 @@ translation = {
     "menu4_tdw": "原文分析組合",
     "menu4_crossRef": "串珠",
     "menu4_tske": "TSK（串珠加強版）",
-    "menu4_compareAll": "比較全部譯本",
+    "menu4_compareAll": "比較愛好譯本",
     "menu4_moreComparison": "比較/並行讀/差異",
     "menu5_search": "搜索",
     "menu5_lookup": "查閱",

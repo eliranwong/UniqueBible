@@ -1425,8 +1425,8 @@ class TextCommandParser:
         verses = biblesSqlite.readMultipleVerses(text, verseList)
         return verses
 
-    def textFormattedBible(self, verse, text, source=""):
-        if config.rawOutput:
+    def textFormattedBible(self, verse, text, source="", rawOutputChapter=False):
+        if config.rawOutput and not rawOutputChapter:
             return self.textPlainBible([verse], text)
         formattedBiblesFolder = os.path.join(config.marvelData, "bibles")
         formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not re.search(r"^[\._]", f)]
@@ -1464,6 +1464,7 @@ class TextCommandParser:
         verseList = self.extractAllVerses(references)
         if not verseList:
             return self.invalidCommand()
+        firstVerse = verseList[0]
         texts = self.getConfirmedTexts(texts)
         marvelBibles = self.getMarvelBibles()
         if not texts:
@@ -1474,7 +1475,8 @@ class TextCommandParser:
             if text in marvelBibles:
                 fileItems = marvelBibles[text][0]
                 if os.path.isfile(os.path.join(*fileItems)):
-                    content = self.textFormattedBible(verseList[0], text, source)
+                    content = self.textFormattedBible(firstVerse, text, source, rawOutputChapter=True)
+                    self.setMainVerse(text, firstVerse)
                     return ("main", content, {})
                 else:
                     databaseInfo = marvelBibles[text]
@@ -1482,7 +1484,8 @@ class TextCommandParser:
                         self.parent.downloadHelper(databaseInfo)
                     return ("", "", {})
             else:
-                content = self.textFormattedBible(verseList[0], text, source)
+                content = self.textFormattedBible(firstVerse, text, source, rawOutputChapter=True)
+                self.setMainVerse(text, firstVerse)
                 return ("main", content, {})
 
     # cmd:::
@@ -2581,7 +2584,8 @@ class TextCommandParser:
         return ("study", display, {})
 
     def getAllFavouriteBibles(self):
-        return sorted(set([config.mainText, config.favouriteBible, config.favouriteBible2, config.favouriteBible3, config.favouriteBiblePrivate, config.favouriteBiblePrivate2, config.favouriteBiblePrivate3]))
+        favouriteVersions = set([config.mainText, config.studyText, config.favouriteBible, config.favouriteBible2, config.favouriteBible3, config.favouriteBiblePrivate, config.favouriteBiblePrivate2, config.favouriteBiblePrivate3])
+        return self.getConfirmedTexts("_".join(favouriteVersions))
 
     # COMPARE:::
     def textCompare(self, command, source):

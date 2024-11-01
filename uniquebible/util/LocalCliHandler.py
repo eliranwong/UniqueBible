@@ -1058,11 +1058,11 @@ class LocalCliHandler:
                 suggestions[i] = self.getDummyDict(self.crossPlatform.textList)
             elif i in ("_vnsc:::", "_vndc:::", "readchapter:::", "readverse:::", "readword:::", "readlexeme:::",):
                 suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ".")
-            elif i in ("compare:::",):
+            elif i in ("compare:::", "comparechapter:::"):
                 suggestions[i] = self.getDummyDict(self.crossPlatform.textList, "_")
             elif i in ("count:::", "search:::", "andsearch:::", "orsearch:::", "advancedsearch:::", "regexsearch:::",):
                 suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ":::")
-            elif i in ("bible:::", "main:::", "study:::", "read:::", "readsync:::", "_verses:::"):
+            elif i in ("bible:::", "chapter:::", "main:::", "study:::", "read:::", "readsync:::", "_verses:::"):
                 suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ":::", None if config.terminalUseLighterCompleter else self.allKJVreferences)
             elif i in ("_biblenote:::",):
                 suggestions[i] = self.getDummyDict(self.crossPlatform.textList, ":::", None if config.terminalUseLighterCompleter else self.allKJVreferencesBcv1)

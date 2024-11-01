@@ -96,7 +96,7 @@ translation = {
     "menu4_tdw": "TDW Combo",
     "menu4_crossRef": "Cross References",
     "menu4_tske": "TSK (Enhanced edition)",
-    "menu4_compareAll": "Compare All Versions",
+    "menu4_compareAll": "Compare Favourite Versions",
     "menu4_moreComparison": "Comparison / Parallel Reading / Difference",
     "menu5_search": "Search",
     "menu5_lookup": "Lookup",

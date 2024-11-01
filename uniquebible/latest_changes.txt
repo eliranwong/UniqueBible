@@ -1,5 +1,15 @@
 PIP package:
 
+0.1.43-0.1.51
+
+* fixed and improved startup
+
+* improved web api
+
+* added command `chapter:::` and `comparechapter:::`
+
+* command `compare:::ALL:::` now compares all favourite bibles instead of all installed bibles
+
 0.1.42
 
 * added command `.resources` to web API to retrieve available resources

@@ -172,10 +172,11 @@ Name=Unique Bible App
         # Run main.py
         mainPy = "main.py {0}".format(initialCommand) if initialCommand else "main.py"
         if enableCli:
-            if os.path.exists(activator):
-                os.system("{0} & {1} {2}".format(activator, python, mainPy))
-            else:
-                os.system("{0} {1}".format(python, mainPy))
+            #if os.path.exists(activator):
+            #    os.system("{0} & {1} {2}".format(activator, python, mainPy))
+            #else:
+            #    os.system("{0} {1}".format(python, mainPy))
+            exec("from uniquebible.main import *", globals())
         else:
             if os.path.exists(activator):
                 subprocess.Popen("{0} & {1} {2}".format(activator, python, mainPy), shell=True)
@@ -191,7 +192,8 @@ Name=Unique Bible App
             exec(code, dict(__file__=activator))"""
         # Run main.py
         if enableCli:
-            os.system("{0} {1}{2}".format(python, mainFile, f" {initialCommand}" if initialCommand else ""))
+            #os.system("{0} {1}{2}".format(python, mainFile, f" {initialCommand}" if initialCommand else ""))
+            exec("from uniquebible.main import *", globals())
         else:
             subprocess.Popen([python, mainFile, initialCommand] if initialCommand else [python, mainFile])
 
