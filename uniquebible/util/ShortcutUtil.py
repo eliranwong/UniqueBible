@@ -743,7 +743,7 @@ class ShortcutUtil:
 
     @staticmethod
     def getAllShortcuts():
-        import shortcut as sc
+        import uniquebible.shortcut as sc
 
         lines = []
         for action in sc.__dict__.keys():
@@ -789,7 +789,7 @@ class ShortcutUtil:
 
     @staticmethod
     def loadShortcutFile(name=None):
-        import shortcut
+        import uniquebible.shortcut as shortcut
         customShortcuts = ShortcutUtil.readShorcutFile(name)
         for key in customShortcuts.keys():
             action = customShortcuts[key]

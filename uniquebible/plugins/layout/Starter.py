@@ -1,5 +1,5 @@
 from uniquebible.gui.MenuItems import *
-import shortcut as sc
+import uniquebible.shortcut as sc
 from uniquebible.db.BiblesSqlite import BiblesSqlite
 from uniquebible.util.LanguageUtil import LanguageUtil
 

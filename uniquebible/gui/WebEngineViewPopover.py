@@ -1,7 +1,7 @@
 from genericpath import isfile
 import os
 from uniquebible import config
-import shortcut as sc
+import uniquebible.shortcut as sc
 if config.qtLibrary == "pyside6":
     from PySide6.QtGui import QKeySequence, QAction, QShortcut
     from PySide6.QtWidgets import QFileDialog, QInputDialog, QLineEdit

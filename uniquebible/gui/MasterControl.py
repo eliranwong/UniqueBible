@@ -1,5 +1,5 @@
 from uniquebible import config
-import shortcut as sc
+import uniquebible.shortcut as sc
 from uniquebible.gui.BibleExplorer import BibleExplorer
 from uniquebible.gui.Library2Launcher import Library2Launcher
 from uniquebible.gui.MediaLauncher import MediaLauncher

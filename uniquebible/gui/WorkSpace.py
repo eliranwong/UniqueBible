@@ -1,7 +1,7 @@
 from uniquebible import config
 import re, os, base64, glob, webbrowser, markdown
 from datetime import datetime
-import shortcut as sc
+import uniquebible.shortcut as sc
 from uniquebible.util.SystemUtil import SystemUtil
 
 if config.qtLibrary == "pyside6":

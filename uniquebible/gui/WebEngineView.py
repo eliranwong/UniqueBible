@@ -3,7 +3,7 @@ from uniquebible.util.Languages import Languages
 from uniquebible.util.GoogleCloudTTSVoices import GoogleCloudTTS
 from uniquebible import config
 import os, platform, re
-import shortcut as sc
+import uniquebible.shortcut as sc
 from functools import partial
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt
