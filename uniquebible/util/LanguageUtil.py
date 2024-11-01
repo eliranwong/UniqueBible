@@ -38,7 +38,7 @@ class LanguageUtil:
 
     @staticmethod
     def loadTranslation(lang):
-        file = "lang.language_{0}".format(lang)
+        file = "uniquebible.lang.language_{0}".format(lang)
         module = importlib.import_module(file)
         trans = importlib.reload(module)
         return trans.translation
