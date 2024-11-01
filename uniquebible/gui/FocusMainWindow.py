@@ -7,7 +7,7 @@ from uniquebible.util.ShortcutUtil import ShortcutUtil
 from uniquebible.util.LanguageUtil import LanguageUtil
 from uniquebible.util.FileUtil import FileUtil
 from uniquebible.util.WebtopUtil import WebtopUtil
-import shortcut as sc
+import uniquebible.shortcut as sc
 import re, os
 
 

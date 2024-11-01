@@ -81,7 +81,7 @@ from uniquebible.util.NoteService import NoteService
 from uniquebible.util.ShortcutUtil import ShortcutUtil
 from uniquebible.util.TextUtil import TextUtil
 from uniquebible.util.PydubUtil import PydubUtil
-import shortcut as sc
+import uniquebible.shortcut as sc
 from uniquebible.util.UpdateUtil import UpdateUtil
 from uniquebible.util.DateUtil import DateUtil
 from uniquebible.util.CrossPlatform import CrossPlatform

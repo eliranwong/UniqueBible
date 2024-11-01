@@ -8,7 +8,7 @@ from uniquebible.util.ShortcutUtil import ShortcutUtil
 from uniquebible.util.FileUtil import FileUtil
 from uniquebible.util.WebtopUtil import WebtopUtil
 import re, os
-import shortcut as sc
+import uniquebible.shortcut as sc
 
 
 class AlephMainWindow:

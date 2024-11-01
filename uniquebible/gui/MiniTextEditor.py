@@ -1,6 +1,6 @@
 from uniquebible import config
 import re, os
-import shortcut as sc
+import uniquebible.shortcut as sc
 from datetime import datetime
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt, QTimer
