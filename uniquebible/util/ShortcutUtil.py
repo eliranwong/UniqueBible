@@ -789,7 +789,7 @@ class ShortcutUtil:
 
     @staticmethod
     def loadShortcutFile(name=None):
-        import uniquebible.shortcut
+        import uniquebible.shortcut as shortcut
         customShortcuts = ShortcutUtil.readShorcutFile(name)
         for key in customShortcuts.keys():
             action = customShortcuts[key]

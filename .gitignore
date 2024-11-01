@@ -60,7 +60,7 @@ uniquebible/htmlResources/images/[A-Z]*/*
 uniquebible/htmlResources/images/qrcode.png
 **/.DS_Store
 nohup.out
-/Perimeter\ Worship\ Songs
+uniquebible/Perimeter\ Worship\ Songs
 /Personal
 uniquebible/htmlResources/main-*.html
 uniquebible/htmlResources/lib/pdfjs-2.7.570-dist/web/*.pdf
