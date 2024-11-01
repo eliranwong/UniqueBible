@@ -1,4 +1,4 @@
-import os, signal, sys, re, base64, webbrowser, platform, subprocess, requests, update, logging, zipfile, glob
+import os, signal, sys, re, base64, webbrowser, platform, subprocess, requests, logging, zipfile, glob
 from uniquebible import config
 import markdown, time
 #from distutils import util
@@ -24,6 +24,7 @@ else:
     from qtpy.QtGui import QClipboard
     from qtpy.QtMultimedia import QMediaPlayer, QMediaContent
     from qtpy.QtMultimediaWidgets import QVideoWidget
+from uniquebible import update
 from uniquebible.gui.PlaylistUI import PlaylistUI
 from uniquebible.gui.WorkSpace import Workspace
 from uniquebible.db.DevotionalSqlite import DevotionalSqlite
@@ -4783,10 +4784,10 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         self.centralWidget.switchLandscapeMode()
         self.resizeCentral()
 
-    """def setLandscapeMode(self, mode):
-        config.landscapeMode = bool(util.strtobool(mode))
+    def setLandscapeMode(self, mode):
+        config.landscapeMode = TextUtil.strtobool(mode)
         self.centralWidget.switchLandscapeMode()
-        self.resizeCentral()"""
+        self.resizeCentral()
 
     def resizeCentral(self):
         self.centralWidget.resizeMe()
@@ -5361,7 +5362,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
                         run_macro_menu.addAction(action)
                         count += 1
 
-    def runMacro(self, file=""):
+    def runMacro(self, file="", extra=""):
         if config.enableMacros and len(file) > 0:
             if not ".ubam" in file:
                 file += ".ubam"
