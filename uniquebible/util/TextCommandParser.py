@@ -350,11 +350,13 @@ class TextCommandParser:
             "crossreference": (self.textCrossReference, """
             # [KEYWORD] CROSSREFERENCE
             # e.g. CROSSREFERENCE:::Gen 1:1
+            # e.g. CROSSREFERENCE:::[BIBLE_VERSION]:::Rev 1:1
             # e.g. CROSSREFERENCE:::[Cross reference file]:::Rev 1:1
             """),
             "tske": (self.tske, """
             # [KEYWORD] TSKE
-            # e.g. TSKE:::Gen 1:1"""),
+            # e.g. TSKE:::Gen 1:1
+            # e.g. TSKE:::NET:::Gen 1:1"""),
             "commentary": (self.textCommentary, """
             # [KEYWORD] COMMENTARY
             # Feature - Open commentary of a bible reference.
@@ -1247,11 +1249,13 @@ class TextCommandParser:
             self.parent.updateStudyRefButton()
 
     # shared functions about bible text
-    def getConfirmedTexts(self, texts, returnEmptyList=False):
+    def getConfirmedTexts(self, texts, allowEmptyList=False):
         biblesSqlite = BiblesSqlite()
         bibleList = biblesSqlite.getBibleList()
         confirmedTexts = [text for text in texts.split("_") if text in bibleList or text in self.getMarvelBibles()]
-        if not confirmedTexts and not returnEmptyList:
+        if not confirmedTexts:
+            if allowEmptyList:
+                return []
             confirmedTexts = [config.favouriteBible]
         #return sorted(list(set(confirmedTexts)))
         confirmedTexts = list(set(confirmedTexts))
@@ -4494,8 +4498,15 @@ The WHERE condition is described as: {query}"""
     def textCrossReference(self, command, source):
         if command.count(":::") == 1:
             file, verses = self.splitCommand(command)
-            files = [file]
+            texts = self.getConfirmedTexts(file, True)
+            if texts:
+                files = [None]
+                bibleText = texts[0]
+            else:
+                files = [file]
+                bibleText = config.mainText
         else:
+            bibleText = config.mainText
             verses = command
             files = [None]
             for file in glob.glob(config.marvelData + "/xref/*.xref"):
@@ -4515,14 +4526,19 @@ The WHERE condition is described as: {query}"""
                 crossReferenceList = self.extractAllVerses(crossReferenceSqlite.getCrossReferenceList(verse))
                 if crossReferenceList:
                     crossReferenceList.insert(0, tuple(verse))
-                    content += biblesSqlite.readMultipleVerses(config.mainText, crossReferenceList)
+                    content += biblesSqlite.readMultipleVerses(bibleText, crossReferenceList)
                 content += "<hr>"
         self.setStudyVerse(config.studyText, verseList[-1])
         return ("study", content, {})
 
     # TSKE:::
     def tske(self, command, source):
-        verseList = self.extractAllVerses(command)
+        if not ":::" in command:
+            command = f"{config.mainText}:::{command}"
+        texts, references = self.splitCommand(command)
+        texts = self.getConfirmedTexts(texts, True)
+        bibleText = texts[0] if texts else config.mainText
+        verseList = self.extractAllVerses(references)
         if not verseList:
             return self.invalidCommand()
         else:
@@ -4538,7 +4554,7 @@ The WHERE condition is described as: {query}"""
                     content += "[No cross-reference is found for this verse!]"
                 else:
                     crossReferenceList.insert(0, tuple(verse))
-                    content += biblesSqlite.readMultipleVerses(config.mainText, crossReferenceList)
+                    content += biblesSqlite.readMultipleVerses(bibleText, crossReferenceList)
                 content += "<hr>"
             self.setStudyVerse(config.studyText, verseList[-1])
             return ("study", content, {})

@@ -1,5 +1,11 @@
 PIP package:
 
+0.1.54-0.1.57
+
+* added bible parameter to commands `crossreference` and `tske`.
+
+* a few fixes
+
 0.1.52-0.1.53
 
 * improved web API output

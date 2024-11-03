@@ -1,4 +1,4 @@
-import os, requests, pkg_resources, re
+import os, requests, pkg_resources, re, socket
 from shutil import copy, copytree
 from pathlib import Path
 from packaging import version
@@ -79,19 +79,36 @@ def getPackageLatestVersion(package):
     except:
         return None
 
-thisPackage = "uniquebible"
+def isServerAlive(ip, port):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.settimeout(2)  # Timeout in case of server not responding
+    try:
+        sock.connect((ip, port))
+        sock.close()
+        return True
+    except socket.error:
+        return False
 
-print(f"Checking '{thisPackage}' version ...")
+if isServerAlive("8.8.8.8", 53):
 
-config.version = installed_version = getPackageInstalledVersion(thisPackage)
-if installed_version is None:
-    print("Installed version information is not accessible!")
+    thisPackage = "uniquebible"
+
+    print(f"Checking '{thisPackage}' version ...")
+
+    config.version = installed_version = getPackageInstalledVersion(thisPackage)
+    if installed_version is None:
+        print("Installed version information is not accessible!")
+    else:
+        print(f"Installed version: {installed_version}")
+    latest_version = getPackageLatestVersion(thisPackage)
+    if latest_version is None:
+        print("Latest version information is not accessible at the moment!")
+    elif installed_version is not None:
+        print(f"Latest version: {latest_version}")
+        if latest_version > installed_version:
+            print("Run `pip install --upgrade uniquebible` to upgrade!")
+
+    config.internetConnectivity = True
 else:
-    print(f"Installed version: {installed_version}")
-latest_version = getPackageLatestVersion(thisPackage)
-if latest_version is None:
-    print("Latest version information is not accessible at the moment!")
-elif installed_version is not None:
-    print(f"Latest version: {latest_version}")
-    if latest_version > installed_version:
-        print("Run `pip install --upgrade uniquebible` to upgrade!")
+    config.internetConnectivity = False
+    config.version = "0.0.0"
