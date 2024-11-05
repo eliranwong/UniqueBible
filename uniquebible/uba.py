@@ -16,7 +16,7 @@ def main():
 
     # check running mode and initial command
     runMode = sys.argv[1] if len(sys.argv) > 1 else ""
-    enableCli = True if runMode.lower() in ("stream", "cli", "cli.py", "gui", "terminal", "docker", "telnet-server", "http-server", "execute-macro", "api-server") else False
+    enableCli = True if runMode.lower() in ("stream", "cli", "cli.py", "gui", "terminal", "docker", "telnet-server", "http-server", "execute-macro", "api-server", "api-client") else False
     initialCommand = input("Enter command: ").strip() if runMode == "-i" else " ".join(sys.argv[1:]).strip()
     initialCommand = initialCommand.strip()
 
@@ -196,6 +196,31 @@ Name=Unique Bible App
             exec("from uniquebible.main import *", globals())
         else:
             subprocess.Popen([python, mainFile, initialCommand] if initialCommand else [python, mainFile])
+
+def stream():
+    sys.argv.insert(1, "stream")
+    main()
+
+def api():
+    # web api-client, not api-server mode
+    sys.argv.insert(1, "api-client")
+    main()
+
+def http():
+    sys.argv.insert(1, "http-server")
+    main()
+
+def ssh():
+    sys.argv.insert(1, "ssh-server")
+    main()
+
+def telnet():
+    sys.argv.insert(1, "telnet-server")
+    main()
+
+def term():
+    sys.argv.insert(1, "terminal")
+    main()
 
 if __name__ == '__main__':
     main()

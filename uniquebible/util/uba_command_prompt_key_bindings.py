@@ -2,6 +2,20 @@ from uniquebible import config
 from prompt_toolkit.key_binding import KeyBindings
 #from prompt_toolkit.application import run_in_terminal
 
+api_command_prompt_key_bindings = KeyBindings()
+
+# Escape+H launch help menu
+@api_command_prompt_key_bindings.add("escape", "h")
+def _(event):
+    event.app.current_buffer.text = ".help"
+    event.app.current_buffer.validate_and_handle()
+
+# Ctrl+Q quit UBA
+@api_command_prompt_key_bindings.add("c-q")
+def _(event):
+    event.app.current_buffer.text = ".quit"
+    event.app.current_buffer.validate_and_handle()
+
 uba_command_prompt_key_bindings = KeyBindings()
 
 # add key bindings from Ctrl+B to Ctrl+Y, skipping Ctrl+A, C, D, E, H, J, M, N, O, P, T, V, X

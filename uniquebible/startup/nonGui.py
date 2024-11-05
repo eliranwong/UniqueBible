@@ -100,7 +100,7 @@ def checkCommand(command):
 def run_terminal_mode():
     from uniquebible.util.LocalCliHandler import LocalCliHandler
     from uniquebible.util.prompt_shared_key_bindings import prompt_shared_key_bindings
-    from uniquebible.util.uba_command_prompt_key_bindings import uba_command_prompt_key_bindings
+    from uniquebible.util.uba_command_prompt_key_bindings import api_command_prompt_key_bindings
     from prompt_toolkit.key_binding import merge_key_bindings
     from prompt_toolkit.shortcuts import set_title, clear_title
     from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
@@ -224,19 +224,133 @@ def run_terminal_mode():
     clear_title()
     sys.exit(0)
 
+# api-client mode
+
+def run_api_client_mode():
+
+    def getApiOutput(command: str):
+        private = f"private={config.web_api_private}&" if config.web_api_private else ""
+        url = f"""{config.web_api_endpoint}?{private}cmd={command}"""
+        response = requests.get(url, timeout=config.web_api_timeout)
+        response.encoding = "utf-8"
+        print(response.text.strip())
+
+    def multiturn_api_output(apiCommandSuggestions=None):
+        from uniquebible.util.prompt_shared_key_bindings import prompt_shared_key_bindings
+        from uniquebible.util.uba_command_prompt_key_bindings import api_command_prompt_key_bindings
+        from prompt_toolkit.key_binding import merge_key_bindings
+        from prompt_toolkit.shortcuts import set_title, clear_title
+        from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+        from prompt_toolkit.styles import Style
+        from prompt_toolkit.filters import Condition
+        from prompt_toolkit.completion import WordCompleter, NestedCompleter, ThreadedCompleter, FuzzyCompleter
+        import webbrowser
+
+        # startup
+        set_title("Unique Bible App API-Client")
+        print("Running Unique Bible App api-client ...")
+        print("Enter an Unique Bible App command:")
+        print("For API documentation, visit https://github.com/eliranwong/UniqueBibleAPI")
+
+        # make key bindings available in config to allow futher customisation via plugins
+        config.key_bindings = merge_key_bindings([
+            prompt_shared_key_bindings,
+            api_command_prompt_key_bindings,
+        ])
+
+        # initiate main prompt session
+        initiateMainPrompt()
+        command_completer = FuzzyCompleter(ThreadedCompleter(NestedCompleter.from_nested_dict(apiCommandSuggestions))) if apiCommandSuggestions is not None else None
+        auto_suggestion=AutoSuggestFromHistory()
+        toolbar = " [ctrl+q] .quit [escape+h] .help "
+        style = Style.from_dict({
+            # User input (default text).
+            "": config.terminalCommandEntryColor1,
+            # Prompt.
+            "indicator": config.terminalPromptIndicatorColor1,
+        })
+        promptIndicator = ">>> "
+        promptIndicator = [
+            ("class:indicator", promptIndicator),
+        ]
+
+        command = ""
+        while True:
+            # User command input
+            command = config.main_prompt_session.prompt(
+                promptIndicator,
+                style=style,
+                completer=command_completer,
+                complete_in_thread=None,
+                auto_suggest=auto_suggestion,
+                bottom_toolbar=toolbar,
+                #default=default,
+                key_bindings=config.key_bindings,
+                # enable system prompt without auto-completion
+                # use escape+!
+                enable_system_prompt=True,
+                swap_light_and_dark_colors=Condition(lambda: not config.terminalResourceLinkColor.startswith("ansibright")),
+                #rprompt="Enter an UBA command",
+            ).strip()
+            if command:
+                if command.lower() == ".quit":
+                    break
+                elif command.lower() == ".help":
+                    webbrowser.open("https://github.com/eliranwong/UniqueBibleAPI")
+                    continue
+                command = checkCommand(command)
+                # remove spaces before and after ":::"
+                command = re.sub("[ ]*?:::[ ]+?([^ ])", r":::\1", command)
+                # remove "_" before ":::"
+                command = re.sub("_:::", ":::", command)
+                # format chapter no. and verse no
+                command = re.sub("([0-9]+?)_([0-9]+?)_([0-9])", r"\1.\2.\3", command)
+                command = re.sub("_([0-9]+?)_([0-9]+?,)", r" \1:\2", command)
+                command = re.sub("_([0-9]+?)_([0-9]+?)$", r" \1:\2", command)
+                # change full width characters
+                command = re.sub("：：：", r":::", command)
+                
+                getApiOutput(command)
+
+        clear_title()
+
+    try:
+        stdin_text = sys.stdin.read() if not sys.stdin.isatty() else ""
+        command = " ".join(sys.argv[2:]).strip()
+        if stdin_text:
+            command = f"{command} {stdin_text}"
+
+        if command:
+            # stream output directly
+            getApiOutput(command)
+        else:
+            # interactive mode
+            private = f"private={config.web_api_private}&" if config.web_api_private else ""
+            r = requests.get(f"{config.web_api_endpoint}?{private}cmd=.suggestions", timeout=config.web_api_timeout)
+            r.encoding = "utf-8"
+            apiCommandSuggestions = r.json()
+
+            multiturn_api_output(apiCommandSuggestions=apiCommandSuggestions)
+    
+    except:
+        #import traceback
+        #print(traceback.format_exc())
+        print(f"Failed to connect '{config.web_api_endpoint}' at the moment!")
+
 # raw mode
 def run_stream_mode():
     from uniquebible.util.LocalCliHandler import LocalCliHandler
 
-    input_text = sys.stdin.read() if not sys.stdin.isatty() else ""
+    stdin_text = sys.stdin.read() if not sys.stdin.isatty() else ""
 
     # Set initial command
-    command = config.initial_command if config.initial_command else " ".join(sys.argv[2:]).strip()
-    if input_text:
-        command = f"{command} {input_text}"
+    command = " ".join(sys.argv[2:]).strip()
+    if stdin_text:
+        command = f"{command} {stdin_text}"
     if command.strip():
         config.mainWindow = LocalCliHandler()
         output_text = config.mainWindow.getContent(command, False)
+        output_text = re.sub("\n[-]+?$", "", output_text)
     else:
         output_text = "Command not given!"
     print(output_text, file=sys.stdout)

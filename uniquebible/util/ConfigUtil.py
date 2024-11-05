@@ -63,15 +63,8 @@ class ConfigUtil:
         config.ubaUserDir = ubaUserDir if os.path.isdir(ubaUserDir) else os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
         # check running mode
-        config.runMode = sys.argv[1] if len(sys.argv) > 1 else ""
-        if " " in config.runMode:
-            import re
-            config.runMode, config.initial_command = config.runMode.split(" ", 1)
-        else:
-            config.initial_command = ""
-        config.runMode = config.runMode.lower()
-
-        if config.runMode and not config.runMode in ("stream", "setup-only", "cli", "gui", "terminal", "docker", "telnet-server", "http-server", "execute-macro", "api-server"):
+        config.runMode = sys.argv[1].lower() if len(sys.argv) > 1 else ""
+        if config.runMode and not config.runMode in ("stream", "setup-only", "cli", "gui", "terminal", "docker", "telnet-server", "http-server", "execute-macro", "api-server", "api-client"):
             config.runMode = ""
 
         # Temporary configurations
@@ -174,6 +167,17 @@ class ConfigUtil:
         setConfig("usePySide6onMacOS", """
         # Use PySide6 as Qt Library, even config.qtLibrary is set to a value other than 'pyside6'.""",
         False)
+
+        # Start of api-client mode setting
+        setConfig("web_api_endpoint", """
+        # UniqueBible App web API endpoint.""",
+        "https://bible.gospelchurch.uk/plain")
+        setConfig("web_api_timeout", """
+        # UniqueBible App web API timeout.""",
+        10)
+        setConfig("web_api_private", """
+        # UniqueBible App web API private key.""",
+        "")
 
         # Start of terminal mode setting
         setConfig("terminalWrapWords", """

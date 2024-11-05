@@ -47,7 +47,7 @@ open(os.path.join(package, "config.py"), "w").close()
 # https://packaging.python.org/en/latest/guides/distributing-packages-using-setuptools/
 setup(
     name=package,
-    version="0.1.57",
+    version="0.1.59",
     python_requires=">=3.8, <3.13",
     description=f"UniqueBible App is a cross-platform & offline bible application, integrated with high-quality resources and unique features. Developers: Eliran Wong and Oliver Tseng",
     long_description=long_description,
@@ -564,6 +564,12 @@ setup(
     entry_points={
         "console_scripts": [
             f"{package}={package}.uba:main",
+            f"ub={package}.uba:stream",
+            f"ubapi={package}.uba:api",
+            f"ubhttp={package}.uba:http",
+            f"ubssh={package}.uba:ssh",
+            f"ubtelnet={package}.uba:telnet",
+            f"ubterm={package}.uba:term",
         ],
     },
     keywords="bible scripture na28 bsha hebrew greek ai marvelbible biblebento uba uniquebible",

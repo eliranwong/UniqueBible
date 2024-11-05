@@ -390,6 +390,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 # convert to plain text for plain endpoint
                 if api in ("json", "plain"):
                     content = TextUtil.htmlToPlainText(content).strip()
+                    content = re.sub("\n[-]+?$", "", content)
                 if api == "json":
                     output = {}
                     if not ":::" in self.command:
