@@ -309,7 +309,8 @@ class BibleLocations(QWidget):
                     num = int(re.sub("\..*?$", "", item))
                     exlbl_entry = "BL{0}".format(num)
                     label, name, latitude, longitude = self.locationMap[exlbl_entry]
-                    googleEarthLink = "https://earth.google.com/web/search/{0},+{1}".format(str(latitude).replace(".", "%2e"), str(longitude).replace(".", "%2e"))
+                    #googleEarthLink = "https://earth.google.com/web/search/{0},+{1}".format(str(latitude).replace(".", "%2e"), str(longitude).replace(".", "%2e"))
+                    googleEarthLink = f"""https://earth.google.com/web/@{latitude},{longitude},654.97002989a,1336.11415664d,35y,0h,76.22542174t,-0r"""
                     if browser:
                         info = "<a href='https://marvel.bible/tool.php?exlbl={0}' target='_blank'>{1}</a> [<a href='{2}' target='_blank'>3D</a>]".format(exlbl_entry, name, googleEarthLink)
                     else:
@@ -318,7 +319,8 @@ class BibleLocations(QWidget):
                 except:
                     pass
         else:
-            googleEarthLink = r"https://earth.google.com/web/search/31%2e777444,+35%2e234935"
+            #googleEarthLink = r"https://earth.google.com/web/search/31%2e777444,+35%2e234935"
+            googleEarthLink = """https://earth.google.com/web/@31.777444,35.234935,654.97002989a,1336.11415664d,35y,0h,76.22542174t,-0r"""
             if browser:
                 info = "<a href='https://marvel.bible/tool.php?exlbl=BL636' target='_blank'>Jerusalem</a> [<a href='{0}' target='_blank'>3D</a>]".format(googleEarthLink)
             else:

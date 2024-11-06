@@ -1,8 +1,14 @@
 PIP package:
 
-0.1.60-0.1.61
+0.1.65
+
+* fixed Google Earth links in bible maps
+
+0.1.60-0.1.64
 
 * version message displayed on console only if newer version is available.
+
+* a few fixes
 
 0.1.58-0.1.59
 

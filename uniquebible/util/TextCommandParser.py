@@ -4460,7 +4460,8 @@ The WHERE condition is described as: {query}"""
                         name = tc_location_names[exlbl_entry]
                     elif config.standardAbbreviation == "SC" and exlbl_entry in sc_location_names and sc_location_names[exlbl_entry]:
                         name = sc_location_names[exlbl_entry]
-                    googleEarthLink = "https://earth.google.com/web/search/{0},+{1}".format(str(latitude).replace(".", "%2e"), str(longitude).replace(".", "%2e"))
+                    #googleEarthLink = "https://earth.google.com/web/search/{0},+{1}".format(str(latitude).replace(".", "%2e"), str(longitude).replace(".", "%2e"))
+                    googleEarthLink = f"""https://earth.google.com/web/@{latitude},{longitude},654.97002989a,1336.11415664d,35y,0h,76.22542174t,-0r"""
                     if browser:
                         weblink = self.getWeblink(f"EXLB:::exlbl:::{exlbl_entry}", filterCommand=False)
                         info = "<a href='{0}' target='_blank'>{1}</a> [<a href='{2}' target='_blank'>3D</a>]".format(weblink, name, googleEarthLink)
@@ -4472,7 +4473,8 @@ The WHERE condition is described as: {query}"""
                 except:
                     pass
         else:
-            googleEarthLink = r"https://earth.google.com/web/search/31%2e777444,+35%2e234935"
+            #googleEarthLink = r"https://earth.google.com/web/search/31%2e777444,+35%2e234935"
+            googleEarthLink = """https://earth.google.com/web/@31.777444,35.234935,654.97002989a,1336.11415664d,35y,0h,76.22542174t,-0r"""
             if browser:
                 weblink = self.getWeblink("EXLB:::exlbl:::BL636", filterCommand=False)
                 info = "<a href='{0}' target='_blank'>Jerusalem</a> [<a href='{1}' target='_blank'>3D</a>]".format(weblink, googleEarthLink)
