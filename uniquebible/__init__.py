@@ -89,26 +89,30 @@ def isServerAlive(ip, port):
     except socket.error:
         return False
 
-if isServerAlive("8.8.8.8", 53):
+if hasattr(config, "checkVersionOnStartup") and config.checkVersionOnStartup:
 
-    thisPackage = "uniquebible"
+    if isServerAlive("8.8.8.8", 53):
 
-    print(f"Checking '{thisPackage}' version ...")
+        thisPackage = "uniquebible"
 
-    config.version = installed_version = getPackageInstalledVersion(thisPackage)
-    if installed_version is None:
-        print("Installed version information is not accessible!")
+        content = []
+
+        content.append(f"# Checked '{thisPackage}' version ...")
+
+        config.version = installed_version = getPackageInstalledVersion(thisPackage)
+        if installed_version is not None:
+            content.append(f"Installed version: {installed_version}")
+            latest_version = getPackageLatestVersion(thisPackage)
+            if latest_version is not None:
+                content.append(f"Latest version: {latest_version}")
+                if latest_version > installed_version:
+                    content.append("Run `pip install --upgrade uniquebible` to upgrade!")
+                    print("\n".join(content))
+
+        config.internetConnectivity = True
     else:
-        print(f"Installed version: {installed_version}")
-    latest_version = getPackageLatestVersion(thisPackage)
-    if latest_version is None:
-        print("Latest version information is not accessible at the moment!")
-    elif installed_version is not None:
-        print(f"Latest version: {latest_version}")
-        if latest_version > installed_version:
-            print("Run `pip install --upgrade uniquebible` to upgrade!")
+        config.internetConnectivity = False
+        config.version = "0.0.0"
 
-    config.internetConnectivity = True
 else:
-    config.internetConnectivity = False
     config.version = "0.0.0"

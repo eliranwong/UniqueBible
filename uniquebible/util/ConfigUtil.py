@@ -168,6 +168,10 @@ class ConfigUtil:
         # Use PySide6 as Qt Library, even config.qtLibrary is set to a value other than 'pyside6'.""",
         False)
 
+        setConfig("checkVersionOnStartup", """
+        # Check installed and latest versions on startup.""",
+        True)
+
         # Start of api-client mode setting
         setConfig("web_api_endpoint", """
         # UniqueBible App web API endpoint.""",

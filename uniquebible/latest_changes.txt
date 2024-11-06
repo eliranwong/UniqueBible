@@ -1,5 +1,15 @@
 PIP package:
 
+0.1.60-0.1.61
+
+* version message displayed on console only if newer version is available.
+
+0.1.58-0.1.59
+
+* added commands `ub`, `ubapi`, `ubhttp`, `ubssh`, `ubtelnet` and `ubterm`.  Read https://github.com/eliranwong/UniqueBible/wiki/UBA-Run-Modes
+
+* added `api-client` mode
+
 0.1.54-0.1.57
 
 * added bible parameter to commands `crossreference` and `tske`.

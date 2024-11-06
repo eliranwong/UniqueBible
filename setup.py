@@ -47,7 +47,7 @@ open(os.path.join(package, "config.py"), "w").close()
 # https://packaging.python.org/en/latest/guides/distributing-packages-using-setuptools/
 setup(
     name=package,
-    version="0.1.59",
+    version="0.1.64",
     python_requires=">=3.8, <3.13",
     description=f"UniqueBible App is a cross-platform & offline bible application, integrated with high-quality resources and unique features. Developers: Eliran Wong and Oliver Tseng",
     long_description=long_description,

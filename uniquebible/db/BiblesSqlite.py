@@ -869,7 +869,7 @@ class Bible:
         self.connection = None
         self.cursor = None
         self.database = os.path.join(config.marvelData, "bibles", text+".bible")
-        if os.path.exists(self.database):
+        if os.path.isfile(self.database):
             self.connection = apsw.Connection(self.database)
             self.connection.createscalarfunction("REGEXP", TextUtil.regexp)
             self.cursor = self.connection.cursor()
