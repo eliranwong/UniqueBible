@@ -385,6 +385,21 @@ def isDuckduckgoSearchInstalled():
     except:
         return False
 
+def isGroqInstalled():
+    try:
+        from groq import Groq
+        return True
+    except:
+        return False
+
+def isMistralInstalled():
+    try:
+        from mistralai import Mistral
+        return True
+    except:
+        return False
+
+
 def isTiktokenInstalled():
     try:
         import tiktoken
@@ -757,6 +772,8 @@ optional = [
     ("googlesearch-python", "A Python library for scraping the Google search engine", isGoogleSearchPythonInstalled),
     ("guidance", "A guidance language for controlling large language models", isGuidanceInstalled),
     ("tiktoken", "tokeniser for use with OpenAI's models.", isTiktokenInstalled),
+    ("groq", "The official Python library for the groq API", isGroqInstalled),
+    ("mistralai", "Python Client SDK for the Mistral AI API", isMistralInstalled),
 ] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -809,7 +826,9 @@ optional = [
     #("duckduckgo-search", "DuckDuckGo.com search", isDuckduckgoSearchInstalled),
     ("googlesearch-python", "A Python library for scraping the Google search engine", isGoogleSearchPythonInstalled),
     ("guidance", "A guidance language for controlling large language models", isGuidanceInstalled),
-    ("tiktoken", "tokeniser for use with OpenAI's models.", isTiktokenInstalled),
+    ("tiktoken", "tokeniser for use with OpenAI's models", isTiktokenInstalled),
+    ("groq", "The official Python library for the groq API", isGroqInstalled),
+    ("mistralai", "Python Client SDK for the Mistral AI API", isMistralInstalled),
 ]
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))

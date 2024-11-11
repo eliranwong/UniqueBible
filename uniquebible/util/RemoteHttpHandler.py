@@ -506,6 +506,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
             "library": self.libraryContent,
             "logout": self.logout,
             "search": self.searchContent,
+            "qna": self.qnaContent,
             "maps": self.mapsContent,
             "days": self.dailyReadingContent,
             "theme": self.swapTheme,
@@ -1040,13 +1041,15 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
             (config.thisTranslation["menu5_topics"], ".topics"),
             (config.thisTranslation["bibleHarmonies"], ".parallels"),
             (config.thisTranslation["biblePromises"], ".promises"),
+            (config.thisTranslation["bibleAnswers"], ".qna") if config.addBibleQnA else None,
             (config.thisTranslation["readingPlan"], ".days"),
             ("{0} &#x1F50E;&#xFE0E;".format(config.thisTranslation["menu_search"]), ".search"),
             (config.thisTranslation["download"], ".download"),
             (config.thisTranslation["ubaCommands"], ".help"),
         )
         for item in sideNavItems:
-            html += """<a href="#" onclick="submitCommand('{1}')">{0}</a>""".format(*item)
+            if item is not None:
+                html += """<a href="#" onclick="submitCommand('{1}')">{0}</a>""".format(*item)
         html += """<a href="{1}" target="_blank">{0}</a>""".format(config.thisTranslation["userManual"], self.getUserManual())
         html += "<hr>"
         html += """<a href="traditional.html">繁體中文</a>""" if config.webHomePage != "traditional.html" else ""
@@ -1845,6 +1848,84 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
             audioButtonPlus = """<button type='button' title='{1} +' onclick='document.title="DAYAUDIOPLUS:::{0}"'>{1} +</button>""".format(i, config.thisTranslation["menu11_audio"])
             content += "{0} {1} {2} {3}<br>".format(day, readButton, audioButton, audioButtonPlus)
         content += "</p></div>"
+        return content
+
+    def qnaContent(self):
+        experimental = "" if config.addBibleQnA else f""" [{config.thisTranslation["experimental"]}]"""
+        content = "<h2>{0}{1}</h2>".format(config.thisTranslation["askAI"], experimental)
+
+        if config.displayLanguage == "zh_HANT":
+            content += """<h3>一般使用者</h3><p>請輸入與聖經相關的提問，然後按下按鈕「{0}」。</p>""".format(config.thisTranslation["send"])
+        elif config.displayLanguage == "zh_HANS":
+            content += """<h3>一般使用者</h3><p>请输入与圣经相关的提问，然后按下按钮，然后按下按钮「{0}」。</p>""".format(config.thisTranslation["send"])
+        else:
+            content += """<h3>General Inquiry</h3><p>Please enter a bible-related question and click the button '{0}'.</p>""".format(config.thisTranslation["send"])
+        content += "<p><input type='text' id='bibleQuestion1' style='width:95%' autofocus></p>"
+        content += """<p><button id='bibleQuestionButton1' type='button' onclick='answer("");' class='ubaButton'>{0}</button></p>""".format(config.thisTranslation["send"])
+
+        if config.displayLanguage == "zh_HANT":
+            content += """<h3>此處供青少年導師使用，參考如何回應青少年的提問</h3><p>請輸入與聖經相關的提問，然後按下按鈕「{0}」。</p>""".format(config.thisTranslation["send"])
+        elif config.displayLanguage == "zh_HANS":
+            content += """<h3>此处供青少年导师使用，参考如何回应青少年的提问</h3><p>请输入与圣经相关的提问，然后按下按钮「{0}」。</p>""".format(config.thisTranslation["send"])
+        else:
+            content += """<h3>For Youth Ministry Helpers</h3><p>Please enter a bible-related question and click the button '{0}'.</p>""".format(config.thisTranslation["send"])
+        content += "<p><input type='text' id='bibleQuestion2' style='width:95%' autofocus></p>"
+        content += """<p><button id='bibleQuestionButton2' type='button' onclick='answer("YOUTH");' class='ubaButton'>{0}</button></p>""".format(config.thisTranslation["send"])
+
+        if config.displayLanguage == "zh_HANT":
+            content += """<h3>此處供兒童主日學導師使用 - 參考如何回應小朋友的提問</h3><p>請輸入與聖經相關的提問，然後按下按鈕「{0}」。</p>""".format(config.thisTranslation["send"])
+        elif config.displayLanguage == "zh_HANS":
+            content += """<h3>此处供儿童主日学导师使用 - 参考如何回应小朋友的提问</h3><p>请输入与圣经相关的提问，然后按下按钮「{0}」。</p>""".format(config.thisTranslation["send"])
+        else:
+            content += """<h3>For Children Sunday School Teachers</h3><p>Please enter a bible-related question and click the button '{0}'.</p>""".format(config.thisTranslation["send"])
+        content += "<p><input type='text' id='bibleQuestion3' style='width:95%' autofocus></p>"
+        content += """<p><button id='bibleQuestionButton3' type='button' onclick='answer("KID");' class='ubaButton'>{0}</button></p>""".format(config.thisTranslation["send"])
+
+        content += "<hr>"
+
+        if config.displayLanguage == "zh_HANT":
+            content += """<p><b>免責聲明：</b> 本網站上由 AI 提供支援的聖經功能旨在提供有關聖經的有用信息和見解。然而，它不能代替個人對經文的學習和反思。聖經本身仍然是基督徒真理和權威的最終來源。請僅將此工具提供的資訊用作參考，並始終查閱聖經以獲得有關您問題的明確答案。</p>"""
+        elif config.displayLanguage == "zh_HANS":
+            content += """<p><b>免责声明：</b> 本网站上由 AI 提供支持的圣经功能旨在提供有关圣经的有用信息和见解。然而，它不能代替个人对经文的学习和反思。圣经本身仍然是基督徒真理和权威的最终来源。请仅将此工具提供的信息用作参考，并始终查阅圣经以获得有关您问题的明确答案。</p>"""
+        else:
+            content += """<p><b>Disclaimer:</b> The AI-powered Bible feature on this website is intended to provide helpful information and insights about the Bible. However, it is not a substitute for personal study and reflection on the scriptures. The Bible itself remains the ultimate source of truth and authority for Christians. Please use the information provided by this tool for reference only, and always consult the Bible for definitive answers to your questions.</p>"""
+
+        content += """
+<script>
+function answer(mode) {0}
+  inputField = "";
+  if (mode == "YOUTH") {0}
+    inputField = "bibleQuestion2";
+  {1} else if (mode == "KID") {0}
+    inputField = "bibleQuestion3";
+  {1} else {0}
+    inputField = "bibleQuestion1";
+  {1}
+  var searchString = document.getElementById(inputField).value;
+  document.title = "ANSWER"+mode+":::"+searchString;
+{1}
+var input1 = document.getElementById('bibleQuestion1');
+input1.addEventListener('keyup', function(event) {0}
+  if (event.keyCode === 13) {0}
+   event.preventDefault();
+   document.getElementById('bibleQuestionButton1').click();
+  {1}
+{1});
+var input2 = document.getElementById('bibleQuestion2');
+input2.addEventListener('keyup', function(event) {0}
+  if (event.keyCode === 13) {0}
+   event.preventDefault();
+   document.getElementById('bibleQuestionButton2').click();
+  {1}
+{1});
+var input3 = document.getElementById('bibleQuestion3');
+input3.addEventListener('keyup', function(event) {0}
+  if (event.keyCode === 13) {0}
+   event.preventDefault();
+   document.getElementById('bibleQuestionButton3').click();
+  {1}
+{1});
+</script>""".format("{", "}")
         return content
 
     def mapsContent(self):

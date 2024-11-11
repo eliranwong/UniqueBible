@@ -337,6 +337,21 @@ class TextCommandParser:
             # Usage - DAYAUDIOPLUS:::[BIBLE_VERSION(S)]:::[day_number]
             # e.g. DAYAUDIOPLUS:::1
             # e.g. DAYAUDIOPLUS:::NET:::1"""),
+            "answer": (self.textAnswerGeneral, """
+            # [KEYWORD] ANSWER
+            # Feature - Answer a bible-related question with AI tools.
+            # Usage - ANSWER:::[INQUIRY]
+            # e.g. ANSWER:::Who is Jesus"""),
+            "answeryouth": (self.textAnswerYouth, """
+            # [KEYWORD] ANSWERYOUTH
+            # Feature - Answer a young people a bible-related question with AI tools.
+            # Usage - ANSWERYOUTH:::[INQUIRY]
+            # e.g. ANSWERYOUTH:::Who is Jesus"""),
+            "answerkid": (self.textAnswerKid, """
+            # [KEYWORD] ANSWERKID
+            # Feature - Answer a kid a bible-related question with AI tools.
+            # Usage - ANSWERKID:::[INQUIRY]
+            # e.g. ANSWERKID:::Who is Jesus"""),
             "map": (self.textMap, """
             # [KEYWORD] MAP
             # Feature - Open a Google map with bible locations pinned
@@ -4391,6 +4406,111 @@ The WHERE condition is described as: {query}"""
             return combinedLocations
         else:
             return []
+
+    # ANSWER::: ANSWERYOUTH::: ANSWERKID:::
+
+    def textAnswerGeneral(self, command, source):
+        return self.textAnswer(command, source, config.groqApi_systemMessage_general)
+
+    def textAnswerYouth(self, command, source):
+        return self.textAnswer(command, source, config.groqApi_systemMessage_youth)
+
+    def textAnswerKid(self, command, source):
+        return self.textAnswer(command, source, config.groqApi_systemMessage_kid)
+
+    def textAnswer(self, command, source, systemMessage):
+        if not config.groqApi_key:
+            return ("study", "<p>Groq cloud API key not found!</p>", {'tab_title': "Ask"})
+        elif command.strip():
+            import markdown
+            from groq import Groq
+            from mistralai import Mistral
+            # edit the following configurations in config.py
+            # config.answer_backend
+            # config.groqApi_key
+            # config.groqApi_systemMessage_general
+            # config.groqApi_systemMessage_youth
+            # config.groqApi_systemMessage_kid
+            # config.groqApi_llmTemperature
+            # config.groqApi_chat_model
+            # config.groqApi_chat_model_max_tokens
+            # config.mistralApi_key
+            # config.mistralApi_llmTemperature
+            # config.mistralApi_chat_model
+            # config.mistralApi_chat_model_max_tokens
+            def getGroqApi_key():
+                '''
+                support multiple grop api keys
+                User can manually edit config to change the value of config.groqApi_key to a list of multiple api keys instead of a string of a single api key
+                '''
+                if config.groqApi_key:
+                    if isinstance(config.groqApi_key, str):
+                        return config.groqApi_key
+                    elif isinstance(config.groqApi_key, list):
+                        if len(config.groqApi_key) > 1:
+                            # rotate multiple api keys
+                            config.groqApi_key = config.groqApi_key[1:] + [config.groqApi_key[0]]
+                        return config.groqApi_key[0]
+                    else:
+                        return ""
+                else:
+                    return ""
+            def getMistralApi_key():
+                '''
+                support multiple mistral api keys
+                User can manually edit config to change the value of config.mistralApi_key to a list of multiple api keys instead of a string of a single api key
+                '''
+                if config.mistralApi_key:
+                    if isinstance(config.mistralApi_key, str):
+                        return config.mistralApi_key
+                    elif isinstance(config.mistralApi_key, list):
+                        if len(config.mistralApi_key) > 1:
+                            # rotate multiple api keys
+                            config.mistralApi_key = config.mistralApi_key[1:] + [config.mistralApi_key[0]]
+                        return config.mistralApi_key[0]
+                    else:
+                        return ""
+                else:
+                    return ""
+            chatMessages = [
+                {"role": "system", "content": systemMessage},
+                {"role": "user", "content": command.strip()},
+            ]
+            try:
+                if config.answer_backend == "gorq":
+                    completion = Groq(api_key=getGroqApi_key()).chat.completions.create(
+                        model=config.groqApi_chat_model,
+                        messages=chatMessages,
+                        n=1,
+                        temperature=config.groqApi_llmTemperature,
+                        max_tokens=config.groqApi_chat_model_max_tokens,
+                        stream=False,
+                    )
+                else:
+                    completion = Mistral(api_key=getMistralApi_key()).chat.complete(
+                        model=config.mistralApi_chat_model,
+                        messages=chatMessages,
+                        n=1,
+                        temperature=config.mistralApi_llmTemperature,
+                        max_tokens=config.mistralApi_chat_model_max_tokens,
+                        stream=False,
+                    )
+                textOutput = completion.choices[0].message.content
+            except:
+                textOutput = "Failed to connect! Please try again later."
+            if not config.rawOutput:
+                textOutput = markdown.markdown(textOutput)
+                if config.runMode == "http-server":
+                    textOutput += """<hr><p><button type='button' onclick='document.title=".qna";' class='ubaButton'>{0}</button></p>""".format(config.thisTranslation["youtube_back"])
+                # Disclaimer
+                if config.displayLanguage == "zh_HANT":
+                    textOutput += """<p><b>免責聲明：</b> 本網站上由 AI 提供支援的聖經功能旨在提供有關聖經的有用信息和見解。然而，它不能代替個人對經文的學習和反思。聖經本身仍然是基督徒真理和權威的最終來源。請僅將此工具提供的資訊用作參考，並始終查閱聖經以獲得有關您問題的明確答案。</p>"""
+                elif config.displayLanguage == "zh_HANS":
+                    textOutput += """<p><b>免责声明：</b> 本网站上由 AI 提供支持的圣经功能旨在提供有关圣经的有用信息和见解。然而，它不能代替个人对经文的学习和反思。圣经本身仍然是基督徒真理和权威的最终来源。请仅将此工具提供的信息用作参考，并始终查阅圣经以获得有关您问题的明确答案。</p>"""
+                else:
+                    textOutput += """<p><b>Disclaimer:</b> The AI-powered Bible feature on this website is intended to provide helpful information and insights about the Bible. However, it is not a substitute for personal study and reflection on the scriptures. The Bible itself remains the ultimate source of truth and authority for Christians. Please use the information provided by this tool for reference only, and always consult the Bible for definitive answers to your questions.</p>"""
+            return ("study", textOutput, {'tab_title': "Ask"})
+        return ("study", "<p>Question not given!</p>", {'tab_title': "Ask"})
 
     # MAP:::
     def textMap(self, command, source):
