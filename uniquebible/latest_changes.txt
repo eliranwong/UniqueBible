@@ -1,5 +1,13 @@
 PIP package:
 
+0.1.65-0.1.73
+
+* added commands `ANSWER:::`, `ANSWERYOUTH:::`, `ANSWERKID:::` to answer bible-related questions with AI models
+
+* added two more AI backends, Groq Cloud API and Mistral AI API
+
+* update Bible Chat plugin to work with new backends
+
 0.1.65
 
 * fixed Google Earth links in bible maps

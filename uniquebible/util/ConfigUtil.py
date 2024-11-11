@@ -175,29 +175,34 @@ class ConfigUtil:
         # start of groq chat setting
         # config.answer_backend
         # config.addBibleQnA
+        # config.answer_systemMessage_general
+        # config.answer_systemMessage_youth
+        # config.answer_systemMessage_kid
         # config.groqApi_key
-        # config.groqApi_systemMessage_general
-        # config.groqApi_systemMessage_youth
-        # config.groqApi_systemMessage_kid
         # config.groqApi_llmTemperature
         # config.groqApi_chat_model
         # config.groqApi_chat_model_max_tokens
+        # config.mistralApi_key
         # config.mistralApi_llmTemperature
         # config.mistralApi_chat_model
         # config.mistralApi_chat_model_max_tokens
+        # config.openaiApi_key
+        # config.openaiApi_llmTemperature
+        # config.openaiApi_chat_model
+        # config.openaiApi_chat_model_max_tokens
         setConfig("answer_backend", """
         # Add Bible Q and A Features to web mode navigation menu.""",
         "groq")
         setConfig("addBibleQnA", """
         # Add Bible Q and A Features to web mode navigation menu.""",
         False)
-        setConfig("groqApi_systemMessage_general", """
+        setConfig("answer_systemMessage_general", """
         # Groq Chat System Message""",
         "I would like you to speak like a compassionate church pastor who upholds the truths of the Bible.")
-        setConfig("groqApi_systemMessage_youth", """
+        setConfig("answer_systemMessage_youth", """
         # Groq Chat System Message""",
         "I would like you to respond as an experienced church youth pastor who is passionate about their faith and dedicated to guiding young people. Speak like you are speaking to a teen.")
-        setConfig("groqApi_systemMessage_kid", """
+        setConfig("answer_systemMessage_kid", """
         # Groq Chat System Message""",
         "Please speak like a kind Children's Sunday School pastor who loves the Bible and wants to share its wonderful stories with a five-year-old. Use simple words and a gentle, loving tone.")
         setConfig("groqApi_key", """
@@ -224,6 +229,18 @@ class ConfigUtil:
         setConfig("mistralApi_llmTemperature", """
         # Mistral AI Chat Temperature""",
         0.3) # 0.2-0.7 is good to use
+        setConfig("openaiApi_key", """
+        # OpenAI API Keys""",
+        "")
+        setConfig("openaiApi_chat_model", """
+        # OpenAI Chat Model""",
+        "gpt-4o")
+        setConfig("openaiApi_chat_model_max_tokens", """
+        # OpenAI Chat Maximum Output Tokens""",
+        8000)
+        setConfig("openaiApi_llmTemperature", """
+        # OpenAI Chat Temperature""",
+        0.3) # 0.2-0.8 is good to use
 
         # Start of api-client mode setting
         setConfig("web_api_endpoint", """

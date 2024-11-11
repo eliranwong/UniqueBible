@@ -1008,6 +1008,30 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
                 config.openaiApiKey)
         if ok:
             config.openaiApiKey = text
+        text, ok = QInputDialog.getText(self, "Unique Bible App",
+                "Groq Cloud API Key", QLineEdit.Normal,
+                str(config.groqApi_key))
+        if ok:
+            try:
+                check = eval(text)
+                if isinstance(check, list):
+                    config.groqApi_key = check
+                else:
+                    config.groqApi_key = text
+            except:
+                config.groqApi_key = text
+        text, ok = QInputDialog.getText(self, "Unique Bible App",
+                "Mistral AI API Key", QLineEdit.Normal,
+                str(config.mistralApi_key))
+        if ok:
+            try:
+                check = eval(text)
+                if isinstance(check, list):
+                    config.mistralApi_key = check
+                else:
+                    config.mistralApi_key = text
+            except:
+                config.mistralApi_key = text
 
     # Interface to add config.myGoogleApiKey
     def setMyGoogleApiKey(self):

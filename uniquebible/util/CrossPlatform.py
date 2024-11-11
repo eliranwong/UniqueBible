@@ -1,5 +1,5 @@
 from uniquebible import config
-import os, glob, re
+import os, glob, re, traceback
 from uniquebible.db.BiblesSqlite import BiblesSqlite, Bible
 from uniquebible.db.ToolsSqlite import BookData, IndexesSqlite, Commentary
 from uniquebible.db.ToolsSqlite import LexiconData
@@ -246,6 +246,8 @@ class CrossPlatform:
                     code = compile(f.read(), script, 'exec')
                     exec(code, globals())
             except:
+                if config.developer:
+                    print(traceback.format_exc())
                 print("Failed to run '{0}'!".format(os.path.basename(script)))
 
     # Google text-to-speech

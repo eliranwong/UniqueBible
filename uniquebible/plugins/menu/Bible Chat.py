@@ -23,6 +23,15 @@ else:
 from uniquebible.gui.Worker import ChatGPTResponse, OpenAIImage
 
 
+def isLLMReady():
+    if config.answer_backend == "openai" and config.openaiApi_key:
+        return True
+    elif config.answer_backend == "mistral" and config.mistralApi_key:
+        return True
+    elif config.answer_backend == "groq" and config.groqApi_key:
+        return True
+    return False
+
 class SpeechRecognitionThread(QThread):
     phrase_recognized = Signal(str)
 
@@ -58,19 +67,36 @@ class ApiDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle(config.thisTranslation["settings"])
-
-        self.apiKeyEdit = QLineEdit(config.openaiApiKey)
+        if config.answer_backend == "openai":
+            self.apiKeyEdit = QLineEdit(config.openaiApi_key)
+        elif config.answer_backend == "mistral":
+            self.apiKeyEdit = QLineEdit(str(config.mistralApi_key))
+        elif config.answer_backend == "groq":
+            self.apiKeyEdit = QLineEdit(str(config.groqApi_key))
         self.apiKeyEdit.setEchoMode(QLineEdit.Password)
         self.orgEdit = QLineEdit(config.openaiApiOrganization)
         self.orgEdit.setEchoMode(QLineEdit.Password)
         self.apiModelBox = QComboBox()
         initialIndex = 0
         index = 0
-        for key in ("o1-preview", "o1-mini", "gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo"):
-            self.apiModelBox.addItem(key)
-            if key == config.chatGPTApiModel:
-                initialIndex = index
-            index += 1
+        if config.answer_backend == "openai":
+            for key in ("gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo"):
+                self.apiModelBox.addItem(key)
+                if key == config.openaiApi_chat_model:
+                    initialIndex = index
+                index += 1
+        elif config.answer_backend == "mistral":
+            for key in ("mistral-large-latest", "ministral-8b-latest", "ministral-3b-latest"):
+                self.apiModelBox.addItem(key)
+                if key == config.mistralApi_chat_model:
+                    initialIndex = index
+                index += 1
+        elif config.answer_backend == "groq":
+            for key in ("gemma2-9b-it", "gemma-7b-it", "llama-3.1-70b-versatile", "llama-3.1-8b-instant", "llama-3.2-1b-preview", "llama-3.2-3b-preview", "llama-3.2-11b-vision-preview", "llama-3.2-90b-vision-preview", "llama3-70b-8192", "llama3-8b-8192", "mixtral-8x7b-32768"):
+                self.apiModelBox.addItem(key)
+                if key == config.groqApi_chat_model:
+                    initialIndex = index
+                index += 1
         self.apiModelBox.setCurrentIndex(initialIndex)
         self.functionCallingBox = QComboBox()
         initialIndex = 0
@@ -90,7 +116,12 @@ class ApiDialog(QDialog):
                 initialIndex = index
             index += 1
         self.loadingInternetSearchesBox.setCurrentIndex(initialIndex)
-        self.maxTokenEdit = QLineEdit(str(config.chatGPTApiMaxTokens))
+        if config.answer_backend == "openai":
+            self.maxTokenEdit = QLineEdit(str(config.openaiApi_chat_model_max_tokens))
+        elif config.answer_backend == "mistral":
+            self.maxTokenEdit = QLineEdit(str(config.mistralApi_chat_model_max_tokens))
+        elif config.answer_backend == "groq":
+            self.maxTokenEdit = QLineEdit(str(config.groqApi_chat_model_max_tokens))
         self.maxTokenEdit.setToolTip("The maximum number of tokens to generate in the completion.\nThe token count of your prompt plus max_tokens cannot exceed the model's context length. Most models have a context length of 2048 tokens (except for the newest models, which support 4096).")
         self.maxInternetSearchResults = QLineEdit(str(config.chatGPTApiMaximumInternetSearchResults))
         self.maxInternetSearchResults.setToolTip("The maximum number of internet search response to be included.")
@@ -143,9 +174,9 @@ class ApiDialog(QDialog):
         #language = config.thisTranslation["menu_language"]
         required = config.thisTranslation["required"]
         optional = config.thisTranslation["optional"]
-        layout.addRow(f"OpenAI API Key [{required}]:", self.apiKeyEdit)
-        layout.addRow(f"Organization ID [{optional}]:", self.orgEdit)
-        layout.addRow(f"API Model [{required}]:", self.apiModelBox)
+        layout.addRow(f"{config.answer_backend.capitalize()} API Key [{required}]:", self.apiKeyEdit)
+        #layout.addRow(f"Organization ID [{optional}]:", self.orgEdit)
+        layout.addRow(f"Chat Model [{required}]:", self.apiModelBox)
         layout.addRow(f"Max Token [{required}]:", self.maxTokenEdit)
         #layout.addRow(f"Function Calling [{optional}]:", self.functionCallingBox)
         #layout.addRow(f"{chatAfterFunctionCalled} [{optional}]:", self.chatAfterFunctionCalledCheckBox)
@@ -275,7 +306,7 @@ class ChatGPTAPI(QWidget):
         config.chatGPTApi = self
         self.parent = parent
         # required
-        openai.api_key = os.environ["OPENAI_API_KEY"] = config.openaiApiKey
+        os.environ["OPENAI_API_KEY"] = config.openaiApi_key
         # optional
         if config.openaiApiOrganization:
             openai.organization = config.openaiApiOrganization
@@ -436,21 +467,34 @@ class ChatGPTAPI(QWidget):
         self.editableCheckbox.setCheckState(Qt.Unchecked)
         self.audioCheckbox = QCheckBox(config.thisTranslation["audio"])
         self.audioCheckbox.setCheckState(Qt.Checked if config.chatGPTApiAudio else Qt.Unchecked)
-        self.choiceNumber = QComboBox()
-        self.choiceNumber.addItems([str(i) for i in range(1, 11)])
-        self.choiceNumber.setCurrentIndex((config.chatApiNoOfChoices - 1))
+        #self.choiceNumber = QComboBox()
+        #self.choiceNumber.addItems([str(i) for i in range(1, 11)])
+        #self.choiceNumber.setCurrentIndex((config.chatApiNoOfChoices - 1))
+        self.backends = QComboBox()
+        self.backends.addItems(["openai", "groq", "mistral"])
+        if config.answer_backend == "openai":
+            self.backends.setCurrentIndex(0)
+        elif config.answer_backend == "groq":
+            self.backends.setCurrentIndex(1)
+        elif config.answer_backend == "mistral":
+            self.backends.setCurrentIndex(2)
         self.fontSize = QComboBox()
         self.fontSize.addItems([str(i) for i in range(1, 51)])
         self.fontSize.setCurrentIndex((config.chatGPTFontSize - 1))
         self.temperature = QComboBox()
         self.temperature.addItems([str(i/10) for i in range(0, 21)])
-        self.temperature.setCurrentIndex(int(config.chatGPTApiTemperature * 10))
+        if config.answer_backend == "openai":
+            self.temperature.setCurrentIndex(int(config.openaiApi_llmTemperature * 10))
+        elif config.answer_backend == "groq":
+            self.temperature.setCurrentIndex(int(config.groqApi_llmTemperature * 10))
+        elif config.answer_backend == "mistral":
+            self.temperature.setCurrentIndex(int(config.mistralApi_llmTemperature * 10))
         temperatureLabel = QLabel(config.thisTranslation["temperature"])
         temperatureLabel.setAlignment(Qt.AlignRight)
         temperatureLabel.setToolTip("What sampling temperature to use, between 0 and 2. \nHigher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.")
-        choicesLabel = QLabel(config.thisTranslation["choices"])
-        choicesLabel.setAlignment(Qt.AlignRight)
-        choicesLabel.setToolTip("How many chat completion choices to generate for each input message.")
+        #choicesLabel = QLabel(config.thisTranslation["choices"])
+        #choicesLabel.setAlignment(Qt.AlignRight)
+        #choicesLabel.setToolTip("How many chat completion choices to generate for each input message.")
         fontLabel = QLabel(config.thisTranslation["font"])
         fontLabel.setAlignment(Qt.AlignRight)
         fontLabel.setToolTip(config.thisTranslation["fontSize"])
@@ -495,10 +539,11 @@ class ChatGPTAPI(QWidget):
         searchReplaceLayout.addWidget(searchReplaceButtonAll)
         layout000Rt.addLayout(searchReplaceLayout)
         rtControlLayout = QHBoxLayout()
+        rtControlLayout.addWidget(self.backends)
         rtControlLayout.addWidget(apiKeyButton)
         rtControlLayout.addWidget(temperatureLabel)
         rtControlLayout.addWidget(self.temperature)
-        rtControlLayout.addWidget(choicesLabel)
+        #rtControlLayout.addWidget(choicesLabel)
         #rtControlLayout.addWidget(self.choiceNumber)
         rtControlLayout.addWidget(fontLabel)
         rtControlLayout.addWidget(self.fontSize)
@@ -564,6 +609,7 @@ class ChatGPTAPI(QWidget):
         self.apiModels.currentIndexChanged.connect(self.updateApiModel)
         self.fontSize.currentIndexChanged.connect(self.setFontSize)
         self.temperature.currentIndexChanged.connect(self.updateTemperature)
+        self.backends.currentIndexChanged.connect(self.updateBackend)
         searchReplaceButton.clicked.connect(self.replaceSelectedText)
         searchReplaceButtonAll.clicked.connect(self.searchReplaceAll)
         self.searchInput.returnPressed.connect(self.searchChatContent)
@@ -643,14 +689,39 @@ class ChatGPTAPI(QWidget):
         dialog = ApiDialog(self)
         result = dialog.exec() if config.qtLibrary == "pyside6" else dialog.exec_()
         if result == QDialog.Accepted:
-            config.openaiApiKey = dialog.api_key()
-            if not openai.api_key:
-                openai.api_key = os.environ["OPENAI_API_KEY"] = config.openaiApiKey
+            if config.answer_backend == "openai":
+                config.openaiApi_key = dialog.api_key()
+            elif config.answer_backend == "mistral":
+                config.mistralApi_key = dialog.api_key()
+                try:
+                    check = eval(config.mistralApi_key)
+                    if isinstance(check, list):
+                        config.mistralApi_key = check
+                except:
+                    pass
+            elif config.answer_backend == "groq":
+                config.groqApi_key = dialog.api_key()
+                try:
+                    check = eval(config.groqApi_key)
+                    if isinstance(check, list):
+                        config.groqApi_key = check
+                except:
+                    pass
+            os.environ["OPENAI_API_KEY"] = config.openaiApi_key
             config.openaiApiOrganization = dialog.org()
             try:
-                config.chatGPTApiMaxTokens = int(dialog.max_token())
-                if config.chatGPTApiMaxTokens < 20:
-                    config.chatGPTApiMaxTokens = 20
+                if config.answer_backend == "openai":
+                    config.openaiApi_chat_model_max_tokens = int(dialog.max_token())
+                    if config.openaiApi_chat_model_max_tokens < 20:
+                        config.openaiApi_chat_model_max_tokens = 20
+                elif config.answer_backend == "mistral":
+                    config.mistralApi_chat_model_max_tokens = int(dialog.max_token())
+                    if config.mistralApi_chat_model_max_tokens < 20:
+                        config.mistralApi_chat_model_max_tokens = 20
+                elif config.answer_backend == "groq":
+                    config.groqApi_chat_model_max_tokens = int(dialog.max_token())
+                    if config.groqApi_chat_model_max_tokens < 20:
+                        config.groqApi_chat_model_max_tokens = 20
             except:
                 pass
             try:
@@ -665,7 +736,12 @@ class ChatGPTAPI(QWidget):
             config.chatGPTApiAutoScrolling = dialog.enable_auto_scrolling()
             config.runPythonScriptGlobally = dialog.enable_runPythonScriptGlobally()
             config.chatAfterFunctionCalled = dialog.enable_chatAfterFunctionCalled()
-            config.chatGPTApiModel = dialog.apiModel()
+            if config.answer_backend == "openai":
+                config.openaiApi_chat_model = dialog.apiModel()
+            elif config.answer_backend == "mistral":
+                config.mistralApi_chat_model = dialog.apiModel()
+            elif config.answer_backend == "groq":
+                config.groqApi_chat_model = dialog.apiModel()
             config.chatApiFunctionCall = dialog.functionCalling()
             config.chatApiLoadingInternetSearches = dialog.loadingInternetSearches()
             internetSeraches = "integrate google searches"
@@ -685,8 +761,21 @@ class ChatGPTAPI(QWidget):
     def updateApiModel(self, index):
         self.apiModel = index
 
+    def updateBackend(self, index):
+        if index == 0:
+            config.answer_backend = "openai"
+        elif index == 1:
+            config.answer_backend = "groq"
+        elif index == 2:
+            config.answer_backend = "mistral"
+
     def updateTemperature(self, index):
-        config.chatGPTApiTemperature = float(index / 10)
+        if config.answer_backend == "mistral":
+            config.mistralApi_llmTemperature = float(index / 10)
+        elif config.answer_backend == "groq":
+            config.groqApi_llmTemperature = float(index / 10)
+        elif config.answer_backend == "openai":
+            config.openaiApi_llmTemperature = float(index / 10)
 
     def updateChoiceNumber(self, index):
         config.chatApiNoOfChoices = index + 1
@@ -859,11 +948,14 @@ class ChatGPTAPI(QWidget):
     def newData(self):
         if not self.busyLoading:
             self.contentID = ""
-            self.contentView.setPlainText("" if openai.api_key else """OpenAI API Key is NOT Found!
+            self.contentView.setPlainText("" if isLLMReady() else """API Key NOT Found!
 
 Follow the following steps:
-1) Register and get your OpenAI Key at https://platform.openai.com/account/api-keys
-2) Click the "Settings" button below and enter your own OpenAI API key""")
+1) Register and get an API key in one of the following websites:
+    https://platform.openai.com/account/api-keys
+    https://console.groq.com/keys
+    https://console.mistral.ai/api-keys/
+2) Click the "Settings" button below and enter your own API key""")
             self.setUserInputFocus()
 
     def selectData(self, index):
@@ -914,7 +1006,7 @@ Follow the following steps:
     # https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb
     def num_tokens_from_messages(self, model=""):
         if not model:
-            model = config.chatGPTApiModel
+            model = config.openaiApi_chat_model
         userInput = self.userInput.text().strip()
         messages = self.getMessages(userInput)
 
@@ -985,9 +1077,9 @@ Follow the following steps:
 
     def getMessages(self, userInput):
         # system message
-        systemMessage = "You’re a kind helpful assistant."
-        if config.chatApiFunctionCall == "auto" and config.chatGPTApiFunctionSignatures:
-            systemMessage += " Only use the functions you have been provided with."
+        systemMessage = "You’re a biblical scholar."
+        #if config.chatApiFunctionCall == "auto" and config.chatGPTApiFunctionSignatures:
+        #    systemMessage += " Only use the functions you have been provided with."
         messages = [
             {"role": "system", "content": systemMessage}
         ]
@@ -1353,15 +1445,15 @@ class MainWindow(QMainWindow):
 bibleChat = MainWindow(config.mainWindow)
 bibleChat.show()
 
-if config.openaiApiKey:
-    if config.bibleChatEntry:
-        bibleChat.chatGPT.userInput.setText(config.bibleChatEntry)
-        bibleChat.chatGPT.sendMessage()
-        config.bibleChatEntry = ""
-    else:
-        # load selected text, if any, to user input
-        selectedText = config.mainWindow.selectedText()
-        if selectedText:
-            bibleChat.chatGPT.userInput.setText(selectedText)
-            if "\n" in selectedText:
-                bibleChat.chatGPT.multilineButtonClicked()
+#if isLLMReady():
+if config.bibleChatEntry:
+    bibleChat.chatGPT.userInput.setText(config.bibleChatEntry)
+    bibleChat.chatGPT.sendMessage()
+    config.bibleChatEntry = ""
+else:
+    # load selected text, if any, to user input
+    selectedText = config.mainWindow.selectedText()
+    if selectedText:
+        bibleChat.chatGPT.userInput.setText(selectedText)
+        if "\n" in selectedText:
+            bibleChat.chatGPT.multilineButtonClicked()

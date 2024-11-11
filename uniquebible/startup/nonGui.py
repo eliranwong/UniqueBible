@@ -123,12 +123,12 @@ def run_terminal_mode():
     config.terminalCommandDefault = ""
     default = ""
     # make key bindings available in config to allow futher customisation via plugins
-    #config.key_bindings = uba_command_prompt_key_bindings
+    config.key_bindings = uba_command_prompt_key_bindings
     # run plugin where users may add customised key bindings
     runStartupPlugins()
     config.key_bindings = merge_key_bindings([
         prompt_shared_key_bindings,
-        uba_command_prompt_key_bindings,
+        config.key_bindings,
     ])
     # make sure user-customised menu contains valid item only.
     # validation can only be running after, not before, running startup plugin, as some startup plugin works on command shortcuts.

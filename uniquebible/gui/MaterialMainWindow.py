@@ -465,7 +465,7 @@ class MaterialMainWindow:
             )
             for feature, action in items:
                 addMenuItem(subMenu0, feature, self, action)
-        addMenuItem(subMenu0, config.thisTranslation["enter"]+" OpenAI API Key", self, self.setMyOpenAiApiKey, translation=False)
+        #addMenuItem(subMenu0, config.thisTranslation["enter"]+" OpenAI API Key", self, self.setMyOpenAiApiKey, translation=False)
         addMenuItem(subMenu0, "setGoogleApiKey", self, self.setMyGoogleApiKey)
         # Shortcuts
         subMenu = addSubMenu(subMenu0, "menu_shortcuts")
@@ -1114,14 +1114,14 @@ class MaterialMainWindow:
                 self.addMaterialIconButton("{0} - {1}".format(config.thisTranslation["context1_speak"], config.ttsDefaultLangauge3), icon, self.instantTTS3, self.secondToolBar, self.instantTtsButton3, False)
 
         icon = "material/hardware/smart_toy/materialiconsoutlined/48dp/2x/outline_smart_toy_black_48dp.png"
-        if config.openaiApiKey:
+        #if config.openaiApi_key:
             #icon = "material/action/question_answer/materialiconsoutlined/48dp/2x/outline_question_answer_black_48dp.png"
             #self.addMenuPluginButton("Bible Chat", "Bible Chat", icon, self.secondToolBar, translation=False)
-            self.bibleChatButton = QToolButton()
-            self.setBibleChatButton()
-            self.secondToolBar.addWidget(self.bibleChatButton)
-        else:
-            self.addMenuPluginButton("ChatGPT", "ChatGPT", icon, self.secondToolBar, translation=False)
+        self.bibleChatButton = QToolButton()
+        self.setBibleChatButton()
+        self.secondToolBar.addWidget(self.bibleChatButton)
+        #else:
+            #self.addMenuPluginButton("ChatGPT", "ChatGPT", icon, self.secondToolBar, translation=False)
         self.secondToolBar.addSeparator()
 
         icon = "material/social/travel_explore/materialiconsoutlined/48dp/2x/outline_travel_explore_black_48dp.png"

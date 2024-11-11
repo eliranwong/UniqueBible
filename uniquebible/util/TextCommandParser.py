@@ -340,18 +340,24 @@ class TextCommandParser:
             "answer": (self.textAnswerGeneral, """
             # [KEYWORD] ANSWER
             # Feature - Answer a bible-related question with AI tools.
-            # Usage - ANSWER:::[INQUIRY]
-            # e.g. ANSWER:::Who is Jesus"""),
+            # Usage - ANSWER:::[BACKEND]:::[INQUIRY]
+            # Use value of `config.answer_backend` as backend if BACKEND is not given.
+            # e.g. ANSWER:::Who is Jesus?
+            # e.g. ANSWER:::How many Marys are there in the Bible?"""),
             "answeryouth": (self.textAnswerYouth, """
             # [KEYWORD] ANSWERYOUTH
             # Feature - Answer a young people a bible-related question with AI tools.
-            # Usage - ANSWERYOUTH:::[INQUIRY]
-            # e.g. ANSWERYOUTH:::Who is Jesus"""),
+            # Usage - ANSWERYOUTH:::[BACKEND]:::[INQUIRY]
+            # Use value of `config.answer_backend` as backend if BACKEND is not given.
+            # e.g. ANSWERYOUTH:::Should I smoke?
+            # e.g. ANSWERYOUTH:::I want to date a girl."""),
             "answerkid": (self.textAnswerKid, """
             # [KEYWORD] ANSWERKID
             # Feature - Answer a kid a bible-related question with AI tools.
-            # Usage - ANSWERKID:::[INQUIRY]
-            # e.g. ANSWERKID:::Who is Jesus"""),
+            # Usage - ANSWERKID:::[BACKEND]:::[INQUIRY]
+            # Use value of `config.answer_backend` as backend if BACKEND is not given.
+            # e.g. ANSWERKID:::What is sex?
+            # e.g. ANSWERKID:::Why are there wars?"""),
             "map": (self.textMap, """
             # [KEYWORD] MAP
             # Feature - Open a Google map with bible locations pinned
@@ -3598,7 +3604,7 @@ The WHERE condition is described as: {query}"""
                 {"role": "user", "content" : prompt}
             ]
             completion = OpenAI().chat.completions.create(
-                model=config.chatGPTApiModel,
+                model=config.openaiApi_chat_model,
                 messages=messages,
                 n=1,
                 temperature=0.0,
@@ -3656,7 +3662,7 @@ The WHERE condition is described as: {query}"""
                 Bible(text).exportToMarkdown(standardReference=True)
                 # create index
                 # define LLM
-                llm = OpenAI(temperature=config.chatGPTApiTemperature, model=config.chatGPTApiModel, max_tokens=config.chatGPTApiMaxTokens)
+                llm = OpenAI(temperature=config.openaiApi_llmTemperature, model=config.openaiApi_chat_model, max_tokens=config.openaiApi_chat_model_max_tokens)
                 service_context = ServiceContext.from_defaults(llm=llm)
                 documents = SimpleDirectoryReader(bible_dir, recursive=True, required_exts=[".md"]).load_data()
                 index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context)
@@ -4410,27 +4416,23 @@ The WHERE condition is described as: {query}"""
     # ANSWER::: ANSWERYOUTH::: ANSWERKID:::
 
     def textAnswerGeneral(self, command, source):
-        return self.textAnswer(command, source, config.groqApi_systemMessage_general)
+        return self.textAnswer(command, source, config.answer_systemMessage_general)
 
     def textAnswerYouth(self, command, source):
-        return self.textAnswer(command, source, config.groqApi_systemMessage_youth)
+        return self.textAnswer(command, source, config.answer_systemMessage_youth)
 
     def textAnswerKid(self, command, source):
-        return self.textAnswer(command, source, config.groqApi_systemMessage_kid)
+        return self.textAnswer(command, source, config.answer_systemMessage_kid)
 
     def textAnswer(self, command, source, systemMessage):
-        if not config.groqApi_key:
-            return ("study", "<p>Groq cloud API key not found!</p>", {'tab_title': "Ask"})
-        elif command.strip():
+        if command.strip():
             import markdown
-            from groq import Groq
-            from mistralai import Mistral
             # edit the following configurations in config.py
             # config.answer_backend
+            # config.answer_systemMessage_general
+            # config.answer_systemMessage_youth
+            # config.answer_systemMessage_kid
             # config.groqApi_key
-            # config.groqApi_systemMessage_general
-            # config.groqApi_systemMessage_youth
-            # config.groqApi_systemMessage_kid
             # config.groqApi_llmTemperature
             # config.groqApi_chat_model
             # config.groqApi_chat_model_max_tokens
@@ -4438,6 +4440,10 @@ The WHERE condition is described as: {query}"""
             # config.mistralApi_llmTemperature
             # config.mistralApi_chat_model
             # config.mistralApi_chat_model_max_tokens
+            # config.openaiApi_key
+            # config.openaiApi_llmTemperature
+            # config.openaiApi_chat_model
+            # config.openaiApi_chat_model_max_tokens
             def getGroqApi_key():
                 '''
                 support multiple grop api keys
@@ -4472,27 +4478,52 @@ The WHERE condition is described as: {query}"""
                         return ""
                 else:
                     return ""
+            command = command.strip()
+            if re.search("^(groq|mistral|openai):::", command):
+                backend, command = command.split(":::", 1)
+            else:
+                # use default backend if not specified
+                backend = config.answer_backend
             chatMessages = [
                 {"role": "system", "content": systemMessage},
                 {"role": "user", "content": command.strip()},
             ]
             try:
-                if config.answer_backend == "gorq":
-                    completion = Groq(api_key=getGroqApi_key()).chat.completions.create(
-                        model=config.groqApi_chat_model,
-                        messages=chatMessages,
-                        n=1,
-                        temperature=config.groqApi_llmTemperature,
-                        max_tokens=config.groqApi_chat_model_max_tokens,
-                        stream=False,
-                    )
-                else:
+                if backend == "mistral":
+                    if not config.mistralApi_chat_model:
+                        return ("study", "<p>Mistral AI API key not found!</p>", {'tab_title': "Ask"})
+                    from mistralai import Mistral
                     completion = Mistral(api_key=getMistralApi_key()).chat.complete(
                         model=config.mistralApi_chat_model,
                         messages=chatMessages,
                         n=1,
                         temperature=config.mistralApi_llmTemperature,
                         max_tokens=config.mistralApi_chat_model_max_tokens,
+                        stream=False,
+                    )
+                elif backend == "openai":
+                    if not config.openaiApi_key:
+                        return ("study", "<p>OpenAI API key not found!</p>", {'tab_title': "Ask"})
+                    from openai import OpenAI
+                    os.environ["OPENAI_API_KEY"] = config.openaiApi_key
+                    completion = OpenAI().chat.completions.create(
+                        model=config.openaiApi_chat_model,
+                        messages=chatMessages,
+                        n=1,
+                        temperature=config.openaiApi_llmTemperature,
+                        max_tokens=config.openaiApi_chat_model_max_tokens,
+                        stream=False,
+                    )
+                else:
+                    if not config.groqApi_key:
+                        return ("study", "<p>Groq cloud API key not found!</p>", {'tab_title': "Ask"})
+                    from groq import Groq
+                    completion = Groq(api_key=getGroqApi_key()).chat.completions.create(
+                        model=config.groqApi_chat_model,
+                        messages=chatMessages,
+                        n=1,
+                        temperature=config.groqApi_llmTemperature,
+                        max_tokens=config.groqApi_chat_model_max_tokens,
                         stream=False,
                     )
                 textOutput = completion.choices[0].message.content

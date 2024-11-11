@@ -8,6 +8,8 @@ from pydub import AudioSegment
 from pydub.playback import play
 from uniquebible.util.VlcUtil import VlcUtil
 from openai import OpenAI
+from mistralai import Mistral
+from groq import Groq
 
 
 class WorkerSignals(QObject):
@@ -144,85 +146,73 @@ class ChatGPTResponse:
         }
 
     def runCompletion(self, thisMessage, progress_callback):
-        self.functionJustCalled = True
-        return OpenAI().chat.completions.create(
-            model=config.chatGPTApiModel,
-            messages=thisMessage,
-            n=1,
-            temperature=config.chatGPTApiTemperature,
-            max_tokens=config.chatGPTApiMaxTokens,
-            stream=True,
-        )
 
-    def runCompletion_old(self, thisMessage, progress_callback):
-        self.functionJustCalled = False
-        def runThisCompletion(thisThisMessage):
-            if config.chatGPTApiFunctionSignatures and not self.functionJustCalled:
-                return openai.ChatCompletion.create(
-                    model=config.chatGPTApiModel,
-                    messages=thisThisMessage,
-                    n=1,
-                    temperature=config.chatGPTApiTemperature,
-                    max_tokens=config.chatGPTApiMaxTokens,
-                    functions=config.chatGPTApiFunctionSignatures,
-                    function_call=config.chatApiFunctionCall,
-                    stream=True,
-                )
-            return openai.ChatCompletion.create(
-                model=config.chatGPTApiModel,
-                messages=thisThisMessage,
+        def getGroqApi_key():
+            '''
+            support multiple grop api keys
+            User can manually edit config to change the value of config.groqApi_key to a list of multiple api keys instead of a string of a single api key
+            '''
+            if config.groqApi_key:
+                if isinstance(config.groqApi_key, str):
+                    return config.groqApi_key
+                elif isinstance(config.groqApi_key, list):
+                    if len(config.groqApi_key) > 1:
+                        # rotate multiple api keys
+                        config.groqApi_key = config.groqApi_key[1:] + [config.groqApi_key[0]]
+                    return config.groqApi_key[0]
+                else:
+                    return ""
+            else:
+                return ""
+        def getMistralApi_key():
+            '''
+            support multiple mistral api keys
+            User can manually edit config to change the value of config.mistralApi_key to a list of multiple api keys instead of a string of a single api key
+            '''
+            if config.mistralApi_key:
+                if isinstance(config.mistralApi_key, str):
+                    return config.mistralApi_key
+                elif isinstance(config.mistralApi_key, list):
+                    if len(config.mistralApi_key) > 1:
+                        # rotate multiple api keys
+                        config.mistralApi_key = config.mistralApi_key[1:] + [config.mistralApi_key[0]]
+                    return config.mistralApi_key[0]
+                else:
+                    return ""
+            else:
+                return ""
+
+        self.functionJustCalled = True
+        if config.answer_backend == "mistral":
+            return Mistral(api_key=getMistralApi_key()).chat.stream(
+                model=config.mistralApi_chat_model,
+                messages=thisMessage,
                 n=1,
-                temperature=config.chatGPTApiTemperature,
-                max_tokens=config.chatGPTApiMaxTokens,
+                temperature=config.mistralApi_llmTemperature,
+                max_tokens=config.mistralApi_chat_model_max_tokens,
+            )
+        elif config.answer_backend == "openai":
+            if not config.openaiApi_key:
+                return None
+            os.environ["OPENAI_API_KEY"] = config.openaiApi_key
+            return OpenAI().chat.completions.create(
+                model=config.openaiApi_chat_model,
+                messages=thisMessage,
+                n=1,
+                temperature=config.openaiApi_llmTemperature,
+                max_tokens=config.openaiApi_chat_model_max_tokens,
                 stream=True,
             )
-
-        while True:
-            completion = runThisCompletion(thisMessage)
-            function_name = ""
-            try:
-                # consume the first delta
-                for event in completion:
-                    delta = event["choices"][0]["delta"]
-                    # Check if a function is called
-                    if not delta.get("function_call"):
-                        self.functionJustCalled = True
-                    elif "name" in delta["function_call"]:
-                        function_name = delta["function_call"]["name"]
-                    # check the first delta is enough
-                    break
-                # Continue only when a function is called
-                if self.functionJustCalled:
-                    break
-
-                # get stream function response message
-                response_message = self.getStreamFunctionResponseMessage(completion, function_name)
-
-                # get function response
-                function_response = self.getFunctionResponse(response_message, function_name)
-
-                # process function response
-                # send the info on the function call and function response to GPT
-                thisMessage.append(response_message) # extend conversation with assistant's reply
-                thisMessage.append(
-                    {
-                        "role": "function",
-                        "name": function_name,
-                        "content": function_response,
-                    }
-                )  # extend conversation with function response
-
-                self.functionJustCalled = True
-
-                if not config.chatAfterFunctionCalled:
-                    progress_callback.emit("\n\n~~~ ")
-                    progress_callback.emit(function_response)
-                    return None
-            except:
-                self.showErrors()
-                break
-
-        return completion
+        if not config.groqApi_key:
+            return None
+        return Groq(api_key=getGroqApi_key()).chat.completions.create(
+            model=config.groqApi_chat_model,
+            messages=thisMessage,
+            n=1,
+            temperature=config.groqApi_llmTemperature,
+            max_tokens=config.groqApi_chat_model_max_tokens,
+            stream=True,
+        )
 
     def showErrors(self):
         if config.developer:
@@ -234,10 +224,10 @@ class ChatGPTResponse:
             #print("loading internet searches ...")
             try:
                 completion = openai.ChatCompletion.create(
-                    model=config.chatGPTApiModel,
+                    model=config.openaiApi_chat_model,
                     messages=messages,
-                    max_tokens=config.chatGPTApiMaxTokens,
-                    temperature=config.chatGPTApiTemperature,
+                    max_tokens=config.openaiApi_chat_model_max_tokens,
+                    temperature=config.openaiApi_llmTemperature,
                     n=1,
                     functions=config.integrate_google_searches_signature,
                     function_call={"name": "integrate_google_searches"},
@@ -269,26 +259,31 @@ class ChatGPTResponse:
                             os.remove(stop_file)
                             break                                 
                         # RETRIEVE THE TEXT FROM THE RESPONSE
-                        progress = event if isinstance(event, str) else event.choices[0].delta.content
+                        if isinstance(event, str):
+                            progress = event
+                        elif hasattr(event, "data"): # mistralai
+                            progress = event.data.choices[0].delta.content
+                        else:
+                            progress = event.choices[0].delta.content
                         # STREAM THE ANSWER
                         progress_callback.emit(progress)
             else:
                 if config.chatGPTApiFunctionSignatures:
                     completion = openai.ChatCompletion.create(
-                        model=config.chatGPTApiModel,
+                        model=config.openaiApi_chat_model,
                         messages=messages,
-                        max_tokens=config.chatGPTApiMaxTokens,
-                        temperature=0.0 if config.chatGPTApiPredefinedContext == "Execute Python Code" else config.chatGPTApiTemperature,
+                        max_tokens=config.openaiApi_chat_model_max_tokens,
+                        temperature=0.0 if config.chatGPTApiPredefinedContext == "Execute Python Code" else config.openaiApi_llmTemperature,
                         n=config.chatApiNoOfChoices,
                         functions=config.chatGPTApiFunctionSignatures,
                         function_call={"name": "run_python"} if config.chatGPTApiPredefinedContext == "Execute Python Code" else config.chatApiFunctionCall,
                     )
                 else:
                     completion = openai.ChatCompletion.create(
-                        model=config.chatGPTApiModel,
+                        model=config.openaiApi_chat_model,
                         messages=messages,
-                        max_tokens=config.chatGPTApiMaxTokens,
-                        temperature=config.chatGPTApiTemperature,
+                        max_tokens=config.openaiApi_chat_model_max_tokens,
+                        temperature=config.openaiApi_llmTemperature,
                         n=config.chatApiNoOfChoices,
                     )
 
