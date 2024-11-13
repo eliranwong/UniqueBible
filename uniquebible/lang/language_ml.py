@@ -1,4 +1,8 @@
 translation = {
+    "aiCommentary": "AI Commentary",
+    "askAI": "Bible Q&amp;A with AI",
+    "bibleAnswers": "Bible Answers",
+    "experimental": "experimental",
     "menu1_app": "യുണീക് ബൈബിൾ",
     "menu1_screenSize": "ജാലകത്തിന്റെ വലിപ്പം",
     "menu1_preferences": "യുബിഎ മുന്‍ഗണനകൾ",
@@ -1045,6 +1049,7 @@ translation = {
     "print": "പ്രിന്റ് ചെയ്യുക",
     "configure": "ക്രമീകരിക്കുക",
     "exit": "പ്രദര്ശിപ്പിക്കുക",
+    "displayVerseAICommentaryIcon": "Display Chapter Verse Commentary Icons",
     "displayChapterVerseAudioIcons": "അദ്ധ്യായം വെഴ്സ് ഓഡിയോ ചിന്ത കാണിക്കുക",
     "newDatabase": "പുതിയ ഡാറ്റാബേസ്",
     "openDatabase": "ഡാറ്റാബേസ് തുറക്ക്",

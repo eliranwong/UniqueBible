@@ -1,4 +1,8 @@
 translation = {
+    "aiCommentary": "AI Commentary",
+    "askAI": "Bible Q&amp;A with AI",
+    "bibleAnswers": "Bible Answers",
+    "experimental": "experimental",
     "menu1_app": "UniqueBible",
     "menu1_screenSize": "Μέγεθος παραθύρου:",
     "menu1_preferences": "Προτιμήσεις UBA",
@@ -1045,6 +1049,7 @@ translation = {
     "print": "Εκτύπωση:",
     "configure": "Ρύθμιση:",
     "exit": "Έξοδος:",
+    "displayVerseAICommentaryIcon": "Display Chapter Verse Commentary Icons",
     "displayChapterVerseAudioIcons": "Εμφάνιση Εικονίδια ήχου κεφάλαιο Verse",
     "newDatabase": "Νέα βάση δεδομένων",
     "openDatabase": "Άνοιγμα βάσης δεδομένων",

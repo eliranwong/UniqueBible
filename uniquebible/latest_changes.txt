@@ -1,5 +1,25 @@
 PIP package:
 
+0.1.74-0.1.78
+
+* support gogole AI API for AI inference, in addition to opena, grop and mistral
+
+* added AI Commentary; works in both GUI and non-GUI modes
+
+* To display AI Commentary icons:
+    In GUI mode, `Bible > Toogle Features > Display Chapter Verse Commentary Icon`
+    In non-GUI modes, set both `enableAICommentary` and `displayVerseAICommentaryIcon` to True
+
+* `bible` and `commentary` command keyword `bible:::` now accepts reference formats chapter numbers, like 43.3.16
+
+* added commands:
+    PRAY:::
+    QUOTE:::
+    ENCOURAGE:::
+    INTERPRETOT:::
+    INTERPRETNT:::
+    AIC:::
+
 0.1.65-0.1.73
 
 * added commands `ANSWER:::`, `ANSWERYOUTH:::`, `ANSWERKID:::` to answer bible-related questions with AI models

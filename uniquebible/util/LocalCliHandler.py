@@ -1081,8 +1081,6 @@ class LocalCliHandler:
                 suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList)
             elif i in ("commentary:::", "_commentaryverses:::"):
                 suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList, ":::", None if config.terminalUseLighterCompleter else self.allKJVreferences)
-            elif i in ("commentary2:::",):
-                suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList, ":::", None if config.terminalUseLighterCompleter else self.allKJVreferencesBcv1)
             elif i in ("_commentary:::",):
                 suggestions[i] = self.getDummyDict(self.crossPlatform.commentaryList, ".")
             elif i in ("crossreference:::", "difference:::", "diff:::", "passages:::", "overview:::", "summary:::", "index:::", "chapterindex:::", "map:::", "tske:::", "combo:::", "translation:::", "discourse:::", "words:::", "openbooknote:::", "openchapternote:::", "openversenote:::", "editbooknote:::", "editchapternote:::", "editversenote:::", "_imvr:::"):

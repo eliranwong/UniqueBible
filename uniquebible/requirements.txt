@@ -3,3 +3,4 @@ gdown
 babel
 requests
 apsw
+markdown

@@ -730,6 +730,8 @@ input.addEventListener('keyup', function(event) {0}
             audioFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", mp3text, "default", "{0}_{1}".format(b, c))
             if os.path.isdir(audioFolder):
                 chapter += """ <ref onclick="rC('{0}')">{1}</ref>""".format(mp3text, config.audioBibleIcon)
+        if config.displayVerseAICommentaryIcon:
+            chapter += f""" <ref onclick="document.title='aic:::{text}:::{b}.{c}.{v}'">{config.aiCommentaryIcon}</ref>"""
         # add note indicator
         if config.showUserNoteIndicator and not config.enableHttpServer:
             noteVerseList = NoteService.getChapterVerseList(b, c)
@@ -1280,6 +1282,8 @@ class Bible:
         audioFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", mp3text, "default", "{0}_{1}".format(b, c))
         if source == "main" and config.displayVerseAudioBibleIcon and os.path.isdir(audioFolder):
             chapter += """ <ref onclick="rC('{0}')">{1}</ref>""".format(mp3text, config.audioBibleIcon)
+        if config.displayVerseAICommentaryIcon:
+            chapter += f""" <ref onclick="document.title='aic:::{self.text}:::{b}.{c}.{v}'">{config.aiCommentaryIcon}</ref>"""
         # add note indicator
         if config.showUserNoteIndicator and not config.enableHttpServer:
             noteSqlite = NoteSqlite()
@@ -1346,6 +1350,8 @@ class Bible:
                     verseTag += """ <ref onclick="rC('{0}', {1})">{2}</ref>""".format(mp3Text, v, config.audioBibleIcon2)
                 else:
                     verseTag += """ <ref onclick="rV('{0}', {1})">{2}</ref>""".format(mp3Text, v, config.audioBibleIcon)
+        if config.displayVerseAICommentaryIcon:
+            verseTag += f""" <ref onclick="document.title='aic:::{self.text}:::{b}.{c}.{v}'">{config.aiCommentaryIcon}</ref>"""
         # add note indicator
         if v in self.thisVerseNoteList:
             verseTag += ' <ref onclick="nV({0})">&#9998;</ref>'.format(v)

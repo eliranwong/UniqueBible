@@ -40,6 +40,9 @@ class CrossPlatform:
             if info == "https://Marvel.Bible Commentary" and module in Commentary.marvelCommentaries:
                 info = Commentary.marvelCommentaries[module]
             self.commentaryFullNameList.append(info)
+        if config.enableAICommentary:
+            self.commentaryList.insert(0, "AIC")
+            self.commentaryFullNameList.insert(0, "AI Commentary")
         # reference book
         # menu10_dialog
         bookData = BookData()

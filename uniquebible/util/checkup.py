@@ -421,6 +421,13 @@ def isMarkdownInstalled():
     except:
         return False
 
+def isOpenccInstalled():
+    try:
+        from opencc import OpenCC
+        return True
+    except:
+        return False
+
 def isNltkInstalled():
     # Use wordnet https://www.educative.io/edpresso/how-to-use-wordnet-in-python
     config.wordnet = None
@@ -774,6 +781,7 @@ optional = [
     ("tiktoken", "tokeniser for use with OpenAI's models.", isTiktokenInstalled),
     ("groq", "The official Python library for the groq API", isGroqInstalled),
     ("mistralai", "Python Client SDK for the Mistral AI API", isMistralInstalled),
+    ("opencc-python-reimplemented", "OpenCC made with Python", isOpenccInstalled),
 ] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -829,6 +837,7 @@ optional = [
     ("tiktoken", "tokeniser for use with OpenAI's models", isTiktokenInstalled),
     ("groq", "The official Python library for the groq API", isGroqInstalled),
     ("mistralai", "Python Client SDK for the Mistral AI API", isMistralInstalled),
+    ("opencc-python-reimplemented", "OpenCC made with Python", isOpenccInstalled),
 ]
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))

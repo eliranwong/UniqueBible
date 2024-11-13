@@ -1,4 +1,8 @@
 translation = {
+    "aiCommentary": "AI Commentary",
+    "askAI": "Bible Q&amp;A with AI",
+    "bibleAnswers": "Bible Answers",
+    "experimental": "experimental",
     "menu1_app": "UniqueBible",
     "menu1_screenSize": "ウィンドウ・サイズ",
     "menu1_preferences": "UBA プリファレンス",
@@ -1045,6 +1049,7 @@ translation = {
     "print": "印刷",
     "configure": "構成",
     "exit": "出口",
+    "displayVerseAICommentaryIcon": "Display Chapter Verse Commentary Icons",
     "displayChapterVerseAudioIcons": "章 Verse オーディオ・アイコンの表示",
     "newDatabase": "新規データベース",
     "openDatabase": "オープン・データベース",

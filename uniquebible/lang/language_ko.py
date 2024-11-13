@@ -1,4 +1,8 @@
 translation = {
+    "aiCommentary": "AI Commentary",
+    "askAI": "Bible Q&amp;A with AI",
+    "bibleAnswers": "Bible Answers",
+    "experimental": "experimental",
     "menu1_app": "UniqueBible",
     "menu1_screenSize": "창 크기",
     "menu1_preferences": "UBA 환경 설정",
@@ -1045,6 +1049,7 @@ translation = {
     "print": "인쇄",
     "configure": "구성",
     "exit": "종료",
+    "displayVerseAICommentaryIcon": "Display Chapter Verse Commentary Icons",
     "displayChapterVerseAudioIcons": "장 Verse 오디오 아이콘 표시",
     "newDatabase": "새 데이터베이스",
     "openDatabase": "데이터베이스 열기",

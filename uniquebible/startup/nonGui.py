@@ -337,10 +337,9 @@ def run_api_client_mode():
         #print(traceback.format_exc())
         print(f"Failed to connect '{config.web_api_endpoint}' at the moment!")
 
-# raw mode
+# stream mode
 def run_stream_mode():
-    from uniquebible.util.LocalCliHandler import LocalCliHandler
-
+    # standard input
     stdin_text = sys.stdin.read() if not sys.stdin.isatty() else ""
 
     # Set initial command
@@ -348,12 +347,15 @@ def run_stream_mode():
     if stdin_text:
         command = f"{command} {stdin_text}"
     if command.strip():
+        from uniquebible.util.LocalCliHandler import LocalCliHandler
         config.mainWindow = LocalCliHandler()
         output_text = config.mainWindow.getContent(command, False)
         output_text = re.sub("\n[-]+?$", "", output_text)
+        print(output_text, file=sys.stdout)
     else:
-        output_text = "Command not given!"
-    print(output_text, file=sys.stdout)
+        # run terminal mode if no command is given
+        config.runMode = "terminal"
+        run_terminal_mode()
 
 # ssh-server
 # read setup guide at https://github.com/eliranwong/UniqueBible/wiki/Run-SSH-Server

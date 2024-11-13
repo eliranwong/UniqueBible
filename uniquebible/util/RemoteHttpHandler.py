@@ -222,7 +222,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
 
     def getVerseFeatures(self):
         return {
-            "COMPARE": config.thisTranslation["menu4_compareAll"],
+            "COMPARE": config.thisTranslation["html_showCompare"],
             "CROSSREFERENCE": config.thisTranslation["menu4_crossRef"],
             "TSKE": config.thisTranslation["menu4_tske"],
             "TRANSLATION": config.thisTranslation["menu4_traslations"],
@@ -372,6 +372,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 showUserNoteIndicator = config.showUserNoteIndicator
                 showBibleNoteIndicator = config.showBibleNoteIndicator
                 displayVerseAudioBibleIcon = config.displayVerseAudioBibleIcon
+                displayVerseAICommentaryIcon = config.displayVerseAICommentaryIcon
                 showHebrewGreekWordAudioLinks = config.showHebrewGreekWordAudioLinks
                 showHebrewGreekWordAudioLinksInMIB = config.showHebrewGreekWordAudioLinksInMIB
                 displayChapterMenuTogetherWithBibleChapter = config.displayChapterMenuTogetherWithBibleChapter
@@ -379,6 +380,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 config.showUserNoteIndicator = False
                 config.showBibleNoteIndicator = False
                 config.displayVerseAudioBibleIcon = False
+                config.displayVerseAICommentaryIcon = False
                 config.showHebrewGreekWordAudioLinks = False
                 config.showHebrewGreekWordAudioLinksInMIB = False
                 config.displayChapterMenuTogetherWithBibleChapter = False
@@ -409,6 +411,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
                 config.showUserNoteIndicator = showUserNoteIndicator
                 config.showBibleNoteIndicator = showBibleNoteIndicator
                 config.displayVerseAudioBibleIcon = displayVerseAudioBibleIcon
+                config.displayVerseAICommentaryIcon = displayVerseAICommentaryIcon
                 config.showHebrewGreekWordAudioLinks = showHebrewGreekWordAudioLinks
                 config.showHebrewGreekWordAudioLinksInMIB = showHebrewGreekWordAudioLinksInMIB
             elif self.ignoreCommand(self.path):
@@ -601,11 +604,6 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
             self.command = shortcuts[commandLower]
         elif commandLower in commands.keys():
             self.command = commands[commandLower]()
-        #elif self.command.upper()[1:] in self.getVerseFeatures().keys():
-            #self.command = "{0}:::{1}".format(self.command.upper()[1:], self.getCurrentReference())
-        #elif self.command.upper()[1:] in self.getChapterFeatures().keys():
-            #self.command = "{0}:::{1}".format(self.command.upper()[1:], self.getCurrentReference())
-            #self.command = re.sub(":[0-9]+?$", "", self.command)
         # Parse command
         if commandLower in (".help", "?"):
             content = self.helpContent()

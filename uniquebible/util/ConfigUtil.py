@@ -41,6 +41,8 @@ class ConfigUtil:
 
     @staticmethod
     def setup(noQt=None, cli=None, enableCli=None, enableApiServer=None, enableHttpServer=None, runMode=None):
+        if not hasattr(config, "packageDir"):
+            config.packageDir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
         if runMode is not None:
             config.runMode = runMode
         if noQt is not None:
@@ -173,10 +175,11 @@ class ConfigUtil:
         True)
 
         # start of groq chat setting
-        # config.answer_backend
+        # config.llm_backend
         # config.addBibleQnA
         # config.answer_systemMessage_general
         # config.answer_systemMessage_youth
+        # config.answer_systemMessage_kid
         # config.answer_systemMessage_kid
         # config.groqApi_key
         # config.groqApi_llmTemperature
@@ -190,24 +193,67 @@ class ConfigUtil:
         # config.openaiApi_llmTemperature
         # config.openaiApi_chat_model
         # config.openaiApi_chat_model_max_tokens
-        setConfig("answer_backend", """
-        # Add Bible Q and A Features to web mode navigation menu.""",
+        # config.googleaiApi_key
+        # config.googleaiApi_llmTemperature
+        # config.googleaiApi_chat_model
+        # config.googleaiApi_chat_model_max_tokens
+        setConfig("llm_backend", """
+        # Default LLM Backend.""",
         "groq")
+        setConfig("enableAICommentary", """
+        # Enable AI Commentary.""",
+        True)
+        setConfig("aiCommentaryIcon", """
+        # Specify the icon used for opening AI commentary""",
+        '<span class="material-icons-outlined">electric_bolt</span>&nbsp;')
+        if not config.aiCommentaryIcon.endswith("&nbsp;"):
+            config.aiCommentaryIcon = f"{config.aiCommentaryIcon.strip()}&nbsp;"
+        setConfig("displayVerseAICommentaryIcon", """
+        # Display indicator for AI commentary""",
+        False)
+        setConfig("bibleChat_systemMessage", """
+        # Default LLM Backend.""",
+        "You are a biblical scholar.")
         setConfig("addBibleQnA", """
         # Add Bible Q and A Features to web mode navigation menu.""",
         False)
         setConfig("answer_systemMessage_general", """
-        # Groq Chat System Message""",
+        # System Message - General Inquiry""",
         "I would like you to speak like a compassionate church pastor who upholds the truths of the Bible.")
         setConfig("answer_systemMessage_youth", """
-        # Groq Chat System Message""",
+        # System Message - Youth""",
         "I would like you to respond as an experienced church youth pastor who is passionate about their faith and dedicated to guiding young people. Speak like you are speaking to a teen.")
         setConfig("answer_systemMessage_kid", """
-        # Groq Chat System Message""",
+        # System Message - Kid""",
         "Please speak like a kind Children's Sunday School pastor who loves the Bible and wants to share its wonderful stories with a five-year-old. Use simple words and a gentle, loving tone.")
+        setConfig("answer_systemMessage_pray", """
+        # System Message - Pray""",
+        "I would like you to pray like a compassionate church pastor. Please ensure that your responses to all my requests for prayer are always in the first person, so I can pray them directly.")
+        setConfig("answer_systemMessage_quote", """
+        # System Message - Quote""",
+        "You always quote multiple Bible verses in response to all my requests.")
+        setConfig("answer_systemMessage_encourage", """
+        # System Message - Encourage""",
+        "You always encourage me with Bible promises in a caring and supportive tone..")
+        setConfig("answer_systemMessage_interpretot", """
+        # System Message - Interpret Old Testament""",
+        """# I would like you to interpret the Bible like a biblical scholar.
+* Interpret the given bible verses in the light of its context, together with the insights of historical and cultural studies.
+* Highlight important key words and explain their original meanings according to Biblical Hebrew studies.
+* Quote other related verses in the Bible, if any.
+* Elaborate their themes, theological and spiritual meaning of the verses.
+* Guide me how to apply in daily life.""")
+        setConfig("answer_systemMessage_interpretnt", """
+        # System Message - Interpret Old Testament""",
+        """# I would like you to interpret the Bible like a biblical scholar.
+* Interpret the given bible verses in the light of its context, together with the insights of historical and cultural studies.
+* Highlight important key words and explain their original meanings according to Biblical Greek studies.
+* Quote other related verses in the Bible, if any.
+* Elaborate their themes, theological and spiritual meaning of the verses.
+* Guide me how to apply in daily life.""")
         setConfig("groqApi_key", """
         # Groq Cloud API Keys""",
-        [])
+        "")
         setConfig("groqApi_chat_model", """
         # Groq Chat Model""",
         "llama-3.1-70b-versatile")
@@ -219,7 +265,7 @@ class ConfigUtil:
         0.3) # 0.2-0.8 is good to use
         setConfig("mistralApi_key", """
         # Mistral AI API Keys""",
-        [])
+        "")
         setConfig("mistralApi_chat_model", """
         # Mistral AI Chat Model""",
         "mistral-large-latest")
@@ -229,6 +275,18 @@ class ConfigUtil:
         setConfig("mistralApi_llmTemperature", """
         # Mistral AI Chat Temperature""",
         0.3) # 0.2-0.7 is good to use
+        setConfig("googleaiApi_key", """
+        # Google Generative AI API Keys""",
+        "")
+        setConfig("googleaiApi_chat_model", """
+        # Google Generative AI Chat Model""",
+        "gemini-1.5-pro")
+        setConfig("googleaiApi_chat_model_max_tokens", """
+        # Google Generative AI Chat Maximum Output Tokens""",
+        8000)
+        setConfig("googleaiApi_llmTemperature", """
+        # Google Generative AI Chat Temperature""",
+        0.3)
         setConfig("openaiApi_key", """
         # OpenAI API Keys""",
         "")
@@ -241,6 +299,12 @@ class ConfigUtil:
         setConfig("openaiApi_llmTemperature", """
         # OpenAI Chat Temperature""",
         0.3) # 0.2-0.8 is good to use
+
+        # 2nd default command
+        setConfig("secondDefaultCommand", """
+        # `BIBLE:::` is always the default command when no command keyword is specified.
+        # When there is no bible reference found in the entry, after trying with the default command, the original command will be prefixed with the value of `config.secondDefaultCommand` and executed with it.""",
+        "REGEXSEARCH:::")
 
         # Start of api-client mode setting
         setConfig("web_api_endpoint", """

@@ -1,4 +1,8 @@
 translation = {
+    "aiCommentary": "AI Commentary",
+    "askAI": "Bible Q&amp;A with AI",
+    "bibleAnswers": "Bible Answers",
+    "experimental": "experimental",
     "menu1_app": "UniqueBible",
     "menu1_screenSize": "Taille de la fenêtre",
     "menu1_preferences": "Préférences UBA",
@@ -1045,6 +1049,7 @@ translation = {
     "print": "Imprimer",
     "configure": "Configurer",
     "exit": "Quitter",
+    "displayVerseAICommentaryIcon": "Display Chapter Verse Commentary Icons",
     "displayChapterVerseAudioIcons": "Afficher les icônes audio chapitre verse",
     "newDatabase": "Nouvelle base de données",
     "openDatabase": "Ouvrir base de données",

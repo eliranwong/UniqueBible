@@ -1,4 +1,8 @@
 translation = {
+    "aiCommentary": "AI Commentary",
+    "askAI": "Bible Q&amp;A with AI",
+    "bibleAnswers": "Bible Answers",
+    "experimental": "experimental",
     "menu1_app": "UniqueBible",
     "menu1_screenSize": "Dimensiune fereastră",
     "menu1_preferences": "Preferinţe UBA",
@@ -1045,6 +1049,7 @@ translation = {
     "print": "Tipărire",
     "configure": "Configurează",
     "exit": "Ieșire",
+    "displayVerseAICommentaryIcon": "Display Chapter Verse Commentary Icons",
     "displayChapterVerseAudioIcons": "Afișează pictogramele audio capitol verset",
     "newDatabase": "Noua baza de date",
     "openDatabase": "Deschide baza de date",

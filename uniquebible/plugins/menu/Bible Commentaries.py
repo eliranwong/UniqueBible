@@ -202,10 +202,13 @@ class BibleCommentaries(QWidget):
             self.displayCommentary()
     
     def displayCommentary(self):
-        # fetch entry data
-        commentary = Commentary(config.commentaryText)
         bcvTuple = (self.b, self.c, self.v)
-        content = commentary.getContent(bcvTuple)
+        # fetch entry data
+        if config.commentaryText == "AIC":
+            _, content, _ = config.mainWindow.textCommandParser.textAiCommentary(f"{self.b}.{self.c}.{self.v}")
+        else:
+            commentary = Commentary(config.commentaryText)
+            content = commentary.getContent(bcvTuple)
         if not content == "INVALID_COMMAND_ENTERED":
             config.mainWindow.textCommandParser.setCommentaryVerse(config.commentaryText, bcvTuple)
         content = config.mainWindow.wrapHtml(content)

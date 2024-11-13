@@ -116,3 +116,136 @@ if hasattr(config, "checkVersionOnStartup") and config.checkVersionOnStartup:
 
 else:
     config.version = "0.0.0"
+
+# AI Features
+
+from openai import OpenAI
+from mistralai import Mistral
+from groq import Groq
+from typing import Optional
+from opencc import OpenCC
+import unicodedata, traceback
+
+config.llm_backends = ["openai", "google", "groq", "mistral"]
+
+def is_CJK(self, text):
+    for char in text:
+        if 'CJK' in unicodedata.name(char):
+            return True
+    return False
+
+def isLLMReady(backend=""):
+    if not backend:
+        backend = config.llm_backend
+    if backend == "openai" and config.openaiApi_key:
+        return True
+    elif backend == "mistral" and config.mistralApi_key:
+        return True
+    elif backend == "groq" and config.groqApi_key:
+        return True
+    elif backend == "google" and config.googleaiApi_key:
+        return True
+    return False
+
+def getGroqApi_key() -> str:
+    '''
+    support multiple grop api keys
+    User can manually edit config to change the value of config.groqApi_key to a list of multiple api keys instead of a string of a single api key
+    '''
+    if config.groqApi_key:
+        if isinstance(config.groqApi_key, str):
+            return config.groqApi_key
+        elif isinstance(config.groqApi_key, list):
+            if len(config.groqApi_key) > 1:
+                # rotate multiple api keys
+                config.groqApi_key = config.groqApi_key[1:] + [config.groqApi_key[0]]
+            return config.groqApi_key[0]
+        else:
+            return ""
+    else:
+        return ""
+
+def getMistralApi_key() -> str:
+    '''
+    support multiple mistral api keys
+    User can manually edit config to change the value of config.mistralApi_key to a list of multiple api keys instead of a string of a single api key
+    '''
+    if config.mistralApi_key:
+        if isinstance(config.mistralApi_key, str):
+            return config.mistralApi_key
+        elif isinstance(config.mistralApi_key, list):
+            if len(config.mistralApi_key) > 1:
+                # rotate multiple api keys
+                config.mistralApi_key = config.mistralApi_key[1:] + [config.mistralApi_key[0]]
+            return config.mistralApi_key[0]
+        else:
+            return ""
+    else:
+        return ""
+
+def getChatResponse(backend, chatMessages) -> Optional[str]:
+    if not isLLMReady(backend) or not backend in config.llm_backends:
+        return None
+    try:
+        if backend == "mistral":
+            completion = Mistral(api_key=getMistralApi_key()).chat.complete(
+                model=config.mistralApi_chat_model,
+                messages=chatMessages,
+                n=1,
+                temperature=config.mistralApi_llmTemperature,
+                max_tokens=config.mistralApi_chat_model_max_tokens,
+                stream=False,
+            )
+        elif backend == "openai":
+            os.environ["OPENAI_API_KEY"] = config.openaiApi_key
+            completion = OpenAI().chat.completions.create(
+                model=config.openaiApi_chat_model,
+                messages=chatMessages,
+                n=1,
+                temperature=config.openaiApi_llmTemperature,
+                max_tokens=config.openaiApi_chat_model_max_tokens,
+                stream=False,
+            )
+        elif backend == "google":
+            # https://ai.google.dev/gemini-api/docs/openai
+            googleaiClient = OpenAI(
+                api_key=config.googleaiApi_key,
+                base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+            )
+            completion = googleaiClient.chat.completions.create(
+                model=config.googleaiApi_chat_model,
+                messages=chatMessages,
+                n=1,
+                temperature=config.googleaiApi_llmTemperature,
+                max_tokens=config.googleaiApi_chat_model_max_tokens,
+                stream=False,
+            )
+        else:
+            completion = Groq(api_key=getGroqApi_key()).chat.completions.create(
+                model=config.groqApi_chat_model,
+                messages=chatMessages,
+                n=1,
+                temperature=config.groqApi_llmTemperature,
+                max_tokens=config.groqApi_chat_model_max_tokens,
+                stream=False,
+            )
+        textOutput = completion.choices[0].message.content
+    except:
+        textOutput = "Failed to connect! Please try again later."
+    if hasattr(config, "displayLanguage") and config.displayLanguage == "zh_HANT":
+        textOutput = OpenCC('s2t').convert(textOutput)
+    return textOutput
+
+def getAiFeatureDisclaimer() -> str:
+    if config.displayLanguage == "zh_HANT":
+        disclaimer = """<hr><p><b>免責聲明：</b> 本網站上由 AI 提供支援的聖經功能旨在提供有關聖經的有用信息和見解。然而，它不能代替個人對經文的學習和反思。聖經本身仍然是基督徒真理和權威的最終來源。請僅將此工具提供的資訊用作參考，並始終查閱聖經以獲得有關您問題的明確答案。</p>"""
+    elif config.displayLanguage == "zh_HANS":
+        disclaimer = """<hr><p><b>免责声明：</b> 本网站上由 AI 提供支持的圣经功能旨在提供有关圣经的有用信息和见解。然而，它不能代替个人对经文的学习和反思。圣经本身仍然是基督徒真理和权威的最终来源。请仅将此工具提供的信息用作参考，并始终查阅圣经以获得有关您问题的明确答案。</p>"""
+    else:
+        disclaimer = """<hr><p><b>Disclaimer:</b> The AI-powered Bible feature on this website is intended to provide helpful information and insights about the Bible. However, it is not a substitute for personal study and reflection on the scriptures. The Bible itself remains the ultimate source of truth and authority for Christians. Please use the information provided by this tool for reference only, and always consult the Bible for definitive answers to your questions.</p>"""
+    return disclaimer
+
+def showErrors():
+    trace = traceback.format_exc()
+    print(trace if config.developer else "Error encountered!")
+    return trace

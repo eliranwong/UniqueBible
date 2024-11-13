@@ -1730,7 +1730,7 @@ class Converter:
         if bookNo in standardAbbreviation:
             return "<a href='javascript:void(0)' onclick='document.title={0}COMMENTARY:::{1} {2}{0}'>".format('"', standardAbbreviation[bookNo], cv)
         else:
-            return "<a href='javascript:void(0)' onclick='document.title={0}COMMENTARY2:::{1}.{2}{0}'>".format('"', bookNo, cv.replace(":", "."))
+            return "<a href='javascript:void(0)' onclick='document.title={0}COMMENTARY:::{1}.{2}{0}'>".format('"', bookNo, cv.replace(":", "."))
 
     def formatNonBibleMyBibleModule(self, text, abbreviation):
         searchReplace = (

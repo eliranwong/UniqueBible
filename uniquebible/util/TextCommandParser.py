@@ -1,12 +1,11 @@
 # coding=utf-8
-import glob, pprint, traceback, pydoc, threading, asyncio, shutil
+import glob, pprint, traceback, pydoc, threading, asyncio, shutil, markdown
 import os, re, webbrowser, platform, zipfile, subprocess, logging
-from uniquebible import config
+from uniquebible import config, getChatResponse, getAiFeatureDisclaimer
 from prompt_toolkit.input import create_input
 from prompt_toolkit.keys import Keys
 from datetime import date
 from openai import OpenAI
-
 from uniquebible.util.DatafileLocation import DatafileLocation
 from uniquebible.db.StatisticsWordsSqlite import StatisticsWordsSqlite
 from uniquebible.util.VlcUtil import VlcUtil
@@ -341,23 +340,71 @@ class TextCommandParser:
             # [KEYWORD] ANSWER
             # Feature - Answer a bible-related question with AI tools.
             # Usage - ANSWER:::[BACKEND]:::[INQUIRY]
-            # Use value of `config.answer_backend` as backend if BACKEND is not given.
+            # BACKEND options: openai, google, groq, mistral
+            # Use value of `config.llm_backend` as backend if BACKEND is not given.
             # e.g. ANSWER:::Who is Jesus?
-            # e.g. ANSWER:::How many Marys are there in the Bible?"""),
+            # e.g. ANSWER:::grop:::How many Marys are there in the Bible?"""),
             "answeryouth": (self.textAnswerYouth, """
             # [KEYWORD] ANSWERYOUTH
             # Feature - Answer a young people a bible-related question with AI tools.
             # Usage - ANSWERYOUTH:::[BACKEND]:::[INQUIRY]
-            # Use value of `config.answer_backend` as backend if BACKEND is not given.
+            # BACKEND options: openai, google, groq, mistral
+            # Use value of `config.llm_backend` as backend if BACKEND is not given.
             # e.g. ANSWERYOUTH:::Should I smoke?
-            # e.g. ANSWERYOUTH:::I want to date a girl."""),
+            # e.g. ANSWERYOUTH:::openai:::I want to date a girl."""),
             "answerkid": (self.textAnswerKid, """
             # [KEYWORD] ANSWERKID
             # Feature - Answer a kid a bible-related question with AI tools.
             # Usage - ANSWERKID:::[BACKEND]:::[INQUIRY]
-            # Use value of `config.answer_backend` as backend if BACKEND is not given.
+            # BACKEND options: openai, google, groq, mistral
+            # Use value of `config.llm_backend` as backend if BACKEND is not given.
             # e.g. ANSWERKID:::What is sex?
-            # e.g. ANSWERKID:::Why are there wars?"""),
+            # e.g. ANSWERKID:::mistral:::Why are there wars?"""),
+            "pray": (self.textAnswerPray, """
+            # [KEYWORD] PRAY
+            # Feature - Write a prayer.
+            # Usage - PRAY:::[BACKEND]:::[INQUIRY]
+            # BACKEND options: openai, google, groq, mistral
+            # Use value of `config.llm_backend` as backend if BACKEND is not given.
+            # e.g. PRAY:::Church Sunday service
+            # e.g. PRAY:::I am sad"""),
+            "quote": (self.textAnswerQuote, """
+            # [KEYWORD] QUOTE
+            # Feature - Quote bible verses.
+            # Usage - QUOTE:::[BACKEND]:::[INQUIRY]
+            # BACKEND options: openai, google, groq, mistral
+            # Use value of `config.llm_backend` as backend if BACKEND is not given.
+            # e.g. QUOTE:::God's temple
+            # e.g. QUOTE:::Second coming of Jesus Christ"""),
+            "encourage": (self.textAnswerEncourage, """
+            # [KEYWORD] ENCOURAGE
+            # Feature - Encourage with bible promises.
+            # Usage - ENCOURAGE:::[BACKEND]:::[INQUIRY]
+            # BACKEND options: openai, google, groq, mistral
+            # Use value of `config.llm_backend` as backend if BACKEND is not given.
+            # e.g. ENCOURAGE:::I am sad
+            # e.g. ENCOURAGE:::I lost my job"""),
+            "interpretot": (self.textAnswerInterpretOT, """
+            # [KEYWORD] INTERPRETOT
+            # Feature - Interpret Old Testament Verses.
+            # Usage - INTERPRETOT:::[BACKEND]:::[INQUIRY]
+            # BACKEND options: openai, google, groq, mistral
+            # Use value of `config.llm_backend` as backend if BACKEND is not given.
+            # e.g. INTERPRETOT:::Deut 6:4"""),
+            "interpretnt": (self.textAnswerInterpretNT, """
+            # [KEYWORD] INTERPRETNT
+            # Feature - Interpret New Testament Verses.
+            # Usage - INTERPRETNT:::[BACKEND]:::[INQUIRY]
+            # BACKEND options: openai, google, groq, mistral
+            # Use value of `config.llm_backend` as backend if BACKEND is not given.
+            # e.g. INTERPRETNT:::John 3:16"""),
+            "aic": (self.textAiCommentary, """
+            # [KEYWORD] AIC
+            # Feature - Open AI Commentary.
+            # Usage - AIC:::[BACKEND]:::[BIBLE]:::[BIBLE_VERSE]
+            # BACKEND options: openai, google, groq, mistral
+            # Use value of `config.llm_backend` as backend if BACKEND is not given.
+            # e.g. AIC:::Deut 6:4"""),
             "map": (self.textMap, """
             # [KEYWORD] MAP
             # Feature - Open a Google map with bible locations pinned
@@ -387,17 +434,6 @@ class TextCommandParser:
             # 2) Commentary is opened on study view.
             # e.g. COMMENTARY:::John 3:16
             # e.g. COMMENTARY:::CBSC:::John 3:16"""),
-            "commentary2": (self.textCommentary2, """
-            # [KEYWORD] COMMENTARY2
-            # Feature - Open commentary of a bible reference.
-            # Usage - COMMENTARY2:::[BOOK_NO].[CHAPTER_NO].[VERSE_NO]
-            # Usage - COMMENTARY2:::[COMMENTARY_MODULE]:::[BOOK_NO].[CHAPTER_NO].[VERSE_NO]
-            # Remarks:
-            # 1) The last opened commentary module is opened if "[COMMENTARY_MODULE]:::" is omitted.
-            # 2) Commentary is opened on study view.
-            # 3) Bible reference used with "COMMENTARY2:::" is formatted as [BOOK_NUMBER.CHAPTER_NUMBER.VERSE_NUMBER], see examples below.
-            # e.g. COMMENTARY2:::43.3.16
-            # e.g. COMMENTARY2:::CBSC:::43.3.16"""),
             "distinctinterlinear": (self.distinctInterlinear, """
             # [KEYWORD] DISTINCTINTERLINEAR
             # e.g. DISTINCTINTERLINEAR:::G746"""),
@@ -1061,7 +1097,7 @@ class TextCommandParser:
                         elif keyword in ("openchapternote", "overview", "summary", "chapterindex"):
                             command = currentBibleReference.split(":", 1)[0]
                             print(f"Running '{keyword}:::{command}' ...")
-                        elif not keyword in ("_mastercontrol", "_paste", "_commentaries", "commentary2", "_comparison", "_menu", "import", "_setconfig", "openjournal", "editjournal", "searchjournal", "searchbooknote", "searchchapternote", "searchversenote", "_openbooknote", "_openchapternote", "_openversenote", "_editbooknote", "_editchapternote", "_editversenote", "_vnsc", "_vndc"):
+                        elif not keyword in ("_mastercontrol", "_paste", "_commentaries", "_comparison", "_menu", "import", "_setconfig", "openjournal", "editjournal", "searchjournal", "searchbooknote", "searchchapternote", "searchversenote", "_openbooknote", "_openchapternote", "_openversenote", "_editbooknote", "_editchapternote", "_editversenote", "_vnsc", "_vndc"):
                             return self.textWhatIs(keyword, source)
                     self.lastKeyword = keyword
                     return self.interpreters[keyword][0](command, source)
@@ -1195,8 +1231,11 @@ class TextCommandParser:
             return ""
 
     def isDatabaseInstalled(self, keyword):
-        if keyword in self.databaseInfo():
-            fileItems = self.databaseInfo()[keyword][0]
+        databaseInfo = self.databaseInfo()
+        if not keyword in databaseInfo or databaseInfo[keyword][0][-1] == "cAIC.commentary":
+            return True
+        if keyword in databaseInfo:
+            fileItems = databaseInfo[keyword][0]
             if os.path.isfile(os.path.join(*fileItems)):
                 return True
             else:
@@ -1331,21 +1370,18 @@ class TextCommandParser:
                     return self.textCompareSideBySide("{0}{1}".format(compareTexts, command), view)
                 else:
                     self.switchCompareView()
-        # Direct to bible search when there is no valid reference.
-        # Use the latest search mode for bible search.
-        # Qt library users can change bible search mode via master control
-        # Terminal mode users can change default search mode via ".changebiblesearchmode"
-        searchModes = ("COUNT", "SEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH", "GPTSEARCH", "SEMANTIC")
+        # `BIBLE:::` is always the default command when no command keyword is specified.
+        # When there is no bible reference found in the entry, the original command will be prefixed with the value of `config.secondDefaultCommand` and executed with it.
         if config.useLiteVerseParsing:
             verseList = self.extractAllVersesFast(command)
             if verseList[0][0] == 0:
                 command = re.sub(r" \d+:?\d?$", "", command)
-                command = f"{searchModes[config.bibleSearchMode]}:::{config.mainText}:::{command}"
+                command = f"{config.secondDefaultCommand}{command}"
                 return self.parser(command, view)
         else:
             verseList = self.extractAllVerses(command)
         if not verseList:
-            command = f"{searchModes[config.bibleSearchMode]}:::{config.mainText}:::{command}"
+            command = f"{config.secondDefaultCommand}{command}"
             return self.parser(command, view)
         else:
             formattedBiblesFolder = os.path.join(config.marvelData, "bibles")
@@ -2424,12 +2460,16 @@ class TextCommandParser:
             return self.invalidCommand()
         else:
             books = BibleBooks().booksMap.get(config.standardAbbreviation, BibleBooks.abbrev["eng"])
-
-            commentary = Commentary(command)
-            bookList = commentary.getBookList()
-            info = commentary.commentaryInfo()
-            if info == "https://Marvel.Bible Commentary" and command in Commentary.marvelCommentaries:
-                info = Commentary.marvelCommentaries[command]
+            if command == "AIC":
+                commentary = Bible(config.mainText)
+                bookList = commentary.getBookList()
+                info = "AI Commentary"
+            else:
+                commentary = Commentary(command)
+                bookList = commentary.getBookList()
+                info = commentary.commentaryInfo()
+                if info == "https://Marvel.Bible Commentary" and command in Commentary.marvelCommentaries:
+                    info = Commentary.marvelCommentaries[command]
             #moreLink = """<p style='text-align: center;'>[ <ref onclick="window.parent.submitCommand('.library')">{0}</ref> ]</p>""".format(config.thisTranslation["change"]) if config.enableHttpServer else ""
             html = """<h2 style='text-align: center;'>{0} <button title='{1}' type='button' class='ubaButton' onclick='document.title="_commentaries:::"'><span class="material-icons-outlined">more_vert</span></button></h2>""".format(info, config.thisTranslation["menu_more"])
             for bNo in bookList:
@@ -3497,7 +3537,11 @@ class TextCommandParser:
             elif command.count(":::") == 1 and command.endswith(":::"):
                 command = "{0}{1}".format(command, self.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
             commandList = self.splitCommand(command)
-            if " " in commandList[1]:
+            if commandList[0] == "AIC":
+                return self.textAiCommentary(commandList[1], source)
+            if re.search(r"^[0-9]+?\.[0-9]+?\.[0-9]+?$", commandList[1].strip()):
+                verseList = [tuple([int(i) for i in commandList[1].strip().split(".")])]
+            elif " " in commandList[1]:
                 verseList = self.extractAllVerses(commandList[1])
             else:
                 verseList = [(BibleBooks.name2number[commandList[1]], 0, 0)]
@@ -3518,29 +3562,6 @@ class TextCommandParser:
                     self.setCommentaryVerse(module, bcvTuple)
                 return ("study", content, {'tab_title':'Com:' + module})
         except:
-            return self.invalidCommand()
-
-    # COMMENTARY2:::
-    def textCommentary2(self, command, source):
-        if not command:
-            command = f"{config.commentaryB}.{config.commentaryC}.{config.commentaryV}"
-        if command.count(":::") == 0:
-            command = "{0}:::{1}".format(config.commentaryText, command)
-        commandList = self.splitCommand(command)
-        reference = commandList[1]
-        if re.search(r"^[0-9]+?\.[0-9]+?\.[0-9]+?$", reference):
-            verseList = [tuple([int(i) for i in reference.split(".")])]
-            if not len(commandList) == 2 or not verseList:
-                return self.invalidCommand()
-            else:
-                bcvTuple = verseList[0]
-                module = commandList[0]
-                commentary = Commentary(module)
-                content = commentary.getContent(bcvTuple)
-                if not content == "INVALID_COMMAND_ENTERED":
-                    self.setCommentaryVerse(module, bcvTuple)
-                return ("study", content, {})
-        else:
             return self.invalidCommand()
 
     # SEARCHTOOL:::
@@ -4413,135 +4434,135 @@ The WHERE condition is described as: {query}"""
         else:
             return []
 
-    # ANSWER::: ANSWERYOUTH::: ANSWERKID:::
-
+    # ANSWER::: 
     def textAnswerGeneral(self, command, source):
-        return self.textAnswer(command, source, config.answer_systemMessage_general)
-
+        return self.textAnswer(command, source, config.answer_systemMessage_general, goBack='''document.title=".qna"''')
+    # ANSWERYOUTH::: 
     def textAnswerYouth(self, command, source):
-        return self.textAnswer(command, source, config.answer_systemMessage_youth)
-
+        return self.textAnswer(command, source, config.answer_systemMessage_youth, goBack='''document.title=".qna"''')
+    # ANSWERKID:::
     def textAnswerKid(self, command, source):
-        return self.textAnswer(command, source, config.answer_systemMessage_kid)
+        return self.textAnswer(command, source, config.answer_systemMessage_kid, goBack='''document.title=".qna"''')
+    # PRAY:::
+    def textAnswerPray(self, command, source):
+        return self.textAnswer(command, source, config.answer_systemMessage_pray)
+    # QUOTE:::
+    def textAnswerQuote(self, command, source):
+        return self.textAnswer(command, source, config.answer_systemMessage_quote)
+    # ENCOURAGE:::
+    def textAnswerEncourage(self, command, source):
+        return self.textAnswer(command, source, config.answer_systemMessage_encourage)
+    # INTERPRETOT:::
+    def textAnswerInterpretOT(self, command, source):
+        return self.textAnswer(command, source, config.answer_systemMessage_interpretot)
+    # INTERPRETNT:::
+    def textAnswerInterpretNT(self, command, source):
+        return self.textAnswer(command, source, config.answer_systemMessage_interpretnt)
+    # AIC:::
+    def textAiCommentary(self, command, source="", systemMessage="", goBack=""):
+        try:
+            backendPattern = "|".join(config.llm_backends)
+            if not re.search(f"^({backendPattern}):::", command):
+                command = f"{config.llm_backend}:::{command}" if ":::" in command else f"{config.llm_backend}:::{config.mainText}:::{command}"
+            elif command.count(":::") == 1:
+                command = re.sub(f"^({backendPattern}):::", rf"\1:::{config.mainText}:::", command)
+            backend, bible, verse = command.split(":::", 2)
+            try:
+                b, c, v, *_ = [int(i) for i in verse.split(".")]
+            except:
+                b, c, v, *_ = self.extractAllVerses(verse)[0]
+            mainVerse_html = Bible("OHGB" if bible in ("OHGBi", "MOB", "MIB", "MTB", "MAB", "MPB") else bible).readTextVerse(b, c, v, noAudioTag=True)[-1]
+            interlinearVerse_html = Bible("OHGBi").readTextVerse(b, c, v, noAudioTag=True)[-1]
+            mainVerse_plain = TextUtil.htmlToPlainText(mainVerse_html).strip()
+            interlinearVerse_plain = TextUtil.htmlToPlainText(interlinearVerse_html).strip()
+            if hasattr(config, "displayLanguage") and config.displayLanguage == "zh_HANT":
+                bookName = BibleBooks.abbrev["tc"][str(b)][-1]
+            elif hasattr(config, "displayLanguage") and config.displayLanguage == "zh_HANS":
+                bookName = BibleBooks.abbrev["sc"][str(b)][-1]
+            else:
+                bookName = BibleBooks.abbrev["eng"][str(b)][-1]
+            verseReference = f"{bookName} {c}:{v}"
+        except:
+            return self.invalidCommand()
+        self.setCommentaryVerse("AIC", (b,c,v))
+        textInput = f"{backend}:::{mainVerse_plain} ({verseReference})\n{interlinearVerse_plain} ({verseReference})"
+        if not goBack:
+            goBack = f'''document.title="BIBLE:::{bible}:::{b}.{c}.{v}"'''
+        if not systemMessage:
+            systemMessage = config.answer_systemMessage_interpretot if b < 40 else config.answer_systemMessage_interpretnt
+        _, textOutput, _ = self.textAnswer(textInput, source, systemMessage, goBack=goBack, bcv=(b, c, v))
+        title = config.thisTranslation["aiCommentary"]
+        if config.rawOutput:
+            textOutput = f"""# {title}
 
-    def textAnswer(self, command, source, systemMessage):
+{mainVerse_plain}
+
+--------------------
+{interlinearVerse_plain}
+--------------------
+
+{textOutput}"""
+        else:
+            mib = f'''document.title="BIBLE:::MIB:::{b}.{c}.{v}"'''
+            interlinearBible = """<button type='button' onclick='{0}' class='ubaButton'>{1}</button>""".format(mib, config.thisTranslation["import_interlinear"])
+            textOutput = f"""<h2>{title} <button title='More ...' type='button' class='ubaButton' onclick='document.title="_commentaries:::"'><span class="material-icons-outlined">more_vert</span></button></h2>
+
+(<ref onclick='{goBack}'>{verseReference}</ref>) {mainVerse_html}
+
+<hr>
+{interlinearVerse_html} {interlinearBible}
+<hr>
+
+{textOutput}"""
+        return ("study", textOutput, {'tab_title': "AI"})
+
+    def textAnswer(self, command, source, systemMessage, goBack="", bcv=None):
         if command.strip():
-            import markdown
-            # edit the following configurations in config.py
-            # config.answer_backend
-            # config.answer_systemMessage_general
-            # config.answer_systemMessage_youth
-            # config.answer_systemMessage_kid
-            # config.groqApi_key
-            # config.groqApi_llmTemperature
-            # config.groqApi_chat_model
-            # config.groqApi_chat_model_max_tokens
-            # config.mistralApi_key
-            # config.mistralApi_llmTemperature
-            # config.mistralApi_chat_model
-            # config.mistralApi_chat_model_max_tokens
-            # config.openaiApi_key
-            # config.openaiApi_llmTemperature
-            # config.openaiApi_chat_model
-            # config.openaiApi_chat_model_max_tokens
-            def getGroqApi_key():
-                '''
-                support multiple grop api keys
-                User can manually edit config to change the value of config.groqApi_key to a list of multiple api keys instead of a string of a single api key
-                '''
-                if config.groqApi_key:
-                    if isinstance(config.groqApi_key, str):
-                        return config.groqApi_key
-                    elif isinstance(config.groqApi_key, list):
-                        if len(config.groqApi_key) > 1:
-                            # rotate multiple api keys
-                            config.groqApi_key = config.groqApi_key[1:] + [config.groqApi_key[0]]
-                        return config.groqApi_key[0]
-                    else:
-                        return ""
-                else:
-                    return ""
-            def getMistralApi_key():
-                '''
-                support multiple mistral api keys
-                User can manually edit config to change the value of config.mistralApi_key to a list of multiple api keys instead of a string of a single api key
-                '''
-                if config.mistralApi_key:
-                    if isinstance(config.mistralApi_key, str):
-                        return config.mistralApi_key
-                    elif isinstance(config.mistralApi_key, list):
-                        if len(config.mistralApi_key) > 1:
-                            # rotate multiple api keys
-                            config.mistralApi_key = config.mistralApi_key[1:] + [config.mistralApi_key[0]]
-                        return config.mistralApi_key[0]
-                    else:
-                        return ""
-                else:
-                    return ""
             command = command.strip()
-            if re.search("^(groq|mistral|openai):::", command):
+            backendPattern = "|".join(config.llm_backends)
+            if re.search(f"^({backendPattern}):::", command):
                 backend, command = command.split(":::", 1)
             else:
                 # use default backend if not specified
-                backend = config.answer_backend
+                backend = config.llm_backend
             chatMessages = [
                 {"role": "system", "content": systemMessage},
                 {"role": "user", "content": command.strip()},
             ]
-            try:
-                if backend == "mistral":
-                    if not config.mistralApi_chat_model:
-                        return ("study", "<p>Mistral AI API key not found!</p>", {'tab_title': "Ask"})
-                    from mistralai import Mistral
-                    completion = Mistral(api_key=getMistralApi_key()).chat.complete(
-                        model=config.mistralApi_chat_model,
-                        messages=chatMessages,
-                        n=1,
-                        temperature=config.mistralApi_llmTemperature,
-                        max_tokens=config.mistralApi_chat_model_max_tokens,
-                        stream=False,
-                    )
-                elif backend == "openai":
-                    if not config.openaiApi_key:
-                        return ("study", "<p>OpenAI API key not found!</p>", {'tab_title': "Ask"})
-                    from openai import OpenAI
-                    os.environ["OPENAI_API_KEY"] = config.openaiApi_key
-                    completion = OpenAI().chat.completions.create(
-                        model=config.openaiApi_chat_model,
-                        messages=chatMessages,
-                        n=1,
-                        temperature=config.openaiApi_llmTemperature,
-                        max_tokens=config.openaiApi_chat_model_max_tokens,
-                        stream=False,
-                    )
-                else:
-                    if not config.groqApi_key:
-                        return ("study", "<p>Groq cloud API key not found!</p>", {'tab_title': "Ask"})
-                    from groq import Groq
-                    completion = Groq(api_key=getGroqApi_key()).chat.completions.create(
-                        model=config.groqApi_chat_model,
-                        messages=chatMessages,
-                        n=1,
-                        temperature=config.groqApi_llmTemperature,
-                        max_tokens=config.groqApi_chat_model_max_tokens,
-                        stream=False,
-                    )
-                textOutput = completion.choices[0].message.content
-            except:
-                textOutput = "Failed to connect! Please try again later."
+            textOutput = getChatResponse(backend, chatMessages)
+            if textOutput is None:
+                return ("study", "<p>AI Backend API key not found!</p>", {'tab_title': "AI"})
             if not config.rawOutput:
+                # convert from markdown to html
                 textOutput = markdown.markdown(textOutput)
+                # add bible reference links
+                bibleVerseParser = BibleVerseParser(config.parserStandarisation)
+                textOutput = bibleVerseParser.parseText(textOutput, splitInChunks=True, parseBooklessReferences=False, canonicalOnly=True)
                 if config.runMode == "http-server":
-                    textOutput += """<hr><p><button type='button' onclick='document.title=".qna";' class='ubaButton'>{0}</button></p>""".format(config.thisTranslation["youtube_back"])
+                    if bcv is not None:
+                        b, c, v = bcv
+                        textOutput += """<hr><p>"""
+                        features = {
+                            "COMPARE": config.thisTranslation["html_showCompare"],
+                            "CROSSREFERENCE": config.thisTranslation["menu4_crossRef"],
+                            "TSKE": config.thisTranslation["menu4_tske"],
+                            "TRANSLATION": config.thisTranslation["menu4_traslations"],
+                            "DISCOURSE": config.thisTranslation["menu4_discourse"],
+                            "WORDS": config.thisTranslation["menu4_words"],
+                            "COMBO": config.thisTranslation["menu4_tdw"],
+                            "INDEX": config.thisTranslation["menu4_indexes"],
+                        }
+                        for command, feature in features.items():
+                            command = f'''document.title="{command}:::{b}.{c}.{v}"'''
+                            textOutput += f"""<button type='button' onclick='{command}' class='ubaButton'>{feature}</button> """
+                        textOutput += """</p>"""
+                    if not goBack:
+                        goBack = "history.back()"
+                    textOutput += """<hr><p><button type='button' onclick='{0}' class='ubaButton'>{1}</button></p>""".format(goBack, config.thisTranslation["youtube_back"])
                 # Disclaimer
-                if config.displayLanguage == "zh_HANT":
-                    textOutput += """<p><b>免責聲明：</b> 本網站上由 AI 提供支援的聖經功能旨在提供有關聖經的有用信息和見解。然而，它不能代替個人對經文的學習和反思。聖經本身仍然是基督徒真理和權威的最終來源。請僅將此工具提供的資訊用作參考，並始終查閱聖經以獲得有關您問題的明確答案。</p>"""
-                elif config.displayLanguage == "zh_HANS":
-                    textOutput += """<p><b>免责声明：</b> 本网站上由 AI 提供支持的圣经功能旨在提供有关圣经的有用信息和见解。然而，它不能代替个人对经文的学习和反思。圣经本身仍然是基督徒真理和权威的最终来源。请仅将此工具提供的信息用作参考，并始终查阅圣经以获得有关您问题的明确答案。</p>"""
-                else:
-                    textOutput += """<p><b>Disclaimer:</b> The AI-powered Bible feature on this website is intended to provide helpful information and insights about the Bible. However, it is not a substitute for personal study and reflection on the scriptures. The Bible itself remains the ultimate source of truth and authority for Christians. Please use the information provided by this tool for reference only, and always consult the Bible for definitive answers to your questions.</p>"""
-            return ("study", textOutput, {'tab_title': "Ask"})
-        return ("study", "<p>Question not given!</p>", {'tab_title': "Ask"})
+                textOutput += getAiFeatureDisclaimer()
+            return ("study", textOutput, {'tab_title': "AI"})
+        return ("study", "<p>Query not given!</p>", {'tab_title': "AI"})
 
     # MAP:::
     def textMap(self, command, source):

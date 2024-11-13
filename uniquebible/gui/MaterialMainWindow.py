@@ -601,6 +601,7 @@ class MaterialMainWindow:
             ("toggleFavouriteVersionIntoMultiRef", self.toggleFavouriteVersionIntoMultiRef, sc.toggleFavouriteVersionIntoMultiRef, config.addFavouriteToMultiRef),
             ("displayVerseReference", self.toggleShowVerseReference, sc.toggleShowVerseReference, config.showVerseReference),
             ("displayChapterVerseAudioIcons", self.toggleDisplayVerseAudioBibleIcon, None, config.displayVerseAudioBibleIcon),
+            ("displayVerseAICommentaryIcon", self.toggleDisplayVerseAICommentaryIcon, None, config.displayVerseAICommentaryIcon),
             ("displayUserNoteIndicator", self.toggleShowUserNoteIndicator, sc.toggleShowUserNoteIndicator, config.showUserNoteIndicator),
             ("displayBibleNoteIndicator", self.toggleShowBibleNoteIndicator, sc.toggleShowBibleNoteIndicator, config.showBibleNoteIndicator),
             ("displayLexicalEntry", self.toggleHideLexicalEntryInBible, sc.toggleHideLexicalEntryInBible, (not config.hideLexicalEntryInBible)),

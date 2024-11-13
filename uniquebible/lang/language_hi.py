@@ -1,4 +1,8 @@
 translation = {
+    "aiCommentary": "AI Commentary",
+    "askAI": "Bible Q&amp;A with AI",
+    "bibleAnswers": "Bible Answers",
+    "experimental": "experimental",
     "menu1_app": "UniqueBible",
     "menu1_screenSize": "विंडो आकार",
     "menu1_preferences": "UBA वरीयताएँ",
@@ -1045,6 +1049,7 @@ translation = {
     "print": "छापें",
     "configure": "कॉन्फ़िगर करें",
     "exit": "बाहर निकलें",
+    "displayVerseAICommentaryIcon": "Display Chapter Verse Commentary Icons",
     "displayChapterVerseAudioIcons": "अध्याय दृश्य ऑडियो प्रतीक दिखाएँ",
     "newDatabase": "नया डाटाबेस",
     "openDatabase": "डाटाबेस खोलें",

@@ -292,6 +292,8 @@ class BibleVerseParser:
 
 
     def runExtractAllReferences(self, text, tagged=False):
+        if re.search(r"^[0-9]+?\.[0-9]+?\.[0-9]+?$", text.strip()):
+            return [tuple([int(i) for i in text.strip().split(".")])]
         if not tagged:
             text = self.parseText(text, False, True)
         # return a list of tuples (b, c, v) or (b, cs, vs, ce, ve)

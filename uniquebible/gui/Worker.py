@@ -183,7 +183,21 @@ class ChatGPTResponse:
                 return ""
 
         self.functionJustCalled = True
-        if config.answer_backend == "mistral":
+        if config.llm_backend == "mistral":
+            # https://ai.google.dev/gemini-api/docs/openai
+            googleaiClient = OpenAI(
+                api_key=config.googleaiApi_key,
+                base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+            )
+            return googleaiClient.chat.completions.create(
+                model=config.googleaiApi_chat_model,
+                messages=thisMessage,
+                n=1,
+                temperature=config.googleaiApi_llmTemperature,
+                max_tokens=config.googleaiApi_chat_model_max_tokens,
+                stream=True,
+            )
+        elif config.llm_backend == "mistral":
             return Mistral(api_key=getMistralApi_key()).chat.stream(
                 model=config.mistralApi_chat_model,
                 messages=thisMessage,
@@ -191,7 +205,7 @@ class ChatGPTResponse:
                 temperature=config.mistralApi_llmTemperature,
                 max_tokens=config.mistralApi_chat_model_max_tokens,
             )
-        elif config.answer_backend == "openai":
+        elif config.llm_backend == "openai":
             if not config.openaiApi_key:
                 return None
             os.environ["OPENAI_API_KEY"] = config.openaiApi_key
