@@ -174,6 +174,17 @@ class ConfigUtil:
         # Check installed and latest versions on startup.""",
         True)
 
+        # UBA Web API
+        setConfig("uniquebible_api_endpoint", """
+        # UBA Web API server API endpoint""",
+        "https://bible.gospelchurch.uk/html")
+        setConfig("uniquebible_api_timeout", """
+        # UBA Web API server API timeout""",
+        10)
+        setConfig("uniquebible_api_private", """
+        # UBA Web API server API key to access private data""",
+        "")
+
         # start of groq chat setting
         # config.llm_backend
         # config.addBibleQnA
@@ -717,7 +728,7 @@ class ConfigUtil:
         "[none]")
         setConfig("chatGPTApiContext", """
         # Set a context for chatGPT conversations""",
-        "about the bible")
+        "# Study the Bible")
         setConfig("chatGPTApiContextInAllInputs", """
         # ChatGP API - predefined context in all inputs.""",
         False)

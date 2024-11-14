@@ -246,17 +246,24 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
     def execPythonFile(self, script):
         self.textCommandParser.parent.execPythonFile(script)
 
-    def updateData(self, rawOutput=False, allowPrivateData=False):
+    def updateData(self, rawOutput=False, allowPrivateData=False, lang=""):
+        languages = {
+            "en_GB": "ENG",
+            "zh_HANT": "TC",
+            "zh_HANS": "SC",
+        }
+        if lang and not lang in languages:
+            lang = ""
         if rawOutput:
-            config.displayLanguage = "en_GB"
-            config.standardAbbreviation = "ENG"
+            config.displayLanguage = lang if lang else "en_GB"
+            config.standardAbbreviation = languages.get(lang) if lang else "ENG"
             self.path = re.sub("^/(html|json|plain)", "/index.html", self.path)
             config.webHomePage = "{0}.html".format(config.webPrivateHomePage) if allowPrivateData else "index.html"
         # Check language
         # Traditional Chinese
         elif config.webPrivateHomePage and self.path.startswith("/{0}.html".format(config.webPrivateHomePage)):
-            config.displayLanguage = "en_GB"
-            config.standardAbbreviation = "ENG"
+            config.displayLanguage = lang if lang else "en_GB"
+            config.standardAbbreviation =  languages.get(lang) if lang else "ENG"
             config.webHomePage = "{0}.html".format(config.webPrivateHomePage)
             self.path = re.sub("^/{0}.html".format(config.webPrivateHomePage), "/index.html", self.path)
             #self.initialCommand = "BIBLE:::{0}:::John 3:16".format(self.getFavouriteBible())
@@ -341,16 +348,17 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
             # check query
             query_components = parse_qs(urlparse(self.path).query)
             private = query_components.get("private", [])
-            allowPrivateData = True if private and private[0].strip() == config.webPrivateHomePage else False
+            lang = query_components.get("lang", "")
+            allowPrivateData = True if private and " ".join(private) == config.webPrivateHomePage else False
             config.rawOutput = True if re.search(r"^/(html|json|plain)\?", self.path) else False
             api = re.sub(r"^/(html|json|plain)\?.*?$", r"\1", self.path) if config.rawOutput else ""
             # update resource path
-            self.updateData(rawOutput=config.rawOutput, allowPrivateData=allowPrivateData)
+            self.updateData(rawOutput=config.rawOutput, allowPrivateData=allowPrivateData, lang=lang)
 
             if config.rawOutput:
                 cmd = query_components.get("cmd", [])
                 if cmd:
-                    self.command = query_components["cmd"][0].strip()
+                    self.command = " ".join(cmd)
                     self.command = self.command.replace("+", " ")
                     if self.command == ".suggestions":
                         self.commonHeader()
@@ -1132,9 +1140,9 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
             return ""
 
     def getQrScannerPage(self):
-        if config.webHomePage == "traditional.html":
+        if config.displayLanguage == "zh_HANT":
             return "qr_code_scanner_tc.html"
-        elif config.webHomePage == "simplified.html":
+        elif config.displayLanguage == "zh_HANS":
             return "qr_code_scanner_sc.html"
         else:
             return "qr_code_scanner.html"
@@ -1299,25 +1307,25 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
 """.format(self.getBookTitle(), self.getChapterTitle(), self.getVerseTitle())
 
     def getBookTitle(self):
-        if config.webHomePage == "traditional.html":
+        if config.displayLanguage == "zh_HANT":
             return "〔書卷〕"
-        elif config.webHomePage == "simplified.html":
+        elif config.displayLanguage == "zh_HANS":
             return "〔书卷〕"
         else:
             return "[Book]"
 
     def getChapterTitle(self):
-        if config.webHomePage == "traditional.html":
+        if config.displayLanguage == "zh_HANT":
             return "〔章〕"
-        elif config.webHomePage == "simplified.html":
+        elif config.displayLanguage == "zh_HANS":
             return "〔章〕"
         else:
             return "[Chapter]"
 
     def getVerseTitle(self):
-        if config.webHomePage == "traditional.html":
+        if config.displayLanguage == "zh_HANT":
             return "〔節〕"
-        elif config.webHomePage == "simplified.html":
+        elif config.displayLanguage == "zh_HANS":
             return "〔节〕"
         else:
             return "[Verse]"

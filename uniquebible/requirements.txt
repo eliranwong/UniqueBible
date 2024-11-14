@@ -4,3 +4,4 @@ babel
 requests
 apsw
 markdown
+opencc-python-reimplemented

@@ -145,10 +145,11 @@ class ApiDialog(QDialog):
         self.contextEdit = QLineEdit(config.chatGPTApiContext)
         firstInputOnly = config.thisTranslation["firstInputOnly"]
         allInputs = config.thisTranslation["allInputs"]
-        self.applyContextIn = QComboBox()
-        self.applyContextIn.addItems([firstInputOnly, allInputs])
-        self.applyContextIn.setCurrentIndex(1 if config.chatGPTApiContextInAllInputs else 0)
-        self.contextEdit.setDisabled(True) if not initialIndex == 1 else self.contextEdit.setEnabled(True)
+        #self.applyContextIn = QComboBox()
+        #self.applyContextIn.addItems([firstInputOnly, allInputs])
+        #self.applyContextIn.setCurrentIndex(1 if config.chatGPTApiContextInAllInputs else 0)
+        self.contextEdit.setDisabled(True)
+        #self.contextEdit.setDisabled(True) if not initialIndex == 1 else self.contextEdit.setEnabled(True)
         """self.languageBox = QComboBox()
         initialIndex = 0
         index = 0
@@ -182,9 +183,9 @@ class ApiDialog(QDialog):
         #layout.addRow(f"Function Calling [{optional}]:", self.functionCallingBox)
         #layout.addRow(f"{chatAfterFunctionCalled} [{optional}]:", self.chatAfterFunctionCalledCheckBox)
         layout.addRow(f"{context} [{optional}]:", self.contextEdit)
-        layout.addRow(f"{applyContext} [{optional}]:", self.applyContextIn)
+        #layout.addRow(f"{applyContext} [{optional}]:", self.applyContextIn)
         #layout.addRow(f"{latestOnlineSearchResults} [{optional}]:", self.loadingInternetSearchesBox)
-        layout.addRow(f"{maximumOnlineSearchResults} [{optional}]:", self.maxInternetSearchResults)
+        #layout.addRow(f"{maximumOnlineSearchResults} [{optional}]:", self.maxInternetSearchResults)
         layout.addRow(f"{autoScroll} [{optional}]:", self.autoScrollingCheckBox)
         #layout.addRow(f"{runPythonScriptGlobally} [{optional}]:", self.runPythonScriptGloballyCheckBox)
         #layout.addRow(f"{language} [{optional}]:", self.languageBox)
@@ -969,10 +970,13 @@ class ChatGPTAPI(QWidget):
 
 Follow the following steps:
 1) Register and get an API key in one of the following websites:
-    https://platform.openai.com/account/api-keys
-    https://console.groq.com/keys
-    https://console.mistral.ai/api-keys/
-2) Click the "Settings" button below and enter your own API key""")
+    OpenAI - https://platform.openai.com/account/api-keys
+    Google - https://ai.google.dev/
+    Groq - https://console.groq.com/keys
+    Mistral - https://console.mistral.ai/api-keys/
+2) Select a backend below
+3) Click the "Settings" button, right next to the backend selection combo
+4) Enter your own API key for the backend you selected""")
             self.setUserInputFocus()
 
     def selectData(self, index):

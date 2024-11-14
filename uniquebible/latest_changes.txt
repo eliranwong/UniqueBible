@@ -1,5 +1,11 @@
 PIP package:
 
+0.1.79-0.1.81
+
+* limit access to AI features via web API to private data users only
+
+* added command `api` to access UBA web api content
+
 0.1.74-0.1.78
 
 * support gogole AI API for AI inference, in addition to opena, grop and mistral

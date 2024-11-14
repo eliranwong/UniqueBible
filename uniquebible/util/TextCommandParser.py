@@ -1,5 +1,5 @@
 # coding=utf-8
-import glob, pprint, traceback, pydoc, threading, asyncio, shutil, markdown
+import glob, pprint, traceback, pydoc, threading, asyncio, shutil, markdown, requests
 import os, re, webbrowser, platform, zipfile, subprocess, logging
 from uniquebible import config, getChatResponse, getAiFeatureDisclaimer
 from prompt_toolkit.input import create_input
@@ -336,6 +336,11 @@ class TextCommandParser:
             # Usage - DAYAUDIOPLUS:::[BIBLE_VERSION(S)]:::[day_number]
             # e.g. DAYAUDIOPLUS:::1
             # e.g. DAYAUDIOPLUS:::NET:::1"""),
+            "api": (self.textApi, """
+            # [KEYWORD] API
+            # Feature - Access content via UBA web API
+            # Usage - API:::[UBA_COMMAND]
+            # e.g. API:::John 3:16"""),
             "answer": (self.textAnswerGeneral, """
             # [KEYWORD] ANSWER
             # Feature - Answer a bible-related question with AI tools.
@@ -4433,6 +4438,15 @@ The WHERE condition is described as: {query}"""
             return combinedLocations
         else:
             return []
+
+    # API:::
+    def textApi(self, command, source):
+        private = f"private={config.uniquebible_api_private}&" if config.uniquebible_api_private else ""
+        url = f"""{config.uniquebible_api_endpoint}?{private}cmd={command}"""
+        response = requests.get(url, timeout=config.uniquebible_api_timeout)
+        response.encoding = "utf-8"
+        toolTextOutput = response.text.strip()
+        return ("study", toolTextOutput, {'tab_title': "API"})
 
     # ANSWER::: 
     def textAnswerGeneral(self, command, source):

@@ -186,6 +186,12 @@ def getMistralApi_key() -> str:
 def getChatResponse(backend, chatMessages) -> Optional[str]:
     if not isLLMReady(backend) or not backend in config.llm_backends:
         return None
+    if config.rawOutput and hasattr(config, "webHomePage") and not config.webHomePage==f"{config.webPrivateHomePage}.html":
+        # AI features via web API are accessible to private data users only in http-server mode
+        return None
+    if not backend == config.llm_backend and hasattr(config, "webHomePage") and not config.webHomePage==f"{config.webPrivateHomePage}.html":
+        # Inference with non-default AI backends is accessible to private data users only in http-server mode
+        return None
     try:
         if backend == "mistral":
             completion = Mistral(api_key=getMistralApi_key()).chat.complete(
@@ -234,6 +240,8 @@ def getChatResponse(backend, chatMessages) -> Optional[str]:
         textOutput = "Failed to connect! Please try again later."
     if hasattr(config, "displayLanguage") and config.displayLanguage == "zh_HANT":
         textOutput = OpenCC('s2t').convert(textOutput)
+    elif hasattr(config, "displayLanguage") and config.displayLanguage == "zh_HANS":
+        textOutput = OpenCC('t2s').convert(textOutput)
     return textOutput
 
 def getAiFeatureDisclaimer() -> str:
