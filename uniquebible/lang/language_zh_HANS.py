@@ -507,7 +507,7 @@ translation = {
     "enableQtMaterial": "切换至 Qt 物料布景主题",
     "disableQtMaterial": "切换至内建布景主题",
     "biblePromises": "圣经应许",
-    "bibleHarmonies": "圣经对观经文",
+    "bibleHarmonies": "对观经文",
     "favouriteBooks": "收藏书籍组合",
     "mainWindow": "圣经视窗",
     "studyWindow": "研习视窗",

@@ -183,7 +183,7 @@ class ChatGPTResponse:
                 return ""
 
         self.functionJustCalled = True
-        if config.llm_backend == "mistral":
+        if config.llm_backend == "google":
             # https://ai.google.dev/gemini-api/docs/openai
             googleaiClient = OpenAI(
                 api_key=config.googleaiApi_key,

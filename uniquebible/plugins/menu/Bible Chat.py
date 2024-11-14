@@ -143,12 +143,12 @@ class ApiDialog(QDialog):
         self.runPythonScriptGloballyCheckBox.setCheckState(Qt.Checked if config.runPythonScriptGlobally else Qt.Unchecked)
         self.runPythonScriptGlobally = config.runPythonScriptGlobally
         self.contextEdit = QLineEdit(config.chatGPTApiContext)
-        firstInputOnly = config.thisTranslation["firstInputOnly"]
-        allInputs = config.thisTranslation["allInputs"]
+        #firstInputOnly = config.thisTranslation["firstInputOnly"]
+        #allInputs = config.thisTranslation["allInputs"]
         #self.applyContextIn = QComboBox()
         #self.applyContextIn.addItems([firstInputOnly, allInputs])
         #self.applyContextIn.setCurrentIndex(1 if config.chatGPTApiContextInAllInputs else 0)
-        self.contextEdit.setDisabled(True)
+        self.contextEdit.setEnabled(True)
         #self.contextEdit.setDisabled(True) if not initialIndex == 1 else self.contextEdit.setEnabled(True)
         """self.languageBox = QComboBox()
         initialIndex = 0
@@ -166,23 +166,24 @@ class ApiDialog(QDialog):
 
         layout = QFormLayout()
         # https://platform.openai.com/account/api-keys
-        chatAfterFunctionCalled = config.thisTranslation["chatAfterFunctionCalled"]
-        runPythonScriptGlobally = config.thisTranslation["runPythonScriptGlobally"]
+        #chatAfterFunctionCalled = config.thisTranslation["chatAfterFunctionCalled"]
+        #runPythonScriptGlobally = config.thisTranslation["runPythonScriptGlobally"]
         autoScroll = config.thisTranslation["autoScroll"]
         context = config.thisTranslation["chatContext"]
-        applyContext = config.thisTranslation["applyContext"]
-        latestOnlineSearchResults = config.thisTranslation["latestOnlineSearchResults"]
-        maximumOnlineSearchResults = config.thisTranslation["maximumOnlineSearchResults"]
+        #applyContext = config.thisTranslation["applyContext"]
+        #latestOnlineSearchResults = config.thisTranslation["latestOnlineSearchResults"]
+        #maximumOnlineSearchResults = config.thisTranslation["maximumOnlineSearchResults"]
         #language = config.thisTranslation["menu_language"]
         required = config.thisTranslation["required"]
         optional = config.thisTranslation["optional"]
+        custom = config.thisTranslation["custom"].lower()
         layout.addRow(f"{config.llm_backend.capitalize()} API Key [{required}]:", self.apiKeyEdit)
         #layout.addRow(f"Organization ID [{optional}]:", self.orgEdit)
         layout.addRow(f"Chat Model [{required}]:", self.apiModelBox)
         layout.addRow(f"Max Token [{required}]:", self.maxTokenEdit)
         #layout.addRow(f"Function Calling [{optional}]:", self.functionCallingBox)
         #layout.addRow(f"{chatAfterFunctionCalled} [{optional}]:", self.chatAfterFunctionCalledCheckBox)
-        layout.addRow(f"{context} [{optional}]:", self.contextEdit)
+        layout.addRow(f"{context} [{custom}]:", self.contextEdit)
         #layout.addRow(f"{applyContext} [{optional}]:", self.applyContextIn)
         #layout.addRow(f"{latestOnlineSearchResults} [{optional}]:", self.loadingInternetSearchesBox)
         #layout.addRow(f"{maximumOnlineSearchResults} [{optional}]:", self.maxInternetSearchResults)
