@@ -1,7 +1,7 @@
 # https://docs.python.org/3/library/http.server.html
 # https://ironpython-test.readthedocs.io/en/latest/library/simplehttpserver.html
 import hashlib
-import json
+import json, markdown
 import logging
 import os, re, pprint, glob
 from uniquebible import config
@@ -518,6 +518,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
             "logout": self.logout,
             "search": self.searchContent,
             "qna": self.qnaContent,
+            "chat": self.chatContent,
             "maps": self.mapsContent,
             "days": self.dailyReadingContent,
             "theme": self.swapTheme,
@@ -1048,13 +1049,14 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
             (config.thisTranslation["biblePromises"], ".promises"),
             (config.thisTranslation["bibleHarmonies"], ".parallels"),
             (config.thisTranslation["bibleAnswers"], ".qna") if config.addBibleQnA else None,
+            ("AI " + config.thisTranslation["chat"], ".chat"),
             (config.thisTranslation["readingPlan"], ".days"),
             ("{0} &#x1F50E;&#xFE0E;".format(config.thisTranslation["menu_search"]), ".search"),
             (config.thisTranslation["download"], ".download"),
             (config.thisTranslation["ubaCommands"], ".help"),
         )
         for item in sideNavItems:
-            if item is not None:
+            if item is not None and not (item[0].startswith("AI ") and not config.webHomePage==f"{config.webPrivateHomePage}.html"):
                 html += """<a href="#" onclick="submitCommand('{1}')">{0}</a>""".format(*item)
         html += """<a href="{1}" target="_blank">{0}</a>""".format(config.thisTranslation["userManual"], self.getUserManual())
         html += "<hr>"
@@ -1936,9 +1938,19 @@ input3.addEventListener('keyup', function(event) {0}
 
     def chatContent(self):
         content = "<h2>AI {0}</h2>".format(config.thisTranslation["chat"])
-
+        if config.displayLanguage == "zh_HANT":
+            content += """<p>請輸入您的提問，然後按下按鈕「{0}」。</p>""".format(config.thisTranslation["send"])
+        elif config.displayLanguage == "zh_HANS":
+            content += """<p>请输入您的提问，然后按下按钮「{0}」。</p>""".format(config.thisTranslation["send"])
+        else:
+            content += """<p>Please enter your query and click the button '{0}'.</p>""".format(config.thisTranslation["send"])
         content += "<p><input type='text' id='chatInput' style='width:95%' autofocus></p>"
         content += "<p><button id='openChatInputButton' type='button' onclick='bibleChat();' class='ubaButton'>{0}</button></p>".format(config.thisTranslation["send"])
+
+        content += "<hr>"
+        content += "\n\n".join([f'''# {i.get("role", "")}\n\n{i.get("content", "")}'''for i in config.chatMessages])
+        textOutput = markdown.markdown(textOutput)
+        
         content += """
 <script>
 function bibleChat() {0}

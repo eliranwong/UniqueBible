@@ -413,10 +413,15 @@ class TextCommandParser:
             "chat": (self.textChat, """
             # [KEYWORD] CHAT
             # Feature - Chat with AI or follow up previous conversation.
-            # Usage - CHAT:::[BACKEND]:::[QUERY]
+            # Usage - CHAT:::[BACKEND]:::[OPERATOR]:::[QUERY]
             # BACKEND options: openai, google, groq, mistral
             # Use value of `config.llm_backend` as backend if BACKEND is not given.
-            # e.g. CHAT:::Tell me more"""),
+            # OPERATOR options: new, show [optional]
+                    new - start a new conversation
+                    show - show the whole conversation
+            # e.g. CHAT:::NEW:::Hi!
+            # e.g. CHAT:::Tell me more
+            # e.g. CHAT:::SHOW"""),
             "map": (self.textMap, """
             # [KEYWORD] MAP
             # Feature - Open a Google map with bible locations pinned
@@ -4537,7 +4542,9 @@ The WHERE condition is described as: {query}"""
 {textOutput}"""
         return ("study", textOutput, {'tab_title': "AI"})
 
-    def textChat(self, command, source):
+    def textChat(self, command, _):
+        if config.runMode == "http-server" and hasattr(config, "webHomePage") and not config.webHomePage==f"{config.webPrivateHomePage}.html":
+            return self.invalidCommand()
         if command.strip():
             command = command.strip()
             backendPattern = "|".join(config.llm_backends)
@@ -4561,14 +4568,14 @@ The WHERE condition is described as: {query}"""
                 feature = ""
             if not command.strip():
                 return self.invalidCommand()
-            if not hasattr(config, "chatMessages") or not config.chatMessages or feature.lower() == "new":::
+            if not hasattr(config, "chatMessages") or not config.chatMessages or feature.lower() == "new":
                 config.chatMessages = [
-                    {"role": "system", "content": bibleChat_systemMessage},
+                    {"role": "system", "content": config.bibleChat_systemMessage},
                     {"role": "user", "content": command.strip()},
                 ]
             else:
                 config.chatMessages.append({"role": "user", "content": command.strip()})
-            textOutput = getChatResponse(backend, chatMessages)
+            textOutput = getChatResponse(backend, config.chatMessages)
             if textOutput is None:
                 return ("study", "<p>AI Backend API key not found!</p>", {'tab_title': "AI"})
             if not config.rawOutput:
@@ -4578,8 +4585,34 @@ The WHERE condition is described as: {query}"""
                 bibleVerseParser = BibleVerseParser(config.parserStandarisation)
                 textOutput = bibleVerseParser.parseText(textOutput, splitInChunks=True, parseBooklessReferences=False, canonicalOnly=True)
                 if config.runMode == "http-server":
+
+                    if config.displayLanguage == "zh_HANT":
+                        textOutput += """<hr><p>如想繼續查詢，請輸入您的提問，然後按下按鈕「{0}」。</p>""".format(config.thisTranslation["send"])
+                    elif config.displayLanguage == "zh_HANS":
+                        textOutput += """<hr><p>如想继续查询，请输入您的提问，然后按下按钮「{0}」。</p>""".format(config.thisTranslation["send"])
+                    else:
+                        textOutput += """<hr><p>To continue, enter your query and click the button '{0}'.</p>""".format(config.thisTranslation["send"])
+                    textOutput += "<p><input type='text' id='chatInput' style='width:95%' autofocus> "
+                    textOutput += "<button id='openChatInputButton' type='button' onclick='bibleChat();' class='ubaButton'>{0}</button></p>".format(config.thisTranslation["send"])
+
                     goBack = 'document.title=".chat"'
                     textOutput += """<hr><p><button type='button' onclick='{0}' class='ubaButton'>{1}</button></p>""".format(goBack, config.thisTranslation["youtube_back"])
+
+                    textOutput += """
+<script>
+function bibleChat() {0}
+  var searchString = document.getElementById('chatInput').value;
+  document.title = "CHAT":::"+searchString;
+{1}
+var input = document.getElementById('chatInput');
+input.addEventListener('keyup', function(event) {0}
+  if (event.keyCode === 13) {0}
+   event.preventDefault();
+   document.getElementById('openChatInputButton').click();
+  {1}
+{1});
+</script>""".format("{", "}")
+
                 # Disclaimer
                 textOutput += getAiFeatureDisclaimer()
             return ("study", textOutput, {'tab_title': "AI"})
