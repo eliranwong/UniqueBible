@@ -1,7 +1,7 @@
 # coding=utf-8
 import glob, pprint, traceback, pydoc, threading, asyncio, shutil, markdown, requests
 import os, re, webbrowser, platform, zipfile, subprocess, logging
-from uniquebible import config, getChatResponse, getAiFeatureDisclaimer
+from uniquebible import config, getChatResponse, getAiFeatureDisclaimer, chatContent
 from prompt_toolkit.input import create_input
 from prompt_toolkit.keys import Keys
 from datetime import date
@@ -419,9 +419,10 @@ class TextCommandParser:
             # OPERATOR options: new, show [optional]
                     new - start a new conversation
                     show - show the whole conversation
-            # e.g. CHAT:::NEW:::Hi!
+            # e.g. CHAT:::new
+            # e.g. CHAT:::new:::Hi!
             # e.g. CHAT:::Tell me more
-            # e.g. CHAT:::SHOW"""),
+            # e.g. CHAT:::show"""),
             "map": (self.textMap, """
             # [KEYWORD] MAP
             # Feature - Open a Google map with bible locations pinned
@@ -4557,9 +4558,11 @@ The WHERE condition is described as: {query}"""
                 feature, command = command.split(":::", 1)
             elif command.strip().lower() == "new": # new chat session
                 config.chatMessages = []
-                return ("study", "<p>New chat session started!</p>", {'tab_title': "AI"})
+                if config.rawOutput:
+                    return ("study", "New chat session started!", {'tab_title': "AI"})
+                return ("study", chatContent(), {'tab_title': "AI"})
             elif command.strip().lower() == "show": # show the whole conversation
-                textOutput = "\n\n".join([f'''# {i.get("role", "")}\n\n{i.get("content", "")}'''for i in config.chatMessages])
+                textOutput = "\n\n".join([f'''# {i.get("role", "")}\n\n{i.get("content", "")}'''for i in config.chatMessages if not i.get("role", "") == "system"])
                 if not config.rawOutput:
                     # convert from markdown to html
                     textOutput = markdown.markdown(textOutput)
@@ -4577,45 +4580,11 @@ The WHERE condition is described as: {query}"""
                 config.chatMessages.append({"role": "user", "content": command.strip()})
             textOutput = getChatResponse(backend, config.chatMessages)
             if textOutput is None:
-                return ("study", "<p>AI Backend API key not found!</p>", {'tab_title': "AI"})
-            if not config.rawOutput:
-                # convert from markdown to html
-                textOutput = markdown.markdown(textOutput)
-                # add bible reference links
-                bibleVerseParser = BibleVerseParser(config.parserStandarisation)
-                textOutput = bibleVerseParser.parseText(textOutput, splitInChunks=True, parseBooklessReferences=False, canonicalOnly=True)
-                if config.runMode == "http-server":
-
-                    if config.displayLanguage == "zh_HANT":
-                        textOutput += """<hr><p>如想繼續查詢，請輸入您的提問，然後按下按鈕「{0}」。</p>""".format(config.thisTranslation["send"])
-                    elif config.displayLanguage == "zh_HANS":
-                        textOutput += """<hr><p>如想继续查询，请输入您的提问，然后按下按钮「{0}」。</p>""".format(config.thisTranslation["send"])
-                    else:
-                        textOutput += """<hr><p>To continue, enter your query and click the button '{0}'.</p>""".format(config.thisTranslation["send"])
-                    textOutput += "<p><input type='text' id='chatInput' style='width:95%' autofocus> "
-                    textOutput += "<button id='openChatInputButton' type='button' onclick='bibleChat();' class='ubaButton'>{0}</button></p>".format(config.thisTranslation["send"])
-
-                    goBack = 'document.title=".chat"'
-                    textOutput += """<hr><p><button type='button' onclick='{0}' class='ubaButton'>{1}</button></p>""".format(goBack, config.thisTranslation["youtube_back"])
-
-                    textOutput += """
-<script>
-function bibleChat() {0}
-  var searchString = document.getElementById('chatInput').value;
-  document.title = "CHAT":::"+searchString;
-{1}
-var input = document.getElementById('chatInput');
-input.addEventListener('keyup', function(event) {0}
-  if (event.keyCode === 13) {0}
-   event.preventDefault();
-   document.getElementById('openChatInputButton').click();
-  {1}
-{1});
-</script>""".format("{", "}")
-
-                # Disclaimer
-                textOutput += getAiFeatureDisclaimer()
-            return ("study", textOutput, {'tab_title': "AI"})
+                return ("study", "<p>This AI feature is not permitted!</p>", {'tab_title': "AI"})
+            if config.rawOutput:
+                return ("study", textOutput, {'tab_title': "AI"})
+            else:
+                return ("study", chatContent(), {'tab_title': "AI"})
         return ("study", "<p>Query not given!</p>", {'tab_title': "AI"})
 
     def textAnswer(self, command, source, systemMessage, goBack="", bcv=None):
@@ -4633,7 +4602,7 @@ input.addEventListener('keyup', function(event) {0}
             ]
             textOutput = getChatResponse(backend, chatMessages)
             if textOutput is None:
-                return ("study", "<p>AI Backend API key not found!</p>", {'tab_title': "AI"})
+                return ("study", "<p>This AI feature is not permitted!</p>", {'tab_title': "AI"})
             if not config.rawOutput:
                 # convert from markdown to html
                 textOutput = markdown.markdown(textOutput)

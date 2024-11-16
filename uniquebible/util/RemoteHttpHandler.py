@@ -1,10 +1,10 @@
 # https://docs.python.org/3/library/http.server.html
 # https://ironpython-test.readthedocs.io/en/latest/library/simplehttpserver.html
 import hashlib
-import json, markdown
+import json
 import logging
 import os, re, pprint, glob
-from uniquebible import config
+from uniquebible import config, chatContent
 import subprocess
 import urllib
 from http import HTTPStatus
@@ -247,6 +247,8 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
         self.textCommandParser.parent.execPythonFile(script)
 
     def updateData(self, rawOutput=False, allowPrivateData=False, lang=""):
+        if lang:
+            lang = lang[0]
         languages = {
             "en_GB": "ENG",
             "zh_HANT": "TC",
@@ -518,7 +520,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
             "logout": self.logout,
             "search": self.searchContent,
             "qna": self.qnaContent,
-            "chat": self.chatContent,
+            "chat": chatContent,
             "maps": self.mapsContent,
             "days": self.dailyReadingContent,
             "theme": self.swapTheme,
@@ -1931,37 +1933,6 @@ input3.addEventListener('keyup', function(event) {0}
   if (event.keyCode === 13) {0}
    event.preventDefault();
    document.getElementById('bibleQuestionButton3').click();
-  {1}
-{1});
-</script>""".format("{", "}")
-        return content
-
-    def chatContent(self):
-        content = "<h2>AI {0}</h2>".format(config.thisTranslation["chat"])
-        if config.displayLanguage == "zh_HANT":
-            content += """<p>請輸入您的提問，然後按下按鈕「{0}」。</p>""".format(config.thisTranslation["send"])
-        elif config.displayLanguage == "zh_HANS":
-            content += """<p>请输入您的提问，然后按下按钮「{0}」。</p>""".format(config.thisTranslation["send"])
-        else:
-            content += """<p>Please enter your query and click the button '{0}'.</p>""".format(config.thisTranslation["send"])
-        content += "<p><input type='text' id='chatInput' style='width:95%' autofocus></p>"
-        content += "<p><button id='openChatInputButton' type='button' onclick='bibleChat();' class='ubaButton'>{0}</button></p>".format(config.thisTranslation["send"])
-
-        content += "<hr>"
-        content += "\n\n".join([f'''# {i.get("role", "")}\n\n{i.get("content", "")}'''for i in config.chatMessages])
-        textOutput = markdown.markdown(textOutput)
-        
-        content += """
-<script>
-function bibleChat() {0}
-  var searchString = document.getElementById('chatInput').value;
-  document.title = "CHAT":::"+searchString;
-{1}
-var input = document.getElementById('chatInput');
-input.addEventListener('keyup', function(event) {0}
-  if (event.keyCode === 13) {0}
-   event.preventDefault();
-   document.getElementById('openChatInputButton').click();
   {1}
 {1});
 </script>""".format("{", "}")

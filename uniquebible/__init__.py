@@ -124,7 +124,8 @@ from mistralai import Mistral
 from groq import Groq
 from typing import Optional
 from opencc import OpenCC
-import unicodedata, traceback
+import unicodedata, traceback, markdown
+from uniquebible.util.BibleVerseParser import BibleVerseParser
 
 config.llm_backends = ["openai", "google", "groq", "mistral"]
 
@@ -260,3 +261,56 @@ def showErrors():
     trace = traceback.format_exc()
     print(trace if config.developer else "Error encountered!")
     return trace
+
+def chatContent():
+    content = "<h1>AI {0}</h1>".format(config.thisTranslation["chat"])
+
+    if config.chatMessages:
+        # add bible reference links
+        bibleVerseParser = BibleVerseParser(config.parserStandarisation)
+        content += "<hr>"
+        messages = []
+        for index, i in enumerate(config.chatMessages):
+            iRole = i.get("role", "")
+            if not iRole == "system":
+                iRole = "Query" if iRole == "user" else "Response"
+                iContent = i.get("content", "")
+                if iContent:
+                    iContent = bibleVerseParser.parseText(iContent, splitInChunks=True, parseBooklessReferences=False, canonicalOnly=True)
+                if index == (len(config.chatMessages) - 1):
+                    # the last item
+                    iRole = f"""{iRole}<vid id="v{config.mainB}.{config.mainC}.{config.mainV}"></vid>"""
+                messages.append(f'''## {iRole}\n\n{iContent}''')
+        content += "\n\n".join(messages)
+
+        content += "<hr>"    
+    else:
+        if config.displayLanguage == "zh_HANT":
+            content += """<p>請輸入您的提問，然後按下按鈕「{0}」。</p>""".format(config.thisTranslation["send"])
+        elif config.displayLanguage == "zh_HANS":
+            content += """<p>请输入您的提问，然后按下按钮「{0}」。</p>""".format(config.thisTranslation["send"])
+        else:
+            content += """<p>Please enter your query and click the button '{0}'.</p>""".format(config.thisTranslation["send"])
+
+    content += "<p><input type='text' id='chatInput' style='width:95%' autofocus></p>"
+    newButton = "" if not config.chatMessages else """ <button id='openChatInputButton' type='button' onclick='document.title="CHAT:::NEW";' class='ubaButton'>{0}</button>""".format(config.thisTranslation["restart"])
+    content += """<p><button id='openChatInputButton' type='button' onclick='bibleChat();' class='ubaButton'>{0}</button>{1}</p>""".format(config.thisTranslation["send"], newButton)
+
+    content += getAiFeatureDisclaimer()
+
+    content = markdown.markdown(content)
+    content += """
+<script>
+function bibleChat() {0}
+  var searchString = document.getElementById('chatInput').value;
+  document.title = "CHAT:::"+searchString;
+{1}
+var input = document.getElementById('chatInput');
+input.addEventListener('keyup', function(event) {0}
+  if (event.keyCode === 13) {0}
+   event.preventDefault();
+   document.getElementById('openChatInputButton').click();
+  {1}
+{1});
+</script>""".format("{", "}")
+    return content
