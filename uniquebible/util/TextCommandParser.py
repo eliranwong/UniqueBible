@@ -410,6 +410,13 @@ class TextCommandParser:
             # BACKEND options: openai, google, groq, mistral
             # Use value of `config.llm_backend` as backend if BACKEND is not given.
             # e.g. AIC:::Deut 6:4"""),
+            "chat": (self.textChat, """
+            # [KEYWORD] CHAT
+            # Feature - Chat with AI or follow up previous conversation.
+            # Usage - CHAT:::[BACKEND]:::[QUERY]
+            # BACKEND options: openai, google, groq, mistral
+            # Use value of `config.llm_backend` as backend if BACKEND is not given.
+            # e.g. CHAT:::Tell me more"""),
             "map": (self.textMap, """
             # [KEYWORD] MAP
             # Feature - Open a Google map with bible locations pinned
@@ -4529,6 +4536,54 @@ The WHERE condition is described as: {query}"""
 
 {textOutput}"""
         return ("study", textOutput, {'tab_title': "AI"})
+
+    def textChat(self, command, source):
+        if command.strip():
+            command = command.strip()
+            backendPattern = "|".join(config.llm_backends)
+            if re.search(f"^({backendPattern}):::", command):
+                backend, command = command.split(":::", 1)
+            else:
+                # use default backend if not specified
+                backend = config.llm_backend
+            if ":::" in command:
+                feature, command = command.split(":::", 1)
+            elif command.strip().lower() == "new": # new chat session
+                config.chatMessages = []
+                return ("study", "<p>New chat session started!</p>", {'tab_title': "AI"})
+            elif command.strip().lower() == "show": # show the whole conversation
+                textOutput = "\n\n".join([f'''# {i.get("role", "")}\n\n{i.get("content", "")}'''for i in config.chatMessages])
+                if not config.rawOutput:
+                    # convert from markdown to html
+                    textOutput = markdown.markdown(textOutput)
+                return ("study", textOutput, {'tab_title': "AI"})
+            else:
+                feature = ""
+            if not command.strip():
+                return self.invalidCommand()
+            if not hasattr(config, "chatMessages") or not config.chatMessages or feature.lower() == "new":::
+                config.chatMessages = [
+                    {"role": "system", "content": bibleChat_systemMessage},
+                    {"role": "user", "content": command.strip()},
+                ]
+            else:
+                config.chatMessages.append({"role": "user", "content": command.strip()})
+            textOutput = getChatResponse(backend, chatMessages)
+            if textOutput is None:
+                return ("study", "<p>AI Backend API key not found!</p>", {'tab_title': "AI"})
+            if not config.rawOutput:
+                # convert from markdown to html
+                textOutput = markdown.markdown(textOutput)
+                # add bible reference links
+                bibleVerseParser = BibleVerseParser(config.parserStandarisation)
+                textOutput = bibleVerseParser.parseText(textOutput, splitInChunks=True, parseBooklessReferences=False, canonicalOnly=True)
+                if config.runMode == "http-server":
+                    goBack = 'document.title=".chat"'
+                    textOutput += """<hr><p><button type='button' onclick='{0}' class='ubaButton'>{1}</button></p>""".format(goBack, config.thisTranslation["youtube_back"])
+                # Disclaimer
+                textOutput += getAiFeatureDisclaimer()
+            return ("study", textOutput, {'tab_title': "AI"})
+        return ("study", "<p>Query not given!</p>", {'tab_title': "AI"})
 
     def textAnswer(self, command, source, systemMessage, goBack="", bcv=None):
         if command.strip():

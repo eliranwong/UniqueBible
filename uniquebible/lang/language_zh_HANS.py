@@ -463,7 +463,7 @@ translation = {
     "remote_control": "控制中心",
     "bible": "圣经",
     "translations": "译本",
-    "commentaries": "圣经注释书",
+    "commentaries": "圣经注释",
     "lexicons": "原文词典",
     "dictionaries": "字典",
     "setDefault": "设定预设值",

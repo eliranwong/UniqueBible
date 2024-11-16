@@ -236,6 +236,9 @@ def getChatResponse(backend, chatMessages) -> Optional[str]:
                 stream=False,
             )
         textOutput = completion.choices[0].message.content
+        # update the message chain in the config, to work with command `chat`
+        config.chatMessages = chatMessages
+        config.chatMessages.append({"role": "user", "content": textOutput})
     except:
         textOutput = "Failed to connect! Please try again later."
     if hasattr(config, "displayLanguage") and config.displayLanguage == "zh_HANT":

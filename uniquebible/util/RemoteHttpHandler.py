@@ -1934,6 +1934,27 @@ input3.addEventListener('keyup', function(event) {0}
 </script>""".format("{", "}")
         return content
 
+    def chatContent(self):
+        content = "<h2>AI {0}</h2>".format(config.thisTranslation["chat"])
+
+        content += "<p><input type='text' id='chatInput' style='width:95%' autofocus></p>"
+        content += "<p><button id='openChatInputButton' type='button' onclick='bibleChat();' class='ubaButton'>{0}</button></p>".format(config.thisTranslation["send"])
+        content += """
+<script>
+function bibleChat() {0}
+  var searchString = document.getElementById('chatInput').value;
+  document.title = "CHAT":::"+searchString;
+{1}
+var input = document.getElementById('chatInput');
+input.addEventListener('keyup', function(event) {0}
+  if (event.keyCode === 13) {0}
+   event.preventDefault();
+   document.getElementById('openChatInputButton').click();
+  {1}
+{1});
+</script>""".format("{", "}")
+        return content
+
     def mapsContent(self):
         content = "<h2>{0}</h2>".format(config.thisTranslation["bibleMaps"])
         if config.displayLanguage == "zh_HANT":
