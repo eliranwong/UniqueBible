@@ -13,7 +13,7 @@ ubahome = os.path.expanduser(os.path.join("~", "UniqueBible"))
 
 # restor previous backup
 configFile = os.path.join(config.packageDir, "config.py")
-backupFile = os.path.join(ubahome, "config.py")
+backupFile = os.path.join(ubahome, "config.py.bk")
 if os.path.isfile(backupFile) and not hasattr(config, "mainText"):
     print(f"Configuration backup found: {backupFile}")
     try:

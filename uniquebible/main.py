@@ -121,6 +121,7 @@ if config.noQt:
     elif config.runMode == "telnet-server":
         startTelnetServer()
     elif config.runMode == "http-server":
+        ConfigUtil.save() # in case of new configuration items
         startHttpServer()
         ConfigUtil.save()
         if config.restartHttpServer:

@@ -2,6 +2,7 @@
 import codecs
 import logging
 import os, pprint, platform, sys
+from shutil import copy
 from uniquebible import config
 from uniquebible.util.DateUtil import DateUtil
 from uniquebible.util.WebtopUtil import WebtopUtil
@@ -228,6 +229,9 @@ class ConfigUtil:
         "You are a biblical scholar.")
         setConfig("addBibleQnA", """
         # Add Bible Q and A Features to web mode navigation menu.""",
+        False)
+        setConfig("addBibleChat", """
+        # Add Bible Chat to web mode navigation menu.""",
         False)
         setConfig("answer_systemMessage_general", """
         # System Message - General Inquiry""",
@@ -686,6 +690,15 @@ class ConfigUtil:
         setConfig("workingTranslation", """
         # Specify the translation which is actively being edited.  This option is created for development purpose.""",
         "en_US")
+        setConfig("myIBMWatsonApikey", """
+        # IBM Watson service api key""",
+        "")
+        setConfig("myIBMWatsonUrl", """
+        # IBM Watson service api url""",
+        "")
+        setConfig("myIBMWatsonVersion", """
+        # IBM Watson service api version""",
+        "2018-05-01")
         setConfig("myGoogleApiKey", """
         # Personal google api key for display of google maps inside UBA window.""",
         "")
@@ -696,27 +709,10 @@ class ConfigUtil:
                 config.alwaysDisplayStaticMaps = False
             else:
                 config.alwaysDisplayStaticMaps = True
-        setConfig("openaiApiKey", """
-        # OpenAI api key""",
-        "")
-        setConfig("openaiApiOrganization", """
-        # OpenAI api organization""",
-        "")
-        setConfig("chatGPTApiModel", """
-        # Chat GPT API model""",
-        "gpt-3.5-turbo")
-        setConfig("chatGPTApiMaxTokens", """
-        # The maximum number of tokens to generate in the completion.
-        # The token count of your prompt plus max_tokens cannot exceed the model's context length. Most models have a context length of 2048 tokens (except for the newest models, which support 4096).""",
-        512)
         setConfig("chatApiNoOfChoices", """
         # ChatGPT API number of choices in response
         # How many chat completion choices to generate for each input message.""",
         1)
-        setConfig("chatGPTApiTemperature", """
-        # ChatGPT API temperature
-        # What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.""",
-        1.0)
         setConfig("chatApiFunctionCall", """
         # Enable / Disable ChatGPT function calling
         # Select 'auto' to enable; 'none' to disable""",
@@ -764,15 +760,6 @@ class ConfigUtil:
         setConfig("runPythonScriptGlobally", """
         # Option to execute Python Script Globally via plugin Bible Chat.""",
         False)
-        setConfig("myIBMWatsonApikey", """
-        # IBM Watson service api key""",
-        "")
-        setConfig("myIBMWatsonUrl", """
-        # IBM Watson service api url""",
-        "")
-        setConfig("myIBMWatsonVersion", """
-        # IBM Watson service api version""",
-        "2018-05-01")
         setConfig("pocketsphinxModelPath", """
         # Model path of pocketsphinx""",
         "")
@@ -1850,7 +1837,7 @@ class ConfigUtil:
             # print("A copy of configurations is saved in file 'config.py'!")
         # backup
         try:
-            backupFile = os.path.join(config.ubaUserDir, "config.py")
+            backupFile = os.path.join(config.ubaUserDir, "config.py.bk")
             copy(configFile, backupFile)
         except:
             pass

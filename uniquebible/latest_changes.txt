@@ -1,5 +1,21 @@
 PIP package:
 
+0.1.86-0.1.89
+
+* fixed configuration backup
+
+* A copy of configurations is automatically saved when http-server starts.
+
+* renamed the config backup file to "config.py.bk".  This may be helpful for some users who use ~/UniqueBible as the application folder, though it is not recommended.
+
+0.1.82-0.1.85
+
+* tweaked http-server
+
+* added `chat` command
+
+* added a simple web ui for AI chat
+
 0.1.79-0.1.81
 
 * limit access to AI features via web API to private data users only

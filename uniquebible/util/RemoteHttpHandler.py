@@ -1058,7 +1058,7 @@ class RemoteHttpHandler(UBAHTTPRequestHandler):
             (config.thisTranslation["ubaCommands"], ".help"),
         )
         for item in sideNavItems:
-            if item is not None and not (item[0].startswith("AI ") and not config.webHomePage==f"{config.webPrivateHomePage}.html"):
+            if item is not None and not (item[0].startswith("AI ") and (not config.addBibleChat or not config.webHomePage==f"{config.webPrivateHomePage}.html")):
                 html += """<a href="#" onclick="submitCommand('{1}')">{0}</a>""".format(*item)
         html += """<a href="{1}" target="_blank">{0}</a>""".format(config.thisTranslation["userManual"], self.getUserManual())
         html += "<hr>"

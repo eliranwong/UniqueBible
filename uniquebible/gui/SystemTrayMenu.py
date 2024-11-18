@@ -169,7 +169,6 @@ if config.enablePlugins:
 # Add a separator
 trayMenu.addSeparator()
 
-#if config.openaiApiKey:
 chatgptapi = QAction(config.thisTranslation["bibleChat"])
 chatgptapi.triggered.connect(partial(config.mainWindow.runPlugin, "Bible Chat"))
 trayMenu.addAction(chatgptapi)
