@@ -119,13 +119,13 @@ class ConfigUtil:
                 if module in config.enabled:
                     config.enabled.remove(module)
 
-        def getCurrentVenvDir():
+        '''def getCurrentVenvDir():
             major, minor, micro, *_ = sys.version_info
             cpu = ""
             if config.thisOS == "Darwin":
                 *_, cpu = platform.mac_ver()
                 cpu = f"_{cpu}"
-            return "venv_{0}{4}_{1}.{2}.{3}".format("macOS" if config.thisOS == "Darwin" else config.thisOS, major, minor, micro, cpu)
+            return "venv_{0}{4}_{1}.{2}.{3}".format("macOS" if config.thisOS == "Darwin" else config.thisOS, major, minor, micro, cpu)'''
 
         config.updateModules = updateModules
         setConfig("enabled", """
@@ -134,15 +134,6 @@ class ConfigUtil:
         setConfig("disabled", """
         # Disabled modules""",
         ['Pygithub', 'Textract', 'Pydnsbl', 'Pocketsphinx'] if os.path.isdir("/data/data/com.termux/files/home") else [])
-        venvDir = getCurrentVenvDir()
-        setConfig("venvDir", """
-        # virtual environment directory""",
-        venvDir)
-        # in case python version is updated or device is changed
-        if not config.venvDir == venvDir:
-            config.enabled = []
-            config.disabled = []
-            config.venvDir = venvDir
         setConfig("desktopUBAIcon", """
         # Desktop version UBA icon filename.  UniqueBible.app provides official icons in different colours.  We ask our users to use one of our official icons to acknowledge our development.""",
         os.path.join("htmlResources", "UniqueBibleApp.png"))

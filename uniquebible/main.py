@@ -87,22 +87,8 @@ if config.runMode == "docker":
 # Check for dependencies and other essential elements
 from uniquebible.util.checkup import *
 
-# make sure nltk data are installed
-if "Nltk" in config.enabled:
-    # copy nltk data to virtual environment directory
-    nltk_data1 = os.path.join("nltk_data", "corpora", "omw-1.4.zip")
-    nltk_data1_destination_folder = os.path.join(config.venvDir, nltk_data1[:-4])
-    nltk_data2 = os.path.join("nltk_data", "corpora", "wordnet.zip")
-    nltk_data2_destination_folder = os.path.join(config.venvDir, nltk_data2[:-4])
-    corpora_folder = os.path.join(config.venvDir, "nltk_data", "corpora")
-    os.makedirs(corpora_folder, exist_ok=True)
-    if os.path.isfile(nltk_data1) and not os.path.isdir(nltk_data1_destination_folder):
-        shutil.unpack_archive(nltk_data1, corpora_folder)
-    if os.path.isfile(nltk_data2) and not os.path.isdir(nltk_data2_destination_folder):
-        shutil.unpack_archive(nltk_data2, corpora_folder)
-
 # exit application if it is run for setup only
-if config.runMode == "setup-only":
+if config.runMode == "setup-only": # work with gui mode only; to set up for non-gui mode run `ub John 3:16`
     print("UniqueBibleApp installed!")
     exit()
 

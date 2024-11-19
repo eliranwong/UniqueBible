@@ -215,20 +215,15 @@ for module, feature, isInstalled in required or config.updateDependenciesOnStart
             print("Required feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first!".format(feature, module))
             exit(1)
 
-major, minor, micro, *_ = sys.version_info
+'''major, minor, micro, *_ = sys.version_info
 thisOS = platform.system()
 cpu = ""
 if thisOS == "Darwin":
     thisOS = "macOS"
     *_, cpu = platform.mac_ver()
     cpu = f"_{cpu}"
-venvDir = "venv_{0}{4}_{1}.{2}.{3}".format(thisOS, major, minor, micro, cpu)
+venvDir = "venv_{0}{4}_{1}.{2}.{3}".format(thisOS, major, minor, micro, cpu)'''
 
-disabledModules = []
-disabledModulesFilePath = os.path.join(venvDir, "disabled_modules.txt")
-if os.path.exists(disabledModulesFilePath):
-    with open(disabledModulesFilePath) as disabledModulesFile:
-        disabledModules = [line.strip() for line in disabledModulesFile.readlines()]
 # Check if optional modules are installed
 optional = [
     ("html-text", "Read html text", isHtmlTextInstalled),
@@ -245,10 +240,7 @@ for module, feature, isInstalled in optional:
     checkModule = re.sub("-|_", "", module)
     checkModule = re.sub("^(-U |--upgrade )", "", checkModule).capitalize()
     if not checkModule in config.enabled and not checkModule in config.disabled:
-        if module in disabledModules:
-            print(f"{module} has been manually disabled")
-            available = False
-        elif not isInstalled() or config.updateDependenciesOnStartup:
+        if not isInstalled() or config.updateDependenciesOnStartup:
             if config.updateDependenciesOnStartup and not (module.startswith("-U ") or module.startswith("--upgrade ")):
                 module = "--upgrade {0}".format(module)
             pip3InstallModule(module)

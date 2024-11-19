@@ -1,4 +1,4 @@
-from uniquebible import config
+from uniquebible import config, getSitePackagesLocation
 import subprocess, os, zipfile, platform, sys, re, shutil
 from shutil import copyfile
 from uniquebible.util.WebtopUtil import WebtopUtil
@@ -46,11 +46,10 @@ def downloadFileIfNotFound(databaseInfo):
 def fixFcitxOnLinux(module):
     # Fixed fcitx for Linux users
     if platform.system() == "Linux" and not (config.runMode == "docker"):
-        major, minor, micro, *_ = sys.version_info
-        venvDir = "venv_Linux_{0}.{1}.{2}".format(major, minor, micro)
+        #major, minor, micro, *_ = sys.version_info
         #if (config.runMode == "docker"):
         #    fcitxPlugin = "/usr/lib/qt/plugins/platforminputcontexts/libfcitx5platforminputcontextplugin.so"
-        ubaInputPluginDir = os.path.join(os.getcwd(), venvDir, "lib/python{0}.{1}/site-packages/{2}/Qt/plugins/platforminputcontexts".format(major, minor, module))
+        ubaInputPluginDir = os.path.join(getSitePackagesLocation(), module, "Qt/plugins/platforminputcontexts")
         # plugin file 1
         fcitxPlugin = "/usr/lib/x86_64-linux-gnu/qt5/plugins/platforminputcontexts/libfcitxplatforminputcontextplugin.so"
         ubaFcitxPlugin = os.path.join(ubaInputPluginDir, "libfcitxplatforminputcontextplugin.so")
@@ -765,7 +764,7 @@ optional = [
     ("pyperclip", "Cross-platform clipboard utilities", isPyperclipInstalled),
     ("numpy", "Array Computing", isNumpyInstalled),
     ("matplotlib", "Plotting Package", isMatplotlibInstalled),
-    ("pickley", "Automate installation of standalone python CLIs", isPickleyInstalled),
+    #("pickley", "Automate installation of standalone python CLIs", isPickleyInstalled),
     ("Pygments", "Syntax highlighting package", isPygmentsInstalled),
     ("asyncssh", "Asynchronous SSHv2 client and server library", isAsyncsshInstalled),
     ("bcrypt", "Modern password hashing for your software and your servers", isBcryptInstalled),
@@ -821,7 +820,7 @@ optional = [
     ("pyperclip", "Cross-platform clipboard utilities", isPyperclipInstalled),
     ("numpy", "Array Computing", isNumpyInstalled),
     ("matplotlib", "Plotting Package", isMatplotlibInstalled),
-    ("pickley", "Automate installation of standalone python CLIs", isPickleyInstalled),
+    #("pickley", "Automate installation of standalone python CLIs", isPickleyInstalled),
     ("Pygments", "Syntax highlighting package", isPygmentsInstalled),
     ("asyncssh", "Asynchronous SSHv2 client and server library", isAsyncsshInstalled),
     ("bcrypt", "Modern password hashing for your software and your servers", isBcryptInstalled),
@@ -842,8 +841,6 @@ optional = [
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))
 for module, feature, isInstalled in optional:
-    if config.runMode in ("stream", "http-server") and module in ("pickley"):
-        continue
     checkModule = re.sub("-|_", "", module)
     checkModule = re.sub("^(-U |--upgrade )", "", checkModule).capitalize()
     if not checkModule in config.enabled and not checkModule in config.disabled:

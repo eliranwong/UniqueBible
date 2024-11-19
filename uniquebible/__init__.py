@@ -64,6 +64,8 @@ if os.getcwd() != ubahome:
 for i in ("chatGPT", "config", "context", "event", "language", "layout", "menu", "shutdown", "startup", "terminal", "text_editor"):
     Path(os.path.join(ubahome, "plugins", i)).mkdir(parents=True, exist_ok=True)
 
+def getSitePackagesLocation():
+    return os.path.dirname(config.packageDir)
 
 def getPackageInstalledVersion(package):
     try:

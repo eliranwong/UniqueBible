@@ -643,7 +643,7 @@ class LocalCliHandler:
             ".watsontranslatecopiedtext": ("run IBM Watson Translator on copied text", self.watsonTranslate),
             ".wt": ("an alias to '.watsontranslate'", lambda: self.watsonTranslate(False)),
             ".wtc": ("an alias to '.watsontranslatecopiedtext'", self.watsonTranslate),
-            ".portablepython": ("build portable python", self.buildPortablePython),
+            #".portablepython": ("build portable python", self.buildPortablePython),
             ".system": ("system command prompt", SystemCommandPrompt().run),
             ".sys": ("an alias to '.system'", SystemCommandPrompt().run),
             ".clear": ("clear screen", self.clear_screen),

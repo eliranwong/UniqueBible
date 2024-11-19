@@ -34,35 +34,14 @@ def main():
     # Do NOT use sys.executable directly
     python = os.path.basename(sys.executable)
     mainFile = os.path.join(wd, "main.py")
-    major, minor, micro, *_ = sys.version_info
+    #major, minor, micro, *_ = sys.version_info
     cpu = ""
     if thisOS == "Darwin":
         thisOS = "macOS"
         *_, cpu = platform.mac_ver()
         cpu = f"_{cpu}"
-    venvDir = "venv_{0}{4}_{1}.{2}.{3}".format(thisOS, major, minor, micro, cpu)
+    #venvDir = "venv_{0}{4}_{1}.{2}.{3}".format(thisOS, major, minor, micro, cpu)
     binDir = "Scripts" if thisOS == "Windows" else "bin"
-
-    # Check if virtual environment is being used
-    """if sys.prefix == sys.base_prefix:
-        # Check if virtual environment is available
-        venvPython = os.path.join(wd, venvDir, binDir, python)
-        if not os.path.exists(venvPython):
-            # Installing virtual environment
-            # https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/
-            try:
-                import venv
-            except:
-                installmodule("virtualenv", False)
-            #subprocess.Popen([python, "-m", "venv", venvDir])
-            print("Setting up environment ...")
-            # optional: add file "use_system_site_packages" in UBA direcyory to use packages installed on system
-            try:
-                if not "venv" in sys.modules:
-                    import venv
-                venv.create(env_dir=venvDir, with_pip=True, system_site_packages=True) if runMode == "docker" or os.path.isfile("use_system_site_packages") else venv.create(env_dir=venvDir, with_pip=True)
-            except:
-                pass"""
 
     # create shortcut files
     # On Windows
@@ -115,14 +94,6 @@ def main():
                 f.write("#!/bin/bash\n")
                 f.write(f"cd {wd}\n")
                 f.write(f"{python} {appFile} gui\n")
-            """ # This method does not work with *.command file
-            # icon needs to be manually added by dragging an icon to file info
-            icon_path = os.path.abspath(os.path.join("icons", f"{appName}.icns"))
-            def set_icon(file_path, icon_path):
-                import subprocess
-                subprocess.call(['sips', '-i', icon_path, '--out', f'{file_path}/Icon\r'])
-                subprocess.call(['/usr/bin/SetFile', '-a', 'C', file_path])
-            set_icon(shortcut_file, icon_path)"""
             os.chmod(shortcut_file, 0o755)
     # desktop shortcuts on Linux
     elif thisOS == "Linux":
@@ -167,29 +138,13 @@ Name=Unique Bible App
     if thisOS == "Windows":
         if python.endswith(".exe"):
             python = python[:-4]
-        # Activate virtual environment
-        activator = os.path.join(wd, venvDir, binDir, "activate")
         # Run main.py
         mainPy = "main.py {0}".format(initialCommand) if initialCommand else "main.py"
         if enableCli:
-            #if os.path.exists(activator):
-            #    os.system("{0} & {1} {2}".format(activator, python, mainPy))
-            #else:
-            #    os.system("{0} {1}".format(python, mainPy))
             exec("from uniquebible.main import *", globals())
         else:
-            if os.path.exists(activator):
-                subprocess.Popen("{0} & {1} {2}".format(activator, python, mainPy), shell=True)
-            else:
-                subprocess.Popen("{0} {1}".format(python, mainPy), shell=True)
+            subprocess.Popen("{0} {1}".format(python, mainPy), shell=True)
     else:
-        """# Activate virtual environment
-        activator = os.path.join(wd, venvDir, binDir, "activate_this.py")
-        if not os.path.exists(activator):
-            copyfile("activate_this.py", activator)
-        with open(activator) as f:
-            code = compile(f.read(), activator, 'exec')
-            exec(code, dict(__file__=activator))"""
         # Run main.py
         if enableCli:
             #os.system("{0} {1}{2}".format(python, mainFile, f" {initialCommand}" if initialCommand else ""))

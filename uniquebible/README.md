@@ -12,7 +12,7 @@ This single project has two major interfaces:
 
 Qt-based Multi-Window Desktop Application:
 
-<b>Tested in:</b> <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Windows">Windows 10</a>, <a href="https://github.com/eliranwong/wsl2/blob/master/bible_apps/desktop.md">Windows WSL2</a>, <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-macOS">macOS [Sierra+]</a> and <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Linux">Linux</a> (Arch, Debian, Ubuntu & Mint), <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Chrome-OS">Chrome OS</a> (Debian 10), <a href="https://github.com/eliranwong/UniqueBible/wiki/Webtop-Version---RECOMMENDED!">Webtops</a>, <a href="https://github.com/eliranwong/UniqueBible/wiki/Android-iOS-Version">Android / iOS</a>
+<b>Tested in:</b> <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Windows">Windows 10</a>, <a href="https://github.com/eliranwong/wsl2/blob/master/bible_apps/desktop.md">Windows WSL2</a>, <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-macOS">macOS [Sierra+]</a> and <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Linux">Linux</a> (Arch, Debian, Ubuntu & Mint), <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Chrome-OS">Chrome OS</a> (Debian 10), <a href="https://github.com/eliranwong/UniqueBible/wiki/Android-iOS-Version">Android / iOS</a>
 
 Unique Bible App can <a href="https://github.com/eliranwong/UniqueBible/wiki/UBA-Run-Modes">runs in different modes</a>, both online and offline, for examples:
 
@@ -38,23 +38,19 @@ Oliver Tseng (https://github.com/otseng)
 
 # Quick Start
 
-('git' and 'python 3.7+' are required)
+Python 3.8+ required!
 
-To download and set up Unique Bible app, run:
+To install:
 
-> git clone https://github.com/eliranwong/UniqueBible.git
+> pip install uniquebible
 
-> cd UniqueBible
+To run GUI mode:
 
-> python3 uba.py
+> uniquebible
 
-# Setup or Installation
+More about installation at https://github.com/eliranwong/UniqueBible/wiki/Installation
 
-Read our recommendations first at: https://github.com/eliranwong/UniqueBible/wiki/Recommendations-for-Different-Platforms
-
-You can simply download & run UBA if you have python in place, read our examples at:
-
-https://github.com/eliranwong/UniqueBible/wiki/Installation
+More about running modes at https://github.com/eliranwong/UniqueBible/wiki/UBA-Run-Modes
 
 # Features, instructions and how-tos
 

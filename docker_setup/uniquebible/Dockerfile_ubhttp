@@ -21,7 +21,7 @@ RUN \
   python3 -m venv uba && \
   . uba/bin/activate && \
   pip install --upgrade pip && \
-  pip install --upgrade --no-cache-dir uniquebible==0.1.96
+  pip install --upgrade --no-cache-dir uniquebible==0.1.98
 # Run stream mode once to set up UniqueBible App for non-gui modes
 RUN \
   . uba/bin/activate && \
