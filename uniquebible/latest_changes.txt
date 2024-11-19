@@ -1,5 +1,11 @@
 PIP package:
 
+0.1.90-0.1.93
+
+* fixed to support python 3.12
+
+* tested for docker files
+
 0.1.86-0.1.89
 
 * fixed configuration backup

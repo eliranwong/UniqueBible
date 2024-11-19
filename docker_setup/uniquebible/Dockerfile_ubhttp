@@ -1,0 +1,31 @@
+FROM alpine:latest
+
+## get UID/GID of host user for remapping to access bindmounts on host
+ARG USER
+ARG UID
+
+RUN addgroup -g ${UID} ${USER} && \
+  adduser -u ${UID} -D ${USER} -G ${USER} && \
+  echo >> /etc/profile && \
+  echo 'export PATH=$HOME/.local/bin:$PATH' >> /etc/profile
+
+RUN \
+  apk update && \
+  apk add python3 py3-pip net-tools iproute2 ffmpeg micro nano
+
+USER ${USER}
+
+WORKDIR /home/${USER}
+
+RUN \
+  python3 -m venv uba && \
+  . uba/bin/activate && \
+  pip install --upgrade pip && \
+  pip install --upgrade --no-cache-dir uniquebible==0.1.96
+# Run stream mode once to set up UniqueBible App for non-gui modes
+RUN \
+  . uba/bin/activate && \
+  uba/bin/ub "John 3:16"
+
+# Set the default command
+CMD ["sh", "-c", ". uba/bin/activate && uba/bin/ubhttp 8888"]

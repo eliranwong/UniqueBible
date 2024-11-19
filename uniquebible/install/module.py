@@ -28,7 +28,7 @@ def installmodule(module, update=True):
                 config.pipIsUpdated = True
         try:
             print("Installing '{0}' ...".format(module))
-            installNewModule = subprocess.Popen(f"pip3 install {module}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            installNewModule = subprocess.Popen(f"pip3 install --no-cache-dir {module}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             *_, stderr = installNewModule.communicate()
             if not stderr:
                 print("Module '{0}' is installed!".format(module))

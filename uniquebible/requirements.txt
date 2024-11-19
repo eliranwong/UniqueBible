@@ -5,3 +5,7 @@ requests
 apsw
 markdown
 opencc-python-reimplemented
+mistralai
+openai
+groq
+packaging

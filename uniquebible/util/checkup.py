@@ -842,6 +842,8 @@ optional = [
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))
 for module, feature, isInstalled in optional:
+    if config.runMode in ("stream", "http-server") and module in ("pickley"):
+        continue
     checkModule = re.sub("-|_", "", module)
     checkModule = re.sub("^(-U |--upgrade )", "", checkModule).capitalize()
     if not checkModule in config.enabled and not checkModule in config.disabled:

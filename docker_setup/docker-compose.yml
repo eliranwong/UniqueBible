@@ -1,0 +1,41 @@
+##
+## UniqueBible server
+##
+## Start server: docker compose build --no-cache && docker compose up -d
+## Stop server: docker compose down --remove-orphans
+##
+## Run in host (Fresh Installation)
+## > mkdir -p UniqueBible
+##
+## For Custom Data and/or Configurations
+## * place custom data in the right places within the folder `~/UniqueBible`
+## * place custom configurations file in the folder `~/UniqueBible` as `~/UniqueBible/config.py.bk`
+services:
+  #
+  # https://github.com/eliranwong/UniqueBible.git
+  #
+  ubhttp:
+    build:
+      container_name: ubhttp
+      context: uniquebible
+      dockerfile: Dockerfile_ubhttp
+      args:
+        UID: ${UID}
+        USER: ${USER}
+    ports:
+      - 8888:8888
+    restart: always
+    volumes:
+      - ${DATA_DIR}:${DATA_DIR}:rw
+  # To run UniqueBibleApp terminal mode:
+  # > docker run -v $HOME/UniqueBible:$HOME/UniqueBible -it uniquebible-ubterm
+  ubterm:
+    build:
+      container_name: ubterm
+      context: uniquebible
+      dockerfile: Dockerfile_ubterm
+      args:
+        UID: ${UID}
+        USER: ${USER}
+    volumes:
+      - ${DATA_DIR}:${DATA_DIR}:rw

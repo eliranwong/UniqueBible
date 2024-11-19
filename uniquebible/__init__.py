@@ -1,4 +1,5 @@
-import os, requests, pkg_resources, re, socket
+import os, requests, re, socket
+import importlib.metadata
 from shutil import copy, copytree
 from pathlib import Path
 from packaging import version
@@ -66,9 +67,9 @@ for i in ("chatGPT", "config", "context", "event", "language", "layout", "menu",
 
 def getPackageInstalledVersion(package):
     try:
-        installed_version = pkg_resources.get_distribution(package).version
+        installed_version = importlib.metadata.version(package)
         return version.parse(installed_version)
-    except pkg_resources.DistributionNotFound:
+    except:
         return None
 
 def getPackageLatestVersion(package):
