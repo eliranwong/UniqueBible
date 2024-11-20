@@ -1,5 +1,13 @@
 PIP package:
 
+0.1.99
+
+* improved display of CHAT::: output
+
+* fixed opening Bible Chat Settings
+
+* fixed Desktop shortcut on Linux
+
 0.1.97-0.1.98
 
 * fixed Linux qt input plugin

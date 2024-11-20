@@ -106,7 +106,7 @@ Version=1.0
 Type=Application
 Terminal=false
 Path={0}
-Exec={1} {2}
+Exec={1} {2} gui
 Icon={3}
 Name=Unique Bible App
 """.format(wd, sys.executable, thisFile, iconPath)

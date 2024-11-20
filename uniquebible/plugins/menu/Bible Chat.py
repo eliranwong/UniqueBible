@@ -67,8 +67,8 @@ class ApiDialog(QDialog):
         elif config.llm_backend == "groq":
             self.apiKeyEdit = QLineEdit(str(config.groqApi_key))
         self.apiKeyEdit.setEchoMode(QLineEdit.Password)
-        self.orgEdit = QLineEdit(config.openaiApiOrganization)
-        self.orgEdit.setEchoMode(QLineEdit.Password)
+        #self.orgEdit = QLineEdit(config.openaiApiOrganization)
+        #self.orgEdit.setEchoMode(QLineEdit.Password)
         self.apiModelBox = QComboBox()
         initialIndex = 0
         index = 0

@@ -269,21 +269,33 @@ def chatContent():
     content = "<h1>AI {0}</h1>".format(config.thisTranslation["chat"])
 
     if config.chatMessages:
-        # add bible reference links
         bibleVerseParser = BibleVerseParser(config.parserStandarisation)
-        content += "<hr>"
         messages = []
         for index, i in enumerate(config.chatMessages):
             iRole = i.get("role", "")
             if not iRole == "system":
-                iRole = "Query" if iRole == "user" else "Response"
                 iContent = i.get("content", "")
                 if iContent:
+                    # add bible reference links
                     iContent = bibleVerseParser.parseText(iContent, splitInChunks=True, parseBooklessReferences=False, canonicalOnly=True)
+                    # convert markdown format to html
+                    iContent = markdown.markdown(iContent)
+                if iRole == "user":
+                    color = "#f2f2f2" if config.theme == 'default' else "#5f5f5f"
+                    iContent = f'''<p><table style='width: 100%;'><tr style='background-color: {color};'>
+                    <td style='vertical-align: text-top;'>{iContent}</td>
+                    </tr></table></p>'''
+                else:
+                    iContent = f'''<p><table style='width: 100%;'><tr>
+                    <td style='vertical-align: text-top;'>{iContent}</td>
+                    </tr></table></p>'''
                 if index == (len(config.chatMessages) - 1):
                     # the last item
-                    iRole = f"""{iRole}<vid id="v{config.mainB}.{config.mainC}.{config.mainV}"></vid>"""
-                messages.append(f'''## {iRole}\n\n{iContent}''')
+                    if config.noQt:
+                        iRole = f"""<vid id="v{config.mainB}.{config.mainC}.{config.mainV}"></vid>"""
+                    else:
+                        iRole = f"""<vid id="v{config.studyB}.{config.studyC}.{config.studyV}"></vid>"""
+                messages.append(f'''{iContent}''')
         content += "\n\n".join(messages)
 
         content += "<hr>"    
@@ -301,7 +313,7 @@ def chatContent():
 
     content += getAiFeatureDisclaimer()
 
-    content = markdown.markdown(content)
+    #content = markdown.markdown(content)
     content += """
 <script>
 function bibleChat() {0}
