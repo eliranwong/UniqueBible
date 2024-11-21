@@ -26,6 +26,7 @@ if os.path.isfile(backupFile) and not hasattr(config, "mainText"):
         exec(configs, globals())
         # copy backup configs
         copy(backupFile, configFile)
+        config.enabled = []
         print("Previous configurations restored!")
     except:
         try:

@@ -1,5 +1,9 @@
 PIP package:
 
+0.2.0
+
+* fixed fresh installation
+
 0.1.99
 
 * improved display of CHAT::: output
