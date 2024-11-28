@@ -205,6 +205,10 @@ class ConfigUtil:
         # config.mistralApi_llmTemperature
         # config.mistralApi_chat_model
         # config.mistralApi_chat_model_max_tokens
+        # config.grokApi_key
+        # config.grokApi_llmTemperature
+        # config.grokApi_chat_model
+        # config.grokApi_chat_model_max_tokens
         # config.openaiApi_key
         # config.openaiApi_llmTemperature
         # config.openaiApi_chat_model
@@ -282,6 +286,19 @@ class ConfigUtil:
         setConfig("groqApi_llmTemperature", """
         # Groq Chat Temperature""",
         0.3) # 0.2-0.8 is good to use
+        setConfig("grokApi_key", """
+        # Grok X AI API Keys""",
+        "")
+        setConfig("grokApi_chat_model", """
+        # Grok X AI Chat Model""",
+        "grok-beta")
+        setConfig("grokApi_chat_model_max_tokens", """
+        # Grok X AI Chat Maximum Output Tokens""",
+        127999) # maximum 127999, greater than this value causes errors
+        setConfig("grokApi_llmTemperature", """
+        # Grok X AI Chat Temperature""",
+        0.3)
+        # mistral
         setConfig("mistralApi_key", """
         # Mistral AI API Keys""",
         "")

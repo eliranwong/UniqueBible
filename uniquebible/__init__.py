@@ -131,7 +131,7 @@ from opencc import OpenCC
 import unicodedata, traceback, markdown
 from uniquebible.util.BibleVerseParser import BibleVerseParser
 
-config.llm_backends = ["openai", "google", "groq", "mistral"]
+config.llm_backends = ["openai", "google", "grok", "groq", "mistral"]
 
 def is_CJK(self, text):
     for char in text:
@@ -145,6 +145,8 @@ def isLLMReady(backend=""):
     if backend == "openai" and config.openaiApi_key:
         return True
     elif backend == "mistral" and config.mistralApi_key:
+        return True
+    elif backend == "grok" and config.grokApi_key:
         return True
     elif backend == "groq" and config.groqApi_key:
         return True
@@ -215,6 +217,19 @@ def getChatResponse(backend, chatMessages) -> Optional[str]:
                 n=1,
                 temperature=config.openaiApi_llmTemperature,
                 max_tokens=config.openaiApi_chat_model_max_tokens,
+                stream=False,
+            )
+        elif backend == "grok":
+            grokClient = OpenAI(
+                api_key=config.grokApi_key,
+                base_url="https://api.x.ai/v1",
+            )
+            completion = grokClient.chat.completions.create(
+                model=config.grokApi_chat_model,
+                messages=chatMessages,
+                n=1,
+                temperature=config.grokApi_llmTemperature,
+                max_tokens=config.grokApi_chat_model_max_tokens,
                 stream=False,
             )
         elif backend == "google":

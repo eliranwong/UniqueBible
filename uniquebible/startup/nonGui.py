@@ -227,6 +227,7 @@ def run_terminal_mode():
 # api-client mode
 
 def run_api_client_mode():
+    cwd = os.getcwd()
 
     def getApiOutput(command: str):
         private = f"private={config.web_api_private}&" if config.web_api_private else ""
@@ -373,9 +374,11 @@ def run_api_client_mode():
         #import traceback
         #print(traceback.format_exc())
         print(f"Failed to connect '{config.web_api_endpoint}' at the moment!")
+    os.chdir(cwd)
 
 # stream mode
 def run_stream_mode():
+    cwd = os.getcwd()
     # standard input
     stdin_text = sys.stdin.read() if not sys.stdin.isatty() else ""
 
@@ -393,6 +396,7 @@ def run_stream_mode():
         # run terminal mode if no command is given
         config.runMode = "terminal"
         run_terminal_mode()
+    os.chdir(cwd)
 
 # ssh-server
 # read setup guide at https://github.com/eliranwong/UniqueBible/wiki/Run-SSH-Server

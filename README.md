@@ -12,7 +12,7 @@ This single project has two major interfaces:
 
 Qt-based Multi-Window Desktop Application:
 
-<b>Tested in:</b> <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Windows">Windows 10</a>, <a href="https://github.com/eliranwong/wsl2/blob/master/bible_apps/desktop.md">Windows WSL2</a>, <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-macOS">macOS [Sierra+]</a> and <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Linux">Linux</a> (Arch, Debian, Ubuntu & Mint), <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Chrome-OS">Chrome OS</a> (Debian 10), <a href="https://github.com/eliranwong/UniqueBible/wiki/Android-iOS-Version">Android / iOS</a>
+<b>Platforms:</b> <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Windows">Windows 10</a>, <a href="https://github.com/eliranwong/wsl2/blob/master/bible_apps/desktop.md">Windows WSL2</a>, <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-macOS">macOS [Sierra+]</a> and <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Linux">Linux</a> (Arch, Debian, Ubuntu & Mint), <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Chrome-OS">Chrome OS</a> (Debian 10), <a href="https://github.com/eliranwong/UniqueBible/wiki/Android-iOS-Version">Android / iOS</a>
 
 Unique Bible App can <a href="https://github.com/eliranwong/UniqueBible/wiki/UBA-Run-Modes">runs in different modes</a>, both online and offline, for examples:
 
@@ -23,6 +23,15 @@ Unique Bible App can <a href="https://github.com/eliranwong/UniqueBible/wiki/UBA
 > <a href="https://github.com/eliranwong/UniqueBible/wiki/Terminal-Mode">Terminal mode</a> - the quickest way to run UBA; the most comprehensive in terms of feature coverage; all platforms supported; local or via ssh
 
 > <a href="https://github.com/eliranwong/UniqueBible/wiki/UBA-Run-Modes">other modes ...</a>
+
+# AI Features
+
+AI Features have been integrated into UniqueBible App. Five backends are supported:
+1. OpenAI / ChatGPT
+2. Google AI / Gemini
+3. X AI / Grok
+4. Grok Cloud API
+5. Mistral AI API.
 
 # Development Team
 

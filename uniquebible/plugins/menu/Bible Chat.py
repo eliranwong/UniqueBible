@@ -64,6 +64,8 @@ class ApiDialog(QDialog):
             self.apiKeyEdit = QLineEdit(config.googleaiApi_key)
         elif config.llm_backend == "mistral":
             self.apiKeyEdit = QLineEdit(str(config.mistralApi_key))
+        elif config.llm_backend == "grok":
+            self.apiKeyEdit = QLineEdit(str(config.grokApi_key))
         elif config.llm_backend == "groq":
             self.apiKeyEdit = QLineEdit(str(config.groqApi_key))
         self.apiKeyEdit.setEchoMode(QLineEdit.Password)
@@ -88,6 +90,12 @@ class ApiDialog(QDialog):
             for key in ("mistral-large-latest", "ministral-8b-latest", "ministral-3b-latest"):
                 self.apiModelBox.addItem(key)
                 if key == config.mistralApi_chat_model:
+                    initialIndex = index
+                index += 1
+        elif config.llm_backend == "grok":
+            for key in ("grok-beta",):
+                self.apiModelBox.addItem(key)
+                if key == config.grokApi_chat_model:
                     initialIndex = index
                 index += 1
         elif config.llm_backend == "groq":
@@ -121,6 +129,8 @@ class ApiDialog(QDialog):
             self.maxTokenEdit = QLineEdit(str(config.googleaiApi_chat_model_max_tokens))
         elif config.llm_backend == "mistral":
             self.maxTokenEdit = QLineEdit(str(config.mistralApi_chat_model_max_tokens))
+        elif config.llm_backend == "grok":
+            self.maxTokenEdit = QLineEdit(str(config.grokApi_chat_model_max_tokens))
         elif config.llm_backend == "groq":
             self.maxTokenEdit = QLineEdit(str(config.groqApi_chat_model_max_tokens))
         self.maxTokenEdit.setToolTip("The maximum number of tokens to generate in the completion.\nThe token count of your prompt plus max_tokens cannot exceed the model's context length. Most models have a context length of 2048 tokens (except for the newest models, which support 4096).")
@@ -476,13 +486,15 @@ class ChatGPTAPI(QWidget):
             self.backends.setCurrentIndex(0)
         elif config.llm_backend == "google":
             self.backends.setCurrentIndex(1)
-        elif config.llm_backend == "groq":
+        elif config.llm_backend == "grok":
             self.backends.setCurrentIndex(2)
-        elif config.llm_backend == "mistral":
+        elif config.llm_backend == "groq":
             self.backends.setCurrentIndex(3)
+        elif config.llm_backend == "mistral":
+            self.backends.setCurrentIndex(4)
         else:
             config.llm_backend == "groq"
-            self.backends.setCurrentIndex(2)
+            self.backends.setCurrentIndex(3)
         self.fontSize = QComboBox()
         self.fontSize.addItems([str(i) for i in range(1, 51)])
         self.fontSize.setCurrentIndex((config.chatGPTFontSize - 1))
@@ -492,6 +504,8 @@ class ChatGPTAPI(QWidget):
             self.temperature.setCurrentIndex(int(config.openaiApi_llmTemperature * 10))
         elif config.llm_backend == "google":
             self.temperature.setCurrentIndex(int(config.googleaiApi_llmTemperature * 10))
+        elif config.llm_backend == "grok":
+            self.temperature.setCurrentIndex(int(config.grokApi_llmTemperature * 10))
         elif config.llm_backend == "groq":
             self.temperature.setCurrentIndex(int(config.groqApi_llmTemperature * 10))
         elif config.llm_backend == "mistral":
@@ -700,6 +714,8 @@ class ChatGPTAPI(QWidget):
                 config.openaiApi_key = dialog.api_key()
             elif config.llm_backend == "google":
                 config.googleaiApi_key = dialog.api_key()
+            elif config.llm_backend == "grok":
+                config.grokApi_key = dialog.api_key()
             elif config.llm_backend == "mistral":
                 config.mistralApi_key = dialog.api_key()
                 try:
@@ -727,6 +743,10 @@ class ChatGPTAPI(QWidget):
                     config.googleaiApi_chat_model_max_tokens = int(dialog.max_token())
                     if config.googleaiApi_chat_model_max_tokens < 20:
                         config.googleaiApi_chat_model_max_tokens = 20
+                elif config.llm_backend == "grok":
+                    config.grokApi_chat_model_max_tokens = int(dialog.max_token())
+                    if config.grokApi_chat_model_max_tokens < 20:
+                        config.grokApi_chat_model_max_tokens = 20
                 elif config.llm_backend == "mistral":
                     config.mistralApi_chat_model_max_tokens = int(dialog.max_token())
                     if config.mistralApi_chat_model_max_tokens < 20:
@@ -753,6 +773,8 @@ class ChatGPTAPI(QWidget):
                 config.openaiApi_chat_model = dialog.apiModel()
             elif config.llm_backend == "google":
                 config.googleaiApi_chat_model = dialog.apiModel()
+            elif config.llm_backend == "grok":
+                config.grokApi_chat_model = dialog.apiModel()
             elif config.llm_backend == "mistral":
                 config.mistralApi_chat_model = dialog.apiModel()
             elif config.llm_backend == "groq":
@@ -768,7 +790,7 @@ class ChatGPTAPI(QWidget):
                 self.parent.reloadMenubar()
             config.mainWindow.runBibleChatPlugins()
             #config.chatGPTApiPredefinedContext = dialog.predefinedContext()
-            config.chatGPTApiContextInAllInputs = dialog.contextInAllInputs()
+            #config.chatGPTApiContextInAllInputs = dialog.contextInAllInputs()
             config.chatGPTApiContext = dialog.context()
             #config.chatGPTApiAudioLanguage = dialog.language()
             self.newData()
@@ -782,13 +804,17 @@ class ChatGPTAPI(QWidget):
         elif index == 1:
             config.llm_backend = "google"
         elif index == 2:
-            config.llm_backend = "groq"
+            config.llm_backend = "grok"
         elif index == 3:
+            config.llm_backend = "groq"
+        elif index == 4:
             config.llm_backend = "mistral"
 
     def updateTemperature(self, index):
         if config.llm_backend == "mistral":
             config.mistralApi_llmTemperature = float(index / 10)
+        elif config.llm_backend == "grok":
+            config.grokApi_llmTemperature = float(index / 10)
         elif config.llm_backend == "groq":
             config.groqApi_llmTemperature = float(index / 10)
         elif config.llm_backend == "openai":
@@ -973,6 +999,7 @@ Follow the following steps:
 1) Register and get an API key in one of the following websites:
     OpenAI - https://platform.openai.com/account/api-keys
     Google - https://ai.google.dev/
+    Grok - https://docs.x.ai/docs
     Groq - https://console.groq.com/keys
     Mistral - https://console.mistral.ai/api-keys/
 2) Select a backend below

@@ -197,6 +197,19 @@ class ChatGPTResponse:
                 max_tokens=config.googleaiApi_chat_model_max_tokens,
                 stream=True,
             )
+        elif config.llm_backend == "grok":
+            grokClient = OpenAI(
+                api_key=config.grokApi_key,
+                base_url="https://api.x.ai/v1",
+            )
+            return grokClient.chat.completions.create(
+                model=config.grokApi_chat_model,
+                messages=thisMessage,
+                n=1,
+                temperature=config.grokApi_llmTemperature,
+                max_tokens=config.grokApi_chat_model_max_tokens,
+                stream=True,
+            )
         elif config.llm_backend == "mistral":
             return Mistral(api_key=getMistralApi_key()).chat.stream(
                 model=config.mistralApi_chat_model,
