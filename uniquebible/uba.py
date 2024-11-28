@@ -152,6 +152,10 @@ Name=Unique Bible App
         else:
             subprocess.Popen([python, mainFile, initialCommand] if initialCommand else [python, mainFile])
 
+def gui():
+    sys.argv.insert(1, "gui")
+    main()
+
 def stream():
     sys.argv.insert(1, "stream")
     main()

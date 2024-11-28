@@ -28,7 +28,10 @@ services:
     volumes:
       - ${DATA_DIR}:${DATA_DIR}:rw
   # To run UniqueBibleApp terminal mode:
-  # > docker run -v $HOME/UniqueBible:$HOME/UniqueBible -it uniquebible-ubterm
+  # > docker run --rm --name ubterm -v $HOME/UniqueBible:$HOME/UniqueBible --network uniquebible_default uniquebible-ubterm
+  # Shell only:
+  # > docker run -it --rm --name ubterm -v $HOME/UniqueBible:$HOME/UniqueBible --network uniquebible_default uniquebible-ubterm sh
+  # Remarks: Use `docker network ls` to check the network name. The default network name is [COMPOSE_PROJECT_NAME]_default
   ubterm:
     build:
       container_name: ubterm

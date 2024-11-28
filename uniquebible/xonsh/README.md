@@ -1,0 +1,1 @@
+To work with auto suggestions and completions on Xonsh, copy the content in completer.py to ~/.xonshrc

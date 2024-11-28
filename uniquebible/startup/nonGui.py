@@ -238,6 +238,8 @@ def run_api_client_mode():
     def multiturn_api_output(apiCommandSuggestions=None):
         from uniquebible.util.prompt_shared_key_bindings import prompt_shared_key_bindings
         from uniquebible.util.uba_command_prompt_key_bindings import api_command_prompt_key_bindings
+        from uniquebible.util.PromptValidator import NumberValidator
+        from prompt_toolkit import prompt
         from prompt_toolkit.key_binding import merge_key_bindings
         from prompt_toolkit.shortcuts import set_title, clear_title
         from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
@@ -245,6 +247,34 @@ def run_api_client_mode():
         from prompt_toolkit.filters import Condition
         from prompt_toolkit.completion import WordCompleter, NestedCompleter, ThreadedCompleter, FuzzyCompleter
         import webbrowser
+
+        def simplePrompt(default="", numberOnly=False, inputIndicator=">>> "):
+            promptStyle = Style.from_dict({
+                "": config.terminalCommandEntryColor2,
+                "indicator": config.terminalPromptIndicatorColor2,
+            })
+            inputIndicator = [
+                ("class:indicator", inputIndicator),
+            ]
+            if numberOnly:
+                userInput = prompt(inputIndicator, style=promptStyle, default=default, validator=NumberValidator()).strip()
+            else:
+                userInput = prompt(inputIndicator, style=promptStyle, default=default).strip()
+            return userInput
+
+        def changeSettings():
+            print("# Chaning web API endpoint ...") # config.web_api_endpoint
+            if configuration := simplePrompt(config.web_api_endpoint):
+                config.web_api_endpoint = configuration
+                ConfigUtil.save()
+            print("# Chaning web API timeout ...") # config.web_api_timeout
+            if configuration := simplePrompt(str(config.web_api_timeout), True):
+                config.web_api_timeout = int(configuration)
+                ConfigUtil.save()
+            print("# Chaning web API private key ...") # config.web_api_private
+            if configuration := simplePrompt(config.web_api_private):
+                config.web_api_private = configuration
+                ConfigUtil.save()
 
         # startup
         set_title("Unique Bible App API-Client")
@@ -260,7 +290,11 @@ def run_api_client_mode():
 
         # initiate main prompt session
         initiateMainPrompt()
-        command_completer = FuzzyCompleter(ThreadedCompleter(NestedCompleter.from_nested_dict(apiCommandSuggestions))) if apiCommandSuggestions is not None else None
+        if apiCommandSuggestions is None:
+            apiCommandSuggestions = {}
+        for i in (".quit", ".help", ".settings"):
+            apiCommandSuggestions[i] = None
+        command_completer = FuzzyCompleter(ThreadedCompleter(NestedCompleter.from_nested_dict(apiCommandSuggestions)))
         auto_suggestion=AutoSuggestFromHistory()
         toolbar = " [ctrl+q] .quit [escape+h] .help "
         style = Style.from_dict({
@@ -295,6 +329,9 @@ def run_api_client_mode():
             if command:
                 if command.lower() == ".quit":
                     break
+                elif command.lower() == ".settings":
+                    changeSettings()
+                    continue
                 elif command.lower() == ".help":
                     webbrowser.open("https://github.com/eliranwong/UniqueBibleAPI")
                     continue

@@ -1,5 +1,13 @@
 PIP package:
 
+0.2.1-0.2.3
+
+* added support of xonsh auto-completions
+
+* improved cli options
+
+* fixed vlc loop issue
+
 0.2.0
 
 * fixed fresh installation

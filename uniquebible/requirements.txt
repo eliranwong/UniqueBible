@@ -9,3 +9,5 @@ mistralai
 openai
 groq
 packaging
+haversine
+xonsh[full]

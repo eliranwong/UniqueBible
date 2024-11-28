@@ -167,7 +167,7 @@ class ConfigUtil:
         # Check installed and latest versions on startup.""",
         True)
 
-        # UBA Web API
+        # UBA Web API (work with GUI)
         setConfig("uniquebible_api_endpoint", """
         # UBA Web API server API endpoint""",
         "https://bible.gospelchurch.uk/html")
@@ -176,6 +176,18 @@ class ConfigUtil:
         10)
         setConfig("uniquebible_api_private", """
         # UBA Web API server API key to access private data""",
+        "")
+
+        # UBA Web API (work with API client mode on console)
+        # Start of api-client mode setting
+        setConfig("web_api_endpoint", """
+        # UniqueBible App web API endpoint.""",
+        "https://bible.gospelchurch.uk/plain")
+        setConfig("web_api_timeout", """
+        # UniqueBible App web API timeout.""",
+        10)
+        setConfig("web_api_private", """
+        # UniqueBible App web API private key.""",
         "")
 
         # start of groq chat setting
@@ -312,17 +324,6 @@ class ConfigUtil:
         # `BIBLE:::` is always the default command when no command keyword is specified.
         # When there is no bible reference found in the entry, after trying with the default command, the original command will be prefixed with the value of `config.secondDefaultCommand` and executed with it.""",
         "REGEXSEARCH:::")
-
-        # Start of api-client mode setting
-        setConfig("web_api_endpoint", """
-        # UniqueBible App web API endpoint.""",
-        "https://bible.gospelchurch.uk/plain")
-        setConfig("web_api_timeout", """
-        # UniqueBible App web API timeout.""",
-        10)
-        setConfig("web_api_private", """
-        # UniqueBible App web API private key.""",
-        "")
 
         # Start of terminal mode setting
         setConfig("terminalWrapWords", """
