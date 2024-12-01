@@ -60,7 +60,6 @@ from uniquebible.gui.DisplayShortcutsWindow import DisplayShortcutsWindow
 from uniquebible.gui.GistWindow import GistWindow
 from uniquebible.gui.Downloader import Downloader, DownloadProcess
 from uniquebible.gui.ModifyDatabaseDialog import ModifyDatabaseDialog
-from uniquebible.gui.WatsonCredentialWindow import WatsonCredentialWindow
 from uniquebible.gui.LanguageItemWindow import LanguageItemWindow
 from uniquebible.gui.ImportSettings import ImportSettings
 #from uniquebible.gui.NoteEditor import NoteEditor
@@ -3170,9 +3169,6 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
     def setupGist(self):
         self.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/Gist-synching")
 
-    def setupWatsonTranslator(self):
-        self.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/IBM-Watson-Language-Translator")
-
     def openUbaWiki(self):
         self.openWebsite("https://github.com/eliranwong/UniqueBible/wiki")
 
@@ -4846,7 +4842,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.setupMenuLayout(config.menuLayout)
             self.reloadControlPanel(False)
 
-    def changeInterfaceLanguage(self, language):
+    def changeInterfaceLanguage(self, language, dummy=None):
         config.displayLanguage = Languages.code[language]
         self.setTranslation()
         self.setupMenuLayout(config.menuLayout)
@@ -4857,19 +4853,13 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     # userLanguage is used when user translate a selected word with right-click menu or use TRANSLATE::: command
     # For example, a user can use English menu but he can translate a word into Chinese.
     def openTranslationLanguageDialog(self):
-        # Use IBM Watson service to translate text
-        translator = Translator()
-        if translator.language_translator is not None:
-            if not config.userLanguage or not config.userLanguage in Translator.toLanguageNames:
-                userLanguage = "English"
-            else:
-                userLanguage = config.userLanguage
-            item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu1_setMyLanguage"], Translator.toLanguageNames, Translator.toLanguageNames.index(userLanguage), False)
-            if ok and item:
-                config.userLanguage = item
+        if not config.userLanguage or not config.userLanguage in Translator.toLanguageNames:
+            userLanguage = "English"
         else:
-            self.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
-            self.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/IBM-Watson-Language-Translator")
+            userLanguage = config.userLanguage
+        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu1_setMyLanguage"], Translator.toLanguageNames, Translator.toLanguageNames.index(userLanguage), False)
+        if ok and item:
+            config.userLanguage = item
 
     # Set verse number single-click action (config.verseNoSingleClickAction)
     def selectSingleClickActionDialog(self):
@@ -5385,11 +5375,6 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         if gw.exec():
             config.gistToken = gw.gistTokenInput.text()
         self.reloadCurrentRecord()
-
-    def showWatsonCredentialWindow(self):
-        window = WatsonCredentialWindow()
-        if window.exec():
-            config.myIBMWatsonApikey, config.myIBMWatsonUrl, config.myIBMWatsonVersion = window.inputApiKey.text(), window.inputURL.text(), window.inputVersion.text()
 
     def showAddLanguageItemWindow(self):
         window = LanguageItemWindow(config.thisTranslation["addLanguageFiles"])

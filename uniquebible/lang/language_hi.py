@@ -1093,4 +1093,5 @@ translation = {
     "donate": "दान",
     "about": "लगभग",
     "githubStatistics": "Githb सांख्यिकी",
+    "overrideCompareToUseAllTexts": "पसंदीदा ग्रंथों के बजाय सभी बाइबिल ग्रंथों की तुलना करने के लिए ओवरराइड कविता तुलना",
 }

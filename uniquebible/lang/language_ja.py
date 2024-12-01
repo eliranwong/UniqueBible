@@ -1093,4 +1093,5 @@ translation = {
     "donate": "ドナーテ",
     "about": "アバウト",
     "githubStatistics": "GitHub 統計",
+    "overrideCompareToUseAllTexts": "お気に入りテキストの代わりに、すべての聖書のテキストを比較するための重複比較をオーバーライド",
 }

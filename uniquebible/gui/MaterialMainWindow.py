@@ -488,14 +488,6 @@ class MaterialMainWindow:
         subMenu = addSubMenu(subMenu01, "menu1_programInterface")
         for language in LanguageUtil.getNamesSupportedLanguages():
             addCheckableMenuItem(subMenu, language, self, partial(self.changeInterfaceLanguage, language), config.displayLanguage, Languages.code[language], translation=False)
-        subMenu = addSubMenu(subMenu01, "watsonTranslator")
-        items = (
-            ("setup", self.setupWatsonTranslator),
-            ("enterCredentials", self.showWatsonCredentialWindow),
-            ("menu1_setMyLanguage", self.openTranslationLanguageDialog),
-        )
-        for feature, action in items:
-            addMenuItem(subMenu, feature, self, action)
         if ("OfflineTts" in config.enabled):
             languages = self.getTtsLanguages()
             languageCodes = list(languages.keys())

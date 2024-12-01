@@ -1315,14 +1315,10 @@ p, li {0} white-space: pre-wrap; {1}
         text = self.editor.textCursor().selectedText()
         if text:
             translator = Translator()
-            if translator.language_translator is not None:
-                fromLanguage = Translator.fromLanguageCodes[self.fromLanguageCombo.currentIndex() - 1] if self.fromLanguageCombo.currentIndex() != 0 else translator.identify(text)
-                toLanguage = Translator.toLanguageCodes[self.toLanguageCombo.currentIndex()]
-                result = translator.translate(text, fromLanguage, toLanguage)
-                self.editor.insertPlainText(result)
-            else:
-                self.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
-                webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/IBM-Watson-Language-Translator")
+            fromLanguage = Translator.fromLanguageCodes[self.fromLanguageCombo.currentIndex() - 1] if self.fromLanguageCombo.currentIndex() != 0 else translator.identify(text)
+            toLanguage = Translator.toLanguageCodes[self.toLanguageCombo.currentIndex()]
+            result = translator.translate(text, fromLanguage, toLanguage)
+            self.editor.insertPlainText(result)
         else:
             self.selectTextFirst()
 

@@ -1093,4 +1093,5 @@ translation = {
     "donate": "Donează",
     "about": "Despre",
     "githubStatistics": "Statistici GitHub",
+    "overrideCompareToUseAllTexts": "Compară versetul cu toate textele biblice în locul textelor favorite",
 }

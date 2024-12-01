@@ -230,14 +230,6 @@ class FocusMainWindow:
         subMenu = addSubMenu(subMenu0, "menu1_programInterface")
         for language in LanguageUtil.getNamesSupportedLanguages():
             addMenuItem(subMenu, language, self, partial(self.changeInterfaceLanguage, language), translation=False)
-        subMenu = addSubMenu(subMenu0, "watsonTranslator")
-        items = (
-            ("setup", self.setupWatsonTranslator),
-            ("enterCredentials", self.showWatsonCredentialWindow),
-            ("menu1_setMyLanguage", self.openTranslationLanguageDialog),
-        )
-        for feature, action in items:
-            addMenuItem(subMenu, feature, self, action)
         if ("OfflineTts" in config.enabled):
             languages = self.getTtsLanguages()
             languageCodes = list(languages.keys())

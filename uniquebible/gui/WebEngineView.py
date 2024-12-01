@@ -892,8 +892,6 @@ class WebEngineView(QWebEngineView):
             separator.setSeparator(True)
             self.addAction(separator)
 
-        # IBM-Watson Translation Service
-
         # Translate into User-defined Language
         userLanguage = config.userLanguage
         translateText = QAction(self)
@@ -909,10 +907,6 @@ class WebEngineView(QWebEngineView):
             action.triggered.connect(partial(self.selectedTextToSelectedLanguage, languageCode))
             translateMenu.addAction(action)
 
-        watsonTranslate = QAction(self)
-        watsonTranslate.setText(config.thisTranslation["watsonTranslator"])
-        watsonTranslate.setMenu(translateMenu)
-
         translateMenu = QMenu()
         for language, languageCode in Languages.googleTranslateCodes.items():
             action = QAction(self)
@@ -927,7 +921,6 @@ class WebEngineView(QWebEngineView):
         translateWrapper = QAction(self)
         translateWrapper.setText(config.thisTranslation["translate"])
         translateWrapperMenu = QMenu()
-        translateWrapperMenu.addAction(watsonTranslate)
         translateWrapperMenu.addAction(googleTranslate)
         translateWrapper.setMenu(translateWrapperMenu)
         self.addAction(translateWrapper)
@@ -1150,7 +1143,6 @@ class WebEngineView(QWebEngineView):
             url = "https://translate.google.com/?sl=origin_language_or_auto&tl={0}&text={1}&op=translate".format(language, selectedText)
             self.openSimpleBrowser(url)
 
-    # Translate selected words into Selected Language (Watson Translator)
     def selectedTextToSelectedLanguage(self, language):
         selectedText = self.selectedTextProcessed()
         if not selectedText:
@@ -1160,32 +1152,22 @@ class WebEngineView(QWebEngineView):
 
     # Check if config.userLanguage is set
     def checkUserLanguage(self):
-        # Use IBM Watson service to translate text
         translator = Translator()
-        if translator.language_translator is not None:
-            if config.userLanguage and config.userLanguage in Translator.toLanguageNames:
-                selectedText = self.selectedTextProcessed()
-                if not selectedText:
-                    self.messageNoSelection()
-                else:
-                    userLanguage = Translator.toLanguageCodes[Translator.toLanguageNames.index(config.userLanguage)]
-                    self.translateTextIntoUserLanguage(selectedText, userLanguage)
+        if config.userLanguage and config.userLanguage in Translator.toLanguageNames:
+            selectedText = self.selectedTextProcessed()
+            if not selectedText:
+                self.messageNoSelection()
             else:
-                self.parent.parent.openTranslationLanguageDialog()
+                userLanguage = Translator.toLanguageCodes[Translator.toLanguageNames.index(config.userLanguage)]
+                self.translateTextIntoUserLanguage(selectedText, userLanguage)
         else:
-            self.parent.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
-            config.mainWindow.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/IBM-Watson-Language-Translator")
+            self.parent.parent.openTranslationLanguageDialog()
 
     # Translate selected words into user-defined language
     def translateTextIntoUserLanguage(self, text, userLanguage="en"):
-        # Use IBM Watson service to translate text
         translator = Translator()
-        if translator.language_translator is not None:
-            translation = translator.translate(text, None, userLanguage)
-            self.openPopover(html=translation)
-        else:
-            self.parent.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
-            config.mainWindow.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/IBM-Watson-Language-Translator")
+        translation = translator.translate(text, "auto", userLanguage)
+        self.openPopover(html=translation)
 
     # TEXT-TO-SPEECH feature
     def textToSpeech(self, activeSelection=False):

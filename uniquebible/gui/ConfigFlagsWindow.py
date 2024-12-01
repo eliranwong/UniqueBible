@@ -146,6 +146,7 @@ class ConfigFlagsWindow(QDialog):
             ("refreshWindowsAfterSavingNote", config.refreshWindowsAfterSavingNote, self.refreshWindowsAfterSavingNoteChanged, True, config.thisTranslation["refreshWindowsAfterSavingNote"]),
             ("limitWorkspaceFilenameLength", config.limitWorkspaceFilenameLength, self.limitWorkspaceFilenameLengthChanged, True, config.thisTranslation["limitWorkspaceFilenameLength"]),
             ("enableHttpRemoteErrorRedirection", config.enableHttpRemoteErrorRedirection, self.enableHttpRemoteErrorRedirection, False, config.thisTranslation["enableHttpRemoteErrorRedirection"]),
+            ("overrideCompareToUseAllTexts", config.overrideCompareToUseAllTexts, self.overrideCompareToUseAllTexts, False,  config.thisTranslation["overrideCompareToUseAllTexts"]),
         ]
         if ("OfflineTts" in config.enabled):
             options += [
@@ -604,3 +605,6 @@ class ConfigFlagsWindow(QDialog):
 
     def enableHttpRemoteErrorRedirection(self):
         config.enableHttpRemoteErrorRedirection = not config.enableHttpRemoteErrorRedirection
+
+    def overrideCompareToUseAllTexts(self):
+        config.overrideCompareToUseAllTexts = not config.overrideCompareToUseAllTexts

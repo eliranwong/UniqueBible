@@ -1093,4 +1093,5 @@ translation = {
     "donate": "ഡോണെറ്റ്",
     "about": "ഏകദേശം",
     "githubStatistics": "ഗിറ്റ്ഹബ് സ്ഥിതിവിവരംName",
+    "overrideCompareToUseAllTexts": "Override verse comparison to compare all Bible texts instead of favourite texts",
 }

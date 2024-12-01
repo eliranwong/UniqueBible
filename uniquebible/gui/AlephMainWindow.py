@@ -176,14 +176,6 @@ class AlephMainWindow:
             )
             for feature, action in items:
                 addMenuItem(subMenu, feature, self, action)
-            subMenu = addSubMenu(menu1_defaults, "watsonTranslator")
-            items = (
-                ("setup", self.setupWatsonTranslator),
-                ("enterCredentials", self.showWatsonCredentialWindow),
-                ("menu1_setMyLanguage", self.openTranslationLanguageDialog),
-            )
-            for feature, action in items:
-                addMenuItem(subMenu, feature, self, action)
             if ("OfflineTts" in config.enabled):
                 languages = self.getTtsLanguages()
                 languageCodes = list(languages.keys())
