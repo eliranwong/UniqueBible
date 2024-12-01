@@ -33,6 +33,7 @@ from uniquebible.db.NoteSqlite import NoteSqlite
 from uniquebible.util.Translator import Translator
 from uniquebible.db.Highlight import Highlight
 from uniquebible.util.TtsLanguages import TtsLanguages
+from uniquebible.util.Languages import Languages
 from uniquebible.db.BiblesSqlite import MorphologySqlite
 from uniquebible.db.JournalSqlite import JournalSqlite
 
@@ -726,8 +727,6 @@ class TextCommandParser:
             # e.g. DOCX:::test.docx"""),
             "translate": (self.translateText, """
             # [KEYWORD] TRANSLATE
-            # Feature - Use IBM Watson service to translate entered 
-            # It works only if user install python package 'ibm-watson'
             # Usage - TRANSLATE:::[text to be translated]
             # Usage - TRANSLATE:::[source_language_code]-[target_language_code]:::[text to be translated]
             # Language code of config.userLanguage is used by default if language code is not provided.  If config.userLanguage is not defined, "en" is used.
@@ -2553,58 +2552,42 @@ class TextCommandParser:
         return ("", "", {})
 
     # TRANSLATE:::
-    # Translate text using IBM Watson service
-    # It works only if user entered their own personal credential and store in config.py locally on users' computer.
-    # The store credentials are only used only for communicating with IBM Watson service with python package 'ibm-watson'
-    # UBA does not collect any of these data.
+    # e.g. TRANSLATE:::神, TRANSLATE:::dios, TRANSLATE:::en-zh:::jesus christ
     def translateText(self, command, source):
         translator = Translator()
-        # Use IBM Watson service to translate text
-        if translator.language_translator is not None:
-            # unpack command
-            if command.count(":::") == 0:
-                fromLanguage = translator.identify(command)
-                toLanguage = "en"
+        languages = Languages().code
+        if command.count(":::") == 0:
+            text = command
+            fromLanguage = "auto"
+            toLanguage = "en"
+            if config.userLanguage and config.userLanguage in languages.keys():
+                toLanguage = languages[config.userLanguage]
+        else:
+            language, text = self.splitCommand(command)
+            if "fr-CA" in language:
+                language = language.replace("fr-CA", "fr")
+            if language.count("-") != 1:
+                if self.parent is not None:
+                    self.parent.displayMessage(config.thisTranslation["message_invalid"])
+            else:
+                fromLanguage, toLanguage = language.split("-")
+                if "@" in fromLanguage:
+                    fromLanguage = fromLanguage.replace("@", "-")
+                if "@" in toLanguage:
+                    toLanguage = toLanguage.replace("@", "-")
                 if not fromLanguage in Translator.fromLanguageCodes:
                     fromLanguage = "en"
-                if config.userLanguage in Translator.toLanguageCodes:
-                    toLanguage = config.userLanguage
-                text = command
+                if not toLanguage in Translator.toLanguageCodes:
+                    toLanguage = "en"
+        translation = translator.translate(text, fromLanguage, toLanguage)
+        if self.parent is not None:
+            self.parent.displayMessage(translation)
+        if config.autoCopyTranslateResult and not config.noQt:
+            if config.qtLibrary == "pyside6":
+                from PySide6.QtWidgets import QApplication
             else:
-                language, text = self.splitCommand(command)
-                if "fr-CA" in language:
-                    language = language.replace("fr-CA", "fr@CA")
-                if "zh-TW" in language:
-                    language = language.replace("zh-TW", "zh@TW")
-                if language.count("-") != 1:
-                    if self.parent is not None:
-                        self.parent.displayMessage(config.thisTranslation["message_invalid"])
-                else:
-                    fromLanguage, toLanguage = language.split("-")
-                    if "@" in fromLanguage:
-                        fromLanguage = fromLanguage.replace("@", "-")
-                    if "@" in toLanguage:
-                        toLanguage = toLanguage.replace("@", "-")
-                    if not fromLanguage in Translator.fromLanguageCodes:
-                        fromLanguage = "en"
-                    if not toLanguage in Translator.toLanguageCodes:
-                        toLanguage = "en"
-            # translate here
-            translation = translator.translate(text, fromLanguage, toLanguage)
-            if self.parent is not None:
-                self.parent.displayMessage(translation)
-            if config.autoCopyTranslateResult and not config.noQt:
-                if config.qtLibrary == "pyside6":
-                    from PySide6.QtWidgets import QApplication
-                else:
-                    from qtpy.QtWidgets import QApplication
-                QApplication.clipboard().setText(translation)
-        else:
-            if self.parent is not None:
-                self.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
-            if self.parent is not None:
-                self.parent.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/IBM-Watson-Language-Translator")
-        return ("", "", {})
+                from qtpy.QtWidgets import QApplication
+            QApplication.clipboard().setText(translation)
 
     # This function below is an old way to process TRANSLATE::: command with goolgetrans
     # However, we found googletrans no longer works with UBA.
@@ -2673,7 +2656,10 @@ class TextCommandParser:
     # COMPARE:::
     def textCompare(self, command, source):
         if command.count(":::") == 0:
-            confirmedTexts = self.getAllFavouriteBibles()
+            if config.overrideCompareToUseAllTexts:
+                confirmedTexts = ["ALL"]
+            else:
+                confirmedTexts = self.getAllFavouriteBibles()
             verseList = self.extractAllVerses(command)
         else:
             texts, references = self.splitCommand(command)
@@ -2689,9 +2675,11 @@ class TextCommandParser:
             config.mainCssBibleFontStyle = ""
             texts = confirmedTexts
             if confirmedTexts == ["ALL"]:
-                #plainBibleList, formattedBibleList = biblesSqlite.getTwoBibleLists()
-                #texts = set(plainBibleList + formattedBibleList)
-                texts = self.getAllFavouriteBibles()
+                if config.overrideCompareToUseAllTexts:
+                    plainBibleList, formattedBibleList = biblesSqlite.getTwoBibleLists()
+                    texts = set(plainBibleList + formattedBibleList)
+                else:
+                    texts = self.getAllFavouriteBibles()
             for text in texts:
                 (fontFile, fontSize, css) = Bible(text).getFontInfo()
                 config.mainCssBibleFontStyle += css

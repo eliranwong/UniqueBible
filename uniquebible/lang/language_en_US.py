@@ -1093,4 +1093,5 @@ translation = {
     "donate": "Donate",
     "about": "About",
     "githubStatistics": "GitHub Statistics",
+    "overrideCompareToUseAllTexts": "Override verse comparison to compare all Bible texts instead of favorite texts",
 }

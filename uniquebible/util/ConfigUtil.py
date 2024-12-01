@@ -699,15 +699,6 @@ class ConfigUtil:
         setConfig("workingTranslation", """
         # Specify the translation which is actively being edited.  This option is created for development purpose.""",
         "en_US")
-        setConfig("myIBMWatsonApikey", """
-        # IBM Watson service api key""",
-        "")
-        setConfig("myIBMWatsonUrl", """
-        # IBM Watson service api url""",
-        "")
-        setConfig("myIBMWatsonVersion", """
-        # IBM Watson service api version""",
-        "2018-05-01")
         setConfig("myGoogleApiKey", """
         # Personal google api key for display of google maps inside UBA window.""",
         "")
@@ -1798,6 +1789,21 @@ class ConfigUtil:
         # Go to redirection page if error in http-server
         """,
         False)
+
+        setConfig("overrideCompareToUseAllTexts", """
+        # Override verse comparison to compare all Bible texts instead of favourite texts
+        """,
+        False)
+
+        setConfig("translate_api_url", """
+        # Translation service API URL
+        """,
+        "https://translate.otweb.com")
+
+        setConfig("translate_api_key", """
+        # Translation service API key
+        """,
+          "")
 
         patFile = os.path.join("secrets", "github", "pat.txt")
         if os.path.exists(patFile):

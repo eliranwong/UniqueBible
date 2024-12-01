@@ -1265,7 +1265,7 @@ class Bible:
             else:
                 return (b, c, v, f"{FileUtil.getVerseAudioTag(self.text, b, c, v)}{textVerse}")
         else:
-            print("Verse table does not exist")
+            print(f"Verse table does not exist in {self.text}")
             return (b, c, v, "")
 
     def readFormattedChapter(self, verse, source):

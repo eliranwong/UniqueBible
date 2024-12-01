@@ -23,8 +23,6 @@ gTTS==2.2.3
 html-text==0.5.2
 html5lib==1.1
 htmldocx==0.0.6
-ibm-cloud-sdk-core==3.14.0
-ibm-watson==5.3.1
 idna==3.7
 importlib-metadata==4.8.1
 Jinja2==3.1.4

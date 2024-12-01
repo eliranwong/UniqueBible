@@ -1,19 +1,19 @@
 import glob, importlib, locale, sys
+import os
+
 from uniquebible import config
 from os import path
 from uniquebible.util.Languages import Languages
 from uniquebible.util.Translator import Translator
 from uniquebible.util.FileUtil import FileUtil
 
-# config.updateModules("Ibmwatson", True)
-
 
 class LanguageUtil:
 
     @staticmethod
     def getCodesSupportedLanguages():
-        files = sorted(glob.glob("lang/language_*.py"))
-        return [file[14:-3] for file in files]
+        files = sorted(os.path.basename(file) for file in glob.glob(config.packageDir + "/lang/language_*.py"))
+        return [file[9:-3] for file in files]
 
     @staticmethod
     def getNamesSupportedLanguages():
@@ -68,7 +68,7 @@ class LanguageUtil:
 
     @staticmethod
     def createNewLanguageFile(lang, force=False):
-        filename = "lang/language_" + lang + ".py"
+        filename = "uniquebible/lang/language_" + lang + ".py"
         if not force and path.exists(filename):
             print(filename + " already exists")
         else:
@@ -86,7 +86,8 @@ class LanguageUtil:
                     if key in ["menu1_app"]:
                         result = text
                     else:
-                        result = translator.translate(text, "en", lang[:2])
+                        toLanguage = Translator.language_mapping[lang]
+                        result = translator.translate(text, "en", toLanguage)
                     fileObj.write('    "{0}": "{1}",\n'.format(key, result))
                 fileObj.write("}")
                 fileObj.close()
@@ -108,7 +109,8 @@ class LanguageUtil:
                     count += 1
                     print(count)
                     text = english[key]
-                    result = translator.translate(text, "en", lang[:2])
+                    toLanguage = Translator.language_mapping[lang]
+                    result = translator.translate(text, "en", toLanguage)
                     missing += '    "{0}": "{1}",\n'.format(key, result)
             FileUtil.insertStringIntoFile(filename, missing, -1)
             print("{0} lines inserted into {1}".format(count, filename))
@@ -125,7 +127,8 @@ class LanguageUtil:
                 if code[:2] == "en":
                     result = englishTranslation
                 else:
-                    result = translator.translate(englishTranslation, "en", "zh-TW" if code == "zh_HANT" else code[:2])
+                    toLanguage = Translator.language_mapping[code]
+                    result = translator.translate(englishTranslation, "en", toLanguage)
                 data = '    "{0}": "{1}",\n'.format(key, result)
                 FileUtil.insertStringIntoFile(filename, data, -1)
                 print("Inserted '{0}' into {1}".format(result, code))
@@ -141,7 +144,8 @@ class LanguageUtil:
                 if code[:2] == "en":
                     result = englishTranslation
                 else:
-                    result = translator.translate(englishTranslation, "en", "zh-TW" if code == "zh_HANT" else code[:2])
+                    toLanguage = Translator.language_mapping[code]
+                    result = translator.translate(englishTranslation, "en", toLanguage)
                 data = '    "{0}": "{1}",\n'.format(key, result)
                 FileUtil.updateStringIntoFile(filename, data)
                 print("updated '{0}' into {1}".format(result, code))
@@ -149,7 +153,6 @@ class LanguageUtil:
     @staticmethod
     def checkLanguageStringToAllFiles(key):
         codes = LanguageUtil.getCodesSupportedLanguages()
-        translator = Translator()
         for code in codes:
             translation = LanguageUtil.loadTranslation(code)
             if key in translation.keys():
@@ -230,5 +233,4 @@ if __name__ == "__main__":
         except Exception as e:
             print("Error executing: " + str(e))
     else:
-        # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("githubStatistics", "GitHub Statistics")
+        addLanguageStringToAllFiles("overrideCompareToUseAllTexts", "Override verse comparison to compare all Bible texts instead of favourite texts")

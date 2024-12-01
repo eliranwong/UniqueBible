@@ -1093,4 +1093,5 @@ translation = {
     "donate": "捐赠",
     "about": "关于",
     "githubStatistics": "GitHub 统计信息",
+    "overrideCompareToUseAllTexts": "取代反比来比较所有圣经文本而不是最爱的文本",
 }

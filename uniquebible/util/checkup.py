@@ -217,14 +217,6 @@ def isBeautifulsoup4Installed():
     except:
         return False
 
-def isIbmWatsonInstalled():
-    try:
-        from ibm_watson import LanguageTranslatorV3
-        from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
-        return True
-    except:
-        return False
-
 def isNumpyInstalled():
     try:
         import numpy
@@ -737,7 +729,6 @@ optional = [
     ("langdetect", "Detect Language", isLangdetectInstalled),
     ("pygithub", "Github access", isPygithubInstalled),
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
-    ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
     ("translate", "Google Translate", isTranslateInstalled),
     ("qrcode", "QR Code", isQrCodeInstalled),
     ("pillow", "QR Code", isPillowInstalled),
@@ -794,7 +785,6 @@ optional = [
     ("pygithub", "Github access", isPygithubInstalled),
     ("qt-material", "Qt Material Themes", isQtMaterialInstalled),
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
-    ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
     ("translate", "Google Translate", isTranslateInstalled),
     ("qrcode", "QR Code", isQrCodeInstalled),
     ("pillow", "QR Code", isPillowInstalled),

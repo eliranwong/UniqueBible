@@ -1093,4 +1093,5 @@ translation = {
     "donate": "기부하다",
     "about": "정보",
     "githubStatistics": "깃허브 통계",
+    "overrideCompareToUseAllTexts": "가장 좋아하는 텍스트 대신 모든 성경 텍스트를 비교하는 배율 비교",
 }

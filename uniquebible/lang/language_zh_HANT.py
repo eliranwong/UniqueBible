@@ -1093,4 +1093,5 @@ translation = {
     "donate": "多納特",
     "about": "關於",
     "githubStatistics": "GitHub 統計資料",
+    "overrideCompareToUseAllTexts": "在比對所有聖經取而代之的取而代之的取而代之",
 }
