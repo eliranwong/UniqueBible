@@ -48,7 +48,8 @@ completer add "ub_completer" ub_completer "start"
 
 # Get UniqueBible App API resources
 import requests, re
-url = f"https://bible.gospelchurch.uk/json?cmd=.resources"
+private = f"private={ubaconfig.web_api_private}&" if ubaconfig.web_api_private else ""
+url = f"""{ubaconfig.web_api_endpoint}?{private}cmd=.resources"""
 response = requests.get(url)
 response.encoding = "utf-8"
 api_resources = response.json()
