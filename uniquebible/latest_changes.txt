@@ -1,5 +1,15 @@
 PIP package:
 
+0.2.6
+
+* added a running mode `api-client-localhost`
+
+* added command `ubal` to connect web api running on localhost
+
+0.2.5
+
+* use translateLibre for translation
+
 0.2.4
 
 * added support of using X AI Grok model

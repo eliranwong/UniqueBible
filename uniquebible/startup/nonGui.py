@@ -226,17 +226,21 @@ def run_terminal_mode():
 
 # api-client mode
 
-def run_api_client_mode():
+def run_api_client_mode(localhost: bool =False):
     cwd = os.getcwd()
 
-    def getApiOutput(command: str):
+    def getApiOutput(command: str, localhost: bool =False):
+        endpoint = f"http://{NetworkUtil.get_ip()}:{config.httpServerPort}/plain" if localhost else config.web_api_endpoint
         private = f"private={config.web_api_private}&" if config.web_api_private else ""
-        url = f"""{config.web_api_endpoint}?{private}cmd={command}"""
-        response = requests.get(url, timeout=config.web_api_timeout)
-        response.encoding = "utf-8"
-        print(response.text.strip())
+        url = f"""{endpoint}?{private}cmd={command}"""
+        try:
+            response = requests.get(url, timeout=config.web_api_timeout)
+            response.encoding = "utf-8"
+            print(response.text.strip())
+        except Exception as err:
+            print(f"An error occurred: {err}")
 
-    def multiturn_api_output(apiCommandSuggestions=None):
+    def multiturn_api_output(apiCommandSuggestions=None, localhost=False):
         from uniquebible.util.prompt_shared_key_bindings import prompt_shared_key_bindings
         from uniquebible.util.uba_command_prompt_key_bindings import api_command_prompt_key_bindings
         from uniquebible.util.PromptValidator import NumberValidator
@@ -348,7 +352,7 @@ def run_api_client_mode():
                 # change full width characters
                 command = re.sub("：：：", r":::", command)
                 
-                getApiOutput(command)
+                getApiOutput(command, localhost=localhost)
 
         clear_title()
 
@@ -360,7 +364,7 @@ def run_api_client_mode():
 
         if command:
             # stream output directly
-            getApiOutput(command)
+            getApiOutput(command, localhost=localhost)
         else:
             # interactive mode
             private = f"private={config.web_api_private}&" if config.web_api_private else ""
@@ -368,7 +372,7 @@ def run_api_client_mode():
             r.encoding = "utf-8"
             apiCommandSuggestions = r.json()
 
-            multiturn_api_output(apiCommandSuggestions=apiCommandSuggestions)
+            multiturn_api_output(apiCommandSuggestions=apiCommandSuggestions, localhost=localhost)
     
     except:
         #import traceback
@@ -494,6 +498,7 @@ def startHttpServer():
     if (len(sys.argv) > 2):
         port = int(sys.argv[2])
     config.thisHttpServerPort = port
+    #ConfigUtil.save()
     print("Running in HTTP Server Mode")
     print("Open browser link: 'http://{0}:{1}'".format(NetworkUtil.get_ip(), port))
     socketserver.TCPServer.allow_reuse_address = True
@@ -511,9 +516,13 @@ def startApiServer():
 
     config.restartApiServer = False
     port = config.httpServerPort
-    if (len(sys.argv) > 2):
-        port = int(sys.argv[2])
+    try:
+        if (len(sys.argv) > 2):
+            port = int(sys.argv[2])
+    except:
+        pass
     config.thisHttpServerPort = port
+
     print("Running in API Server Mode")
     print("API URL: 'http://{0}:{1}'".format(NetworkUtil.get_ip(), port))
     socketserver.TCPServer.allow_reuse_address = True

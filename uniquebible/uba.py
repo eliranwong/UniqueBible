@@ -16,7 +16,7 @@ def main():
 
     # check running mode and initial command
     runMode = sys.argv[1] if len(sys.argv) > 1 else ""
-    enableCli = True if runMode.lower() in ("stream", "cli", "cli.py", "gui", "terminal", "docker", "telnet-server", "http-server", "execute-macro", "api-server", "api-client") else False
+    enableCli = True if runMode.lower() in ("stream", "cli", "cli.py", "gui", "terminal", "docker", "telnet-server", "http-server", "execute-macro", "api-server", "api-client", "api-client-localhost") else False
     initialCommand = input("Enter command: ").strip() if runMode == "-i" else " ".join(sys.argv[1:]).strip()
     initialCommand = initialCommand.strip()
 
@@ -163,6 +163,11 @@ def stream():
 def api():
     # web api-client, not api-server mode
     sys.argv.insert(1, "api-client")
+    main()
+
+def apil():
+    # web api-client, not api-server mode; connect to localhost
+    sys.argv.insert(1, "api-client-localhost")
     main()
 
 def http():

@@ -57,7 +57,7 @@ api_resources = response.json()
 @non_exclusive_completer
 @contextual_completer
 def ubapi_completer(context):
-    if context.command and context.command.args and context.command.args[0].value in ('ubapi', 'uba') and context.command.prefix:
+    if context.command and context.command.args and context.command.args[0].value in ('ubapi', 'uba', 'ubal') and context.command.prefix:
         check = " ".join([i.value for i in context.command.args[1:] if hasattr(i, "value")]) + context.command.prefix
         if re.search(f"^({'|'.join(bibleKeywords)}):::", check, re.IGNORECASE):
             return set([context.command.prefix+i for i in api_resources.get("bibleListAbb", [])])

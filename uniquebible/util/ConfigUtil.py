@@ -67,7 +67,7 @@ class ConfigUtil:
 
         # check running mode
         config.runMode = sys.argv[1].lower() if len(sys.argv) > 1 else ""
-        if config.runMode and not config.runMode in ("stream", "setup-only", "cli", "gui", "terminal", "docker", "telnet-server", "http-server", "execute-macro", "api-server", "api-client"):
+        if config.runMode and not config.runMode in ("stream", "setup-only", "cli", "gui", "terminal", "docker", "telnet-server", "http-server", "execute-macro", "api-server", "api-client", "api-client-localhost"):
             config.runMode = ""
 
         # Temporary configurations
