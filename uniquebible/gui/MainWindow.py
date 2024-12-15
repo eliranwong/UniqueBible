@@ -2958,7 +2958,7 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
             config.numberOfTab = integer
             self.handleRestart()
 
-    def setIconButtonSize(self, size=None):
+    def setIconButtonSize(self, size=None, dummy=None):
         if size is None:
             integer, ok = QInputDialog.getInt(self,
                                             "UniqueBible", config.thisTranslation["customiseIconSize"], config.iconButtonSize, 12,
