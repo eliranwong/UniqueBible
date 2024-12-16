@@ -14,7 +14,7 @@ class GithubUtil:
         if len(repo) > 0:
             self.repo = self.g.get_repo(repo)
 
-    def printAllPersonalRepos(self):
+    def printAllRepos(self):
         if self.repo:
             for repo in self.g.get_user().get_repos():
                 print(repo.name)
@@ -72,11 +72,6 @@ class GithubUtil:
 if __name__ == "__main__":
     from uniquebible.util.GitHubRepoInfo import GitHubRepoInfo
 
-    # github = GithubUtil(GitHubRepoInfo.bibles[0])
-    # github.printContentsOfRepo()
-
-    github = GithubUtil("otseng/UBA-Wiki")
-    github.printContentsOfRepo()
-    github.printBranches()
-    github.downloadFile("file.zip", "tree-2c12af93b64436c86869f58ce3e7b4ce24dd5772")
+    github = GithubUtil(GitHubRepoInfo.bibles[0])
+    github.printAllRepos()
 

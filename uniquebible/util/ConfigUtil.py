@@ -1728,8 +1728,9 @@ class ConfigUtil:
         False)
         config.help["githubAccessToken"] = """
         # Github access token"""
-        token = "{0}_{1}0{2}".format('tuc', 'AAUqeeL85rzuqvqZCx4B', 'iu2CrbkH41IBZJE')
-        config.githubAccessToken = codecs.encode(token, 'rot_13')
+        token = "{0}_{1}_{2}".format('tvguho_cng', '11NNTRMXN0v3X2sTuLF0Yg', 'TNK81tX21MzjexjP4pnqTbV9l1tVADsn54ybj4s6PzKLRQ2IRKMa1whP3O2')
+        githubAccessToken = codecs.encode(token, 'rot_13')
+        setConfig("githubAccessToken", "githubAccessToken", githubAccessToken)
         setConfig("includeStrictDocTypeInNote", """
         # Include the strict doc type in first line of notes""",
         True)
