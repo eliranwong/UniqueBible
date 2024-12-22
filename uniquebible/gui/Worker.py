@@ -164,6 +164,23 @@ class ChatGPTResponse:
                     return ""
             else:
                 return ""
+        def getGithubApi_key():
+            '''
+            support multiple github api keys
+            User can manually edit config to change the value of config.githubApi_key to a list of multiple api keys instead of a string of a single api key
+            '''
+            if config.githubApi_key:
+                if isinstance(config.githubApi_key, str):
+                    return config.githubApi_key
+                elif isinstance(config.githubApi_key, list):
+                    if len(config.githubApi_key) > 1:
+                        # rotate multiple api keys
+                        config.githubApi_key = config.githubApi_key[1:] + [config.githubApi_key[0]]
+                    return config.githubApi_key[0]
+                else:
+                    return ""
+            else:
+                return ""
         def getMistralApi_key():
             '''
             support multiple mistral api keys
@@ -223,6 +240,19 @@ class ChatGPTResponse:
                 return None
             os.environ["OPENAI_API_KEY"] = config.openaiApi_key
             return OpenAI().chat.completions.create(
+                model=config.openaiApi_chat_model,
+                messages=thisMessage,
+                n=1,
+                temperature=config.openaiApi_llmTemperature,
+                max_tokens=config.openaiApi_chat_model_max_tokens,
+                stream=True,
+            )
+        elif config.llm_backend == "github":
+            githubClient = OpenAI(
+                api_key=getGithubApi_key(),
+                base_url="https://models.inference.ai.azure.com",
+            )
+            return githubClient.chat.completions.create(
                 model=config.openaiApi_chat_model,
                 messages=thisMessage,
                 n=1,

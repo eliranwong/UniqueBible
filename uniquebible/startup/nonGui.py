@@ -334,7 +334,8 @@ def run_api_client_mode(localhost: bool =False):
             if command:
                 if command.lower() == ".quit":
                     break
-                elif command.lower() == ".settings":
+                #elif command.lower() == ".settings":
+                elif not localhost and command.lower() == ".settings":
                     changeSettings()
                     continue
                 elif command.lower() == ".help":

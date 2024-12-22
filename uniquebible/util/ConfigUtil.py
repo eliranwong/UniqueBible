@@ -326,6 +326,9 @@ class ConfigUtil:
         setConfig("openaiApi_key", """
         # OpenAI API Keys""",
         "")
+        setConfig("githubApi_key", """
+        # Github API Keys""",
+        "")
         setConfig("openaiApi_chat_model", """
         # OpenAI Chat Model""",
         "gpt-4o")

@@ -131,7 +131,7 @@ from opencc import OpenCC
 import unicodedata, traceback, markdown
 from uniquebible.util.BibleVerseParser import BibleVerseParser
 
-config.llm_backends = ["openai", "google", "grok", "groq", "mistral"]
+config.llm_backends = ["openai", "github", "google", "grok", "groq", "mistral"]
 
 def is_CJK(self, text):
     for char in text:
@@ -144,6 +144,8 @@ def isLLMReady(backend=""):
         backend = config.llm_backend
     if backend == "openai" and config.openaiApi_key:
         return True
+    elif backend == "github" and config.githubApi_key:
+        return True
     elif backend == "mistral" and config.mistralApi_key:
         return True
     elif backend == "grok" and config.grokApi_key:
@@ -153,6 +155,24 @@ def isLLMReady(backend=""):
     elif backend == "google" and config.googleaiApi_key:
         return True
     return False
+
+def getGithubApi_key() -> str:
+    '''
+    support multiple github api keys
+    User can manually edit config to change the value of config.githubApi_key to a list of multiple api keys instead of a string of a single api key
+    '''
+    if config.githubApi_key:
+        if isinstance(config.githubApi_key, str):
+            return config.githubApi_key
+        elif isinstance(config.githubApi_key, list):
+            if len(config.githubApi_key) > 1:
+                # rotate multiple api keys
+                config.githubApi_key = config.githubApi_key[1:] + [config.githubApi_key[0]]
+            return config.githubApi_key[0]
+        else:
+            return ""
+    else:
+        return ""
 
 def getGroqApi_key() -> str:
     '''
@@ -212,6 +232,19 @@ def getChatResponse(backend, chatMessages) -> Optional[str]:
         elif backend == "openai":
             os.environ["OPENAI_API_KEY"] = config.openaiApi_key
             completion = OpenAI().chat.completions.create(
+                model=config.openaiApi_chat_model,
+                messages=chatMessages,
+                n=1,
+                temperature=config.openaiApi_llmTemperature,
+                max_tokens=config.openaiApi_chat_model_max_tokens,
+                stream=False,
+            )
+        elif backend == "github":
+            githubClient = OpenAI(
+                api_key=getGithubApi_key(),
+                base_url="https://models.inference.ai.azure.com",
+            )
+            completion = githubClient.chat.completions.create(
                 model=config.openaiApi_chat_model,
                 messages=chatMessages,
                 n=1,

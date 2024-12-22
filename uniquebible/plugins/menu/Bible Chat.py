@@ -68,14 +68,16 @@ class ApiDialog(QDialog):
             self.apiKeyEdit = QLineEdit(str(config.grokApi_key))
         elif config.llm_backend == "groq":
             self.apiKeyEdit = QLineEdit(str(config.groqApi_key))
+        elif config.llm_backend == "github":
+            self.apiKeyEdit = QLineEdit(str(config.githubApi_key))
         self.apiKeyEdit.setEchoMode(QLineEdit.Password)
         #self.orgEdit = QLineEdit(config.openaiApiOrganization)
         #self.orgEdit.setEchoMode(QLineEdit.Password)
         self.apiModelBox = QComboBox()
         initialIndex = 0
         index = 0
-        if config.llm_backend == "openai":
-            for key in ("gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo"):
+        if config.llm_backend in ("openai", "github"):
+            for key in ("gpt-4o", "gpt-4o-mini"):
                 self.apiModelBox.addItem(key)
                 if key == config.openaiApi_chat_model:
                     initialIndex = index
@@ -123,7 +125,7 @@ class ApiDialog(QDialog):
                 initialIndex = index
             index += 1
         self.loadingInternetSearchesBox.setCurrentIndex(initialIndex)
-        if config.llm_backend == "openai":
+        if config.llm_backend in ("openai", "github"):
             self.maxTokenEdit = QLineEdit(str(config.openaiApi_chat_model_max_tokens))
         elif config.llm_backend == "google":
             self.maxTokenEdit = QLineEdit(str(config.googleaiApi_chat_model_max_tokens))
@@ -484,23 +486,25 @@ class ChatGPTAPI(QWidget):
         self.backends.addItems(config.llm_backends)
         if config.llm_backend == "openai":
             self.backends.setCurrentIndex(0)
-        elif config.llm_backend == "google":
+        elif config.llm_backend == "github":
             self.backends.setCurrentIndex(1)
-        elif config.llm_backend == "grok":
+        elif config.llm_backend == "google":
             self.backends.setCurrentIndex(2)
-        elif config.llm_backend == "groq":
+        elif config.llm_backend == "grok":
             self.backends.setCurrentIndex(3)
-        elif config.llm_backend == "mistral":
+        elif config.llm_backend == "groq":
             self.backends.setCurrentIndex(4)
+        elif config.llm_backend == "mistral":
+            self.backends.setCurrentIndex(5)
         else:
             config.llm_backend == "groq"
-            self.backends.setCurrentIndex(3)
+            self.backends.setCurrentIndex(4)
         self.fontSize = QComboBox()
         self.fontSize.addItems([str(i) for i in range(1, 51)])
         self.fontSize.setCurrentIndex((config.chatGPTFontSize - 1))
         self.temperature = QComboBox()
         self.temperature.addItems([str(i/10) for i in range(0, 21)])
-        if config.llm_backend == "openai":
+        if config.llm_backend in ("openai", "github"):
             self.temperature.setCurrentIndex(int(config.openaiApi_llmTemperature * 10))
         elif config.llm_backend == "google":
             self.temperature.setCurrentIndex(int(config.googleaiApi_llmTemperature * 10))
@@ -732,10 +736,18 @@ class ChatGPTAPI(QWidget):
                         config.groqApi_key = check
                 except:
                     pass
+            elif config.llm_backend == "github":
+                config.githubApi_key = dialog.api_key()
+                try:
+                    check = eval(config.githubApi_key)
+                    if isinstance(check, list):
+                        config.githubApi_key = check
+                except:
+                    pass
             os.environ["OPENAI_API_KEY"] = config.openaiApi_key
             #config.openaiApiOrganization = dialog.org()
             try:
-                if config.llm_backend == "openai":
+                if config.llm_backend in ("openai", "github"):
                     config.openaiApi_chat_model_max_tokens = int(dialog.max_token())
                     if config.openaiApi_chat_model_max_tokens < 20:
                         config.openaiApi_chat_model_max_tokens = 20
@@ -769,7 +781,7 @@ class ChatGPTAPI(QWidget):
             config.chatGPTApiAutoScrolling = dialog.enable_auto_scrolling()
             config.runPythonScriptGlobally = dialog.enable_runPythonScriptGlobally()
             config.chatAfterFunctionCalled = dialog.enable_chatAfterFunctionCalled()
-            if config.llm_backend == "openai":
+            if config.llm_backend ("openai", "github"):
                 config.openaiApi_chat_model = dialog.apiModel()
             elif config.llm_backend == "google":
                 config.googleaiApi_chat_model = dialog.apiModel()
@@ -802,12 +814,14 @@ class ChatGPTAPI(QWidget):
         if index == 0:
             config.llm_backend = "openai"
         elif index == 1:
-            config.llm_backend = "google"
+            config.llm_backend = "github"
         elif index == 2:
-            config.llm_backend = "grok"
+            config.llm_backend = "google"
         elif index == 3:
-            config.llm_backend = "groq"
+            config.llm_backend = "grok"
         elif index == 4:
+            config.llm_backend = "groq"
+        elif index == 5:
             config.llm_backend = "mistral"
 
     def updateTemperature(self, index):
@@ -817,7 +831,7 @@ class ChatGPTAPI(QWidget):
             config.grokApi_llmTemperature = float(index / 10)
         elif config.llm_backend == "groq":
             config.groqApi_llmTemperature = float(index / 10)
-        elif config.llm_backend == "openai":
+        elif config.llm_backend in ("openai", "github"):
             config.openaiApi_llmTemperature = float(index / 10)
         elif config.llm_backend == "google":
             config.googleaiApi_llmTemperature = float(index / 10)
@@ -998,6 +1012,7 @@ class ChatGPTAPI(QWidget):
 Follow the following steps:
 1) Register and get an API key in one of the following websites:
     OpenAI - https://platform.openai.com/account/api-keys
+    Github - https://github.com/eliranwong/UniqueBible/wiki/Free-Github-API-Key
     Google - https://ai.google.dev/
     Grok - https://docs.x.ai/docs
     Groq - https://console.groq.com/keys
