@@ -791,7 +791,7 @@ class ChatGPTAPI(QWidget):
             config.chatGPTApiAutoScrolling = dialog.enable_auto_scrolling()
             config.runPythonScriptGlobally = dialog.enable_runPythonScriptGlobally()
             config.chatAfterFunctionCalled = dialog.enable_chatAfterFunctionCalled()
-            if config.llm_backend ("openai", "github", "azure"):
+            if config.llm_backend in ("openai", "github", "azure"):
                 config.openaiApi_chat_model = dialog.apiModel()
             elif config.llm_backend == "google":
                 config.googleaiApi_chat_model = dialog.apiModel()
