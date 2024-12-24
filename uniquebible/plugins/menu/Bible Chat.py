@@ -85,7 +85,7 @@ class ApiDialog(QDialog):
                     initialIndex = index
                 index += 1
         elif config.llm_backend == "google":
-            for key in ("gemini-1.5-flash", "gemini-1.5-flash-8b", "gemini-1.5-pro"):
+            for key in ("gemini-2.0-flash-exp", "gemini-1.5-flash", "gemini-1.5-flash-8b", "gemini-1.5-pro"):
                 self.apiModelBox.addItem(key)
                 if key == config.googleaiApi_chat_model:
                     initialIndex = index
