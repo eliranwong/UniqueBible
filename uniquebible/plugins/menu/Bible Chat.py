@@ -60,6 +60,8 @@ class ApiDialog(QDialog):
         self.setWindowTitle(config.thisTranslation["settings"])
         if config.llm_backend == "openai":
             self.apiKeyEdit = QLineEdit(config.openaiApi_key)
+        elif config.llm_backend == "azure":
+            self.apiKeyEdit = QLineEdit(config.azureApi_key)
         elif config.llm_backend == "google":
             self.apiKeyEdit = QLineEdit(config.googleaiApi_key)
         elif config.llm_backend == "mistral":
@@ -76,7 +78,7 @@ class ApiDialog(QDialog):
         self.apiModelBox = QComboBox()
         initialIndex = 0
         index = 0
-        if config.llm_backend in ("openai", "github"):
+        if config.llm_backend in ("openai", "github", "azure"):
             for key in ("gpt-4o", "gpt-4o-mini"):
                 self.apiModelBox.addItem(key)
                 if key == config.openaiApi_chat_model:
@@ -101,7 +103,7 @@ class ApiDialog(QDialog):
                     initialIndex = index
                 index += 1
         elif config.llm_backend == "groq":
-            for key in ("gemma2-9b-it", "gemma-7b-it", "llama-3.1-70b-versatile", "llama-3.1-8b-instant", "llama-3.2-1b-preview", "llama-3.2-3b-preview", "llama-3.2-11b-vision-preview", "llama-3.2-90b-vision-preview", "llama3-70b-8192", "llama3-8b-8192", "mixtral-8x7b-32768"):
+            for key in ("gemma2-9b-it", "gemma-7b-it", "llama-3.3-70b-versatile", "llama-3.1-8b-instant", "llama-3.2-1b-preview", "llama-3.2-3b-preview", "llama-3.2-11b-vision-preview", "llama-3.2-90b-vision-preview", "llama3-70b-8192", "llama3-8b-8192", "mixtral-8x7b-32768"):
                 self.apiModelBox.addItem(key)
                 if key == config.groqApi_chat_model:
                     initialIndex = index
@@ -125,7 +127,7 @@ class ApiDialog(QDialog):
                 initialIndex = index
             index += 1
         self.loadingInternetSearchesBox.setCurrentIndex(initialIndex)
-        if config.llm_backend in ("openai", "github"):
+        if config.llm_backend in ("openai", "github", "azure"):
             self.maxTokenEdit = QLineEdit(str(config.openaiApi_chat_model_max_tokens))
         elif config.llm_backend == "google":
             self.maxTokenEdit = QLineEdit(str(config.googleaiApi_chat_model_max_tokens))
@@ -190,6 +192,9 @@ class ApiDialog(QDialog):
         optional = config.thisTranslation["optional"]
         custom = config.thisTranslation["custom"].lower()
         layout.addRow(f"{config.llm_backend.capitalize()} API Key [{required}]:", self.apiKeyEdit)
+        if config.llm_backend == "azure":
+            self.azureBaseUrl = QLineEdit(config.azureBaseUrl)
+            layout.addRow(f"Azure endpoint [{required}]:", self.azureBaseUrl)
         #layout.addRow(f"Organization ID [{optional}]:", self.orgEdit)
         layout.addRow(f"Chat Model [{required}]:", self.apiModelBox)
         layout.addRow(f"Max Token [{required}]:", self.maxTokenEdit)
@@ -488,14 +493,16 @@ class ChatGPTAPI(QWidget):
             self.backends.setCurrentIndex(0)
         elif config.llm_backend == "github":
             self.backends.setCurrentIndex(1)
-        elif config.llm_backend == "google":
+        elif config.llm_backend == "azure":
             self.backends.setCurrentIndex(2)
-        elif config.llm_backend == "grok":
+        elif config.llm_backend == "google":
             self.backends.setCurrentIndex(3)
         elif config.llm_backend == "groq":
             self.backends.setCurrentIndex(4)
         elif config.llm_backend == "mistral":
             self.backends.setCurrentIndex(5)
+        elif config.llm_backend == "grok":
+            self.backends.setCurrentIndex(6)
         else:
             config.llm_backend == "groq"
             self.backends.setCurrentIndex(4)
@@ -504,7 +511,7 @@ class ChatGPTAPI(QWidget):
         self.fontSize.setCurrentIndex((config.chatGPTFontSize - 1))
         self.temperature = QComboBox()
         self.temperature.addItems([str(i/10) for i in range(0, 21)])
-        if config.llm_backend in ("openai", "github"):
+        if config.llm_backend in ("openai", "github", "azure"):
             self.temperature.setCurrentIndex(int(config.openaiApi_llmTemperature * 10))
         elif config.llm_backend == "google":
             self.temperature.setCurrentIndex(int(config.googleaiApi_llmTemperature * 10))
@@ -716,6 +723,9 @@ class ChatGPTAPI(QWidget):
         if result == QDialog.Accepted:
             if config.llm_backend == "openai":
                 config.openaiApi_key = dialog.api_key()
+            elif config.llm_backend == "azure":
+                config.azureApi_key = dialog.api_key()
+                config.azureBaseUrl = dialog.azureBaseUrl.text().strip()
             elif config.llm_backend == "google":
                 config.googleaiApi_key = dialog.api_key()
             elif config.llm_backend == "grok":
@@ -747,7 +757,7 @@ class ChatGPTAPI(QWidget):
             os.environ["OPENAI_API_KEY"] = config.openaiApi_key
             #config.openaiApiOrganization = dialog.org()
             try:
-                if config.llm_backend in ("openai", "github"):
+                if config.llm_backend in ("openai", "github", "azure"):
                     config.openaiApi_chat_model_max_tokens = int(dialog.max_token())
                     if config.openaiApi_chat_model_max_tokens < 20:
                         config.openaiApi_chat_model_max_tokens = 20
@@ -781,7 +791,7 @@ class ChatGPTAPI(QWidget):
             config.chatGPTApiAutoScrolling = dialog.enable_auto_scrolling()
             config.runPythonScriptGlobally = dialog.enable_runPythonScriptGlobally()
             config.chatAfterFunctionCalled = dialog.enable_chatAfterFunctionCalled()
-            if config.llm_backend ("openai", "github"):
+            if config.llm_backend ("openai", "github", "azure"):
                 config.openaiApi_chat_model = dialog.apiModel()
             elif config.llm_backend == "google":
                 config.googleaiApi_chat_model = dialog.apiModel()
@@ -816,13 +826,15 @@ class ChatGPTAPI(QWidget):
         elif index == 1:
             config.llm_backend = "github"
         elif index == 2:
-            config.llm_backend = "google"
+            config.llm_backend = "azure"
         elif index == 3:
-            config.llm_backend = "grok"
+            config.llm_backend = "google"
         elif index == 4:
             config.llm_backend = "groq"
         elif index == 5:
             config.llm_backend = "mistral"
+        elif index == 6:
+            config.llm_backend = "grok"
 
     def updateTemperature(self, index):
         if config.llm_backend == "mistral":
@@ -831,7 +843,7 @@ class ChatGPTAPI(QWidget):
             config.grokApi_llmTemperature = float(index / 10)
         elif config.llm_backend == "groq":
             config.groqApi_llmTemperature = float(index / 10)
-        elif config.llm_backend in ("openai", "github"):
+        elif config.llm_backend in ("openai", "github", "azure"):
             config.openaiApi_llmTemperature = float(index / 10)
         elif config.llm_backend == "google":
             config.googleaiApi_llmTemperature = float(index / 10)

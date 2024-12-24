@@ -1,5 +1,11 @@
 PIP package:
 
+0.2.7-0.2.11
+
+* added support of using FREE Github API key
+
+* removed old AI model from Bible Chat list
+
 0.2.6
 
 * added a running mode `api-client-localhost`

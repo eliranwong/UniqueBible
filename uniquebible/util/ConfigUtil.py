@@ -279,7 +279,7 @@ class ConfigUtil:
         "")
         setConfig("groqApi_chat_model", """
         # Groq Chat Model""",
-        "llama-3.1-70b-versatile")
+        "llama-3.3-70b-versatile")
         setConfig("groqApi_chat_model_max_tokens", """
         # Groq Chat Maximum Output Tokens""",
         8000)
@@ -327,7 +327,13 @@ class ConfigUtil:
         # OpenAI API Keys""",
         "")
         setConfig("githubApi_key", """
-        # Github API Keys""",
+        # Github API Keys""", # either a string or a list of strings
+        "")
+        setConfig("azureApi_key", """
+        # Azure API Key""",
+        "")
+        setConfig("azureBaseUrl", """
+        # Github API inference endpoint""",
         "")
         setConfig("openaiApi_chat_model", """
         # OpenAI Chat Model""",

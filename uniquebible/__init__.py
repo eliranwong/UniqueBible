@@ -123,7 +123,7 @@ else:
 
 # AI Features
 
-from openai import OpenAI
+from openai import OpenAI, AzureOpenAI
 from mistralai import Mistral
 from groq import Groq
 from typing import Optional
@@ -131,7 +131,9 @@ from opencc import OpenCC
 import unicodedata, traceback, markdown
 from uniquebible.util.BibleVerseParser import BibleVerseParser
 
-config.llm_backends = ["openai", "github", "google", "grok", "groq", "mistral"]
+config.llm_backends = ["openai", "github", "azure", "google", "grok", "groq", "mistral"]
+# check latest version of azure api at https://learn.microsoft.com/en-us/azure/ai-services/openai/reference
+config.azure_api_version = "2024-10-21"
 
 def is_CJK(self, text):
     for char in text:
@@ -145,6 +147,8 @@ def isLLMReady(backend=""):
     if backend == "openai" and config.openaiApi_key:
         return True
     elif backend == "github" and config.githubApi_key:
+        return True
+    elif backend == "azure" and config.azureApi_key:
         return True
     elif backend == "mistral" and config.mistralApi_key:
         return True
@@ -245,6 +249,18 @@ def getChatResponse(backend, chatMessages) -> Optional[str]:
                 base_url="https://models.inference.ai.azure.com",
             )
             completion = githubClient.chat.completions.create(
+                model=config.openaiApi_chat_model,
+                messages=chatMessages,
+                n=1,
+                temperature=config.openaiApi_llmTemperature,
+                max_tokens=config.openaiApi_chat_model_max_tokens,
+                stream=False,
+            )
+        elif backend == "azure":
+            # azure_endpoint should be something like https://<your-resource-name>.openai.azure.com without "/models" at the end
+            endpoint = re.sub("/models[/]*$", "", config.azureBaseUrl)
+            azureClient = AzureOpenAI(azure_endpoint=endpoint,api_version=config.azure_api_version,api_key=config.azureApi_key)
+            completion = azureClient.chat.completions.create(
                 model=config.openaiApi_chat_model,
                 messages=chatMessages,
                 n=1,

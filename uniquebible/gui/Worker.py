@@ -7,7 +7,7 @@ else:
 from pydub import AudioSegment
 from pydub.playback import play
 from uniquebible.util.VlcUtil import VlcUtil
-from openai import OpenAI
+from openai import OpenAI, AzureOpenAI
 from mistralai import Mistral
 from groq import Groq
 
@@ -247,6 +247,18 @@ class ChatGPTResponse:
                 max_tokens=config.openaiApi_chat_model_max_tokens,
                 stream=True,
             )
+        elif config.llm_backend == "azure":
+            # azure_endpoint should be something like https://<your-resource-name>.openai.azure.com without "/models" at the end
+            endpoint = re.sub("/models[/]*$", "", config.azureBaseUrl)
+            azureClient = AzureOpenAI(azure_endpoint=endpoint,api_version=config.azure_api_version,api_key=config.azureApi_key)
+            return azureClient.chat.completions.create(
+                model=config.openaiApi_chat_model,
+                messages=thisMessage,
+                n=1,
+                temperature=config.openaiApi_llmTemperature,
+                max_tokens=config.openaiApi_chat_model_max_tokens,
+                stream=True,
+            )
         elif config.llm_backend == "github":
             githubClient = OpenAI(
                 api_key=getGithubApi_key(),
@@ -320,6 +332,8 @@ class ChatGPTResponse:
                             progress = event
                         elif hasattr(event, "data"): # mistralai
                             progress = event.data.choices[0].delta.content
+                        elif not event.choices: # in case of the first event of Azure completion
+                            continue
                         else:
                             progress = event.choices[0].delta.content
                         # STREAM THE ANSWER
