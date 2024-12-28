@@ -238,9 +238,9 @@ def isTranslateInstalled():
     except:
         return False
 
-def isTextractInstalled():
+def isMarkitdownInstalled():
     try:
-        import textract
+        from markitdown import MarkItDown
         return True
     except:
         return False
@@ -743,7 +743,7 @@ optional = [
     ("word-forms", "Generate English Word Forms", isWordformsInstalled),
     ("lemmagen3", "Lemmatizer", isLemmagen3Installed),
     ("chinese-english-lookup", "Chinese-to-English word definition", isChineseEnglishLookupInstalled),
-    #("textract", "Extract text from document", isTextractInstalled),
+    ("markitdown", "Extract text from document", isMarkitdownInstalled),
     ("tabulate", "Pretty-print tabular data", isTabulateInstalled),
     #("apsw", "Another Python SQLite Wrapper", isApswInstalled),
     ("pyluach", "Hebrew (Jewish) calendar dates", isPyluachInstalled),
@@ -799,7 +799,7 @@ optional = [
     ("word-forms", "Generate English Word Forms", isWordformsInstalled),
     ("lemmagen3", "Lemmatizer", isLemmagen3Installed),
     ("chinese-english-lookup", "Chinese-to-English word definition", isChineseEnglishLookupInstalled),
-    #("textract", "Extract text from document", isTextractInstalled),
+    ("markitdown", "Extract text from document", isMarkitdownInstalled),
     ("tabulate", "Pretty-print tabular data", isTabulateInstalled),
     #("apsw", "Another Python SQLite Wrapper", isApswInstalled),
     ("pyluach", "Hebrew (Jewish) calendar dates", isPyluachInstalled),

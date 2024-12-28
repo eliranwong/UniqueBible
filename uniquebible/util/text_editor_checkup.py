@@ -72,9 +72,9 @@ def isTranslateInstalled():
         return False
 
 # optional
-def isTextractInstalled():
+def isMarkitdownInstalled():
     try:
-        import textract
+        from markitdown import MarkItDown
         return True
     except:
         return False
@@ -234,7 +234,7 @@ optional = [
     ("pyperclip", "Cross-platform clipboard utilities", isPyperclipInstalled),
     ("Pygments", "Syntax highlighting package", isPygmentsInstalled),
     ("translate", "Google Translate", isTranslateInstalled),
-    #("textract", "Extract text from document", isTextractInstalled),
+    ("markitdown", "Extract text from document", isMarkitdownInstalled),
 ]
 for module, feature, isInstalled in optional:
     checkModule = re.sub("-|_", "", module)

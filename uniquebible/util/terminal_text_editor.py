@@ -1,4 +1,4 @@
-from uniquebible import config
+from uniquebible import config, extract_text
 import re, os
 from uniquebible.util.TextUtil import TextUtil
 from prompt_toolkit.formatted_text import HTML
@@ -685,8 +685,7 @@ class TextEditor:
 
     def extractFileText(self, filepath):
         if os.path.isfile(filepath):
-            import textract
-            text = text = textract.process(filepath).decode()
+            text = extract_text(filepath)
             # to prevent corrupting original file, users need to specify a file path for saving
             #self.filepath = filepath
             self.savedText = text

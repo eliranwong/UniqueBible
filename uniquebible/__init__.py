@@ -135,7 +135,7 @@ config.llm_backends = ["openai", "github", "azure", "google", "grok", "groq", "m
 # check latest version of azure api at https://learn.microsoft.com/en-us/azure/ai-services/openai/reference
 config.azure_api_version = "2024-10-21"
 
-def is_CJK(self, text):
+def is_CJK(text):
     for char in text:
         if 'CJK' in unicodedata.name(char):
             return True
@@ -213,6 +213,27 @@ def getMistralApi_key() -> str:
             return ""
     else:
         return ""
+
+def getOpenAIClient():
+    # priority in order: azure > github > openai
+    if config.azureApi_key:
+        return AzureOpenAI(azure_endpoint=re.sub("/models[/]*$", "", config.azureBaseUrl),api_version=config.azure_api_version,api_key=config.azureApi_key)
+    if config.githubApi_key:
+        return OpenAI(api_key=getGithubApi_key(),base_url="https://models.inference.ai.azure.com")
+    return OpenAI()
+
+def extract_text(filepath):
+    try:
+        from markitdown import MarkItDown
+        filepath = filepath.rstrip()
+        if os.path.isfile(filepath):
+            if re.search("(\.jpg|\.jpeg|\.png)$", filepath.lower()):
+                md = MarkItDown(llm_client=getOpenAIClient(), llm_model="gpt-4o")
+            else:
+                md = MarkItDown()
+            return md.convert(filepath)
+    except:
+        return "Install markitdown first!"
 
 def getChatResponse(backend, chatMessages) -> Optional[str]:
     if not isLLMReady(backend) or not backend in config.llm_backends:

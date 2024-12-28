@@ -1,5 +1,11 @@
 PIP package:
 
+0.2.16
+
+* replace textextract package with markitdown
+
+* support custom model names deployed via Azure service
+
 0.2.7-0.2.11
 
 * added support of using FREE Github API key

@@ -1,4 +1,4 @@
-from uniquebible import config
+from uniquebible import config, extract_text
 import re, os, base64, glob, webbrowser, markdown
 from datetime import datetime
 import uniquebible.shortcut as sc
@@ -197,11 +197,10 @@ class Workspace(QMainWindow):
                 html = config.mainWindow.htmlWrapper(html, True, html=False if fileName.lower().endswith(".md") else True)
             else:
                 try:
-                    import textract
-                    html = textract.process(fileName).decode()
+                    html = extract_text(fileName)
                     html = config.mainWindow.htmlWrapper(html, True, html=False)
                 except:
-                    self.parent.displayMessage("Optional package 'textract' is not installed!")
+                    self.parent.displayMessage("Optional package 'markitdown' is not installed!")
             self.addHtmlContent(html, editable, os.path.basename(fileName))
 
     def fixNoteFont(self, note):

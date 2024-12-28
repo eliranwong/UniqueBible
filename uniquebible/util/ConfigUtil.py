@@ -332,6 +332,9 @@ class ConfigUtil:
         setConfig("azureApi_key", """
         # Azure API Key""",
         "")
+        setConfig("azureOpenAIModels", """
+        # users can manually change config.azureOpenAIModels to match custom model names deployed via Azure service""",
+        ["gpt-4o", "gpt-4o-mini"])
         setConfig("azureBaseUrl", """
         # Github API inference endpoint""",
         "")

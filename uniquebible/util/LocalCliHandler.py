@@ -1,6 +1,6 @@
 # flake8: noqa
 import re, pprint, os, requests, platform, pydoc, markdown, sys, subprocess, json, shutil, webbrowser, traceback, textwrap, wcwidth, unicodedata
-from uniquebible import config
+from uniquebible import config, extract_text
 import threading, time
 #from duckduckgo_search import ddg
 from functools import partial
@@ -2228,12 +2228,11 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
         return ""
 
     def opentext(self, editMode=False):
-        if ("Textract" in config.enabled):
+        if ("Markitdown" in config.enabled):
             self.print(self.divider)
             userInput = self.getPath.getFilePath(check_isfile=True, empty_to_cancel=True)
             if userInput:
-                import textract
-                content = textract.process(userInput).decode()
+                content = extract_text(userInput)
                 if editMode:
                     self.multilineEditor(content)
                     return ""
@@ -2241,7 +2240,7 @@ $SCRIPT_DIR/portable_python/{2}{7}_{3}.{4}.{5}/{3}.{4}.{5}/bin/python{3}.{4} uba
                     return content
             else:
                 return self.cancelAction()
-        self.printToolNotFound("textract")
+        self.printToolNotFound("markitdown")
         return ""
 
     def printToolNotFound(self, tool):

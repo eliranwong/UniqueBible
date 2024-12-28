@@ -78,8 +78,14 @@ class ApiDialog(QDialog):
         self.apiModelBox = QComboBox()
         initialIndex = 0
         index = 0
-        if config.llm_backend in ("openai", "github", "azure"):
+        if config.llm_backend in ("openai", "github"):
             for key in ("gpt-4o", "gpt-4o-mini"):
+                self.apiModelBox.addItem(key)
+                if key == config.openaiApi_chat_model:
+                    initialIndex = index
+                index += 1
+        elif config.llm_backend == "azure":
+            for key in config.azureOpenAIModels: # users can manually change config.azureOpenAIModels to match custom deployed model names
                 self.apiModelBox.addItem(key)
                 if key == config.openaiApi_chat_model:
                     initialIndex = index
