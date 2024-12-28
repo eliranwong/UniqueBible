@@ -961,6 +961,7 @@ class Bible:
             shutil.rmtree(bible_dir)
         # export bible text in markdown format
         for b in self.getBookList():
+            bookText = []
             bookFolder = os.path.join(bible_dir, "{:02}".format(b))
             Path(bookFolder).mkdir(parents=True, exist_ok=True)
             for c in self.getChapterList(b):
@@ -985,6 +986,10 @@ class Bible:
                 chapterFile = os.path.join(bookFolder, "{:03}.md".format(c))
                 with open(chapterFile, "w", encoding="utf-8") as fileObj:
                     fileObj.write(chatperText)
+                bookText.append(chatperText)
+            bookTextFile = os.path.join(bible_dir, "{:02}.md".format(b))
+            with open(bookTextFile, "w", encoding="utf-8") as fileObj:
+                fileObj.write("\n\n".join(bookText))
 
     def updateVerse(self, b, c, v, verseText):
         self.cursor.execute("UPDATE Verses SET Scripture = ? WHERE Book = ? AND Chapter = ? AND Verse = ?", (verseText, b, c, v))
