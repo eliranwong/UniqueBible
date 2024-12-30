@@ -4,6 +4,8 @@ A cross-platform & offline bible application, integrated with high-quality resou
 
 [![Watch the video](https://img.youtube.com/vi/NuTUhAD-zCk/maxresdefault.jpg)](https://youtu.be/NuTUhAD-zCk)
 
+[Click to listen audio overview](https://youtu.be/NuTUhAD-zCk)
+
 <b>Platforms:</b> <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Windows">Windows 10</a>, <a href="https://github.com/eliranwong/wsl2/blob/master/bible_apps/desktop.md">Windows WSL2</a>, <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-macOS">macOS [Sierra+]</a> and <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Linux">Linux</a> (Arch, Debian, Ubuntu & Mint), <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Chrome-OS">Chrome OS</a> (Debian 10), <a href="https://github.com/eliranwong/UniqueBible/wiki/Android-iOS-Version">Android / iOS</a>
 
 # User Interface
