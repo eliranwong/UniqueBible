@@ -130,3 +130,4 @@ uniquebible/macros/
 uniquebible/plugins/menu
 uniquebible/ip_blacklist.txt
 uniquebible/ip_whitelist.txt
+uniquebible/plugins/event/*.py

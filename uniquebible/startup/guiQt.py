@@ -119,7 +119,7 @@ def exitApplication():
     if (config.runMode == "docker") and config.restartUBA:
         os.system("nohup ./UniqueBibleApp.sh > /dev/null 2>&1 &")
     elif config.restartUBA and hasattr(config, "cli"):
-        subprocess.Popen("{0} uba.py gui".format(sys.executable), shell=True)
+        subprocess.Popen("cd {0}/..;pwd;{1} -m uniquebible.main gui".format(config.packageDir, sys.executable), shell=True)
 
 def nameChanged():
     if app.applicationName() == "UniqueBible.app CLI":
