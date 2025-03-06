@@ -505,9 +505,9 @@ class ChatGPTAPI(QWidget):
             self.backends.setCurrentIndex(3)
         elif config.llm_backend == "groq":
             self.backends.setCurrentIndex(4)
-        elif config.llm_backend == "mistral":
-            self.backends.setCurrentIndex(5)
         elif config.llm_backend == "grok":
+            self.backends.setCurrentIndex(5)
+        elif config.llm_backend == "mistral":
             self.backends.setCurrentIndex(6)
         else:
             config.llm_backend == "groq"

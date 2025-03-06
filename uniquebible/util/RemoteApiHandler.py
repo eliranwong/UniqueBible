@@ -353,23 +353,38 @@ class RemoteApiHandler(ApiRequestHandler):
             texts = ['KJV']
         self.jsonData['data'] = BiblesSqlite().compareVerseRaw((cmd[1], cmd[2], cmd[3]), texts)
 
-    # /search?searchText=faith
+    # /search?searchText=faith&start=Genesis&end=Malachi
     def processSearchCommand(self, cmd, query):
         try:
             searchText = query["searchText"][0]
+            startNum = 1
+            endNum = 66
+            if "start" in query:
+                try:
+                    startName = query["start"][0]
+                    startNum = int(BibleBooks.name2number[startName])
+                except:
+                    startNum = 1
+            if "end" in query:
+                try:
+                    endName = query["end"][0]
+                    endNum = int(BibleBooks.name2number[endName])
+                except:
+                    endNum = 66
             type = query["type"][0] if "type" in query.keys() else "bible"
             if type == "bible":
                 text = query["text"][0] if "text" in query.keys() else "KJV"
                 query = "SELECT Book, Chapter, Verse, Scripture FROM Verses "
                 query += "WHERE "
                 query += "(Scripture LIKE ?) "
+                query += "AND Book >= ? AND Book <= ? "
                 query += "ORDER BY Book, Chapter, Verse "
                 query += "LIMIT 5000 "
                 if '"' in searchText:
                     searchText = searchText.replace('"', '')
                 else:
                     searchText = searchText.replace(" ", "%").replace("+", "%")
-                t = ("%{0}%".format(searchText),)
+                t = ("%{0}%".format(searchText), startNum, endNum)
                 verses = Bible(text).getSearchVerses(query, t)
 
                 self.jsonData['data'] = verses

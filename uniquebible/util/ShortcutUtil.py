@@ -703,6 +703,7 @@ class ShortcutUtil:
         try:
             if name not in ShortcutUtil.data.keys():
                 filename = "shortcut_" + name + ".py"
+                filename = os.path.join(config.packageDir, filename)
                 if not path.exists(filename):
                     name = "micron"
                 else:
@@ -718,7 +719,8 @@ class ShortcutUtil:
 
     @staticmethod
     def create(data):
-        with open("shortcut.py", "w", encoding="utf-8") as fileObj:
+        filename = os.path.join(config.packageDir, "shortcut.py")
+        with open(filename, "w", encoding="utf-8") as fileObj:
             for name in data.keys():
                 value = data[name]
                 fileObj.write("{0} = {1}\n".format(name, pprint.pformat(value)))
@@ -726,7 +728,8 @@ class ShortcutUtil:
 
     @staticmethod
     def reset():
-        with open("shortcut.py", "w", encoding="utf-8") as fileObj:
+        filename = os.path.join(config.packageDir, "shortcut.py")
+        with open(filename, "w", encoding="utf-8") as fileObj:
             fileObj.write("")
             fileObj.close()
 
@@ -775,6 +778,7 @@ class ShortcutUtil:
             filename = "shortcut.py"
         else:
             filename = "shortcut_" + name + ".py"
+        filename = os.path.join(config.packageDir, filename)
         file = open(filename, "r")
         lines = file.readlines()
         data = {}
@@ -798,6 +802,7 @@ class ShortcutUtil:
     @staticmethod
     def addActionToShortcutFile(name, action, shortcut=""):
         filename = "shortcut_" + name + ".py"
+        filename = os.path.join(config.packageDir, filename)
         with open(filename, "a", encoding="utf-8") as fileObj:
             print("Added {0} to {1}".format(action, filename))
             fileObj.write('{0} = "{1}"\n'.format(action, shortcut))
@@ -806,7 +811,8 @@ class ShortcutUtil:
     @staticmethod
     def createShortcutFile(name, shortcuts):
         shortcuts.sort(key=lambda x: x[0])
-        with open("shortcut_"+name+".py", "w", encoding="utf-8") as fileObj:
+        filename = os.path.join(config.packageDir, "shortcut_"+name+".py")
+        with open(filename, "w", encoding="utf-8") as fileObj:
             for action, key in shortcuts:
                 key = key.replace("\\\\", "\\")
                 fileObj.write("{0} = {1}\n".format(action, pprint.pformat(key)))
