@@ -1,24 +1,20 @@
-# Migration to PIP Package
-
-We've recently published pip packages for distributing UniqueBible App.
-
-Read latest instructions for installation at: https://github.com/eliranwong/UniqueBible/wiki/installation#latest-updates
-
 # UniqueBible
 
 A cross-platform & offline bible application, integrated with high-quality resources and unique features.
 
-This single project has two major interfaces:
+[![Watch the video](https://img.youtube.com/vi/NuTUhAD-zCk/maxresdefault.jpg)](https://youtu.be/NuTUhAD-zCk)
 
-Qt-based Multi-Window Desktop Application:
+[Click to listen audio overview](https://youtu.be/NuTUhAD-zCk)
 
 <b>Platforms:</b> <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Windows">Windows 10</a>, <a href="https://github.com/eliranwong/wsl2/blob/master/bible_apps/desktop.md">Windows WSL2</a>, <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-macOS">macOS [Sierra+]</a> and <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Linux">Linux</a> (Arch, Debian, Ubuntu & Mint), <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Chrome-OS">Chrome OS</a> (Debian 10), <a href="https://github.com/eliranwong/UniqueBible/wiki/Android-iOS-Version">Android / iOS</a>
 
-Unique Bible App can <a href="https://github.com/eliranwong/UniqueBible/wiki/UBA-Run-Modes">runs in different modes</a>, both online and offline, for examples:
+# User Interface
 
-> <a href="https://github.com/eliranwong/UniqueBible/wiki/Command-Line-Interface">GUI mode</a> - we use popular Qt library to run UBA on Windows, macOS, Linux, ChromeOS
+Unique Bible App can <a href="https://github.com/eliranwong/UniqueBible/wiki/UBA-Run-Modes">run in different modes</a>, both online and offline, for examples:
 
-> <a href="https://github.com/eliranwong/UniqueBible/wiki/Web-Version-%5Bavailable-OFFLINE%5D">Http-server</a> - e.g. <a href="https://bible.gospelchurch.uk">https://bible.gospelchurch.uk</a>
+> <a href="https://github.com/eliranwong/UniqueBible/wiki/Command-Line-Interface">GUI mode</a> - a Qt-based Multi-Window Desktop Application, designed to run UBA on Windows, macOS, Linux, ChromeOS
+
+> <a href="https://github.com/eliranwong/UniqueBible/wiki/Web-Version-%5Bavailable-OFFLINE%5D">Http-server</a> - a web server that supports regular browsing and APIs, e.g. <a href="https://bible.gospelchurch.uk">https://bible.gospelchurch.uk</a>
 
 > <a href="https://github.com/eliranwong/UniqueBible/wiki/Terminal-Mode">Terminal mode</a> - the quickest way to run UBA; the most comprehensive in terms of feature coverage; all platforms supported; local or via ssh
 
