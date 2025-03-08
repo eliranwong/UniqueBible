@@ -25,12 +25,12 @@ class DownloadProcess(QObject):
                 config.gdownIsUpdated = True
             try:
                 gdown.download(self.cloudFile, self.localFile, quiet=True)
-                print("Downloaded!")
+                print("Downloaded " + self.localFile)
                 connection = True
             except Exception as ex:
                 cli = "gdown {0} -O {1}".format(self.cloudFile, self.localFile)
                 os.system(cli)
-                print("Downloaded!")
+                print("Downloaded " + self.localFile)
                 connection = True
         except Exception as ex:
             print("Failed to download '{0}'!".format(self.cloudFile))
@@ -42,8 +42,9 @@ class DownloadProcess(QObject):
             zipObject.extractall(path)
             zipObject.close()
             os.remove(self.localFile)
-        # Emit a signal to notify that download process is finished
-        self.finished.emit()
+        if config.downloadGCloudModulesInSeparateThread:
+            # Emit a signal to notify that download process is finished
+            self.finished.emit()
 
 
 class Downloader(QDialog):
@@ -75,7 +76,8 @@ class Downloader(QDialog):
         self.layout = QGridLayout()
         self.layout.addWidget(self.messageLabel, 0, 0)
         self.layout.addWidget(self.downloadButton, 1, 0)
-        self.layout.addWidget(self.cancelButton, 2, 0)
+        if config.downloadGCloudModulesInSeparateThread:
+            self.layout.addWidget(self.cancelButton, 2, 0)
         self.layout.addWidget(self.remarks, 3, 0)
         self.setLayout(self.layout)
 

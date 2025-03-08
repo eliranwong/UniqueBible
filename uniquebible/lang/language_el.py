@@ -1094,4 +1094,5 @@ translation = {
     "about": "-Ναι.",
     "githubStatistics": "Στατιστικά στοιχεία GitHub",
     "overrideCompareToUseAllTexts": "Παράκαμψε τη σύγκριση των εδαφίων για να συγκρίνεις όλα τα Γραφικά εδάφια αντί των αγαπημένων κειμένων",
+    "downloadGCloudModulesInSeparateThread": "Λήψη των ενοτήτων Marvel GCloud (Non-GitHub) σε ξεχωριστό νήμα",
 }

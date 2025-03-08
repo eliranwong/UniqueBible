@@ -1,5 +1,12 @@
 PIP package:
 
+0.2.17
+
+* added downloadGCloudModulesInSeparateThread config flag to disable downloading marvel data files from google in a separate thread
+* added overrideCompareToUseAllTexts config flag to compare all texts
+* fix shortcuts not loading on startup
+* fix restarting UBA
+
 0.2.16
 
 * replace textextract package with markitdown

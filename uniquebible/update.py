@@ -10,5 +10,5 @@ oldFiles = (
 )
 
 # A tulple of files which have been updated since the initial release
-updatedFiles = ("CUV.bible", "CUVs.bible", "ULT.bible", "UST.bible", "SBLGNT.bible", "SBLGNTl.bible", "LXX1.bible", "LXX2.bible", "LXX1i.bible", "LXX2i.bible", "MOB.bible", "MPB.bible", "MIB.bible", "MAB.bible", "MTB.bible")
-
+# updatedFiles = ("CUV.bible", "CUVs.bible", "ULT.bible", "UST.bible", "SBLGNT.bible", "SBLGNTl.bible", "LXX1.bible", "LXX2.bible", "LXX1i.bible", "LXX2i.bible", "MOB.bible", "MPB.bible", "MIB.bible", "MAB.bible", "MTB.bible")
+updatedFiles = ()

@@ -1064,7 +1064,10 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
             self.displayMessage(config.thisTranslation["previousDownloadIncomplete"])
         else:
             self.downloader = Downloader(self, databaseInfo)
-            self.downloader.show()
+            if config.downloadGCloudModulesInSeparateThread:
+                self.downloader.show()
+            else:
+                self.downloader.downloadFile()
 
     def downloadFile(self, databaseInfo, notification=True):
         # Prevent downloading multiple files at the same time.
@@ -1073,18 +1076,27 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
         fileItems, cloudID, *_ = databaseInfo
         cloudFile = "https://drive.google.com/uc?id={0}".format(cloudID)
         localFile = "{0}.zip".format(os.path.join(*fileItems))
-        # Configure a QThread
-        self.downloadthread = QThread()
-        self.downloadProcess = DownloadProcess(cloudFile, localFile)
-        self.downloadProcess.moveToThread(self.downloadthread)
-        # Connect actions
-        self.downloadthread.started.connect(self.downloadProcess.downloadFile)
-        self.downloadProcess.finished.connect(self.downloadthread.quit)
-        self.downloadProcess.finished.connect(lambda: self.moduleInstalled(fileItems, cloudID, notification))
-        self.downloadProcess.finished.connect(self.downloadProcess.deleteLater)
-        self.downloadthread.finished.connect(self.downloadthread.deleteLater)
-        # Start a QThread
-        self.downloadthread.start()
+
+        if config.downloadGCloudModulesInSeparateThread:
+            # Configure a QThread
+            self.downloadthread = QThread()
+            self.downloadProcess = DownloadProcess(cloudFile, localFile)
+            self.downloadProcess.moveToThread(self.downloadthread)
+            # Connect actions
+            self.downloadthread.started.connect(self.downloadProcess.downloadFile)
+            self.downloadProcess.finished.connect(self.downloadthread.quit)
+            self.downloadProcess.finished.connect(lambda: self.moduleInstalled(fileItems, cloudID, notification))
+            self.downloadProcess.finished.connect(self.downloadProcess.deleteLater)
+            self.downloadthread.finished.connect(self.downloadthread.deleteLater)
+            # Start a QThread
+            self.downloadthread.start()
+        else:
+            print("Downloading in single thread mode")
+            self.downloadProcess = DownloadProcess(cloudFile, localFile)
+            self.downloadProcess.downloadFile()
+            config.isDownloading = False
+            if self.downloader:
+                self.downloader.close()
 
     def moduleInstalled(self, fileItems, cloudID, notification=True):
         if hasattr(self, "downloader") and self.downloader.isVisible():
@@ -1155,9 +1167,13 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
                                         config.thisTranslation["menu8_bibles"], items, 0, False)
         if ok and item and not item in ("[All Installed]", installAll):
             self.downloadHelper(bibles[item])
-        elif item == installAll:
+        elif ok and item == installAll:
             self.installAllMarvelFiles(bibles, installAll)
+        else:
+            return
         self.reloadResources()
+        if not config.downloadGCloudModulesInSeparateThread:
+            self.installMarvelBibles()
 
     def installMarvelCommentaries(self):
         installAll = "Install ALL Commentaries"
@@ -1173,8 +1189,13 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
         if ok and item and not item in ("[All Installed]", installAll):
             self.downloadHelper(commentaries[item])
             self.reloadResources()
-        elif item == installAll:
+        elif ok and item == installAll:
             self.installAllMarvelFiles(commentaries, installAll)
+        else:
+            return
+        self.reloadResources()
+        if not config.downloadGCloudModulesInSeparateThread:
+            self.installMarvelCommentaries()
 
     def installAllMarvelFiles(self, files, installAll):
         if config.isDownloading:
@@ -1183,7 +1204,8 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
             toBeInstalled = [file for file in files.keys() if
                              not file == installAll and not os.path.isfile(
                                  os.path.join(os.getcwd(), *files[file][0]))]
-            self.displayMessage("{0}  {1}".format(config.thisTranslation["message_downloadAllFiles"],
+            if config.downloadGCloudModulesInSeparateThread:
+                self.displayMessage("{0}  {1}".format(config.thisTranslation["message_downloadAllFiles"],
                                                   config.thisTranslation["message_willBeNoticed"]))
             print("Downloading {0} files".format(len(toBeInstalled)))
             for file in toBeInstalled:
@@ -1193,7 +1215,8 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
                 downloader.downloadFile(False)
             self.reloadResources()
             print("Downloading complete")
-            self.displayMessage(config.thisTranslation["message_installed"])
+            if config.downloadGCloudModulesInSeparateThread:
+                self.displayMessage(config.thisTranslation["message_installed"])
 
     def installMarvelDatasets(self):
         installAll = "Install ALL Datasets"
@@ -1207,9 +1230,13 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
                                         config.thisTranslation["menu8_datasets"], items, 0, False)
         if ok and item and not item in ("[All Installed]", installAll):
             self.downloadHelper(datasets[item])
-        elif item == installAll:
+        elif ok and item == installAll:
             self.installAllMarvelFiles(datasets, installAll)
+        else:
+            return
         self.reloadResources()
+        if not config.downloadGCloudModulesInSeparateThread:
+            self.installMarvelDatasets()
 
     def installGithubBibles(self):
         self.installFromGitHub(GitHubRepoInfo.bibles)

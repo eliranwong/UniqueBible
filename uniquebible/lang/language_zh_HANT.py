@@ -1094,4 +1094,5 @@ translation = {
     "about": "關於",
     "githubStatistics": "GitHub 統計資料",
     "overrideCompareToUseAllTexts": "比較所有聖經譯本而不單是最愛的譯本",
+    "downloadGCloudModulesInSeparateThread": "在相隔的線中下載 Marvel GCloud (非 GitHub) 模組",
 }
