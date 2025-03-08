@@ -1094,4 +1094,5 @@ translation = {
     "about": "정보",
     "githubStatistics": "깃허브 통계",
     "overrideCompareToUseAllTexts": "가장 좋아하는 텍스트 대신 모든 성경 텍스트를 비교하는 배율 비교",
+    "downloadGCloudModulesInSeparateThread": "Marvel GCloud (Non-GitHub) 모듈을 별도 스레드에 다운로드",
 }

@@ -1818,6 +1818,11 @@ class ConfigUtil:
         """,
           "")
 
+        setConfig("downloadGCloudModulesInSeparateThread", """
+                # Downloads the Marvel GCloud (Non-GitHub) modules in a separate thread
+                """,
+                  True)
+
         patFile = os.path.join("secrets", "github", "pat.txt")
         if os.path.exists(patFile):
             with open(patFile) as file:

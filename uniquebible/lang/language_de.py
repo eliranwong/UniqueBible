@@ -1094,4 +1094,5 @@ translation = {
     "about": "Informationen zu",
     "githubStatistics": "GitHub-Statistik",
     "overrideCompareToUseAllTexts": "Überschreiben Vers Vergleich, um alle Bibeltexte anstelle von Lieblingstexten zu vergleichen",
+    "downloadGCloudModulesInSeparateThread": "Downloads der Marvel GCloud (Non-GitHub) Module in einem separaten Thread",
 }

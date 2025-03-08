@@ -123,7 +123,7 @@ class LanguageUtil:
         for code in codes:
             translation = LanguageUtil.loadTranslation(code)
             if key not in translation.keys():
-                filename = "lang/language_" + code + ".py"
+                filename = os.path.join(config.packageDir, "lang", "language_" + code + ".py")
                 if code[:2] == "en":
                     result = englishTranslation
                 else:
@@ -233,4 +233,4 @@ if __name__ == "__main__":
         except Exception as e:
             print("Error executing: " + str(e))
     else:
-        addLanguageStringToAllFiles("overrideCompareToUseAllTexts", "Override verse comparison to compare all Bible texts instead of favourite texts")
+        addLanguageStringToAllFiles("downloadGCloudModulesInSeparateThread", "Downloads the Marvel GCloud (Non-GitHub) modules in a separate thread")

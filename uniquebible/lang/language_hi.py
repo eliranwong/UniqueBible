@@ -1094,4 +1094,5 @@ translation = {
     "about": "लगभग",
     "githubStatistics": "Githb सांख्यिकी",
     "overrideCompareToUseAllTexts": "पसंदीदा ग्रंथों के बजाय सभी बाइबिल ग्रंथों की तुलना करने के लिए ओवरराइड कविता तुलना",
+    "downloadGCloudModulesInSeparateThread": "एक अलग धागे में मार्वल GCloud (गैर-GitHub) मॉड्यूल डाउनलोड करें",
 }

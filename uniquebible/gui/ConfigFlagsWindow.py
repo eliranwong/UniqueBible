@@ -147,6 +147,7 @@ class ConfigFlagsWindow(QDialog):
             ("limitWorkspaceFilenameLength", config.limitWorkspaceFilenameLength, self.limitWorkspaceFilenameLengthChanged, True, config.thisTranslation["limitWorkspaceFilenameLength"]),
             ("enableHttpRemoteErrorRedirection", config.enableHttpRemoteErrorRedirection, self.enableHttpRemoteErrorRedirection, False, config.thisTranslation["enableHttpRemoteErrorRedirection"]),
             ("overrideCompareToUseAllTexts", config.overrideCompareToUseAllTexts, self.overrideCompareToUseAllTexts, False,  config.thisTranslation["overrideCompareToUseAllTexts"]),
+            ("downloadGCloudModulesInSeparateThread", config.downloadGCloudModulesInSeparateThread, self.downloadGCloudModulesInSeparateThread, True, config.thisTranslation["downloadGCloudModulesInSeparateThread"]),
         ]
         if ("OfflineTts" in config.enabled):
             options += [
@@ -608,3 +609,6 @@ class ConfigFlagsWindow(QDialog):
 
     def overrideCompareToUseAllTexts(self):
         config.overrideCompareToUseAllTexts = not config.overrideCompareToUseAllTexts
+
+    def downloadGCloudModulesInSeparateThread(self):
+        config.downloadGCloudModulesInSeparateThread = not config.downloadGCloudModulesInSeparateThread
