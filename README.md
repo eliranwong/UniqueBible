@@ -27,7 +27,7 @@ After downloading, all resources are available for off-line use.
 * Timelines
 * Bible Characters and Locations
 
-## GitHub Modules
+## GitHub modules
 
 * [UBA Bibles](https://github.com/otseng/UniqueBible_Bibles)
 * [UBA Commentaries](https://github.com/darrelwright/UniqueBible_Commentaries)
