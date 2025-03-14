@@ -17,9 +17,9 @@ After downloading, all resources are available for offline use.
 * [Bibles](https://github.com/eliranwong/UniqueBible/wiki/Bible-Modules) - includes Hebrew & Greek resources
 * [Commentaries](https://github.com/eliranwong/UniqueBible/wiki/Commentary-Modules)
 * [Dictionaries](https://github.com/eliranwong/UniqueBible/wiki/Dictionaries)
+* [Encyclopedias](https://github.com/eliranwong/UniqueBible/wiki/Encyclopedias)
 * Lexicons
 * Cross References
-* Bible Encyclopedia
 * Treasury of Scripture Knowledge
 * Discourse Analysis
 * Harmonies and Parallels
