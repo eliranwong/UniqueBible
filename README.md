@@ -8,6 +8,36 @@ A cross-platform & offline bible application, integrated with high-quality resou
 
 <b>Platforms:</b> <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Windows">Windows 10</a>, <a href="https://github.com/eliranwong/wsl2/blob/master/bible_apps/desktop.md">Windows WSL2</a>, <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-macOS">macOS [Sierra+]</a> and <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Linux">Linux</a> (Arch, Debian, Ubuntu & Mint), <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Chrome-OS">Chrome OS</a> (Debian 10), <a href="https://github.com/eliranwong/UniqueBible/wiki/Android-iOS-Version">Android / iOS</a>
 
+# Resources
+
+After downloading, all resources are available for off-line use.
+
+## Standard modules
+
+* [Bibles](https://github.com/eliranwong/UniqueBible/wiki/Bible-Modules) - includes Hebrew & Greek resources
+* [Commentaries](https://github.com/eliranwong/UniqueBible/wiki/Commentary-Modules)
+* Dictionaries
+* Lexicons
+* Cross References
+* Bible Encyclopedia
+* Treasury of Scripture Knowledge
+* Discourse Analysis
+* Harmonies and Parallels
+* Bible Promises
+* Timelines
+* Bible Characters and Locations
+
+## GitHub Modules
+
+* [UBA Bibles](https://github.com/otseng/UniqueBible_Bibles)
+* [UBA Commentaries](https://github.com/darrelwright/UniqueBible_Commentaries)
+* [UBA Books](https://github.com/darrelwright/UniqueBible_Books)
+* [UBA Maps-Charts](https://github.com/darrelwright/UniqueBible_Maps-Charts)
+* [UBA PDF](https://github.com/otseng/UniqueBible_PDF)
+* [UBA EPUB](https://github.com/otseng/UniqueBible_EPUB)
+* [UBA Hymn Lyrics](https://github.com/otseng/UniqueBible_Hymn_Lyrics)
+* [UBA Devotionals](https://github.com/otseng/UniqueBible_Devotionals)
+
 # User Interface
 
 Unique Bible App can <a href="https://github.com/eliranwong/UniqueBible/wiki/UBA-Run-Modes">run in different modes</a>, both online and offline, for examples:
