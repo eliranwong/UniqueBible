@@ -10,7 +10,7 @@ A cross-platform & offline bible application, integrated with high-quality resou
 
 # Resources
 
-After downloading, all resources are available for off-line use.
+After downloading, all resources are available for offline use.
 
 ## Standard modules
 
