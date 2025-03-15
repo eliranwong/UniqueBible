@@ -18,6 +18,7 @@ After downloading, all resources are available for offline use.
 * [Commentaries](https://github.com/eliranwong/UniqueBible/wiki/Commentary-Modules)
 * [Dictionaries](https://github.com/eliranwong/UniqueBible/wiki/Dictionaries)
 * [Encyclopedias](https://github.com/eliranwong/UniqueBible/wiki/Encyclopedias)
+* [Bible Topics](https://github.com/eliranwong/UniqueBible/wiki/Bible-Topics)
 * Lexicons
 * Cross References
 * Treasury of Scripture Knowledge
