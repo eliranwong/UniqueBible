@@ -22,6 +22,7 @@ from uniquebible.util.BibleVerseParser import BibleVerseParser
 from uniquebible.db.AGBTSData import AGBTSData
 from uniquebible.db.NoteSqlite import NoteSqlite
 from uniquebible.db.Highlight import Highlight
+from uniquebible.db.BibleVectorDatabase import BibleVectorDatabase, get_embeddings
 from uniquebible.util.ConfigUtil import ConfigUtil
 from uniquebible.util.FileUtil import FileUtil
 from uniquebible.util.themes import Themes
@@ -880,6 +881,23 @@ class Bible:
         if not self.connection is None:
 #            #self.cursor.execute("COMMIT")
             self.connection.close()
+
+    def addVectorsTable(self):
+        if shutil.which("ollama"):
+            query = "SELECT * FROM Verses"
+            self.cursor.execute(query)
+            verses = self.cursor.fetchall()
+            vectorDB = BibleVectorDatabase(self.database, conn=self.connection)
+            for book, chapter, verse, text in verses:
+                vector = get_embeddings([text])
+                vectorDB.add(book, chapter, verse, text, vector)
+
+    def searchSimilarity(self, query):
+        if shutil.which("ollama"):
+            vectorDB = BibleVectorDatabase(self.database, conn=self.connection)
+            vector = get_embeddings([query])
+            return vectorDB.search(vector[0])
+        return []
 
     # Check if a verse is empty
     def isNonEmptyVerse(self, b, c, v):
