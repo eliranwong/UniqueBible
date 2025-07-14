@@ -1945,6 +1945,21 @@ def printBibleData():
         except:
             print("Error in {0}".format(bible))
 
+
+def sampleVersesFromAllBibles():
+    fileList = glob.glob(config.marvelData+"/bibles/*.bible")
+    for file in fileList:
+        bible = None
+        try:
+            if os.path.isfile(file):
+                bibleName = Path(file).stem
+                bible = Bible(bibleName)
+                verse = bible.readTextVerse(1, 1, 1)
+                print(bibleName + ":" + verse[3])
+        except:
+            print("Error in {0}".format(bible))
+
+
 def debugBiblesSqlite():
     # Bibles = BiblesSqlite()
     #
@@ -2002,5 +2017,6 @@ if __name__ == '__main__':
         except Exception as e:
             print("Error executing: " + str(e))
     else:
-        Bible("KJV").exportToJson()
+        # Bible("KJV").exportToJson()
+        sampleVersesFromAllBibles()
 
