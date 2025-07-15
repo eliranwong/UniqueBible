@@ -111,7 +111,7 @@ class JEPDUtil:
         cursor.execute('''CREATE TABLE IF NOT EXISTS Notes (Book INT, Chapter INT, Verse INT, ID TEXT, Note TEXT);
                             ''')
         sql = ("INSERT INTO Details VALUES ('JEPD Bible with sources', 'JEPD',"
-               "'JPED Coded KJV text of Pentateuch.  Based on https://tanach.us/', 1, 1, 0, 0, 1);")
+               "'JEPD Coded KJV text of Pentateuch.  Based on https://tanach.us/', 1, 1, 0, 0, 1);")
         cursor.execute(sql)
 
     def delete_strongs(self, line):
