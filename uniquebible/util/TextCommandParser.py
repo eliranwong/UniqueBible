@@ -4505,6 +4505,11 @@ The WHERE condition is described as: {query}"""
             goBack = f'''document.title="BIBLE:::{bible}:::{b}.{c}.{v}"'''
         if not systemMessage:
             systemMessage = config.answer_systemMessage_interpretot if b < 40 else config.answer_systemMessage_interpretnt
+            if hasattr(config, "webHomePage"):
+                if config.webHomePage == "traditional.html":
+                    systemMessage += "\n* Reply in tradtional Chinese characters except quoting Hebrew or Greek words."
+                elif config.webHomePage == "simplified.html":
+                    systemMessage += "\n* Reply in Chinese except quoting Hebrew or Greek words."
         _, textOutput, _ = self.textAnswer(textInput, source, systemMessage, goBack=goBack, bcv=(b, c, v))
         title = config.thisTranslation["aiCommentary"]
         if config.rawOutput:
