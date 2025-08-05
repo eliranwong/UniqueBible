@@ -13,7 +13,7 @@ RUN \
 
 RUN \
   apk update && \
-  apk add doas python3 py3-pip ffmpeg micro nano w3m lynx && \
+  apk add doas sqlite python3 py3-pip ffmpeg micro nano w3m lynx && \
   echo 'permit nopass :wheel' >> /etc/doas.conf
 
 USER ${USER}

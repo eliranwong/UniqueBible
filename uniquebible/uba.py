@@ -41,65 +41,67 @@ def main():
         *_, cpu = platform.mac_ver()
         cpu = f"_{cpu}"
     #venvDir = "venv_{0}{4}_{1}.{2}.{3}".format(thisOS, major, minor, micro, cpu)
-    binDir = "Scripts" if thisOS == "Windows" else "bin"
+    #binDir = "Scripts" if thisOS == "Windows" else "bin"
 
     # create shortcut files
-    # On Windows
-    if thisOS == "Windows":
-        desktopPath = os.path.join(os.path.expanduser('~'), 'Desktop')
-        shortcutDir = desktopPath if os.path.isdir(desktopPath) else wd
-        # gui mode shortcut
-        shortcutBat1 = os.path.join(shortcutDir, "UniqueBibleApp.bat")
-        shortcutCommand1 = f'''powershell.exe -NoExit -Command "python '{thisFile}'"'''
-        # terminal mode shortcut
-        shortcutBat2 = os.path.join(shortcutDir, "UniqueBibleAppTerminal.bat")
-        shortcutCommand2 = f'''powershell.exe -NoExit -Command "python '{thisFile}' terminal"'''
-        windowsShortcuts = {
-            shortcutBat1: shortcutCommand1,
-            shortcutBat2: shortcutCommand2,
-        }
-        # Create .bat for application shortcuts
-        for shortcutBat, shortcutCommand in windowsShortcuts.items():
-            if not os.path.isfile(shortcutBat):
-                try:
-                    with open(shortcutBat, "w") as fileObj:
-                        fileObj.write(shortcutCommand)
-                except:
-                    pass
-    # On non-Windows platforms
-    else:
-        # Create application shortcuts and set file permission
-        shortcutSh = os.path.join(wd, "uba.sh")
-        if not os.path.exists(shortcutSh):
-            # Create .sh shortcut
-            with open(shortcutSh, "w") as fileObj:
-                fileObj.write("#!{0}\n{1} {2} gui".format(os.environ["SHELL"], sys.executable, thisFile))
-            # Set permission
-            for file in (thisFile, "main.py", "util/BibleVerseParser.py", "util/RegexSearch.py", shortcutSh):
-                try:
-                    os.chmod(file, 0o755)
-                except:
-                    pass
-    # desktop shortcut on macOS
-    # on iOS a-Shell app, ~/Desktop/ is invalid
-    if thisOS == "macOS" and os.path.isdir("~/Desktop/"):
-        app = "UniqueBibleApp"
-        shortcut_file = os.path.expanduser(f"~/Desktop/{app}.command")
-        if not os.path.isfile(shortcut_file):
-            thisFile = os.path.realpath(__file__)
-            wd = os.path.dirname(thisFile)
-            appFile = "uba.py"
-            icon_path = os.path.abspath(os.path.join("htmlResources", f"{app}.icns"))
-            with open(shortcut_file, "w") as f:
-                f.write("#!/bin/bash\n")
-                f.write(f"cd {wd}\n")
-                f.write(f"{python} {appFile} gui\n")
-            os.chmod(shortcut_file, 0o755)
-    # desktop shortcuts on Linux
-    elif thisOS == "Linux":
-        def desktopFileContent():
-            iconPath = os.path.join(wd, "htmlResources", "UniqueBibleApp.png")
-            return """#!/usr/bin/env xdg-open
+    if not runMode.lower() in ("stream", "terminal", "docker", "telnet-server", "http-server", "execute-macro", "api-server", "api-client", "api-client-localhost"):
+        print("Creating shortcut files ...")
+        # On Windows
+        if thisOS == "Windows":
+            desktopPath = os.path.join(os.path.expanduser('~'), 'Desktop')
+            shortcutDir = desktopPath if os.path.isdir(desktopPath) else wd
+            # gui mode shortcut
+            shortcutBat1 = os.path.join(shortcutDir, "UniqueBibleApp.bat")
+            shortcutCommand1 = f'''powershell.exe -NoExit -Command "python '{thisFile}'"'''
+            # terminal mode shortcut
+            shortcutBat2 = os.path.join(shortcutDir, "UniqueBibleAppTerminal.bat")
+            shortcutCommand2 = f'''powershell.exe -NoExit -Command "python '{thisFile}' terminal"'''
+            windowsShortcuts = {
+                shortcutBat1: shortcutCommand1,
+                shortcutBat2: shortcutCommand2,
+            }
+            # Create .bat for application shortcuts
+            for shortcutBat, shortcutCommand in windowsShortcuts.items():
+                if not os.path.isfile(shortcutBat):
+                    try:
+                        with open(shortcutBat, "w") as fileObj:
+                            fileObj.write(shortcutCommand)
+                    except:
+                        pass
+        # On non-Windows platforms
+        else:
+            # Create application shortcuts and set file permission
+            shortcutSh = os.path.join(wd, "uba.sh")
+            if not os.path.exists(shortcutSh):
+                # Create .sh shortcut
+                with open(shortcutSh, "w") as fileObj:
+                    fileObj.write("#!{0}\n{1} {2} gui".format(os.environ["SHELL"], sys.executable, thisFile))
+                # Set permission
+                for file in (thisFile, "main.py", "util/BibleVerseParser.py", "util/RegexSearch.py", shortcutSh):
+                    try:
+                        os.chmod(file, 0o755)
+                    except:
+                        pass
+        # desktop shortcut on macOS
+        # on iOS a-Shell app, ~/Desktop/ is invalid
+        if thisOS == "macOS" and os.path.isdir("~/Desktop/"):
+            app = "UniqueBibleApp"
+            shortcut_file = os.path.expanduser(f"~/Desktop/{app}.command")
+            if not os.path.isfile(shortcut_file):
+                thisFile = os.path.realpath(__file__)
+                wd = os.path.dirname(thisFile)
+                appFile = "uba.py"
+                icon_path = os.path.abspath(os.path.join("htmlResources", f"{app}.icns"))
+                with open(shortcut_file, "w") as f:
+                    f.write("#!/bin/bash\n")
+                    f.write(f"cd {wd}\n")
+                    f.write(f"{python} {appFile} gui\n")
+                os.chmod(shortcut_file, 0o755)
+        # desktop shortcuts on Linux
+        elif thisOS == "Linux":
+            def desktopFileContent():
+                iconPath = os.path.join(wd, "htmlResources", "UniqueBibleApp.png")
+                return """#!/usr/bin/env xdg-open
 
 [Desktop Entry]
 Version=1.0
@@ -111,28 +113,28 @@ Icon={3}
 Name=Unique Bible App
 """.format(wd, sys.executable, thisFile, iconPath)
 
-        ubaLinuxDesktopFile = os.path.join(wd, "UniqueBibleApp.desktop")
-        if not os.path.exists(ubaLinuxDesktopFile):
-            # Create .desktop shortcut
-            with open(ubaLinuxDesktopFile, "w") as fileObj:
-                fileObj.write(desktopFileContent())
-            try:
-                # Try to copy the newly created .desktop file to:
-                from pathlib import Path
-                # ~/.local/share/applications
-                userAppDir = os.path.join(str(Path.home()), ".local", "share", "applications")
-                userAppDirShortcut = os.path.join(userAppDir, "UniqueBibleApp.desktop")
-                if not os.path.exists(userAppDirShortcut):
-                    Path(userAppDir).mkdir(parents=True, exist_ok=True)
-                    copyfile(ubaLinuxDesktopFile, userAppDirShortcut)
-                # ~/Desktop
-                homeDir = os.environ["HOME"]
-                desktopPath = f"{homeDir}/Desktop"
-                desktopPathShortcut = os.path.join(desktopPath, "UniqueBibleApp.desktop")
-                if os.path.exists(desktopPath) and not os.path.exists(desktopPathShortcut):
-                    copyfile(ubaLinuxDesktopFile, desktopPathShortcut)
-            except:
-                pass
+            ubaLinuxDesktopFile = os.path.join(wd, "UniqueBibleApp.desktop")
+            if not os.path.exists(ubaLinuxDesktopFile):
+                # Create .desktop shortcut
+                with open(ubaLinuxDesktopFile, "w") as fileObj:
+                    fileObj.write(desktopFileContent())
+                try:
+                    # Try to copy the newly created .desktop file to:
+                    from pathlib import Path
+                    # ~/.local/share/applications
+                    userAppDir = os.path.join(str(Path.home()), ".local", "share", "applications")
+                    userAppDirShortcut = os.path.join(userAppDir, "UniqueBibleApp.desktop")
+                    if not os.path.exists(userAppDirShortcut):
+                        Path(userAppDir).mkdir(parents=True, exist_ok=True)
+                        copyfile(ubaLinuxDesktopFile, userAppDirShortcut)
+                    # ~/Desktop
+                    homeDir = os.environ["HOME"]
+                    desktopPath = f"{homeDir}/Desktop"
+                    desktopPathShortcut = os.path.join(desktopPath, "UniqueBibleApp.desktop")
+                    if os.path.exists(desktopPath) and not os.path.exists(desktopPathShortcut):
+                        copyfile(ubaLinuxDesktopFile, desktopPathShortcut)
+                except:
+                    pass
 
     # Run main.py
     if thisOS == "Windows":

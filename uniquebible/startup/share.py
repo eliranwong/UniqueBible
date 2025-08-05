@@ -1,4 +1,4 @@
-import glob, os, sys, logging
+import glob, os, sys, logging, traceback
 from uniquebible import config
 import logging.handlers as handlers
 from uniquebible.util.FileUtil import FileUtil
@@ -42,8 +42,8 @@ if config.enableLogging:
 else:
     logger.addHandler(logging.NullHandler())
 
-def global_excepthook(type, value, traceback):
-    logger.error("Uncaught exception", exc_info=(type, value, traceback))
+def global_excepthook(type, value, tb):
+    logger.error("Uncaught exception", exc_info=(type, value, tb))
     print(traceback.format_exc())
 
 sys.excepthook = global_excepthook

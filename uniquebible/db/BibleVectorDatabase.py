@@ -1,6 +1,11 @@
 import numpy as np
 import sqlite3, apsw
-import json, re, ollama, os, datetime
+import json, re, os, datetime
+try:
+    import ollama
+except:
+    pass
+
 """
 from typing import Union
 from openai import OpenAI

@@ -11,7 +11,7 @@ RUN addgroup -g ${UID} ${USER} && \
 
 RUN \
   apk update && \
-  apk add python3 py3-pip net-tools iproute2 ffmpeg micro nano
+  apk add sqlite python3 py3-pip net-tools iproute2 ffmpeg micro nano
 
 USER ${USER}
 
@@ -21,8 +21,11 @@ RUN \
   python3 -m venv uba && \
   . uba/bin/activate && \
   pip install --upgrade pip && \
-  pip install --upgrade --no-cache-dir uniquebible==0.2.0
+  pip install --upgrade --no-cache-dir uniquebible==0.2.24
+
 # Run stream mode once to set up UniqueBible App for non-gui modes
+# it helps to pre-installed optional packages
+# make sure to set 'enabled = []' in $HOME/UniqueBible/config.py.bk in case there is a backup file.
 RUN \
   . uba/bin/activate && \
   uba/bin/ub "John 3:16"

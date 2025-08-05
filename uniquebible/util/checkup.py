@@ -558,6 +558,13 @@ def isOpenaiInstalled():
     except:
         return False
 
+def isOllamaInstalled():
+    try:
+        import ollama
+        return True
+    except:
+        return False
+
 def isLlamaIndexInstalled():
     try:
         from llama_index import GPTVectorStoreIndex
@@ -762,6 +769,7 @@ optional = [
     ("validators", "Python Data Validation for Humans", isValidatorsInstalled),
     ("pydub", "Manipulate audio", isPydubInstalled),
     ("openai>=1.45.0", "Python client library for the OpenAI API", isOpenaiInstalled),
+    ("ollama", "The official Python client for Ollama.", isOllamaInstalled),
     #("llama-index", "Lama Index (GPT Index)", isLlamaIndexInstalled),
     ("SpeechRecognition", "Library for performing speech recognition", isSpeechRecognitionInstalled),
     ("pocketsphinx", "Python bindings for PocketSphinx", isPocketSphinxInstalled),
@@ -817,6 +825,7 @@ optional = [
     ("validators", "Python Data Validation for Humans", isValidatorsInstalled),
     ("pydub", "Manipulate audio", isPydubInstalled),
     ("openai", "Python client library for the OpenAI API", isOpenaiInstalled),
+    ("ollama", "The official Python client for Ollama.", isOllamaInstalled),
     #("llama-index", "Lama Index (GPT Index)", isLlamaIndexInstalled),
     ("SpeechRecognition", "Library for performing speech recognition", isSpeechRecognitionInstalled),
     ("pocketsphinx", "Python bindings for PocketSphinx", isPocketSphinxInstalled),
