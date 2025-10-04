@@ -169,6 +169,7 @@ class TextUtil:
     @staticmethod
     def htmlToPlainText(content, colours=True):
         content = content.replace("<hr>", "<br><b>--------------------</b><br>")
+        content = re.sub("<vid [^<>]*?>([0-9]+?)</vid>", r"`\1`", content)
         if config.runMode == "terminal":
             content = re.sub(r"""<ref onclick="lex\('(H[0-9]+?)'\)" class="G\1" onmouseover="ld\('\1'\); hl1\('','','\1'\)" onmouseout="hl0\('','','\1'\)">\1</ref>""", r"[<ref>\1</ref> ] ", content)
             content = re.sub("""(<heb|<grk)( [^<>]*?onclick="luW\([0-9]+?,')([0-9]+?)('[^<>]*?>)""", r"[<ref>\3</ref> ]\1\2\3\4", content)
