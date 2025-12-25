@@ -659,7 +659,7 @@ class Commentary:
 
     def getCommentaryList(self):
         commentaryFolder = config.commentariesFolder
-        commentaryList = [f[1:-11] for f in os.listdir(commentaryFolder) if os.path.isfile(os.path.join(commentaryFolder, f)) and f.endswith(".commentary") and not re.search(r"^[\._]", f)]
+        commentaryList = [f[1:-11] for f in os.listdir(commentaryFolder) if os.path.isfile(os.path.join(commentaryFolder, f)) and f.endswith(".commentary") and not re.search(r"^[\._]", f) and not f.startswith("cAIC")]
         return sorted(commentaryList)
 
     def getCommentaryListThatHasBookAndChapter(self, book, chapter):
@@ -774,7 +774,7 @@ class Commentary:
                     data = data.replace('color:#000080;', 'color:gray;')
                 chapter += re.sub(r'onclick="luV\(([0-9]+?)\)"', r'onclick="luV(\1)" onmouseover="qV(\1)" ondblclick="mV(\1)"', data)
                 if config.runMode == "terminal":
-                    chapter = re.sub("""(<vid id="v{0}.{1}.{2}" onclick="bcv\({0},{1},{2}\)">)""".format(b, c, v), r"<z>******* {0}:{1} *******</z><br>\1".format(c, v), chapter)
+                    chapter = re.sub(r"""(<vid id="v{0}.{1}.{2}" onclick="bcv\({0},{1},{2}\)">)""".format(b, c, v), r"<z>******* {0}:{1} *******</z><br>\1".format(c, v), chapter)
                 return "<div>{0}</div>".format(chapter)
             else:
                 return "<span style='color:gray;'>['{0}' does not contain this chapter.]</span>".format(self.text)
@@ -1074,8 +1074,8 @@ class BookData:
         if config.runMode == "terminal":
             #<ref onclick="promise(0, 86)">[Go to]</ref>
             #_promise:::0.86
-            content = re.sub("""<ref onclick="promise\(([0-9]+?), ([0-9]+?)\)">\[Go to\]</ref>""", r"[<ref>_promise:::\1.\2</ref> ]", content)
-            content = re.sub("""<ref onclick="harmony\(([0-9]+?), ([0-9]+?)\)">\[Go to\]</ref>""", r"[<ref>_harmony:::\1.\2</ref> ]", content)
+            content = re.sub(r"""<ref onclick="promise\(([0-9]+?), ([0-9]+?)\)">\[Go to\]</ref>""", r"[<ref>_promise:::\1.\2</ref> ]", content)
+            content = re.sub(r"""<ref onclick="harmony\(([0-9]+?), ([0-9]+?)\)">\[Go to\]</ref>""", r"[<ref>_harmony:::\1.\2</ref> ]", content)
         return content
 
 
