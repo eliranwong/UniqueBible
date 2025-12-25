@@ -17,7 +17,7 @@ diff-match-patch==20200713
 distlib==0.3.4
 distro==1.6.0
 dnspython==2.6.1
-filelock==3.6.0
+filelock==3.20.1
 gdown==4.3.0
 gTTS==2.2.3
 html-text==0.5.2
