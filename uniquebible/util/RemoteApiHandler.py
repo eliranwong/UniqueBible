@@ -263,12 +263,26 @@ class RemoteApiHandler(ApiRequestHandler):
         if len(cmd) == 1:
             self.jsonData['data'] = [commentary for commentary in Commentary().getCommentaryList()]
             return
-        elif len(cmd) < 4:
+        elif len(cmd) == 4:
+            commentary = urllib.parse.unquote(cmd[1])
+            data = Commentary(commentary).getRawContent(cmd[2], cmd[3])
+            self.jsonData['data'] = data if data else ("[Not found]",)
+            return
+        elif len(cmd) == 5:
+            commentary = urllib.parse.unquote(cmd[1])
+            data = Commentary(commentary).getRawContentVerse(cmd[2], cmd[3], cmd[4])
+            if data:
+                data = data[0]
+                pos = data.find("If you’d like, I can also provide")
+                if pos != -1:
+                    data = data[:pos]
+            else:
+                data = "[Not found]"
+            self.jsonData['data'] = data
+            return
+        else:
             self.sendError("Invalid Commentary command")
             return
-        commentary = urllib.parse.unquote(cmd[1])
-        data = Commentary(commentary).getRawContent(cmd[2], cmd[3])
-        self.jsonData['data'] = data if data else ("[Not found]",)
 
     # /lexicon
     # /lexicon/TBESG/G5

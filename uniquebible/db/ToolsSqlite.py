@@ -574,7 +574,7 @@ class Commentary:
             config.commentariesFolder = os.path.join(config.marvelData, "commentaries")
         if text:
             self.text = text
-            if self.text in self.getCommentaryList():
+            if self.text in self.getCommentaryList() or self.text in ["AIC"]:
                 self.database = os.path.join(config.commentariesFolder, "c{0}.commentary".format(text))
                 self.connection = apsw.Connection(self.database)
                 self.cursor = self.connection.cursor()
@@ -785,6 +785,15 @@ class Commentary:
         if self.text in self.getCommentaryList():
             query = "SELECT Scripture FROM Commentary WHERE Book=? AND Chapter=?"
             self.cursor.execute(query, (b, c))
+            data = self.cursor.fetchone()
+            return data
+        else:
+            return ""
+
+    def getRawContentVerse(self, b, c, v):
+        if self.text in ["AIC"]:
+            query = "SELECT Content FROM Commentary WHERE Book=? AND Chapter=? and Verse=?"
+            self.cursor.execute(query, (b, c, v))
             data = self.cursor.fetchone()
             return data
         else:

@@ -726,7 +726,7 @@ input.addEventListener('keyup', function(event) {0}
         noteVerseList = []
         highlightDict = {}
         # add tts indicator
-        if config.displayVerseAudioBibleIcon and source == "main":
+        if config.displayVerseAudioBibleIcon and source in ("main", "http"):
             mp3text = FileUtil.getMP3TextFile(text)
             audioFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", mp3text, "default", "{0}_{1}".format(b, c))
             if os.path.isdir(audioFolder):
@@ -741,8 +741,8 @@ input.addEventListener('keyup', function(event) {0}
         if config.enableVerseHighlighting:
             highlightDict = Highlight().getVerseDict(b, c)
         readChapter = ""
-        if source == "main":
-            readChapter = Bible.insertReadBibleLink(text, b, c)
+        if source in ("main", "http"):
+            readChapter = Bible.insertReadBibleLink(text, b, c, v)
             chapter += readChapter
         chapter += "</h2>"
         #titleList = self.getVerseList(b, c, "title")
@@ -777,7 +777,7 @@ input.addEventListener('keyup', function(event) {0}
                 chapter += '<ref onclick="hiV({0},{1},{2},\'ul1\')" class="oul1">&#9683;</ref>'.format(b, c, v)
             chapter += '<vid id="v{0}.{1}.{2}" onclick="luV({2})" onmouseover="qV({2})" ondblclick="mV({2})">{2}</vid> '.format(b, c, v)
             # add read verse icon
-            if source == "main":
+            if source in ("main", "http"):
                 readVerse = Bible.insertReadBibleLink(text, b, c, v)
                 if readVerse:
                     chapter += readVerse
