@@ -27,6 +27,7 @@ Additional Features implemented in BibleMate AI include, but are not limited to:
 * New Added Loop Feature for Bible Audio
 * Improved Visual Presentation of Bible Relationships, Maps, Timelines, and Chronology
 * Improved Tab and History Management
+* Data Downloads in One Go
 
 Read more at: https://github.com/eliranwong/biblemate
 
