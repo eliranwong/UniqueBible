@@ -21,7 +21,9 @@ ConfigUtil.setup()
 # set enviornment variables
 env = (
     ("PYTHONUNBUFFERED", "1"),
-    ("QT_API", "pyside2"),
+    # Keep QT_API consistent with the configured Qt binding.
+    # Hard-coding "pyside2" breaks environments that only have PySide6 installed.
+    ("QT_API", getattr(config, "qtLibrary", "pyside6")),
     ("QT_LOGGING_RULES", "*=false"),
 )
 for key, value in env:

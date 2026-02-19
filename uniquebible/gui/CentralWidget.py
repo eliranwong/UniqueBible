@@ -18,6 +18,30 @@ class CentralWidget(QWidget):
         3: (2, 2),
     }
 
+    @staticmethod
+    def _applySplitterHandleStyle(splitter):
+        # Style the draggable splitter handle (Qt widget, not the HTML content).
+        thickness = getattr(config, "splitterHandleThickness", 5)
+        try:
+            thickness = int(thickness)
+        except Exception:
+            thickness = 5
+        if thickness <= 0:
+            thickness = 5
+
+        splitter.setHandleWidth(thickness)
+
+        color = getattr(config, "splitterHandleColor", "")
+        if color:
+            splitter.setStyleSheet(
+                "QSplitter::handle { background-color: %s; }\n"
+                "QSplitter::handle:hover { background-color: %s; }\n"
+                "QSplitter::handle:pressed { background-color: %s; }\n" % (color, color, color)
+            )
+        else:
+            # Empty => let the global theme/QSS decide.
+            splitter.setStyleSheet("")
+
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
@@ -64,8 +88,8 @@ class CentralWidget(QWidget):
         self.parallelSplitter.addWidget(self.mainView)
         self.parallelSplitter.addWidget(self.studyView)
         
-        self.parallelSplitter.setHandleWidth(5)
-        self.instantSplitter.setHandleWidth(5)
+        self._applySplitterHandleStyle(self.parallelSplitter)
+        self._applySplitterHandleStyle(self.instantSplitter)
 
         self.instantSplitter.addWidget(self.parallelSplitter)
         self.instantSplitter.addWidget(self.instantView)

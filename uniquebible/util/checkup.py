@@ -669,7 +669,7 @@ if not config.enabled:
                 module = "PySide2"
                 isInstalled = isPySide2Installed
                 print("PySide6 is not found!  Trying to install 'PySide2' instead ...")
-                config.qtLibrary == "pyside2"
+                config.qtLibrary = "pyside2"
                 os.environ["QT_API"] = config.qtLibrary
                 installmodule(module)
                 if isInstalled():
@@ -685,7 +685,7 @@ if not config.enabled:
                         installmodule(module)
                         installmodule("PyQtWebEngine")
                     if isInstalled():
-                        config.qtLibrary == "pyqt5"
+                        config.qtLibrary = "pyqt5"
                         os.environ["QT_API"] = config.qtLibrary
                         print("Installed!")
                     else:
@@ -693,7 +693,7 @@ if not config.enabled:
                         #exit(1)
                         runTerminalMode()
                 else:
-                    config.qtLibrary == "pyqt5"
+                    config.qtLibrary = "pyqt5"
                     os.environ["QT_API"] = config.qtLibrary
             elif module == "PyQt5" and not isInstalled():
                 module = "PySide2"
@@ -705,7 +705,7 @@ if not config.enabled:
                     else:
                         installmodule(module)
                     if isInstalled():
-                        config.qtLibrary == "pyside2"
+                        config.qtLibrary = "pyside2"
                         os.environ["QT_API"] = config.qtLibrary
                         print("Installed!")
                     else:
@@ -713,7 +713,7 @@ if not config.enabled:
                         #exit(1)
                         runTerminalMode()
                 else:
-                    config.qtLibrary == "pyside2"
+                    config.qtLibrary = "pyside2"
                     os.environ["QT_API"] = config.qtLibrary
             if isInstalled():
                 if module == "gdown":

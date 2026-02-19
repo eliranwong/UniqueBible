@@ -71,7 +71,12 @@ def addColorIconMenuItem(color, menu, feature, object, action, shortcut=None, tr
     icon = QIcon(pixmap)
     if shortcut is None:
         shortcut = ""
-    return menu.addAction(QAction(icon, config.thisTranslation[feature] if translation else feature, object, triggered=action, shortcut=shortcut))
+    # QAction.triggered emits a boolean (checked). For non-checkable actions it is always False,
+    # which can accidentally get passed into callables like MainWindow.setTheme(theme, setColours=True)
+    # as the second argument. Wrap to ignore the checked state.
+    qAction = QAction(icon, config.thisTranslation[feature] if translation else feature, object, shortcut=shortcut)
+    qAction.triggered.connect(lambda _checked=False, a=action: a())
+    return menu.addAction(qAction)
 
 def addIconMenuItem(icon, menu, feature, object, action, shortcut=None, translation=True):
     if shortcut:
