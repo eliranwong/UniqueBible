@@ -43,6 +43,40 @@ initialCommand = " ".join(sys.argv[2:]).strip() if config.runMode else " ".join(
 initialCommandIsPython = True if initialCommand.endswith(".py") and os.path.isfile(initialCommand) else False
 
 # Set screen size at first launch
+def _restoreWindowGeometry(availableGeometry):
+    try:
+        x = int(config.mainWindowX)
+        y = int(config.mainWindowY)
+        width = int(config.mainWindowWidth)
+        height = int(config.mainWindowHeight)
+        if width <= 0 or height <= 0:
+            return False
+        width = min(width, int(availableGeometry.width()))
+        height = min(height, int(availableGeometry.height()))
+        width = max(width, 320)
+        height = max(height, 240)
+        minX = int(availableGeometry.x())
+        minY = int(availableGeometry.y())
+        maxX = minX + int(availableGeometry.width()) - width
+        maxY = minY + int(availableGeometry.height()) - height
+        if width > availableGeometry.width():
+            width = int(availableGeometry.width())
+        if height > availableGeometry.height():
+            height = int(availableGeometry.height())
+        if x == -1:
+            x = minX + int((int(availableGeometry.width()) - width) / 2)
+        else:
+            x = max(minX, min(x, maxX))
+        if y == -1:
+            y = minY + int((int(availableGeometry.height()) - height) / 2)
+        else:
+            y = max(minY, min(y, maxY))
+        config.mainWindow.showNormal()
+        config.mainWindow.setGeometry(x, y, width, height)
+        return True
+    except:
+        return False
+
 def setupMainWindow(availableGeometry):
     config.screenWidth = availableGeometry.width()
     config.screenHeight = availableGeometry.height()
@@ -50,6 +84,10 @@ def setupMainWindow(availableGeometry):
     # Linux / Darwin / Windows
     if (config.runMode == "docker") or config.startFullScreen or (platform.system() == "Linux" and config.linuxStartFullScreen):
         config.mainWindow.showFullScreen()
+    elif config.rememberWindowGeometry and config.mainWindowMaximized:
+        config.mainWindow.showMaximized()
+    elif config.rememberWindowGeometry and _restoreWindowGeometry(availableGeometry):
+        pass
     elif platform.system() == "Linux" and not config.linuxStartFullScreen:
         # Launching the app in full screen in some Linux distributions makes the app too sticky to be resized.
         config.mainWindow.resize(int(config.screenWidth), int(config.screenHeight - 60))
@@ -105,6 +143,20 @@ def exitApplication():
     from uniquebible.util.NoteService import NoteService
 
     app.closeAllWindows()
+    if config.rememberWindowGeometry:
+        try:
+            if config.mainWindow.isMaximized():
+                geometry = config.mainWindow.normalGeometry()
+                config.mainWindowMaximized = True
+            else:
+                geometry = config.mainWindow.geometry()
+                config.mainWindowMaximized = False
+            config.mainWindowX = int(geometry.x())
+            config.mainWindowY = int(geometry.y())
+            config.mainWindowWidth = int(geometry.width())
+            config.mainWindowHeight = int(geometry.height())
+        except:
+            pass
     if not config.doNotStop3rdPartyMediaPlayerOnExit:
         config.mainWindow.closeMediaPlayer()
     # Run shutdown plugins
