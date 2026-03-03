@@ -797,20 +797,24 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
             QGuiApplication.instance().quit()
 
     def resetUI(self):
-        config.defineStyle()
         app = QGuiApplication.instance()
         if config.qtMaterial and config.qtMaterialTheme:
             from qt_material import apply_stylesheet
             apply_stylesheet(app, theme=config.qtMaterialTheme)
             config.theme = "dark" if config.qtMaterialTheme.startswith("dark_") else "default"
+            # For qt-material, we don't regenerate QSS from config.materialStyle, but we
+            # still reload theme-linked colour preferences for HTML views and plugins.
+            ConfigUtil.loadColorConfig()
         else:
+            # Load theme colour config first so defineStyle/materialStyle is generated from it.
+            ConfigUtil.loadColorConfig()
+            config.defineStyle()
             app.setPalette(Themes.getPalette())
             if config.menuLayout == "material":
                 app.setStyleSheet(config.materialStyle)
                 self.setupMenuLayout("material")
             else:
                 app.setStyleSheet("")
-        ConfigUtil.loadColorConfig()
         self.reloadCurrentRecord(True)
 
     def restartApp(self):
@@ -1574,9 +1578,16 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
         config.theme = theme
         if mainColor and setColours:
             self.setColours(mainColor)
+            # Persist the preset into the active theme file so resetUI() (and restarts)
+            # don't immediately override it by re-loading an older `.color` file.
+            ConfigUtil.saveColorConfig()
         elif config.menuLayout == "material":
             if setColours:
-                self.setColours()
+                if os.path.exists(ConfigUtil.getColorConfigFilename()):
+                    # User has customised colours for this theme — reload them.
+                    ConfigUtil.loadColorConfig()
+                else:
+                    self.setColours()
         else:
             self.setupMenuLayout(config.menuLayout)
         PluginEventHandler.handleEvent("post_theme_change")
@@ -1595,6 +1606,7 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
             config.widgetForegroundColorPressed = '#FFFFE0'
             config.darkThemeTextColor = '#ffffff'
             config.darkThemeActiveVerseColor = '#aaff7f'
+            config.darkThemeActiveVerseBackgroundColor = ''
         else:
             config.maskMaterialIconColor = "#483D8B"
             config.maskMaterialIconBackground = False
@@ -1606,6 +1618,7 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
             config.widgetForegroundColorPressed = "#483D8B"
             config.lightThemeTextColor = "#000000"
             config.lightThemeActiveVerseColor = "#483D8B"
+            config.lightThemeActiveVerseBackgroundColor = ''
         if color:
             color = HtmlColorCodes.colors[color][0]
             config.maskMaterialIconBackground = False
@@ -4074,10 +4087,11 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
     
     def getScrollVerseJS(self, b, c, v, underline=False):
         activeVerseNoColour = config.darkThemeActiveVerseColor if config.theme in ("dark", "night") else config.lightThemeActiveVerseColor
+        activeVerseBgColour = config.darkThemeActiveVerseBackgroundColor if config.theme in ("dark", "night") else config.lightThemeActiveVerseBackgroundColor
         js = """
             var activeVerse = document.getElementById('v{0}.{1}.{2}');
             if (typeof(activeVerse) != 'undefined' && activeVerse != null) {3}
-                activeVerse.scrollIntoView(); activeVerse.style.color = '{5}';
+                activeVerse.scrollIntoView(); activeVerse.style.color = '{5}'; activeVerse.style.backgroundColor = '{7}';
                 {6}
             {4} else if (document.getElementById('v0.0.0') != null) {3}
                 document.getElementById('v0.0.0').scrollIntoView();
@@ -4090,6 +4104,7 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
             "}",
             activeVerseNoColour,
             "activeVerse.style.textDecoration = 'underline';" if underline else "",
+            activeVerseBgColour,
         )
         #print("studyView", studyView)
         #print(js)

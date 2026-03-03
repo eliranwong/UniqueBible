@@ -1580,6 +1580,21 @@ class ConfigUtil:
         setConfig("darkThemeActiveVerseColor", """
         # Active verse colour displayed on dark theme.""",
         "#aaff7f")
+        setConfig("lightThemeActiveVerseBackgroundColor", """
+        # Active verse background colour displayed on light theme.
+        # Leave empty string '' to disable background highlight.""",
+        "")
+        setConfig("darkThemeActiveVerseBackgroundColor", """
+        # Active verse background colour displayed on dark theme.
+        # Leave empty string '' to disable background highlight.""",
+        "")
+        setConfig("splitterHandleColor", """
+        # Splitter handle colour (applies to all themes).
+        # Leave empty string '' to use the theme default.""",
+        "")
+        setConfig("splitterHandleThickness", """
+        # Splitter handle thickness in pixels (applies to all themes).""",
+        5)
         setConfig("qtMaterial", """
         # Apply qt-material theme.""",
         False)
@@ -1888,3 +1903,37 @@ class ConfigUtil:
             with open(fileName, "r") as f:
                 settings = f.read()
                 exec(settings)
+
+    @staticmethod
+    def saveColorConfig(fileName=None):
+        """
+        Persist current colour-related preferences to the theme config file.
+        This is used so selecting a built-in preset (e.g. Light DarkBlue) actually
+        takes effect even when a `.color` file exists (and will be re-loaded later).
+        """
+        if not fileName:
+            fileName = ConfigUtil.getColorConfigFilename()
+        # Keep this list aligned with MaterialColorDialog.saveData()
+        data = (
+            ("config.theme", config.theme),
+            ("config.maskMaterialIconColor", getattr(config, "maskMaterialIconColor", "")),
+            ("config.maskMaterialIconBackground", getattr(config, "maskMaterialIconBackground", False)),
+            ("config.widgetBackgroundColor", getattr(config, "widgetBackgroundColor", "")),
+            ("config.widgetForegroundColor", getattr(config, "widgetForegroundColor", "")),
+            ("config.widgetBackgroundColorHover", getattr(config, "widgetBackgroundColorHover", "")),
+            ("config.widgetForegroundColorHover", getattr(config, "widgetForegroundColorHover", "")),
+            ("config.widgetBackgroundColorPressed", getattr(config, "widgetBackgroundColorPressed", "")),
+            ("config.widgetForegroundColorPressed", getattr(config, "widgetForegroundColorPressed", "")),
+            ("config.lightThemeTextColor", getattr(config, "lightThemeTextColor", "")),
+            ("config.darkThemeTextColor", getattr(config, "darkThemeTextColor", "")),
+            ("config.lightThemeActiveVerseColor", getattr(config, "lightThemeActiveVerseColor", "")),
+            ("config.darkThemeActiveVerseColor", getattr(config, "darkThemeActiveVerseColor", "")),
+            ("config.lightThemeActiveVerseBackgroundColor", getattr(config, "lightThemeActiveVerseBackgroundColor", "")),
+            ("config.darkThemeActiveVerseBackgroundColor", getattr(config, "darkThemeActiveVerseBackgroundColor", "")),
+            ("config.splitterHandleColor", getattr(config, "splitterHandleColor", "")),
+            ("config.splitterHandleThickness", getattr(config, "splitterHandleThickness", 5)),
+        )
+        os.makedirs(os.path.dirname(fileName), exist_ok=True)
+        with open(fileName, "w", encoding="utf-8") as fileObj:
+            for name, value in data:
+                fileObj.write("{0} = {1}\n".format(name, pprint.pformat(value)))
