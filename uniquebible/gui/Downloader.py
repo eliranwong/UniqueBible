@@ -20,31 +20,110 @@ class DownloadProcess(QObject):
 
     def downloadFile(self):
         try:
-            if not config.gdownIsUpdated:
-                installmodule("--upgrade gdown")
-                config.gdownIsUpdated = True
-            try:
-                gdown.download(self.cloudFile, self.localFile, quiet=True)
-                print("Downloaded " + self.localFile)
-                connection = True
-            except Exception as ex:
-                cli = "gdown {0} -O {1}".format(self.cloudFile, self.localFile)
-                os.system(cli)
-                print("Downloaded " + self.localFile)
-                connection = True
-        except Exception as ex:
-            print("Failed to download '{0}'!".format(self.cloudFile))
-            print(ex)
             connection = False
-        if connection and os.path.isfile(self.localFile) and self.localFile.endswith(".zip"):
-            zipObject = zipfile.ZipFile(self.localFile, "r")
-            path, *_ = os.path.split(self.localFile)
-            zipObject.extractall(path)
-            zipObject.close()
-            os.remove(self.localFile)
-        if config.downloadGCloudModulesInSeparateThread:
-            # Emit a signal to notify that download process is finished
-            self.finished.emit()
+            try:
+                if not config.gdownIsUpdated:
+                    installmodule("--upgrade gdown")
+                    config.gdownIsUpdated = True
+                try:
+                    gdown.download(self.cloudFile, self.localFile, quiet=True)
+                    print("Downloaded " + self.localFile)
+                    connection = True
+                except Exception as ex:
+                    cli = "gdown {0} -O {1}".format(self.cloudFile, self.localFile)
+                    os.system(cli)
+                    print("Downloaded " + self.localFile)
+                    connection = True
+            except Exception as ex:
+                print("Failed to download '{0}'!".format(self.cloudFile))
+                print(ex)
+            if connection and os.path.isfile(self.localFile) and self.localFile.endswith(".zip"):
+                try:
+                    zipObject = zipfile.ZipFile(self.localFile, "r")
+                    path, *_ = os.path.split(self.localFile)
+                    zipObject.extractall(path)
+                    zipObject.close()
+                    os.remove(self.localFile)
+                except Exception as ex:
+                    print("Failed to extract '{0}'!".format(self.localFile))
+                    print(ex)
+        except Exception as ex:
+            print(ex)
+        self.finished.emit()
+
+
+class GitHubRepoFetchProcess(QObject):
+
+    finished = Signal(bool, object, str)
+
+    def __init__(self, repo):
+        super().__init__()
+        self.repo = repo
+
+    def run(self):
+        try:
+            from uniquebible.util.GithubUtil import GithubUtil
+            github = GithubUtil(self.repo)
+            repoData = github.getRepoData()
+            self.finished.emit(True, repoData, "")
+        except Exception as ex:
+            print("Failed to fetch repo data: {0}".format(ex))
+            self.finished.emit(False, {}, str(ex))
+
+
+class GitHubDownloadProcess(QObject):
+
+    finished = Signal(bool, str)
+
+    def __init__(self, repo, repoData, items, folder):
+        super().__init__()
+        self.repo = repo
+        self.repoData = repoData
+        self.items = items
+        self.folder = folder
+
+    def run(self):
+        try:
+            from uniquebible.util.GithubUtil import GithubUtil
+            github = GithubUtil(self.repo)
+            for item in self.items:
+                file = os.path.join(self.folder, item + ".zip")
+                print("Downloading {0}".format(file))
+                github.downloadFile(file, self.repoData[item])
+                with zipfile.ZipFile(file, 'r') as zipped:
+                    zipped.extractall(self.folder)
+                os.remove(file)
+            print("Downloading complete")
+            self.finished.emit(True, "")
+        except Exception as ex:
+            print("Failed to download from GitHub: {0}".format(ex))
+            self.finished.emit(False, str(ex))
+
+
+class LibraryCatalogDownloadProcess(QObject):
+
+    finished = Signal(bool, str)
+
+    def __init__(self, repo, filename, sha, installDirectory):
+        super().__init__()
+        self.repo = repo
+        self.filename = filename
+        self.sha = sha
+        self.installDirectory = installDirectory
+
+    def run(self):
+        try:
+            from uniquebible.util.GithubUtil import GithubUtil
+            github = GithubUtil(self.repo)
+            file = os.path.join(self.installDirectory, self.filename + ".zip")
+            github.downloadFile(file, self.sha)
+            with zipfile.ZipFile(file, 'r') as zipped:
+                zipped.extractall(self.installDirectory)
+            os.remove(file)
+            self.finished.emit(True, self.filename)
+        except Exception as ex:
+            print("Failed to download '{0}': {1}".format(self.filename, ex))
+            self.finished.emit(False, str(ex))
 
 
 class Downloader(QDialog):

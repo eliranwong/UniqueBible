@@ -58,7 +58,7 @@ from uniquebible.util.PluginEventHandler import PluginEventHandler
 # These "unused" window imports are actually used.  Do not delete these lines.
 from uniquebible.gui.DisplayShortcutsWindow import DisplayShortcutsWindow
 from uniquebible.gui.GistWindow import GistWindow
-from uniquebible.gui.Downloader import Downloader, DownloadProcess
+from uniquebible.gui.Downloader import Downloader, DownloadProcess, GitHubRepoFetchProcess, GitHubDownloadProcess
 from uniquebible.gui.ModifyDatabaseDialog import ModifyDatabaseDialog
 from uniquebible.gui.LanguageItemWindow import LanguageItemWindow
 from uniquebible.gui.ImportSettings import ImportSettings
@@ -1085,9 +1085,10 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
             # Connect actions
             self.downloadthread.started.connect(self.downloadProcess.downloadFile)
             self.downloadProcess.finished.connect(self.downloadthread.quit)
-            self.downloadProcess.finished.connect(lambda: self.moduleInstalled(fileItems, cloudID, notification))
+            self._download_context = (fileItems, cloudID, notification)
+            self.downloadProcess.finished.connect(self._onGCloudDownloadFinished)
             self.downloadProcess.finished.connect(self.downloadProcess.deleteLater)
-            self.downloadthread.finished.connect(self.downloadthread.deleteLater)
+            self.downloadthread.finished.connect(self.downloadProcess.deleteLater)
             # Start a QThread
             self.downloadthread.start()
         else:
@@ -1098,25 +1099,31 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
             if self.downloader:
                 self.downloader.close()
 
+    def _onGCloudDownloadFinished(self):
+        fileItems, cloudID, notification = self._download_context
+        self.moduleInstalled(fileItems, cloudID, notification)
+
     def moduleInstalled(self, fileItems, cloudID, notification=True):
-        if hasattr(self, "downloader") and self.downloader.isVisible():
-            self.downloader.close()
-        # Check if file is successfully installed
-        localFile = os.path.join(*fileItems)
-        if os.path.isfile(localFile):
-            # Reload Master Control
-            self.reloadControlPanel(False)
-            # Update install history
-            config.installHistory[fileItems[-1]] = cloudID
-            # Notify users
-            if notification:
-                self.displayMessage(config.thisTranslation["message_installed"])
-        elif notification:
-            self.displayMessage(config.thisTranslation["message_failedToInstall"])
-        config.isDownloading = False
-        Commentary().reloadFileLookup()
-        CatalogUtil.reloadLocalCatalog()
-        self.setupMenuLayout(config.menuLayout)
+        try:
+            if hasattr(self, "downloader") and self.downloader.isVisible():
+                self.downloader.close()
+            # Check if file is successfully installed
+            localFile = os.path.join(*fileItems)
+            if os.path.isfile(localFile):
+                # Reload Master Control
+                self.reloadControlPanel(False)
+                # Update install history
+                config.installHistory[fileItems[-1]] = cloudID
+                # Notify users
+                if notification:
+                    self.displayMessage(config.thisTranslation["message_installed"])
+            elif notification:
+                self.displayMessage(config.thisTranslation["message_failedToInstall"])
+        finally:
+            config.isDownloading = False
+            Commentary().reloadFileLookup()
+            CatalogUtil.reloadLocalCatalog()
+            self.setupMenuLayout(config.menuLayout)
 
     def downloadGoogleStaticMaps(self):
         # https://developers.google.com/maps/documentation/maps-static/intro
@@ -1171,8 +1178,8 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
             self.installAllMarvelFiles(bibles, installAll)
         else:
             return
-        self.reloadResources()
         if not config.downloadGCloudModulesInSeparateThread:
+            self.reloadResources()
             self.installMarvelBibles()
 
     def installMarvelCommentaries(self):
@@ -1188,13 +1195,12 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
                                         config.thisTranslation["menu8_commentaries"], items, 0, False)
         if ok and item and not item in ("[All Installed]", installAll):
             self.downloadHelper(commentaries[item])
-            self.reloadResources()
         elif ok and item == installAll:
             self.installAllMarvelFiles(commentaries, installAll)
         else:
             return
-        self.reloadResources()
         if not config.downloadGCloudModulesInSeparateThread:
+            self.reloadResources()
             self.installMarvelCommentaries()
 
     def installAllMarvelFiles(self, files, installAll):
@@ -1213,7 +1219,8 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
                 downloader = Downloader(self, databaseInfo)
                 print("Downloading " + file)
                 downloader.downloadFile(False)
-            self.reloadResources()
+            if not config.downloadGCloudModulesInSeparateThread:
+                self.reloadResources()
             print("Downloading complete")
             if config.downloadGCloudModulesInSeparateThread:
                 self.displayMessage(config.thisTranslation["message_installed"])
@@ -1234,8 +1241,8 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
             self.installAllMarvelFiles(datasets, installAll)
         else:
             return
-        self.reloadResources()
         if not config.downloadGCloudModulesInSeparateThread:
+            self.reloadResources()
             self.installMarvelDatasets()
 
     def installGithubBibles(self):
@@ -1298,48 +1305,106 @@ config.mainWindow.audioPlayer.setAudioOutput(config.audioOutput)"""
     def installFromGitHub(self, gitHubRepoInfo):
         repo, directory, title, extension = gitHubRepoInfo
         if ("Pygithub" in config.enabled):
-            try:
-                from uniquebible.util.GithubUtil import GithubUtil
-
-                installAll = "Install ALL"
-                github = GithubUtil(repo)
-                repoData = github.getRepoData()
-                folder = os.path.join(config.marvelData, directory)
-                items = [item for item in repoData.keys() if not FileUtil.regexFileExists("^{0}.*".format(GithubUtil.getShortname(item).replace(".", "\\.")), folder)]
-                if items:
-                    items.append(installAll)
-                else:
-                    items = ["[All Installed]"]
-                selectedItem, ok = QInputDialog.getItem(self, "UniqueBible",
-                                                config.thisTranslation[title], items, 0, False)
-                if ok and selectedItem:
-                    if selectedItem == installAll:
-                        self.displayMessage("{0}  {1}".format(config.thisTranslation["message_downloadAllFiles"],
-                                                              config.thisTranslation["message_willBeNoticed"]))
-                        items.remove(installAll)
-                        print("Downloading {0} files".format(len(items)))
-                    else:
-                        self.displayMessage(selectedItem + " " + config.thisTranslation["message_installing"])
-                        items = [selectedItem]
-                    for index, item in enumerate(items):
-                        file = os.path.join(folder, item+".zip")
-                        print("Downloading {0}".format(file))
-                        github.downloadFile(file, repoData[item])
-                        with zipfile.ZipFile(file, 'r') as zipped:
-                            zipped.extractall(folder)
-                        os.remove(file)
-                    print("Downloading complete")
-                    self.reloadResources()
-                    if selectedItem == installAll:
-                        self.displayMessage(config.thisTranslation["message_installed"])
-                    else:
-                        self.installFromGitHub(gitHubRepoInfo)
+            if config.downloadGCloudModulesInSeparateThread:
+                self._githubRepoInfo = gitHubRepoInfo
+                self._githubFetchthread = QThread()
+                self._githubFetchProcess = GitHubRepoFetchProcess(repo)
+                self._githubFetchProcess.moveToThread(self._githubFetchthread)
+                self._githubFetchthread.started.connect(self._githubFetchProcess.run)
+                self._githubFetchProcess.finished.connect(self._githubFetchthread.quit)
+                self._githubFetchProcess.finished.connect(self._githubFetchProcess.deleteLater)
+                self._githubFetchthread.finished.connect(self._githubFetchProcess.deleteLater)
+                self._githubFetchProcess.finished.connect(self._onGitHubRepoFetched)
+                self._githubFetchthread.start()
                 return True
+            else:
+                try:
+                    from uniquebible.util.GithubUtil import GithubUtil
 
-            except Exception as ex:
-                self.displayMessage(config.thisTranslation["couldNotAccess"] + " " + repo)
-                print(ex)
+                    installAll = "Install ALL"
+                    github = GithubUtil(repo)
+                    repoData = github.getRepoData()
+                    folder = os.path.join(config.marvelData, directory)
+                    items = [item for item in repoData.keys() if not FileUtil.regexFileExists("^{0}.*".format(GithubUtil.getShortname(item).replace(".", "\\.")), folder)]
+                    if items:
+                        items.append(installAll)
+                    else:
+                        items = ["[All Installed]"]
+                    selectedItem, ok = QInputDialog.getItem(self, "UniqueBible",
+                                                    config.thisTranslation[title], items, 0, False)
+                    if ok and selectedItem:
+                        if selectedItem == installAll:
+                            self.displayMessage("{0}  {1}".format(config.thisTranslation["message_downloadAllFiles"],
+                                                                  config.thisTranslation["message_willBeNoticed"]))
+                            items.remove(installAll)
+                            print("Downloading {0} files".format(len(items)))
+                        else:
+                            self.displayMessage(selectedItem + " " + config.thisTranslation["message_installing"])
+                            items = [selectedItem]
+                        for index, item in enumerate(items):
+                            file = os.path.join(folder, item+".zip")
+                            print("Downloading {0}".format(file))
+                            github.downloadFile(file, repoData[item])
+                            with zipfile.ZipFile(file, 'r') as zipped:
+                                zipped.extractall(folder)
+                            os.remove(file)
+                        print("Downloading complete")
+                        self.reloadResources()
+                        if selectedItem == installAll:
+                            self.displayMessage(config.thisTranslation["message_installed"])
+                        else:
+                            self.installFromGitHub(gitHubRepoInfo)
+                    return True
+
+                except Exception as ex:
+                    self.displayMessage(config.thisTranslation["couldNotAccess"] + " " + repo)
+                    print(ex)
         return False
+
+    def _onGitHubRepoFetched(self, success, repoData, error):
+        repo, directory, title, extension = self._githubRepoInfo
+        if not success:
+            self.displayMessage(config.thisTranslation["couldNotAccess"] + " " + repo)
+            return
+        from uniquebible.util.GithubUtil import GithubUtil
+        installAll = "Install ALL"
+        folder = os.path.join(config.marvelData, directory)
+        items = [item for item in repoData.keys() if not FileUtil.regexFileExists("^{0}.*".format(GithubUtil.getShortname(item).replace(".", "\\.")), folder)]
+        if items:
+            items.append(installAll)
+        else:
+            items = ["[All Installed]"]
+        selectedItem, ok = QInputDialog.getItem(self, "UniqueBible",
+                                        config.thisTranslation[title], items, 0, False)
+        if ok and selectedItem:
+            if selectedItem == installAll:
+                self.displayMessage("{0}  {1}".format(config.thisTranslation["message_downloadAllFiles"],
+                                                      config.thisTranslation["message_willBeNoticed"]))
+                items.remove(installAll)
+                print("Downloading {0} files".format(len(items)))
+            else:
+                self.displayMessage(selectedItem + " " + config.thisTranslation["message_installing"])
+                items = [selectedItem]
+            self._githubSelectedItem = selectedItem
+            self._githubthread = QThread()
+            self._githubProcess = GitHubDownloadProcess(repo, repoData, items, folder)
+            self._githubProcess.moveToThread(self._githubthread)
+            self._githubthread.started.connect(self._githubProcess.run)
+            self._githubProcess.finished.connect(self._githubthread.quit)
+            self._githubProcess.finished.connect(self._githubProcess.deleteLater)
+            self._githubthread.finished.connect(self._githubProcess.deleteLater)
+            self._githubProcess.finished.connect(self._onGitHubDownloadFinished)
+            self._githubthread.start()
+
+    def _onGitHubDownloadFinished(self, success, error):
+        if success:
+            self.reloadResources()
+            if self._githubSelectedItem == "Install ALL":
+                self.displayMessage(config.thisTranslation["message_installed"])
+            else:
+                self.installFromGitHub(self._githubRepoInfo)
+        else:
+            self.displayMessage("Download failed: " + error)
 
     # Select database to modify
     def selectDatabaseToModify(self):

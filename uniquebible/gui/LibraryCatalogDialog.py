@@ -3,14 +3,14 @@ import zipfile
 from uniquebible import config
 import os
 if config.qtLibrary == "pyside6":
-    from PySide6.QtCore import Qt
+    from PySide6.QtCore import Qt, QThread
     from PySide6.QtWidgets import QRadioButton
     from PySide6.QtWidgets import QCheckBox
     from PySide6.QtWidgets import QGroupBox
     from PySide6.QtGui import QStandardItemModel, QStandardItem
     from PySide6.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QPushButton, QMessageBox
 else:
-    from qtpy.QtCore import Qt
+    from qtpy.QtCore import Qt, QThread
     from qtpy.QtWidgets import QRadioButton
     from qtpy.QtWidgets import QCheckBox
     from qtpy.QtWidgets import QGroupBox
@@ -21,6 +21,7 @@ from uniquebible.util.CatalogUtil import CatalogUtil
 from uniquebible.util.FileUtil import FileUtil
 from uniquebible.util.GithubUtil import GithubUtil
 from uniquebible.util.GitHubRepoCache import gitHubRepoCacheData
+from uniquebible.gui.Downloader import LibraryCatalogDownloadProcess
 
 
 class LibraryCatalogDialog(QDialog):
@@ -339,14 +340,34 @@ class LibraryCatalogDialog(QDialog):
             self.downloadButton.setStyleSheet("")
         item = self.remoteCatalogData[self.catalogEntryId]
         id, filename, type, directory, file, description, repo, installDirectory, sha = item
-        github = GithubUtil(repo)
         installDirectory = os.path.join(config.marvelData, installDirectory)
-        file = os.path.join(installDirectory, filename + ".zip")
-        github.downloadFile(file, sha)
-        with zipfile.ZipFile(file, 'r') as zipped:
-            zipped.extractall(installDirectory)
-        os.remove(file)
-        self.displayMessage(filename + " " + config.thisTranslation["message_installed"])
+        if config.downloadGCloudModulesInSeparateThread:
+            self._downloadthread = QThread()
+            self._downloadProcess = LibraryCatalogDownloadProcess(repo, filename, sha, installDirectory)
+            self._downloadProcess.moveToThread(self._downloadthread)
+            self._downloadthread.started.connect(self._downloadProcess.run)
+            self._downloadProcess.finished.connect(self._downloadthread.quit)
+            self._downloadProcess.finished.connect(self._downloadProcess.deleteLater)
+            self._downloadthread.finished.connect(self._downloadProcess.deleteLater)
+            self._downloadProcess.finished.connect(self._onDownloadFinished)
+            self._downloadthread.start()
+        else:
+            github = GithubUtil(repo)
+            file = os.path.join(installDirectory, filename + ".zip")
+            github.downloadFile(file, sha)
+            with zipfile.ZipFile(file, 'r') as zipped:
+                zipped.extractall(installDirectory)
+            os.remove(file)
+            self.displayMessage(filename + " " + config.thisTranslation["message_installed"])
+            self.localCatalog = CatalogUtil.reloadLocalCatalog()
+            self.localCatalogData = self.getLocalCatalogItems()
+            self.resetItems()
+
+    def _onDownloadFinished(self, success, filename):
+        if success:
+            self.displayMessage(filename + " " + config.thisTranslation["message_installed"])
+        else:
+            self.displayMessage("Download failed: " + filename)
         self.localCatalog = CatalogUtil.reloadLocalCatalog()
         self.localCatalogData = self.getLocalCatalogItems()
         self.resetItems()
