@@ -1,35 +1,16 @@
-# Full Upgrade from UniqueBible App to BibleMate AI
+# **Ready for an Upgrade? Introducing BibleMate AI**
 
-[BibleMate AI](https://github.com/eliranwong/biblemate) is partially built on the [UniqueBible App](https://github.com/eliranwong/UniqueBible) data and features.
+I am immensely proud of what we achieved with the [UniqueBible App](https://github.com/eliranwong/UniqueBible). It has provided a solid, database-driven foundation for examining scriptures for years. However, technology has moved forward, and so have we. I am pleased to announce its official successor: **[BibleMate AI](https://github.com/eliranwong/biblemate)**.
 
-There are lots of new features implemented in BibleMate AI that haven't been included in the UniqueBible App.
+To describe this generational advance in our app development, consider the motor car:
 
-Additional Features implemented in BibleMate AI include, but are not limited to:
+* 🚗 **The old [UniqueBible App](https://github.com/eliranwong/UniqueBible) is like a petrol car** — primarily database-driven, with a handful of AI tools that remained entirely bolted on and disconnected from the core study workflow.
+* 🚙 **The [previous BibleMate AI](https://github.com/eliranwong/biblemate) was like a hybrid** — combining database retrieval and AI features, but confined to limited integration within a single, restrictive framework.
+* ⚡ **The [latest BibleMate AI](https://github.com/eliranwong/antigravity-biblemate-workspace) is like a fully electric vehicle** — entirely AI agent-driven and fully integrated.
 
-* AI Agent Mode for Bible Studies 
-* AI Partner Mode for Bible Studies
-* Newly Added MCP Server
-* API Server Re-written
-* CLI Version Re-written
-* Web GUI / Http Server Re-written
-* AI-generated Book Analysis on Every Single Bible Book in Three Languages
-* AI-generated Capter Summary on Every Single Bible Chapter in Three Languages
-* AI-generated Commentary on Every Single Bible Verse in Three Languages
-* New Set of 12 Search Tools for In-depth Bible Studies
-* Support Semantic Searches with Vectors Database
-* Support Selective Morphology Search with Web UI
-* Sync Parallel Bible Scrolling
-* Sync Bible Notes with Google Accounts
-* User Customisation for Web UI
-* Quick Access of Hebrew / Greek Audio for Every Single Hebrew / Greek Word via Tooltips
-* Bible Podcast Audio for Every Single Bible Book
-* Bible Podcast Audio for Every Single Bible Chapter
-* New Added Loop Feature for Bible Audio
-* Improved Visual Presentation of Bible Relationships, Maps, Timelines, and Chronology
-* Improved Tab and History Management
-* Data Downloads in One Go
+We have moved beyond simple search results into a fully automated, agentic workflow. The new BibleMate AI features the simplest, most minimal interface possible, yet it delivers maximised study quality.
 
-Read more at: https://github.com/eliranwong/biblemate
+Beneath this clean exterior lies a seamless integration between rigorous database retrieval and intelligent AI agents. The application actively orchestrates these tools for you—effortlessly retrieving the precise historical and linguistic nuances of ancient texts and applying advanced AI reasoning—bringing unparalleled depth, automation, and clarity to your Bible studies.
 
 # UniqueBible
 
