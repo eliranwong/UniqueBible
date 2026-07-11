@@ -6,7 +6,7 @@ To describe this generational advance in our app development, consider the motor
 
 * 🚗 **The old [UniqueBible App](https://github.com/eliranwong/UniqueBible) is like a petrol car** — primarily database-driven, with a handful of AI tools that remained entirely bolted on and disconnected from the core study workflow.
 * 🚙 **The [previous BibleMate AI](https://github.com/eliranwong/biblemate) was like a hybrid** — combining database retrieval and AI features, but confined to limited integration within a single, restrictive framework.
-* ⚡ **The [latest BibleMate AI](https://github.com/eliranwong/antigravity-biblemate-workspace) is like a fully electric vehicle** — entirely AI agent-driven and fully integrated.
+* ⚡ **The [latest BibleMate AI](https://github.com/eliranwong/biblemate-agentic-workspace) is like a fully electric vehicle** — entirely AI agent-driven and fully integrated.
 
 We have moved beyond simple search results into a fully automated, agentic workflow. The new BibleMate AI features the simplest, most minimal interface possible, yet it delivers maximised study quality.
 
