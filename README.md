@@ -1,16 +1,17 @@
 # **Ready for an Upgrade? Introducing BibleMate AI**
 
-I am immensely proud of what we achieved with the [UniqueBible App](https://github.com/eliranwong/UniqueBible). It has provided a solid, database-driven foundation for examining scriptures for years. However, technology has moved forward, and so have we. I am pleased to announce its official successor: **[BibleMate AI](https://github.com/eliranwong/biblemate)**.
+I am immensely proud of what we achieved with the [UniqueBible App](https://github.com/eliranwong/UniqueBible), which has provided a solid, database-driven foundation for examining scriptures for years. However, technology has moved forward—and so have we. To give you a faster, deeper, and more capable study experience, I am pleased to introduce the next generation of upgrades under **[BibleMate AI](https://github.com/eliranwong/biblemate)**: **[BibleMate Web](https://github.com/eliranwong/biblemateweb)** and **[BibleMate Agentic Workspace](https://github.com/eliranwong/biblemate-agentic-workspace)**.
 
-To describe this generational advance in our app development, consider the motor car:
+To see how far things have come, consider the evolution of the motor car:
 
-* 🚗 **The old [UniqueBible App](https://github.com/eliranwong/UniqueBible) is like a petrol car** — primarily database-driven, with a handful of AI tools that remained entirely bolted on and disconnected from the core study workflow.
-* 🚙 **The [previous BibleMate AI](https://github.com/eliranwong/biblemate) was like a hybrid** — combining database retrieval and AI features, but confined to limited integration within a single, restrictive framework.
-* ⚡ **The [latest BibleMate AI](https://github.com/eliranwong/biblemate-agentic-workspace) is like a fully electric vehicle** — entirely AI agent-driven and fully integrated.
+* 🚗 **[UniqueBible App](https://github.com/eliranwong/UniqueBible) is like a classic petrol car** — a reliable, database-driven desktop foundation, with a handful of AI tools bolted onto the side of the core study workflow.
+* 🚙 **[BibleMate Web](https://github.com/eliranwong/biblemateweb) is like a modern hybrid** — a traditional web app and the true, more capable successor to UniqueBible App, packed with additional resources, richer study features, and seamlessly integrated AI capabilities.
+* ⚡ **[BibleMate Agentic Workspace](https://github.com/eliranwong/biblemate-agentic-workspace) is like a fully electric vehicle** — not a traditional app, but a next-generation workspace built around AI agent orchestration for Bible studies.
 
-We have moved beyond simple search results into a fully automated, agentic workflow. The new BibleMate AI features the simplest, most minimal interface possible, yet it delivers maximised study quality.
+Whether you prefer a familiar, full-featured interface or an automated research partner, both options are a major step up from the original UniqueBible App:
 
-Beneath this clean exterior lies a seamless integration between rigorous database retrieval and intelligent AI agents. The application actively orchestrates these tools for you—effortlessly retrieving the precise historical and linguistic nuances of ancient texts and applying advanced AI reasoning—bringing unparalleled depth, automation, and clarity to your Bible studies.
+* **Upgrade to [BibleMate Web](https://github.com/eliranwong/biblemateweb)** if you want an all-in-one, traditional web experience that surpasses UniqueBible App in every way—more biblical resources, stronger study tools, and built-in AI assistance right where you read.
+* **Try [BibleMate Agentic Workspace](https://github.com/eliranwong/biblemate-agentic-workspace)** if you want to move beyond manual searching—featuring a clean, minimal interface backed by intelligent AI agents that orchestrate database retrieval, uncover historical and linguistic nuances, and apply advanced reasoning to deliver deeper, automated Bible studies.
 
 # UniqueBible
 
