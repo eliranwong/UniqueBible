@@ -32,7 +32,7 @@ mammoth==1.11.0
 Markdown==3.8.1
 MarkupSafe==2.0.1
 more-itertools==8.10.0
-msgpack==1.0.3
+msgpack==1.2.1
 mutagen==1.45.1
 OpenCC==1.2.0
 ordered-set==4.0.2
